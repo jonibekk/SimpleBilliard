@@ -8,7 +8,9 @@
   "servers" : [ {
     "url" : "http://127.0.0.1"
   }, {
-    "url" : "http://oreo.goalous.com",
+    "url" : "https://oreo.goalous.com"
+  }, {
+    "url" : "https://stg.goalous.com",
     "variables" : { }
   } ],
   "security" : [ {
@@ -19,7 +21,7 @@
       "get" : {
         "tags" : [ "Circles" ],
         "summary" : "Not implemented yet",
-        "description" : "# Overview\n- Return the list of public circles of authenticated team",
+        "description" : "# Overview\n- Return the list of circles of authenticated team",
         "operationId" : "X/api/circles",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
@@ -146,11 +148,13 @@
     "/api/circles/{circle.id}/members" : {
       "get" : {
         "tags" : [ "Circles" ],
-        "summary" : "/api/circles/{circle.id}/members",
+        "summary" : "Get circle members",
         "description" : "Get members of a joined / public circle.",
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
         }, {
           "$ref" : "#/components/parameters/Paging.Limit"
         }, {
@@ -193,15 +197,41 @@
       },
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "Not implemented yet",
-        "description" : "Invite a member to a circle. Can only be done by Circle Admin",
-        "operationId" : "X/api/circles/{circle.id}/members",
+        "summary" : "Invite member to a circle",
+        "description" : "Invite a member to a circle. Can only be done by Circle Admin in secret circle",
+        "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
         } ],
         "responses" : {
           "200" : {
-            "description" : ""
+            "description" : "[Success] Invited a member",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.CircleMember"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.Member.Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -232,12 +262,12 @@
         }
       }
     },
-    "/api/circles/{circle.id}/join" : {
+    "/api/circles/{circle.id}/joins" : {
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "/api/circles/{circle.id}/join",
-        "description" : "Invite a user to given circle",
-        "operationId" : "/api/circles/{circle.id}/join",
+        "summary" : "/api/circles/{circle.id}/joins",
+        "description" : "Join a circle as current user",
+        "operationId" : "/api/circles/{circle.id}/joins",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
         } ],
@@ -277,6 +307,9 @@
                 }
               }
             }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -287,16 +320,49 @@
         }
       }
     },
-    "/api/circles/{circle.id}/leave" : {
+    "/api/circles/{circle.id}/leaves" : {
       "post" : {
         "tags" : [ "Circles" ],
-        "summary" : "Not implemented yet",
+        "summary" : "Leave a circle",
+        "description" : "Leave a given circle as current user",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
         } ],
         "responses" : {
           "200" : {
-            "description" : "[Success] Current user left circle"
+            "description" : "[Success] Current user left circle",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "user_id" : {
+                          "$ref" : "#/components/schemas/Object.String.ID"
+                        },
+                        "circle_id" : {
+                          "$ref" : "#/components/schemas/Object.String.ID"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "data" : {
+                    "user_id" : "1",
+                    "circle_id" : "1"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         }
       }
@@ -1499,9 +1565,9 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ext:comment:all", "ext:comment:user" ]
+              "enum" : [ "ext:comment:all", "ext:comment:user", "ext:comment:like", "ext:comment:read" ]
             },
-            "default" : [ "ext:comment:user" ]
+            "default" : [ ]
           }
         } ],
         "responses" : {
@@ -1546,7 +1612,33 @@
                     "del_flg" : false,
                     "deleted" : null,
                     "created" : "0",
-                    "modified" : null
+                    "modified" : "null,",
+                    "is_read" : "true,",
+                    "is_liked" : "true,",
+                    "user" : {
+                      "id" : 615,
+                      "first_name" : "Jiro",
+                      "last_name" : "Gorasu",
+                      "photo_file_name" : null,
+                      "cover_photo_file_name" : null,
+                      "language" : "jpn",
+                      "auto_language_flg" : false,
+                      "romanize_flg" : false,
+                      "display_first_name" : "Jiro",
+                      "display_last_name" : "Gorasu",
+                      "display_username" : "Jiro Gorasu",
+                      "local_username" : null,
+                      "roman_username" : "Jiro Gorasu",
+                      "last_first" : true,
+                      "profile_img_url" : {
+                        "small" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "x_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "original" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D"
+                      }
+                    }
                   } ],
                   "cursor" : "eyJjb25kaXRpb25zIjpbXSwicG9pbnRlciI6WyJpZCIsIjwiLCIyIl0sIm9yZGVyIjp7ImlkIjoiYXNjIn19",
                   "count" : 2
@@ -1575,7 +1667,141 @@
         }
       }
     },
-    "/api/posts/{post.id}/like" : {
+    "/api/posts/{post.id}/likes" : {
+      "get" : {
+        "tags" : [ "Posts" ],
+        "summary" : "Get post like information",
+        "description" : "Get like information of a post",
+        "operationId" : "/api/posts/{post.id}/like",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Post.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "name" : "extoption",
+          "in" : "query",
+          "description" : "Extension option",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ext:pots_like:all", "ext:pots_like:user" ]
+            },
+            "default" : [ "ext:post_like:user" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get post like information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "allOf" : [ {
+                          "$ref" : "#/components/schemas/Model.PostLike.Simple"
+                        }, {
+                          "type" : "object",
+                          "properties" : {
+                            "user" : {
+                              "$ref" : "#/components/schemas/Model.User.Profile"
+                            }
+                          }
+                        } ]
+                      }
+                    },
+                    "cursor" : {
+                      "type" : "string"
+                    },
+                    "count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                },
+                "example" : {
+                  "data" : [ {
+                    "user_id" : 615,
+                    "created" : 1536016933,
+                    "id" : 2,
+                    "user" : {
+                      "id" : 615,
+                      "first_name" : "Jiro",
+                      "last_name" : "Gorasu",
+                      "photo_file_name" : null,
+                      "cover_photo_file_name" : null,
+                      "language" : "jpn",
+                      "auto_language_flg" : false,
+                      "romanize_flg" : false,
+                      "display_first_name" : "Jiro",
+                      "display_last_name" : "Gorasu",
+                      "display_username" : "Jiro Gorasu",
+                      "local_username" : null,
+                      "roman_username" : "Jiro Gorasu",
+                      "last_first" : true,
+                      "profile_img_url" : {
+                        "small" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "x_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "original" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D"
+                      }
+                    }
+                  }, {
+                    "user_id" : 614,
+                    "created" : 1536016933,
+                    "id" : 1,
+                    "user" : {
+                      "id" : 614,
+                      "first_name" : "Taro",
+                      "last_name" : "Gorasu",
+                      "photo_file_name" : null,
+                      "cover_photo_file_name" : null,
+                      "language" : "jpn",
+                      "auto_language_flg" : false,
+                      "romanize_flg" : false,
+                      "display_first_name" : "Taro",
+                      "display_last_name" : "Gorasu",
+                      "display_username" : "Taro Gorasu",
+                      "local_username" : null,
+                      "roman_username" : "Taro Gorasu",
+                      "last_first" : true,
+                      "profile_img_url" : {
+                        "small" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "medium_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "x_large" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D",
+                        "original" : "https://goalous-local-assets.s3.amazonaws.com/howls/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536602400&Signature=712KtTxKnNh9%2FZPf1TfDHZTRaco%3D"
+                      }
+                    }
+                  } ],
+                  "cursor" : "",
+                  "count" : 2
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        }
+      },
       "post" : {
         "tags" : [ "Posts" ],
         "summary" : "Add like",
@@ -1641,6 +1867,9 @@
           "404" : {
             "$ref" : "#/components/responses/Error.Post.NotFound"
           },
+          "409" : {
+            "$ref" : "#/components/responses/Error.PostLike.Conflict"
+          },
           "500" : {
             "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
@@ -1688,12 +1917,12 @@
         }
       }
     },
-    "/api/posts/{post.id}/readers" : {
+    "/api/posts/{post.id}/reads" : {
       "get" : {
         "tags" : [ "Posts" ],
-        "summary" : "/api/posts/{{post.id}}/readers",
-        "description" : "Get post readers",
-        "operationId" : "/api/posts/{{post.id}}/readers",
+        "summary" : "Get post read information",
+        "description" : "Get post read information",
+        "operationId" : "/api/posts/{{post.id}}/reads",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
         }, {
@@ -1711,9 +1940,9 @@
             "type" : "array",
             "items" : {
               "type" : "string",
-              "enum" : [ "ext:pots_read:all", "ext:pots_read:user" ]
+              "enum" : [ "ext:post_read:all", "ext:post_read:user" ]
             },
-            "default" : [ "ext:pots_read:user" ]
+            "default" : [ "ext:post_read:user" ]
           }
         } ],
         "responses" : {
@@ -1727,24 +1956,16 @@
                     "data" : {
                       "type" : "array",
                       "items" : {
-                        "type" : "object",
-                        "properties" : {
-                          "user_id" : {
-                            "type" : "integer",
-                            "format" : "int32"
-                          },
-                          "created" : {
-                            "type" : "integer",
-                            "format" : "int32"
-                          },
-                          "id" : {
-                            "type" : "integer",
-                            "format" : "int32"
-                          },
-                          "user" : {
-                            "$ref" : "#/components/schemas/Model.User.Profile"
+                        "allOf" : [ {
+                          "$ref" : "#/components/schemas/Model.PostRead.Simple"
+                        }, {
+                          "type" : "object",
+                          "properties" : {
+                            "user" : {
+                              "$ref" : "#/components/schemas/Model.User.Profile"
+                            }
                           }
-                        }
+                        } ]
                       }
                     },
                     "cursor" : {
@@ -2075,12 +2296,91 @@
         }
       }
     },
-    "/api/comments/{comment.id}/like" : {
+    "/api/comments/{comment.id}/likes" : {
+      "get" : {
+        "tags" : [ "Comments" ],
+        "summary" : "Get comment read",
+        "description" : "Get read information of a comment",
+        "operationId" : "/api/comments/{comment.id}/readers",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Comment.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "name" : "extoption",
+          "description" : "Extension option",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ext:comment_like:all", "ext:comment_like:user" ]
+            },
+            "default" : [ "ext:comment_like:user" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get comment like",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "allOf" : [ {
+                          "$ref" : "#/components/schemas/Model.CommentLike.Simple"
+                        }, {
+                          "type" : "object",
+                          "properties" : {
+                            "user" : {
+                              "$ref" : "#/components/schemas/Model.User.Profile"
+                            }
+                          }
+                        } ]
+                      }
+                    },
+                    "cursor" : {
+                      "type" : "string"
+                    },
+                    "count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Comment.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      },
       "post" : {
         "tags" : [ "Comments" ],
         "summary" : "Add like to comment",
         "description" : "Add a like to a comment",
-        "operationId" : "/api/comments/{comment.id}/like",
+        "operationId" : "/api/comments/{comment.id}/likes",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
         }, {
@@ -2099,6 +2399,12 @@
           },
           "404" : {
             "$ref" : "#/components/responses/Error.Comment.NotFound"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Error.CommentLike.Conflict"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -2112,7 +2418,7 @@
         "tags" : [ "Comments" ],
         "summary" : "Remove comment like",
         "description" : "Remove a like from a comment",
-        "operationId" : "/api/comments/{comment.id}/like1",
+        "operationId" : "/api/comments/{comment.id}/likes",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
         }, {
@@ -2141,18 +2447,77 @@
         }
       }
     },
-    "/api/comments/{comment.id}/readers" : {
+    "/api/comments/{comment.id}/reads" : {
       "get" : {
         "tags" : [ "Comments" ],
-        "summary" : "Not implemented yet",
-        "description" : "Get users that read the comment",
-        "operationId" : "X/api/comments/{{comment.id}}/readers",
+        "summary" : "Get comment read",
+        "description" : "Get read information of a comment",
+        "operationId" : "/api/comments/{comment.id}/readers",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Comment.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "name" : "extoption",
+          "description" : "Extension option",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ext:comment_read:all", "ext:comment_read:user" ]
+            },
+            "default" : [ "ext:comment_read:user" ]
+          }
         } ],
         "responses" : {
           "200" : {
-            "description" : ""
+            "description" : "[Success] Get comment read",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "allOf" : [ {
+                          "$ref" : "#/components/schemas/Model.CommentRead.Simple"
+                        }, {
+                          "type" : "object",
+                          "properties" : {
+                            "user" : {
+                              "$ref" : "#/components/schemas/Model.User.Profile"
+                            }
+                          }
+                        } ]
+                      }
+                    },
+                    "cursor" : {
+                      "type" : "string"
+                    },
+                    "count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Comment.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -2471,6 +2836,30 @@
           }
         }
       },
+      "Error.CommentLike.Conflict" : {
+        "description" : "[Failed] Like already exists",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Response.Error"
+            }
+          }
+        }
+      },
+      "Error.Circle.Member.Forbidden" : {
+        "description" : "[Failed] Can not invite",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Response.Error"
+            },
+            "example" : {
+              "message" : "You can not invite.",
+              "error" : [ ]
+            }
+          }
+        }
+      },
       "Error.Circle.NotFound" : {
         "description" : "[Failure] Circle not found / user does not belong to the secret circle",
         "content" : {
@@ -2513,6 +2902,16 @@
           }
         }
       },
+      "Error.PostLike.Conflict" : {
+        "description" : "[Failed] Like already exists",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Response.Error"
+            }
+          }
+        }
+      },
       "Error.User.NotFound" : {
         "description" : "[Failed] User not found",
         "content" : {
@@ -2527,15 +2926,19 @@
     "schemas" : {
       "Object.String.FileID" : {
         "type" : "string",
-        "pattern" : "[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}",
+        "pattern" : "^[A-Fa-f0-9]{14}.[A-Fa-f0-9]{8}$",
         "example" : "5b7ba798848b89.57809264"
+      },
+      "Object.String.ID" : {
+        "type" : "string",
+        "pattern" : "^[1-9]+[0-9]*$",
+        "example" : "900"
       },
       "Model" : {
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "del_flg" : {
             "type" : "boolean",
@@ -2561,8 +2964,7 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "integer",
-            "format" : "int32"
+            "$ref" : "#/components/schemas/Object.String.ID"
           },
           "first_name" : {
             "type" : "string"
@@ -2639,7 +3041,7 @@
           }
         },
         "example" : {
-          "id" : 1,
+          "id" : "1",
           "first_name" : "Admin",
           "last_name\"" : "Test",
           "photo_file_name" : null,
@@ -2662,8 +3064,7 @@
           "type" : "object",
           "properties" : {
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "name" : {
               "type" : "string"
@@ -2716,14 +3117,13 @@
               }
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -2743,7 +3143,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505
+          "circle_id" : "505"
         }
       },
       "Model.CircleMember" : {
@@ -2776,16 +3176,13 @@
               "default" : 0
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
@@ -2796,12 +3193,12 @@
           "get_notification_flg" : true,
           "last_posted" : 0,
           "del_flg" : false,
-          "circle_id" : 1,
-          "user_id" : 614,
-          "team_id" : 66,
+          "circle_id" : "1",
+          "user_id" : "614",
+          "team_id" : "66",
           "created" : 1535966985,
           "modified" : 1535966985,
-          "id" : 13726
+          "id" : "13726"
         }
       },
       "Model.Circle.Paging" : {
@@ -2812,14 +3209,13 @@
           "type" : "object",
           "properties" : {
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             }
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -2839,7 +3235,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505
+          "circle_id" : "505"
         }
       },
       "Model.Circle.Paging.Me" : {
@@ -2861,8 +3257,8 @@
           }
         } ],
         "example" : {
-          "id" : 505,
-          "team_id" : 66,
+          "id" : "505",
+          "team_id" : "66",
           "name" : "Secret 2",
           "description" : "AA",
           "photo_file_name" : null,
@@ -2882,7 +3278,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
-          "circle_id" : 505,
+          "circle_id" : "505",
           "unread_count" : 0,
           "admin_flg" : false
         }
@@ -2894,16 +3290,13 @@
           "type" : "object",
           "properties" : {
             "post_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "body" : {
               "type" : "string",
@@ -2949,6 +3342,46 @@
           }
         } ]
       },
+      "Model.CommentLike.Simple" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "id" : "1",
+          "user_id" : "1",
+          "created" : 1536016933
+        }
+      },
+      "Model.CommentRead.Simple" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "id" : "1",
+          "user_id" : "1",
+          "created" : 1536016933
+        }
+      },
       "Model.Post" : {
         "allOf" : [ {
           "$ref" : "#/components/schemas/Model.Post"
@@ -2956,12 +3389,10 @@
           "type" : "object",
           "properties" : {
             "user_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "team_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "body" : {
               "type" : "string",
@@ -2993,20 +3424,16 @@
               "default" : false
             },
             "goal_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "circle_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "action_result_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "key_result_id" : {
-              "type" : "integer",
-              "format" : "int32"
+              "$ref" : "#/components/schemas/Object.String.ID"
             },
             "photo1_file_name" : {
               "type" : "string",
@@ -3037,9 +3464,9 @@
           }
         } ],
         "example" : {
-          "id" : 71877,
-          "user_id" : 404,
-          "team_id" : 1,
+          "id" : "71877",
+          "user_id" : "404",
+          "team_id" : "1",
           "body" : "テックトーーク#4 開催しました！\r\nhttps://isao.goalous.com/post_permanent/7119\r\n\r\n山名さんブロックチェーンについての分かりやすい説明ありがとうございました！\r\n\r\n次回のテックトーークのテーマは「Git」となります。\r\nGitHub,GitLabなど関連するトピックであればなんでもありなので、何かネタがあって話せるよという人はぜひ連絡を下さい！\r\n(小宮さんはLT確定です￣ー￣)ﾆﾔﾘ)\r\n\r\nそれではまた来月お楽しみに！",
           "type" : 1,
           "comment_count" : 0,
@@ -3061,6 +3488,46 @@
           "deleted" : null,
           "created" : 1529045693,
           "modified" : 1529045693
+        }
+      },
+      "Model.PostLike.Simple" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "id" : "1",
+          "user_id" : "1",
+          "created" : 1536016933
+        }
+      },
+      "Model.PostRead.Simple" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "id" : "1",
+          "user_id" : "1",
+          "created" : 1536016933
         }
       },
       "Response.LikeCount" : {
@@ -3119,8 +3586,8 @@
         },
         "example" : {
           "data" : [ {
-            "id" : 90,
-            "team_id" : 1,
+            "id" : "90",
+            "team_id" : "1",
             "name" : "All Team",
             "description" : null,
             "photo_file_name" : null,
@@ -3132,10 +3599,10 @@
             "created" : 1524474553,
             "modified" : 1527555809,
             "latest_post_created" : 1531275897,
-            "circle_id" : 1
+            "circle_id" : "1"
           }, {
-            "id" : 80,
-            "team_id" : 2,
+            "id" : "80",
+            "team_id" : "2",
             "name" : "Circle 2",
             "description" : null,
             "photo_file_name" : null,
@@ -3147,7 +3614,7 @@
             "created" : 1524474553,
             "modified" : 1527555809,
             "latest_post_created" : 1531275897,
-            "circle_id" : 1
+            "circle_id" : "1"
           } ],
           "cursor" : "eyJjb25kaXRpb25zIjp7InB1YmxpY19vbmx5IjoiMCJ9LCJwb2ludGVyIjpbWyJsYXRlc3RfcG9zdF9jcmVhdGVkIiwiPCIsMTUzMTI3NTg5N11dLCJvcmRlciI6eyJsYXRlc3RfcG9zdF9jcmVhdGVkIjoiZGVzYyIsImlkIjoiZGVzYyJ9fQ==",
           "count" : 4
@@ -3219,8 +3686,7 @@
               "type" : "object",
               "properties" : {
                 "user_id" : {
-                  "type" : "integer",
-                  "format" : "int32"
+                  "$ref" : "#/components/schemas/Object.String.ID"
                 },
                 "last_posted" : {
                   "type" : "integer",
