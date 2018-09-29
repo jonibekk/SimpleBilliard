@@ -185,7 +185,7 @@ if (REDIS_SESSION_HOST) {
     $session_config = [
         'checkAgent'     => false,
         'userAgent'      => false,
-        'cookie'         => 'SID',
+        'cookie'         => 'GLS_SID',
         'timeout'        => null,
         'autoRegenerate' => false,
         'handler'        => [
@@ -211,7 +211,7 @@ if (REDIS_SESSION_HOST) {
 } else {
     Configure::write('Session', array(
         'defaults' => 'database',
-        'cookie'   => 'SID',
+        'cookie'   => 'GLS_SID',
         'timeout'  => 60 * 24 * 7 * 2, //60min * 24h * 7day * 2 = 2week
     ));
 }
