@@ -502,7 +502,11 @@ class AppUtil
     static function baseCmdOfBgJob(): string
     {
         $nohup = "nohup ";
-        $php = 'php ';
+        if (ENV_NAME == 'local') {
+            $php = 'php ';
+        } else {
+            $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        }
         $cakeCmd = $php . APP . "Console" . DS . "cake.php";
         $cakeApp = " -app " . APP;
         $baseCommand = $nohup . $cakeCmd . $cakeApp;

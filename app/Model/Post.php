@@ -1595,7 +1595,11 @@ class Post extends AppModel
         $method_name = "red_post_comment";
         $set_web_env = "";
         $nohup = "nohup ";
-        $php = 'php ';
+        if (ENV_NAME == 'local') {
+            $php = 'php ';
+        } else {
+            $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        }
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " Operation.post {$method_name}";
