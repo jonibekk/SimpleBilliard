@@ -1,5 +1,7 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
+App::import('Model/Entity', 'UserEntity');
 
 /**
  * User Test Case
@@ -572,7 +574,7 @@ class UserTest extends GoalousTestCase
         $postData['User']['email'] = "test@aaaaaaa.com";
         $this->User->addEmail($postData, $uid);
         $res = $this->User->changePrimaryEmail($uid, $this->User->getLastInsertID());
-        $this->assertArrayHasKey('User', $res, "[正常]通常使うメアドの変更");
+        $this->assertNotEmpty($res['User']['id'], "[正常]通常使うメアドの変更");
     }
 
     function testPasswordCheckSuccess()
@@ -817,6 +819,31 @@ class UserTest extends GoalousTestCase
         $this->assertEmpty($res);
     }
 
+    public function test_getUsersByKeywordWithExclusion_success()
+    {
+        $excludedUserIdList = [10, 11];
+        $excludedUserIdList2 = [2, 3];
+
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $result = $this->User->getUsersByKeyword("first", 20, false);
+        $this->assertCount(5, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList);
+        $this->assertCount(5, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, true);
+        $this->assertCount(4, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList2);
+        $this->assertCount(3, $result);
+        $result = $this->User->getUsersByKeyword("first", 20, true, $excludedUserIdList2);
+        $this->assertCount(2, $result);
+    }
+
     function testGetNewUsersByKeywordNotSharedOnPost()
     {
         $this->User->my_uid = 1;
@@ -998,7 +1025,7 @@ class UserTest extends GoalousTestCase
         $this->User->LocalName->current_team_id = 1;
 
         $usersWithOutSelf = $this->User->getUsersSelect2('first', 10, true);
-        $usersWithSelf    = $this->User->getUsersSelect2('first', 10, true, true);
+        $usersWithSelf = $this->User->getUsersSelect2('first', 10, true, true);
         $this->assertTrue(count($usersWithOutSelf['results']) !== $this->count($usersWithSelf['results']));
 
         $isContainingUserId = function (string $userId, array $resultSelect2) {
@@ -1227,5 +1254,116 @@ class UserTest extends GoalousTestCase
     function test_findNotBelongToTeamByEmail()
     {
         // TODO.Payment:add unit tests
+    }
+
+    public function test_typeConversionFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $res = $User->useType()->find('first', $conditions);
+
+        $this->assertInternalType('int', $res["User"]['id']);
+        $this->assertInternalType('int', $res["User"]['created']);
+        $this->assertInternalType('int', $res["User"]['modified']);
+    }
+
+    public function test_getSingleEntityFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useEntity()->find('first', $conditions);
+
+        $this->assertTrue($result instanceof UserEntity);
+    }
+
+    public function test_getManyEntityFromFind_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'del_flg' => false
+            ]
+        ];
+
+        $result = $User->useEntity()->find('all', $conditions);
+
+        foreach ($result as $element) {
+            $this->assertTrue($element instanceof UserEntity);
+        }
+    }
+
+    public function test_useTypeThenEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_useEntityThenType_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useEntity()->useType()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_multipleFindAfterEntity_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = [
+            'conditions' => [
+                'id' => 1
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->find('first', $conditions);
+        $this->assertTrue(is_array($result));
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $result = $User->useType()->useEntity()->find('first', $conditions);
+        $this->assertTrue($result instanceof UserEntity);
+        $this->assertInternalType('int', $result['id']);
     }
 }

@@ -1,6 +1,9 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
+
+App::import('Model/Entity', 'CommentEntity');
 
 /**
  * Comment Test Case
@@ -483,6 +486,7 @@ class CommentTest extends GoalousTestCase
         $comment = $this->Comment->read(null, 1)['Comment'];
         $this->assertEqual($comment['body'], '%%%circle_4:秘密サークル%%%');
     }
+
     function testAfterFind_violated_mentioned_to_private_circle_in_public_circle()
     {
         $this->Comment->read(null, 1);
@@ -491,6 +495,7 @@ class CommentTest extends GoalousTestCase
         $comment = $this->Comment->read(null, 1)['Comment'];
         $this->assertEqual($comment['body'], '%%%circle_4%%%');
     }
+
     function testAfterFind_violated_mentioned_to_public_circle_in_private_circle()
     {
         $this->Comment->read(null, 1);
@@ -502,6 +507,7 @@ class CommentTest extends GoalousTestCase
         $comment = $this->Comment->read(null, 1)['Comment'];
         $this->assertEqual($comment['body'], '%%%circle_3%%%');
     }
+
     function testAfterFind_violated_mentioned_to_non_member_user_in_private_circle()
     {
         $this->Comment->read(null, 1);
@@ -513,4 +519,105 @@ class CommentTest extends GoalousTestCase
         $comment = $this->Comment->read(null, 1)['Comment'];
         $this->assertEqual($comment['body'], '%%%circle_4%%%');
     }
+
+    public function test_convertEntityOnFind_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $comment = $Comment->useEntity()->find('first', ['conditions' => ['id' => 1]]);
+
+        $this->assertTrue($comment instanceof CommentEntity);
+    }
+
+    public function test_convertTypeOnFind_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $comment = $Comment->useType()->find('first', ['conditions' => ['id' => 1]])['Comment'];
+
+        $this->assertInternalType('int', $comment['id']);
+        $this->assertInternalType('int', $comment['post_id']);
+        $this->assertInternalType('int', $comment['user_id']);
+        $this->assertInternalType('int', $comment['team_id']);
+        $this->assertInternalType('int', $comment['comment_like_count']);
+        $this->assertInternalType('int', $comment['comment_read_count']);
+    }
+
+    public function test_convertTypeEntityOnFind_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $comment = $Comment->useType()->useEntity()->find('first');
+
+        $this->assertTrue($comment instanceof CommentEntity);
+        $this->assertInternalType('int', $comment['id']);
+        $this->assertInternalType('int', $comment['post_id']);
+        $this->assertInternalType('int', $comment['user_id']);
+        $this->assertInternalType('int', $comment['team_id']);
+        $this->assertInternalType('int', $comment['comment_like_count']);
+        $this->assertInternalType('int', $comment['comment_read_count']);
+    }
+
+    public function test_convertEntityOnSave_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $newData = [
+            'post_id' => "1",
+            'user_id' => "1",
+            'team_id' => "1",
+            'body'    => 'test'
+        ];
+
+        $comment = $Comment->useEntity()->save($newData, false);
+
+        $this->assertTrue($comment instanceof CommentEntity);
+    }
+
+    public function test_convertTypeOnSave_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $newData = [
+            'post_id' => "1",
+            'user_id' => "1",
+            'team_id' => "1",
+            'body'    => 'test'
+        ];
+
+        $comment = $Comment->useType()->save($newData, false)['Comment'];
+
+        $this->assertInternalType('int', $comment['id']);
+        $this->assertInternalType('int', $comment['post_id']);
+        $this->assertInternalType('int', $comment['user_id']);
+        $this->assertInternalType('int', $comment['team_id']);
+
+    }
+
+    public function test_convertTypeEntityOnSave_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $newData = [
+            'post_id' => "2",
+            'user_id' => "1",
+            'team_id' => "1",
+            'body'    => 'test'
+        ];
+
+        $comment = $Comment->useType()->useEntity()->save($newData, false);
+
+        $this->assertTrue($comment instanceof CommentEntity);
+        $this->assertInternalType('int', $comment['id']);
+        $this->assertInternalType('int', $comment['post_id']);
+        $this->assertInternalType('int', $comment['user_id']);
+        $this->assertInternalType('int', $comment['team_id']);
+    }
+
 }

@@ -2,8 +2,11 @@
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
+App::uses('Email', 'Model');
+App::import('Model/Entity', 'UserEntity');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
 
@@ -51,6 +54,7 @@ class User extends AppModel
 
     const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
     const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
+    const USER_PASSWORD_REGEX = '/\A(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}\z/i';
 
     /**
      * 性別タイプの名前をセット
@@ -96,6 +100,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-user.jpg',
+                's3_default_url' => 'sys/defaults/no-image-user.svg',
                 'quality'     => 100,
             ],
             'cover_photo' => [
@@ -106,6 +111,7 @@ class User extends AppModel
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-cover.jpg',
+                's3_default_url' => 'sys/defaults/no-image-cover.svg',
                 'quality'     => 100,
             ],
         ]
@@ -137,6 +143,16 @@ class User extends AppModel
      * @var array
      */
     protected $uids = [];
+
+    /**
+     * Type conversion table for User model
+     *
+     * @var array
+     */
+    protected $modelConversionTable = [
+        'default_team_id' => DataType::INT,
+        'timezone' => DataType::INT
+    ];
 
     /**
      * Validation rules
@@ -284,7 +300,7 @@ class User extends AppModel
             'passwordPolicy' => [
                 'rule' => [
                     'custom',
-                    '/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i',
+                    self::USER_PASSWORD_REGEX,
                 ]
             ]
         ],
@@ -307,6 +323,35 @@ class User extends AppModel
         'language',
         'auto_language_flg',
         'romanize_flg',
+    ];
+
+    /**
+     * User fields to be returned on user login
+     *
+     * @var array
+     */
+    public $loginUserFields = [
+        'id',
+        'photo_file_name',
+        'cover_photo_file_name',
+        'first_name',
+        'last_name',
+        'middle_name',
+        'language',
+        'active_flg',
+        'last_login',
+        'admin_flg',
+        'default_team_id',
+        'timezone',
+        'language',
+        'romanize_flg',
+        'update_email_flg',
+        'agreed_terms_of_service_id',
+        'gender_type',
+        'birth_day',
+        'hide_year_flg',
+        'phone_no',
+        'hometown'
     ];
 
     /**
@@ -400,7 +445,7 @@ class User extends AppModel
      * @param array $results Result data
      * @param mixed $primary Primary query
      *
-     * @return array
+     * @return mixed
      */
     public function afterFind($results, $primary = false)
     {
@@ -417,6 +462,7 @@ class User extends AppModel
                         array_push($this->uids, $entity[$this->alias]['id']);
                     }
                 });
+
         //LocalName取得(まだ取得していないIDのみ)
         foreach ($this->uids as $k => $v) {
             if (array_key_exists($v, $this->local_names)) {
@@ -437,6 +483,15 @@ class User extends AppModel
                 function (&$entity, &$model) {
                     $entity = $this->setUsername($entity);
                 });
+
+        $this->dataIter($results,
+            function (&$data, &$model) {
+                $data = $this->attachImageUrl($data);
+            });
+
+
+        $results = parent::afterFind($results, $primary);
+
         return $results;
     }
 
@@ -630,13 +685,13 @@ class User extends AppModel
     /**
      * ローカル名を利用しないか判定
      *
-     * @param $lung
+     * @param string $lang
      *
      * @return bool
      */
-    public function isNotUseLocalName($lung)
+    public function isNotUseLocalName(string $lang)
     {
-        return in_array($lung, $this->langCodeOfNotLocalName);
+        return in_array($lang, $this->langCodeOfNotLocalName);
     }
 
     /**
@@ -1185,17 +1240,18 @@ class User extends AppModel
      *
      * @see https://select2.github.io/select2/ (v 3.5.x)
      *
-     * @param      $keyword   User typed string in input type=text
-     * @param int  $limit
-     * @param bool $with_group
-     * @param bool $with_self Include authorized user in the result.
+     * @param       $keyword       User typed string in input type=text
+     * @param int   $limit
+     * @param bool  $with_group
+     * @param bool  $with_self     Include authorized user in the result.
+     * @param array $excludedUsers User IDs to be removed from the query
      *
      * @return array
      */
-    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false)
+    public function getUsersSelect2($keyword, $limit = 10, $with_group = false, $with_self = false, $excludedUsers = [])
     {
         $exclude_auth_user = !$with_self;
-        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user);
+        $users = $this->getUsersByKeyword($keyword, $limit, $exclude_auth_user, $excludedUsers);
         $user_res = $this->makeSelect2UserList($users);
 
         // グループを結果に含める場合
@@ -1852,9 +1908,9 @@ class User extends AppModel
         ];
 
         if ($activeFlag) {
-            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::ACTIVE;
+            $options['conditions']['TeamMember.status'] = Enum\Model\TeamMember\Status::ACTIVE;
         } else {
-            $options['conditions']['TeamMember.status'] = Enum\TeamMember\Status::INACTIVE;
+            $options['conditions']['TeamMember.status'] = Enum\Model\TeamMember\Status::INACTIVE;
         }
 
         $res = $this->find('all', $options);
@@ -1870,5 +1926,92 @@ class User extends AppModel
     public function validateUserId($userId): bool
     {
         return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
+    }
+
+    /**
+     * Get user object from user's primary email address
+     *
+     * @param string $email
+     *
+     * @return UserEntity
+     */
+    public function findUserByEmail(string $email)
+    {
+        $condition = [
+            'conditions' => [
+                'User.del_flg'    => false,
+                'User.active_flg' => true,
+            ],
+            'fields'     => [
+                'User.id',
+                'User.password',
+                'User.default_team_id'
+            ],
+            'joins'      => [
+                [
+                    'table'      => 'emails',
+                    'alias'      => 'Email',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'User.primary_email_id = Email.id',
+                        'Email.del_flg' => false,
+                        'Email.email'   => $email,
+                    ]
+                ]
+            ]
+        ];
+
+        /** @var UserEntity $user */
+        $user = $this->useType()->useEntity()->find('first', $condition);
+
+        return $user;
+    }
+
+    /**
+     * Get user with fields for login response
+     *
+     * @param int $userId
+     *
+     * @return UserEntity
+     */
+    public function getUserForLoginResponse(int $userId)
+    {
+        $conditions = [
+            'conditions' => [
+                'id' => $userId
+            ],
+            'fields'     => $this->loginUserFields,
+        ];
+
+       /** @var UserEntity $res */
+        $res =  $this->useType()->useEntity()->find('first', $conditions);
+
+        return $res;
+    }
+
+    /**
+     * Get photo file names from the user data array, and turn them into URLs
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    private function attachImageUrl(array $data): array
+    {
+//TODO GL-7111
+        $coverFileName = Hash::get($data, 'cover_photo_file_name');
+        $photoFileName = Hash::get($data, 'photo_file_name');
+
+        if (isset($coverFileName)) {
+            $data['cover_img_url'] = '';
+            unset($data['cover_photo_file_name']);
+        }
+
+        if (isset($photoFileName)) {
+            $data['photo_img_url'] = '';
+            unset($data['photo_file_name']);
+        }
+
+        return $data;
     }
 }

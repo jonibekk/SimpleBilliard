@@ -10,7 +10,7 @@ App::uses('TeamMember', 'Model');
  * Date: 08/03/2018
  * Time: 10:57
  *
- * @property NotifyBizComponent $NotifyBiz
+ * @property NotifyBizComponent    $NotifyBiz
  * @property NotificationComponent Notification
  */
 class EvaluatorsController extends ApiController

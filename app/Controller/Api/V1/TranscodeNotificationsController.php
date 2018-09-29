@@ -13,7 +13,7 @@ App::import('Service', 'PostResourceService');
 App::import('Service', 'PostDraftService');
 App::import('Service', 'VideoStreamService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class SnsNotificationController
@@ -150,7 +150,7 @@ class TranscodeNotificationsController extends ApiController
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             $videoStream = $VideoStreamService->updateFromTranscodeProgressData($videoStream, $transcodeNotificationAwsSns);
 
-            $updatedVideoStreamProgress = new Enum\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
+            $updatedVideoStreamProgress = new Enum\Model\Video\VideoTranscodeStatus(intval($videoStream['transcode_status']));
 
             // If transcode notification is COMPLETED notify
             // Video resource related to draft post is prepared for video post
@@ -158,9 +158,9 @@ class TranscodeNotificationsController extends ApiController
             $PostDraft = ClassRegistry::init('PostDraft');
 
             if (// If transcode notification is COMPLETED notify
-                $transcodeNotificationAwsSns->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::COMPLETE())
+                $transcodeNotificationAwsSns->getProgressState()->equals(Enum\Model\Video\VideoTranscodeProgress::COMPLETE())
                 // and if video_streams.transcode_status = TRANSCODE_COMPLETE then, draft is ready to post
-                && $updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+                && $updatedVideoStreamProgress->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
                 GoalousLog::info('transcode is completed and try to post from draft', [
                     'video_streams.id'    => $videoStreamId,
                     'video_stream_state'  => $updatedVideoStreamProgress->getValue(),
@@ -168,7 +168,7 @@ class TranscodeNotificationsController extends ApiController
                 ]);
 
                 // if we received COMPLETE notify, post related draft post if its ready
-                $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
+                $postDrafts = $PostDraft->getByResourceTypeAndResourceId(Enum\Model\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId);
                 /** @var PostService $PostService */
                 $PostService = ClassRegistry::init('PostService');
                 foreach ($postDrafts as $postDraft) {
@@ -197,7 +197,7 @@ class TranscodeNotificationsController extends ApiController
                         $this->notifyTranscodeCompleteAndDraftPublished($post['id'], $post['user_id'], $post['team_id']);
                     }
                 }
-            } else if ($updatedVideoStreamProgress->equals(Enum\Video\VideoTranscodeStatus::ERROR())) {
+            } else if ($updatedVideoStreamProgress->equals(Enum\Model\Video\VideoTranscodeStatus::ERROR())) {
                 /** @var Video $Video */
                 $Video = ClassRegistry::init('Video');
                 $video = $Video->getById($videoStream['video_id']);

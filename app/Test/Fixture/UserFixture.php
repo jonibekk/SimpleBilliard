@@ -78,7 +78,7 @@ class UserFixture extends CakeTestFixtureEx
             'charset' => 'utf8mb4'
         ),
 
-        'primary_email_id'   => array(
+        'primary_email_id'           => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -86,27 +86,27 @@ class UserFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'プライマリメールアドレスID(hasOneでEmailモデルに関連)'
         ),
-        'active_flg'         => array(
+        'active_flg'                 => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'key'     => 'index',
             'comment' => 'アクティブフラグ(ユーザ認証済みの場合On)'
         ),
-        'last_login'         => array(
+        'last_login'                 => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => '最終ログイン日時'
         ),
-        'admin_flg'          => array(
+        'admin_flg'                  => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => '管理者フラグ(管理画面が開ける人)'
         ),
-        'default_team_id'    => array(
+        'default_team_id'            => array(
             'type'     => 'biginteger',
             'null'     => true,
             'default'  => null,
@@ -114,20 +114,20 @@ class UserFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'デフォルトチーム(belongsToでTeamモデルに関連)'
         ),
-        'timezone'           => array(
+        'timezone'                   => array(
             'type'     => 'float',
             'null'     => true,
             'default'  => null,
             'unsigned' => false,
             'comment'  => 'タイムゾーン(UTCを起点とした時差)'
         ),
-        'auto_timezone_flg'  => array(
+        'auto_timezone_flg'          => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '1',
             'comment' => '自動タイムゾーンフラグ(Onの場合はOSからタイムゾーンを取得する)'
         ),
-        'language'           => array(
+        'language'                   => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -136,46 +136,46 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '言語(日本語ならjpn)',
             'charset' => 'utf8mb4'
         ),
-        'auto_language_flg'  => array(
+        'auto_language_flg'          => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => '自動言語設定フラグ(Onの場合はブラウザから言語を取得する)'
         ),
-        'romanize_flg'       => array(
+        'romanize_flg'               => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => 'ローマ字表記フラグ(Onの場合は自分の名前がアプリ内で英語表記になる)。local_first_name,local_last_nameが入力されていても、first_name,last_nameがつかわれる。'
         ),
-        'update_email_flg'   => array(
+        'update_email_flg'           => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '1',
             'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'
         ),
-        'agreed_terms_of_service_id'   => array(
+        'agreed_terms_of_service_id' => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => '0',
             'unsigned' => true,
             'comment'  => '同意した利用規約ID'
         ),
-        'del_flg'            => array(
+        'del_flg'                    => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'key'     => 'index',
             'comment' => '削除フラグ'
         ),
-        'deleted'            => array(
+        'deleted'                    => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'ユーザが退会した日付時刻'
         ),
-        'gender_type'        => array(
+        'gender_type'                => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
@@ -183,14 +183,14 @@ class UserFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => '性別(1:男,2:女)'
         ),
-        'birth_day'          => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '誕生日'),
-        'hide_year_flg'      => array(
+        'birth_day'                  => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '誕生日'),
+        'hide_year_flg'              => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => '誕生日の年を隠すフラグ'
         ),
-        'phone_no'           => array(
+        'phone_no'                   => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -199,7 +199,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '電話番号',
             'charset' => 'utf8mb4'
         ),
-        'hometown'           => array(
+        'hometown'                   => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -208,7 +208,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '出身地',
             'charset' => 'utf8mb4'
         ),
-        'comment'            => array(
+        'comment'                    => array(
             'type'    => 'text',
             'null'    => true,
             'default' => null,
@@ -216,7 +216,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => 'コメント',
             'charset' => 'utf8mb4'
         ),
-        'first_name'         => array(
+        'first_name'                 => array(
             'type'    => 'string',
             'null'    => false,
             'default' => null,
@@ -225,7 +225,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '英名',
             'charset' => 'utf8mb4'
         ),
-        'last_name'          => array(
+        'last_name'                  => array(
             'type'    => 'string',
             'null'    => false,
             'default' => null,
@@ -234,7 +234,7 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '英姓',
             'charset' => 'utf8mb4'
         ),
-        'middle_name'        => array(
+        'middle_name'                => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -243,27 +243,27 @@ class UserFixture extends CakeTestFixtureEx
             'comment' => '英ミドルネーム',
             'charset' => 'utf8mb4'
         ),
-        'setup_complete_flg' => array(
+        'setup_complete_flg'         => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => 'セットアップが完了したかどうか'
         ),
-        'created'            => array(
+        'created'                    => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'ユーザーデータを登録した日付時刻'
         ),
-        'modified'           => array(
+        'modified'                   => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'ユーザーデータを最後に更新した日付時刻'
         ),
-        'indexes'            => array(
+        'indexes'                    => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'primary_email_id' => array('column' => 'primary_email_id', 'unique' => 0),
             'default_team_id'  => array('column' => 'default_team_id', 'unique' => 0),
@@ -271,7 +271,11 @@ class UserFixture extends CakeTestFixtureEx
             'del_flg'          => array('column' => 'del_flg', 'unique' => 0),
             'active_flg'       => array('column' => 'active_flg', 'unique' => 0)
         ),
-        'tableParameters'    => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'            => array(
+            'charset' => 'utf8mb4',
+            'collate' => 'utf8mb4_general_ci',
+            'engine'  => 'InnoDB'
+        )
     );
 
     /**

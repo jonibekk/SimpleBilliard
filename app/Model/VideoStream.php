@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class VideoStream
@@ -70,10 +70,10 @@ class VideoStream extends AppModel
         $options = [
             'conditions' => [
                 'transcode_status' => [
-                    Enum\Video\VideoTranscodeStatus::TRANSCODING,
-                    Enum\Video\VideoTranscodeStatus::QUEUED,
-                    Enum\Video\VideoTranscodeStatus::UPLOADING,
-                    Enum\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
+                    Enum\Model\Video\VideoTranscodeStatus::TRANSCODING,
+                    Enum\Model\Video\VideoTranscodeStatus::QUEUED,
+                    Enum\Model\Video\VideoTranscodeStatus::UPLOADING,
+                    Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
                 ],
                 'modified <' => $timestamp,
                 'del_flg' => false,

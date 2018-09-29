@@ -139,8 +139,6 @@ gulp.task('js_homepage', done => {
 gulp.task('js_app', done => {
   return runSequence(
     'js:eslint',
-    'js:coffeelint',
-    'js:coffee',
     'js:concat',
     'js:uglify',
     'js:clean',

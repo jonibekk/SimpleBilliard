@@ -17,7 +17,7 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('GoalousDateTime', 'DateTime');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PaymentService
@@ -328,7 +328,7 @@ class PaymentService extends AppService
      * (100,000 - 50,000) × 20 days / 1 month
      *
      * @param int                          $teamId
-     * @param Enum\PaymentSetting\Currency $currencyType
+     * @param Enum\Model\PaymentSetting\Currency $currencyType
      * @param string                       $upgradePlanCode
      * @param string                       $currentPlanCode
      *
@@ -339,7 +339,7 @@ class PaymentService extends AppService
     function calcRelatedTotalChargeForUpgradingPlan
     (
         int $teamId,
-        Enum\PaymentSetting\Currency $currencyType,
+        Enum\Model\PaymentSetting\Currency $currencyType,
         string $upgradePlanCode,
         string $currentPlanCode
     ): array {
@@ -427,7 +427,7 @@ class PaymentService extends AppService
      *
      * @param int                          $teamId
      * @param int                          $userCnt
-     * @param Enum\PaymentSetting\Currency $currency
+     * @param Enum\Model\PaymentSetting\Currency $currency
      * @param null                         $useDaysByNext
      * @param null                         $allUseDays
      *
@@ -436,7 +436,7 @@ class PaymentService extends AppService
     public function formatTotalChargeByAddUsers(
         int $teamId,
         int $userCnt,
-        Enum\PaymentSetting\Currency $currency,
+        Enum\Model\PaymentSetting\Currency $currency,
         $useDaysByNext = null,
         $allUseDays = null
     ): string {
@@ -451,7 +451,7 @@ class PaymentService extends AppService
      *
      * @param int                           $teamId
      * @param int                           $chargeUserCnt
-     * @param Enum\ChargeHistory\ChargeType $chargeType
+     * @param Enum\Model\ChargeHistory\ChargeType $chargeType
      * @param array                         $paymentSetting
      *
      * @return array
@@ -459,7 +459,7 @@ class PaymentService extends AppService
     public function calcRelatedTotalChargeByType(
         int $teamId,
         int $chargeUserCnt,
-        Enum\ChargeHistory\ChargeType $chargeType,
+        Enum\Model\ChargeHistory\ChargeType $chargeType,
         array $paymentSetting = []
     ): array {
         /** @var CampaignService $CampaignService */
@@ -467,7 +467,7 @@ class PaymentService extends AppService
         $isCampaign = $CampaignService->purchased($teamId);
 
         // Get price for monthly campaign
-        if ($isCampaign && $chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+        if ($isCampaign && $chargeType->getValue() == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
             $info = $CampaignService->getTeamChargeInfo($teamId);
             if (empty($info)) {
                 CakeLog::emergency("PricePlanPurchaseTeam not found for team: $teamId");
@@ -486,7 +486,7 @@ class PaymentService extends AppService
         }
 
         // Monthly fee
-        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+        if ($chargeType->getValue() == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
             return $this->calcRelatedTotalChargeByUserCnt($teamId, $chargeUserCnt, $paymentSetting);
         }
 
@@ -616,7 +616,7 @@ class PaymentService extends AppService
     {
         // Format ex 1980 → ¥1,980
         $num = number_format($charge, 2);
-        if ($currencyType == Enum\PaymentSetting\Currency::JPY) {
+        if ($currencyType == Enum\Model\PaymentSetting\Currency::JPY) {
             $num = preg_replace("/\.?0+$/", "", $num);
         }
         $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . $num;
@@ -627,7 +627,7 @@ class PaymentService extends AppService
      * Apply Credit card charge for a specified team.
      *
      * @param int                               $teamId
-     * @param Enum\ChargeHistory\ChargeType|int $chargeType
+     * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
      * @param int                               $opeUserId
      * @param int|null                          $timestampChargeDateTime timestamp of charge_histories.charge_datetime
@@ -638,7 +638,7 @@ class PaymentService extends AppService
      */
     public function applyCreditCardCharge(
         int $teamId,
-        Enum\ChargeHistory\ChargeType $chargeType,
+        Enum\Model\ChargeHistory\ChargeType $chargeType,
         int $usersCount,
         $opeUserId = null,
         $timestampChargeDateTime = null,
@@ -718,7 +718,7 @@ class PaymentService extends AppService
             $historyData = [
                 'team_id'                     => $teamId,
                 'user_id'                     => $opeUserId,
-                'payment_type'                => Enum\PaymentSetting\Type::CREDIT_CARD,
+                'payment_type'                => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'charge_type'                 => $chargeType->getValue(),
                 'amount_per_user'             => $amountPerUser,
                 'total_amount'                => $chargeInfo['sub_total_charge'],
@@ -726,7 +726,7 @@ class PaymentService extends AppService
                 'charge_users'                => $usersCount,
                 'currency'                    => $currency,
                 'charge_datetime'             => $chargeDateTime->getTimestamp(),
-                'result_type'                 => Enum\ChargeHistory\ResultType::ERROR,
+                'result_type'                 => Enum\Model\ChargeHistory\ResultType::ERROR,
                 'max_charge_users'            => $maxChargeUserCnt,
                 'campaign_team_id'            => $campaignTeamId,
                 'price_plan_purchase_team_id' => $pricePlanPurchaseId,
@@ -803,15 +803,15 @@ class PaymentService extends AppService
 
             $updateHistory = [];
             if ($chargeRes['success']) {
-                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
 
                 // If this charging is reordering, set reorder_charge_history_id to the new record
-                if ($chargeType->equals(Enum\ChargeHistory\ChargeType::RECHARGE())) {
+                if ($chargeType->equals(Enum\Model\ChargeHistory\ChargeType::RECHARGE())) {
                     $updateHistory['reorder_charge_history_id'] = $chargeInfo['reorder_charge_history_id'];
                 }
             } else {
-                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
+                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::FAIL;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
             }
 
@@ -867,7 +867,7 @@ class PaymentService extends AppService
 
         return $this->applyCreditCardCharge(
             $teamId,
-            Enum\ChargeHistory\ChargeType::RECHARGE(),
+            Enum\Model\ChargeHistory\ChargeType::RECHARGE(),
             $usersCount,
             $opeUserId,
             $timeStampChargeTime,
@@ -879,20 +879,20 @@ class PaymentService extends AppService
      * Get charge max user cnt by charge type
      *
      * @param int                           $teamId
-     * @param Enum\ChargeHistory\ChargeType $chargeType
+     * @param Enum\Model\ChargeHistory\ChargeType $chargeType
      * @param int                           $usersCount
      *
      * @return array
      */
     public function getChargeMaxUserCnt(
         int $teamId,
-        Enum\ChargeHistory\ChargeType $chargeType,
+        Enum\Model\ChargeHistory\ChargeType $chargeType,
         int $usersCount
     ) {
-        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+        if ($chargeType->getValue() == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
             return $usersCount;
         }
-        if ($chargeType->getValue() == Enum\ChargeHistory\ChargeType::RECHARGE) {
+        if ($chargeType->getValue() == Enum\Model\ChargeHistory\ChargeType::RECHARGE) {
             return $usersCount;
         }
 
@@ -988,7 +988,7 @@ class PaymentService extends AppService
             $paymentData['currency'] = $currency;
             $timezone = $Team->getTimezone();
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
-            $paymentData['type'] = Enum\PaymentSetting\Type::CREDIT_CARD;
+            $paymentData['type'] = Enum\Model\PaymentSetting\Type::CREDIT_CARD;
             $paymentData['start_date'] = $date;
 
             // Create PaymentSetting
@@ -1053,14 +1053,14 @@ class PaymentService extends AppService
                 'team_id'                     => $teamId,
                 'user_id'                     => $userId,
                 'payment_type'                => PaymentSetting::PAYMENT_TYPE_CREDIT_CARD,
-                'charge_type'                 => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'amount_per_user'             => $amountPerUser,
                 'total_amount'                => $chargeInfo['sub_total_charge'],
                 'tax'                         => $chargeInfo['tax'],
                 'charge_users'                => $membersCount,
                 'currency'                    => $currency,
                 'charge_datetime'             => time(),
-                'result_type'                 => Enum\ChargeHistory\ResultType::ERROR,
+                'result_type'                 => Enum\Model\ChargeHistory\ResultType::ERROR,
                 'max_charge_users'            => $membersCount,
                 'campaign_team_id'            => $campaignTeamId,
                 'price_plan_purchase_team_id' => $pricePlanPurchaseId,
@@ -1078,7 +1078,7 @@ class PaymentService extends AppService
                 'env'          => ENV_NAME,
                 'team_id'      => $teamId,
                 'history_id'   => $historyId,
-                'charge_type'  => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'charge_type'  => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
                 'first_charge' => true,
                 'campaign'     => $isCampaign,
             ];
@@ -1142,10 +1142,10 @@ class PaymentService extends AppService
             // Save history
             $updateHistory = [];
             if ($chargeResult['success']) {
-                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeResult['paymentId'];
             } else {
-                $updateHistory['result_type'] = Enum\ChargeHistory\ResultType::FAIL;
+                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::FAIL;
             }
 
             $ChargeHistory->clear();
@@ -1219,8 +1219,8 @@ class PaymentService extends AppService
 
             $paymentData['team_id'] = $teamId;
             $paymentData['payment_base_day'] = date('d', strtotime(AppUtil::todayDateYmdLocal($timezone)));
-            $paymentData['currency'] = Enum\PaymentSetting\Currency::JPY;
-            $paymentData['type'] = Enum\PaymentSetting\Type::INVOICE;
+            $paymentData['currency'] = Enum\Model\PaymentSetting\Currency::JPY;
+            $paymentData['type'] = Enum\Model\PaymentSetting\Type::INVOICE;
             $paymentData['amount_per_user'] = $this->getAmountPerUserBeforePayment($teamId, 'JP');
             $paymentData['start_date'] = $date;
             // Create Payment Setting
@@ -1233,7 +1233,7 @@ class PaymentService extends AppService
             // Prepare data for saving
             $invoiceData['team_id'] = $teamId;
             $invoiceData['payment_setting_id'] = $paymentSettingId;
-            $invoiceData['credit_status'] = Enum\Invoice\CreditStatus::WAITING;
+            $invoiceData['credit_status'] = Enum\Model\Invoice\CreditStatus::WAITING;
             // Create Invoice
             if (!$Invoice->save($invoiceData, true)) {
                 throw new Exception(sprintf("Failed create invoice record. data: %s",
@@ -1724,7 +1724,7 @@ class PaymentService extends AppService
         /** @var ChargeHistory $ChargeHistory */
         $ChargeHistory = ClassRegistry::init("ChargeHistory");
         // Get teams only credit card payment type
-        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\PaymentSetting\Type::CREDIT_CARD());
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\Model\PaymentSetting\Type::CREDIT_CARD());
 
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams, function ($v) use ($time, $ChargeHistory) {
@@ -1785,7 +1785,7 @@ class PaymentService extends AppService
         /** @var InvoiceHistory $InvoiceHistory */
         $InvoiceHistory = ClassRegistry::init("InvoiceHistory");
         // Get teams only credit card payment type
-        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\PaymentSetting\Type::INVOICE());
+        $targetChargeTeams = $PaymentSetting->findMonthlyChargeTeams(Enum\Model\PaymentSetting\Type::INVOICE());
         CakeLog::info(sprintf('teams monthly invoice charge:%s', AppUtil::jsonOneLine($targetChargeTeams)));
         // Filtering
         $targetChargeTeams = array_filter($targetChargeTeams,
@@ -1851,7 +1851,7 @@ class PaymentService extends AppService
         ];
 
         // If payment type is invoice, user can update contact person name kana
-        if ((int)Hash::get($paySetting, 'type') === Enum\PaymentSetting\Type::INVOICE) {
+        if ((int)Hash::get($paySetting, 'type') === Enum\Model\PaymentSetting\Type::INVOICE) {
             $data['contact_person_first_name_kana'] = $payerData['contact_person_first_name_kana'];
             $data['contact_person_last_name_kana'] = $payerData['contact_person_last_name_kana'];
         }
@@ -1908,7 +1908,7 @@ class PaymentService extends AppService
      * ■Must catch Exception and handling in the caller
      *
      * @param int                               $teamId
-     * @param Enum\ChargeHistory\ChargeType|int $chargeType
+     * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
      * @param int                               $usersCount
      * @param int                               $opeUserId
      *
@@ -1917,7 +1917,7 @@ class PaymentService extends AppService
      */
     public function charge(
         int $teamId,
-        Enum\ChargeHistory\ChargeType $chargeType,
+        Enum\Model\ChargeHistory\ChargeType $chargeType,
         int $usersCount = 1,
         int $opeUserId
     ) {
@@ -1933,7 +1933,7 @@ class PaymentService extends AppService
             );
         }
 
-        if (Hash::get($paymentSetting, 'type') == Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if (Hash::get($paymentSetting, 'type') == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             $res = $this->applyCreditCardCharge(
                 $teamId,
                 $chargeType,
@@ -1966,7 +1966,7 @@ class PaymentService extends AppService
                 $historyData = [
                     'team_id'          => $teamId,
                     'user_id'          => $opeUserId,
-                    'payment_type'     => Enum\PaymentSetting\Type::INVOICE,
+                    'payment_type'     => Enum\Model\PaymentSetting\Type::INVOICE,
                     'charge_type'      => $chargeType->getValue(),
                     'amount_per_user'  => $paymentSetting['amount_per_user'],
                     'total_amount'     => $chargeInfo['sub_total_charge'],
@@ -1974,7 +1974,7 @@ class PaymentService extends AppService
                     'charge_users'     => $usersCount,
                     'currency'         => $paymentSetting['currency'],
                     'charge_datetime'  => time(),
-                    'result_type'      => Enum\ChargeHistory\ResultType::SUCCESS,
+                    'result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS,
                     'max_charge_users' => $maxChargeUserCnt
                 ];
                 if (!$ChargeHistory->save($historyData)) {
@@ -2020,16 +2020,16 @@ class PaymentService extends AppService
             );
         }
 
-        $chargeType = Enum\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF();
+        $chargeType = Enum\Model\ChargeHistory\ChargeType::UPGRADE_PLAN_DIFF();
         $usersCount = 0;
         $chargeInfo = $this->calcRelatedTotalChargeForUpgradingPlan(
             $teamId,
-            new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']),
+            new Enum\Model\PaymentSetting\Currency((int)$paymentSetting['currency']),
             $upgradePlanCode,
             $currentPlanCode
         );
 
-        if (Hash::get($paymentSetting, 'type') == Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if (Hash::get($paymentSetting, 'type') == Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             $res = $this->applyCreditCardCharge(
                 $teamId,
                 $chargeType,
@@ -2059,7 +2059,7 @@ class PaymentService extends AppService
                 $historyData = [
                     'team_id'                     => $teamId,
                     'user_id'                     => $opeUserId,
-                    'payment_type'                => Enum\PaymentSetting\Type::INVOICE,
+                    'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
                     'charge_type'                 => $chargeType->getValue(),
                     'amount_per_user'             => 0,
                     'total_amount'                => $chargeInfo['sub_total_charge'],
@@ -2067,7 +2067,7 @@ class PaymentService extends AppService
                     'charge_users'                => $usersCount,
                     'currency'                    => $paymentSetting['currency'],
                     'charge_datetime'             => time(),
-                    'result_type'                 => Enum\ChargeHistory\ResultType::SUCCESS,
+                    'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,
                     'max_charge_users'            => $maxChargeUserCnt,
                     'campaign_team_id'            => $campaignTeamId,
                     'price_plan_purchase_team_id' => $pricePlanPurchaseId,
@@ -2161,7 +2161,7 @@ class PaymentService extends AppService
         // PaymentSetting validation
         if (!empty(Hash::get($fields, 'PaymentSetting'))) {
             $paymentType = Hash::get($data, 'payment_setting.type');
-            if (is_null($paymentType) === false && (int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            if (is_null($paymentType) === false && (int)$paymentType === Enum\Model\PaymentSetting\Type::INVOICE) {
                 $PaymentSetting->validate = am($PaymentSetting->validate, $PaymentSetting->validateJp);
             }
             $allValidationErrors = am(

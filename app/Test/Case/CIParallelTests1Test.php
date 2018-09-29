@@ -33,9 +33,13 @@ class CIParallelTests1 extends BaseTest
     {
         ini_set('memory_limit', '2G');
         $suite = new CakeTestSuite('Travis CI Parallel1 Test');
-        $testDirectories = static::$testDirectories[__CLASS__];
+        $testDirectories = static::$testDirectories[__CLASS__]['directory'];
         foreach ($testDirectories as $dir) {
             $suite->addTestDirectory($dir);
+        }
+        $testDirectoriesRecursive = static::$testDirectories[__CLASS__]['directoryRecursive'];
+        foreach ($testDirectoriesRecursive as $dir) {
+            $suite->addTestDirectoryRecursive($dir);
         }
         return $suite;
     }

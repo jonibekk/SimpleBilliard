@@ -2,7 +2,7 @@
 App::uses('VideoStream', 'Model');
 App::uses('Video', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 trait TestPostDraftTrait
 {
@@ -53,7 +53,7 @@ trait TestPostDraftTrait
         $postResource = $this->PostResource->create([
             'post_id'       => null,
             'post_draft_id' => $postDraft['PostDraft']['id'],
-            'resource_type' => Enum\Post\PostResourceType::VIDEO_STREAM,
+            'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM,
             'resource_id'   => $videoStream['id'],
         ]);
         $postResource = $this->PostResource->save($postResource);

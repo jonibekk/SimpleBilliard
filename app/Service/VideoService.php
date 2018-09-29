@@ -6,7 +6,7 @@ App::uses('VideoStorageClient', 'Model/Video');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class VideoService

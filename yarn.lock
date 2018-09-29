@@ -222,10 +222,6 @@ argparse@^1.0.7:
   dependencies:
     sprintf-js "~1.0.2"
 
-args-js@^0.10.5:
-  version "0.10.12"
-  resolved "https://registry.yarnpkg.com/args-js/-/args-js-0.10.12.tgz#a327aea80e41072a3d85f9c274db6511eb95e49c"
-
 arr-diff@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/arr-diff/-/arr-diff-2.0.0.tgz#8f3b827f955a8bd669697e4a4256ac3ceae356cf"
@@ -379,9 +375,9 @@ autoprefixer@^6.0.0, autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-autosize@^3.0.21:
-  version "3.0.21"
-  resolved "https://registry.yarnpkg.com/autosize/-/autosize-3.0.21.tgz#f182f40d17757d978a139a4c9ca40c4c0e448603"
+"autosize@git+https://github.com/IsaoCorp/autosize.git":
+  version "4.0.0"
+  resolved "git+https://github.com/IsaoCorp/autosize.git#0b9bdd8f0e0fb037ba5114a3aeadab5ba02314a7"
 
 aws-sign2@~0.6.0:
   version "0.6.0"
@@ -1549,28 +1545,6 @@ coa@~1.0.1:
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
-
-coffee-script@^1.10.0, coffee-script@~1.11.0:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.11.1.tgz#bf1c47ad64443a0d95d12df2b147cc0a4daad6e9"
-
-coffeelint-stylish@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/coffeelint-stylish/-/coffeelint-stylish-0.1.2.tgz#ab501a64435e231706da13a27527ab695700abc9"
-  dependencies:
-    chalk "^1.0.0"
-    text-table "^0.2.0"
-
-coffeelint@^1.4.0, coffeelint@^1.9.*:
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/coffeelint/-/coffeelint-1.16.0.tgz#83d8ed1dafde3a677de44e7b8a18be607761e6d8"
-  dependencies:
-    coffee-script "~1.11.0"
-    glob "^7.0.6"
-    ignore "^3.0.9"
-    optimist "^0.6.1"
-    resolve "^0.6.3"
-    strip-json-comments "^1.0.2"
 
 color-convert@^1.3.0, color-convert@^1.9.0:
   version "1.9.0"
@@ -3100,7 +3074,7 @@ glob@^4.3.1:
     minimatch "^2.0.1"
     once "^1.3.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.0.6, glob@^7.1.0, glob@^7.1.2, glob@~7.1.2:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.0, glob@^7.1.2, glob@~7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
   dependencies:
@@ -3230,26 +3204,6 @@ gulp-babel@^6.1.2:
     replace-ext "0.0.1"
     through2 "^2.0.0"
     vinyl-sourcemaps-apply "^0.2.0"
-
-gulp-coffee@^2.3.2:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/gulp-coffee/-/gulp-coffee-2.3.4.tgz#e9975faf3f26746fb2e72da9e3f32c9db5746daa"
-  dependencies:
-    coffee-script "^1.10.0"
-    gulp-util "^3.0.2"
-    merge "^1.2.0"
-    through2 "^2.0.1"
-    vinyl-sourcemaps-apply "^0.2.1"
-
-gulp-coffeelint@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/gulp-coffeelint/-/gulp-coffeelint-0.6.0.tgz#b4706849c5e3b057658bf638ccfa5dee7351023b"
-  dependencies:
-    args-js "^0.10.5"
-    coffeelint "^1.4.0"
-    coffeelint-stylish "^0.1.1"
-    gulp-util "^3.0.0"
-    through2 "^2.0.0"
 
 gulp-concat@^2.6.0:
   version "2.6.1"
@@ -3698,7 +3652,7 @@ ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
 
-ignore@^3.0.9, ignore@^3.2.0:
+ignore@^3.2.0:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.5.tgz#c4e715455f6073a8d7e5dae72d2fc9d71663dba6"
 
@@ -5293,7 +5247,7 @@ opn@4.0.2:
     object-assign "^4.0.1"
     pinkie-promise "^2.0.0"
 
-optimist@^0.6.1, optimist@~0.6.1:
+optimist@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.6.1.tgz#da3ea74686fa21a19a111c326e90eb15a0196686"
   dependencies:
@@ -6507,10 +6461,6 @@ resolve@1.x, resolve@^1.1.3, resolve@^1.1.4, resolve@^1.1.6, resolve@^1.1.7, res
   dependencies:
     path-parse "^1.0.5"
 
-resolve@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-0.6.3.tgz#dd957982e7e736debdf53b58a4dd91754575dd46"
-
 resp-modifier@6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/resp-modifier/-/resp-modifier-6.0.2.tgz#b124de5c4fbafcba541f48ffa73970f4aa456b4f"
@@ -6837,6 +6787,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
+sortablejs@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.7.0.tgz#80a2b2370abd568e1cec8c271131ef30a904fa28"
+
 source-list-map@^0.1.7:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
@@ -7080,10 +7034,6 @@ strip-indent@^1.0.1:
   dependencies:
     get-stdin "^4.0.1"
 
-strip-json-comments@^1.0.2:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
-
 strip-json-comments@^2.0.0, strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
@@ -7213,7 +7163,7 @@ tempfile@~0.1.2:
   dependencies:
     uuid "~1.4.0"
 
-text-table@^0.2.0, text-table@~0.2.0:
+text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 

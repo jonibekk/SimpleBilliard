@@ -5,7 +5,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'CampaignService');
 App::uses('PaymentSetting', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PaymentsController
@@ -445,7 +445,7 @@ class PaymentsController extends ApiController
             if (!AppUtil::isInt($paymentType)) {
                 return $this->_getResponseBadFail(__("Invalid Request"));
             }
-            if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+            if ((int)$paymentType === Enum\Model\PaymentSetting\Type::INVOICE) {
                 $validationFields['PaymentSetting'] = am(
                     $validationFields['PaymentSetting'],
                     [
@@ -493,7 +493,7 @@ class PaymentsController extends ApiController
 
         $paymentSetting = $PaymentService->get($teamId);
         $paymentType = Hash::get($paymentSetting, 'type');
-        if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+        if ((int)$paymentType === Enum\Model\PaymentSetting\Type::INVOICE) {
             $validationFields['PaymentSetting'] = am(
                 $validationFields['PaymentSetting'],
                 [
@@ -542,7 +542,7 @@ class PaymentsController extends ApiController
         // Check if the team is of invoice payment
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::INVOICE) {
+        if ($PaymentService->getPaymentType($teamId) != Enum\Model\PaymentSetting\Type::INVOICE) {
             return $this->_getResponseForbidden();
         }
 
@@ -554,7 +554,7 @@ class PaymentsController extends ApiController
         $data = array('payment_setting' => $this->request->data);
         $paymentSetting = $PaymentService->get($teamId);
         $paymentType = Hash::get($paymentSetting, 'type');
-        if ((int)$paymentType === Enum\PaymentSetting\Type::INVOICE) {
+        if ((int)$paymentType === Enum\Model\PaymentSetting\Type::INVOICE) {
             $validationFields['PaymentSetting'] = am(
                 $validationFields['PaymentSetting'],
                 [
@@ -600,7 +600,7 @@ class PaymentsController extends ApiController
         // Check if the team is of Credit card payment
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init("PaymentService");
-        if ($PaymentService->getPaymentType($teamId) != Enum\PaymentSetting\Type::CREDIT_CARD) {
+        if ($PaymentService->getPaymentType($teamId) != Enum\Model\PaymentSetting\Type::CREDIT_CARD) {
             return $this->_getResponseForbidden();
         }
 

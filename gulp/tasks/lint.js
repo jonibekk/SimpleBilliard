@@ -1,17 +1,9 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
-import coffeelint from 'gulp-coffeelint'
 import duration from 'gulp-duration'
 import eslint from 'gulp-eslint'
 import lesshint from 'gulp-lesshint'
 import config from '../config.js'
-
-gulp.task('js:coffeelint', () => {
-  return gulp.src(config.coffee.src)
-    .pipe(plumber())
-    .pipe(coffeelint('./coffeelint.json'))
-    .pipe(duration('js:coffeelint'))
-})
 
 gulp.task('js:eslint', () => {
   return gulp.src(config.js.src)

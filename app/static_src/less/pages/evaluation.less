@@ -1,5 +1,4 @@
 /* Evaluation page css */
-
 @import "../variables/all";
 @import "../helpers/mixin";
 @import "../partials/attached_file";
@@ -23,6 +22,7 @@
     &-center {
       flex: 1;
       margin: 0 10px;
+      justify-content: center;
     }
     &-right {
       width: 25px;
@@ -35,6 +35,12 @@
         font-weight: 700;
         font-size: 28px;
       }
+    }
+    &-suggestion {
+      margin-right: 4px;
+    }
+    &-parts {
+      justify-content: center;
     }
   }
 }
@@ -113,7 +119,7 @@
   &.flex {
     display: flex;
     -webkit-align-items: center; /* 縦方向中央揃え（Safari用） */
-     align-items: center; /* 縦方向中央揃え */
+    align-items: center; /* 縦方向中央揃え */
     .kr-card-main {
       padding: 10px;
       -webkit-box-flex: 1;
@@ -188,5 +194,13 @@
 #evaluationPage a {
   &:hover, &:focus, &:active {
     color: initial;
+  }
+}
+.evaluatee-summary {
+  img {
+    float: left;
+  }
+  .evaluatee-summary-names {
+    margin-top: .5em;
   }
 }

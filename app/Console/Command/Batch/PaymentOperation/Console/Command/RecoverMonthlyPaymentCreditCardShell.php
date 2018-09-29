@@ -3,7 +3,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'InvoiceService');
 App::uses('AppUtil', 'Util');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * creating credit card payment about passed parameters
@@ -144,7 +144,7 @@ class RecoverMonthlyPaymentCreditCardShell extends AppShell
         try {
             $this->PaymentService->applyCreditCardCharge(
                 $team['id'],
-                Enum\ChargeHistory\ChargeType::MONTHLY_FEE(),
+                Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
                 $amountChargeUsers,
                 null,
                 $targetDateTime->getTimestamp()

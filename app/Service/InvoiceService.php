@@ -8,7 +8,7 @@ App::uses('Invoice', 'Model');
 App::uses('Team', 'Model');
 App::uses('GlRedis', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class InvoiceService
@@ -71,7 +71,7 @@ class InvoiceService extends AppService
             $itemIndex = 0;
             if (!empty($targetChargeHistories)) {
                 foreach ($targetChargeHistories as $history) {
-                    if ((int)$history['charge_type'] === Enum\ChargeHistory\ChargeType::MONTHLY_FEE) {
+                    if ((int)$history['charge_type'] === Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
 
                         $itemName = $this->getMonthlyFeeItemName($teamId, $history['charge_datetime']);
                     } else {

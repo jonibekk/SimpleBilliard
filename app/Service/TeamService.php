@@ -3,7 +3,7 @@ App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class TeamService
@@ -207,7 +207,7 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        if ($serviceUseStatus == Enum\Team\ServiceUseStatus::PAID) {
+        if ($serviceUseStatus == Enum\Model\Team\ServiceUseStatus::PAID) {
             $endDate = null;
         } else {
             $statusDays = Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
@@ -229,8 +229,8 @@ class TeamService extends AppService
             $this->TransactionManager->begin();
 
             // Delete all payment data only when changing from PAID to READ_ONLY
-            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Team\ServiceUseStatus::PAID &&
-                $serviceUseStatus == Enum\Team\ServiceUseStatus::READ_ONLY) {
+            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Model\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus == Enum\Model\Team\ServiceUseStatus::READ_ONLY) {
                 /** @var PaymentService $PaymentService */
                 $PaymentService = ClassRegistry::init('PaymentService');
                 if (!$PaymentService->deleteTeamsAllPaymentSetting($teamId)) {

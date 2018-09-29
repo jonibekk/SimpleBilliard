@@ -1,7 +1,7 @@
 <?php
 App::uses('TranscodeProgressData', 'Model/Video/Stream');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Handling about notification json from AWS SNS
@@ -87,22 +87,22 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
     /**
      * Return Enum defined transcoding progress state
      *
-     * @return Enum\Video\VideoTranscodeProgress
+     * @return Enum\Model\Video\VideoTranscodeProgress
      */
-    public function getProgressState(): Enum\Video\VideoTranscodeProgress
+    public function getProgressState(): Enum\Model\Video\VideoTranscodeProgress
     {
         if (!isset($this->messageData['state'])) {
             throw new RuntimeException('message data: state is not set.');
         }
         switch ($this->messageData['state']) {
             case 'PROGRESSING':
-                return Enum\Video\VideoTranscodeProgress::PROGRESS();
+                return Enum\Model\Video\VideoTranscodeProgress::PROGRESS();
             case 'COMPLETED':
-                return Enum\Video\VideoTranscodeProgress::COMPLETE();
+                return Enum\Model\Video\VideoTranscodeProgress::COMPLETE();
             case 'ERROR':
-                return Enum\Video\VideoTranscodeProgress::ERROR();
+                return Enum\Model\Video\VideoTranscodeProgress::ERROR();
             case 'WARNING':
-                return Enum\Video\VideoTranscodeProgress::WARNING();
+                return Enum\Model\Video\VideoTranscodeProgress::WARNING();
         }
         throw new RuntimeException('unknown notification state: ' . $this->messageData['state']);
     }
@@ -203,7 +203,7 @@ class TranscodeNotificationAwsSns implements TranscodeProgressData
      */
     public function isError(): bool
     {
-        return $this->getProgressState()->equals(Enum\Video\VideoTranscodeProgress::ERROR());
+        return $this->getProgressState()->equals(Enum\Model\Video\VideoTranscodeProgress::ERROR());
     }
 
     /**

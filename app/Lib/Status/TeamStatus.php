@@ -3,7 +3,7 @@ App::import('Service', 'TeamService');
 App::import('Service', 'CampaignService');
 App::uses('Experiment', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class TeamStatus {
 
@@ -29,7 +29,7 @@ class TeamStatus {
 
     private function __construct()
     {
-        $this->serviceUserStatus = Enum\Team\ServiceUseStatus::FREE_TRIAL();
+        $this->serviceUserStatus = Enum\Model\Team\ServiceUseStatus::FREE_TRIAL();
     }
 
     /**
@@ -92,7 +92,7 @@ class TeamStatus {
         }
 
         if (!is_null($serviceUseStatus)) {
-            $this->setServiceUseStatus(new Enum\Team\ServiceUseStatus($serviceUseStatus));
+            $this->setServiceUseStatus(new Enum\Model\Team\ServiceUseStatus($serviceUseStatus));
         }
 
         // fetch experiment settings of team
@@ -158,9 +158,9 @@ class TeamStatus {
     /**
      * set teams service use status
      *
-     * @param Enum\Team\ServiceUseStatus $serviceUseStatus
+     * @param Enum\Model\Team\ServiceUseStatus $serviceUseStatus
      */
-    public function setServiceUseStatus(Enum\Team\ServiceUseStatus $serviceUseStatus)
+    public function setServiceUseStatus(Enum\Model\Team\ServiceUseStatus $serviceUseStatus)
     {
         $this->serviceUserStatus = $serviceUseStatus;
     }
@@ -192,7 +192,7 @@ class TeamStatus {
      */
     public function isTeamPaid(): bool
     {
-        return $this->getServiceUseStatus()->equals(Enum\Team\ServiceUseStatus::PAID());
+        return $this->getServiceUseStatus()->equals(Enum\Model\Team\ServiceUseStatus::PAID());
     }
 
     /**
@@ -235,9 +235,9 @@ class TeamStatus {
     }
 
     /**
-     * @return Enum\Team\ServiceUseStatus
+     * @return Enum\Model\Team\ServiceUseStatus
      */
-    public function getServiceUseStatus(): Enum\Team\ServiceUseStatus
+    public function getServiceUseStatus(): Enum\Model\Team\ServiceUseStatus
     {
         return $this->serviceUserStatus;
     }
@@ -249,17 +249,17 @@ class TeamStatus {
      */
     public function getTeamPlan(): Enum\TeamPlan
     {
-        if ($this->getServiceUseStatus()->equals(Enum\Team\ServiceUseStatus::PAID())) {
+        if ($this->getServiceUseStatus()->equals(Enum\Model\Team\ServiceUseStatus::PAID())) {
             return Enum\TeamPlan::PAID();
         }
         return Enum\TeamPlan::REGULAR();
     }
 
     /**
-     * @return Enum\Video\TranscodeOutputVersion
+     * @return Enum\Model\Video\TranscodeOutputVersion
      */
-    public function getTranscodeOutputVersion(): Enum\Video\TranscodeOutputVersion
+    public function getTranscodeOutputVersion(): Enum\Model\Video\TranscodeOutputVersion
     {
-        return Enum\Video\TranscodeOutputVersion::V1();
+        return Enum\Model\Video\TranscodeOutputVersion::V1();
     }
 }

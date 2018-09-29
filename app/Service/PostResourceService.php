@@ -3,14 +3,14 @@
 App::import('Service', 'AppService');
 App::uses('PostResource', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class PostResourceService
  */
 class PostResourceService extends AppService
 {
-    public function createPostResource(int $postDraftId, Enum\Post\PostResourceType $postResourceType, int $resourceId)
+    public function createPostResource(int $postDraftId, Enum\Model\Post\PostResourceType $postResourceType, int $resourceId)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init("PostResource");
