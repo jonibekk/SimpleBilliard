@@ -50,7 +50,7 @@ class CirclePostPagingService extends BasePagingService
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
-        $result = $Post->find('all', $options);
+        $result = $Post->useType()->find('all', $options);
 
         //Remove 'Post' from array
         return Hash::extract($result, '{n}.Post');
