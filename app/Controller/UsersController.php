@@ -256,7 +256,16 @@ class UsersController extends AppController
                     }
                     $this->Session->delete('invited_team_id');
 
-                    $this->User->updateAll(['User.default_team_id' => $invitedTeamId], ['User.id' => $this->Auth->user('id')]);
+                    /** @var UserService $UserService */
+                    $UserService = ClassRegistry::init('UserService');
+
+                    $userId = $this->Auth->user('id');
+
+                    if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
+                        $this->Notification->outError(__("Error, failed to invite."));
+                        GoalousLog::error("Failed updating default team ID $teamId of user $userId");
+                        return $this->redirect("/");
+                    }
                 }
 
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
