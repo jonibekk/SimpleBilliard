@@ -266,6 +266,8 @@ class UsersController extends AppController
                         GoalousLog::error("Failed updating default team ID $teamId of user $userId");
                         return $this->redirect("/");
                     }
+
+                    $this->Session->write('current_team_id', $invitedTeamId);
                 }
 
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
