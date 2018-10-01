@@ -243,7 +243,7 @@ class UsersController extends AppController
                         'Team.del_flg' => false
                     ],
                     'fields'     => [
-                        'id'
+                        'Team.id'
                     ]
                 ];
 
@@ -256,7 +256,7 @@ class UsersController extends AppController
                     }
                     $this->Session->delete('invited_team_id');
 
-                    $this->User->updateAll(['default_team_id' => $invitedTeamId], ['id' => $this->Auth->user('id')]);
+                    $this->User->updateAll(['User.default_team_id' => $invitedTeamId], ['User.id' => $this->Auth->user('id')]);
                 }
 
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
