@@ -267,7 +267,8 @@ class UsersController extends AppController
                         return $this->redirect("/");
                     }
                     $user['default_team_id'] = $invitedTeamId;
-                    $this->Session->write('Auth.User', $user);
+                    //Update the user data
+                    $this->Auth->login($user);
                     $this->Session->write('current_team_id', $invitedTeamId);
                     $this->Session->delete('invited_team_id');
                 }
@@ -283,10 +284,7 @@ class UsersController extends AppController
                 $this->_updateSetupStatusIfNotCompleted();
             }
 
-            $user = $this->_refreshAuth();
-            if (!empty($user) && is_array($user)) {
-                GoalousLog::notice("AUTH REFRESH", $user);
-            }
+            $this->_refreshAuth();
             $this->_setAfterLogin($invitedTeamId);
 
             // reset login failed count
