@@ -281,7 +281,10 @@ class UsersController extends AppController
                 $this->_updateSetupStatusIfNotCompleted();
             }
 
-            $this->_refreshAuth();
+            $user = $this->_refreshAuth();
+            if (!empty($user) && is_array($user)) {
+                GoalousLog::notice("AUTH REFRESH", $user);
+            }
             $this->_setAfterLogin($invitedTeamId);
 
             // reset login failed count
