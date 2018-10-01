@@ -80,14 +80,9 @@ class UserService extends AppService
         $User->id = $userId;
         try {
             $this->TransactionManager->begin();
-            $res = $User->updateAll(['User.default_team_id' => $teamId], ['User.id' => $userId]);
-            if ($res) {
-                $this->TransactionManager->commit();
-                GoalousLog::notice("Updated default team ID to $teamId for User $userId");
-                return true;
-            } else {
-                return false;
-            }
+            $User->updateAll(['User.default_team_id' => $teamId], ['User.id' => $userId]);
+            $this->TransactionManager->commit();
+            return true;
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             throw $exception;

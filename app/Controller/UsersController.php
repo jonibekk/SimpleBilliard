@@ -282,7 +282,7 @@ class UsersController extends AppController
             }
 
             $this->_refreshAuth();
-            $this->_setAfterLogin();
+            $this->_setAfterLogin($invitedTeamId);
 
             // reset login failed count
             $ipAddress = $this->request->clientIp();
