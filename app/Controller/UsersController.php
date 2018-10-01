@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Team', 'Model');
 App::uses('Post', 'Model');
 App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
@@ -228,6 +229,36 @@ class UsersController extends AppController
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
             if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
+                //If default_team_id is deleted, replace with new one
+                $teamId = $this->current_team_id;
+                if (empty($teamId)) {
+                    $teamId = $this->Auth->user('default_team_id');
+                }
+                /** @var Team $Team */
+                $Team = ClassRegistry::init('Team');
+
+                $condition = [
+                    'conditions' => [
+                        'Team.id'      => $teamId,
+                        'Team.del_flg' => false
+                    ],
+                    'fields'     => [
+                        'id'
+                    ]
+                ];
+
+                //If default team is deleted
+                if ((int)$Team->find('count', $condition) === 0) {
+                    $invitedTeamId = $this->Session->read('invited_team_id');
+                    if (empty($invitedTeamId)) {
+                        $this->Notification->outError(__("Error, failed to invite."));
+                        return $this->redirect("/");
+                    }
+                    $this->Session->delete('invited_team_id');
+
+                    $this->User->updateAll(['default_team_id' => $invitedTeamId], ['id' => $this->Auth->user('id')]);
+                }
+
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
@@ -748,7 +779,7 @@ class UsersController extends AppController
                         if ($this->request->data['NotifySetting'][$k] !== $v) {
                             $same = false;
                             break;
-                        }                        
+                        }
                     }
                 }
                 if ($same) {
@@ -850,6 +881,9 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
+            //Save invited team ID
+            $this->Session->write('invited_team_id', $invitation['team_id']);
+
             // 登録済みユーザーかつ未ログインの場合はログイン画面へ
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
@@ -891,7 +925,7 @@ class UsersController extends AppController
         $res = ['results' => []];
         if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = boolval($query['with_group'] ?? false);
-            $with_self  = boolval($query['with_self'] ?? false);
+            $with_self = boolval($query['with_self'] ?? false);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
