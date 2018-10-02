@@ -120,7 +120,11 @@ class UploadedFile
         return $this->binaryFile;
     }
 
-    public function getEncodedFile($withBase64Header = false): string
+    /**
+     * @param bool $withBase64Header Always returning result with base64 header
+     * @return string
+     */
+    public function getEncodedFile(bool $withBase64Header = false): string
     {
         $encodedFile = empty($this->encodedFile) ? base64_encode($this->binaryFile) : $this->encodedFile;
         if (!$withBase64Header) {
