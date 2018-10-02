@@ -41,7 +41,7 @@ class BaseController extends Controller
             'csrfExpires' => '+24 hour'
         ],
         'Auth'     => [
-            'flash'        => [
+            'flash' => [
                 'element' => 'alert',
                 'key'     => 'auth',
                 'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']

@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Team', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
@@ -267,6 +268,10 @@ class UsersController extends AppController
                         return $this->redirect("/");
                     }
 
+                    /** @var TeamMember $TeamMember */
+                    $TeamMember = ClassRegistry::init('TeamMember');
+                    $TeamMember->activateMembers($userId, $invitedTeamId);
+
                     $this->Session->write('current_team_id', $invitedTeamId);
                     $redirect_url = '/';
                 }
@@ -284,6 +289,10 @@ class UsersController extends AppController
 
             $this->_refreshAuth();
             $this->_setAfterLogin($invitedTeamId);
+
+            if (!empty($teamId = $this->Session->read('invited_team_id'))) {
+                $this->Session->write('current_team_id', $teamId);
+            }
 
             // reset login failed count
             $ipAddress = $this->request->clientIp();

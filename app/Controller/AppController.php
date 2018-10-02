@@ -11,6 +11,7 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('User', 'Model');
 App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
@@ -1042,6 +1043,18 @@ class AppController extends BaseController
             $team_id = $this->Auth->user('default_team_id');
         }
         $this->_setDefaultTeam($team_id);
+        /** @var User $User */
+        $User = ClassRegistry::init('init');
+
+        $condition = [
+            'conditions' => [
+                'User.id' => $this->User->id
+            ],
+            'fields'     => [
+                'User.id',
+                'User.default_team_id'
+            ]
+        ];
         if ($this->Session->read('current_team_id')) {
             $this->User->TeamMember->updateLastLogin($this->Session->read('current_team_id'), $this->Auth->user('id'));
         }
