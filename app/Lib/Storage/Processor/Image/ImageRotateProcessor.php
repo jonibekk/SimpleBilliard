@@ -96,7 +96,7 @@ class ImageRotateProcessor extends BaseImageProcessor
      */
     private function readExif(UploadedFile $file): array
     {
-        $exif = @exif_read_data("data://" . $file->getMIME() . ";base64," . $file->getEncodedFile());
+        $exif = @exif_read_data($file->getEncodedFile(true));
         return $exif ?: [];
     }
 }
