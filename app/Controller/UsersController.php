@@ -261,7 +261,7 @@ class UsersController extends AppController
                     /** @var array $user */
                     $userId = $this->Auth->user('id');
 
-                    if (!$UserService->updateDefaultTeam($user['id'], $invitedTeamId)) {
+                    if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
                         GoalousLog::error("Failed updating default team ID $teamId of user $userId");
                         return $this->redirect("/");
