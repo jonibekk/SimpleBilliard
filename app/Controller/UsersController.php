@@ -255,11 +255,10 @@ class UsersController extends AppController
                         GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
                         return $this->redirect("/");
                     }
-
-                    /** @var TeamMember $TeamMember */
-                    $TeamMember = ClassRegistry::init('TeamMember');
-                    $TeamMember->activateMembers($userId, $invitedTeamId);
                 }
+                /** @var TeamMember $TeamMember */
+                $TeamMember = ClassRegistry::init('TeamMember');
+                $TeamMember->activateMembers($userId, $invitedTeamId);
 
                 $this->Session->write('current_team_id', $invitedTeamId);
                 $redirect_url = '/';
