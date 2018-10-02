@@ -235,18 +235,18 @@ class UsersController extends AppController
                 if (empty($teamId)) {
                     $teamId = $this->Auth->user('default_team_id');
                 }
+
+                $userId = $this->Auth->user('id');
+
+                $invitedTeamId = $this->Session->read('invited_team_id');
+                if (empty($invitedTeamId)) {
+                    $this->Notification->outError(__("Error, failed to invite."));
+                    GoalousLog::error("Empty invited team ID for user $userId");
+                    return $this->redirect("/");
+                }
+
                 //If default team is deleted
                 if (empty($this->Team->findById($teamId))) {
-
-                    $userId = $this->Auth->user('id');
-
-                    $invitedTeamId = $this->Session->read('invited_team_id');
-                    if (empty($invitedTeamId)) {
-                        $this->Notification->outError(__("Error, failed to invite."));
-                        GoalousLog::error("Empty invited team ID for user $userId");
-                        return $this->redirect("/");
-                    }
-
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
 
@@ -259,10 +259,10 @@ class UsersController extends AppController
                     /** @var TeamMember $TeamMember */
                     $TeamMember = ClassRegistry::init('TeamMember');
                     $TeamMember->activateMembers($userId, $invitedTeamId);
-
-                    $this->Session->write('current_team_id', $invitedTeamId);
-                    $redirect_url = '/';
                 }
+
+                $this->Session->write('current_team_id', $invitedTeamId);
+                $redirect_url = '/';
 
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
