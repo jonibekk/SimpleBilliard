@@ -235,21 +235,8 @@ class UsersController extends AppController
                 if (empty($teamId)) {
                     $teamId = $this->Auth->user('default_team_id');
                 }
-                /** @var Team $Team */
-                $Team = ClassRegistry::init('Team');
-
-                $condition = [
-                    'conditions' => [
-                        'Team.id'      => $teamId,
-                        'Team.del_flg' => false
-                    ],
-                    'fields'     => [
-                        'Team.id'
-                    ]
-                ];
-
                 //If default team is deleted
-                if ((int)$Team->find('count', $condition) === 0) {
+                if (empty($this->Team->findById($teamId))) {
                     $invitedTeamId = $this->Session->read('invited_team_id');
                     if (empty($invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
@@ -259,12 +246,11 @@ class UsersController extends AppController
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
 
-                    /** @var array $user */
                     $userId = $this->Auth->user('id');
 
                     if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
-                        GoalousLog::error("Failed updating default team ID $teamId of user $userId");
+                        GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
                         return $this->redirect("/");
                     }
 
