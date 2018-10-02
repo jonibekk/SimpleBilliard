@@ -288,7 +288,7 @@ class UsersController extends AppController
             }
 
             $this->_refreshAuth();
-            $this->_setAfterLogin($invitedTeamId);
+            $this->_setAfterLogin();
 
             if (!empty($teamId = $this->Session->read('invited_team_id'))) {
                 $this->Session->write('current_team_id', $teamId);
