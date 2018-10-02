@@ -1015,9 +1015,11 @@ class AppController extends BaseController
             return false;
         }
         try {
-            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
+            $skipCheckUserStatus = !empty($this->Session->read('invited_team_id'));
+            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'), $skipCheckUserStatus);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
+            GoalousLog::error("Error on setting user's default team. " . $e->getMessage());
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             $set_team_id = !empty($team_list) ? key($team_list) : null;
             $this->Session->write('current_team_id', $set_team_id);

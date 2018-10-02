@@ -214,13 +214,14 @@ class TeamMember extends AppModel
     /**
      * 通常のアクセス権限チェック（自分が所属しているチームかどうか？）
      *
-     * @param $team_id
-     * @param $uid
+     * @param      $team_id
+     * @param      $uid
+     * @param bool $skipCheckUserStatus
      *
      * @return bool
      * @throws RuntimeException
      */
-    public function permissionCheck($team_id, $uid)
+    public function permissionCheck($team_id, $uid, bool $skipCheckUserStatus = false): bool
     {
         //チームに入っていない場合
         if (!$team_id) {
@@ -232,7 +233,7 @@ class TeamMember extends AppModel
         if (empty($this->myStatusWithTeam['Team'])) {
             throw new RuntimeException(__("There is no team."));
         }
-        if ($this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
+        if (!$skipCheckUserStatus && $this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
             throw new RuntimeException(__("You can't access to this team. Your account has been disabled."));
         }
         return true;
