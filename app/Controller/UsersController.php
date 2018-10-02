@@ -237,16 +237,18 @@ class UsersController extends AppController
                 }
                 //If default team is deleted
                 if (empty($this->Team->findById($teamId))) {
+
+                    $userId = $this->Auth->user('id');
+
                     $invitedTeamId = $this->Session->read('invited_team_id');
                     if (empty($invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
+                        GoalousLog::error("Empty invited team ID for user $userId");
                         return $this->redirect("/");
                     }
 
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
-
-                    $userId = $this->Auth->user('id');
 
                     if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
