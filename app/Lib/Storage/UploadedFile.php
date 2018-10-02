@@ -120,12 +120,14 @@ class UploadedFile
         return $this->binaryFile;
     }
 
-    public function getEncodedFile(): string
+    public function getEncodedFile($withBase64Header = false): string
     {
-        if (empty($this->encodedFile)) {
-            return base64_encode($this->binaryFile);
+        $encodedFile = empty($this->encodedFile) ? base64_encode($this->binaryFile) : $this->encodedFile;
+        if (!$withBase64Header) {
+            return $encodedFile;
         }
-        return $this->encodedFile;
+        $hasBase64Header = (0 === strpos($this->encodedFile, 'data:'));
+        return $hasBase64Header ? $encodedFile : sprintf('data://%s;base64,%s', $this->getMIME(), $encodedFile);
     }
 
     public function isEmpty(): bool
