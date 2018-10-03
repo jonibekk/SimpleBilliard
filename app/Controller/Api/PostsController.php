@@ -25,6 +25,10 @@ use Goalous\Exception as GlException;
 
 class PostsController extends BasePagingController
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+    ];
 
     /**
      * Endpoint for saving both circle posts and action posts
