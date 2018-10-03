@@ -25,6 +25,11 @@ use Goalous\Enum as Enum;
 
 abstract class BaseApiController extends Controller
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+    ];
+
     /** @var string */
     private $_jwtToken;
 
