@@ -76,7 +76,7 @@ class PostsController extends BasePagingController
         $notifyType = NotifySetting::TYPE_FEED_POST;
 
         /** @var NotifyBizComponent $NotifyBiz */
-        $this->NotifyBiz->execSendNotify($notifyType, $postedPostId);
+        $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
 
         // TODO: Realtime notification with WebSocket.
         // But to implement, we have to decide how realize WebSocket at first
