@@ -189,7 +189,7 @@ class BaseController extends Controller
             if (empty($this->User->find('first', $condition))) {
                 $this->User->deleteCache($this->my_uid);
                 GoalousLog::notice("User $this->my_uid is deleted. Redirecting");
-                $this->Notification->outNotice(__("This user does not exist."));
+                $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($this->Auth->logout());
             }
 
