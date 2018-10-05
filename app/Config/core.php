@@ -153,6 +153,17 @@ Configure::write('App.encoding', 'UTF-8');
 //Configure::write('Cache.viewPrefix', 'prefix');
 
 /**
+ * Function decide session name at current environment.
+ * @return string
+ */
+function getSid(): string {
+    $base = 'GLS_SID';
+    if ('isao' === ENV_NAME) {
+        return $base;
+    }
+    return sprintf('GLS_SID_%s', strtoupper(ENV_NAME));
+}
+/**
  * Session configuration.
  * Contains an array of settings to use for session configuration. The defaults key is
  * used to define a default preset to use for sessions, any settings declared here will override
@@ -185,7 +196,7 @@ if (REDIS_SESSION_HOST) {
     $session_config = [
         'checkAgent'     => false,
         'userAgent'      => false,
-        'cookie'         => 'GLS_SID',
+        'cookie'         => getSid(),
         'timeout'        => null,
         'autoRegenerate' => false,
         'handler'        => [
@@ -211,7 +222,7 @@ if (REDIS_SESSION_HOST) {
 } else {
     Configure::write('Session', array(
         'defaults' => 'database',
-        'cookie'   => 'GLS_SID',
+        'cookie'   => getSid(),
         'timeout'  => 60 * 24 * 7 * 2, //60min * 24h * 7day * 2 = 2week
     ));
 }
