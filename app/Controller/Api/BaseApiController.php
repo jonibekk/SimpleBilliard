@@ -25,6 +25,7 @@ use Goalous\Enum as Enum;
 
 abstract class BaseApiController extends Controller
 {
+
     /** @var string */
     private $_jwtToken;
 

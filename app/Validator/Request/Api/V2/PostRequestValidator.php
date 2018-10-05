@@ -15,7 +15,7 @@ class PostRequestValidator extends BaseValidator
     public function getDefaultValidationRule(): array
     {
         $rules = [
-            "body"     => [validator::notEmpty()::length(1, 10000)],
+            "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
             "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
             "file_ids" => [
                 validator::arrayType()::length(null, 10),

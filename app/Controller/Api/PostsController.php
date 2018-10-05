@@ -25,6 +25,10 @@ use Goalous\Exception as GlException;
 
 class PostsController extends BasePagingController
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+    ];
 
     /**
      * Endpoint for saving both circle posts and action posts
@@ -50,6 +54,7 @@ class PostsController extends BasePagingController
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            $this->_notifyNewPost($res);
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
@@ -59,6 +64,25 @@ class PostsController extends BasePagingController
 
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
+
+    /**
+     * Notify new post to other members
+     * @param array $newPost
+     */
+    private function _notifyNewPost(PostEntity $newPost)
+    {
+        // Notify to other members
+        $postedPostId = $newPost['id'];
+        $notifyType = NotifySetting::TYPE_FEED_POST;
+
+        /** @var NotifyBizComponent $NotifyBiz */
+        $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
+
+        // TODO: Realtime notification with WebSocket.
+        // But to implement, we have to decide how realize WebSocket at first
+        // e.g. use Pusher like old Goalous, or scratch implementing, etc
+    }
+
 
     public function get_comments(int $postId)
     {
