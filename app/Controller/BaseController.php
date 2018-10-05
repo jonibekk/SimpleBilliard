@@ -188,7 +188,9 @@ class BaseController extends Controller
             //If user is deleted, delete session & user cache, and redirect to login page
             if (empty($this->User->find('first', $condition))) {
                 $this->User->deleteCache($this->my_uid);
-                GoalousLog::notice("User $this->my_uid is deleted. Redirecting");
+                GoalousLog::notice("User is deleted. Redirecting", [
+                    "user.id" => $this->my_uid,
+                ]);
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($this->Auth->logout());
             }
