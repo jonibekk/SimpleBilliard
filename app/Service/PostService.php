@@ -126,14 +126,25 @@ class PostService extends AppService
             );
             $this->TransactionManager->commit();
             return $post;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
-                'message'  => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
+
+            // Logging for https://jira.goalous.com/browse/GL-7496
+            if (false !== strpos($e->getMessage(), 'Lock wait timeout exceeded')) {
+                GoalousLog::emergency('Got a DB lock when adding post', [
+                    'message'  => $e->getMessage(),
+                    'users.id' => $userId,
+                    'teams.id' => $teamId,
+                ]);
+                GoalousLog::emergency($e->getTraceAsString());
+            } else {
+                GoalousLog::error('failed adding post data', [
+                    'message'  => $e->getMessage(),
+                    'users.id' => $userId,
+                    'teams.id' => $teamId,
+                ]);
+                GoalousLog::error($e->getTraceAsString());
+            }
         }
         return false;
     }
