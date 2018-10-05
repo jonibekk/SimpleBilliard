@@ -1871,4 +1871,17 @@ class User extends AppModel
     {
         return !empty($userId) && AppUtil::isInt($userId) && $userId != 0;
     }
+
+    /**
+     * Delete an user data from cache
+     *
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function deleteCache(int $userId): bool
+    {
+        $res = Cache::delete($this->getCacheKey(CACHE_KEY_MY_PROFILE, true, $userId, false), 'user_data');
+        return $res;
+    }
 }
