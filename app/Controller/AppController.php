@@ -34,7 +34,6 @@ use Goalous\Model\Enum as Enum;
  * @property LangComponent         $Lang
  * @property CookieComponent       $Cookie
  * @property CsvComponent          $Csv
- * @property NotificationComponent $Notification
  * @property MixpanelComponent     $Mixpanel
  * @property OgpComponent          $Ogp
  * @property BenchmarkComponent    $Benchmark
@@ -54,7 +53,6 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Notification',
         'Ogp',
         'Csv',
         'Flash',

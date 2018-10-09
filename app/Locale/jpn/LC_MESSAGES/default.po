@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-21 17:39+0900\n"
+"PO-Revision-Date: 2018-10-05 16:45+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -910,6 +910,9 @@ msgstr "フォロー中ではありません。"
 
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
+
+msgid "This user does not exist."
+msgstr "このユーザーは存在しません。"
 
 msgid "Error, failed to invite"
 msgstr "問題があるため、招待に失敗しました。"
