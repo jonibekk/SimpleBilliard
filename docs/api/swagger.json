@@ -2531,8 +2531,8 @@
     "/api/comments/reads" : {
       "post" : {
         "tags" : [ "Comments" ],
-        "summary" : "Add read to comment",
-        "description" : "Add a read to a comment",
+        "summary" : "Post comments read",
+        "description" : "List of comments that user reads",
         "operationId" : "/api/comments/reads",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
