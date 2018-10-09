@@ -1,7 +1,9 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'CircleMemberEntity');
 App::uses('NotifyBiz', 'Controller/Component');
 
@@ -152,4 +154,75 @@ class CircleMemberService extends AppService
         $notifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
     }
 
+    /**
+     * Remove a member from a circle
+     *
+     * @param int $userId
+     * @param int $teamId
+     * @param int $circleId
+     *
+     * @return bool TRUE on successful delete
+     * @throws Exception
+     */
+    public function delete(int $userId, int $teamId, int $circleId): bool
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $circleCondition = [
+            'conditions' => [
+                'id'      => $circleId,
+                'del_flg' => false
+            ]
+        ];
+
+        $circle = $Circle->useType()->useEntity()->find('first', $circleCondition);
+
+        if (empty($circle)) {
+            throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
+        }
+
+        $condition = [
+            'CircleMember.user_id'   => $userId,
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.del_flg'   => false
+        ];
+
+        $circleMember = $CircleMember->find('first', ['conditions' => $condition]);
+
+        if (empty($circleMember)) {
+            throw new GlException\GoalousNotFoundException(__("Not exist"));
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $res = $CircleMember->deleteAll($condition);
+            if (!$res) {
+                throw new RuntimeException("Failed to unjoin user $userId from circle $circleId");
+            }
+
+            /** @var CirclePinService $CirclePinService */
+            $CirclePinService = ClassRegistry::init('CirclePinService');
+
+            $CirclePinService->deleteCircleId($userId, $teamId, $circleId);
+
+            //If circle is secret, perform additional deletion
+            if (!$circle['public_flg']) {
+                /** @var SavedPostService $SavedPostService */
+                $SavedPostService = ClassRegistry::init('SavedPostService');
+                $SavedPostService->deleteAllInCircle($userId, $teamId, $circleId);
+            }
+            $Circle->updateMemberCount($circleId);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error($exception->getMessage(), $exception->getTrace());
+            throw $exception;
+        }
+
+        return $res;
+    }
 }

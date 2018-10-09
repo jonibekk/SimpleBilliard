@@ -82,7 +82,7 @@ class CirclesController extends BasePagingController
 
     public function post_joins(int $circleId)
     {
-        $error = $this->validatePostJoin($circleId);
+        $error = $this->validatePostJoins($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -104,6 +104,28 @@ class CirclesController extends BasePagingController
         }
 
         return ApiResponse::ok()->withData($return->toArray())->getResponse();
+    }
+
+    public function post_leaves(int $circleId)
+    {
+        $error = $this->validatePostLeaves($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        try {
+            /** @var CircleMemberService $CircleMemberService */
+            $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+            $CircleMemberService->delete($this->getUserId(), $this->getTeamId(), $circleId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(['circle_id' => $circleId, 'user_id' => $this->getUserId()])->getResponse();
     }
 
     /**
@@ -173,6 +195,25 @@ class CirclesController extends BasePagingController
     }
 
     /**
+     * Validate delete member endpoint
+     *
+     * @param int $circleId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validatePostLeaves(int $circleId)
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        if (!$Circle->exists($circleId)) {
+            return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
      * Validate post_joins endpoint
      *
      * @param int $circleId
@@ -193,7 +234,8 @@ class CirclesController extends BasePagingController
         ];
         $circle = $Circle->find('first', $condition);
 
-        if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) || empty($circle)) {
+        if (!$Circle->isBelongCurrentTeam($circleId,
+                $this->getTeamId()) || empty($circle) || $Circle->isSecret($circleId)) {
             return ErrorResponse::notFound()->withMessage(__("This circle does not exist."))->getResponse();
         }
 
