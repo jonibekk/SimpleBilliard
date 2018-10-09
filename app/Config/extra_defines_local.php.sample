@@ -1,0 +1,12 @@
+<?php
+/**
+ * This file is defines for local.
+ * If you want to enable this file,
+ * 1. Rename this file `extra_defines_local.php.sample` to `extra_defines_local.php`
+ * 2. Fix define value follow your local setting
+ */
+$definesForLocal = [
+    //For local S3 user name
+    //https://confluence.goalous.com/x/agMQAQ
+    'AWS_S3_BUCKET_USERNAME'                        => 'damasa',
+];
