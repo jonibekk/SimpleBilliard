@@ -7408,6 +7408,28 @@
             "message" : "Key body must be present"
           } ]
         }
+      },
+      "Response.ReadCount" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "comment_ids" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "integer",
+                  "format" : "int32"
+                }
+              }
+            }
+          }
+        },
+        "example" : {
+          "data" : {
+            "comment_ids" : [ 1, 2, 3 ]
+          }
+        }
       }
     },
     "securitySchemes" : {
