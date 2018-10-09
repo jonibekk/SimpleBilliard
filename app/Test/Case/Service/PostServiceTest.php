@@ -133,8 +133,8 @@ class PostServiceTest extends GoalousTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(true));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(true));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -159,8 +159,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -191,8 +191,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post'    => [
@@ -411,8 +411,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(true));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(true));
 
         $userId = 1;
         $teamId = 1;
@@ -447,8 +447,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -473,8 +473,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostShareUser', array('add'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('add')
-             ->will($this->returnValue(false));
+            ->method('add')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -494,8 +494,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostShareCircle', array('add'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('add')
-             ->will($this->returnValue(false));
+            ->method('add')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -515,8 +515,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('CircleMember', array('incrementUnreadCount'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('incrementUnreadCount')
-             ->will($this->returnValue(false));
+            ->method('incrementUnreadCount')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -536,8 +536,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('CircleMember', array('updateModified'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -557,8 +557,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('Circle', array('updateModified'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -574,8 +574,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('Circle', array('updateModified'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -634,8 +634,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostDraft', array('save'));
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('save')
-             ->will($this->returnValue(false));
+            ->method('save')
+            ->will($this->returnValue(false));
 
         $bodyText = sprintf('body text: %s', time());
         $videoStreamId = 11;
@@ -790,16 +790,16 @@ class PostServiceTest extends GoalousTestCase
         //Mock storage clients
         $bufferClient = mock::mock('BufferStorageClient');
         $bufferClient->shouldReceive('get')->withAnyArgs()
-                     ->atLeast()->once()
-                     ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
+            ->atLeast()->once()
+            ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
         $bufferClient->shouldReceive('save')->withAnyArgs()
-                     ->atLeast()->once()
-                     ->andReturn("1234567890abcd.12345678");
+            ->atLeast()->once()
+            ->andReturn("1234567890abcd.12345678");
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
         $assetsClient->shouldReceive('save')->withAnyArgs()
-                     ->atLeast()->once()->andReturn(true);
+            ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
         /** @var PostService $PostService */
@@ -852,12 +852,12 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $postsIds = [1,3];
+        $postsIds = [1, 3];
         $userId = 1;
 
-        try{
+        try {
             $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
-        } catch (GlException\GoalousConflictException $e){
+        } catch (GlException\GoalousConflictException $e) {
             $this->assertEqual("The circle doesn't exist or you don't have permission.", $e->getMessage());
         }
 
@@ -868,9 +868,43 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $postsIds = [1,101];
+        $postsIds = [1, 101];
         $userId = 1;
 
         $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
+    }
+
+    public function test_addCirclePost_success()
+    {
+        $userId = 1;
+        $teamId = 1;
+        $circleId = 1;
+        $body = "A new post";
+        $type = 1;
+
+        $newData['body'] = $body;
+        $newData['type'] = $type;
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        $initialCircle = $Circle->getById($circleId);
+
+        $newPost = $PostService->addCirclePost($newData, $circleId, $userId, $teamId);
+
+        $this->assertEquals($body, $newPost['body']);
+        $this->assertEquals($userId, $newPost['user_id']);
+        $this->assertEquals($teamId, $newPost['post_id']);
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        $PostShareCircle->current_team_id = $teamId;
+
+        $this->assertCount(1, $PostShareCircle->getShareCircleList($newPost['id']));
+
+        $updatedCircle = $Circle->getById($circleId);
+        $this->assertLessThan($updatedCircle['Circle']['latest_post_created'], $initialCircle['Circle']['latest_post_created']);
+        $this->assertLessThan($updatedCircle['Circle']['modified'], $initialCircle['Circle']['modified']);
     }
 }

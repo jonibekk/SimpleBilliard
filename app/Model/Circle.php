@@ -623,4 +623,40 @@ class Circle extends AppModel
 
         return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
     }
+
+    /**
+     * Update the latest_post_created
+     *
+     * @param int $circleId
+     * @param int $time
+     *
+     * @return bool
+     */
+    public function updateLatestPosted(int $circleId, int $time = 0)
+    {
+        return $this->updateLatestPostedInCircles([$circleId], $time);
+    }
+
+    /**
+     * Update the latest_post_created column of circles
+     *
+     * @param array $circleId
+     * @param int   $time
+     *
+     * @return bool
+     */
+    public function updateLatestPostedInCircles(array $circleId, int $time = 0): bool
+    {
+        if (empty ($time)) {
+            $time = GoalousDateTime::now();
+        }
+
+        $newData = [
+            'last_post_created' => $time,
+            'modified'          => $time
+        ];
+
+        return $this->updateAll($newData, ['id' => $circleId]);
+
+    }
 }
