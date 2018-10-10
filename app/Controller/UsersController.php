@@ -249,20 +249,13 @@ class UsersController extends AppController
                 if (empty($this->Team->findById($teamId))) {
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
-
                     if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
                         $this->Notification->outError(__("Error, failed to invite."));
                         GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
                         return $this->redirect("/");
                     }
                 }
-                /** @var TeamMember $TeamMember */
-                $TeamMember = ClassRegistry::init('TeamMember');
-                $TeamMember->activateMembers($userId, $invitedTeamId);
-
                 $this->Session->write('current_team_id', $invitedTeamId);
-                $redirect_url = '/';
-
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);

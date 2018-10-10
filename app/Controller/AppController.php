@@ -184,6 +184,10 @@ class AppController extends BaseController
             // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
+                    $currentTeam = $this->Team->getById($this->current_team_id);
+                    if (empty($currentTeam) && $this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST) {
+                        return $this->Auth->logout();
+                    }
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
@@ -207,15 +211,17 @@ class AppController extends BaseController
 
                 // アクティブチームリストに current_team_id が入っていない場合はログアウト
                 // （チームが削除された場合）
-                if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
-                    $this->Session->write('current_team_id', null);
-                    //もしdefault_teamがそのチームだった場合はdefault_teamにnullをセット
-                    if ($this->Auth->user('default_team_id') == $this->current_team_id) {
-                        $this->User->updateDefaultTeam(null, true, $login_uid);
+                if ($this->current_team_id) {
+                    if (!isset($active_team_list[$this->current_team_id]) && $this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST) {
+                        $this->Session->write('current_team_id', null);
+                        //もしdefault_teamがそのチームだった場合はdefault_teamにnullをセット
+                        if ($this->Auth->user('default_team_id') == $this->current_team_id) {
+                            $this->User->updateDefaultTeam(null, true, $login_uid);
+                        }
+                        $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
+                        $this->Auth->logout();
+                        return;
                     }
-                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
-                    $this->Auth->logout();
-                    return;
                 }
 
                 //リクエストがログイン中のチーム以外なら切り替える
