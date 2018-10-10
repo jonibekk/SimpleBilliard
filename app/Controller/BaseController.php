@@ -173,11 +173,14 @@ class BaseController extends Controller
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
-            $sesId = $this->Session->id();
-            // GL-7364：Enable to keep login status between old Goalous and new Goalous
-            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
-            if (empty($mapSesAndJwt)) {
-                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
+            if (!empty($this->current_team_id)) {
+                $sesId = $this->Session->id();
+                // GL-7364：Enable to keep login status between old Goalous and new Goalous
+                $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                if (empty($mapSesAndJwt)) {
+                    $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                }
             }
 
             // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
@@ -352,7 +355,7 @@ class BaseController extends Controller
     }
 
     /**
-     * @param string $class  __CLASS__
+     * @param string $class __CLASS__
      * @param string $method __METHOD__
      */
     function _logOldRequest(string $class, string $method)
