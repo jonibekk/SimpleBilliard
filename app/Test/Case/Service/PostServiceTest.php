@@ -317,6 +317,13 @@ class PostServiceTest extends GoalousTestCase
         ]);
         $this->assertCount(1, $sharedUserAll);
         $this->assertEquals(2, $sharedUserAll[0]['PostShareUser']['user_id']);
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $updatedCircle = $Circle->getById(1);
+
+        $this->assertTrue($updatedCircle['latest_post_created'] > 100);
     }
 
     function test_addNormal_withSharing_secret_circle()
@@ -904,7 +911,7 @@ class PostServiceTest extends GoalousTestCase
         $this->assertCount(1, $PostShareCircle->getShareCircleList($newPost['id']));
 
         $updatedCircle = $Circle->getById($circleId);
-        var_dump($updatedCircle);
+
         $this->assertLessThan($updatedCircle['latest_post_created'], $initialCircle['latest_post_created']);
         $this->assertLessThan($updatedCircle['modified'], $initialCircle['modified']);
     }
