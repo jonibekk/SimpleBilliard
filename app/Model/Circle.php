@@ -632,7 +632,7 @@ class Circle extends AppModel
      *
      * @return bool
      */
-    public function updateLatestPosted(int $circleId, int $time = 0)
+    public function updateLatestPosted(int $circleId, int $time = null)
     {
         return $this->updateLatestPostedInCircles([$circleId], $time);
     }
@@ -645,10 +645,10 @@ class Circle extends AppModel
      *
      * @return bool
      */
-    public function updateLatestPostedInCircles(array $circleIds, int $time = 0): bool
+    public function updateLatestPostedInCircles(array $circleIds, int $time = null): bool
     {
         if (empty($time)) {
-            $time = GoalousDateTime::now();
+            $time = GoalousDateTime::now()->getTimestamp();
         }
 
         $newData = [
@@ -656,11 +656,10 @@ class Circle extends AppModel
             'Circle.modified'            => $time
         ];
 
-        // Cast types to integer
-        $castedCircleIds = array_map(function ($value) {
-            return (int)$value;
-        }, $circleIds);
+        $condition = [
+            'Circle.id' => $circleIds
+        ];
 
-        return $this->updateAll($newData, ['Circle.id' => $castedCircleIds]);
+        return $this->updateAll($newData, $condition);
     }
 }
