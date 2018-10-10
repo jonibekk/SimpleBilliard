@@ -153,15 +153,19 @@ Configure::write('App.encoding', 'UTF-8');
 //Configure::write('Cache.viewPrefix', 'prefix');
 
 /**
- * Function decide session name at current environment.
+ * Decide session name on working environment.
  * @return string
  */
 function getSid(): string {
     $base = 'GLS_SID';
-    if ('isao' === ENV_NAME) {
-        return $base;
+    switch (ENV_NAME) {
+        case 'prod':
+            return '_' . $base;
+        case 'isao':
+            return $base;
+        default:
+            return sprintf('%s_%s', $base, strtoupper(ENV_NAME));
     }
-    return sprintf('GLS_SID_%s', strtoupper(ENV_NAME));
 }
 /**
  * Session configuration.
