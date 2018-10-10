@@ -19,18 +19,19 @@ use Goalous\Enum as Enum;
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.Controller
  * @since         CakePHP(tm) v 0.2.9
- * @property SessionComponent   $Session
- * @property SecurityComponent  $Security
- * @property AuthComponent      $Auth
- * @property NotifyBizComponent $NotifyBiz
- * @property GlEmailComponent   $GlEmail
- * @property MixpanelComponent  $Mixpanel
- * @property LangComponent      $Lang
- * @property User               $User
- * @property Post               $Post
- * @property Goal               $Goal
- * @property Team               $Team
- * @property GlRedis            $GlRedis
+ * @property SessionComponent      $Session
+ * @property SecurityComponent     $Security
+ * @property AuthComponent         $Auth
+ * @property NotifyBizComponent    $NotifyBiz
+ * @property NotificationComponent $Notification
+ * @property GlEmailComponent      $GlEmail
+ * @property MixpanelComponent     $Mixpanel
+ * @property LangComponent         $Lang
+ * @property User                  $User
+ * @property Post                  $Post
+ * @property Goal                  $Goal
+ * @property Team                  $Team
+ * @property GlRedis               $GlRedis
  */
 class BaseController extends Controller
 {
@@ -181,6 +182,24 @@ class BaseController extends Controller
                 if (empty($mapSesAndJwt)) {
                     $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
                 }
+            }
+            //Check from DB whether user is deleted
+            $condition = [
+                'conditions' => [
+                    'User.id'      => $this->my_uid,
+                    'User.del_flg' => false
+                ],
+                'fields'     => [
+                    'User.id'
+                ]
+            ];
+            //If user is deleted, delete session & user cache, and redirect to login page
+            if (empty($this->User->find('first', $condition))) {
+                GoalousLog::notice("User is deleted. Redirecting", [
+                    "user.id" => $this->my_uid,
+                ]);
+                $this->Notification->outError(__("This user does not exist."));
+                $this->redirect($this->Auth->logout());
             }
 
             // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
