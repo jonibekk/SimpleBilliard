@@ -519,7 +519,7 @@ class CircleTest extends GoalousTestCase
         $circle = $Circle->getEntity(2);
         $this->assertEquals($newTime, $circle['latest_post_created']);
 
-        $Circle->updateLatestPosted([1, 2]);
+        $Circle->updateLatestPostedInCircles([1, 2]);
 
         $circle = $Circle->getEntity(1);
         $this->assertTrue($newTime < $circle['latest_post_created']);
