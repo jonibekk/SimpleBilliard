@@ -458,7 +458,8 @@ class CircleTest extends GoalousTestCase
         $this->assertInternalType('int', $result['team_id']);
     }
 
-    public function test_updateMemberCount_success(){
+    public function test_updateMemberCount_success()
+    {
 
         $circleId = 1;
 
@@ -481,5 +482,49 @@ class CircleTest extends GoalousTestCase
 
         $this->assertNotEqual($startingCircle['modified'], $updatedCircle['modified']);
         $this->assertNotEqual($startingCircle['circle_member_count'], $updatedCircle['circle_member_count']);
+    }
+
+    public function test_updateLatestPosted_success()
+    {
+
+        $circleId = 1;
+        $newTime = 1000000;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $Circle->updateLatestPosted($circleId, $newTime);
+
+        $circle = $Circle->getEntity($circleId);
+        $this->assertEquals($newTime, $circle['latest_post_created']);
+
+        $Circle->updateLatestPosted($circleId);
+
+        $circle = $Circle->getEntity($circleId);
+        $this->assertTrue($newTime < $circle['latest_post_created']);
+    }
+
+    public function test_updateLatestPostedInCircles_success()
+    {
+        $newTime = 1000000;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $Circle->updateLatestPostedInCircles([1, 2], $newTime);
+
+        $circle = $Circle->getEntity(1);
+        $this->assertEquals($newTime, $circle['latest_post_created']);
+
+        $circle = $Circle->getEntity(2);
+        $this->assertEquals($newTime, $circle['latest_post_created']);
+
+        $Circle->updateLatestPosted([1, 2]);
+
+        $circle = $Circle->getEntity(1);
+        $this->assertTrue($newTime < $circle['latest_post_created']);
+
+        $circle = $Circle->getEntity(2);
+        $this->assertTrue($newTime < $circle['latest_post_created']);
     }
 }
