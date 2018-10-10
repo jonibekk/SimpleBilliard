@@ -6320,6 +6320,9 @@ msgstr "このアイテムはすでに保存されています"
 msgid "This item doesn't exist."
 msgstr "このアイテムは保存されていません"
 
+msgid "You already read this comment."
+msgstr "あなたはすでにこのコメントを読みました。"
+
 #, fuzzy
 #~| msgid "You don't have access right to this page."
 #~ msgid "You don't have access to this post"

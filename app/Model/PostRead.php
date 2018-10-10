@@ -245,13 +245,17 @@ class PostRead extends AppModel
                 'post_id' => $postsIds
             ],
             'fields'     => [
+                'post_id',
+                'COUNT(post_id) AS sum'
+            ],
+            'group'     => [
                 'post_id'
             ]
         ];
 
-        $array = $this->useType()->find('all', $condition);
+        $array = $this->find('all', $condition);
 
-        return array_count_values(Hash::extract($array, "{n}.PostRead.post_id"));
+        return Hash::combine($array, '{n}.PostRead.post_id', '{n}.0.sum');;
     }
 
 }
