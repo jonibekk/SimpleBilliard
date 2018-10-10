@@ -895,7 +895,7 @@ class PostServiceTest extends GoalousTestCase
 
         $this->assertEquals($body, $newPost['body']);
         $this->assertEquals($userId, $newPost['user_id']);
-        $this->assertEquals($teamId, $newPost['post_id']);
+        $this->assertEquals($teamId, $newPost['team_id']);
 
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
@@ -904,7 +904,8 @@ class PostServiceTest extends GoalousTestCase
         $this->assertCount(1, $PostShareCircle->getShareCircleList($newPost['id']));
 
         $updatedCircle = $Circle->getById($circleId);
-        $this->assertLessThan($updatedCircle['Circle']['latest_post_created'], $initialCircle['Circle']['latest_post_created']);
-        $this->assertLessThan($updatedCircle['Circle']['modified'], $initialCircle['Circle']['modified']);
+        var_dump($updatedCircle);
+        $this->assertLessThan($updatedCircle['latest_post_created'], $initialCircle['latest_post_created']);
+        $this->assertLessThan($updatedCircle['modified'], $initialCircle['modified']);
     }
 }
