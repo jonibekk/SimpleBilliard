@@ -1,5 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Team', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
@@ -228,6 +230,32 @@ class UsersController extends AppController
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
             if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
+                //If default_team_id is deleted, replace with new one
+                $teamId = $this->current_team_id;
+                if (empty($teamId)) {
+                    $teamId = $this->Auth->user('default_team_id');
+                }
+
+                $userId = $this->Auth->user('id');
+
+                $invitedTeamId = $this->Session->read('invited_team_id');
+                if (empty($invitedTeamId)) {
+                    $this->Notification->outError(__("Error, failed to invite."));
+                    GoalousLog::error("Empty invited team ID for user $userId");
+                    return $this->redirect("/");
+                }
+
+                //If default team is deleted
+                if (empty($this->Team->findById($teamId))) {
+                    /** @var UserService $UserService */
+                    $UserService = ClassRegistry::init('UserService');
+                    if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
+                        $this->Notification->outError(__("Error, failed to invite."));
+                        GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
+                        return $this->redirect("/");
+                    }
+                }
+                $this->Session->write('current_team_id', $invitedTeamId);
                 $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
@@ -242,12 +270,17 @@ class UsersController extends AppController
             $this->_refreshAuth();
             $this->_setAfterLogin();
 
+            if (!empty($teamId = $this->Session->read('invited_team_id'))) {
+                $this->Session->write('current_team_id', $teamId);
+            }
+
             // reset login failed count
             $ipAddress = $this->request->clientIp();
             $this->GlRedis->resetLoginFailedCount($this->request->data['User']['email'], $ipAddress);
 
             $this->Notification->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
                 ['title' => __("Succeeded to login")]);
+            $this->Session->delete('invited_team_id');
             return $this->redirect($redirect_url);
         } else {
             $this->Notification->outError(__("Error. Try to login again."));
@@ -748,7 +781,7 @@ class UsersController extends AppController
                         if ($this->request->data['NotifySetting'][$k] !== $v) {
                             $same = false;
                             break;
-                        }                        
+                        }
                     }
                 }
                 if ($same) {
@@ -850,6 +883,9 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
+            //Save invited team ID
+            $this->Session->write('invited_team_id', $invitation['team_id']);
+
             // 登録済みユーザーかつ未ログインの場合はログイン画面へ
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
@@ -891,7 +927,7 @@ class UsersController extends AppController
         $res = ['results' => []];
         if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = boolval($query['with_group'] ?? false);
-            $with_self  = boolval($query['with_self'] ?? false);
+            $with_self = boolval($query['with_self'] ?? false);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
