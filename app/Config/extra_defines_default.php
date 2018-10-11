@@ -107,6 +107,11 @@ $defines = [
     //For temporary files, such as upload buffering
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp'
 ];
+// for local
+if (file_exists(APP . 'Config/extra_defines_local.php')) {
+    require_once(APP . 'Config/extra_defines_local.php');
+    $defines = array_merge($defines, $definesForLocal);
+}
 
 //If on docker, use redis container
 if (!empty(getenv('DOCKER_ENV'))) {
