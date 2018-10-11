@@ -11,8 +11,6 @@ class RespectTranslationTest extends GoalousTestCase
     /**
      * Test for validation translate message
      *
-     * TODO: need to fix when translation has decided
-     *
      * @throws Exception
      */
     public function test_validatePost_success_en()
@@ -22,7 +20,7 @@ class RespectTranslationTest extends GoalousTestCase
 
         try {
             $this->assertTrue($authRequestValidator->validate([
-                'email' => "not email format",
+                'email'    => "not email format",
                 'password' => ""
             ]));
             // Expect to throw error
@@ -32,10 +30,10 @@ class RespectTranslationTest extends GoalousTestCase
                 /** @var \Respect\Validation\Exceptions\ValidationException $exception */
                 switch ($exception->getName()) {
                     case 'email':
-                        $this->assertSame($exception->getMessage(), 'validation.error.email_format');
+                        $this->assertSame($exception->getMessage(), 'Email address is incorrect.');
                         break;
                     case 'password':
-                        $this->assertSame($exception->getMessage(), 'validation.error.required');
+                        $this->assertSame($exception->getMessage(), 'Please enter some text.');
                         break;
                 }
             }
@@ -44,8 +42,6 @@ class RespectTranslationTest extends GoalousTestCase
 
     /**
      * Test for validation translate message
-     *
-     * TODO: need to fix when translation has decided
      *
      * @throws Exception
      */
@@ -56,7 +52,7 @@ class RespectTranslationTest extends GoalousTestCase
 
         try {
             $this->assertTrue($authRequestValidator->validate([
-                'email' => "not email format",
+                'email'    => "not email format",
                 'password' => ""
             ]));
             // Expect to throw error
@@ -66,10 +62,10 @@ class RespectTranslationTest extends GoalousTestCase
                 /** @var \Respect\Validation\Exceptions\ValidationException $exception */
                 switch ($exception->getName()) {
                     case 'email':
-                        $this->assertSame($exception->getMessage(), 'validation.error.email_format');
+                        $this->assertSame($exception->getMessage(), __('Email address is incorrect.'));
                         break;
                     case 'password':
-                        $this->assertSame($exception->getMessage(), 'validation.error.required');
+                        $this->assertSame($exception->getMessage(), __('Please enter some text.'));
                         break;
                 }
             }

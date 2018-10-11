@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-10-05 16:45+0900\n"
+"PO-Revision-Date: 2018-10-11 15:37+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 
 msgid "Percentage"
 msgstr "パーセント"
@@ -44,6 +44,12 @@ msgstr ""
 
 msgid "5 (Very high)"
 msgstr "5 (とても高い)"
+
+msgid "Please enter some text."
+msgstr "なにかテキストを入力してください。"
+
+msgid "Email address is incorrect."
+msgstr "メールアドレスが正しくありません。"
 
 msgid "All Team"
 msgstr "チーム全体"
@@ -614,9 +620,6 @@ msgstr "評価を開始できませんでした。"
 msgid "Evaluation started."
 msgstr "評価を開始しました。"
 
-msgid "Email address is incorrect."
-msgstr "メールアドレスが正しくありません。"
-
 msgid "%s invitations are the limits in one time."
 msgstr "一度に送信できる招待は%s件までです。"
 
@@ -856,6 +859,44 @@ msgstr ""
 
 msgid "Validation failed."
 msgstr "データの検証に失敗しました。"
+
+msgid "password and email did not match"
+msgstr ""
+
+msgid "validation failed"
+msgstr "データの検証に失敗しました。"
+
+#, fuzzy
+#| msgid "The Goal doesn't exist."
+msgid "Session doesn't exist"
+msgstr "ゴールが存在しません。"
+
+msgid "Missing token."
+msgstr ""
+
+msgid "You already joined to this circle."
+msgstr "あなたはすでにこのサークルに参加しています。"
+
+msgid "This team member already joined this circle."
+msgstr "このチームメンバーは既にこのサークルに参加しています。"
+
+msgid "The circle dosen't exist or you don't have permission."
+msgstr "サークルが存在しないか、権限がありません。"
+
+msgid "You can not invite."
+msgstr "あなたは招待できません。"
+
+msgid "You don't have permission to access this comment"
+msgstr "このコメントにアクセスする権限がありません。"
+
+msgid "Evaluator setting saved."
+msgstr "評価者設定を保存しました。"
+
+msgid "%s %s inactive"
+msgstr ""
+
+msgid "You don't have permission to access this post"
+msgstr "この投稿にアクセスする権限がありません。"
 
 msgid "Please reselect an image."
 msgstr "画像ファイルを選択し直してください。"
@@ -1995,6 +2036,20 @@ msgstr "有料プランの登録に失敗しました。"
 
 msgid "Payment settings does not exists."
 msgstr "決済設定が見つかりません。"
+
+msgid "You already read this post."
+msgstr "あなたはすでにこの投稿を読みました。"
+
+#, fuzzy
+#| msgid "The circle dosen't exist or you don't have permission."
+msgid "The circle doesn't exist or you don't have permission."
+msgstr "サークルが存在しないか、権限がありません。"
+
+msgid "This item is already saved."
+msgstr "このアイテムはすでに保存されています"
+
+msgid "This item doesn't exist."
+msgstr "このアイテムは保存されていません"
 
 msgid "Invalid users are included in the destination."
 msgstr "送信先に無効なユーザーが含まれています。"
@@ -6238,6 +6293,22 @@ msgstr "フォロー中(%s)"
 
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
+
+#, fuzzy
+#~| msgid "You don't have access right to this page."
+#~ msgid "You don't have access to this post"
+#~ msgstr "この画面にはアクセスできません。"
+
+#~ msgid "%s pixel is the limit."
+#~ msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
+#, fuzzy
+#~| msgid "Error"
+#~ msgid "Fatal Error"
+#~ msgstr "エラー"
+
+#~ msgid "Failed to logout"
+#~ msgstr "ログアウトに失敗しました。"
 
 #~ msgid "View Circles"
 #~ msgstr "サークルを見る"
