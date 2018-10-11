@@ -41,7 +41,7 @@ class CircleMemberInfoDataExtender extends DataExtender
         $result = $CircleMember->useType()->find('all', $options);
 
         if (count($result) != count($uniqueKeys)) {
-            GoalousLog::error("Missing data for circle member extension. Circle ID: " . implode(',',
+            GoalousLog::error("Missing data for circle member extension. For user $this->userId, Circle ID: " . implode(',',
                     array_diff($uniqueKeys, Hash::extract($result, '{n}.{s}.circle_id'))));
         }
 

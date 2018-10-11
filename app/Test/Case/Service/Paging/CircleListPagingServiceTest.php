@@ -16,6 +16,7 @@ class CircleListPagingServiceTest extends GoalousTestCase
         'app.user',
         'app.circle',
         'app.circle_member',
+        'app.circle_pin',
         'app.experiment',
         'app.post_share_circle'
     ];
@@ -26,11 +27,8 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $pagingRequest = new PagingRequest();
-        $pagingRequest->addResource('res_id', 1);
-        $pagingRequest->addResource('current_team_id', 1);
+        $pagingRequest->setCurrentTeamId(1);
         $pagingRequest->setCurrentUserId(1);
-
-        $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
 
