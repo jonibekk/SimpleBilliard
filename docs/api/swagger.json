@@ -243,15 +243,52 @@
       },
       "delete" : {
         "tags" : [ "Circles" ],
-        "summary" : "Not implemented yet",
+        "summary" : "Remove a member from a circle",
         "description" : "Remove a member from a circle. Can only be done by Circle Admin",
-        "operationId" : "X/api/circles/{circle.id}/members1",
+        "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
         } ],
         "responses" : {
           "200" : {
-            "description" : ""
+            "description" : "[Success] Removed member from a circle",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "user_id" : {
+                          "$ref" : "#/components/schemas/Object.String.ID"
+                        },
+                        "circle_id" : {
+                          "$ref" : "#/components/schemas/Object.String.ID"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "data" : {
+                    "user_id" : "1",
+                    "circle_id" : "1"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -2531,8 +2568,8 @@
     "/api/comments/reads" : {
       "post" : {
         "tags" : [ "Comments" ],
-        "summary" : "Post comments read",
-        "description" : "List of comments that user reads",
+        "summary" : "Add read to comment",
+        "description" : "Add a read to a comment",
         "operationId" : "/api/comments/reads",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
