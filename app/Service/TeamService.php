@@ -86,8 +86,18 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $team = $Team->getById($teamId, ['service_use_status']);
-        return $team['service_use_status'];
+        $condition = [
+            'conditions' => [
+                'id'      => $teamId,
+                'del_flg' => [true, false]
+            ],
+            'fields'     => [
+                'service_use_status'
+            ]
+        ];
+        $team = $Team->find('first', $condition);
+
+        return $team['Team']['service_use_status'];
     }
 
     /**
@@ -131,10 +141,10 @@ class TeamService extends AppService
             return false;
         }
         CakeLog::info(sprintf('update teams service status and dates: %s', AppUtil::jsonOneLine([
-            'teams.ids' => array_values($targetTeamList),
+            'teams.ids'                    => array_values($targetTeamList),
             'teams.service_use_status.old' => $currentStatus,
             'teams.service_use_status.new' => $nextStatus,
-            'target_expire_date' => $targetExpireDate,
+            'target_expire_date'           => $targetExpireDate,
         ])));
         $ret = $Team->updateServiceStatusAndDates($targetTeamList, $nextStatus);
         if ($ret === false) {
@@ -173,7 +183,7 @@ class TeamService extends AppService
         }
 
         CakeLog::info(sprintf('delete teams service status expired: %s', AppUtil::jsonOneLine([
-            'teams.ids' => array_values($targetTeamList),
+            'teams.ids'          => array_values($targetTeamList),
             'target_expire_date' => $targetExpireDate,
         ])));
         $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
@@ -215,11 +225,11 @@ class TeamService extends AppService
         }
 
         $data = [
-            'id' => $teamId,
-            'service_use_status' => $serviceUseStatus,
+            'id'                           => $teamId,
+            'service_use_status'           => $serviceUseStatus,
             'service_use_state_start_date' => "'$startDate'",
             'service_use_state_end_date'   => $endDate ? "'$endDate'" : null,
-            'modified' => GoalousDateTime::now()->getTimestamp(),
+            'modified'                     => GoalousDateTime::now()->getTimestamp(),
         ];
         $condition = [
             'Team.id' => $teamId,
@@ -246,8 +256,7 @@ class TeamService extends AppService
             $this->deleteTeamCache($teamId);
 
             $this->TransactionManager->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->TransactionManager->rollback();
 
             CakeLog::emergency(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
@@ -266,15 +275,15 @@ class TeamService extends AppService
      *
      * @return int|null
      */
-    public function getTeamTimezone(int $teamId)  {
+    public function getTeamTimezone(int $teamId)
+    {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
         try {
             $team = $Team->findById($teamId);
             return Hash::get($team, 'Team.timezone');
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
 

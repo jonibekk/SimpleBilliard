@@ -328,6 +328,15 @@ class PostService extends AppService
                         ]);
                         throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
+                    // Update last_post_created in circle
+                    if (false === $Circle->updateLatestPostedInCircles($circles)) {
+                        GoalousLog::error($errorMessage = 'failed updating last post created', [
+                            'post.id'    => $postId,
+                            'circles.id' => $circles,
+                            'teams.id'   => $teamId,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
+                    }
                 } catch (\Throwable $e) {
                     $PostFile->AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);
                     throw $e;
@@ -423,13 +432,16 @@ class PostService extends AppService
         int $userId,
         int $teamId,
         array $fileIDs = []
-    ): PostEntity {
+    ): PostEntity
+    {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
 
         if (empty($postBody['body'])) {
             GoalousLog::error('Error on adding post: Invalid argument', [
@@ -498,8 +510,18 @@ class PostService extends AppService
             // Update unread post numbers if specified sharing circle
             if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
                 GoalousLog::error($errorMessage = 'failed increment unread count', [
-                    'circles.ids' => $postId,
-                    'teams.id'    => $teamId,
+                    'post.id'    => $postId,
+                    'circles.id' => $circleId,
+                    'teams.id'   => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+            // Update last_post_created in circle
+            if (false === $Circle->updateLatestPosted($circleId)) {
+                GoalousLog::error($errorMessage = 'failed updating last post created', [
+                    'post.id'    => $postId,
+                    'circles.id' => $circleId,
+                    'teams.id'   => $teamId,
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }

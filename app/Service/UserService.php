@@ -78,12 +78,14 @@ class UserService extends AppService
         /** @var User $User */
         $User = ClassRegistry::init('User');
         $User->id = $userId;
-        if ($User->save([
-            'id' => $userId,
-            'default_team_id' => $teamId,
-        ])) {
+        try {
+            $this->TransactionManager->begin();
+            $User->updateAll(['User.default_team_id' => $teamId], ['User.id' => $userId]);
+            $this->TransactionManager->commit();
             return true;
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            throw $exception;
         }
-        return false;
     }
 }
