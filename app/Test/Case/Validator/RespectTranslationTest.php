@@ -11,8 +11,6 @@ class RespectTranslationTest extends GoalousTestCase
     /**
      * Test for validation translate message
      *
-     * TODO: need to fix when translation has decided
-     *
      * @throws Exception
      */
     public function test_validatePost_success_en()
@@ -44,8 +42,6 @@ class RespectTranslationTest extends GoalousTestCase
 
     /**
      * Test for validation translate message
-     *
-     * TODO: need to fix when translation has decided
      *
      * @throws Exception
      */
