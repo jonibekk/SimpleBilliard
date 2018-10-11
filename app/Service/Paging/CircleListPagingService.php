@@ -89,7 +89,6 @@ class CircleListPagingService extends BasePagingService
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
-            'conversion' => true
         ];
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', false));
         if ($publicOnlyFlag === true) {
