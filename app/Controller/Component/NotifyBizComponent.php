@@ -1560,6 +1560,8 @@ class NotifyBizComponent extends Component
         }
         $notificationBody = json_encode($notificationBody);
 
+        $this->GlRedis->setSkipCheckMyId($this->skipCheckFromUserId);
+
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
