@@ -281,7 +281,7 @@ class NotifyBizComponent extends Component
         }
 
         //Check if from_user_id is null
-        if (!$this->skipCheckFromUserId && empty($this->notify_option['from_user_id'])){
+        if (!$this->skipCheckFromUserId && empty($this->notify_option['from_user_id'])) {
             GoalousLog::error("Missing from_user_id for notification type $notify_type");
         }
 
@@ -1765,7 +1765,7 @@ class NotifyBizComponent extends Component
      * @param array       $to_user_list json_encodeしてbase64_encodeする
      * @param int|null    $teamId
      * @param int|null    $userId
-     * @param string|null $baseUrl the base url of notification list url
+     * @param string|null $baseUrl      the base url of notification list url
      *                                  specify if execSendNotify called from externalAPI, batch shell
      */
     public function execSendNotify(

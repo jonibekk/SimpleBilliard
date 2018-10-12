@@ -489,14 +489,14 @@ class GlRedis extends AppModel
     }
 
     /**
-     * @param string $type Notification type
-     * @param int    $team_id Team ID for the notification
+     * @param string $type        Notification type
+     * @param int    $team_id     Team ID for the notification
      * @param array  $to_user_ids User IDs of notification receivers
-     * @param int    $my_id User ID of notification sender
-     * @param string $body Notification message
-     * @param string $url Page URL when the notification is clicked
-     * @param int    $date UNIX timestamp of when the notification was created
-     * @param int    $post_id ID of post related to the notification
+     * @param int    $my_id       User ID of notification sender
+     * @param string $body        Notification message
+     * @param string $url         Page URL when the notification is clicked
+     * @param int    $date        UNIX timestamp of when the notification was created
+     * @param int    $post_id     ID of post related to the notification
      * @param array  $options
      *
      * @return bool TRUE = succesfully save notification into REDIS.
@@ -1075,7 +1075,7 @@ class GlRedis extends AppModel
      * @param int   $team_id
      * @param int   $user_id
      * @param int   $access_time アクセス時間 (unix timestamp, UTC)
-     * @param array $timezones タイムゾーンのリスト
+     * @param array $timezones   タイムゾーンのリスト
      *
      * @return int
      */
@@ -1127,7 +1127,7 @@ class GlRedis extends AppModel
      *
      * @param int       $team_id
      * @param string    $access_date アクセス日付
-     * @param int|float $timezone タイムゾーン
+     * @param int|float $timezone    タイムゾーン
      *
      * @return array
      */
@@ -1142,7 +1142,7 @@ class GlRedis extends AppModel
      *
      * @param int       $team_id
      * @param string    $access_date アクセス日付
-     * @param int|float $timezone タイムゾーン
+     * @param int|float $timezone    タイムゾーン
      *
      * @return int
      */
