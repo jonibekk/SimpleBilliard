@@ -245,7 +245,7 @@
       }
     },
     "/api/circles/{circle.id}/remove_members" : {
-      "delete" : {
+      "post" : {
         "tags" : [ "Circles" ],
         "summary" : "Remove a member from a circle",
         "description" : "Remove a member from a circle. Can only be done by Circle Admin",
