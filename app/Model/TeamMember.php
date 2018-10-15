@@ -121,10 +121,9 @@ class TeamMember extends AppModel
                         [
                             'type'       => 'INNER',
                             'table'      => 'teams',
-                            'alias'      => 'Team',
                             'conditions' => [
-                                'Team.id = TeamMember.team_id',
-                                'Team.service_use_status' => [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_PAID, Team::SERVICE_USE_STATUS_READ_ONLY]
+                                'teams.id = TeamMember.team_id',
+                                'teams.service_use_status' => [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_PAID, Team::SERVICE_USE_STATUS_READ_ONLY]
                             ]
                         ]
                     ]
