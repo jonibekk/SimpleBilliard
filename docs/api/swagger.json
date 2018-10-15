@@ -194,7 +194,9 @@
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
         }
-      },
+      }
+    },
+    "/api/circles/{circle.id}/invite_members" : {
       "post" : {
         "tags" : [ "Circles" ],
         "summary" : "Invite member to a circle",
@@ -240,7 +242,9 @@
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
         }
-      },
+      }
+    },
+    "/api/circles/{circle.id}/remove_members" : {
       "delete" : {
         "tags" : [ "Circles" ],
         "summary" : "Remove a member from a circle",
