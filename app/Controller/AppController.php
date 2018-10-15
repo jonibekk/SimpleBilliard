@@ -31,13 +31,13 @@ use Goalous\Model\Enum as Enum;
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent         $Lang
- * @property CookieComponent       $Cookie
- * @property CsvComponent          $Csv
- * @property MixpanelComponent     $Mixpanel
- * @property OgpComponent          $Ogp
- * @property BenchmarkComponent    $Benchmark
- * @property PaymentSetting        $PaymentSetting
+ * @property LangComponent      $Lang
+ * @property CookieComponent    $Cookie
+ * @property CsvComponent       $Csv
+ * @property MixpanelComponent  $Mixpanel
+ * @property OgpComponent       $Ogp
+ * @property BenchmarkComponent $Benchmark
+ * @property PaymentSetting     $PaymentSetting
  */
 class AppController extends BaseController
 {

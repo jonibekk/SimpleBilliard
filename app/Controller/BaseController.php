@@ -194,11 +194,23 @@ class BaseController extends Controller
                 $this->redirect($this->Auth->logout());
             }
 
-            // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
-                GoalousLog::emergency("Current team id is empty", ['user_id' => $this->my_uid]);
-                $this->redirect($this->Auth->logout());
+                //Try updating user's default_team_id if user belongs to multiple teams
+                $newTeamId = $this->updateDefaultTeam($this->my_uid);
+                if (empty($newTeamId)) {
+                    //If user doesn't have other team, redirect to create team page
+                    GoalousLog::error("Current team id is empty", ['user_id' => $this->my_uid]);
+                    $this->redirect(['controller' => 'teams', 'action' => 'add']);
+                } else {
+                    $this->_refreshAuth($this->my_uid);
+                    foreach (ClassRegistry::keys() as $k) {
+                        $obj = ClassRegistry::getObject($k);
+                        if ($obj instanceof AppModel) {
+                            $obj->current_team_id = $newTeamId;
+                        }
+                    }
+                }
             }
             $this->_setTeamStatus();
         }
@@ -495,5 +507,33 @@ class BaseController extends Controller
             return false;
         }
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
+    }
+
+
+    /**
+     * Update default_team_id of an user
+     *
+     * @param int $userId User ID
+     *
+     * @return int New team ID
+     */
+    private function updateDefaultTeam(int $userId = null): int
+    {
+        if (empty($userId)) {
+            $userId = $this->Auth->user('id');
+        }
+
+        $teamList = $this->User->TeamMember->getActiveTeamList($userId);
+
+        if (empty($teamList)) {
+            return 0;
+        }
+
+        $newTeamId = key($teamList);
+
+        $this->Session->write('current_team_id', $newTeamId);
+        $this->User->updateDefaultTeam($newTeamId, true, $userId);
+
+        return $newTeamId;
     }
 }
