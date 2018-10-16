@@ -75,7 +75,7 @@ class SavedPostServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException \Goalous\Exception\GoalousConflictException
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
      */
     public function test_deleteSavedPostNotSaved_failure()
     {
