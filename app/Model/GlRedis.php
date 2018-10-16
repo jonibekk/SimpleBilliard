@@ -21,6 +21,13 @@ class GlRedis extends AppModel
     private $config_name = 'redis';
 
     /**
+     * Skip checking if my_id actually defined
+     *
+     * @var bool
+     */
+    private $skipCheckMyId = false;
+
+    /**
      * @param bool $id
      * @param null $table
      * @param null $ds
@@ -326,8 +333,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $map_ses_and_jwt = [
-        'team'         => null,
-        'user'         => null,
+        'team'            => null,
+        'user'            => null,
         'map_ses_and_jwt' => null,
     ];
 
@@ -411,7 +418,8 @@ class GlRedis extends AppModel
         $start = null,
         $end = null,
         $group = null
-    ) {
+    )
+    {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
         }
@@ -503,7 +511,8 @@ class GlRedis extends AppModel
         $date,
         $post_id = null,
         $options = []
-    ) {
+    )
+    {
 
         $parameterErrorArray = $this->_validateGlRedisParameters($type, $team_id, $my_id, $body, $url, $date);
 
@@ -851,8 +860,8 @@ class GlRedis extends AppModel
     }
 
     /**
-     * @param    int|string    $userId
-     * @param    $ipAddress
+     * @param    int|string $userId
+     * @param               $ipAddress
      *
      * @return bool|string
      * @throws Exception
@@ -1504,12 +1513,14 @@ class GlRedis extends AppModel
         } elseif ($teamId <= 0) {
             $errorParameters[] = 'team_id not positive';
         }
-        if (empty ($myId)) {
-            $errorParameters[] = 'my_id empty';
-        } elseif (!ctype_digit(strval($myId))) {
-            $errorParameters[] = 'my_id not int';
-        } elseif ($myId <= 0) {
-            $errorParameters[] = 'myId not positive';
+        if (!$this->skipCheckMyId) {
+            if (empty($myId)) {
+                $errorParameters[] = 'my_id empty';
+            } elseif (!ctype_digit(strval($myId))) {
+                $errorParameters[] = 'my_id not int';
+            } elseif ($myId <= 0) {
+                $errorParameters[] = 'myId not positive';
+            }
         }
         if (empty($body)) {
             $errorParameters[] = 'body empty';
@@ -1532,11 +1543,12 @@ class GlRedis extends AppModel
     /**
      * Save mapping between session id and jwt
      *
-     * @param int $teamId
-     * @param int $userId
-     * @param string $sessionId
-     * @param string $jwt
+     * @param int       $teamId
+     * @param int       $userId
+     * @param string    $sessionId
+     * @param string    $jwt
      * @param float|int $expire
+     *
      * @return bool
      */
     function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3)
@@ -1552,9 +1564,10 @@ class GlRedis extends AppModel
     /**
      * Get jwt from session id
      *
-     * @param int $teamId
-     * @param int $userId
+     * @param int    $teamId
+     * @param int    $userId
      * @param string $sessionId
+     *
      * @return mixed
      */
     function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
@@ -1568,6 +1581,16 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId, $userId);
         $key .= $sessionId;
         return $key;
+    }
+
+    /**
+     * Set skip checking my_id
+     *
+     * @param bool $skip
+     */
+    public function setSkipCheckMyId(bool $skip)
+    {
+        $this->skipCheckMyId = $skip;
     }
 
 }

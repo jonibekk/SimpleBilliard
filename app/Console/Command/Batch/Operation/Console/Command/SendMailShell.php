@@ -221,18 +221,9 @@ class SendMailShell extends AppShell
                 'layout'   => 'default',
             ];
 
-            // GL-6355: Output log to investigate the cause of error.
-            // TODO: Remove try catch after we found the cause and fixed.
-            if (!isset($data['FromUser']['display_username'])) {
-                CakeLog::error(sprintf("Undefined index FromUser.display_username param_id:%s FromUser:%s"
-                    , $this->params['id']
-                    , AppUtil::jsonOneLine($data['FromUser'])
-                ));
-            }
-
             $viewVars = [
-                'to_user_name'   => $data['ToUser']['display_username'],
-                'from_user_name' => $data['FromUser']['display_username'] ?? null,
+                'to_user_name'   => Hash::get($data, 'ToUser.display_username'),
+                'from_user_name' => Hash::get($data, 'FromUser.display_username', null),
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
                 'body'           => $this->item['item_name'],
@@ -315,7 +306,7 @@ class SendMailShell extends AppShell
 
         try {
             $Email->to($options['to'])->subject($options['subject'])
-                  ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
+                ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
             $Email->reset();
         } catch (Exception $e) {
             GoalousLog::info('failed to send mail item', [
