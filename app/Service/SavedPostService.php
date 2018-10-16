@@ -21,9 +21,9 @@ class SavedPostService extends AppService
     /**
      * Find saved posts.
      *
-     * @param int $teamId
-     * @param int $userId
-     * @param array $conditions
+     * @param int         $teamId
+     * @param int         $userId
+     * @param array       $conditions
      * @param             $cursor
      * @param             $limit
      *
@@ -39,6 +39,7 @@ class SavedPostService extends AppService
 
     /**
      * Gett count info each type (all, actions, normal posts)
+     *
      * @param int $teamId
      * @param int $userId
      *
@@ -53,7 +54,7 @@ class SavedPostService extends AppService
         return [
             'normal' => $normalPostCount,
             'action' => $actionPostCount,
-            'all' => $normalPostCount + $actionPostCount
+            'all'    => $normalPostCount + $actionPostCount
         ];
     }
 
@@ -65,9 +66,9 @@ class SavedPostService extends AppService
      * @param int $teamId The team ID where this happens
      *
      * @throws Exception
-     * @return SavedPostEntity | null Null for failed addition
+     * @return SavedPostEntity
      */
-    public function add(int $postId, int $userId, int $teamId)
+    public function add(int $postId, int $userId, int $teamId): SavedPostEntity
     {
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
@@ -97,7 +98,7 @@ class SavedPostService extends AppService
                 $result = $SavedPost->useType()->useEntity()->save($newData, false);
 
                 $this->TransactionManager->commit();
-
+                return $result;
             } catch (Exception $e) {
                 $this->TransactionManager->rollback();
                 GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
@@ -106,12 +107,6 @@ class SavedPostService extends AppService
         } else {
             throw new GlException\GoalousConflictException(__('This item is already saved.'));
         }
-
-        if (empty($result)) {
-            $result = new SavedPostEntity();
-        }
-
-        return $result;
     }
 
     /**
@@ -120,10 +115,10 @@ class SavedPostService extends AppService
      * @param int $postId Target post's ID
      * @param int $userId User ID who removed the saved post
      *
-     * @return int New saved count
+     * @return bool
      * @throws Exception
      */
-    public function delete(int $postId, int $userId)
+    public function delete(int $postId, int $userId): bool
     {
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
@@ -145,14 +140,14 @@ class SavedPostService extends AppService
                 $this->TransactionManager->begin();
                 $SavedPost->delete($existing['SavedPost']['id']);
                 $this->TransactionManager->commit();
-
+                return true;
             } catch (Exception $e) {
                 $this->TransactionManager->rollback();
                 GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
                 throw $e;
             }
         } else {
-            throw new GlException\GoalousConflictException(__("This item doesn't exist."));
+            throw new GlException\GoalousNotFoundException(__("This item doesn't exist."));
         }
     }
 
@@ -172,16 +167,16 @@ class SavedPostService extends AppService
             'conditions' => [
                 'SavedPost.user_id' => $userId
             ],
-            'table' => 'saved_posts',
-            'alias' => 'SavedPost',
-            'joins' => [
+            'table'      => 'saved_posts',
+            'alias'      => 'SavedPost',
+            'joins'      => [
                 [
-                    'type' => 'INNER',
-                    'table' => 'post_share_circles',
-                    'alias' => 'PostShareCircle',
+                    'type'       => 'INNER',
+                    'table'      => 'post_share_circles',
+                    'alias'      => 'PostShareCircle',
                     'conditions' => [
                         'PostShareCircle.post_id = SavedPost.post_id',
-                        'PostShareCircle.team_id' => $teamId,
+                        'PostShareCircle.team_id'   => $teamId,
                         'PostShareCircle.circle_id' => $circleId
                     ]
                 ]
@@ -199,6 +194,7 @@ class SavedPostService extends AppService
             if (!$res) {
                 throw new RuntimeException("Failed to delete saved post for user $userId in circle $circleId");
             }
+            $this->TransactionManager->commit();
         } catch (Exception $exception) {
             GoalousLog::error("Failed to delete saved post for user $userId in circle $circleId", $exception->getTrace());
             $this->TransactionManager->rollback();
