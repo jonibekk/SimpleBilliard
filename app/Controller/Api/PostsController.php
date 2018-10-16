@@ -86,7 +86,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -129,7 +129,7 @@ class PostsController extends BasePagingController
      */
     public function get_reads(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -244,7 +244,7 @@ class PostsController extends BasePagingController
 
     public function post_likes(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -293,7 +293,7 @@ class PostsController extends BasePagingController
      */
     public function delete_likes(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -321,7 +321,7 @@ class PostsController extends BasePagingController
      */
     public function get_likes(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error =$this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -357,7 +357,7 @@ class PostsController extends BasePagingController
      */
     public function post_saves(int $postId): CakeResponse
     {
-        $res = $this->validateSave($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -384,7 +384,7 @@ class PostsController extends BasePagingController
      */
     public function delete_saves(int $postId): CakeResponse
     {
-        $res = $this->validateSave($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -400,6 +400,41 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
         return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
+    }
+
+    /**
+     * Endpoint for saving a new comment
+     *
+     * @return CakeResponse
+     */
+    public function post_comments(int $postId)
+    {
+        /* Validate user acces to this post */
+        $error = $this->validatePostAccess($postId); 
+
+        if (!empty($error)) { 
+            return $error; 
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $comment['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $comment['post_id'] = $postId;
+
+        $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+
+        try {
+            $res = $CommentService->addComment($comment, $this->getUserId(), $fileIDs);
+            $this->_notifyNewPost($res);
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
+                                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 
     /**
@@ -444,13 +479,13 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * Validation function for adding / removing like from a post
+     * Validation acces to post
      *
      * @param int $postId
      *
      * @return CakeResponse|null
      */
-    private function validateLike(int $postId)
+    private function validatePostAccess(int $postId)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -469,65 +504,6 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Validation function for adding / removing save from a post
-     *
-     * @param int $postId
-     *
-     * @return CakeResponse|null
-     */
-    private function validateSave(int $postId)
-    {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
-        } catch (GlException\GoalousNotFoundException $notFoundException) {
-            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
-        } catch (Exception $exception) {
-            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-        }
-
-        //Check if user belongs to a circle where the post is shared to
-        if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
-        }
-
-        return null;
-    }
-
-    /*
-     * Validate get comments and readers endpoint
-     *
-     * @param int $postId
-     *
-     * @return ErrorResponse|null
-     */
-    private function validateAccessToPost(int $postId)
-    {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
-
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        try {
-            $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
-        } catch (GlException\GoalousNotFoundException $exception) {
-            return ErrorResponse::notFound()->withException($exception)->getResponse();
-        }
-
-        if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                                 ->getResponse();
         }

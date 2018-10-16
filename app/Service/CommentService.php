@@ -95,4 +95,68 @@ class CommentService extends AppService
 
         return $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
     }
+
+    /**
+     * Method to save a comment
+     *
+     * @param array   $commentBody = ['body' => '',
+     *                                'post_id' => '',
+     *                                ];
+     * @param int     $userId
+     * @param string[]  $fileIDs
+     *
+     * @return CommentEntity of saved comment
+     * @throws Execption
+     */
+    public function addComment(
+        array $commentBody, 
+        int $userId, 
+        array $fileIDs = []
+    ): CommentEntity{
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        if (empty($commentBody['body'])) {
+            GoalousLog::error('Error on adding post: Invalid argument', [
+                'users.id'      => $userId,
+                'post_id'       => $postId,
+                'commentData'   => $commentBody
+            ]);
+            throw new InvalidArgumentException('Error on adding comment: Invalid argument');
+        } 
+
+        try {
+            $this->TransactionManager->begin();
+            $Comment->create();
+
+            $commentBody['user_id'] = $userId;
+
+            /** @var CommentEntity $savedComment */
+            $savedComment = $Comment->useType()->useEntity()->save($commentBody, false);
+
+            if (empty($savedComment)) {
+                GoalousLog::error('Error on adding comment: dailed comment save', [
+                    'user.id'       => $userId,
+                    'commentData'   => $commentBody,
+                    'post.id'       => $postId
+                ]);
+                throw new RuntimeException('Error on adding post: dailed comment save');
+            }
+
+            $commentId = $savedComment['id'];
+            $commentCreated = $savedComment['created'];
+
+            //Saved attached files
+            if (!empty($fileIDs)) {
+                $this->saveFiles($commentId, $userId, $fileIDs);
+            }
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+           throw $e; 
+        }
+
+        return $savedComment;
+    }
 }
