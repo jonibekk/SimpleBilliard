@@ -1733,12 +1733,6 @@
                     "items" : {
                       "$ref" : "#/components/schemas/Object.String.FileID"
                     }
-                  },
-                  "mentioned_user_ids" : {
-                    "type" : "array",
-                    "items" : {
-                      "$ref" : "#/components/schemas/Object.String.ID"
-                    }
                   }
                 }
               },
