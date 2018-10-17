@@ -284,6 +284,7 @@ class Comment extends AppModel
                 'Comment.id'
             ]
         ];
+
         return (int)$this->find('count', $options);
     }
 

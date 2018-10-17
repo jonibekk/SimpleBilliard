@@ -19,10 +19,10 @@ class CommentFileService extends AppService
      * @param int $teamId
      * @param int $indexNum
      *
-     * @return PostFileEntity
+     * @return CommentFileEntity
      * @throws Exception
      */
-    public function add(int $commentId, int $attachedFileId, int $teamId, int $indexNum): PostFileEntity
+    public function add(int $commentId, int $attachedFileId, int $teamId, int $indexNum): CommentFileEntity
     {
         /** @var CommentFile $CommentFile */
         $CommentFile = ClassRegistry::init('CommentFile');

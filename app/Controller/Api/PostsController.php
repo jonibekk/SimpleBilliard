@@ -414,7 +414,7 @@ class PostsController extends BasePagingController
     public function post_comments(int $postId)
     {
         /* Validate user access to this post */
-        $error = $this->validatePostAccess($postId, true);
+        $error = $this->validatePostComments($postId);
 
         if (!empty($error)) {
             return $error;
@@ -425,11 +425,13 @@ class PostsController extends BasePagingController
 
         $comment['body'] = Hash::get($this->getRequestJsonBody(), 'body');
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
-        $mentionedUsers = Hash::get($this->getRequestJsonBody(), 'mentioned_user_ids', []);
+//        $mentionedUsers = Hash::get($this->getRequestJsonBody(), 'mentioned_user_ids', []);
 
         try {
             $res = $CommentService->add($comment, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
-            $CommentService->notifyNewComment($res['id'], $postId, $this->getUserId(), $mentionedUsers);
+            $CommentService->notifyNewComment($res['id'], $postId, $this->getUserId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
@@ -617,6 +619,43 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
+        return null;
+    }
+
+    private function validatePostComments(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            PostRequestValidator::createPostCommentValidator()->validate($requestBody);
+            PostRequestValidator::createFileUploadValidator()->validate($requestBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        try {
+            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId, true);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                ->getResponse();
+        }
         return null;
     }
 }

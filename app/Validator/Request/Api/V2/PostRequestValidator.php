@@ -82,6 +82,24 @@ class PostRequestValidator extends BaseValidator
         return $rules;
     }
 
+    /**
+     * Validation rules for posting comments into a post
+     *
+     * @return array
+     */
+    public function getPostCommentValidationRule(): array
+    {
+        $rules = [
+            "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
+            "file_ids" => [
+                validator::arrayType()::length(null, 10),
+                "optional"
+            ]
+        ];
+
+        return $rules;
+    }
+
     public static function createDefaultPostValidator(): self
     {
         $self = new self();
@@ -124,4 +142,10 @@ class PostRequestValidator extends BaseValidator
         return $self;
     }
 
+    public static function createPostCommentValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostCommentValidationRule(), true);
+        return $self;
+    }
 }

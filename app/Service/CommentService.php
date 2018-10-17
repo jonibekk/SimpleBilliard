@@ -26,6 +26,11 @@ use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 class CommentService extends AppService
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+    ];
+
     /**
      * Check whether user has access to the post where the comment belongs in
      *
@@ -132,6 +137,10 @@ class CommentService extends AppService
         $Comment = ClassRegistry::init('Comment');
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+
+        if (!$Post->exists($postId)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
 
         try {
             $this->TransactionManager->begin();
@@ -304,7 +313,7 @@ class CommentService extends AppService
                     $commentId);
                 $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $commentId);
-                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_ACTION:
                 // This notification must not be sent to those who mentioned
@@ -314,7 +323,7 @@ class CommentService extends AppService
                     $commentId);
                 $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $commentId);
-                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_CREATE_GOAL:
                 $this->notifyUserOfGoalComment($userId, $postId);
