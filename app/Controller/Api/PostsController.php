@@ -322,7 +322,7 @@ class PostsController extends BasePagingController
      */
     public function get_likes(int $postId)
     {
-        $error =$this->validatePostAccess($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -407,11 +407,13 @@ class PostsController extends BasePagingController
     /**
      * Endpoint for saving a new comment
      *
+     * @param int $postId Id of the post to comment to
+     *
      * @return CakeResponse
      */
     public function post_comments(int $postId)
     {
-        /* Validate user acces to this post */
+        /* Validate user access to this post */
         $error = $this->validatePostAccess($postId);
 
         if (!empty($error)) {
@@ -422,18 +424,17 @@ class PostsController extends BasePagingController
         $CommentService = ClassRegistry::init('CommentService');
 
         $comment['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-        $comment['post_id'] = $postId;
-
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
 
         try {
-            $res = $CommentService->addComment($comment, $this->getUserId(), $fileIDs);
+            $res = $CommentService->add($comment, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            //TODO Enable comment
             $this->_notifyNewPost($res);
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                                ->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to comment."))
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
@@ -480,7 +481,7 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * Validation acces to post
+     * Validate access to post
      *
      * @param int $postId
      *

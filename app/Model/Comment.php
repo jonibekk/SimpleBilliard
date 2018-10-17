@@ -266,15 +266,25 @@ class Comment extends AppModel
         return $comment_id;
     }
 
-    public function getCommentCount($post_id)
+    /**
+     * Get the count of comments in a post
+     *
+     * @param $post_id
+     *
+     * @return int
+     */
+    public function getCommentCount(int $post_id): int
     {
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
                 'Comment.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'Comment.id'
             ]
         ];
-        return $this->find('count', $options);
+        return (int)$this->find('count', $options);
     }
 
     /**

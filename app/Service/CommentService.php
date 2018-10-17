@@ -1,7 +1,15 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'PostService');
+App::import('Service', 'CommentFileService');
+App::import('Service', 'AttachedFileService');
+App::import('Service', 'UploadService');
+App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
+App::import('Model/Entity', 'CommentEntity');
+App::import('Model/Entity', 'CommentFileEntity');
+App::import('Model/Entity', 'AttachedFileEntity');
+
 
 /**
  * Created by PhpStorm.
@@ -11,6 +19,8 @@ App::uses('Comment', 'Model');
  */
 
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 class CommentService extends AppService
 {
@@ -58,29 +68,29 @@ class CommentService extends AppService
     /**
      * Check whether the user can view the several comments
      *
-     * @param int  $userId
-     * @param int  $commentsIds
+     * @param int $userId
+     * @param int $commentsIds
      *
      * @throws Exception
      */
     public function checkUserAccessToMultipleComment(int $userId, array $commentsIds)
     {
-         /** @var Comment $Comment */
-         $Comment = ClassRegistry::init('Comment');
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
 
-         /** @var PostService $PostService */
-         $PostService = ClassRegistry::init('PostService');
- 
-         $options = [
-             'conditions' => [
-                 'id' => $commentsIds
-             ],
-             'fields'     => [
-                 'post_id'
-             ]
-         ];
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
 
-         $comments = $Comment->useType()->find('first', $options);
+        $options = [
+            'conditions' => [
+                'id' => $commentsIds
+            ],
+            'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $comments = $Comment->useType()->find('first', $options);
 
         if (empty($comments)) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
@@ -99,64 +109,169 @@ class CommentService extends AppService
     /**
      * Method to save a comment
      *
-     * @param array   $commentBody = ['body' => '',
-     *                                'post_id' => '',
-     *                                ];
-     * @param int     $userId
-     * @param string[]  $fileIDs
+     * @param string   $commentBody ;
+     * @param int      $postId
+     * @param int      $userId
+     * @param int      $teamId
+     * @param string[] $fileIDs
      *
      * @return CommentEntity of saved comment
-     * @throws Execption
+     * @throws Exception
      */
-    public function addComment(
-        array $commentBody, 
-        int $userId, 
+    public function add(
+        string $commentBody,
+        int $postId,
+        int $userId,
+        int $teamId,
         array $fileIDs = []
-    ): CommentEntity{
+    ): CommentEntity
+    {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
-
-        if (empty($commentBody['body'])) {
-            GoalousLog::error('Error on adding post: Invalid argument', [
-                'users.id'      => $userId,
-                'post_id'       => $postId,
-                'commentData'   => $commentBody
-            ]);
-            throw new InvalidArgumentException('Error on adding comment: Invalid argument');
-        } 
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
 
         try {
             $this->TransactionManager->begin();
             $Comment->create();
 
-            $commentBody['user_id'] = $userId;
+            $newData['body'] = $commentBody;
+            $newData['post_id'] = $postId;
+            $newData['user_id'] = $userId;
+            $newData['team_id'] = $teamId;
 
             /** @var CommentEntity $savedComment */
-            $savedComment = $Comment->useType()->useEntity()->save($commentBody, false);
+            $savedComment = $Comment->useType()->useEntity()->save($newData, false);
 
             if (empty($savedComment)) {
-                GoalousLog::error('Error on adding comment: dailed comment save', [
-                    'user.id'       => $userId,
-                    'commentData'   => $commentBody,
-                    'post.id'       => $postId
+                GoalousLog::error('Error on adding comment: failed comment save', [
+                    'users.id'    => $userId,
+                    'posts.id'    => $postId,
+                    'teams.id'    => $teamId,
+                    'commentData' => $newData
                 ]);
-                throw new RuntimeException('Error on adding post: dailed comment save');
+                throw new RuntimeException('Error on adding post: failed comment save');
             }
 
             $commentId = $savedComment['id'];
-            $commentCreated = $savedComment['created'];
+
+            $newCommentCount = $Comment->getCommentCount($postId);
+
+            if (!$Post->updateCommentCount($postId, $newCommentCount)) {
+                GoalousLog::error('Error on adding comment: failed updating posts.comment_count', [
+                    'users.id'    => $userId,
+                    'posts.id'    => $postId,
+                    'teams.id'    => $teamId,
+                    'commentData' => $newData
+                ]);
+                throw new RuntimeException('Error on adding post: failed updating posts.comment_count');
+
+            }
 
             //Saved attached files
             if (!empty($fileIDs)) {
-                $this->saveFiles($commentId, $userId, $fileIDs);
+                $this->saveFiles($commentId, $userId, $teamId, $fileIDs);
             }
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-           throw $e; 
+            throw $e;
         }
 
         return $savedComment;
+    }
+
+    /**
+     * Save uploaded files
+     *
+     * @param int   $commentId
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $fileIDs
+     *
+     * @return bool
+     * @throws Exception
+     */
+    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs): bool
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        /** @var CommentFileService $CommentFileService */
+        $CommentFileService = ClassRegistry::init('CommentFileService');
+
+        $commentFileIndex = 0;
+
+        $addedFiles = [];
+
+        try {
+            //Save attached files
+            foreach ($fileIDs as $id) {
+
+                if (!is_string($id)) {
+                    throw new InvalidArgumentException("Buffered file ID must be string.");
+                }
+
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
+                    AttachedModelType::TYPE_MODEL_COMMENT());
+
+                $addedFiles[] = $attachedFile['id'];
+
+                $CommentFileService->add($commentId, $attachedFile['id'], $teamId, $commentFileIndex++);
+
+                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+            }
+        } catch (Exception $e) {
+            //If any error happened, remove uploaded file
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Get list of attached files of a post
+     *
+     * @param int                                              $commentId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getAttachedFiles(int $commentId, AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'comment_files',
+                    'alias'      => 'CommentFile',
+                    'conditions' => [
+                        'CommentFile.post_id' => $commentId,
+                        'CommentFile.attached_file_id = AttachedFile.id'
+                    ]
+                ]
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
     }
 }

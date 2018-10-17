@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'CommentFileENtity');
 
 /**
  * CommentFile Model
@@ -8,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property AttachedFile $AttachedFile
  * @property Team         $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class CommentFile extends AppModel
 {
 
@@ -34,4 +38,11 @@ class CommentFile extends AppModel
         'AttachedFile',
         'Team',
     );
+
+    public $modelConversionTable = [
+        'comment_id'       => DataType::INT,
+        'attached_file_id' => DataType::INT,
+        'team_id'          => DataType::INT,
+        'index'            => DataType::INT
+    ];
 }

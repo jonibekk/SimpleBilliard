@@ -541,18 +541,6 @@ class PostService extends AppService
     }
 
     /**
-     * Get query condition for posts made by an user
-     *
-     * @param int $userId User ID of the posts author
-     *
-     * @return array
-     */
-    public function getUserPostListCondition(int $userId)
-    {
-        return ['Post.user_id' => $userId];
-    }
-
-    /**
      * Check whether the user can view the post
      *
      * @param int  $userId

@@ -810,7 +810,8 @@ class Post extends AppModel
         $end,
         $my_circle_list = null,
         $share_type = null
-    ) {
+    )
+    {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
         }
@@ -951,7 +952,8 @@ class Post extends AppModel
         $type,
         $start = null,
         $end = null
-    ) {
+    )
+    {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -990,7 +992,8 @@ class Post extends AppModel
         $type = self::TYPE_ACTION,
         $start = null,
         $end = null
-    ) {
+    )
+    {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1389,7 +1392,8 @@ class Post extends AppModel
         $model_id = null,
         $share = null,
         $share_type = PostShareCircle::SHARE_TYPE_SHARED
-    ) {
+    )
+    {
         if (!$uid) {
             $uid = $this->my_uid;
         }
@@ -1651,7 +1655,8 @@ class Post extends AppModel
         $start = null,
         $end = null,
         $file_type = null
-    ) {
+    )
+    {
         $one_month = 60 * 60 * 24 * 31;
         $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
         $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
@@ -1916,6 +1921,28 @@ class Post extends AppModel
         ];
 
         return $this->find('first', $condition)['Post']['post_like_count'];
+    }
+
+    /**
+     * Update the comment count of a post
+     *
+     * @param int $postId
+     * @param int $newCommentCount
+     *
+     * @return bool
+     */
+    public function updateCommentCount(int $postId, int $newCommentCount): bool
+    {
+        $newData = [
+            'Post.comment_count' => $newCommentCount,
+            'Post.modified'      => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $condition = [
+            'Post.id' => $postId
+        ];
+
+        return $this->updateAll($newData, $condition);
     }
 
 }
