@@ -414,7 +414,7 @@ class PostsController extends BasePagingController
     public function post_comments(int $postId)
     {
         /* Validate user access to this post */
-        $error = $this->validatePostAccess($postId);
+        $error = $this->validatePostAccess($postId, true);
 
         if (!empty($error)) {
             return $error;
@@ -425,11 +425,11 @@ class PostsController extends BasePagingController
 
         $comment['body'] = Hash::get($this->getRequestJsonBody(), 'body');
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+        $mentionedUsers = Hash::get($this->getRequestJsonBody(), 'mentioned_user_ids', []);
 
         try {
             $res = $CommentService->add($comment, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
-            //TODO Enable comment
-            $this->_notifyNewPost($res);
+            $CommentService->notifyNewComment($res['id'], $postId, $this->getUserId(), $mentionedUsers);
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
@@ -483,11 +483,12 @@ class PostsController extends BasePagingController
     /**
      * Validate access to post
      *
-     * @param int $postId
+     * @param int  $postId
+     * @param bool $mustBelong Whether user must belong to the circle where post is made
      *
      * @return CakeResponse|null
      */
-    private function validatePostAccess(int $postId)
+    private function validatePostAccess(int $postId, bool $mustBelong = false)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();

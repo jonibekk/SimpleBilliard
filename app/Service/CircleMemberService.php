@@ -148,10 +148,10 @@ class CircleMemberService extends AppService
 
         $memberList = $CircleMember->getMemberList($circleId, true, false, $userId);
 
-        /** @var NotifyBizComponent $notifyBiz */
-        $notifyBiz = ClassRegistry::init('NotifyBizComponent');
+        /** @var NotifyBizComponent $NotifyBiz */
+        $NotifyBiz = ClassRegistry::init('NotifyBizComponent');
         // Notify to circle member
-        $notifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+        $NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
     }
 
     /**

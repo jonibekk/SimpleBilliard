@@ -6,9 +6,11 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
+App::uses('Post', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
+App::import('Model/Entity', 'POstEntity');
 
 
 /**
@@ -273,5 +275,86 @@ class CommentService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    /**
+     * Send notification about new comment on a post.
+     * Will notify post's author & other users who've commented on the post
+     *
+     * @param int   $commentId      Comment ID of the new comment
+     * @param int   $postId         Post ID where the comment belongs to
+     * @param int   $userId         User ID of the author of the new comment
+     * @param int[] $mentionedUsers List of user IDs of mentioned users
+     */
+    public function notifyNewComment(int $commentId, int $postId, int $userId, array $mentionedUsers = [])
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        /** @var NotifyBizComponent $NotifyBiz */
+        $NotifyBiz = ClassRegistry::init('NotifyBizComponent');
+
+        $type = $Post->getPostType($postId);
+
+        switch ($type) {
+            case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
+                    $commentId);
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId, $commentId);
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                    $postId,
+                    $commentId);
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId, $commentId);
+                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_CREATE_GOAL:
+                $this->notifyUserOfGoalComment($userId, $postId);
+                break;
+        }
+    }
+
+    /**
+     * Send notification if a Goal post is commented
+     *
+     * @param int $commentAuthorUserId ID of user who made the comment
+     * @param int $postId              Post ID where the comment belongs to
+     */
+    private function notifyUserOfGoalComment(int $commentAuthorUserId, int $postId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        /** @var NotifyBizComponent $NotifyBiz */
+        $NotifyBiz = ClassRegistry::init('NotifyBizComponent');
+
+        $postData = $Post->getEntity($postId);
+
+        $postId = $postData['id'];
+        $postOwnerUserId = $postData['user_id'];
+
+        //If commenter is not post owner, send notification to owner
+        if ($commentAuthorUserId !== $postOwnerUserId) {
+            $NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL, null, null,
+                [$postOwnerUserId], $commentAuthorUserId, $postData['team_id'], $postId);
+        }
+        $excludedUserList = array($postOwnerUserId, $commentAuthorUserId);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        $notificationReceiverUserList = $Comment->getCommentedUniqueUsersList($postId, false, $excludedUserList);
+
+        if (!empty($notificationReceiverUserList)) {
+            $NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL, null, null,
+                $notificationReceiverUserList, $commentAuthorUserId, $postData['team_id'], $postId);
+        }
     }
 }

@@ -581,7 +581,7 @@ class PostService extends AppService
             ]
         ];
 
-        /** @var CircleEntity $circles */
+        /** @var CircleEntity[] $circles */
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {

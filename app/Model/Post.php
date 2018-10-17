@@ -1945,4 +1945,24 @@ class Post extends AppModel
         return $this->updateAll($newData, $condition);
     }
 
+    /**
+     * Get post type
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function getPostType(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'Post.id' => $postId
+            ],
+            'fields'     => [
+                'Post.type'
+            ]
+        ];
+
+        return (int)$this->find('first', $condition)['Post'];
+    }
 }
