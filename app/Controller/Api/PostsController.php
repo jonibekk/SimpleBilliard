@@ -59,7 +59,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
@@ -67,6 +67,7 @@ class PostsController extends BasePagingController
 
     /**
      * Notify new post to other members
+     *
      * @param array $newPost
      */
     private function _notifyNewPost(PostEntity $newPost)
@@ -182,7 +183,7 @@ class PostsController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withData(["posts_ids" => $res])->getResponse();
@@ -394,8 +395,9 @@ class PostsController extends BasePagingController
         $SavedPostService = ClassRegistry::init('SavedPostService');
 
         try {
-            $count = $SavedPostService->delete($postId, $this->getUserId());
-
+            $SavedPostService->delete($postId, $this->getUserId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
@@ -410,10 +412,10 @@ class PostsController extends BasePagingController
     public function post_comments(int $postId)
     {
         /* Validate user acces to this post */
-        $error = $this->validatePostAccess($postId); 
+        $error = $this->validatePostAccess($postId);
 
-        if (!empty($error)) { 
-            return $error; 
+        if (!empty($error)) {
+            return $error;
         }
 
         /** @var CommentService $CommentService */
@@ -450,10 +452,9 @@ class PostsController extends BasePagingController
         $circleId = (int)Hash::get($requestBody, 'circle_id');
 
         if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
-            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
-                                ->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("The circle doesn't exist or you don't have permission."))
+                ->getResponse();
         }
-
         try {
             PostRequestValidator::createDefaultPostValidator()->validate($requestBody);
             PostRequestValidator::createFileUploadValidator()->validate($requestBody);
@@ -464,9 +465,9 @@ class PostsController extends BasePagingController
             }
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -505,7 +506,7 @@ class PostsController extends BasePagingController
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -520,9 +521,6 @@ class PostsController extends BasePagingController
      */
     private function validateDelete(int $postId)
     {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -536,7 +534,7 @@ class PostsController extends BasePagingController
         if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
                 $this->getTeamId())) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
         return null;
     }
@@ -557,7 +555,7 @@ class PostsController extends BasePagingController
         //Check whether user is the owner of the post
         if (!$Post->isPostOwned($postId, $this->getUserId())) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         $body = $this->getRequestJsonBody();
@@ -568,9 +566,9 @@ class PostsController extends BasePagingController
 
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -595,9 +593,9 @@ class PostsController extends BasePagingController
             PostRequestValidator::createPostReadValidator()->validate($requestBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
