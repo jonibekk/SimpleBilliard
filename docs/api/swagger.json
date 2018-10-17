@@ -1352,7 +1352,7 @@
     "/api/posts" : {
       "post" : {
         "tags" : [ "Posts" ],
-        "summary" : "Add new cirlce post",
+        "summary" : "Add new circle post",
         "description" : "For saving post to the server",
         "operationId" : "/api/posts",
         "parameters" : [ {
@@ -1705,6 +1705,76 @@
           "AllowDynamicQueryParameters" : false,
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
+        }
+      },
+      "post" : {
+        "tags" : [ "Posts" ],
+        "summary" : "Add a comment to a post",
+        "description" : "Add a comment to given post id as current user",
+        "operationId" : "/api/posts/{post.id}/comments",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Post.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "requestBody" : {
+          "description" : "Comment body",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "body", "file_ids", "mentioned_user_ids" ],
+                "properties" : {
+                  "body" : {
+                    "type" : "string"
+                  },
+                  "file_ids" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.String.FileID"
+                    }
+                  },
+                  "mentioned_user_ids" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.String.ID"
+                    }
+                  }
+                }
+              },
+              "example" : {
+                "body" : "This is a new comment",
+                "file_ids" : [ "5b7ba798848b89.57809264" ],
+                "mentioned_user_ids" : [ "1", "2" ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Added new comment",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Comment"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
         }
       }
     },
