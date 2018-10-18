@@ -159,7 +159,8 @@ class TeamMember extends AppModel
             ]
         ];
 
-        return $this->find('list', $condition);
+        $res = array_filter($this->findWithoutTeamId('list', $condition));
+        return $res;
     }
 
     public function getActiveTeamMembersList($use_cache = true)
