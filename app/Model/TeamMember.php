@@ -113,10 +113,21 @@ class TeamMember extends AppModel
                 $options = [
                     'conditions' => [
                         'TeamMember.user_id' => $uid,
-                        'TeamMember.status'  => self::USER_STATUS_ACTIVE
+                        'TeamMember.status'  => self::USER_STATUS_ACTIVE,
+                        'TeamMember.del_flg' => false
                     ],
                     'fields'     => ['TeamMember.team_id', 'Team.name'],
-                    'contain'    => ['Team']
+                    'joins'      => [
+                        [
+                            'type'       => 'INNER',
+                            'table'      => 'teams',
+                            'alias'      => 'Team',
+                            'conditions' => [
+                                'Team.id = TeamMember.team_id',
+                                'Team.del_flg' => false,
+                            ]
+                        ]
+                    ]
                 ];
                 $res = array_filter($model->findWithoutTeamId('list', $options));
                 return $res;
