@@ -135,45 +135,6 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
-    /**
-     * Get list of active teams of an user, skipping on expired teams
-     *
-     * @param int $userId
-     *
-     * @return array
-     *              ['team_id' => 'name']
-     */
-    public function getActiveTeamListWithoutExpired(int $userId): array
-    {
-        $condition = [
-            'conditions' => [
-                'TeamMember.user_id' => $userId,
-                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
-                'TeamMember.del_flg' => false
-            ],
-            'fields'     => ['TeamMember.team_id', 'Team.name'],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'teams',
-                    'alias'      => 'Team',
-                    'conditions' => [
-                        'Team.id = TeamMember.team_id',
-                        'Team.del_flg'            => false,
-                        'Team.service_use_status' => [
-                            Team::SERVICE_USE_STATUS_FREE_TRIAL,
-                            Team::SERVICE_USE_STATUS_PAID,
-                            Team::SERVICE_USE_STATUS_READ_ONLY
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        $res = array_filter($this->findWithoutTeamId('list', $condition));
-        return $res;
-    }
-
     public function getActiveTeamMembersList($use_cache = true)
     {
         if ($use_cache && !empty($this->active_member_list)) {
