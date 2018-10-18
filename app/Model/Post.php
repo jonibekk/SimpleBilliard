@@ -905,13 +905,22 @@ class Post extends AppModel
         return true;
     }
 
-    public function isMyPost($post_id)
+    /**
+     * @param $postId
+     * @param null $userId
+     * @param null $teamId
+     * @return bool
+     */
+    public function isMyPost($postId, $userId = null, $teamId = null)
     {
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
         $options = [
             'conditions' => [
-                'id'      => $post_id,
-                'team_id' => $this->current_team_id,
-                'user_id' => $this->my_uid,
+                'id'      => $postId,
+                'team_id' => $teamId,
+                'user_id' => $userId,
             ]
         ];
         $res = $this->find('list', $options);
