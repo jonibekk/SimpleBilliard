@@ -1025,7 +1025,8 @@ class AppController extends BaseController
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             GoalousLog::error("Error on setting user's default team. " . $e->getMessage());
-            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            //Only get active ones
+            $team_list = $this->User->TeamMember->getActiveTeamListWithoutExpired($this->Auth->user('id'));
             $set_team_id = !empty($team_list) ? key($team_list) : null;
             $this->Session->write('current_team_id', $set_team_id);
             $this->User->updateDefaultTeam($set_team_id, true, $this->Auth->user('id'));

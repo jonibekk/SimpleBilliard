@@ -93,7 +93,7 @@ class TeamMember extends AppModel
     /**
      * 現在有効なチーム一覧を取得
      *
-     * @param $uid
+     * @param      $uid
      *
      * @return array
      */
@@ -116,22 +116,50 @@ class TeamMember extends AppModel
                         'TeamMember.status'  => self::USER_STATUS_ACTIVE
                     ],
                     'fields'     => ['TeamMember.team_id', 'Team.name'],
-                    'joins'      => [
-                        [
-                            'type'       => 'INNER',
-                            'table'      => 'teams',
-                            'alias'      => 'Team',
-                            'conditions' => [
-                                'Team.id = TeamMember.team_id',
-                                'Team.service_use_status' => [Team::SERVICE_USE_STATUS_FREE_TRIAL, Team::SERVICE_USE_STATUS_PAID, Team::SERVICE_USE_STATUS_READ_ONLY]
-                            ]
-                        ]
-                    ]
+                    'contain'    => ['Team']
                 ];
                 $res = array_filter($model->findWithoutTeamId('list', $options));
                 return $res;
             }, 'team_info');
         $this->myTeams = $res;
+    }
+
+    /**
+     * Get list of active teams of an user, skipping on expired teams
+     *
+     * @param int $userId
+     *
+     * @return array
+     *              ['team_id' => 'name']
+     */
+    public function getActiveTeamListWithoutExpired(int $userId): array
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.user_id' => $userId,
+                'TeamMember.status'  => self::USER_STATUS_ACTIVE,
+                'TeamMember.del_flg' => false
+            ],
+            'fields'     => ['TeamMember.team_id', 'Team.name'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'conditions' => [
+                        'Team.id = TeamMember.team_id',
+                        'Team.del_flg'            => false,
+                        'Team.service_use_status' => [
+                            Team::SERVICE_USE_STATUS_FREE_TRIAL,
+                            Team::SERVICE_USE_STATUS_PAID,
+                            Team::SERVICE_USE_STATUS_READ_ONLY
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->find('list', $condition);
     }
 
     public function getActiveTeamMembersList($use_cache = true)
@@ -365,8 +393,7 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    )
-    {
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -2026,8 +2053,7 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2138,8 +2164,7 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    )
-    {
+    ) {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2166,8 +2191,7 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'      => $teamMemberId,
@@ -2187,8 +2211,7 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2208,8 +2231,7 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2238,8 +2260,7 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
