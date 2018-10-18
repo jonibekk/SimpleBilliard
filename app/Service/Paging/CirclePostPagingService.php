@@ -105,18 +105,29 @@ class CirclePostPagingService extends BasePagingService
             /** @var PostService $PostService */
             $PostService = ClassRegistry::init('PostService');
 
+            $Upload = new UploadHelper(new View());
+
             foreach ($resultArray as $index => $entry) {
                 $attachedFile = $PostService->getAttachedFiles($entry['id']);
-
+                $resultArray[$index]['attached_files'] = [];
                 if (empty($attachedFile)) {
-                    $resultArray[$index]['attached_files'] = [];
                     continue;
                 }
                 /** @var AttachedFileEntity $file */
                 foreach ($attachedFile as $file) {
+                    $file['file_url'] = '';
+                    $file['preview_url'] = '';
+                    // download url is common.
+                    // TODO: We should consider to preapare new API or using old processe;
+//                    $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
+                    $file['download_url'] = '';
+
                     if ($file['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                         $file['file_url'] = $ImageStorageService->getImgUrlEachSize($file->toArray(), 'AttachedFile',
                             'attached');
+                        $resultArray[$index]['attached_files'][] = $file->toArray();
+                    } else {
+                        $file['preview_url'] = $Upload->attachedFileUrl($file->toArray());
                         $resultArray[$index]['attached_files'][] = $file->toArray();
                     }
                 }
