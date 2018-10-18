@@ -355,7 +355,8 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    ) {
+    )
+    {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -2015,7 +2016,8 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2126,7 +2128,8 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    ) {
+    )
+    {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2153,7 +2156,8 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'id'      => $teamMemberId,
@@ -2173,7 +2177,8 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2193,7 +2198,8 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2222,7 +2228,8 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2234,6 +2241,47 @@ class TeamMember extends AppModel
             return [];
         }
         return Hash::extract($res, '{n}.TeamMember');
+    }
+
+    /**
+     * Get last logged in team
+     *
+     * @param int   $userId
+     * @param array $excludedTeamId Team ID to be excluded from the search
+     *
+     * @return int Team ID
+     */
+    public function getLatestLoggedInActiveTeamId(int $userId, array $excludedTeamId = []): int
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.user_id'    => $userId,
+                'TeamMember.del_flg'    => false,
+                'TeamMember.status'     => TeamMember::USER_STATUS_ACTIVE,
+                'TeamMember.team_id !=' => $excludedTeamId
+            ],
+            'fields'     => [
+                'TeamMember.team_id'
+            ],
+            'order'      => [
+                'TeamMember.last_login' => 'DESC'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'conditions' => [
+                        'Team.id = TeamMember.team_id',
+                        'Team.del_flg' => false
+                    ]
+                ]
+            ]
+        ];
+
+        $res = $this->find('first', $condition);
+
+        return (int)$res['TeamMember']['team_id'];
     }
 
 }

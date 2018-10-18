@@ -182,15 +182,24 @@ class TeamService extends AppService
             return false;
         }
 
-        CakeLog::info(sprintf('delete teams service status expired: %s', AppUtil::jsonOneLine([
-            'teams.ids'          => array_values($targetTeamList),
-            'target_expire_date' => $targetExpireDate,
-        ])));
-        $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
-        if ($ret === false) {
-            $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",
-                AppUtil::varExportOneLine($targetTeamList)));
-            $this->log(Debugger::trace());
+        try {
+            $this->TransactionManager->begin();
+            CakeLog::info(sprintf('delete teams service status expired: %s', AppUtil::jsonOneLine([
+                'teams.ids'          => array_values($targetTeamList),
+                'target_expire_date' => $targetExpireDate,
+            ])));
+            $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
+            if ($ret === false) {
+                $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",
+                    AppUtil::varExportOneLine($targetTeamList)));
+                $this->log(Debugger::trace());
+            }
+            foreach ($targetTeamList as $team) {
+                $this->updateDefaultTeamOnDeletion($team);
+            }
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            throw $exception;
         }
 
         /** @var GlRedis $GlRedis */
@@ -289,5 +298,44 @@ class TeamService extends AppService
 
             return null;
         }
+    }
+
+    /**
+     * Update the default_team_id if the previous one is being deleted
+     *
+     * @param int $oldTeamId
+     *
+     * @return bool
+     */
+    public function updateDefaultTeamOnDeletion(int $oldTeamId): bool
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $userSearchCondition = [
+            'conditions' => [
+                'User.default_team_id' => $oldTeamId
+            ],
+            'fields'     => [
+                'User.id'
+            ]
+        ];
+
+        $userList = $User->find('all', $userSearchCondition);
+
+        foreach ($userList as $user) {
+            $userId = $user['id'];
+
+            //If user doesn't have next active item, set the default team id to null
+            $newTeamId = $TeamMember->getLatestLoggedInActiveTeamId($userId, [$oldTeamId]) ?: null;
+
+            $User->updateDefaultTeam($newTeamId, true, $userId);
+        }
+
+        return true;
+
     }
 }
