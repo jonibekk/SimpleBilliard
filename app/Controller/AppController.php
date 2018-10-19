@@ -1014,7 +1014,7 @@ class AppController extends BaseController
         }
     }
 
-    public function _setDefaultTeam($team_id)
+    protected function _setDefaultTeam($team_id)
     {
         if (!$team_id) {
             return false;
