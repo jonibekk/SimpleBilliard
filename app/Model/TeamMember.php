@@ -2292,7 +2292,7 @@ class TeamMember extends AppModel
 
         $res = $this->find('first', $condition);
 
-        return (int)$res['TeamMember']['team_id'];
+        return Hash::get($res, 'TeamMember.team_id', 0);
     }
 
 }
