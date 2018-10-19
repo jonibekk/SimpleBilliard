@@ -2671,12 +2671,12 @@
         }
       }
     },
-    "/api/uploads" : {
+    "/api/files/upload" : {
       "post" : {
-        "tags" : [ "Uploads" ],
+        "tags" : [ "Files" ],
         "summary" : "File upload",
-        "description" : "Main endpoint for uploading files.  \nReturn value on success is 23 char HEX string, with dot (.) at 15th place",
-        "operationId" : "/api/uploads",
+        "description" : "Main endpoint for uploading files.\nReturn value on success is 23 char HEX string, with dot (.) at 15th place",
+        "operationId" : "/api/files/upload",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
         } ],
@@ -2725,6 +2725,79 @@
                       "file_id" : "5b5e6939bcbba2.52108389"
                     }
                   }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Failed validation. Bad POST data",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "message" : {
+                      "type" : "string"
+                    },
+                    "errors" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "type" : {
+                            "type" : "string"
+                          },
+                          "field" : {
+                            "type" : "string"
+                          },
+                          "message" : {
+                            "type" : "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example" : {
+                  "message" : "validation failed",
+                  "errors" : [ {
+                    "type" : "validation",
+                    "field" : "file_data",
+                    "message" : "Key file_data must be present"
+                  } ]
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/files/{file.id}/download" : {
+      "get" : {
+        "tags" : [ "Files" ],
+        "summary" : "File download",
+        "description" : "Main endpoint for downloading files.",
+        "operationId" : "/api/files/{file.id}/download",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/File.Id"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] File download",
+            "content" : {
+              "application/octet-stream" : {
+                "schema" : {
+                  "type" : "string",
+                  "example" : "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPEVycm9yPjxDb2RlPk5vU3VjaEtleTwvQ29kZT48TWVzc2FnZT5UaGUgc3BlY2lmaWVkIGtleSBkb2VzIG5vdCBleGlzdC48L01lc3NhZ2U+PEtleT5kYW1hc2EvYXR0YWNoZWRfZmlsZXMvNi9mY2RjOGRhMTBkMGUxZjQ5NmViOTJjMjQ5MzE2NGJjOV9vcmlnaW5hbC48L0tleT48UmVxdWVzdElkPkNFOUY5MEZDNjk1MjI1QkQ8L1JlcXVlc3RJZD48SG9zdElkPnZrTVRSb0trTjBGT3NFbGNabnZ1S2dXNit5cTBHU1pVTmpOb2o3NWd6UUFGZ3EraE51c2x6ajJmWm9TY1o1NDR5Kytpb0NqNzI3OD08L0hvc3RJZD48L0Vycm9yPg=="
                 }
               }
             }
@@ -2914,6 +2987,17 @@
         "name" : "user.id",
         "in" : "path",
         "description" : "ID of the user model",
+        "required" : true,
+        "example" : 1,
+        "schema" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "File.Id" : {
+        "name" : "file.id",
+        "in" : "path",
+        "description" : "ID of the attached_file model",
         "required" : true,
         "example" : 1,
         "schema" : {
