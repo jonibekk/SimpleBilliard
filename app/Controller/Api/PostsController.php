@@ -1,4 +1,5 @@
 <?php
+App::import('Service', 'CommentService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Service', 'PostReadService');
@@ -423,13 +424,12 @@ class PostsController extends BasePagingController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $comment['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $commentBody = Hash::get($this->getRequestJsonBody(), 'body');
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
-//        $mentionedUsers = Hash::get($this->getRequestJsonBody(), 'mentioned_user_ids', []);
 
         try {
-            $res = $CommentService->add($comment, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
-            $CommentService->notifyNewComment($res['id'], $postId, $this->getUserId());
+            $res = $CommentService->add($commentBody, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            $this->notifyNewComment($res['id'], $postId, $this->getUserId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
@@ -627,6 +627,8 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
+        $requestBody = $this->getRequestJsonBody();
+
         try {
             PostRequestValidator::createPostCommentValidator()->validate($requestBody);
             PostRequestValidator::createFileUploadValidator()->validate($requestBody);
@@ -657,5 +659,80 @@ class PostsController extends BasePagingController
                 ->getResponse();
         }
         return null;
+    }
+
+    /**
+     * Send notification about new comment on a post.
+     * Will notify post's author & other users who've commented on the post
+     *
+     * @param int   $commentId      Comment ID of the new comment
+     * @param int   $postId         Post ID where the comment belongs to
+     * @param int   $userId         User ID of the author of the new comment
+     * @param int[] $mentionedUsers List of user IDs of mentioned users
+     */
+    private function notifyNewComment(int $commentId, int $postId, int $userId, array $mentionedUsers = [])
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $type = $Post->getPostType($postId);
+
+        switch ($type) {
+            case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
+                    $commentId);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId, $commentId);
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                    $postId,
+                    $commentId);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId, $commentId);
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_CREATE_GOAL:
+                $this->notifyUserOfGoalComment($userId, $postId);
+                break;
+        }
+    }
+
+    /**
+     * Send notification if a Goal post is commented
+     *
+     * @param int $commentAuthorUserId ID of user who made the comment
+     * @param int $postId              Post ID where the comment belongs to
+     */
+    private function notifyUserOfGoalComment(int $commentAuthorUserId, int $postId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postData = $Post->getEntity($postId);
+
+        $postId = $postData['id'];
+        $postOwnerUserId = $postData['user_id'];
+
+        //If commenter is not post owner, send notification to owner
+        if ($commentAuthorUserId !== $postOwnerUserId) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL, null, null,
+                [$postOwnerUserId], $commentAuthorUserId, $postData['team_id'], $postId);
+        }
+        $excludedUserList = array($postOwnerUserId, $commentAuthorUserId);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        $notificationReceiverUserList = $Comment->getCommentedUniqueUsersList($postId, false, $excludedUserList);
+
+        if (!empty($notificationReceiverUserList)) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL, null, null,
+                $notificationReceiverUserList, $commentAuthorUserId, $postData['team_id'], $postId);
+        }
     }
 }
