@@ -509,7 +509,6 @@ class BaseController extends Controller
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
     }
 
-
     /**
      * Update default_team_id of an user
      *
@@ -523,17 +522,15 @@ class BaseController extends Controller
             $userId = $this->Auth->user('id');
         }
 
-        $teamList = $this->User->TeamMember->getActiveTeamList($userId);
+        $latestLoggedInTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId);
 
-        if (empty($teamList)) {
+        if (empty($latestLoggedInTeamId)) {
             return 0;
         }
 
-        $newTeamId = key($teamList);
+        $this->Session->write('current_team_id', $latestLoggedInTeamId);
+        $this->User->updateDefaultTeam($latestLoggedInTeamId, true, $userId);
 
-        $this->Session->write('current_team_id', $newTeamId);
-        $this->User->updateDefaultTeam($newTeamId, true, $userId);
-
-        return $newTeamId;
+        return $latestLoggedInTeamId;
     }
 }
