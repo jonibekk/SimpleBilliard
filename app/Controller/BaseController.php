@@ -196,11 +196,12 @@ class BaseController extends Controller
 
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
+                $userId = $this->Auth->user('id');
                 //Try updating user's default_team_id if user belongs to multiple teams
-                $newTeamId = $this->updateDefaultTeam($this->my_uid);
+                $newTeamId = $this->updateDefaultTeam($userId);
                 if (empty($newTeamId)) {
                     //If user doesn't have other team, redirect to create team page
-                    GoalousLog::error("Current team id is empty", ['user_id' => $this->my_uid]);
+                    GoalousLog::info("User $userId is not active in any team");
                     $this->redirect(['controller' => 'teams', 'action' => 'add']);
                 } else {
                     $this->_refreshAuth($this->my_uid);
