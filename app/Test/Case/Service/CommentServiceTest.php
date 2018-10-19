@@ -57,7 +57,7 @@ class CommentServiceTest extends GoalousTestCase
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $this->assertEquals(0, $Comment->getCommentCount($postId));
+        $initialCommentCount = $Comment->getCommentCount($postId);
 
         $newComment = $CommentService->add($newBody, $postId, $userId, $teamId);
 
@@ -66,7 +66,7 @@ class CommentServiceTest extends GoalousTestCase
         $this->assertEquals($postId, $newComment['post_id']);
         $this->assertEquals($newBody, $newComment['body']);
 
-        $this->assertEquals(1, $Comment->getCommentCount($postId));
+        $this->assertEquals(++$initialCommentCount, $Comment->getCommentCount($postId));
     }
 
 

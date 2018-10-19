@@ -277,8 +277,7 @@ class Comment extends AppModel
     {
         $options = [
             'conditions' => [
-                'Comment.post_id' => $post_id,
-                'Comment.team_id' => $this->current_team_id,
+                'Comment.post_id' => $post_id
             ],
             'fields'     => [
                 'Comment.id'

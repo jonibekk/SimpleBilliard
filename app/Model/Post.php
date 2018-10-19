@@ -1963,6 +1963,6 @@ class Post extends AppModel
             ]
         ];
 
-        return (int)$this->find('first', $condition)['Post'];
+        return (int)$this->find('first', $condition)['Post']['type'];
     }
 }

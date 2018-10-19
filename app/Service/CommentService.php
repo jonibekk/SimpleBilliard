@@ -272,7 +272,7 @@ class CommentService extends AppService
                     'table'      => 'comment_files',
                     'alias'      => 'CommentFile',
                     'conditions' => [
-                        'CommentFile.post_id' => $commentId,
+                        'CommentFile.comment_id' => $commentId,
                         'CommentFile.attached_file_id = AttachedFile.id'
                     ]
                 ]
