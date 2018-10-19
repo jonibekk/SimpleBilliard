@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Enum as Enum;
+use Goalous\Model\Enum as Enum;
 
 /**
  * Email Model
@@ -135,7 +135,7 @@ class Email extends AppModel
                     'conditions' => [
                         'TeamMember.user_id = Email.user_id',
                         'TeamMember.team_id' => $teamId,
-                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE()->getValue(),
+                        'TeamMember.status'  => Enum\TeamMember\Status::ACTIVE()->getValue(),
                         'TeamMember.del_flg' => false
                     ]
                 ]
