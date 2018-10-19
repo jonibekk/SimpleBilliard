@@ -1,4 +1,6 @@
 <?php
+App::uses('User', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'TeamService');
 
@@ -16,6 +18,7 @@ class TeamServiceTest extends GoalousTestCase
         'app.term',
         'app.user',
         'app.team',
+        'app.team_member',
         'app.payment_setting',
         'app.invoice',
         'app.credit_card',
@@ -77,7 +80,7 @@ class TeamServiceTest extends GoalousTestCase
             'service_use_status'           => Team::SERVICE_USE_STATUS_READ_ONLY,
             'service_use_state_start_date' => '2017-01-10',
             'service_use_state_end_date'   => '2017-02-09',
-            'timezone'              => 9,
+            'timezone'                     => 9,
         ]);
         $this->setDefaultTeamIdAndUid(1, $teamId);
 
@@ -93,6 +96,43 @@ class TeamServiceTest extends GoalousTestCase
         // test error
         $timezone = $this->TeamService->getTeamTimezone(987987);
         $this->assertNull($timezone);
+    }
+
+    public function test_updateDefaultTeamOnDeletion_success()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+
+        /** @var User $User */
+        $User = ClassRegistry::init('init');
+
+        $newData = [
+            'team_id' => 2,
+            'user_id' => 1
+        ];
+
+        $TeamMember->create();
+        $TeamMember->save($newData, false);
+
+        $TeamService->updateDefaultTeamOnDeletion(1);
+
+        $user = $User->findById(1);
+        $this->assertEquals('2', $user['User']['default_team_Id']);
+
+        $user = $User->findById(2);
+        $this->assertEmpty($user['User']['default_team_Id']);
+
+        $user = $User->findById(3);
+        $this->assertEmpty($user['User']['default_team_Id']);
+
+        $user = $User->findById(12);
+        $this->assertEmpty($user['User']['default_team_Id']);
+
+        $user = $User->findById(13);
+        $this->assertEmpty($user['User']['default_team_Id']);
     }
 
 }
