@@ -79,7 +79,8 @@ class ApiResponse extends BaseApiResponse
     {
         // Set header to prevent file name garbled
         $this->withHeader([
-            'Content-Disposition' => sprintf('attachment; filename*=UTF-8\'\'%s',
+            'Content-Disposition' => sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                $fileName,
                 rawurldecode($fileName)
             ),
             'Access-Control-Expose-Headers' => 'Content-Disposition'
