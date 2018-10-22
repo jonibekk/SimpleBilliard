@@ -2,16 +2,9 @@
 App::uses('BaseValidator', 'Validator');
 App::uses('CommonValidator', 'Validator');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/08/08
- * Time: 16:40
- */
-
 use Respect\Validation\Validator as validator;
 
-class UploadRequestValidator extends BaseValidator
+class FileRequestValidator extends BaseValidator
 {
     public function getDefaultValidationRule(): array
     {
@@ -23,7 +16,7 @@ class UploadRequestValidator extends BaseValidator
      *
      * @return array
      */
-    public function getPostValidationRule(): array
+    public function getUploadValidationRule(): array
     {
         $rules = [
             'file_name' => [validator::notEmpty()::stringType()],
@@ -33,11 +26,10 @@ class UploadRequestValidator extends BaseValidator
         return $rules;
     }
 
-    public static function createPostValidator(): self
+    public static function createUploadValidator(): self
     {
         $self = new self();
-        $self->addRule($self->getPostValidationRule());
+        $self->addRule($self->getUploadValidationRule());
         return $self;
     }
-
 }

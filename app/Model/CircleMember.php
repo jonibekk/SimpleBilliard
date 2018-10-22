@@ -71,13 +71,16 @@ class CircleMember extends AppModel
         'last_posted'           => DataType::INT
     ];
 
-    public function getMyCircleList($check_hide_status = null)
+    public function getMyCircleList($check_hide_status = null, $userId = null, $teamId = null)
     {
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
         if (!is_null($check_hide_status)) {
             $options = [
                 'conditions' => [
-                    'user_id'               => $this->my_uid,
-                    'team_id'               => $this->current_team_id,
+                    'user_id'               => $userId,
+                    'team_id'               => $teamId,
                     'show_for_all_feed_flg' => $check_hide_status
                 ],
                 'fields'     => ['circle_id'],
@@ -85,8 +88,8 @@ class CircleMember extends AppModel
         } else {
             $options = [
                 'conditions' => [
-                    'user_id' => $this->my_uid,
-                    'team_id' => $this->current_team_id,
+                    'user_id' => $userId,
+                    'team_id' => $teamId,
                 ],
                 'fields'     => ['circle_id'],
             ];
