@@ -187,33 +187,42 @@ class BaseController extends Controller
             ];
             //If user is deleted, delete session & user cache, and redirect to login page
             if (empty($this->User->find('first', $condition))) {
-                GoalousLog::notice("User is deleted. Redirecting", [
+                GoalousLog::info("User is deleted. Redirecting", [
                     "user.id" => $this->my_uid,
                 ]);
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($this->Auth->logout());
             }
 
+            $userId = $this->Auth->user('id');
+
             // Detect inconsistent data that current team id is empty
-            if (empty($this->current_team_id)) {
-                $userId = $this->Auth->user('id');
-                //Try updating user's default_team_id if user belongs to multiple teams
-                $newTeamId = $this->updateDefaultTeam($userId);
-                if (empty($newTeamId)) {
-                    //If user doesn't have other team, redirect to create team page
-                    GoalousLog::info("User $userId is not active in any team");
-                    $this->redirect(['controller' => 'teams', 'action' => 'add']);
-                } else {
-                    $this->_refreshAuth($this->my_uid);
-                    foreach (ClassRegistry::keys() as $k) {
-                        $obj = ClassRegistry::getObject($k);
-                        if ($obj instanceof AppModel) {
-                            $obj->current_team_id = $newTeamId;
-                        }
-                    }
-                }
+            if (empty($this->current_team_id) && empty($this->Session->read('user_has_no_team'))) {
+                $this->Session->write('user_has_no_team', true);
             }
-            $this->_setTeamStatus();
+
+            if (!empty($this->current_team_id)) {
+                //If the team no longer exists, force logout
+                if (empty($this->Team->exists($this->current_team_id))) {
+                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
+                    GoalousLog::info("Team is deleted. Redirecting", [
+                        "team.id" => $this->current_team_id,
+                    ]);
+                    $this->redirect($this->Auth->logout());
+                }
+                $this->Session->delete('user_has_no_team');
+            }
+
+            if ($this->Session->read('user_has_no_team') && empty($this->Session->read('redirecting_team'))) {
+                //If user doesn't have other team, redirect to create team page
+                GoalousLog::info("User $userId is not active in any team");
+                $this->Session->write('redirecting_team', true);
+                $this->redirect(['controller' => 'teams', 'action' => 'add']);
+            }
+
+            if (empty($this->Session->read('user_has_no_team'))) {
+                $this->_setTeamStatus();
+            }
         }
     }
 

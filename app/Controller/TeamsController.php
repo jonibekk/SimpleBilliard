@@ -110,8 +110,15 @@ class TeamsController extends AppController
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
+        $newTeamId = $this->Team->getLastInsertID();
+        if (empty($this->Team->findById($this->Auth->user('default_team_id')))) {
+            $userId = $this->Auth->user('id');
+            GoalousLog::info("Updating user $userId default_team_id.");
+            $this->User->updateDefaultTeam($newTeamId, true, $userId);
+        }
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
         $this->Notification->outSuccess(__("Created a team."));
+        $this->Session->delete('redirecting_team');
         return $this->redirect(['action' => 'invite']);
     }
 
@@ -359,7 +366,7 @@ class TeamsController extends AppController
         // Decide $can_start_evaluation
         if (!$previous_term_exists) {
             $can_start_evaluation = !$current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
-        } else if (!$current_term_exists) {
+        } elseif (!$current_term_exists) {
             $can_start_evaluation = !$previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
         } else {
             $isInProgress = $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS()) || $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS());
@@ -1441,7 +1448,7 @@ class TeamsController extends AppController
             if (!$isPast) {
                 throw new NotFoundException();
             }
-        }else {
+        } else {
             // 集計 開始日付, 終了日付
             $start_date = $date_info['date_ranges'][$date_range]['start'];
             $end_date = $date_info['date_ranges'][$date_range]['end'];
@@ -1493,7 +1500,7 @@ class TeamsController extends AppController
                 $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->Term->getCurrentTermId();
-            }else {
+            } else {
                 $start_term_id = $date_range;
             }
             $skip = true;
@@ -1578,7 +1585,7 @@ class TeamsController extends AppController
             if (!$isPast) {
                 throw new NotFoundException();
             }
-        }else {
+        } else {
             // 集計 開始日付, 終了日付
             $start_date = $date_info['date_ranges'][$date_range]['start'];
             $end_date = $date_info['date_ranges'][$date_range]['end'];
@@ -1721,7 +1728,7 @@ class TeamsController extends AppController
                 $start_term_id = $this->Team->Term->getPreviousTermId();
             } elseif ($date_range == 'current_term') {
                 $start_term_id = $this->Team->Term->getCurrentTermId();
-            }else {
+            } else {
                 $start_term_id = $date_range;
             }
 
@@ -1819,7 +1826,7 @@ class TeamsController extends AppController
             if (!$isPast) {
                 throw new NotFoundException();
             }
-        }else {
+        } else {
             // 集計 開始日付, 終了日付
             $start_date = $date_info['date_ranges'][$date_range]['start'];
             $end_date = $date_info['date_ranges'][$date_range]['end'];
@@ -1998,7 +2005,7 @@ class TeamsController extends AppController
             if (!$isPast) {
                 throw new NotFoundException();
             }
-        }else {
+        } else {
             // 集計 開始日付, 終了日付
             $start_date = $date_info['date_ranges'][$date_range]['start'];
             $end_date = $date_info['date_ranges'][$date_range]['end'];
@@ -2119,7 +2126,7 @@ class TeamsController extends AppController
                 } else {
                     $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
                 }
-                $filter_ranking[$rankKey] = $ranking[$rankKey];                
+                $filter_ranking[$rankKey] = $ranking[$rankKey];
             }
             $rank++;
         }
@@ -2176,7 +2183,6 @@ class TeamsController extends AppController
             }
             $date_ranges['past_terms'] = $dateRangesMore;
         }
-
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }

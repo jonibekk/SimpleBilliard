@@ -154,7 +154,7 @@ class AppController extends BaseController
         }
         $this->set('my_prof', $this->User->getMyProf());
         //ログイン済みの場合のみ実行する
-        if ($this->Auth->user()) {
+        if ($this->Auth->user() && empty($this->Session->read('user_has_no_team'))) {
 
             $login_uid = $this->Auth->user('id');
 
@@ -273,7 +273,9 @@ class AppController extends BaseController
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
-        $this->set('my_team_id', $this->current_team_id);
+        if (empty($this->Session->read('user_has_no_team'))) {
+            $this->set('my_team_id', $this->current_team_id);
+        }
         $this->_redirectIfMobileAppVersionUnsupported();
     }
 
@@ -1019,16 +1021,17 @@ class AppController extends BaseController
         if (!$team_id) {
             return false;
         }
+        $userId = $this->Auth->user('id');
         try {
             $skipCheckUserStatus = !empty($this->Session->read('invited_team_id'));
-            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'), $skipCheckUserStatus);
+            $this->User->TeamMember->permissionCheck($team_id, $userId, $skipCheckUserStatus);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            GoalousLog::error("Error on setting user's default team. " . $e->getMessage());
-            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
-            $set_team_id = !empty($team_list) ? key($team_list) : null;
-            $this->Session->write('current_team_id', $set_team_id);
-            $this->User->updateDefaultTeam($set_team_id, true, $this->Auth->user('id'));
+            GoalousLog::error("Error on setting user $userId default_team_id. " . $e->getMessage());
+            $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($this->Auth->user('id'),
+                [$team_id]) ?: null;
+            $this->Session->write('current_team_id', $newTeamId);
+            $this->User->updateDefaultTeam($newTeamId, true, $this->Auth->user('id'));
             return false;
         }
         $this->Session->write('current_team_id', $team_id);

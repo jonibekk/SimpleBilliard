@@ -238,6 +238,9 @@ class TeamMember extends AppModel
         if (!$team_id) {
             throw new RuntimeException(__("If you want to access this page, please switch to the team."));
         }
+        if (empty($this->Team->findById($team_id))) {
+            throw new RuntimeException(__('Your team no longer has access to Goalous.'));
+        }
         if (!$this->myStatusWithTeam) {
             $this->setMyStatusWithTeam($team_id, $uid);
         }
@@ -366,8 +369,7 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    )
-    {
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -2027,8 +2029,7 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2139,8 +2140,7 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    )
-    {
+    ) {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2167,8 +2167,7 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'      => $teamMemberId,
@@ -2188,8 +2187,7 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2209,8 +2207,7 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2239,8 +2236,7 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2260,9 +2256,9 @@ class TeamMember extends AppModel
      * @param int   $userId
      * @param array $excludedTeamId Team ID to be excluded from the search
      *
-     * @return int Team ID
+     * @return int | null Team ID
      */
-    public function getLatestLoggedInActiveTeamId(int $userId, array $excludedTeamId = []): int
+    public function getLatestLoggedInActiveTeamId(int $userId, array $excludedTeamId = [])
     {
         $condition = [
             'conditions' => [
@@ -2272,7 +2268,7 @@ class TeamMember extends AppModel
                 'TeamMember.team_id !=' => $excludedTeamId
             ],
             'fields'     => [
-                'TeamMember.team_id'
+                'TeamMember.team_id',
             ],
             'order'      => [
                 'TeamMember.last_login' => 'DESC'
@@ -2289,10 +2285,9 @@ class TeamMember extends AppModel
                 ]
             ]
         ];
-
         $res = $this->find('first', $condition);
 
-        return Hash::get($res, 'TeamMember.team_id', 0);
+        return Hash::get($res, 'TeamMember.team_id', null);
     }
 
 }
