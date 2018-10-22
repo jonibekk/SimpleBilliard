@@ -289,11 +289,15 @@ class TeamMember extends AppModel
                 'User' => [
                     'conditions' => [
                         'User.active_flg' => true,
+                        'User.del_flg'    => false
                     ],
                     'fields'     => ['User.id']
                 ],
                 'Team' => [
-                    'fields' => ['Team.id']
+                    'conditions' => [
+                        'Team.del_flg' => false
+                    ],
+                    'fields'     => ['Team.id']
                 ]
             ]
         ];
