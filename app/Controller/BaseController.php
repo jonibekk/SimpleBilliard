@@ -532,29 +532,4 @@ class BaseController extends Controller
         }
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
     }
-
-    /**
-     * Update default_team_id of an user
-     *
-     * @param int $userId User ID
-     *
-     * @return int New team ID
-     */
-    private function updateDefaultTeam(int $userId = null): int
-    {
-        if (empty($userId)) {
-            $userId = $this->Auth->user('id');
-        }
-
-        $latestLoggedInTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId);
-
-        if (empty($latestLoggedInTeamId)) {
-            return 0;
-        }
-
-        $this->Session->write('current_team_id', $latestLoggedInTeamId);
-        $this->User->updateDefaultTeam($latestLoggedInTeamId, true, $userId);
-
-        return $latestLoggedInTeamId;
-    }
 }
