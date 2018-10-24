@@ -135,10 +135,10 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals('2', $user['User']['default_team_id']);
 
         $user = $User->findById(12);
-        $this->assertEmpty($user['User']['default_team_id']);
+        $this->assertEquals('1', $user['User']['default_team_id']);
 
         $user = $User->findById(13);
-        $this->assertEmpty($user['User']['default_team_id']);
+        $this->assertEquals('1', $user['User']['default_team_id']);
     }
 
 }

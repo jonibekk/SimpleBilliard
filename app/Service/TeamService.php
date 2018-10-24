@@ -330,7 +330,7 @@ class TeamService extends AppService
             $userId = $user['User']['id'];
 
             //If user doesn't have next active item, set the default team id to null
-            $newTeamId = $TeamMember->getLatestLoggedInActiveTeamId($userId, [$oldTeamId]) ?: null;
+            $newTeamId = $TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
 
             $User->updateDefaultTeam($newTeamId, true, $userId);
         }
