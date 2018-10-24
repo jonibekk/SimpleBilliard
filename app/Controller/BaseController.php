@@ -206,13 +206,15 @@ class BaseController extends Controller
                 $this->redirect($this->Auth->logout());
             }
 
-            // Detect inconsistent data that current team id is empty
+            //Detect inconsistent data that current team id is empty.
             if (empty($this->current_team_id)) {
                 $this->Session->write('user_has_no_team', true);
-            } else {
+            } elseif (!empty($this->current_team_id)) {
                 //If the team no longer exists or user becomes inactive, force logout.
                 //This simplifies process flow, since auto-team changes happens after login
-                if (empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
+                //However, ignore this step if user is being invited since user's team_member won't be active yet
+                if ($this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST &&
+                    empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
                     $this->Session->delete('user_has_no_team');
                     $this->Session->delete('redirecting_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
@@ -224,6 +226,7 @@ class BaseController extends Controller
                 }
                 $this->Session->delete('user_has_no_team');
             }
+
             if ($this->Session->read('user_has_no_team') && empty($this->Session->read('redirecting_team'))) {
                 //If user doesn't have other team, redirect to create team page
                 GoalousLog::info("User $this->my_uid is not active in any team");

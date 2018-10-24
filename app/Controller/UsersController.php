@@ -239,8 +239,8 @@ class UsersController extends AppController
                     return $this->redirect("/");
                 }
 
-                //If default team is deleted
-                if (empty($this->Team->findById($teamId))) {
+                //If default team is deleted or if user is not active in current team
+                if (empty($this->TeamMember->isActive($userId, $teamId))) {
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
                     if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
@@ -248,9 +248,9 @@ class UsersController extends AppController
                         GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
                         return $this->redirect("/");
                     }
+                    $this->TeamMember->activateMembers($userId, $invitedTeamId);
                 }
                 $this->Session->write('current_team_id', $invitedTeamId);
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
@@ -906,7 +906,7 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+        $this->Session->delete('referer_status');
         $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
     }
