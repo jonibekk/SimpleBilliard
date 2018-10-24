@@ -3347,6 +3347,9 @@
                 }
               }
             },
+            "is_member" : {
+              "type" : "boolean"
+            },
             "circle_id" : {
               "$ref" : "#/components/schemas/Object.String.ID"
             }
