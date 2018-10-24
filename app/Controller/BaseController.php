@@ -215,6 +215,7 @@ class BaseController extends Controller
                 //If the team no longer exists or user becomes inactive, force logout.
                 //This simplifies process flow, since auto-team changes happens after login
                 if (empty($this->User->TeamMember->isActive($userId, $this->current_team_id))) {
+                    $this->User->updateDefaultTeam(null, true, $userId);
                     $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
                     GoalousLog::info("Team is deleted. Redirecting", [
                         "team.id" => $this->current_team_id,
