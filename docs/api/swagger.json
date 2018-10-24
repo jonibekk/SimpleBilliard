@@ -3377,6 +3377,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
+          "is_member" : true,
           "circle_id" : "505"
         }
       },
