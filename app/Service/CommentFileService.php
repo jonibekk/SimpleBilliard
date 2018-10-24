@@ -31,7 +31,8 @@ class CommentFileService extends AppService
             'comment_id'       => $commentId,
             'attached_file_id' => $attachedFileId,
             'team_id'          => $teamId,
-            'index_num'        => $indexNum
+            'index_num'        => $indexNum,
+            'created'          => GoalousDateTime::now()->getTimestamp()
         ];
 
         try {

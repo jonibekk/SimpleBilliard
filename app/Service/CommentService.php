@@ -150,6 +150,7 @@ class CommentService extends AppService
             $newData['post_id'] = $postId;
             $newData['user_id'] = $userId;
             $newData['team_id'] = $teamId;
+            $newData['created'] = GoalousDateTime::now()->getTimestamp();
 
             /** @var CommentEntity $savedComment */
             $savedComment = $Comment->useType()->useEntity()->save($newData, false);
