@@ -206,19 +206,19 @@ class BaseController extends Controller
                 $this->redirect($this->Auth->logout());
             }
 
-            $userId = $this->Auth->user('id');
-
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
                 $this->Session->write('user_has_no_team', true);
             } else {
                 //If the team no longer exists or user becomes inactive, force logout.
                 //This simplifies process flow, since auto-team changes happens after login
-                if (empty($this->User->TeamMember->isActive($userId, $this->current_team_id))) {
-                    $this->User->updateDefaultTeam(null, true, $userId);
-                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
+                if (empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
+                    $this->Session->delete('user_has_no_team');
+                    $this->Session->delete('redirecting_team');
+                    $this->User->updateDefaultTeam(null, true, $this->my_uid);
+                    $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
                     GoalousLog::info("Team is deleted. Redirecting", [
-                        "team.id" => $this->current_team_id,
+                        "user.id" => $this->my_uid,
                     ]);
                     $this->redirect($this->Auth->logout());
                 }
@@ -226,13 +226,13 @@ class BaseController extends Controller
             }
             if ($this->Session->read('user_has_no_team') && empty($this->Session->read('redirecting_team'))) {
                 //If user doesn't have other team, redirect to create team page
-                GoalousLog::info("User $userId is not active in any team");
+                GoalousLog::info("User $this->my_uid is not active in any team");
                 $this->Session->write('redirecting_team', true);
             }
             if ($this->Session->read('redirecting_team') && !in_array($this->request->url,
                     $this->ignoreForcedTeamCreation)) {
                 //If user tries to access other page, force redirect to team creation page
-                $this->Notification->outError(__("You need to create a team before using Goalous."));
+                $this->Notification->outInfo(__("You need to create a team before using Goalous."));
                 $this->redirect(['controller' => 'teams', 'action' => 'add']);
             }
             if (empty($this->Session->read('user_has_no_team'))) {

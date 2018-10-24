@@ -1018,9 +1018,6 @@ class AppController extends BaseController
 
     protected function _setDefaultTeam($team_id)
     {
-        if (!$team_id) {
-            return false;
-        }
         $userId = $this->Auth->user('id');
         try {
             $skipCheckUserStatus = !empty($this->Session->read('invited_team_id'));
@@ -1028,8 +1025,7 @@ class AppController extends BaseController
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
             GoalousLog::error("Error on setting user $userId default_team_id. " . $e->getMessage());
-            $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($this->Auth->user('id'),
-                [$team_id]) ?: null;
+            $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($this->Auth->user('id')) ?: null;
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $this->Auth->user('id'));
             return false;

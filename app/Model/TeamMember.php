@@ -2255,21 +2255,19 @@ class TeamMember extends AppModel
     }
 
     /**
-     * Get last logged in team
+     * Get last logged in active team ID
      *
-     * @param int   $userId
-     * @param array $excludedTeamId Team ID to be excluded from the search
+     * @param int $userId
      *
-     * @return int | null Team ID
+     * @return int | null Team ID, null for no available joined active team
      */
-    public function getLatestLoggedInActiveTeamId(int $userId, array $excludedTeamId = [])
+    public function getLatestLoggedInActiveTeamId(int $userId)
     {
         $condition = [
             'conditions' => [
-                'TeamMember.user_id'    => $userId,
-                'TeamMember.del_flg'    => false,
-                'TeamMember.status'     => TeamMember::USER_STATUS_ACTIVE,
-                'TeamMember.team_id !=' => $excludedTeamId
+                'TeamMember.user_id' => $userId,
+                'TeamMember.del_flg' => false,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
             ],
             'fields'     => [
                 'TeamMember.team_id',

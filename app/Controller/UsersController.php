@@ -80,12 +80,6 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        // Check if user belongs any team
-        if (empty($this->TeamMember->findBelongsByUser($userInfo['id']))) {
-            $this->Notification->outError(__("You don't belong to any team."));
-            return $this->render();
-        }
-
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
