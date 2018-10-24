@@ -19,8 +19,11 @@ class FileRequestValidator extends BaseValidator
     public function getUploadValidationRule(): array
     {
         $rules = [
-            'file_name' => [validator::notEmpty()::stringType()],
-            'file_data' => [validator::notEmpty()::stringType()]
+            'name' => [validator::notEmpty()::stringType()],
+            'tmp_name' => [validator::notEmpty()::stringType()],
+            'type' => [validator::notEmpty()::stringType()],
+            'error' => [validator::notEmpty()::equals(0)],
+            'size' => [validator::notEmpty()::intType()],
         ];
 
         return $rules;

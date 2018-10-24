@@ -4,6 +4,7 @@ App::uses('FileRequestValidator', 'Validator/Request/Api/V2');
 App::import('Service', 'UploadService');
 App::import('Service', 'AttachedFileService');
 App::uses('HttpSocket', 'Network/Http');
+App::import('Validator/Lib/Storage', 'UploadValidator');
 
 /**
  * Class FilesController
@@ -69,10 +70,17 @@ class FilesController extends BaseApiController
         return null;
     }
 
+    /**
+     * File uploading way is `multipart/form-data`, not `base64` in request body
+     * At first, we have used `base64` way, but when upload large files, Chrome crash happens so easily.
+     * The cause is not unknown still, but we decided to use `multipart/form-data` instead of `base64`
+     * @return ApiResponse|BaseApiResponse|ErrorResponse
+     */
     public function post_upload()
     {
-        $error = $this->validatePost();
+        $file = Hash::get($this->request->params, 'form.file');
 
+        $error = $this->validatePost($file);
         if (!empty($error)) {
             return $error;
         }
@@ -80,8 +88,9 @@ class FilesController extends BaseApiController
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
-        $encodedFile = $this->getRequestJsonBody()['file_data'];
-        $fileName = $this->getRequestJsonBody()['file_name'];
+        $content = file_get_contents($file['tmp_name']);
+        $encodedFile = base64_encode($content);
+        $fileName = $file['name'];
 
         try {
             $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile, $fileName);
@@ -99,18 +108,23 @@ class FilesController extends BaseApiController
     /**
      * Validation method for post function
      *
+     * @param $file
      * @return CakeResponse|null
      */
-    private function validatePost()
+    private function validatePost($file)
     {
-        $requestBody = $this->getRequestJsonBody();
+        if (empty($file) || !is_array($file)) {
+            return ErrorResponse::badRequest()
+                ->withMessage(__('validation failed'))
+                ->getResponse();
+        }
 
         try {
-            FileRequestValidator::createUploadValidator()->validate($requestBody);
+            FileRequestValidator::createUploadValidator()->validate($file);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
-                ->withMessage(__('validation failed'))
+                ->withMessage(__('Failed to upload.'))
                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
@@ -118,6 +132,14 @@ class FilesController extends BaseApiController
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        // Check if file size doesn't over limit
+        // UploadValidator do same checking, but it is after decode content.
+        if ($file['size'] > UploadValidator::MAX_FILE_SIZE * 1024 * 1024) {
+            return ErrorResponse::badRequest()
+                ->withMessage(__("%sMB is the limit.", UploadValidator::MAX_FILE_SIZE))
+                ->getResponse();
         }
 
         return null;
