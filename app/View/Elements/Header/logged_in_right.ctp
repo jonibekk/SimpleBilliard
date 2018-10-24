@@ -5,7 +5,7 @@
  */
 ?>
 
-<?php $userHasNoTeam = $this->Session->read('user_has_no_team'); ?>
+<?php $userHasNoTeam = $this->Session->read('user_has_no_team') ?: false; ?>
 
 <?php if (empty($userHasNoTeam)): ?>
     <?php if (!$is_mb_app): ?>
@@ -162,7 +162,7 @@
 <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
     <a href="#"
        class="btn-function-header"
-        <?php if ($userHasNoTeam): ?> style="float:right margin-right:8px" <?php endif; ?>>
+        <?php if (!empty($userHasNoTeam) && $userHasNoTeam): ?> style="float:right margin-right:8px" <?php endif; ?>>
         <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         <?php if (!empty($all_alert_cnt) && $all_alert_cnt > 0): ?>
             <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
