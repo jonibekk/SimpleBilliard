@@ -135,7 +135,7 @@ class Email extends AppModel
                     'conditions' => [
                         'TeamMember.user_id = Email.user_id',
                         'TeamMember.team_id' => $teamId,
-                        'TeamMember.status'  => Enum\TeamMember\Status::ACTIVE()->getValue(),
+                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE()->getValue(),
                         'TeamMember.del_flg' => false
                     ]
                 ]
