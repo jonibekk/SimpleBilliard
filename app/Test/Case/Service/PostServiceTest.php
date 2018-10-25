@@ -219,6 +219,7 @@ class PostServiceTest extends GoalousTestCase
         $post = $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
         $this->assertNotEmpty($post);
 
+        $postId = $post['id'];
 
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
@@ -244,6 +245,7 @@ class PostServiceTest extends GoalousTestCase
         $post = $this->PostService->addNormal($postData, $userId = 1, $teamId = 1);
         $this->assertNotEmpty($post);
 
+        $postId = $post['id'];
 
         // assert shared to public circle
         $sharedCircleAll = $this->PostShareCircle->find('all', [
