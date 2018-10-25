@@ -238,6 +238,9 @@ class TeamMember extends AppModel
         if (!$team_id) {
             throw new RuntimeException(__("If you want to access this page, please switch to the team."));
         }
+        if (empty($this->Team->findById($team_id))) {
+            throw new RuntimeException(__('Your team no longer has access to Goalous.'));
+        }
         if (!$this->myStatusWithTeam) {
             $this->setMyStatusWithTeam($team_id, $uid);
         }
@@ -286,11 +289,15 @@ class TeamMember extends AppModel
                 'User' => [
                     'conditions' => [
                         'User.active_flg' => true,
+                        'User.del_flg'    => false
                     ],
                     'fields'     => ['User.id']
                 ],
                 'Team' => [
-                    'fields' => ['Team.id']
+                    'conditions' => [
+                        'Team.del_flg' => false
+                    ],
+                    'fields'     => ['Team.id']
                 ]
             ]
         ];
@@ -2245,6 +2252,69 @@ class TeamMember extends AppModel
             return [];
         }
         return Hash::extract($res, '{n}.TeamMember');
+    }
+
+    /**
+     * Get last logged in active team ID
+     *
+     * @param int $userId
+     *
+     * @return int | null Team ID, null for no available joined active team
+     */
+    public function getLatestLoggedInActiveTeamId(int $userId)
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.user_id' => $userId,
+                'TeamMember.del_flg' => false,
+                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
+            ],
+            'fields'     => [
+                'TeamMember.team_id',
+            ],
+            'order'      => [
+                'TeamMember.last_login' => 'DESC'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'teams',
+                    'alias'      => 'Team',
+                    'conditions' => [
+                        'Team.id = TeamMember.team_id',
+                        'Team.del_flg' => false
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('first', $condition);
+
+        return Hash::get($res, 'TeamMember.team_id', null);
+    }
+
+    /**
+     * Check if user is being invited to given team
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isBeingInvited(int $userId, int $teamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.user_id' => $userId,
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.status'  => Enum\TeamMember\Status::INVITED()->getValue(),
+                'TeamMember.del_flg' => false
+            ],
+            'fields'     => [
+                'TeamMember.id'
+            ]
+        ];
+
+        return !empty($this->find('count', $condition));
     }
 
 }

@@ -1,9 +1,13 @@
-<?= $this->App->viewStartComment()?>
-<?php  
+<?= $this->App->viewStartComment() ?>
+<?php
 /**
  * @var $is_mb_app
  */
 ?>
+
+<?php $userHasNoTeam = $this->Session->read('user_has_no_team') ?: false; ?>
+
+<?php if (empty($userHasNoTeam)): ?>
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url([
@@ -13,11 +17,16 @@
            ]) ?>">
             <?=
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium_large'],
-                ['width' => '22', 'height' => '22', 'alt' => 'icon', 'class' => 'header-nav-avatar header-dropdown-avatar header-icon-zoom']) ?>
+                [
+                    'width'  => '22',
+                    'height' => '22',
+                    'alt'    => 'icon',
+                    'class'  => 'header-nav-avatar header-dropdown-avatar header-icon-zoom'
+                ]) ?>
         </a>
     <?php endif; ?>
 
-    <?php if($is_mb_app || $isMobileBrowser): ?>
+    <?php if ($is_mb_app || $isMobileBrowser): ?>
         <div class="header-icon-search-toggle header-icon-zoom dropdown-toggle <?= $is_mb_app || $isMobileBrowser ? 'search-icon-adjust' : '' ?>">
             <a href="#">
                 <i class="fa fa-search fa-adjust-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
@@ -42,23 +51,24 @@
 
 
     <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
-        <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
-            <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
-                <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
-                    <span><?= $setup_rest_count ?></span>
-                </div>
-            <?php endif; ?>
-        </a>
-    </div>
+        <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?> header-icon-zoom">
+            <a href="/setup/top/" class="btn-header-setup">
+                <i class="fa fa-book fa-adjust-book header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+                <?php if (isset($setup_rest_count) && $setup_rest_count >= 1): ?>
+                    <div class="btn btn-xs bell-notify-box notify-setup-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
+                        <span><?= $setup_rest_count ?></span>
+                    </div>
+                <?php endif; ?>
+            </a>
+        </div>
     <?php endif; ?>
 
     <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?> header-icon-zoom">
         <a id="download" href="#" class="btn-addition-header">
             <i class="fa fa-plus-circle fa-adjust-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
-        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu " aria-labelledby="download">
+        <ul class="<?= $is_mb_app ? "mb-header-nav-add-contents" : "header-nav-add-contents" ?> dropdown-menu "
+            aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li class="header-nav-add-contents-goal">
                     <a class="header-nav-add-contents-anchor"
@@ -100,7 +110,7 @@
                 <ul class="header-nav-message-contents message-dropdown" role="menu">
                     <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px"></i><span
-                            class="notify-empty-text"><?= __('No new message') ?></span>
+                                class="notify-empty-text"><?= __('No new message') ?></span>
                     </li>
                 </ul>
             </div>
@@ -126,7 +136,7 @@
                     style="overflow-y:scroll">
                     <li class="notify-card-empty">
                         <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                            class="notify-empty-text"><?= __('No new notification') ?></span>
+                                class="notify-empty-text"><?= __('No new notification') ?></span>
                     </li>
                 </ul>
             </div>
@@ -148,27 +158,31 @@
             </a>
         </div>
     </div>
-    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
-        <a href="#"
-           class="btn-function-header"">
-            <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
-            <?php if ($all_alert_cnt > 0): ?>
-                <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
+<?php endif; ?>
+<div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?> header-icon-zoom header-function">
+    <a href="#"
+       class="btn-function-header"
+        <?php if (!empty($userHasNoTeam) && $userHasNoTeam): ?> style="float:right; margin-right:8px;" <?php endif; ?>>
+        <i class="header-dropdown-icon-functions fa fa-cog fa-adjust-cog header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
+        <?php if (!empty($all_alert_cnt) && $all_alert_cnt > 0): ?>
+            <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
                  <span>
                    <?= $all_alert_cnt ?>
                  </span>
-                </div>
-            <?php endif; ?>
-        </a>
-        <ul class="<?= $is_mb_app ? "mb-header-nav-function-contents" : "header-nav-function-contents" ?> dropdown-menu" role="menu"
-            aria-labelledby="dropdownMenu1">
+            </div>
+        <?php endif; ?>
+    </a>
+    <ul class="<?= $is_mb_app ? "mb-header-nav-function-contents" : "header-nav-function-contents" ?> dropdown-menu"
+        role="menu"
+        aria-labelledby="dropdownMenu1">
+        <?php if (empty($userHasNoTeam)): ?>
             <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__('User Setting'),
                     ['controller' => 'users', 'action' => 'settings'],
                     ['class' => 'header-nav-function-contents-user-setting']) ?>
             </li>
             <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-            if (Hash::get($my_member_status, 'TeamMember.admin_flg') && $my_member_status['TeamMember']['admin_flg']):?>
+            if (!empty($my_member_status) && Hash::get($my_member_status, 'TeamMember.admin_flg', false)):?>
                 <li class="header-nav-function-contents-list">
                     <?=
                     $this->Html->link(__('Team Setting'),
@@ -182,7 +196,7 @@
                         ['class' => 'header-nav-function-contents-billing']) ?>
                 </li>
             <?php endif; ?>
-            <?php if ($is_evaluation_available): ?>
+            <?php if (!empty($is_evaluation_available) && $is_evaluation_available): ?>
                 <li class="header-nav-function-contents-list">
                     <?=
                     $this->Html->link(__('Evaluation'),
@@ -205,28 +219,29 @@
                     </div>
                 <?php } ?>
             </li>
+        <?php endif; ?>
+        <li class="header-nav-function-contents-list">
+            <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=17c2lbrWEuqQYvOlVSb3Sn1dyFatXq2XD' : 'https://drive.google.com/open?id=1HZBsB3EdS1dciMLY3RXuc1FYHU1uuW73'; ?>
+               class="header-nav-function-contents-user-guidelines"><?= __('User Guide'); ?></a>
+        </li>
+        <li class="header-nav-function-contents-list">
+            <a href="#" data-toggle="modal" data-target="#modal_tutorial"
+               class="header-nav-function-contents-tutorial">
+                <?= __('Tutorial') ?>
+            </a>
+        </li>
+        <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
             <li class="header-nav-function-contents-list">
-                <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=17c2lbrWEuqQYvOlVSb3Sn1dyFatXq2XD' : 'https://drive.google.com/open?id=1HZBsB3EdS1dciMLY3RXuc1FYHU1uuW73'; ?>
-                    class="header-nav-function-contents-user-guidelines" ><?=__('User Guide');?></a>
+                <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
+                   class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
             </li>
-            <li class="header-nav-function-contents-list">
-                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
-                   class="header-nav-function-contents-tutorial">
-                    <?= __('Tutorial') ?>
-                </a>
-            </li>
-            <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-                <li class="header-nav-function-contents-list">
-                    <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                       class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
-                </li>
-            <?php endif; ?>
-            <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__('Logout'),
-                    ['controller' => 'users', 'action' => 'logout'],
-                    ['class' => 'header-nav-function-contents-logout']) ?>
-            </li>
-        </ul>
-    </div>
-<?= $this->App->viewEndComment()?>
+        <?php endif; ?>
+        <li class="header-nav-function-contents-list">
+            <?=
+            $this->Html->link(__('Logout'),
+                ['controller' => 'users', 'action' => 'logout'],
+                ['class' => 'header-nav-function-contents-logout']) ?>
+        </li>
+    </ul>
+</div>
+<?= $this->App->viewEndComment() ?>
