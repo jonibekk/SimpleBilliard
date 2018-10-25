@@ -2292,4 +2292,29 @@ class TeamMember extends AppModel
         return Hash::get($res, 'TeamMember.team_id', null);
     }
 
+    /**
+     * Check if user is being invited to given team
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isBeingInvited(int $userId, int $teamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.user_id' => $userId,
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.status'  => Enum\TeamMember\Status::INVITED()->getValue(),
+                'TeamMember.del_flg' => false
+            ],
+            'fields'     => [
+                'TeamMember.id'
+            ]
+        ];
+
+        return !empty($this->find('count', $condition));
+    }
+
 }

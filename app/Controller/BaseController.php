@@ -214,7 +214,7 @@ class BaseController extends Controller
                 //If the team no longer exists or user becomes inactive, force logout.
                 //This simplifies process flow, since auto-team changes happens after login
                 //However, ignore this step if user is being invited since user's team_member won't be active yet
-                if ($this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST &&
+                if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
                     empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
                     $this->Session->delete('user_has_no_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
