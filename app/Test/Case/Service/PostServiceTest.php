@@ -667,9 +667,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToPublicPost_success()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $result = $this->PostService->checkUserAccessToPost(4, 1);
         $result1 = $this->PostService->checkUserAccessToPost(4, 1, true);
 
@@ -679,9 +676,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_success()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $result = $this->PostService->checkUserAccessToPost(2, 7, true);
         $result1 = $this->PostService->checkUserAccessToPost(2, 7);
 
@@ -691,9 +685,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_failed()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $result = $this->PostService->checkUserAccessToPost(4, 7);
 
         $this->assertFalse($result);
@@ -701,9 +692,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToJoinedPost_success()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $result = $this->PostService->checkUserAccessToPost(1, 1);
 
         $this->assertTrue($result);
@@ -712,9 +700,6 @@ class PostServiceTest extends GoalousTestCase
     public function test_softDeletePost_success()
     {
         $postId = 1;
-
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
 
         $this->PostService->softDelete($postId);
 
@@ -776,10 +761,6 @@ class PostServiceTest extends GoalousTestCase
     public function test_softDeletePostNotExist_failed()
     {
         $postId = 10909;
-
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $this->PostService->softDelete($postId);
     }
 
@@ -789,9 +770,6 @@ class PostServiceTest extends GoalousTestCase
     public function test_softDeletePostDeleted_failed()
     {
         $postId = 1;
-
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
 
         $this->PostService->softDelete($postId);
         $this->PostService->softDelete($postId);
@@ -814,8 +792,6 @@ class PostServiceTest extends GoalousTestCase
             ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
@@ -837,9 +813,6 @@ class PostServiceTest extends GoalousTestCase
      */
     public function test_editPostMissing_failed()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $newBody = 'EDITED';
 
         $this->PostService->editPost($newBody, 183281390);
@@ -848,9 +821,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_editPost_success()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $newBody = 'EDITED';
 
         $res = $this->PostService->editPost($newBody, 1);
@@ -861,9 +831,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_checkUserAccessToMultiplePost_failure()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         /* Circle post and it was created by login user */
         $userId = 1;
         $teamId = 1;
@@ -876,7 +843,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertEmpty($msg);
@@ -890,7 +857,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertEmpty($msg);
@@ -905,7 +872,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertEmpty($msg);
@@ -918,7 +885,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertEmpty($msg);
@@ -933,7 +900,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertNotEmpty($msg);
@@ -944,7 +911,7 @@ class PostServiceTest extends GoalousTestCase
         $msg = "";
         try {
             $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (GlException\GoalousNotFoundException $e) {
             $msg = $e->getMessage();
         }
         $this->assertEmpty($msg);
@@ -952,9 +919,6 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_checkUserAccessToMultiplePost_success()
     {
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
-
         $postsIds = [1, 101];
         $userId = 1;
 
@@ -972,8 +936,6 @@ class PostServiceTest extends GoalousTestCase
         $newData['body'] = $body;
         $newData['type'] = $type;
 
-        /** @var PostService $this->PostService */
-        $this->PostService = ClassRegistry::init('PostService');
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
         $initialCircle = $Circle->getById($circleId);
