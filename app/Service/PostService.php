@@ -826,86 +826,55 @@ class PostService extends AppService
      * @param int $userId
      * @param int $postsIds
      *
+     * @return bool
      * @throws Exception
      */
-    public function checkUserAccessToMultiplePost(int $userId, array $postsIds)
+    public function checkUserAccessToMultiplePost(int $userId, array $postsIds) : bool
     {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init("CircleMember");
-
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
 
-        $circleOption = [
+        $options = [
             'conditions' => [
-                'PostShareCircle.post_id' => $postsIds,
+                'Circle.del_flg' => false,
+                'CircleMember.id' => null
             ],
             'fields'     => [
-                'Circle.id',
+                'PostShareCircle.circle_id',
+                'PostShareCircle.post_id',
             ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
             'joins'      => [
                 [
                     'type'       => 'INNER',
                     'conditions' => [
                         'Circle.id = PostShareCircle.circle_id',
+                        'PostShareCircle.post_id' => $postsIds,
+                        'PostShareCircle.del_flg' => false,
+                        'Circle.public_flg' => false,
                     ],
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
-                    'field'      => 'PostShareCircle.circle_id'
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Circle.id = CircleMember.circle_id',
+                        'CircleMember.user_id' => $userId,
+                        'CircleMember.del_flg' => false,
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
                 ]
             ]
         ];
 
-        /** @var CircleEntity $circles */
-        $circlePostArray = $Circle->useType()->useEntity()->find('all', $circleOption);
-
-        if (empty($circlePostArray)) {
-            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        $noPermissionPosts = $Circle->find('all', $options);
+        $noPermissionPosts = Hash::extract($noPermissionPosts, '{n}.PostShareCircle');
+        if (!empty($noPermissionPosts)) {
+            GoalousLog::info('No permission posts', $noPermissionPosts);
+            throw new GlException\GoalousNotFoundException(__("You don't have permission to access this post"));
         }
 
-        if (count($circlePostArray) != count($postsIds)) {
-            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
-        }
-
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $db = $CircleMember->getDataSource();
-
-        $subQuery = $db->buildStatement([
-            'conditions' => [
-                'CircleMember.user_id' => $userId,
-                'CircleMember.del_flg' => false,
-            ],
-            'fields'     => [
-                'CircleMember.circle_id'
-            ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember'
-        ], $CircleMember);
-        $subQueryExpression = $db->expression($subQuery);
-
-        $query = [
-            'conditions' => [
-                'OR' => [
-                    $subQueryExpression,
-                    'Circle.public_flg' => true,
-                ]
-            ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
-            'fields'     => 'Circle.id'
-        ];
-
-        $circleUserArray = $Circle->find('all', $query);
-
-        $circleUserArray = Hash::extract($circleUserArray, '{n}.Circle.id');
-        $circlePostArray = Hash::extract($circlePostArray, '{n}.Circle.id');
-
-        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)) {
-            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
-        }
+        return true;
     }
 }
