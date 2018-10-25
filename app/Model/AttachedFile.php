@@ -498,7 +498,7 @@ class AttachedFile extends AppModel
     public function isReadable(int $fileId, $userId = null, $teamId = null)
     {
         $file = $this->findById($fileId);
-        if (!$file) {
+        if (empty($file)) {
             return false;
         }
 
