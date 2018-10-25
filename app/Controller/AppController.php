@@ -273,9 +273,7 @@ class AppController extends BaseController
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
-        if (empty($this->Session->read('user_has_no_team'))) {
-            $this->set('my_team_id', $this->current_team_id);
-        }
+        $this->set('my_team_id', $this->current_team_id);
         $this->_redirectIfMobileAppVersionUnsupported();
     }
 

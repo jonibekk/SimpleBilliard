@@ -194,9 +194,6 @@ class TeamService extends AppService
                     AppUtil::varExportOneLine($targetTeamList)));
                 $this->log(Debugger::trace());
             }
-            foreach ($targetTeamList as $team) {
-                $this->updateDefaultTeamOnDeletion($team);
-            }
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             throw $exception;

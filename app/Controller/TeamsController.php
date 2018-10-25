@@ -110,15 +110,9 @@ class TeamsController extends AppController
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
-        $newTeamId = $this->Team->getLastInsertID();
-        if (empty($this->Team->findById($this->Auth->user('default_team_id')))) {
-            $userId = $this->Auth->user('id');
-            GoalousLog::info("Updating user $userId default_team_id.");
-            $this->User->updateDefaultTeam($newTeamId, true, $userId);
-        }
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
         $this->Notification->outSuccess(__("Created a team."));
-        $this->Session->delete('redirecting_team');
+        $this->Session->delete('user_has_no_team');
         return $this->redirect(['action' => 'invite']);
     }
 

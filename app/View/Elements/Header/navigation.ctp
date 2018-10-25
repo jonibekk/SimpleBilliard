@@ -1,6 +1,6 @@
 <?= $this->App->viewStartComment() ?>
 
-<?php $userHasNoTeam = $this->Session->read('user_has_no_team'); ?>
+<?php $userHasNoTeam = $this->Session->read('user_has_no_team') ?: false; ?>
 
 <div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
@@ -94,13 +94,13 @@
                     ?>
                 </form>
             </li>
+            <li class="visible-xxxs visible-xxs hidden-xs">
+                <?= $this->element('dashboard_saved_item') ?>
+            </li>
+            <li class="circle-list-in-hamburger visible-xxxs visible-xxs hidden-xs">
+                <?= $this->element('circle_list_in_hamburger') ?>
+            </li>
         <?php endif; ?>
-        <li class="visible-xxxs visible-xxs hidden-xs">
-            <?= $this->element('dashboard_saved_item') ?>
-        </li>
-        <li class="circle-list-in-hamburger visible-xxxs visible-xxs hidden-xs">
-            <?= $this->element('circle_list_in_hamburger') ?>
-        </li>
     </ul>
 </div>
 <?= $this->App->viewEndComment() ?>
