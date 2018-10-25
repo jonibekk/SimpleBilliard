@@ -351,7 +351,8 @@ class CirclesController extends BasePagingController
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
 
-        $circle = $CircleService->get($circleId);
+        $circle = $CircleService->get($circleId, $this->getUserId());
+
         return ApiResponse::ok()->withData($circle)->getResponse();
     }
 }
