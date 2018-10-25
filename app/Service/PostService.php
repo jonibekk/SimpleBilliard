@@ -829,7 +829,7 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function checkUserAccessToMultiplePost(int $userId, array $postsIds)
+    public function checkUserAccessToMultiplePost(int $userId, array $postsIds) : bool
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -872,9 +872,9 @@ class PostService extends AppService
         $noPermissionPosts = Hash::extract($noPermissionPosts, '{n}.PostShareCircle');
         if (!empty($noPermissionPosts)) {
             GoalousLog::info('No permission posts', $noPermissionPosts);
-            throw new GlException\GoalousConflictException(__("You don't have permission to access this post"));
+            throw new GlException\GoalousNotFoundException(__("You don't have permission to access this post"));
         }
 
-
+        return true;
     }
 }
