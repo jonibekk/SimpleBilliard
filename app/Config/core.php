@@ -371,6 +371,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     $core_cache_prefix = $prefix . 'cake_core_api_v1:';
 } else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     $core_cache_prefix = $prefix . 'cake_core_api:';
+    Configure::write('Exception.renderer', 'ApiV2ExceptionRenderer');
 }
 Cache::config('_cake_core_', array(
     'engine'   => 'Apc',
