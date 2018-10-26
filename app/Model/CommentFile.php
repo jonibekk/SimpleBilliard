@@ -43,6 +43,6 @@ class CommentFile extends AppModel
         'comment_id'       => DataType::INT,
         'attached_file_id' => DataType::INT,
         'team_id'          => DataType::INT,
-        'index'            => DataType::INT
+        'index_num'        => DataType::INT
     ];
 }

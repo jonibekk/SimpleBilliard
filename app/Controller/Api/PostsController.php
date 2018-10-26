@@ -685,6 +685,7 @@ class PostsController extends BasePagingController
                     $commentId);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
                     $postId, $commentId);
+                //TODO Enable mention notification
 //                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_ACTION:
@@ -695,6 +696,7 @@ class PostsController extends BasePagingController
                     $commentId);
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                     $postId, $commentId);
+                //TODO Enable mention notification
 //                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_CREATE_GOAL:

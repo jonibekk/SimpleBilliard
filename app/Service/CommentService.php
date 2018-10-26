@@ -26,10 +26,6 @@ use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 class CommentService extends AppService
 {
-    public $components = [
-        'NotifyBiz',
-        'GlEmail',
-    ];
 
     /**
      * Check whether user has access to the post where the comment belongs in
@@ -146,20 +142,19 @@ class CommentService extends AppService
             $this->TransactionManager->begin();
             $Comment->create();
 
-            $newData['body'] = $commentBody;
-            $newData['post_id'] = $postId;
-            $newData['user_id'] = $userId;
-            $newData['team_id'] = $teamId;
-            $newData['created'] = GoalousDateTime::now()->getTimestamp();
+            $newData = [
+                'body'    => $commentBody,
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'created' => GoalousDateTime::now()->getTimestamp()
+            ];
 
             /** @var CommentEntity $savedComment */
             $savedComment = $Comment->useType()->useEntity()->save($newData, false);
 
             if (empty($savedComment)) {
                 GoalousLog::error('Error on adding comment: failed comment save', [
-                    'users.id'    => $userId,
-                    'posts.id'    => $postId,
-                    'teams.id'    => $teamId,
                     'commentData' => $newData
                 ]);
                 throw new RuntimeException('Error on adding post: failed comment save');
@@ -171,9 +166,6 @@ class CommentService extends AppService
 
             if (!$Post->updateCommentCount($postId, $newCommentCount)) {
                 GoalousLog::error('Error on adding comment: failed updating posts.comment_count', [
-                    'users.id'    => $userId,
-                    'posts.id'    => $postId,
-                    'teams.id'    => $teamId,
                     'commentData' => $newData
                 ]);
                 throw new RuntimeException('Error on adding post: failed updating posts.comment_count');
