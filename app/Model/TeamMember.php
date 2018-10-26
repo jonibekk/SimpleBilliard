@@ -2310,7 +2310,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $userId,
                 'TeamMember.del_flg' => false,
-                'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE()->getValue()
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE
             ],
             'fields'     => [
                 'TeamMember.team_id',
@@ -2349,7 +2349,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $userId,
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => Enum\Model\TeamMember\Status::INVITED()->getValue(),
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::INVITED,
                 'TeamMember.del_flg' => false
             ],
             'fields'     => [
