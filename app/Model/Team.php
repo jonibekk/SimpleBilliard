@@ -251,9 +251,9 @@ class Team extends AppModel
         $this->saveAll($postData);
         // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
-        if (isset($user['User']) && !$user['User']['default_team_id']) {
+        if (isset($user['User']) && empty($user['User']['default_team_id'])) {
             $this->TeamMember->User->id = $uid;
-            $this->TeamMember->User->saveField('default_team_id', $this->id);
+            $this->TeamMember->User->updateDefaultTeam($this->id, true, $uid);
         }
 
         // Add All team | 「チーム全体」サークルを追加
@@ -400,6 +400,7 @@ class Team extends AppModel
 
     /**
      * TODO: move to service layter
+     *
      * @return null
      */
     function getCurrentTeam()
@@ -410,7 +411,7 @@ class Team extends AppModel
                 function () use ($model) {
                     return $model->findById($model->current_team_id);
                 }, 'team_info');
-            }
+        }
         return $this->current_team;
     }
 
@@ -862,12 +863,12 @@ class Team extends AppModel
                         'ChargeHistory.result_type'     => Enum\Model\ChargeHistory\ResultType::FAIL,
                         'ChargeHistory.charge_datetime >= ' => $startTimestamp,
                         'ChargeHistory.charge_datetime <= ' => $endTimestamp,
-                        'ChargeHistory.del_flg' => false,
+                        'ChargeHistory.del_flg'             => false,
                     ]
                 ],
             ],
-            'group' => [
-                'Team.id HAVING COUNT(Team.id) >= '.$judgeFailureCnt
+            'group'      => [
+                'Team.id HAVING COUNT(Team.id) >= ' . $judgeFailureCnt
             ],
         ];
         $ret = $this->find('all', $options);

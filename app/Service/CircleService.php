@@ -477,7 +477,7 @@ class CircleService extends AppService
         });
     }
 
-    function get(int $circleId): array
+    function get(int $circleId, int $userId): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -486,6 +486,11 @@ class CircleService extends AppService
 
         $circle = $Circle->useEntity()->useType()->findById($circleId)->toArray();
         $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
+        
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $circle['is_member'] = $CircleMember->isJoined($circle['id'], $userId);
+
         return $circle;
     }
 }

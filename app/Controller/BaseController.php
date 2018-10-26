@@ -160,6 +160,18 @@ class BaseController extends Controller
         ],
     ];
 
+    /**
+     * List of pages to be ignored from forced redirection to team creation page.
+     *
+     * @var array
+     */
+    protected $ignoreForcedTeamCreation = [
+        'teams/add',
+        'users/logout',
+        'privacy_policy',
+        'terms'
+    ];
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
@@ -195,18 +207,38 @@ class BaseController extends Controller
             ];
             //If user is deleted, delete session & user cache, and redirect to login page
             if (empty($this->User->find('first', $condition))) {
-                GoalousLog::notice("User is deleted. Redirecting", [
+                GoalousLog::info("User is deleted. Redirecting", [
                     "user.id" => $this->my_uid,
                 ]);
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($this->Auth->logout());
             }
-
-            // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
-            // Detect inconsistent data that current team id is empty
+            //Detect inconsistent data that current team id is empty.
             if (empty($this->current_team_id)) {
-                GoalousLog::emergency("Current team id is empty", ['user_id' => $this->my_uid]);
-                $this->redirect($this->Auth->logout());
+                //If user doesn't have other team, redirect to create team page
+                GoalousLog::info("User $this->my_uid is not active in any team");
+                $this->Session->write('user_has_no_team', true);
+            } elseif (!empty($this->current_team_id)) {
+                //If the team no longer exists or user becomes inactive, force logout.
+                //This simplifies process flow, since auto-team changes happens after login
+                //However, ignore this step if user is being invited since user's team_member won't be active yet
+                if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
+                    empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
+                    $this->Session->delete('user_has_no_team');
+                    $this->User->updateDefaultTeam(null, true, $this->my_uid);
+                    $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
+                    GoalousLog::info("Team is deleted. Redirecting", [
+                        "user.id" => $this->my_uid,
+                    ]);
+                    $this->redirect($this->Auth->logout());
+                }
+                $this->Session->delete('user_has_no_team');
+            }
+            if ($this->Session->read('user_has_no_team') && !in_array($this->request->url,
+                    $this->ignoreForcedTeamCreation)) {
+                //If user tries to access other page, force redirect to team creation page
+                $this->Notification->outInfo(__("You need to create a team before using Goalous."));
+                $this->redirect(['controller' => 'teams', 'action' => 'add']);
             }
             $this->_setTeamStatus();
         }
