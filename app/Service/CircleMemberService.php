@@ -134,27 +134,6 @@ class CircleMemberService extends AppService
     }
 
     /**
-     * Send notification to all members in a circle
-     *
-     * @param int $notificationType
-     * @param int $circleId
-     * @param int $userId
-     * @param int $teamId
-     */
-    public function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
-    {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $memberList = $CircleMember->getMemberList($circleId, true, false, $userId);
-
-        /** @var NotifyBizComponent $notifyBiz */
-        $notifyBiz = ClassRegistry::init('NotifyBizComponent');
-        // Notify to circle member
-        $notifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
-    }
-
-    /**
      * Remove a member from a circle
      *
      * @param int $userId

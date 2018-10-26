@@ -589,13 +589,13 @@ class Circle extends AppModel
         $memberCount = $CircleMember->getMemberCount($circleId, true);
 
         $newData = [
-            'circle_member_count' => $memberCount,
-            'modified'            => GoalousDateTime::now()->getTimestamp()
+            'Circle.circle_member_count' => $memberCount,
+            'Circle.modified'            => GoalousDateTime::now()->getTimestamp()
         ];
 
         $condition = [
             'Circle.id' => $circleId,
-            'del_flg'   => false
+            'Circle.del_flg'   => false
         ];
 
         $this->updateAll($newData, $condition);
