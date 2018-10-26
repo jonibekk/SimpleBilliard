@@ -371,6 +371,9 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     $core_cache_prefix = $prefix . 'cake_core_api_v1:';
 } else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     $core_cache_prefix = $prefix . 'cake_core_api:';
+    // Enable "Exception.renderer ApiV2ExceptionRenderer" to the route below /api/*
+    // Do not move to ApiController::__constructor() because if Controller is not found (= If not defined route),
+    // /api/* could not return 404 response as json.
     Configure::write('Exception.renderer', 'ApiV2ExceptionRenderer');
 }
 Cache::config('_cake_core_', array(
