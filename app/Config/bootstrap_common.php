@@ -143,7 +143,6 @@ Configure::write('CakePdf', array(
     'encoding'    => 'UTF-8',
     'pageSize'    => 'A4',
 ));
-Configure::write('Exception.renderer', 'ApiV2ExceptionRenderer');
 
 // AdditionalExceptions
 require APP . "Lib/Error/Exceptions.php";
