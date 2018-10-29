@@ -771,8 +771,8 @@ class CircleMember extends AppModel
     {
         $conditions = [
             'conditions' => [
-                'circle_id' => $circleId,
-                'del_flg'   => false
+                'CircleMember.circle_id' => $circleId,
+                'CircleMember.del_flg'   => false
             ],
         ];
 
@@ -786,7 +786,7 @@ class CircleMember extends AppModel
             $userList = $TeamMember->getMemberList($Circle->getTeamId($circleId),
                 Goalous\Enum\Model\TeamMember\Status::ACTIVE());
 
-            $conditions['conditions']['user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
+            $conditions['conditions']['CircleMember.user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
         }
 
         $count = (int)$this->find('count', $conditions);
