@@ -227,12 +227,16 @@ class TeamService extends AppService
             // Get all team members before delete
             $userIds = $TeamMember->getActiveTeamMembersList(false, $teamId);
 
-            $currentTs = time();
+            $now = GoalousDateTime::now();
+            // CakePHP updateAll trap when update date column...
+            $serviceUseStateStartDate = "'".$now->setTimeZoneByHour($team['timezone'])->format('Y-m-d')."'";
+
             // Created data for deleting
             $deleteData = [
-                'service_use_state_start_date' => null,
+                'service_use_state_start_date' => $serviceUseStateStartDate,
                 'service_use_state_end_date' => null,
-                'deleted'  => $currentTs,
+                'deleted'  => $now->timestamp,
+                'modified'  => $now->timestamp,
                 'del_flg'  => true
             ];
             if ($isManualDelete) {
@@ -261,7 +265,7 @@ class TeamService extends AppService
             /** @var GlRedis $GlRedis */
             $GlRedis = ClassRegistry::init("GlRedis");
             // delete all team cache
-            $GlRedis->dellKeys("*current_team:team:{$teamId}");
+            $GlRedis->dellKeys("*team:{$teamId}:*");
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
