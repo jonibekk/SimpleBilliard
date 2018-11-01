@@ -1776,6 +1776,7 @@ class AppSchema extends CakeSchema {
 		'service_use_state_start_date' => array('type' => 'date', 'null' => false, 'default' => null, 'comment' => '各ステートの開始日'),
 		'service_use_state_end_date' => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '各ステートの終了日'),
 		'pre_register_amount_per_user' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10, 'unsigned' => true, 'comment' => 'Amount per user before registering payment plan'),
+		'ope_user_id' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チーム情報変更者'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを削除した日付時刻'),
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'チームを追加した日付時刻'),
