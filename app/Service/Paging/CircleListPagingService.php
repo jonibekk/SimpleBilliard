@@ -4,6 +4,7 @@ App::import('Lib/Paging', 'PagingRequest');
 App::import('Service', 'ImageStorageService');
 App::import('Service', 'CirclePinService');
 App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
+App::import('Lib/DataExtender', 'CircleMemberCountDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 
@@ -17,6 +18,7 @@ class CircleListPagingService extends BasePagingService
 {
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
+    const EXTEND_MEMBER_COUNT = 'ext:circle:member_count';
     const MAIN_MODEL = 'Circle';
 
     /**
@@ -212,7 +214,7 @@ class CircleListPagingService extends BasePagingService
             $resultArray[$i]['img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Circle');
         }
 
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
+        if ($this->includeExt($options, self::EXTEND_MEMBER_INFO)) {
 
             $userId = $request->getResourceId() ?: $request->getCurrentUserId();
 
@@ -223,6 +225,14 @@ class CircleListPagingService extends BasePagingService
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
 
         }
+
+        // Originally circles table has `circle_member_count` column. but this column hasn't been maintained. So we shouldn't use this column and overwrite key value.
+        if ($this->includeExt($options, self::EXTEND_MEMBER_COUNT)) {
+            /** @var CircleMemberCountDataExtender $CircleMemberCountDataExtender */
+            $CircleMemberCountDataExtender = ClassRegistry::init('CircleMemberCountDataExtender');
+            $resultArray = $CircleMemberCountDataExtender->extend($resultArray, "{n}.id");
+        }
+
     }
 
     protected function beforeRead(PagingRequest $pagingRequest)

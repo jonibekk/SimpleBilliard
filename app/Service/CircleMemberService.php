@@ -123,6 +123,10 @@ class CircleMemberService extends AppService
             }
             $Circle->updateMemberCount($circleId);
 
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
@@ -195,6 +199,11 @@ class CircleMemberService extends AppService
                 $SavedPostService->deleteAllInCircle($userId, $teamId, $circleId);
             }
             $Circle->updateMemberCount($circleId);
+
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
