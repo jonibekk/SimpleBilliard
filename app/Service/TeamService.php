@@ -2,6 +2,13 @@
 App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
+App::uses('NotifyBizComponent', 'Controller/Component');
+
+// FIXME: to use GlEmailComponent
+App::uses('ComponentCollection', 'Controller');
+App::uses('Component', 'Controller');
+App::uses('AppController', 'Controller');
+App::uses('GlEmailComponent', 'Controller/Component');
 
 use Goalous\Model\Enum as Enum;
 
@@ -126,8 +133,8 @@ class TeamService extends AppService
      * changing service status expired teams
      *
      * @param string $targetExpireDate
-     * @param int    $currentStatus
-     * @param int    $nextStatus
+     * @param int $currentStatus
+     * @param int $nextStatus
      *
      * @return bool
      */
@@ -136,27 +143,27 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $targetTeamList = $Team->findTeamListStatusExpired($currentStatus, $targetExpireDate);
-        if (empty($targetTeamList)) {
+        $targetTeamIds = $Team->findTeamIdsStatusExpired($currentStatus, $targetExpireDate);
+        if (empty($targetTeamIds)) {
             return false;
         }
         CakeLog::info(sprintf('update teams service status and dates: %s', AppUtil::jsonOneLine([
-            'teams.ids'                    => array_values($targetTeamList),
+            'teams.ids'                    => $targetTeamIds,
             'teams.service_use_status.old' => $currentStatus,
             'teams.service_use_status.new' => $nextStatus,
             'target_expire_date'           => $targetExpireDate,
         ])));
-        $ret = $Team->updateServiceStatusAndDates($targetTeamList, $nextStatus);
+        $ret = $Team->updateServiceStatusAndDates($targetTeamIds, $nextStatus);
         if ($ret === false) {
             $this->log(sprintf("failed to save changeStatusAllTeamFromReadonlyToCannotUseService. targetTeamList: %s",
-                AppUtil::varExportOneLine($targetTeamList)));
+                AppUtil::varExportOneLine($targetTeamIds)));
             $this->log(Debugger::trace());
         }
 
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init("GlRedis");
         // delete all team cache
-        foreach ($targetTeamList as $teamId) {
+        foreach ($targetTeamIds as $teamId) {
             $GlRedis->dellKeys("*current_team:team:{$teamId}");
         }
         return $ret;
@@ -174,46 +181,128 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $targetTeamList = $Team->findTeamListStatusExpired(
+        $targetTeamIds = $Team->findTeamIdsStatusExpired(
             Team::SERVICE_USE_STATUS_CANNOT_USE,
             $targetExpireDate
         );
-        if (empty($targetTeamList)) {
+
+        if (empty($targetTeamIds)) {
+            return false;
+        }
+        GoalousLog::info('These teams are deleted automatically', compact('targetTeamIds'));
+        $errorTeamIds = [];
+        foreach ($targetTeamIds as $teamId) {
+            if (!$this->deleteTeam($teamId)) {
+                $errorTeamIds[] = $teamId;
+            }
+        }
+
+        if (!empty($errorTeamIds)) {
+            GoalousLog::emergency('Failed to delete team automatically', compact('errorTeamIds'));
             return false;
         }
 
-        try {
-            $this->TransactionManager->begin();
-            CakeLog::info(sprintf('delete teams service status expired: %s', AppUtil::jsonOneLine([
-                'teams.ids'          => array_values($targetTeamList),
-                'target_expire_date' => $targetExpireDate,
-            ])));
-            $ret = $Team->softDeleteAll(['Team.id' => $targetTeamList], false);
-            if ($ret === false) {
-                $this->log(sprintf("failed to save deleteTeamCannotUseServiceExpired. targetTeamList: %s",
-                    AppUtil::varExportOneLine($targetTeamList)));
-                $this->log(Debugger::trace());
-            }
-        } catch (Exception $exception) {
-            $this->TransactionManager->rollback();
-            throw $exception;
-        }
-
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init("GlRedis");
-        // delete all team cache
-        foreach ($targetTeamList as $teamId) {
-            $GlRedis->dellKeys("*current_team:team:{$teamId}");
-        }
-
-        return $ret;
+        return true;
     }
 
     /**
      * Update Service Use Status
      *
-     * @param int    $teamId
-     * @param int    $serviceUseStatus
+     * @param int $teamId
+     * @param bool $isManualDelete
+     * @param null $opeUserId
+     * @return bool
+     */
+    public function deleteTeam(int $teamId, bool $isManualDelete = false, $opeUserId = null): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        try {
+            $this->TransactionManager->begin();
+
+            // Get team data before delete
+            $team = $Team->getById($teamId);
+            // Get all team members before delete
+            $userIds = $TeamMember->getActiveTeamMembersList(false, $teamId);
+
+            $now = GoalousDateTime::now();
+            // CakePHP updateAll trap when update date column...
+            $serviceUseStateStartDate = "'".$now->setTimeZoneByHour($team['timezone'])->format('Y-m-d')."'";
+
+            // Created data for deleting
+            $deleteData = [
+                'service_use_state_start_date' => $serviceUseStateStartDate,
+                'service_use_state_end_date' => null,
+                'deleted'  => $now->timestamp,
+                'modified'  => $now->timestamp,
+                'del_flg'  => true
+            ];
+            if ($isManualDelete) {
+                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_MANUAL;
+                // TODO: create db migration to add this column when implement manual team deletion
+//                $deleteData['ope_user_id'] = $opeUserId;
+            } else {
+                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_AUTO;
+            }
+
+            // Delete team
+            if (!$Team->updateAll($deleteData, ['Team.id' => $teamId])) {
+                throw new Exception(sprintf('Failed to delete team. data:%s', AppUtil::jsonOneLine($deleteData)));
+            }
+
+            // Delete team member
+            if (!$TeamMember->softDeleteAll(['TeamMember.team_id' => $teamId], false)) {
+                throw new Exception(sprintf('Failed to delete all team members. team_id:%s', $teamId));
+            }
+
+            // TODO: Delete all data related team if necessary
+
+            // Update team member's default team id
+            $this->updateDefaultTeamOnDeletion($teamId);
+
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            // delete all team cache
+            $GlRedis->dellKeys("*team:{$teamId}:*");
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::emergency($e->getMessage());
+            GoalousLog::emergency($e->getTraceAsString());
+            return false;
+        }
+
+        // Send mail
+        $GlEmail = new GlEmailComponent(new ComponentCollection());
+        $GlEmail->startup(new AppController());
+
+        foreach ($userIds as $userId) {
+            if ($isManualDelete) {
+                $GlEmail->sendTeamDeletedManual(
+                    $userId,
+                    $teamId,
+                    $team['name']
+                );
+            } else {
+                $GlEmail->sendTeamDeletedAuto(
+                    $userId,
+                    $teamId,
+                    $team['name']
+                );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Update Service Use Status
+     *
+     * @param int $teamId
+     * @param int $serviceUseStatus
      * @param string $startDate
      *
      * @return bool
