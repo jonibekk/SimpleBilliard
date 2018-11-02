@@ -240,11 +240,11 @@ class TeamService extends AppService
                 'del_flg'  => true
             ];
             if ($isManualDelete) {
-                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_MANUAL;
+                $deleteData['service_use_status'] = Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL;
                 // TODO: create db migration to add this column when implement manual team deletion
 //                $deleteData['ope_user_id'] = $opeUserId;
             } else {
-                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_AUTO;
+                $deleteData['service_use_status'] = Enum\Model\Team\ServiceUseStatus::DELETED_AUTO;
             }
 
             // Delete team
