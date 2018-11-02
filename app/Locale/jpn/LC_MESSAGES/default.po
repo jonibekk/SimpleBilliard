@@ -5562,3 +5562,15 @@ msgstr "投稿既読に失敗しました。"
 
 msgid "Failed to read comment."
 msgstr "コメント既読に失敗しました。"
+
+msgid "%s in Goalous has been deleted by team administrator. After that, you can not use by that team."
+msgstr "チーム管理者によって、Goalous内のチーム「%s」が削除されました。以後、そのチームで利用することはできません。"
+
+msgid "Thank you very much for using."
+msgstr "Goalousのご利用をありがとうございました。"
+
+msgid "The team has been deleted"
+msgstr "チームが削除されました"
+
+msgid "%s in Goalous has been deleted because the usage expiration date has passed. After that, you can not use by that team."
+msgstr "利用期限を過ぎましたので、Goalous内のチーム「%s」が削除されました。以後、そのチームで利用することはできません。"
