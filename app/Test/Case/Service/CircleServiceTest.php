@@ -3,15 +3,16 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'CircleService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('GlRedis', 'Model');
 
 /**
  * CircleService Test Case
  *
  * @property ActionService $ActionService
  * @property CircleService $CircleService
- * @property Circle        $Circle
- * @property CircleMember  $CircleMember
- * @property User          $User
+ * @property Circle $Circle
+ * @property CircleMember $CircleMember
+ * @property User $User
  */
 class CircleServiceTest extends GoalousTestCase
 {
@@ -46,6 +47,7 @@ class CircleServiceTest extends GoalousTestCase
         $this->Circle = ClassRegistry::init('Circle');
         $this->CircleMember = ClassRegistry::init('CircleMember');
         $this->User = ClassRegistry::init('User');
+        $this->GlRedis = ClassRegistry::init('GlRedis');
     }
 
     public function test_validateCreate_validate()
@@ -271,4 +273,32 @@ class CircleServiceTest extends GoalousTestCase
         $this->CircleMember->save(['team_id' => $teamId, 'circle_id' => $circleId, 'user_id' => $userId]);
         $this->assertFalse($this->CircleService->validateJoin($teamId, $circleId, $userId));
     }
+
+    function test_getMemberCountEachCircle()
+    {
+        $this->GlRedis->deleteMultiCircleMemberCount([1,2,3,4]);
+
+        /* all cache doesn't exist */
+        $expect = [1 => 3];
+        $circleIds = array_keys($expect);
+        $res = $this->CircleService->getMemberCountEachCircle($circleIds);
+        $this->assertEquals($res, $expect);
+        // confirm whether cache was saved
+        $res = $this->GlRedis->getMultiCircleMemberCount($circleIds);
+        $this->assertEquals($res, $expect);
+
+        /* some cache doesn't exist */
+        $expect = [1 => 3, 3 => 2, 4 => 2];
+        $circleIds = array_keys($expect);
+        $res = $this->CircleService->getMemberCountEachCircle($circleIds);
+        $this->assertEquals($res, $expect);
+        // confirm whether cache was saved
+        $res = $this->GlRedis->getMultiCircleMemberCount($circleIds);
+        $this->assertEquals($res, $expect);
+
+        /* all cache exist */
+        $res = $this->CircleService->getMemberCountEachCircle($circleIds);
+        $this->assertEquals($res, $expect);
+    }
+
 }

@@ -155,19 +155,20 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
-    public function getActiveTeamMembersList($use_cache = true)
+    public function getActiveTeamMembersList($use_cache = true, $teamId = null)
     {
+        $teamId = $teamId ?: $this->current_team_id;
         if ($use_cache && !empty($this->active_member_list)) {
             return $this->active_member_list;
         }
         //if team is not exist
-        if (!$this->Team->findById($this->current_team_id)) {
+        if (!$this->Team->findById($teamId)) {
             return [];
         }
         $options = [
             'conditions' => [
                 'status'  => self::USER_STATUS_ACTIVE,
-                'team_id' => $this->current_team_id
+                'team_id' => $teamId
             ],
             'fields'     => ['user_id', 'user_id']
         ];

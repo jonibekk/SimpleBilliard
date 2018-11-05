@@ -664,7 +664,7 @@ class Team extends AppModel
      *
      * @return array
      */
-    function findTeamListStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
     {
         $options = [
             'conditions' => [
@@ -675,8 +675,11 @@ class Team extends AppModel
                 'id'
             ]
         ];
-        $res = $this->find('list', $options);
-        return $res;
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Team.id');
     }
 
     /**
