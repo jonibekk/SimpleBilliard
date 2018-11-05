@@ -110,8 +110,8 @@ class CommentsController extends BasePagingController
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                ->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to read comment."))
+                                ->getResponse();
         }
 
         return ApiResponse::ok()->withData(["comment_ids" => $res])->getResponse();

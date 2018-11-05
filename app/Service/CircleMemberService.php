@@ -123,6 +123,10 @@ class CircleMemberService extends AppService
             }
             $Circle->updateMemberCount($circleId);
 
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
@@ -131,27 +135,6 @@ class CircleMemberService extends AppService
         }
 
         return $return;
-    }
-
-    /**
-     * Send notification to all members in a circle
-     *
-     * @param int $notificationType
-     * @param int $circleId
-     * @param int $userId
-     * @param int $teamId
-     */
-    public function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
-    {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $memberList = $CircleMember->getMemberList($circleId, true, false, $userId);
-
-        /** @var NotifyBizComponent $NotifyBiz */
-        $NotifyBiz = ClassRegistry::init('NotifyBizComponent');
-        // Notify to circle member
-        $NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
     }
 
     /**
@@ -216,6 +199,11 @@ class CircleMemberService extends AppService
                 $SavedPostService->deleteAllInCircle($userId, $teamId, $circleId);
             }
             $Circle->updateMemberCount($circleId);
+
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();

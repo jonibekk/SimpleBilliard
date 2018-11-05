@@ -167,6 +167,9 @@ class SavedPostService extends AppService
             'conditions' => [
                 'SavedPost.user_id' => $userId
             ],
+            'fields'     => [
+                'SavedPost.id'
+            ],
             'table'      => 'saved_posts',
             'alias'      => 'SavedPost',
             'joins'      => [
@@ -189,12 +192,15 @@ class SavedPostService extends AppService
         try {
             $this->TransactionManager->begin();
 
-            $res = $SavedPost->deleteAll($condition);
+            $resultFind = $SavedPost->find('all', $condition);
+            $savedPostIds = Hash::extract($resultFind, '{n}.SavedPost.id');
+            $resultDelete = $SavedPost->deleteAll(['id' => $savedPostIds]);
 
-            if (!$res) {
+            if (!$resultDelete) {
                 throw new RuntimeException("Failed to delete saved post for user $userId in circle $circleId");
             }
             $this->TransactionManager->commit();
+            return true;
         } catch (Exception $exception) {
             GoalousLog::error("Failed to delete saved post for user $userId in circle $circleId", $exception->getTrace());
             $this->TransactionManager->rollback();
