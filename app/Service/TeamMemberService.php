@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('TeamMember', 'Model');
+App::uses('User', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -85,7 +86,7 @@ class TeamMemberService extends AppService
      *
      * @param int $teamMemberId
      *
-     * @return void
+     * @return bool
      */
     public function validateActivation(int $teamId, int $teamMemberId): bool
     {
@@ -110,5 +111,81 @@ class TeamMemberService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * Inactivate a member by user id & team id
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function inactivateByID(int $userId, int $teamId): bool
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $condition = [
+            'conditions' => [
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'del_flg' => false
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        $teamMember = $TeamMember->find('first', $condition)['TeamMember'];
+
+        if (empty($teamMember)) {
+            return false;
+        }
+
+        return $this->inactivate($teamMember['id']);
+    }
+
+    /**
+     * Inactivate a team member by the team member id
+     *
+     * @param int $teamMemberID
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function inactivate(int $teamMemberID): bool
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        try {
+            $this->TransactionManager->begin();
+
+            $res = $TeamMember->inactivate($teamMemberID);
+
+            if (!$res){
+                throw new RuntimeException();
+            }
+
+            $teamMember = $TeamMember->findById($teamMemberID)['TeamMember'];
+            $user = $User->findById($teamMember['user_id'])['User'];
+
+            //If inactivated team ID is the same as user's default one, update user's default team
+            if ($user['default_team_id'] == $teamMember['team_id']) {
+                $newTeamId = $TeamMember->getLatestLoggedInActiveTeamId($teamMember['user_id']) ?: null;
+                $User->updateDefaultTeam($newTeamId, true, $teamMember['user_id']);
+            }
+
+            $this->TransactionManager->commit();
+
+            return true;
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            throw $exception;
+        }
     }
 }
