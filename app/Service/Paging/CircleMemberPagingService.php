@@ -5,6 +5,8 @@ App::import('Lib/Paging', 'PagingRequest');
 App::uses("CircleMember", 'Model');
 App::uses("User", 'Model');
 
+use Goalous\Enum as Enum;
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -58,8 +60,6 @@ class CircleMemberPagingService extends BasePagingService
         $circleId = $pagingRequest->getResourceId();
 
         $conditions = [
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember',
             'fields'     => [
                 'CircleMember.id',
                 'CircleMember.user_id',
@@ -68,6 +68,19 @@ class CircleMemberPagingService extends BasePagingService
             'conditions' => [
                 'CircleMember.team_id'   => $teamId,
                 'CircleMember.circle_id' => $circleId
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.team_id = CircleMember.team_id',
+                        'TeamMember.user_id = CircleMember.user_id',
+                        'TeamMember.del_flg' => false,
+                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE,
+                    ]
+                ]
             ]
         ];
 
@@ -85,7 +98,8 @@ class CircleMemberPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
+    ): PointerTree
+    {
         $prevLastPosted = $pagingRequest->getPointer('last_posted')[2] ?? -1;
 
         if ($lastElement['last_posted'] == $headNextElement['last_posted'] ||

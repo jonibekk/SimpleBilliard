@@ -213,25 +213,24 @@ class SavedPostService extends AppService
 
             $savedPosts = $this->findAllInCircle($userId, $teamId, $circleId);
 
-            $deletedIDs = [];
+            $savedPostIDs = [];
 
             /** @var SavedPostEntity $savedPost */
             foreach ($savedPosts as $savedPost) {
-                $deletedIDs[] = $savedPost['id'];
+                $savedPostIDs[] = $savedPost['id'];
             }
 
-            $res = $SavedPost->deleteAll(['SavedPost.id' => $deletedIDs]);
+            $res = $SavedPost->deleteAll(['SavedPost.id' => $savedPostIDs]);
 
             if (!$res) {
                 throw new RuntimeException("Failed to delete saved post for user $userId in circle $circleId");
             }
             $this->TransactionManager->commit();
+            return true;
         } catch (Exception $exception) {
             GoalousLog::error("Failed to delete saved post for user $userId in circle $circleId", $exception->getTrace());
             $this->TransactionManager->rollback();
             throw $exception;
         }
-
-        return true;
     }
 }

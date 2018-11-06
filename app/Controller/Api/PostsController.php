@@ -182,7 +182,7 @@ class PostsController extends BasePagingController
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to read post."))
                 ->getResponse();
         }
 

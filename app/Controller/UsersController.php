@@ -85,12 +85,6 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        // Check if user belongs any team
-        if (empty($this->TeamMember->findBelongsByUser($userInfo['id']))) {
-            $this->Notification->outError(__("You don't belong to any team."));
-            return $this->render();
-        }
-
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
@@ -250,8 +244,8 @@ class UsersController extends AppController
                     return $this->redirect("/");
                 }
 
-                //If default team is deleted
-                if (empty($this->Team->findById($teamId))) {
+                //If default team is deleted or if user is not active in current team
+                if (empty($this->TeamMember->isActive($userId, $teamId))) {
                     /** @var UserService $UserService */
                     $UserService = ClassRegistry::init('UserService');
                     if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
@@ -261,7 +255,6 @@ class UsersController extends AppController
                     }
                 }
                 $this->Session->write('current_team_id', $invitedTeamId);
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
@@ -917,7 +910,7 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+        $this->Session->delete('referer_status');
         $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
     }

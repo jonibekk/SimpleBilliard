@@ -20,6 +20,11 @@ use Goalous\Exception as GlException;
 
 class CirclesController extends BasePagingController
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+    ];
+
     public function get_posts(int $circleId)
     {
         $error = $this->validateGetCircle($circleId);
@@ -92,13 +97,13 @@ class CirclesController extends BasePagingController
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
         try {
             $return = $CircleMemberService->add($this->getUserId(), $this->getTeamId(), $circleId);
-            $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
+            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
                 $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (GlException\GoalousConflictException $exception) {
             return ErrorResponse::resourceConflict()->withException($exception)
-                                ->withMessage(__("You already joined to this circle."))->getResponse();
+                ->withMessage(__("You already joined to this circle."))->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
@@ -150,13 +155,13 @@ class CirclesController extends BasePagingController
 
         try {
             $return = $CircleMemberService->add($newMemberId, $this->getTeamId(), $circleId);
-            $CircleMemberService->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
+            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
                 $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (GlException\GoalousConflictException $exception) {
             return ErrorResponse::resourceConflict()->withException($exception)
-                                ->withMessage(__("This team member already joined this circle."))->getResponse();
+                ->withMessage(__("This team member already joined this circle."))->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
@@ -188,7 +193,7 @@ class CirclesController extends BasePagingController
             ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId(),
                     $this->getTeamId()))) {
             return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -256,9 +261,9 @@ class CirclesController extends BasePagingController
             CircleRequestValidator::createPostMemberValidator()->validate($this->getRequestJsonBody());
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -340,7 +345,7 @@ class CirclesController extends BasePagingController
      *
      * @return BaseApiResponse
      */
-    function get_detail(int $circleId)
+    public function get_detail(int $circleId)
     {
         $error = $this->validateGetCircle($circleId);
 
@@ -351,7 +356,29 @@ class CirclesController extends BasePagingController
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
 
-        $circle = $CircleService->get($circleId);
+        $circle = $CircleService->get($circleId, $this->getUserId());
+
         return ApiResponse::ok()->withData($circle)->getResponse();
     }
+
+
+    /**
+     * Send notification to all members in a circle
+     *
+     * @param int $notificationType
+     * @param int $circleId
+     * @param int $userId User who sent the notification
+     * @param int $teamId
+     */
+    private function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $memberList = $CircleMember->getMemberList($circleId, true, false, [$userId]);
+
+        // Notify to circle member
+       $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+    }
+
 }
