@@ -30,7 +30,10 @@
         <div class="nav-container header-container">
             <?php
             // Condition that returns true if user is on a sub-page and is viewing on mobile app
-            if ($this->BackBtn->checkPage() && $is_mb_app) { ?>
+
+            if ($userHasNoTeam) { ?>
+                <?= $this->element('Header/navigation'); ?>
+            <?php } elseif ($this->BackBtn->checkPage() && $is_mb_app) { ?>
                 <?= $this->element('Header/back_btn') ?>
             <?php } else { ?>
                 <?= $this->element('Header/navigation'); ?>
