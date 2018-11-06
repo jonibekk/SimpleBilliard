@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'CirclePinService');
+App::import('Service', 'SavedPostService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Model/Entity', 'CircleEntity');
@@ -206,7 +207,6 @@ class CircleMemberService extends AppService
 
             /** @var CirclePinService $CirclePinService */
             $CirclePinService = ClassRegistry::init('CirclePinService');
-
             $CirclePinService->deleteCircleId($userId, $teamId, $circleId);
 
             //If circle is secret, perform additional deletion
