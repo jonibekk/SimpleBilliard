@@ -9,6 +9,7 @@ App::uses('AttachedFile', 'Model');
 App::uses('Topic', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('Post', 'Model');
+App::uses('PostShareCircle', 'Model');
 
 /**
  * Class SavedPostService
@@ -152,26 +153,25 @@ class SavedPostService extends AppService
     }
 
     /**
-     * Delete all saved post for posts in given circle
+     * Find all saved post of an user in a circle
      *
      * @param int $userId
      * @param int $teamId
      * @param int $circleId
      *
-     * @return bool TRUE on successful deletion
-     * @throws Exception
+     * @return SavedPostEntity[]
      */
-    public function deleteAllInCircle(int $userId, int $teamId, int $circleId): bool
+    public function findAllInCircle(int $userId, int $teamId, int $circleId): array
     {
         $condition = [
             'conditions' => [
                 'SavedPost.user_id' => $userId
             ],
+            'table'      => 'saved_posts',
+            'alias'      => 'SavedPost',
             'fields'     => [
                 'SavedPost.id'
             ],
-            'table'      => 'saved_posts',
-            'alias'      => 'SavedPost',
             'joins'      => [
                 [
                     'type'       => 'INNER',
@@ -189,14 +189,40 @@ class SavedPostService extends AppService
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
 
+        return $SavedPost->useType()->useEntity()->find('all', $condition);
+    }
+
+
+    /**
+     * Delete all saved post for posts in given circle
+     *
+     * @param int $userId
+     * @param int $teamId
+     * @param int $circleId
+     *
+     * @return bool TRUE on successful deletion
+     * @throws Exception
+     */
+    public function deleteAllInCircle(int $userId, int $teamId, int $circleId): bool
+    {
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init('SavedPost');
+
         try {
             $this->TransactionManager->begin();
 
-            $resultFind = $SavedPost->find('all', $condition);
-            $savedPostIds = Hash::extract($resultFind, '{n}.SavedPost.id');
-            $resultDelete = $SavedPost->deleteAll(['id' => $savedPostIds]);
+            $savedPosts = $this->findAllInCircle($userId, $teamId, $circleId);
 
-            if (!$resultDelete) {
+            $savedPostIDs = [];
+
+            /** @var SavedPostEntity $savedPost */
+            foreach ($savedPosts as $savedPost) {
+                $savedPostIDs[] = $savedPost['id'];
+            }
+
+            $res = $SavedPost->deleteAll(['SavedPost.id' => $savedPostIDs]);
+
+            if (!$res) {
                 throw new RuntimeException("Failed to delete saved post for user $userId in circle $circleId");
             }
             $this->TransactionManager->commit();
