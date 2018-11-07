@@ -1259,6 +1259,7 @@ class PostsController extends AppController
     }
 
     /**
+     * @deprecated
      * OGP のデータを取得する
      *
      * @return CakeResponse
