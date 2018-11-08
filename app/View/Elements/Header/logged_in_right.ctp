@@ -5,8 +5,6 @@
  */
 ?>
 
-<?php $userHasNoTeam = $this->Session->read('user_has_no_team') ?: false; ?>
-
 <?php if (empty($userHasNoTeam)): ?>
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"

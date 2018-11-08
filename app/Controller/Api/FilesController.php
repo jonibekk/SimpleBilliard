@@ -9,6 +9,9 @@ App::import('Validator/Lib/Storage', 'UploadValidator');
 /**
  * Class FilesController
  */
+
+use Goalous\Exception as GlException;
+
 class FilesController extends BaseApiController
 {
 
@@ -45,6 +48,7 @@ class FilesController extends BaseApiController
      * Validation method for download function
      *
      * @param int $fileId
+     *
      * @return CakeResponse|null
      */
     private function validateDownload(int $fileId)
@@ -74,6 +78,7 @@ class FilesController extends BaseApiController
      * File uploading way is `multipart/form-data`, not `base64` in request body
      * At first, we have used `base64` way, but when upload large files, Chrome crash happens so easily.
      * The cause is not unknown still, but we decided to use `multipart/form-data` instead of `base64`
+     *
      * @return ApiResponse|BaseApiResponse|ErrorResponse
      */
     public function post_upload()
@@ -96,6 +101,8 @@ class FilesController extends BaseApiController
             $uuid = $UploadService->buffer($this->getUserId(), $this->getTeamId(), $encodedFile, $fileName);
         } catch (InvalidArgumentException $argumentException) {
             return ErrorResponse::badRequest()->withMessage($argumentException->getMessage())->getResponse();
+        } catch (GlException\Storage\Upload\UploadValidationException $validationException) {
+            return ErrorResponse::badRequest()->withMessage($validationException->getMessage())->getResponse();
         } catch (Exception $exception) {
             GoalousLog::error("Failed to upload file. " . $exception->getMessage(), $exception->getTrace());
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
@@ -109,7 +116,8 @@ class FilesController extends BaseApiController
      * Validation method for post function
      *
      * @param $file
-     * @return CakeResponse|null
+     *
+     * @return BaseApiResponse|null
      */
     private function validatePost($file)
     {
@@ -128,7 +136,7 @@ class FilesController extends BaseApiController
                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
-                'class' => get_class($e),
+                'class'   => get_class($e),
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
