@@ -114,48 +114,14 @@ class TeamMemberService extends AppService
     }
 
     /**
-     * Inactivate a member by user id & team id
-     *
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function inactivateByID(int $userId, int $teamId): bool
-    {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        $condition = [
-            'conditions' => [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'del_flg' => false
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
-
-        $teamMember = $TeamMember->find('first', $condition)['TeamMember'];
-
-        if (empty($teamMember)) {
-            return false;
-        }
-
-        return $this->inactivate($teamMember['id']);
-    }
-
-    /**
      * Inactivate a team member by the team member id
      *
-     * @param int $teamMemberID
+     * @param int $teamMemberId
      *
      * @return bool
      * @throws Exception
      */
-    public function inactivate(int $teamMemberID): bool
+    public function inactivate(int $teamMemberId): bool
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -165,13 +131,13 @@ class TeamMemberService extends AppService
         try {
             $this->TransactionManager->begin();
 
-            $res = $TeamMember->inactivate($teamMemberID);
+            $res = $TeamMember->inactivate($teamMemberId);
 
             if (!$res){
                 throw new RuntimeException();
             }
 
-            $teamMember = $TeamMember->findById($teamMemberID)['TeamMember'];
+            $teamMember = $TeamMember->findById($teamMemberId)['TeamMember'];
             $user = $User->findById($teamMember['user_id'])['User'];
 
             //If inactivated team ID is the same as user's default one, update user's default team

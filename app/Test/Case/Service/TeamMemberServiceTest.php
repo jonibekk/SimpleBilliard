@@ -137,29 +137,4 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertEquals(Enum\TeamMember\Status::INACTIVE, $teamMember['status']);
         $this->assertEquals($newTeamId, $User->findById($teamMember['user_id'])['User']['default_team_id']);
     }
-
-    public function test_inactivateTeamMemberByID_success()
-    {
-        $userId = 1;
-        $teamId = 1;
-
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init('TeamMemberService');
-
-        $TeamMemberService->inactivateByID($userId, $teamId);
-
-        $condition = [
-            'conditions' => [
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ]
-        ];
-
-        $teamMember = $TeamMember->find('first', $condition)['TeamMember'];
-
-        $this->assertEquals(Enum\TeamMember\Status::INACTIVE, $teamMember['status']);
-    }
 }
