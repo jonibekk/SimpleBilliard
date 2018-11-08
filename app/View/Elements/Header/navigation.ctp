@@ -1,8 +1,5 @@
 <?= $this->App->viewStartComment() ?>
-
-<?php $userHasNoTeam = $this->Session->read('user_has_no_team') ?: false; ?>
-
-<div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg">
+<div class="button-container visible-xxs-inline-block visible-xs-inline-block hidden-sm hidden-md hidden-lg" <?php if($userHasNoTeam):?>style="visibility: hidden"<?php endif;?>>
     <button id="toggleNavigationButton" type="button" action="" onclick="toggleNav()"
             class="mb-to-front-almost header-toggle-icon js-nav-toggle">
         <div class="hamburger-unread-point js-unread-point-on-hamburger is-read <?= $is_mb_app ? "mb-hambuger-badge-shift" : "" ?>"></div>
