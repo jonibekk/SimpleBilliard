@@ -211,12 +211,12 @@ class BaseController extends Controller
                 GoalousLog::info("User $this->my_uid is not active in any team");
                 $this->Session->write('user_has_no_team', true);
             } elseif (!empty($this->current_team_id)) {
+                $this->Session->delete('user_has_no_team');
                 //If the team no longer exists or user becomes inactive, force logout.
                 //This simplifies process flow, since auto-team changes happens after login
                 //However, ignore this step if user is being invited since user's team_member won't be active yet
                 if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
                     empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
-                    $this->Session->delete('user_has_no_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
                     $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
                     GoalousLog::info("Team is deleted. Redirecting", [
@@ -224,7 +224,6 @@ class BaseController extends Controller
                     ]);
                     $this->redirect($this->Auth->logout());
                 }
-                $this->Session->delete('user_has_no_team');
             }
             if ($this->Session->read('user_has_no_team') && !in_array($this->request->url,
                     $this->ignoreForcedTeamCreation)) {
