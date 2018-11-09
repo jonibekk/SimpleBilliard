@@ -223,7 +223,7 @@ class BaseController extends Controller
                 //This simplifies process flow, since auto-team changes happens after login
                 //However, ignore this step if user is being invited since user's team_member won't be active yet
                 if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
-                    empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id))) {
+                    empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id, false))) {
                     $this->Session->delete('user_has_no_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
                     $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
