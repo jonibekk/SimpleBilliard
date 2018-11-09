@@ -115,9 +115,9 @@ class PostsController extends BasePagingController
     private function getDefaultCommentsExtension()
     {
         return [
-            CommentPagingService::EXTEND_USER,
-            CommentPagingService::EXTEND_LIKE,
-            CommentPagingService::EXTEND_READ,
+            CommentExtender::EXTEND_USER,
+            CommentExtender::EXTEND_LIKE,
+            CommentExtender::EXTEND_READ,
         ];
     }
 
@@ -197,7 +197,7 @@ class PostsController extends BasePagingController
     private function getDefaultReaderExtension()
     {
         return [
-            PostReaderPagingService::EXTEND_USER
+            PostReadExtender::EXTEND_USER
         ];
     }
 
@@ -209,7 +209,7 @@ class PostsController extends BasePagingController
     private function getDefaultLikesUserExtension()
     {
         return [
-            PostLikesPagingService::EXTEND_USER
+            PostLikeExtender::EXTEND_USER
         ];
     }
 
@@ -461,7 +461,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
@@ -490,7 +490,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
@@ -519,7 +519,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $hasAccess = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         }

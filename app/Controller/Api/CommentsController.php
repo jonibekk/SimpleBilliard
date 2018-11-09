@@ -216,7 +216,7 @@ class CommentsController extends BasePagingController
     private function getDefaultReaderExtension()
     {
         return [
-            CommentReaderPagingService::EXTEND_USER
+            CommentReadExtender::EXTEND_USER
         ];
     }
 
@@ -228,7 +228,7 @@ class CommentsController extends BasePagingController
     private function getDefaultLikesUserExtension()
     {
         return [
-            CommentLikesPagingService::EXTEND_USER
+            CommentLikeExtender::EXTEND_USER
         ];
     }
 

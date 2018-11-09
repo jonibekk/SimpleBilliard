@@ -81,7 +81,7 @@ class CircleMemberPagingServiceTest extends GoalousTestCase
         $pagingRequest->setResourceId(1);
 
         $result = $CircleMemberPagingService->getDataWithPaging($pagingRequest, 1,
-            CircleMemberPagingService::EXTEND_USER);
+            CircleMemberExtender::EXTEND_USER);
 
         $this->assertNotEmpty($result['data']);
         $this->assertCount(1, $result['data']);

@@ -52,7 +52,7 @@ class CommentService extends AppService
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
-        return $PostService->checkUserAccessToPost($userId, $postId);
+        return $PostService->checkUserAccessToCirclePost($userId, $postId);
     }
 
     /**

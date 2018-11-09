@@ -1,6 +1,6 @@
 <?php
 App::uses('Circle', 'Model');
-App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
+App::import('Lib/DataExtender/Extension', 'CircleMemberInfoExtension');
 App::uses('GoalousTestCase', 'Test');
 
 /**
@@ -9,7 +9,7 @@ App::uses('GoalousTestCase', 'Test');
  * Date: 2018/07/09
  * Time: 15:48
  */
-class CircleMemberInfoDataExtenderTest extends GoalousTestCase
+class CircleMemberInfoExtensionTest extends GoalousTestCase
 {
     /**
      * Fixtures
@@ -31,10 +31,10 @@ class CircleMemberInfoDataExtenderTest extends GoalousTestCase
         $Circle = ClassRegistry::init("Circle");
 
         $circle = $Circle->useType()->find('all', ['conditions' => ['user_id' => 1]]);
-        /** @var  CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
-        $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
-        $CircleMemberInfoDataExtender->setUserId(1);
-        $circle = $CircleMemberInfoDataExtender->extend($circle, '{n}.id', 'circle_id');
+        /** @var  CircleMemberInfoExtension $CircleMemberInfoExtension */
+        $CircleMemberInfoExtension = ClassRegistry::init('CircleMemberInfoExtension');
+        $CircleMemberInfoExtension->setUserId(1);
+        $circle = $CircleMemberInfoExtension->extendMulti($circle, '{n}.id', 'circle_id');
 
         foreach ($circle as $data) {
             $this->assertNotEmpty($data['unread_count']);
@@ -49,10 +49,10 @@ class CircleMemberInfoDataExtenderTest extends GoalousTestCase
 
         $circle = $Circle->useType()->find('first', ['conditions' => ['id' => 1]])['Circle'];
 
-        /** @var  CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
-        $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
-        $CircleMemberInfoDataExtender->setUserId(1);
-        $circle = $CircleMemberInfoDataExtender->extend($circle, '{n}.id', 'circle_id');
+        /** @var  CircleMemberInfoExtension $CircleMemberInfoExtension */
+        $CircleMemberInfoExtension = ClassRegistry::init('CircleMemberInfoExtension');
+        $CircleMemberInfoExtension->setUserId(1);
+        $circle = $CircleMemberInfoExtension->extendMulti($circle, '{n}.id', 'circle_id');
 
         $this->assertNotEmpty($circle['unread_count']);
         $this->assertNotEmpty($circle['admin_flg']);
@@ -64,11 +64,11 @@ class CircleMemberInfoDataExtenderTest extends GoalousTestCase
         $Circle = ClassRegistry::init("Circle");
 
         $circle = $Circle->useType()->find('first', ['conditions' => ['id' => 1]]);
-        /** @var  CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
-        $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
+        /** @var  CircleMemberInfoExtension $CircleMemberInfoExtension */
+        $CircleMemberInfoExtension = ClassRegistry::init('CircleMemberInfoExtension');
 
         try {
-            $result = $CircleMemberInfoDataExtender->extend($circle, '{n}.id', 'circle_id');
+            $result = $CircleMemberInfoExtension->extendMulti($circle, '{n}.id', 'circle_id');
         } catch (InvalidArgumentException $e) {
 
         } catch (Exception $exception) {

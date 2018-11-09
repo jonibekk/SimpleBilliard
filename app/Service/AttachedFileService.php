@@ -31,9 +31,6 @@ class AttachedFileService extends AppService
         IMAGETYPE_JPEG2000,
     ];
 
-    /* variable cache not to avoid to get same data wastefully */
-    private static $cacheList = [];
-
     /**
      * Get single file
      *

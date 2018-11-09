@@ -6,8 +6,27 @@
  * Time: 16:47
  */
 
-abstract class DataExtender
+abstract class DataExtension
 {
+    /**
+     * Method for extending a object array
+     *
+     * @param  array $data The array to be extended
+     * @param string $parentKey
+     * @param string $extKeyName
+     * @return array Extended data
+     */
+    public final function extend(array $data, string $parentKey, string $extKeyName = 'id'): array
+    {
+        $keys = $this->getKeys($data, $parentKey);
+        if (!empty($keys)) {
+            $dataExtension = $this->fetchData($keys);
+            $tmp = $this->connectData([$data], $parentKey, $dataExtension, $extKeyName);
+            $data = reset($tmp);
+        }
+        return $data;
+    }
+
     /**
      * Method for extending a object array
      *
@@ -17,7 +36,7 @@ abstract class DataExtender
      *
      * @return array Extended data
      */
-    public final function extend(array $data, string $path, string $extKeyName = 'id'): array
+    public final function extendMulti(array $data, string $path, string $extKeyName = 'id'): array
     {
         $keys = $this->getKeys($data, $path);
 
@@ -66,7 +85,8 @@ abstract class DataExtender
                     //E.g. ['User'][...]
                     if (Hash::get($parentData, $parentKeyName) ==
                         Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                        $parentData = array_merge($parentData, array_change_key_case($extension));
+
+                        $parentData = array_merge($parentData, AppUtil::arrayChangeKeySnakeCase($extension));
                         break;
                     }
                     return $parentData;
@@ -76,7 +96,7 @@ abstract class DataExtender
                 //E.g. ['User'][...]
                 if (Hash::get($parentElement, $parentKeyName) ==
                     Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                    $parentElement = array_merge($parentElement, array_change_key_case($extension));
+                    $parentElement = array_merge($parentElement, AppUtil::arrayChangeKeySnakeCase($extension));
                     break;
                 }
 
@@ -108,9 +128,7 @@ abstract class DataExtender
         if (is_int(array_keys($data)[0])) {
             return Hash::extract($data, $path);
         } else {
-            //Since extract path is split with '.' , tokenize string by it and get the last element
-            $tokens = explode('.', $path);
-            $parentKey = end($tokens);
+            $parentKey = ltrim($path, '{n}.');
 
             return [Hash::get($data, $parentKey)];
         }

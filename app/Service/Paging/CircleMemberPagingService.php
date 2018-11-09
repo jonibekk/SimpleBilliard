@@ -1,23 +1,16 @@
 <?php
-App::import('Lib/DataExtender', 'UserDataExtender');
+
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses("CircleMember", 'Model');
 App::uses("User", 'Model');
+App::import('Lib/DataExtender', 'CircleMemberExtender');
 
 use Goalous\Enum as Enum;
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/08/23
- * Time: 14:00
- */
 class CircleMemberPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'CircleMember';
-    const EXTEND_ALL = "ext:circle_member:all";
-    const EXTEND_USER = "ext:circle_member:user";
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -45,13 +38,14 @@ class CircleMemberPagingService extends BasePagingService
         return (int)$CircleMember->find('count', $conditions);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var CircleMemberExtender $CircleMemberExtender */
+        $CircleMemberExtender = ClassRegistry::init('CircleMemberExtender');
+        $data = $CircleMemberExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     private function createSearchCondition(PagingRequest $pagingRequest)

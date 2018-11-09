@@ -70,7 +70,7 @@ class PostReaderPagingServiceTest extends GoalousTestCase
         $pagingRequest->setCurrentTeamId(1);
 
         $result = $PostReaderPagingService->getDataWithPaging($pagingRequest, 1,
-            [PostReaderPagingService::EXTEND_USER]);
+            [PostReadExtender::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
 

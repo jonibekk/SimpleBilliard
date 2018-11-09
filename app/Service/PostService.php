@@ -23,6 +23,7 @@ App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
+App::import('Lib/DataExtender', 'PostExtender');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
@@ -34,6 +35,65 @@ use Goalous\Exception as GlException;
  */
 class PostService extends AppService
 {
+    /**
+     * Get single data based on model.
+     * extend data
+     *
+     * @param PostResourceRequest $req
+     * @param array $extensions
+     * @return array
+     */
+    function get(PostResourceRequest $req, array $extensions = []): array
+    {
+        $id = $req->getId();
+        $userId = $req->getUserId();
+        $teamId = $req->getTeamId();
+        if ($req->isCheckPermission() && !$this->canAccessPost($id, $userId, $teamId)
+        ) {
+            return [];
+        }
+
+        $data = $this->_getWithCache($id, 'Post');
+        if (empty($data)) {
+            return [];
+        }
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
+        $data = $PostExtender->extend($data, $userId, $teamId, $extensions);
+        return $data;
+    }
+
+    function canAccessPost(int $postId, int $userId, int $teamId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $condition = ['id' => $postId, 'team_id' => $teamId];
+        $data = $Post->useEntity()->useType()->find('first', $condition);
+        if (empty($data)) {
+            return false;
+        }
+        // Check whether self post
+        if ((int)$data['user_id'] === $userId) {
+            return true;
+        }
+
+        // Check if goal post
+        if ($Post->isGoalPost($postId, $userId, $teamId)) {
+            return true;
+        }
+
+        // Check circle post permission
+        try {
+            if ($this->checkUserAccessToCirclePost($userId, $postId)) {
+                return true;
+            }
+        } catch (Exception $exception) {
+            return false;
+        }
+        return false;
+    }
 
     /**
      * 月のインデックスからフィードの取得期間を取得
@@ -561,7 +621,7 @@ class PostService extends AppService
      *
      * @return bool
      */
-    public function checkUserAccessToPost(int $userId, int $postId, bool $mustBelong = false): bool
+    public function checkUserAccessToCirclePost(int $userId, int $postId, bool $mustBelong = false): bool
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init("CircleMember");
@@ -627,7 +687,7 @@ class PostService extends AppService
     }
 
     /**
-     * Get list of attached files of a post
+     * Get list of attached files of a post despite of post typte
      *
      * @param int                                              $postId
      * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
@@ -635,6 +695,24 @@ class PostService extends AppService
      * @return AttachedFileEntity[]
      */
     public function getAttachedFiles(int $postId, AttachedFileType $type = null): array
+    {
+        $files = $this->getNormalAttachedFiles($postId, $type);
+        if (!empty($files)) {
+            return $files;
+        }
+        $files = $this->getActionAttachedFiles($postId, $type);
+        return $files;
+    }
+
+    /**
+     * Get list of normal attached files(e.g. circle post) of a post
+     *
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getNormalAttachedFiles(int $postId, AttachedFileType $type = null): array
     {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -651,6 +729,52 @@ class PostService extends AppService
                     'conditions' => [
                         'PostFile.post_id' => $postId,
                         'PostFile.attached_file_id = AttachedFile.id'
+                    ]
+                ],
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+
+    /**
+     * Get list of action attached files of a post
+     *
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getActionAttachedFiles(int $postId, AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'action_result_files',
+                    'alias'      => 'ActionResultFile',
+                    'conditions' => [
+                        'ActionResultFile.attached_file_id = AttachedFile.id'
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'posts',
+                    'alias'      => 'Post',
+                    'conditions' => [
+                        'Post.id' => $postId,
+                        'Post.action_result_id = ActionResultFile.action_result_id'
                     ]
                 ]
             ]
