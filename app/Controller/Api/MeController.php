@@ -60,8 +60,8 @@ class MeController extends BasePagingController
     private function getDefaultCircleExtension()
     {
         return [
-            CircleListPagingService::EXTEND_MEMBER_INFO,
-            CircleListPagingService::EXTEND_MEMBER_COUNT
+            CircleExtender::EXTEND_MEMBER_INFO,
+            CircleExtender::EXTEND_MEMBER_COUNT
         ];
     }
 }

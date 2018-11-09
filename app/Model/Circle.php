@@ -594,8 +594,8 @@ class Circle extends AppModel
         ];
 
         $condition = [
-            'Circle.id' => $circleId,
-            'Circle.del_flg'   => false
+            'Circle.id'      => $circleId,
+            'Circle.del_flg' => false
         ];
 
         $this->updateAll($newData, $condition);

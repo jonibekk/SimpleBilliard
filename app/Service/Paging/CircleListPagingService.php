@@ -1,12 +1,10 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
-App::import('Service', 'ImageStorageService');
 App::import('Service', 'CirclePinService');
-App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
-App::import('Lib/DataExtender', 'CircleMemberCountDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::import('Lib/DataExtender', 'CircleExtender');
 
 /**
  * Created by PhpStorm.
@@ -16,9 +14,6 @@ App::uses('CircleMember', 'Model');
  */
 class CircleListPagingService extends BasePagingService
 {
-    const EXTEND_ALL = 'ext:circle:all';
-    const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
-    const EXTEND_MEMBER_COUNT = 'ext:circle:member_count';
     const MAIN_MODEL = 'Circle';
 
     /**
@@ -205,34 +200,14 @@ class CircleListPagingService extends BasePagingService
         }
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        // Set image url each circle
-        /** @var ImageStorageService $ImageStorageService */
-        $ImageStorageService = ClassRegistry::init('ImageStorageService');
-        foreach ($resultArray as $i => $v) {
-            $resultArray[$i]['img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Circle');
-        }
+        $userId = $request->getResourceId() ?: $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
 
-        if ($this->includeExt($options, self::EXTEND_MEMBER_INFO)) {
-
-            $userId = $request->getResourceId() ?: $request->getCurrentUserId();
-
-            /** @var CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
-            $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
-
-            $CircleMemberInfoDataExtender->setUserId($userId);
-            $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
-
-        }
-
-        // Originally circles table has `circle_member_count` column. but this column hasn't been maintained. So we shouldn't use this column and overwrite key value.
-        if ($this->includeExt($options, self::EXTEND_MEMBER_COUNT)) {
-            /** @var CircleMemberCountDataExtender $CircleMemberCountDataExtender */
-            $CircleMemberCountDataExtender = ClassRegistry::init('CircleMemberCountDataExtender');
-            $resultArray = $CircleMemberCountDataExtender->extend($resultArray, "{n}.id");
-        }
-
+        /** @var CircleExtender $CircleExtender */
+        $CircleExtender = ClassRegistry::init('CircleExtender');
+        $data = $CircleExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     protected function beforeRead(PagingRequest $pagingRequest)

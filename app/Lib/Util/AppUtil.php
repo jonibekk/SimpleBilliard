@@ -842,4 +842,21 @@ class AppUtil
 
         return $traceResult;
     }
+
+    /**
+     * Change array key to snake case
+     *
+     *
+     * @param array $arr
+     * @return array
+     */
+    static function arrayChangeKeySnakeCase(array $arr): array
+    {
+        $ret = [];
+        foreach( $arr as $key => $val) {
+            $key = Inflector::underscore($key);
+            $ret[$key] = $val;
+        }
+        return $ret;
+    }
 }

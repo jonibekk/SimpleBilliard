@@ -1,25 +1,12 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::import('Lib/DataExtender', "UserDataExtender");
-App::import('Lib/DataExtender', "CommentLikeDataExtender");
-App::import('Lib/DataExtender', "CommentReadDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('Comment', 'Model');
 App::uses('User', 'Model');
+App::import('Lib/DataExtender', 'CommentExtender');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/05/28
- * Time: 13:56
- */
 class CommentPagingService extends BasePagingService
 {
-
-    const EXTEND_ALL = "ext:comment:all";
-    const EXTEND_USER = "ext:comment:user";
-    const EXTEND_LIKE = "ext:comment:like";
-    const EXTEND_READ = "ext:comment:read";
     const MAIN_MODEL = 'Comment';
 
     /**
@@ -54,26 +41,14 @@ class CommentPagingService extends BasePagingService
         return (int)$Comment->find('count', $options);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
-        if ($this->includeExt($options, self::EXTEND_LIKE)) {
-            $userId = $request->getCurrentUserId();
-            /** @var CommentLikeDataExtender $CommentLikeDataExtender */
-            $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
-            $CommentLikeDataExtender->setUserId($userId);
-            $resultArray = $CommentLikeDataExtender->extend($resultArray, "{n}.id", "comment_id");
-        }
-        if ($this->includeExt($options, self::EXTEND_READ)) {
-            /** @var CommentReadDataExtender $CommentReadDataExtender */
-            $CommentReadDataExtender = ClassRegistry::init('CommentReadDataExtender');
-            $CommentReadDataExtender->setUserId($userId);
-            $resultArray = $CommentReadDataExtender->extend($resultArray, "{n}.id", "comment_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+        $data = $CommentExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     private function createSearchCondition(PagingRequest $request): array

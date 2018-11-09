@@ -1,8 +1,8 @@
 <?php
 App::import('Service', 'CircleService');
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 
-class CircleMemberCountDataExtender extends DataExtender
+class CircleMemberCountExtension extends DataExtension
 {
     protected function fetchData(array $keys): array
     {

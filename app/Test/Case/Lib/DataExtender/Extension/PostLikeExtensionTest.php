@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender', 'PostLikeDataExtender');
+App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::uses('GoalousTestCase', 'Test');
 /**
  * Created by PhpStorm.
@@ -9,7 +9,7 @@ App::uses('GoalousTestCase', 'Test');
  * Time: 12:51
  */
 
-class PostLikeDataExtenderTest extends GoalousTestCase
+class PostLikeExtensionTest extends GoalousTestCase
 {
 
     /**
@@ -32,10 +32,10 @@ class PostLikeDataExtenderTest extends GoalousTestCase
         $Post = ClassRegistry::init('Post');
         $posts = Hash::extract($Post->find('first', ['conditions' => ['id' => 11]]), 'Post');
         $this->assertNotEmpty($posts);
-        /** @var PostLikeDataExtender $PostLikeDataExtender */
-        $PostLikeDataExtender = ClassRegistry::init('PostLikeDataExtender');
-        $PostLikeDataExtender->setUserId(1);
-        $extended = $PostLikeDataExtender->extend($posts, 'id', 'post_id');
+        /** @var PostLikeExtension $PostLikeExtension */
+        $PostLikeExtension = ClassRegistry::init('PostLikeExtension');
+        $PostLikeExtension->setUserId(1);
+        $extended = $PostLikeExtension->extendMulti($posts, 'id', 'post_id');
 
         $this->assertTrue(Hash::get($extended, 'is_liked'));
     }

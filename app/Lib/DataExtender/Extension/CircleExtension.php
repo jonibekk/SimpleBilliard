@@ -1,6 +1,6 @@
 <?php
 App::uses("Circle", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 
 /**
  * Created by PhpStorm.
@@ -8,7 +8,7 @@ App::import('Lib/DataExtender', 'DataExtender');
  * Date: 2018/06/12
  * Time: 15:40
  */
-class CircleDataExtender extends DataExtender
+class CircleExtension extends DataExtension
 {
     protected function fetchData(array $keys): array
     {
@@ -24,7 +24,7 @@ class CircleDataExtender extends DataExtender
             ],
         ];
 
-        $fetchedData = $Circle->find('all', $conditions);
+        $fetchedData = $Circle->useType()->find('all', $conditions);
 
         if (count($fetchedData) != count($uniqueKeys)) {
             GoalousLog::error("Missing data for data extension. Circle ID: " . implode(',',

@@ -1,6 +1,6 @@
 <?php
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender', 'CircleMemberCountDataExtender');
+App::import('Lib/DataExtender/Extension', 'CircleMemberCountExtension');
 App::uses('GoalousTestCase', 'Test');
 
 /**
@@ -9,7 +9,7 @@ App::uses('GoalousTestCase', 'Test');
  * Date: 2018/06/14
  * Time: 12:08
  */
-class CircleMemberCountDataExtenderTest extends GoalousTestCase
+class CircleMemberCountExtensionTest extends GoalousTestCase
 {
     /**
      * Fixtures
@@ -33,9 +33,9 @@ class CircleMemberCountDataExtenderTest extends GoalousTestCase
             ['id' => 9999, 'circle_member_count' => 10000],
         ];
 
-        /** @var CircleMemberCountDataExtender $CircleMemberCountDataExtender */
-        $CircleMemberCountDataExtender = ClassRegistry::init('CircleMemberCountDataExtender');
-        $extended = $CircleMemberCountDataExtender->extend($circles, '{n}.id');
+        /** @var CircleMemberCountExtension $CircleMemberCountExtension */
+        $CircleMemberCountExtension = ClassRegistry::init('CircleMemberCountExtension');
+        $extended = $CircleMemberCountExtension->extendMulti($circles, '{n}.id');
         $expect = [
             ['id' => 1, 'circle_member_count' => 3],
             ['id' => 2, 'circle_member_count' => 1],
@@ -44,7 +44,7 @@ class CircleMemberCountDataExtenderTest extends GoalousTestCase
         $this->assertEquals($extended, $expect);
 
         // Get from cache
-        $extended = $CircleMemberCountDataExtender->extend($circles, '{n}.id');
+        $extended = $CircleMemberCountExtension->extendMulti($circles, '{n}.id');
         $expect = [
             ['id' => 1, 'circle_member_count' => 3],
             ['id' => 2, 'circle_member_count' => 1],
