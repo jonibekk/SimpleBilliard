@@ -34,7 +34,7 @@ class OgpController extends BaseApiController
             return $error;
         }
 
-        $ogp = $this->Ogp->getOgpByUrlInText($text);
+        $ogp = $this->Ogp->getOgpByUrlInText($text, true);
         return ApiResponse::ok()->withData($ogp)->getResponse();
     }
 
