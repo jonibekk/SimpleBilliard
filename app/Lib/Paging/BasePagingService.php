@@ -148,15 +148,15 @@ abstract class BasePagingService implements PagingServiceInterface
      * Extend result arrays with additional contents
      * Override to use
      *
-     * @param array         $resultArray Content to be extended
+     * @param array         $data Content to be extended
      * @param PagingRequest $request     Conditions used for getting the result
      * @param array         $options     Extension options
      *
      * @return array
      */
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        return $resultArray;
+        return $data;
     }
 
     /**
@@ -171,24 +171,4 @@ abstract class BasePagingService implements PagingServiceInterface
         $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
         return $pagingRequest;
     }
-
-    /**
-     * Check whether ext options include target ext
-     *
-     * @param string $targetExt
-     * @param array  $options
-     *
-     * @return bool
-     */
-    protected final function includeExt(array $options, string $targetExt): bool
-    {
-        if (in_array(static::EXTEND_ALL, $options)) {
-            return true;
-        }
-        if (in_array($targetExt, $options)) {
-            return true;
-        }
-        return false;
-    }
-
 }

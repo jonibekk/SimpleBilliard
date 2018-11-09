@@ -3,12 +3,6 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Lib/Paging', 'PagingRequest');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/28
- * Time: 12:07
- */
 class CircleListPagingServiceTest extends GoalousTestCase
 {
     public $fixtures = [
@@ -71,10 +65,9 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $cursor->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($cursor, 1,
-            [CircleListPagingService::EXTEND_MEMBER_INFO]);
+            [CircleExtender::EXTEND_MEMBER_INFO]);
 
         $data = $result['data'][0];
-
         $this->assertInternalType('int', $data['unread_count']);
         $this->assertInternalType('bool', $data['admin_flg']);
     }

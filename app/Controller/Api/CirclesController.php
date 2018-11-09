@@ -316,13 +316,13 @@ class CirclesController extends BasePagingController
     private function getDefaultPostExtension()
     {
         return [
-            CirclePostPagingService::EXTEND_CIRCLE,
-            CirclePostPagingService::EXTEND_LIKE,
-            CirclePostPagingService::EXTEND_SAVED,
-            CirclePostPagingService::EXTEND_READ,
-            CirclePostPagingService::EXTEND_USER,
-            CirclePostPagingService::EXTEND_COMMENTS,
-            CirclePostPagingService::EXTEND_POST_FILE
+            CirclePostExtender::EXTEND_CIRCLE,
+            CirclePostExtender::EXTEND_LIKE,
+            CirclePostExtender::EXTEND_SAVED,
+            CirclePostExtender::EXTEND_READ,
+            CirclePostExtender::EXTEND_USER,
+            CirclePostExtender::EXTEND_COMMENTS,
+            CirclePostExtender::EXTEND_POST_FILE
         ];
     }
 
@@ -334,7 +334,7 @@ class CirclesController extends BasePagingController
     private function getDefaultMemberExtension()
     {
         return [
-            CircleMemberPagingService::EXTEND_USER
+            CircleMemberExtender::EXTEND_USER
         ];
     }
 

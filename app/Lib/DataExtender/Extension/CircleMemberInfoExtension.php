@@ -1,14 +1,8 @@
 <?php
 App::uses("CircleMember", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/07/09
- * Time: 15:16
- */
-class CircleMemberInfoDataExtender extends DataExtender
+class CircleMemberInfoExtension extends DataExtension
 {
     /**
      * @var int

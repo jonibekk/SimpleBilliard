@@ -1,10 +1,10 @@
 <?php
 App::uses('Comment', 'Model');
 App::uses('CommentRead', 'Model');
-App::import('Lib/DataExtender', 'CommentReadDataExtender');
+App::import('Lib/DataExtender/Extension', 'CommentReadDataExtension');
 App::uses('GoalousTestCase', 'Test');
 
-class CommentReadDataExtenderTest extends GoalousTestCase
+class CommentReadExtensionTest extends GoalousTestCase
 {
 
     /**
@@ -27,14 +27,14 @@ class CommentReadDataExtenderTest extends GoalousTestCase
         $Comment = ClassRegistry::init('Comment');
         /** @var CommentRead $CommentRead */
         $CommentRead = ClassRegistry::init('CommentRead');
-        /** @var CommentReadDataExtender $CommentReadDataExtender */
-        $CommentReadDataExtender = ClassRegistry::init('CommentReadDataExtender');
+        /** @var CommentReadDataExtension $CommentReadExtension */
+        $CommentReadExtension = ClassRegistry::init('CommentReadDataExtension');
 
         /* Not read comment */
         $comments = Hash::extract($Comment->find('first', ['conditions' => ['id' => 4]]), 'Comment');
         $this->assertNotEmpty($comments);
-        $CommentReadDataExtender->setUserId(1);
-        $extended = $CommentReadDataExtender->extend($comments, 'id', 'comment_id');
+        $CommentReadExtension->setUserId(1);
+        $extended = $CommentReadExtension->extendMulti($comments, 'id', 'comment_id');
         $this->assertFalse(Hash::get($extended, 'is_read'));
 
         /* Read comment */
@@ -43,12 +43,12 @@ class CommentReadDataExtenderTest extends GoalousTestCase
             'comment_id' => 4,
             'user_id' => 1
         ], false);
-        $extended = $CommentReadDataExtender->extend($comments, 'id', 'comment_id');
+        $extended = $CommentReadExtension->extendMulti($comments, 'id', 'comment_id');
         $this->assertTrue(Hash::get($extended, 'is_read'));
 
         /* Comment was created by logged in user */
         $comments = Hash::extract($Comment->find('all', ['conditions' => ['id' => [1,2]]]), '{n}.Comment');
-        $extended = $CommentReadDataExtender->extend($comments, '{n}.id', 'comment_id');
+        $extended = $CommentReadExtension->extendMulti($comments, '{n}.id', 'comment_id');
         $ret = Hash::combine($extended, '{n}.id', '{n}.is_read');
         $this->assertEquals($ret, [1 => true, 2 => true]);
 

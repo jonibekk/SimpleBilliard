@@ -1,8 +1,9 @@
 <?php
-App::uses("PostRead", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::uses("Comment", "Model");
+App::uses("CommentRead", "Model");
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 
-class PostReadDataExtender extends DataExtender
+class CommentReadDataExtension extends DataExtension
 {
     /** @var int */
     private $userId;
@@ -24,45 +25,45 @@ class PostReadDataExtender extends DataExtender
         }
 
 
-        $postIds = $this->filterKeys($keys);
+        $commentIds = $this->filterKeys($keys);
 
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
 
-        /* Deal as post is read if post creator is logged in user */
+        /* Deal as comment is read if comment creator is logged in user */
         $options = [
             'conditions' => [
-                'id' => $postIds,
+                'id' => $commentIds,
                 'user_id' => $this->userId,
             ],
             'fields' => [
                 'id'
             ],
         ];
-        $posts = $Post->find('all', $options);
-        $createdPostIds = Hash::extract($posts, '{n}.Post.id');
-        $notCreatedPostIds = array_diff($postIds, $createdPostIds);
-        // All posts are created by logged in user, finish processing
-        if(empty($notCreatedPostIds)) {
-            return $createdPostIds;
+        $comments = $Comment->find('all', $options);
+        $createdCommentIds = Hash::extract($comments, '{n}.Comment.id');
+        $notCreatedCommentIds = array_diff($commentIds, $createdCommentIds);
+        // All comments are created by logged in user, finish processing
+        if(empty($notCreatedCommentIds)) {
+            return $createdCommentIds;
         }
 
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
+        /** @var CommentRead $CommentRead */
+        $CommentRead = ClassRegistry::init('CommentRead');
 
-        /* Get whether read posts created by other user. */
+        /* Get whether read comments created by other user. */
         $options = [
             'conditions' => [
-                'post_id' => $notCreatedPostIds,
+                'comment_id' => $notCreatedCommentIds,
                 'user_id' => $this->userId,
             ],
             'fields' => [
-                'post_id'
+                'comment_id'
             ],
         ];
-        $postReads = $PostRead->find('all', $options);
-        $readPostIds = Hash::extract($postReads, "{n}.{s}.post_id");
-        return array_merge($createdPostIds, $readPostIds);
+        $commentReads = $CommentRead->find('all', $options);
+        $readCommentIds = Hash::extract($commentReads, "{n}.{s}.comment_id");
+        return array_merge($createdCommentIds, $readCommentIds);
     }
 
     protected function connectData(

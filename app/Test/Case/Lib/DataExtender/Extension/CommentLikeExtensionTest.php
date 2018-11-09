@@ -1,14 +1,14 @@
 <?php
 App::uses('Comment', 'Model');
 App::uses('CommentLike', 'Model');
-App::import('Lib/DataExtender', 'CommentLikeDataExtender');
+App::import('Lib/DataExtender/Extension', 'CommentLikeExtension');
 App::uses('GoalousTestCase', 'Test');
 
 /**
  * @property Comment Comment
  * @property CommentLike CommentLike
  */
-class CommentLikeDataExtenderTest extends GoalousTestCase
+class CommentLikeExtensionTest extends GoalousTestCase
 {
 
     /**
@@ -43,12 +43,12 @@ class CommentLikeDataExtenderTest extends GoalousTestCase
     {
         $comments = Hash::extract($this->Comment->find('first', ['conditions' => ['id' => [1]]]), 'Comment');
 
-        /** @var CommentLikeDataExtender $CommentLikeDataExtender */
-        $CommentLikeDataExtender = ClassRegistry::init('CommentLikeDataExtender');
-        $CommentLikeDataExtender->setUserId(1);
+        /** @var CommentLikeExtension $CommentLikeExtension */
+        $CommentLikeExtension = ClassRegistry::init('CommentLikeExtension');
+        $CommentLikeExtension->setUserId(1);
 
         /* User didn't like for comment */
-        $extended = $CommentLikeDataExtender->extend($comments, 'id', 'comment_id');
+        $extended = $CommentLikeExtension->extendMulti($comments, 'id', 'comment_id');
         $this->assertFalse(Hash::get($extended, 'is_liked'));
 
 
@@ -60,7 +60,7 @@ class CommentLikeDataExtenderTest extends GoalousTestCase
             'comment_id' => 1,
         ], false);
 
-        $extended = $CommentLikeDataExtender->extend($comments, 'id', 'comment_id');
+        $extended = $CommentLikeExtension->extendMulti($comments, 'id', 'comment_id');
         $this->assertTrue(Hash::get($extended, 'is_liked'));
     }
 }

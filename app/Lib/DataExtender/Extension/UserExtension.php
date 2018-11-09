@@ -1,15 +1,9 @@
 <?php
 App::uses("User", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 App::import('Service', 'ImageStorageService');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/08
- * Time: 16:46
- */
-class UserDataExtender extends DataExtender
+class UserExtension extends DataExtension
 {
     protected function fetchData(array $keys): array
     {
