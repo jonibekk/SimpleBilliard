@@ -33,14 +33,16 @@ class AppService extends CakeObject
      * @return entity|array
      */
     protected function _getWithCache(int $id, string $modelName) {
+        $path = $modelName.".".$id;
         // In case already got data from db and cached, but data is empty
-        if (array_key_exists($id, self::$cacheList) && empty(self::$cacheList[$id])) {
+        if (Hash::check(static::$cacheList, $path)
+            && empty(Hash::get(static::$cacheList, $path))) {
             return [];
         }
 
         // In case already got data from db and cached, data is not empty
-        if (!empty(self::$cacheList[$id])) {
-            $data = self::$cacheList[$id];
+        $data = Hash::get(static::$cacheList, $path);
+        if (!empty($data)) {
             return $data;
         }
 
@@ -49,7 +51,7 @@ class AppService extends CakeObject
         // Get data from db and cache
         $data = $model->useType()->findById($id);
         $data = Hash::get($data, $modelName) ?? [];
-        self::$cacheList[$id] = $data;
+        static::$cacheList[$modelName][$id] = $data;
         if (empty($data)) {
             return [];
         }
