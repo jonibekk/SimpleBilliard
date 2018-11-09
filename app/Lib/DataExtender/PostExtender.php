@@ -129,6 +129,6 @@ class PostExtender extends BaseExtender
 
     public function extendMulti(array $data, int $userId, int $teamId, array $extensions = []): array
     {
-        // TODO:implement
+        throw new RuntimeException("Please implement " . __METHOD__);
     }
 }

@@ -9,7 +9,7 @@ class PostReadExtender extends BaseExtender
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
-        // TODO:implement
+        throw new RuntimeException("Please implement " . __METHOD__);
     }
 
     public function extendMulti(array $data, int $userId, int $teamId, array $extensions = []): array
