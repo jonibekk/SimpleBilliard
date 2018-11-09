@@ -15,6 +15,7 @@ App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 App::import('Model/Entity', 'PostEntity');
+App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
 use Mockery as mock;
@@ -979,13 +980,12 @@ class PostServiceTest extends GoalousTestCase
             PostExtender::EXTEND_SAVED,
             PostExtender::EXTEND_READ,
         ];
-        $postId = 1;
-        $userId = 1;
-        $teamId = 1;
-        $ret = $this->PostService->get($postId, $userId, $teamId,true, $extensions);
+
+        $req = new PostResourceRequest(1, 1, 1, true);
+        $ret = $this->PostService->get($req,$extensions);
 
         $this->assertTrue(is_array($ret));
-        $this->assertEquals($ret['id'], $postId);
+        $this->assertEquals($ret['id'], $req->getId());
         $this->assertEquals($ret['del_flg'], false);
         $this->assertTrue(is_array($ret['user']));
         $this->assertEquals($ret['is_liked'], false);
@@ -993,19 +993,19 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['is_saved'], false);
         $this->assertEquals($ret['attached_files'], []);
         $this->assertEquals(count($ret['comments']['data']), 2);
-        $this->assertEquals($ret['comments']['data'][0]['post_id'], $postId);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
         $this->assertEquals($ret['comments']['cursor'], null);
-        $this->assertEquals($ret['circle']['team_id'], $teamId);
+        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
         $this->assertEquals($ret['circle']['id'], 1);
 
         $extensions = [
             PostExtender::EXTEND_ALL
         ];
-        $ret = $this->PostService->get($postId, $userId, $teamId,true, $extensions);
+        $ret = $this->PostService->get($req,$extensions);
 
         $this->assertTrue(is_array($ret));
-        $this->assertEquals($ret['id'], $postId);
+        $this->assertEquals($ret['id'], $req->getId());
         $this->assertEquals($ret['del_flg'], false);
         $this->assertTrue(is_array($ret['user']));
         $this->assertEquals($ret['is_liked'], false);
@@ -1013,21 +1013,25 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['is_saved'], false);
         $this->assertEquals($ret['attached_files'], []);
         $this->assertEquals(count($ret['comments']['data']), 2);
-        $this->assertEquals($ret['comments']['data'][0]['post_id'], $postId);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
         $this->assertEquals($ret['comments']['cursor'], null);
-        $this->assertEquals($ret['circle']['team_id'], $teamId);
+        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
         $this->assertEquals($ret['circle']['id'], 1);
 
-        $postId = 7;
-        $userId = 99;
-        $ret = $this->PostService->get($postId, $userId, $teamId,true, $extensions);
-
+        $req->setId(7);
+        $req->setUserId(99);
+        $ret = $this->PostService->get($req,$extensions);
         $this->assertEquals($ret, []);
 
-        $postId = 8;
-        $userId = 2;
-        $ret = $this->PostService->get($postId, $userId, $teamId,true, $extensions);
+        $req->setCheckPermission(false);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertNotEmpty($ret);
+
+        $req->setId(8);
+        $req->setUserId(2);
+        $req->setCheckPermission(true);
+        $ret = $this->PostService->get($req,$extensions);
         $this->assertTrue(is_array($ret));
         $this->assertEquals(count($ret['attached_files']), 1);
         $this->assertEquals($ret['attached_files'][0]['id'], 2);

@@ -39,16 +39,16 @@ class PostService extends AppService
      * Get single data based on model.
      * extend data
      *
-     * @param int $id
-     * @param int $userId
-     * @param int $teamId
-     * @param bool $checkPermission
+     * @param PostResourceRequest $req
      * @param array $extensions
      * @return array
      */
-    function get(int $id, int $userId, int $teamId, bool $checkPermission = false, array $extensions = []): array
+    function get(PostResourceRequest $req, array $extensions = []): array
     {
-        if ($checkPermission && !$this->canAccessPost($id, $userId, $teamId)
+        $id = $req->getId();
+        $userId = $req->getUserId();
+        $teamId = $req->getTeamId();
+        if ($req->isCheckPermission() && !$this->canAccessPost($id, $userId, $teamId)
         ) {
             return [];
         }
