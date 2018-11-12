@@ -116,9 +116,9 @@ class PostsController extends BasePagingController
     private function getDefaultCommentsExtension()
     {
         return [
-            CommentPagingService::EXTEND_USER,
-            CommentPagingService::EXTEND_LIKE,
-            CommentPagingService::EXTEND_READ,
+            CommentExtender::EXTEND_USER,
+            CommentExtender::EXTEND_LIKE,
+            CommentExtender::EXTEND_READ,
         ];
     }
 
@@ -198,7 +198,7 @@ class PostsController extends BasePagingController
     private function getDefaultReaderExtension()
     {
         return [
-            PostReaderPagingService::EXTEND_USER
+            PostReadExtender::EXTEND_USER
         ];
     }
 
@@ -210,7 +210,7 @@ class PostsController extends BasePagingController
     private function getDefaultLikesUserExtension()
     {
         return [
-            PostLikesPagingService::EXTEND_USER
+            PostLikeExtender::EXTEND_USER
         ];
     }
 
@@ -500,7 +500,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
@@ -509,6 +509,61 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Validation function for adding / removing save from a post
+     *
+     * @param int $postId
+     *
+     * @return CakeResponse|null
+     */
+    private function validateSave(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                ->getResponse();
+        }
+
+        return null;
+    }
+
+    /*
+     * Validate get comments and readers endpoint
+     *
+     * @param int $postId
+     *
+     * @return ErrorResponse|null
+     */
+    private function validateAccessToPost(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        try {
+            $hasAccess = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        }
+
+        if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                 ->getResponse();
         }

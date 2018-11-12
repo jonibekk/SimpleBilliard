@@ -1,20 +1,13 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::import('Lib/DataExtender', "UserDataExtender");
+App::import('Lib/DataExtender/Extension', "UserExtension");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('PostRead', 'Model');
 App::uses('User', 'Model');
+App::import('Lib/DataExtender', 'PostReadExtender');
 
-/**
- * User: MartiFloriach
- * Date: 2018/09/03
- * Time: 13:56
- */
 class PostReaderPagingService extends BasePagingService
 {
-
-    const EXTEND_ALL = "ext:post_read:all";
-    const EXTEND_USER = "ext:post_read:user";
     const MAIN_MODEL = 'PostRead';
 
     /**
@@ -49,13 +42,14 @@ class PostReaderPagingService extends BasePagingService
         return (int)$PostRead->find('count', $options);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var PostReadExtender $PostReadExtender */
+        $PostReadExtender = ClassRegistry::init('PostReadExtender');
+        $data = $PostReadExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     /**

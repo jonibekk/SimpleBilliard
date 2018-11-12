@@ -15,6 +15,7 @@ App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 App::import('Model/Entity', 'PostEntity');
+App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
 use Mockery as mock;
@@ -51,7 +52,15 @@ class PostServiceTest extends GoalousTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.post_shared_log'
+        'app.post_shared_log',
+        'app.comment',
+        'app.comment_like',
+        'app.comment_read',
+        'app.saved_post',
+        'app.action_result',
+        'app.action_result_file',
+        'app.key_result',
+        'app.goal',
     ];
 
     /**
@@ -667,8 +676,8 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToPublicPost_success()
     {
-        $result = $this->PostService->checkUserAccessToPost(4, 1);
-        $result1 = $this->PostService->checkUserAccessToPost(4, 1, true);
+        $result = $this->PostService->checkUserAccessToCirclePost(4, 1);
+        $result1 = $this->PostService->checkUserAccessToCirclePost(4, 1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
@@ -676,8 +685,8 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_success()
     {
-        $result = $this->PostService->checkUserAccessToPost(2, 7, true);
-        $result1 = $this->PostService->checkUserAccessToPost(2, 7);
+        $result = $this->PostService->checkUserAccessToCirclePost(2, 7, true);
+        $result1 = $this->PostService->checkUserAccessToCirclePost(2, 7);
 
         $this->assertTrue($result);
         $this->assertTrue($result1);
@@ -685,14 +694,14 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_failed()
     {
-        $result = $this->PostService->checkUserAccessToPost(4, 7);
+        $result = $this->PostService->checkUserAccessToCirclePost(4, 7);
 
         $this->assertFalse($result);
     }
 
     public function test_userHasAccessToJoinedPost_success()
     {
-        $result = $this->PostService->checkUserAccessToPost(1, 1);
+        $result = $this->PostService->checkUserAccessToCirclePost(1, 1);
 
         $this->assertTrue($result);
     }
@@ -803,7 +812,7 @@ class PostServiceTest extends GoalousTestCase
 
         $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
 
-        $files = $this->PostService->getAttachedFiles($postEntity['id']);
+        $files = $this->PostService->getNormalAttachedFiles($postEntity['id']);
 
         $this->assertNotEmpty($files);
     }
@@ -956,5 +965,79 @@ class PostServiceTest extends GoalousTestCase
 
         $this->assertLessThan($updatedCircle['latest_post_created'], $initialCircle['latest_post_created']);
         $this->assertLessThan($updatedCircle['modified'], $initialCircle['modified']);
+    }
+
+    public function test_get()
+    {
+        $extensions = [
+            PostExtender::EXTEND_USER,
+            PostExtender::EXTEND_RELATED_TYPE,
+            PostExtender::EXTEND_COMMENTS,
+            PostExtender::EXTEND_POST_SHARE_CIRCLE,
+            PostExtender::EXTEND_POST_SHARE_USER,
+            PostExtender::EXTEND_POST_FILE,
+            PostExtender::EXTEND_LIKE,
+            PostExtender::EXTEND_SAVED,
+            PostExtender::EXTEND_READ,
+        ];
+
+        $req = new PostResourceRequest(1, 1, 1, true);
+        $ret = $this->PostService->get($req,$extensions);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals($ret['id'], $req->getId());
+        $this->assertEquals($ret['del_flg'], false);
+        $this->assertTrue(is_array($ret['user']));
+        $this->assertEquals($ret['is_liked'], false);
+        $this->assertEquals($ret['is_read'], false);
+        $this->assertEquals($ret['is_saved'], false);
+        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals(count($ret['comments']['data']), 2);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
+        $this->assertEquals($ret['comments']['count'], 2);
+        $this->assertEquals($ret['comments']['cursor'], null);
+        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
+        $this->assertEquals($ret['circle']['id'], 1);
+
+        $extensions = [
+            PostExtender::EXTEND_ALL
+        ];
+        $ret = $this->PostService->get($req,$extensions);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals($ret['id'], $req->getId());
+        $this->assertEquals($ret['del_flg'], false);
+        $this->assertTrue(is_array($ret['user']));
+        $this->assertEquals($ret['is_liked'], false);
+        $this->assertEquals($ret['is_read'], false);
+        $this->assertEquals($ret['is_saved'], false);
+        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals(count($ret['comments']['data']), 2);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
+        $this->assertEquals($ret['comments']['count'], 2);
+        $this->assertEquals($ret['comments']['cursor'], null);
+        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
+        $this->assertEquals($ret['circle']['id'], 1);
+
+        $req->setId(7);
+        $req->setUserId(99);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertEquals($ret, []);
+
+        $req->setCheckPermission(false);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertNotEmpty($ret);
+
+        $req->setId(8);
+        $req->setUserId(2);
+        $req->setCheckPermission(true);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals(count($ret['attached_files']), 1);
+        $this->assertEquals($ret['attached_files'][0]['id'], 2);
+
+        $this->assertEquals($ret['action_result']['id'], 1);
+        $this->assertEquals($ret['key_result']['id'], $ret['action_result']['key_result_id']);
+        $this->assertEquals($ret['goal']['id'], $ret['action_result']['goal_id']);
     }
 }

@@ -6,7 +6,7 @@
  * Time: 15:45
  */
 
-class PostFileDataExtender extends DataExtender
+class PostFileExtension extends DataExtension
 {
     protected function fetchData(array $keys): array
     {

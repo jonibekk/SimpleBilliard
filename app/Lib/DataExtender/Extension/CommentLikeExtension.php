@@ -1,14 +1,8 @@
 <?php
 App::uses("CommentLike", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/29
- * Time: 10:31
- */
-class CommentLikeDataExtender extends DataExtender
+class CommentLikeExtension extends DataExtension
 {
     /** @var int */
     private $userId;

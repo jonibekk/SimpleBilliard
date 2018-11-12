@@ -254,7 +254,10 @@ class UsersController extends AppController
                         return $this->redirect("/");
                     }
                 }
-                $this->Session->write('current_team_id', $invitedTeamId);
+                $activeTeams = $this->Team->TeamMember->getActiveTeamMembersList();
+                if (empty($activeTeams)) {
+                    $this->Session->write('current_team_id', $invitedTeamId);
+                }
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
@@ -1168,6 +1171,9 @@ class UsersController extends AppController
             $currentTeamId = $this->Circle->current_team_id;
             $this->Circle->current_team_id = $inviteTeamId;
             $this->Circle->CircleMember->current_team_id = $inviteTeamId;
+
+            Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+
             $teamAllCircle = $this->Circle->getTeamAllCircle();
 
             // 「チーム全体」サークルに追加

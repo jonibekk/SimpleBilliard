@@ -57,9 +57,6 @@ class GoalService extends AppService
     const GRAPH_SWEET_SPOT_MAX_TOP = 100;
     const GRAPH_SWEET_SPOT_MAX_BOTTOM = 60;
 
-    /* ゴールキャッシュ */
-    private static $cacheList = [];
-
     /**
      * idによる単体データ取得
      *

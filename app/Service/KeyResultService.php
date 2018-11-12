@@ -17,9 +17,6 @@ App::uses('NumberExHelper', 'View/Helper');
 class KeyResultService extends AppService
 {
 
-    /* KRキャッシュ */
-    private static $cacheList = [];
-
     /**
      * idによる単体データ取得
      *

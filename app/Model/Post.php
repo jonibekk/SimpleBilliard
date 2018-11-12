@@ -44,11 +44,11 @@ class Post extends AppModel
     const TYPE_NORMAL = 1;
     const TYPE_CREATE_GOAL = 2;
     const TYPE_ACTION = 3;
-    const TYPE_BADGE = 4;
+    const TYPE_BADGE = 4; // unused now
     const TYPE_KR_COMPLETE = 5;
     const TYPE_GOAL_COMPLETE = 6;
     const TYPE_CREATE_CIRCLE = 7;
-    const TYPE_MESSAGE = 8;
+    const TYPE_MESSAGE = 8; // unused now?
     const SHARE_PEOPLE = 2;
     const SHARE_ONLY_ME = 3;
     const SHARE_CIRCLE = 4;
@@ -327,6 +327,21 @@ class Post extends AppModel
         return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'medium']);
     }
 
+    /**
+     * @deprecated
+     * [Important]
+     * Don't use this method when new implementation
+     * this is too chaos and has too much a role
+     * e.g. read post/comment. but as a major principle, one method has one role.
+     *
+     * @param int $page
+     * @param int $limit
+     * @param null $start
+     * @param null $end
+     * @param null $params
+     * @param bool $contains_message
+     * @return array|null
+     */
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
         if (!$start) {
