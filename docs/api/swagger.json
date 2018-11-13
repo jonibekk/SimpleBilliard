@@ -2878,6 +2878,72 @@
           "IsMultiContentStreaming" : false
         }
       }
+    },
+    "/api/ogp/info" : {
+      "get" : {
+        "tags" : [ "OGP" ],
+        "summary" : "Get ogp info by text",
+        "description" : "Get ogp information",
+        "operationId" : "/api/ogp/info",
+        "parameters" : [ {
+          "name" : "text",
+          "description" : "content include url",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get ogp info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "title" : {
+                          "type" : "string"
+                        },
+                        "description" : {
+                          "type" : "string"
+                        },
+                        "url" : {
+                          "type" : "string"
+                        },
+                        "type" : {
+                          "type" : "string"
+                        },
+                        "image" : {
+                          "type" : "string"
+                        },
+                        "site_name" : {
+                          "type" : "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
     }
   },
   "components" : {
@@ -3347,6 +3413,9 @@
                 }
               }
             },
+            "is_member" : {
+              "type" : "boolean"
+            },
             "circle_id" : {
               "$ref" : "#/components/schemas/Object.String.ID"
             }
@@ -3374,6 +3443,7 @@
             "x_large" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D",
             "original" : "https://goalous-local-assets.s3.amazonaws.com/stephen/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1536580800&Signature=5POP1uJFWwkrx6GUEli8WPvkzkc%3D"
           },
+          "is_member" : true,
           "circle_id" : "505"
         }
       },

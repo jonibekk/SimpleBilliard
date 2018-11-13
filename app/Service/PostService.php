@@ -526,6 +526,9 @@ class PostService extends AppService
                 $postBody['type'] = Post::TYPE_NORMAL;
             }
 
+            // OGP
+            $postBody['site_info'] = !empty($postBody['site_info']) ? json_encode($postBody['site_info']): null;
+
             /** @var PostEntity $savedPost */
             $savedPost = $Post->useType()->useEntity()->save($postBody, false);
 

@@ -47,11 +47,13 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $post['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-        $post['type'] = (int)Hash::get($this->getRequestJsonBody(), 'type');
+        $requestData = $this->getRequestJsonBody();
+        $post['body'] = Hash::get($requestData, 'body');
+        $post['type'] = (int)Hash::get($requestData, 'type');
+        $post['site_info'] = Hash::get($requestData, 'site_info');
 
-        $circleId = (int)Hash::get($this->getRequestJsonBody(), 'circle_id');
-        $fileIds = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+        $circleId = (int)Hash::get($requestData, 'circle_id');
+        $fileIds = Hash::get($requestData, 'file_ids', []);
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIds);
