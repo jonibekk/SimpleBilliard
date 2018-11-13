@@ -12,6 +12,7 @@ App::import('Lib/Storage', 'UploadedFile');
 
 use Aws\S3\Exception\S3Exception;
 use Goalous\Exception as GlException;
+use Aws\CommandPool;
 
 class AssetsStorageClient extends BaseStorageClient implements StorageClient
 {
@@ -36,19 +37,61 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         $this->modelId = $modelId;
     }
 
-    public function save(UploadedFile $file, string $suffix = ""): string
+    /**
+     * Upload single file
+     * @param UploadedFile $file
+     * @param string $suffix
+     * @return bool
+     */
+    public function save(UploadedFile $file, string $suffix = ""): bool
     {
         $key = $this->createFileKey($file->getFileName(true), $suffix, $file->getFileExt());
         $key = $this->sanitize($key);
 
         try {
+
+            $baseLog = '------------'.__METHOD__.' $this->upload '; //TODO:delete
+            CakeLog::debug($baseLog.'start------------'); //TODO:delete
+            $time_start = microtime(true); //TODO:delete
+
             $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
+
+            CakeLog::debug($baseLog."処理時間：".sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
+            CakeLog::debug($baseLog.'end------------');//TODO:delete
+
         } catch (S3Exception $exception) {
             GoalousLog::error("Failed saving to S3. Model: $this->modelName, ID: $this->modelId, File:" . $file->getFileName());
             throw new RuntimeException("Failed saving to S3");
         }
 
-        return $file->getUUID();
+        return true;
+    }
+
+    /**
+     * Bulk upload
+     * @param UploadedFile[] $files
+     * @return bool
+     */
+    public function bulkSave(array $files): bool
+    {
+
+        try {
+            $commands = [];
+
+            foreach ($files as $file) {
+                $key = $this->createFileKey($file->getFileName(true), $file->getSuffix(), $file->getFileExt());
+                $key = $this->sanitize($key);
+
+                $commands[] = $this->getCommandForUpload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
+            }
+
+            CommandPool::batch($this->s3Instance, $commands);
+
+        } catch (AwsException $exception) {
+            throw new RuntimeException($exception->getMessage());
+        }
+
+        return true;
     }
 
     public function delete(string $fileName): bool
@@ -185,5 +228,29 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
             'ACL'                  => 'public-read',
         ]);
         return !empty($response);
+    }
+
+    /**
+     * For bulk commands execution
+     * Get command for uploading a file to S3
+     *
+     * @param string $bucket
+     * @param string $key
+     * @param string $body
+     * @param string $type
+     *
+     * @return mixed
+     */
+    protected function getCommandForUpload(string $bucket, string $key, string $body, string $type): Aws\Command
+    {
+        return $this->s3Instance->getCommand('PutObject', [
+            'Bucket'               => $bucket,
+            'Key'                  => $key,
+            'Body'                 => $body,
+            'ContentType'          => $type,
+            'StorageClass'         => 'STANDARD',
+            'ServerSideEncryption' => 'AES256',
+            'ACL'                  => 'public-read',
+        ]);
     }
 }

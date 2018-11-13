@@ -585,10 +585,15 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
+
+            $time_start = microtime(true); //TODO:delete
+
             //Save attached files
             if (!empty($fileIDs)) {
                 $this->saveFiles($postId, $userId, $teamId, $fileIDs);
             }
+
+            CakeLog::debug(__METHOD__.' $this->saveFiles 処理時間：'.sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
 
             $this->TransactionManager->commit();
 
@@ -870,16 +875,17 @@ class PostService extends AppService
 
         $addedFiles = [];
 
+        $time_start = microtime(true); //TODO:delete
+
+        /** @var UploadedFile $uploadedFile */
+        $uploadedFiles = $UploadService->getBuffers($userId, $teamId, $fileIDs);
+
+        CakeLog::debug(__METHOD__.' $UploadService->getBuffers 処理時間：'.sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
+
+
         try {
             //Save attached files
-            foreach ($fileIDs as $id) {
-
-                if (!is_string($id)) {
-                    throw new InvalidArgumentException("Buffered file ID must be string.");
-                }
-
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+            foreach ($uploadedFiles as $uploadedFile) {
 
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
@@ -889,7 +895,11 @@ class PostService extends AppService
 
                 $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
 
+                $time_start = microtime(true); //TODO:delete
+
                 $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+
+                CakeLog::debug(__METHOD__.' $UploadService->saveWithProcessing 処理時間：'.sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
             }
         } catch (Exception $e) {
             //If any error happened, remove uploaded file
