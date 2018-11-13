@@ -64,7 +64,7 @@ class CommentServiceTest extends GoalousTestCase
         $this->assertEquals($userId, $newComment['user_id']);
         $this->assertEquals($teamId, $newComment['team_id']);
         $this->assertEquals($postId, $newComment['post_id']);
-        $this->assertEquals($newBody, $newComment['body']);
+        $this->assertEquals($newBody['body'], $newComment['body']);
 
         $this->assertEquals(++$initialCommentCount, $Comment->getCommentCount($postId));
     }

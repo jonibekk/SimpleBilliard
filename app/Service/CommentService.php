@@ -148,11 +148,11 @@ class CommentService extends AppService
             $commentBody['created'] = GoalousDateTime::now()->getTimestamp();
 
             /** @var CommentEntity $savedComment */
-            $savedComment = $Comment->useType()->useEntity()->save($newData, false);
+            $savedComment = $Comment->useType()->useEntity()->save($commentBody, false);
 
             if (empty($savedComment)) {
                 GoalousLog::error('Error on adding comment: failed comment save', [
-                    'commentData' => $newData
+                    'commentData' => $commentBody
                 ]);
                 throw new RuntimeException('Error on adding post: failed comment save');
             }
@@ -163,7 +163,7 @@ class CommentService extends AppService
 
             if (!$Post->updateCommentCount($postId, $newCommentCount)) {
                 GoalousLog::error('Error on adding comment: failed updating posts.comment_count', [
-                    'commentData' => $newData
+                    'commentData' => $commentBody
                 ]);
                 throw new RuntimeException('Error on adding post: failed updating posts.comment_count');
 
