@@ -112,7 +112,7 @@ class CommentService extends AppService
     /**
      * Method to save a comment
      *
-     * @param string   $commentBody ;
+     * @param array    $commentBody
      * @param int      $postId
      * @param int      $userId
      * @param int      $teamId
@@ -122,7 +122,7 @@ class CommentService extends AppService
      * @throws Exception
      */
     public function add(
-        string $commentBody,
+        array $commentBody,
         int $postId,
         int $userId,
         int $teamId,
@@ -142,13 +142,10 @@ class CommentService extends AppService
             $this->TransactionManager->begin();
             $Comment->create();
 
-            $newData = [
-                'body'    => $commentBody,
-                'post_id' => $postId,
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'created' => GoalousDateTime::now()->getTimestamp()
-            ];
+            $commentBody['post_id'] = $postId;
+            $commentBody['user_id'] = $userId;
+            $commentBody['team_id'] = $teamId;
+            $commentBody['created'] = GoalousDateTime::now()->getTimestamp();
 
             /** @var CommentEntity $savedComment */
             $savedComment = $Comment->useType()->useEntity()->save($newData, false);

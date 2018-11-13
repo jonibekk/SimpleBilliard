@@ -90,11 +90,12 @@ class PostRequestValidator extends BaseValidator
     public function getPostCommentValidationRule(): array
     {
         $rules = [
-            "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
-            "file_ids" => [
+            "body"      => [validator::stringType()::length(1, 10000)::notEmpty()],
+            "file_ids"  => [
                 validator::arrayType()::length(null, 10),
                 "optional"
-            ]
+            ],
+            "site_info" => [validator::arrayType()]
         ];
 
         return $rules;

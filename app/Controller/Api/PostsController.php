@@ -51,10 +51,10 @@ class PostsController extends BasePagingController
         $post['type'] = (int)Hash::get($this->getRequestJsonBody(), 'type');
 
         $circleId = (int)Hash::get($this->getRequestJsonBody(), 'circle_id');
-        $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+        $fileIds = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
 
         try {
-            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIds);
             $this->_notifyNewPost($res);
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -424,8 +424,10 @@ class PostsController extends BasePagingController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $commentBody = Hash::get($this->getRequestJsonBody(), 'body');
-        $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+        $requestBody = $this->getRequestJsonBody();
+        $commentBody['body'] = Hash::get($requestBody, 'body');
+        $commentBody['site_info'] = Hash::get($requestBody, 'site_info');
+        $fileIDs = Hash::get($requestBody, 'file_ids', []);
 
         try {
             $res = $CommentService->add($commentBody, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);

@@ -49,7 +49,7 @@ class CommentServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
         $postId = 1;
-        $newBody = "A new comment";
+        $newBody['body'] = "A new comment";
 
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
@@ -77,8 +77,9 @@ class CommentServiceTest extends GoalousTestCase
     {
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
+        $newBody['body'] = "A new comment";
 
-        $CommentService->add("test", 12081237, 1, 1);
+        $CommentService->add($newBody, 12081237, 1, 1);
 
         $this->fail();
     }
@@ -107,9 +108,9 @@ class CommentServiceTest extends GoalousTestCase
         $UploadService = ClassRegistry::init('UploadService');
 
         $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
-        $commentBody = 'body text ' . time();
+        $newBody['body'] = "A new comment " . time();
 
-        $postEntity = $CommentService->add($commentBody, 1, 1, 1, [$uuid]);
+        $postEntity = $CommentService->add($newBody, 1, 1, 1, [$uuid]);
 
         $files = $CommentService->getAttachedFiles($postEntity['id']);
 
