@@ -13,24 +13,24 @@ App::import('Service', 'PostService');
 /**
  * Post Model
  *
- * @property User            $User
- * @property Team            $Team
- * @property CommentMention  $CommentMention
- * @property Comment         $Comment
- * @property Goal            $Goal
- * @property GivenBadge      $GivenBadge
- * @property PostLike        $PostLike
- * @property PostMention     $PostMention
- * @property PostShareUser   $PostShareUser
+ * @property User $User
+ * @property Team $Team
+ * @property CommentMention $CommentMention
+ * @property Comment $Comment
+ * @property Goal $Goal
+ * @property GivenBadge $GivenBadge
+ * @property PostLike $PostLike
+ * @property PostMention $PostMention
+ * @property PostShareUser $PostShareUser
  * @property PostShareCircle $PostShareCircle
- * @property PostRead        $PostRead
- * @property ActionResult    $ActionResult
- * @property KeyResult       $KeyResult
- * @property Circle          $Circle
- * @property AttachedFile    $AttachedFile
- * @property PostFile        $PostFile
- * @property PostSharedLog   $PostSharedLog
- * @property SavedPost       $SavedPost
+ * @property PostRead $PostRead
+ * @property ActionResult $ActionResult
+ * @property KeyResult $KeyResult
+ * @property Circle $Circle
+ * @property AttachedFile $AttachedFile
+ * @property PostFile $PostFile
+ * @property PostSharedLog $PostSharedLog
+ * @property SavedPost $SavedPost
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
@@ -229,7 +229,8 @@ class Post extends AppModel
         'goal_id'          => DataType::INT,
         'circle_id'        => DataType::INT,
         'action_result_id' => DataType::INT,
-        'key_result_id'    => DataType::INT
+        'key_result_id'    => DataType::INT,
+        'site_info'        => DataType::JSON
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -269,7 +270,7 @@ class Post extends AppModel
      * @param        $end
      * @param string $order
      * @param string $order_direction
-     * @param int    $limit
+     * @param int $limit
      *
      * @return array|null|void
      */
@@ -787,7 +788,7 @@ class Post extends AppModel
      * @param DboSource $db
      * @param           $start
      * @param           $end
-     * @param array     $params
+     * @param array $params
      *                 'user_id' : 指定すると投稿者で絞る
      *
      * @return string|null
@@ -825,7 +826,8 @@ class Post extends AppModel
         $end,
         $my_circle_list = null,
         $share_type = null
-    ) {
+    )
+    {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
         }
@@ -861,7 +863,7 @@ class Post extends AppModel
      * @param  DboSource $db
      * @param            $start
      * @param            $end
-     * @param array      $post_types
+     * @param array $post_types
      *
      * @return string
      */
@@ -975,7 +977,8 @@ class Post extends AppModel
         $type,
         $start = null,
         $end = null
-    ) {
+    )
+    {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1014,7 +1017,8 @@ class Post extends AppModel
         $type = self::TYPE_ACTION,
         $start = null,
         $end = null
-    ) {
+    )
+    {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1047,7 +1051,7 @@ class Post extends AppModel
      * @param DboSource $db
      * @param           $start
      * @param           $end
-     * @param array     $params
+     * @param array $params
      *                 'user_id' : 指定すると投稿者IDで絞る
      *
      * @return string|null
@@ -1216,7 +1220,7 @@ class Post extends AppModel
      * Return share message by share type
      *
      * @param string $shareType
-     * @param bool   $isPostPublished
+     * @param bool $isPostPublished
      *
      * @return string
      */
@@ -1293,7 +1297,7 @@ class Post extends AppModel
      * Set whether loginUser save favorite item each post
      *
      * @param array $data
-     * @param int   $userId
+     * @param int $userId
      *
      * @return array
      */
@@ -1396,11 +1400,11 @@ class Post extends AppModel
     /**
      * @param       $type
      * @param       $goal_id
-     * @param null  $uid
-     * @param bool  $public
-     * @param null  $model_id
+     * @param null $uid
+     * @param bool $public
+     * @param null $model_id
      * @param array $share
-     * @param int   $share_type
+     * @param int $share_type
      *
      * @return mixed
      * @throws Exception
@@ -1413,7 +1417,8 @@ class Post extends AppModel
         $model_id = null,
         $share = null,
         $share_type = PostShareCircle::SHARE_TYPE_SHARED
-    ) {
+    )
+    {
         if (!$uid) {
             $uid = $this->my_uid;
         }
@@ -1481,7 +1486,7 @@ class Post extends AppModel
     /**
      * Return list of users.id and circles.id to share
      *
-     * @param array    $shares string of post targets to share
+     * @param array $shares string of post targets to share
      *                         e.g. 'public,circle_1,user_2'
      * @param int|null $teamId
      *                         if null is passed, teamId is solved from $this->current_team_id
@@ -1539,9 +1544,9 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param mixed  $userId ユーザーIDもしくは'me'を指定する。
-     * @param null   $startTimestamp
-     * @param null   $endTimestamp
+     * @param mixed $userId ユーザーIDもしくは'me'を指定する。
+     * @param null $startTimestamp
+     * @param null $endTimestamp
      * @param string $date_col
      *
      * @return int
@@ -1639,7 +1644,7 @@ class Post extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param int      $userId
+     * @param int $userId
      * @param int|null $startTimestamp
      * @param int|null $endTimestamp
      *
@@ -1675,7 +1680,8 @@ class Post extends AppModel
         $start = null,
         $end = null,
         $file_type = null
-    ) {
+    )
+    {
         $one_month = 60 * 60 * 24 * 31;
         $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
         $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
@@ -1903,11 +1909,11 @@ class Post extends AppModel
      * @override
      *
      * @param array $data
-     * @param bool  $filterKey
+     * @param bool $filterKey
      *
      * @return array
      */
-    public function create($data = array(), $filterKey = false)
+    public function create($data = [], $filterKey = false)
     {
         parent::create($data, $filterKey);
 

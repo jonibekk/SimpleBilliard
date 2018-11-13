@@ -832,6 +832,9 @@ class AppModel extends Model
                     case (DataType::BOOL):
                         $data[$key] = boolval($value);
                         break;
+                    case (DataType::JSON):
+                        $data[$key] = json_decode($value, true);
+                        break;
                 }
             }
             if (is_numeric($key) || is_array($value)) {
