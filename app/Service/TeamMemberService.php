@@ -137,8 +137,8 @@ class TeamMemberService extends AppService
                 throw new RuntimeException();
             }
 
-            $teamMember = $TeamMember->getById($teamMemberId)['TeamMember'];
-            $user = $User->getById($teamMember['user_id'])['User'];
+            $teamMember = $TeamMember->getById($teamMemberId);
+            $user = $User->getById($teamMember['user_id']);
 
             //If inactivated team ID is the same as user's default one, update user's default team
             if ($user['default_team_id'] == $teamMember['team_id']) {
