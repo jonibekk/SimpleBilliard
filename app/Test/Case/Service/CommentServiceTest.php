@@ -98,7 +98,9 @@ class CommentServiceTest extends GoalousTestCase
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
-        $assetsClient->shouldReceive('save')->withAnyArgs()
+        $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
+            ->atLeast()->once()->andReturn(true);
+        $assetsClient->shouldReceive('delete')->withAnyArgs()
             ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
