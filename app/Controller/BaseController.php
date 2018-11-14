@@ -4,6 +4,7 @@ App::uses('UserAgent', 'Request');
 App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
+App::uses('Device', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -22,6 +23,7 @@ use Goalous\Model\Enum as Enum;
  * @property SessionComponent      $Session
  * @property SecurityComponent     $Security
  * @property AuthComponent         $Auth
+ * @property CookieComponent       $Cookie
  * @property NotifyBizComponent    $NotifyBiz
  * @property NotificationComponent $Notification
  * @property GlEmailComponent      $GlEmail
@@ -36,6 +38,7 @@ use Goalous\Model\Enum as Enum;
 class BaseController extends Controller
 {
     public $components = [
+        'Cookie',
         'Session',
         'Security' => [
             'csrfUseOnce' => false,
@@ -199,11 +202,12 @@ class BaseController extends Controller
             ];
             //If user is deleted, delete session & user cache, and redirect to login page
             if (empty($this->User->find('first', $condition))) {
+                $logoutRedirect = $this->logoutProcess();
                 GoalousLog::info("User is deleted. Redirecting", [
                     "user.id" => $this->my_uid,
                 ]);
                 $this->Notification->outError(__("This user does not exist."));
-                $this->redirect($this->Auth->logout());
+                $this->redirect($logoutRedirect);
             }
             //Detect inconsistent data that current team id is empty.
             if (empty($this->current_team_id)) {
@@ -219,11 +223,12 @@ class BaseController extends Controller
                     empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id, false))) {
                     $this->Session->delete('user_has_no_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
+                    $logoutRedirect = $this->logoutProcess();
                     $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
                     GoalousLog::info("Team is deleted. Redirecting", [
                         "user.id" => $this->my_uid,
                     ]);
-                    $this->redirect($this->Auth->logout());
+                    $this->redirect($logoutRedirect);
                 }
             }
             if ($this->Session->read('user_has_no_team') && !in_array($this->request->url,
@@ -527,5 +532,33 @@ class BaseController extends Controller
             return false;
         }
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
+    }
+
+    /**
+     * Logout process.
+     */
+    protected function logoutProcess()
+    {
+        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
+        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
+        $installationId = $this->Session->read('installationId');
+        if ($installationId) {
+            /** @var Device $Device */
+            $Device = ClassRegistry::init('Device');
+            $Device->softDeleteAll([
+                'Device.installation_id' => $installationId,
+            ], false);
+        }
+
+        foreach ($this->Session->read() as $key => $val) {
+            if (in_array($key, ['Config', '_Token', 'Auth'])) {
+                continue;
+            }
+            $this->Session->delete($key);
+        }
+
+        $this->Cookie->destroy();
+
+        return $this->Auth->logout();
     }
 }
