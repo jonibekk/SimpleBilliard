@@ -80,6 +80,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
      * @param string $uuid
      *
      * @return UploadedFile
+     * @throws Exception
      */
     public function get(string $uuid): UploadedFile
     {
@@ -110,7 +111,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
     }
 
     /**
-     * Get buffered file from temporary bucket
+     * Bulk get buffered file from temporary bucket
      *
      * @param string[] $uuids
      * @return UploadedFile[]

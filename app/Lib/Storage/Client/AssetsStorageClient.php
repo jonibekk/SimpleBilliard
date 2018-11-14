@@ -49,15 +49,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         $key = $this->sanitize($key);
 
         try {
-
-            $baseLog = '------------'.__METHOD__.' $this->upload '; //TODO:delete
-            CakeLog::debug($baseLog.'start------------'); //TODO:delete
-            $time_start = microtime(true); //TODO:delete
-
             $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
-
-            CakeLog::debug($baseLog."処理時間：".sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
-            CakeLog::debug($baseLog.'end------------');//TODO:delete
 
         } catch (S3Exception $exception) {
             GoalousLog::error("Failed saving to S3. Model: $this->modelName, ID: $this->modelId, File:" . $file->getFileName());
@@ -239,7 +231,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
      * @param string $body
      * @param string $type
      *
-     * @return mixed
+     * @return \Aws\Command
      */
     protected function getCommandForUpload(string $bucket, string $key, string $body, string $type): Aws\Command
     {

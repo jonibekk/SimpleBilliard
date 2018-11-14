@@ -37,8 +37,6 @@ class PostsController extends BasePagingController
      */
     public function post()
     {
-        $this->log(__METHOD__.' start', LOG_DEBUG); //TODO:delete
-
         $error = $this->validatePost();
 
         if (!empty($error)) {
@@ -55,12 +53,7 @@ class PostsController extends BasePagingController
         $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
 
         try {
-            $time_start = microtime(true); //TODO:delete
-
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
-
-            CakeLog::debug(__METHOD__.' $PostService->addCirclePost 処理時間：'.sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
-
 
             $this->_notifyNewPost($res);
 
@@ -70,8 +63,6 @@ class PostsController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
                 ->getResponse();
         }
-
-        $this->log(__METHOD__.' end', LOG_DEBUG); //TODO:delete
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 

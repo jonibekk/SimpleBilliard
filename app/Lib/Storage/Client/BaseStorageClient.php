@@ -102,10 +102,11 @@ abstract class BaseStorageClient implements StorageClient
      * For bulk commands execution
      * Get command for get object
      *
-     * @param $bucket
-     * @param $key
+     * @param string $bucket
+     * @param string $key
+     * @return \Aws\Command
      */
-    protected final function getCommandForGetObject($bucket, $key): Aws\Command {
+    protected final function getCommandForGetObject(string $bucket, string $key): Aws\Command {
         return $this->s3Instance->getCommand('GetObject', [
             'Bucket'      => $bucket,
             'Key'         => $key,

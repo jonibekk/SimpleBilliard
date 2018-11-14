@@ -202,11 +202,8 @@ class UploadService extends AppService
             }
         }
 
-        $time_start = microtime(true); //TODO:delete
-
+        // Bulk upload original file and file each size to s3
         $this->bulkSave($modelName, $modelId, $fileGroups);
-
-        CakeLog::debug(__METHOD__.' $this->bulkSave 処理時間：'.sprintf("%.5f", (microtime(true) - $time_start))."秒");//TODO:delete
 
         return true;
     }
