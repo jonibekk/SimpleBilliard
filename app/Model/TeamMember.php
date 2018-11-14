@@ -255,12 +255,15 @@ class TeamMember extends AppModel
     }
 
     /**
-     * @param $uid
-     * @param $team_id
+     * @deprecated
      *
+     * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
+     * @param $uid
+     * @param null $teamId
+     * @param bool $withCache
      * @return bool
      */
-    public function isActive($uid, $teamId = null)
+    public function isActive($uid, $teamId = null, bool $withCache = true)
     {
         if (!$teamId) {
             if (!$this->current_team_id) {
@@ -271,12 +274,14 @@ class TeamMember extends AppModel
         $isDefault = false;
         if ($uid == $this->my_uid && $teamId == $this->current_team_id) {
             $isDefault = true;
-            $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
-            if ($res !== false) {
-                if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
-                    return true;
+            if ($withCache) {
+                $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+                if ($res !== false) {
+                    if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
             }
         }
         $options = [
@@ -303,7 +308,7 @@ class TeamMember extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        if ($isDefault) {
+        if ($withCache && $isDefault) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
         if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
