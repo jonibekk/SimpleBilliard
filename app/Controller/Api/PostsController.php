@@ -56,14 +56,15 @@ class PostsController extends BasePagingController
 
         try {
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+
             $this->_notifyNewPost($res);
+
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
                 ->getResponse();
         }
-
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 

@@ -788,16 +788,16 @@ class PostServiceTest extends GoalousTestCase
     {
         //Mock storage clients
         $bufferClient = mock::mock('BufferStorageClient');
-        $bufferClient->shouldReceive('get')->withAnyArgs()
+        $bufferClient->shouldReceive('bulkGet')->withAnyArgs()
             ->atLeast()->once()
-            ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
+            ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
         $bufferClient->shouldReceive('save')->withAnyArgs()
             ->atLeast()->once()
             ->andReturn("1234567890abcd.12345678");
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
-        $assetsClient->shouldReceive('save')->withAnyArgs()
+        $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
             ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 

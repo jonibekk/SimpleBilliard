@@ -73,6 +73,29 @@ class UploadedFile
     private $fileName;
 
     /**
+     * Suffix of file name
+     *
+     * @var string
+     */
+    private $suffix = '';
+
+    /**
+     * @return string
+     */
+    public function getSuffix(): string
+    {
+        return $this->suffix;
+    }
+
+    /**
+     * @param string $suffix
+     */
+    public function setSuffix(string $suffix)
+    {
+        $this->suffix = $suffix;
+    }
+
+    /**
      * Metadata of the file
      *
      * @var string
