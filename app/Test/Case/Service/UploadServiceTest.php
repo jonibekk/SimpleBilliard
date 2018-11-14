@@ -32,21 +32,21 @@ class UploadServiceTest extends GoalousTestCase
 
     public function test_bufferFile_success()
     {
-        $returnValue = "1234567890abcd.12345678";
+        $returnValue = "5beb86de5430f7.89168598";
 
         $bufferClient = mock::mock('BufferStorageClient');
 
         $bufferClient->shouldReceive('save')
                      ->once()
-                     ->andReturn($returnValue);
+                     ->andReturn(true);
 
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
-        $mocked = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
+        $ret = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
 
-        $this->assertEquals($returnValue, $mocked);
+        $this->assertTrue(!empty($ret) && is_string($ret));
     }
 
     public function test_saveFile_success()

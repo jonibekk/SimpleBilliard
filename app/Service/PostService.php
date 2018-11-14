@@ -588,6 +588,7 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
+
             //Save attached files
             if (!empty($fileIDs)) {
                 $this->saveFiles($postId, $userId, $teamId, $fileIDs);
@@ -862,15 +863,11 @@ class PostService extends AppService
         $addedFiles = [];
 
         try {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFiles = $UploadService->getBuffers($userId, $teamId, $fileIDs);
+
             //Save attached files
-            foreach ($fileIDs as $id) {
-
-                if (!is_string($id)) {
-                    throw new InvalidArgumentException("Buffered file ID must be string.");
-                }
-
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+            foreach ($uploadedFiles as $uploadedFile) {
 
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
