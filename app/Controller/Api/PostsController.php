@@ -705,7 +705,7 @@ class PostsController extends BasePagingController
         }
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId, true);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId, true);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
