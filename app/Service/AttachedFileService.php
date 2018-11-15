@@ -270,7 +270,8 @@ class AttachedFileService extends AppService
             'file_size' => $file->getFileSize(),
             'model_type' => $modelType->getValue(),
             'display_file_list_flg' => $displayFileList,
-            'removable_flg' => $removable
+            'removable_flg'         => $removable,
+            'created'               => GoalousDateTime::now()->getTimestamp()
         ];
 
         try {

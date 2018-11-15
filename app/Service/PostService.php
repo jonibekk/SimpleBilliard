@@ -605,18 +605,6 @@ class PostService extends AppService
     }
 
     /**
-     * Get query condition for posts made by an user
-     *
-     * @param int $userId User ID of the posts author
-     *
-     * @return array
-     */
-    public function getUserPostListCondition(int $userId)
-    {
-        return ['Post.user_id' => $userId];
-    }
-
-    /**
      * Check whether the user can view the post
      *
      * @param int  $userId
@@ -657,7 +645,7 @@ class PostService extends AppService
             ]
         ];
 
-        /** @var CircleEntity $circles */
+        /** @var CircleEntity[] $circles */
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {

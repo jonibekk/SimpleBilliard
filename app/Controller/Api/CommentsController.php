@@ -202,7 +202,7 @@ class CommentsController extends BasePagingController
         }
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -233,7 +233,7 @@ class CommentsController extends BasePagingController
     }
 
     /**
-     * 
+     *
      * @return CakeResponse|null
      */
     private function validateCommentRead()
@@ -246,9 +246,9 @@ class CommentsController extends BasePagingController
             CommentRequestValidator::createCommentReadValidator()->validate($requestBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->withMessage(__('validation failed'))
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),

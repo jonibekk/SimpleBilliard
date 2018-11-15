@@ -1948,4 +1948,46 @@ class Post extends AppModel
         return $this->find('first', $condition)['Post']['post_like_count'];
     }
 
+    /**
+     * Update the comment count of a post
+     *
+     * @param int $postId
+     * @param int $newCommentCount
+     *
+     * @return bool
+     */
+    public function updateCommentCount(int $postId, int $newCommentCount): bool
+    {
+        $newData = [
+            'Post.comment_count' => $newCommentCount,
+            'Post.modified'      => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $condition = [
+            'Post.id' => $postId
+        ];
+
+        return $this->updateAll($newData, $condition);
+    }
+
+    /**
+     * Get post type
+     *
+     * @param int $postId
+     *
+     * @return int
+     */
+    public function getPostType(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'Post.id' => $postId
+            ],
+            'fields'     => [
+                'Post.type'
+            ]
+        ];
+
+        return (int)$this->find('first', $condition)['Post']['type'];
+    }
 }
