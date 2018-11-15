@@ -8,7 +8,7 @@ App::uses('User', 'Model');
  * @property TeamMemberService $TeamMemberService
  */
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class TeamMemberServiceTest extends GoalousTestCase
 {
@@ -97,7 +97,7 @@ class TeamMemberServiceTest extends GoalousTestCase
 
         $teamMember = $TeamMember->findById($teamMemberId)['TeamMember'];
 
-        $this->assertEquals(Enum\TeamMember\Status::INACTIVE, $teamMember['status']);
+        $this->assertEquals(Enum\Model\TeamMember\Status::INACTIVE, $teamMember['status']);
         $this->assertEmpty($User->findById($teamMember['user_id'])['User']['default_team_id']);
     }
 
@@ -123,7 +123,7 @@ class TeamMemberServiceTest extends GoalousTestCase
         $newTeamMember = [
             'user_id'    => $userId,
             'team_id'    => $newTeamId,
-            'status'     => Enum\TeamMember\Status::ACTIVE,
+            'status'     => Enum\Model\TeamMember\Status::ACTIVE,
             'last_login' => 1000
         ];
 
@@ -134,7 +134,7 @@ class TeamMemberServiceTest extends GoalousTestCase
 
         $teamMember = $TeamMember->findById($teamMemberId)['TeamMember'];
 
-        $this->assertEquals(Enum\TeamMember\Status::INACTIVE, $teamMember['status']);
+        $this->assertEquals(Enum\Model\TeamMember\Status::INACTIVE, $teamMember['status']);
         $this->assertEquals($newTeamId, $User->findById($teamMember['user_id'])['User']['default_team_id']);
     }
 }
