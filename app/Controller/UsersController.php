@@ -287,34 +287,19 @@ class UsersController extends AppController
 
     /**
      * Common logout action
-     *
-     * @return void
      */
     public function logout()
     {
         $user = $this->Auth->user();
 
-        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
-        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
-        $installationId = $this->Session->read('installationId');
-        if ($installationId) {
-            /** @var Device $Device */
-            $Device = ClassRegistry::init('Device');
-            $Device->softDeleteAll([
-                'Device.installation_id' => $installationId,
-            ], false);
-        }
+        //Need to put the notification between logout process & the redirect
+        //If not notification can't reach the frontend
+        $logoutRedirect = $this->logoutProcess();
 
-        foreach ($this->Session->read() as $key => $val) {
-            if (in_array($key, ['Config', '_Token', 'Auth'])) {
-                continue;
-            }
-            $this->Session->delete($key);
-        }
-        $this->Cookie->destroy();
         $this->Notification->outInfo(__("See you %s", $user['display_username']),
             ['title' => __("Logged out")]);
-        return $this->redirect($this->Auth->logout());
+
+        return $this->redirect($logoutRedirect);
     }
 
     /**

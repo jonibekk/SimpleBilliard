@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::uses('TeamMember', 'Model');
+App::uses('User', 'Model');
 
 use Goalous\Model\Enum as Enum;
 
@@ -85,7 +86,7 @@ class TeamMemberService extends AppService
      *
      * @param int $teamMemberId
      *
-     * @return void
+     * @return bool
      */
     public function validateActivation(int $teamId, int $teamMemberId): bool
     {
@@ -110,5 +111,47 @@ class TeamMemberService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * Inactivate a team member by the team member id
+     *
+     * @param int $teamMemberId
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function inactivate(int $teamMemberId): bool
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        try {
+            $this->TransactionManager->begin();
+
+            $res = $TeamMember->inactivate($teamMemberId);
+
+            if (!$res) {
+                throw new RuntimeException();
+            }
+
+            $teamMember = $TeamMember->getById($teamMemberId);
+            $user = $User->getById($teamMember['user_id']);
+
+            //If inactivated team ID is the same as user's default one or is empty, update user's default team
+            if (empty($user['default_team_id']) || $user['default_team_id'] == $teamMember['team_id']) {
+                $newTeamId = $TeamMember->getLatestLoggedInActiveTeamId($teamMember['user_id']) ?: null;
+                $User->updateDefaultTeam($newTeamId, true, $teamMember['user_id']);
+            }
+
+            $this->TransactionManager->commit();
+
+            return true;
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            throw $exception;
+        }
     }
 }

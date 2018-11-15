@@ -1136,8 +1136,20 @@ class TeamsController extends AppController
     function ajax_inactivate_team_member($teamMemberId)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->TeamMember->inactivate($teamMemberId);
-        CakeLog::info(sprintf('inactivate team member: %s', AppUtil::jsonOneLine([
+
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        try {
+            $res = $TeamMemberService->inactivate($teamMemberId);
+        } catch (Exception $exception) {
+            GoalousLog::error(sprintf('Failed to inactivate team member: %s', AppUtil::jsonOneLine([
+                'teams.id'        => $this->current_team_id,
+                'team_members.id' => $teamMemberId,
+            ])));
+            $res = false;
+        }
+        GoalousLog::info(sprintf('inactivate team member: %s', AppUtil::jsonOneLine([
             'teams.id'        => $this->current_team_id,
             'team_members.id' => $teamMemberId,
         ])));
