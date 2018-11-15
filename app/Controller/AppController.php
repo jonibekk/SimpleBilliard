@@ -32,8 +32,8 @@ use Goalous\Enum as Enum;
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  * @property LangComponent      $Lang
- * @property CookieComponent    $Cookie
  * @property CsvComponent       $Csv
+ * @property CookieComponent    $Cookie
  * @property MixpanelComponent  $Mixpanel
  * @property OgpComponent       $Ogp
  * @property BenchmarkComponent $Benchmark
