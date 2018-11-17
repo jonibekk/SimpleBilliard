@@ -18,7 +18,7 @@ class PostRequestValidator extends BaseValidator
             "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
             "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
             "site_info"     => [
-                validator::arrayType(),
+                validator::optional(validator::arrayType()),
                 "optional"
             ],
             "file_ids" => [
@@ -100,7 +100,7 @@ class PostRequestValidator extends BaseValidator
                 "optional"
             ],
             "site_info"     => [
-                validator::arrayType(),
+                validator::optional(validator::arrayType()),
                 "optional"
             ]
         ];
