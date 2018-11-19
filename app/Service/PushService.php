@@ -7,7 +7,6 @@ use Goalous\Enum as Enum;
 /**
  * Send Push Notifications thought service providers,
  * manage device tokens.
- *
  * Class PushService
  */
 class PushService extends AppService
@@ -66,8 +65,11 @@ class PushService extends AppService
      *
      * @return bool
      */
-    private function _sendFirebasePushNotificationForAndroid(array $deviceTokens, string $message, string $postUrl): bool
-    {
+    private function _sendFirebasePushNotificationForAndroid(
+        array $deviceTokens,
+        string $message,
+        string $postUrl
+    ): bool {
         // Request data
         $data = [
             'data'             => [
@@ -94,8 +96,8 @@ class PushService extends AppService
         // Request data
         $data = [
             'notification'     => [
-                'body' => $message,
-                'mutable_content'  => true
+                'body'            => $message,
+                'mutable_content' => true
             ],
             'data'             => [
                 'url' => $postUrl
@@ -174,7 +176,7 @@ class PushService extends AppService
             foreach ($result['results'] as $key => $value) {
                 // Check for invalid tokens.
                 // Errors are returned on the same order of request
-                if (in_array($value['error'], $invalidTypes, true)) {
+                if (!empty($value['error']) && in_array($value['error'], $invalidTypes, true)) {
                     $invalidToken = $deviceTokens[$key];
                     $this->removeDevice($invalidToken);
                 }
@@ -234,15 +236,19 @@ class PushService extends AppService
     /**
      * Save a device token to database.
      *
-     * @param int                     $userId
-     * @param string                  $deviceToken
+     * @param int                           $userId
+     * @param string                        $deviceToken
      * @param Enum\Model\Devices\DeviceType $deviceType
-     * @param string                  $version
+     * @param string                        $version
      *
      * @return bool
      */
-    public function saveDeviceToken(int $userId, string $deviceToken, Enum\Model\Devices\DeviceType $deviceType, string $version): bool
-    {
+    public function saveDeviceToken(
+        int $userId,
+        string $deviceToken,
+        Enum\Model\Devices\DeviceType $deviceType,
+        string $version
+    ): bool {
         /** @var Device $Device */
         $Device = ClassRegistry::init('Device');
 
@@ -340,8 +346,8 @@ class PushService extends AppService
             $Device->softDelete($data['Device']['id'], false);
         } catch (Exception $e) {
             GoalousLog::error('Failed remove device.', [
-                'Exception' => $e->getMessage(),
-                'installationId'     => $installationId
+                'Exception'      => $e->getMessage(),
+                'installationId' => $installationId
             ]);
             return false;
         }
