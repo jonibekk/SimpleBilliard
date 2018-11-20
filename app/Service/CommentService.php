@@ -146,6 +146,8 @@ class CommentService extends AppService
             $commentBody['user_id'] = $userId;
             $commentBody['team_id'] = $teamId;
             $commentBody['created'] = GoalousDateTime::now()->getTimestamp();
+            // OGP
+            $commentBody['site_info'] = !empty($commentBody['site_info']) ? json_encode($commentBody['site_info']): null;
 
             /** @var CommentEntity $savedComment */
             $savedComment = $Comment->useType()->useEntity()->save($commentBody, false);

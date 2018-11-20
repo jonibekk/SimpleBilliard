@@ -15,13 +15,13 @@ use Goalous\Enum\DataType\DataType as DataType;
 /**
  * Comment Model
  *
- * @property Post         $Post
- * @property User         $User
- * @property Team         $Team
- * @property CommentLike  $CommentLike
- * @property CommentRead  $CommentRead
+ * @property Post $Post
+ * @property User $User
+ * @property Team $Team
+ * @property CommentLike $CommentLike
+ * @property CommentRead $CommentRead
  * @property AttachedFile $AttachedFile
- * @property CommentFile  $CommentFile
+ * @property CommentFile $CommentFile
  */
 class Comment extends AppModel
 {
@@ -183,7 +183,8 @@ class Comment extends AppModel
         'user_id'            => DataType::INT,
         'team_id'            => DataType::INT,
         'comment_like_count' => DataType::INT,
-        'comment_read_count' => DataType::INT
+        'comment_read_count' => DataType::INT,
+        'site_info'          => DataType::JSON
     ];
 
     public function beforeValidate($options = [])
@@ -291,9 +292,9 @@ class Comment extends AppModel
      * コメント一覧データを返す
      *
      * @param       $post_id
-     * @param null  $get_num
-     * @param null  $page
-     * @param null  $order_by
+     * @param null $get_num
+     * @param null $page
+     * @param null $order_by
      * @param array $params
      *                start: 指定すると、この時間以降に投稿されたコメントのみを返す
      *
@@ -481,7 +482,7 @@ class Comment extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param int      $userId
+     * @param int $userId
      * @param int|null $startTimestamp
      * @param int|null $endTimestamp
      *
