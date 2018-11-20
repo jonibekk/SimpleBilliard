@@ -139,7 +139,6 @@ class CircleListPagingService extends BasePagingService
      */
     private function addSearchConditionForJoined(array $searchConditions, int $userId, int $teamId, bool $joinedFlag): array
     {
-
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 

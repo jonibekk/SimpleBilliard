@@ -1,6 +1,9 @@
 <?php
-App::uses('ApiController', 'Controller/Api');
+App::uses('BaseV1PagingController', 'Controller/Api/V1');
+App::uses('CircleMember', 'Model');
+App::import('Lib/ElasticSearch', 'PostService');
 App::import('Service', 'PostService');
+App::import('Service/Paging/Search', 'PostSearchPagingService');
 
 /**
  * Class PostsController
@@ -14,6 +17,7 @@ class PostsController extends ApiController
 
     /**
      * Delete favorite post
+     *
      * @param $postId
      *
      * @return CakeResponse
@@ -40,8 +44,7 @@ class PostsController extends ApiController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init("PostService");
-        if (!$PostService->deleteItem($postId, $userId))
-        {
+        if (!$PostService->deleteItem($postId, $userId)) {
             return $this->_getResponseInternalServerError();
         }
 
@@ -50,6 +53,7 @@ class PostsController extends ApiController
 
     /**
      * Save favorite post
+     *
      * @param $postId
      *
      * @return CakeResponse
@@ -76,11 +80,52 @@ class PostsController extends ApiController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init("PostService");
-        if (!$PostService->saveItem($postId, $userId, $this->current_team_id))
-        {
+        if (!$PostService->saveItem($postId, $userId, $this->current_team_id)) {
             return $this->_getResponseInternalServerError();
         }
 
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Search endpoint for posts
+     */
+    public function get_search()
+    {
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        if (empty ($userId) || empty ($teamId)) {
+            return $this->_getResponseValidationFail(["Missing user/team ID"]);
+        }
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+
+            $circleMember = $CircleMember->getMyCircleList();
+            $circleIds = Hash::extract($circleMember, '{n}.{*}');
+
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('team_id', $teamId);
+            $pagingRequest->addCondition('circle', $circleIds);
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        /** @var PostSearchPagingService $PostSearchPagingService */
+        $PostSearchPagingService = ClassRegistry::init('PostSearchPagingService');
+
+        $searchResult = $PostSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return $this->_getResponseSuccess($searchResult);
     }
 }
