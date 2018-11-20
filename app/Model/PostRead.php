@@ -253,9 +253,17 @@ class PostRead extends AppModel
             ]
         ];
 
-        $array = $this->find('all', $condition);
+        $groupedCounts = $this->useReset()->find('all', $condition);
 
-        return Hash::combine($array, '{n}.PostRead.post_id', '{n}.0.sum');;
+        $return = [];
+
+        foreach ($groupedCounts as $groupedCount) {
+            $postId = $groupedCount['PostRead']['post_id'];
+            $count = $groupedCount['0']['sum'];
+            $return[$postId] = $count;
+        }
+
+        return $return;
     }
 
 }
