@@ -1,6 +1,12 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
+App::uses('CircleMember', 'Model');
+App::import('Lib/ElasticSearch', 'PostService');
 App::import('Service', 'PostService');
+App::import('Service/Paging/Search', 'ActionSearchPagingService');
+App::import('Service/Paging/Search', 'PostSearchPagingService');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
 
 /**
  * Class PostsController
@@ -14,6 +20,7 @@ class PostsController extends ApiController
 
     /**
      * Delete favorite post
+     *
      * @param $postId
      *
      * @return CakeResponse
@@ -40,8 +47,7 @@ class PostsController extends ApiController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init("PostService");
-        if (!$PostService->deleteItem($postId, $userId))
-        {
+        if (!$PostService->deleteItem($postId, $userId)) {
             return $this->_getResponseInternalServerError();
         }
 
@@ -50,6 +56,7 @@ class PostsController extends ApiController
 
     /**
      * Save favorite post
+     *
      * @param $postId
      *
      * @return CakeResponse
@@ -76,11 +83,94 @@ class PostsController extends ApiController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init("PostService");
-        if (!$PostService->saveItem($postId, $userId, $this->current_team_id))
-        {
+        if (!$PostService->saveItem($postId, $userId, $this->current_team_id)) {
             return $this->_getResponseInternalServerError();
         }
 
         return $this->_getResponseSuccess();
+    }
+
+    /**
+     * Search endpoint for posts
+     */
+    public function get_search()
+    {
+        $error = $this->validateSearch();
+
+        if (!empty($error)) {
+            return $this->_getResponseValidationFail($error);
+        }
+
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+        $type = $this->request->query('type') ?: "circle_post";
+        $teamId = $this->current_team_id;
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('team_id', $teamId);
+
+            if ($type != "action") {
+                $circle = $this->request->query('circle');
+
+                if (!empty($circle)) {
+                    $circleIds = explode(',', $circle);
+                }
+
+                if (empty($circleIds)) {
+                    /** @var CircleMember $CircleMember */
+                    $CircleMember = ClassRegistry::init('CircleMember');
+
+                    $circleMember = $CircleMember->getMyCircleList();
+                    $circleIds = Hash::extract($circleMember, '{n}.{*}');
+                }
+                $pagingRequest->addCondition('circle', $circleIds);
+            }
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        switch ($type) {
+            case "action":
+                /** @var ActionSearchPagingService $ActionSearchPagingService */
+                $ActionSearchPagingService = ClassRegistry::init('ActionSearchPagingService');
+                $searchResult = $ActionSearchPagingService->getDataWithPaging($pagingRequest);
+                break;
+            case "circle_post":
+                /** @var PostSearchPagingService $PostSearchPagingService */
+                $PostSearchPagingService = ClassRegistry::init('PostSearchPagingService');
+                $searchResult = $PostSearchPagingService->getDataWithPaging($pagingRequest);
+                break;
+            default:
+                $searchResult = [];
+        }
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
+    }
+
+    private function validateSearch(): array
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        if (empty ($userId)) {
+            return ["No user ID"];
+        }
+
+        if (empty($teamId)) {
+            return ["No team ID"];
+        }
+        $query = $this->request->query;
+
+        if (empty($query['keyword'])) {
+            return ["Need keyword"];
+        }
+
+        return [];
     }
 }
