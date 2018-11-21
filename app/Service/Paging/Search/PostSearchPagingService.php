@@ -29,7 +29,7 @@ class PostSearchPagingService extends BaseSearchPagingService
         $pagingRequest->addQueryToCondition("circle_only", false, 0);
         $pagingRequest->addQueryToCondition("circle", false, []);
 
-        if (empty($pagingRequest->getCondition('keyword'))){
+        if (empty($pagingRequest->getCondition('keyword'))) {
             throw new InvalidArgumentException("Need keyword");
         }
 
@@ -45,11 +45,11 @@ class PostSearchPagingService extends BaseSearchPagingService
         $teamId = $pagingRequest->getCondition('team_id');
 
         $params[static::ES_SEARCH_PARAM_MODEL] = [
-            'pn'          => $pagingRequest->getCondition('pn'),
-            'rn'          => $pagingRequest->getCondition('limit'),
-            'file_name'   => $pagingRequest->getCondition('file_name'),
+            'pn'          => intval($pagingRequest->getCondition('pn')),
+            'rn'          => intval($pagingRequest->getCondition('limit')),
+            'file_name'   => intval($pagingRequest->getCondition('file_name')),
             'circle'      => $pagingRequest->getCondition('circle'),
-            'circle_only' => $pagingRequest->getCondition('circle_only')
+            'circle_only' => intval($pagingRequest->getCondition('circle_only'))
         ];
 
         return $ESClient->search($query, $teamId, $params);
