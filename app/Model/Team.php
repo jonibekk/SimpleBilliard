@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+
 use Goalous\Enum as Enum;
 
 /**
@@ -61,8 +62,8 @@ class Team extends AppModel
     /**
      * Team credit card status
      */
-    const STATUS_CREDIT_CARD_CLEAR       = 0;
-    const STATUS_CREDIT_CARD_EXPIRED     = 1;
+    const STATUS_CREDIT_CARD_CLEAR = 0;
+    const STATUS_CREDIT_CARD_EXPIRED = 1;
     const STATUS_CREDIT_CARD_EXPIRE_SOON = 2;
 
     /**
@@ -251,9 +252,9 @@ class Team extends AppModel
         $this->saveAll($postData);
         // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
-        if (isset($user['User']) && !$user['User']['default_team_id']) {
+        if (isset($user['User']) && empty($user['User']['default_team_id'])) {
             $this->TeamMember->User->id = $uid;
-            $this->TeamMember->User->saveField('default_team_id', $this->id);
+            $this->TeamMember->User->updateDefaultTeam($this->id, true, $uid);
         }
 
         // Add All team | 「チーム全体」サークルを追加
@@ -400,6 +401,7 @@ class Team extends AppModel
 
     /**
      * TODO: move to service layter
+     *
      * @return null
      */
     function getCurrentTeam()
@@ -410,7 +412,7 @@ class Team extends AppModel
                 function () use ($model) {
                     return $model->findById($model->current_team_id);
                 }, 'team_info');
-            }
+        }
         return $this->current_team;
     }
 
@@ -663,7 +665,7 @@ class Team extends AppModel
      *
      * @return array
      */
-    function findTeamListStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
     {
         $options = [
             'conditions' => [
@@ -674,8 +676,11 @@ class Team extends AppModel
                 'id'
             ]
         ];
-        $res = $this->find('list', $options);
-        return $res;
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Team.id');
     }
 
     /**
@@ -858,16 +863,16 @@ class Team extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'PaymentSetting.team_id = ChargeHistory.team_id',
-                        'ChargeHistory.charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
-                        'ChargeHistory.result_type'     => Enum\Model\ChargeHistory\ResultType::FAIL,
+                        'ChargeHistory.charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+                        'ChargeHistory.result_type'         => Enum\Model\ChargeHistory\ResultType::FAIL,
                         'ChargeHistory.charge_datetime >= ' => $startTimestamp,
                         'ChargeHistory.charge_datetime <= ' => $endTimestamp,
-                        'ChargeHistory.del_flg' => false,
+                        'ChargeHistory.del_flg'             => false,
                     ]
                 ],
             ],
-            'group' => [
-                'Team.id HAVING COUNT(Team.id) >= '.$judgeFailureCnt
+            'group'      => [
+                'Team.id HAVING COUNT(Team.id) >= ' . $judgeFailureCnt
             ],
         ];
         $ret = $this->find('all', $options);
@@ -892,4 +897,5 @@ class Team extends AppModel
         }
         return null;
     }
+
 }
