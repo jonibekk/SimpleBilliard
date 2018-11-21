@@ -1,0 +1,156 @@
+/* search page css */
+
+@import "../variables/all";
+@import "../helpers/mixin";
+@import(reference) "../partials/line_number_limit";
+@import "../partials/select_labels";
+
+
+#Search {
+  .searchPage {
+    &-noItem {
+      padding: 80px 0;
+      &-searchKeyword {
+        color: @acidRed;
+      }
+    }
+    &-searchCategoryTabs {
+      border-bottom: 1px solid #efefef;
+      padding: 0px 8px;
+      &-item {
+        display: inline-block;
+        padding: 4px 16px;
+        &.mod-active {
+          border-bottom: 3px solid @acidRed;
+        }
+        > a {
+          text-decoration: none;
+          color: @darkGray;
+        }
+      }
+    }
+    .search {
+      &-keyword {
+        width: 100%;
+        display: table;
+        border-collapse: separate;
+        border: 1px solid #a8a8a8;
+        border-radius: 4px;
+        &-input {
+          background-color: #fff;
+          border-radius: 4px 0 0 4px;
+          box-shadow: none;
+          -webkit-transition: none;
+          transition: none;
+          outline: 0;
+          padding: 8px;
+          display: table-cell;
+          width: 100%;
+          font-size: 14px;
+          border: 0;
+          line-height: 18px;
+        }
+        &-submit {
+          display: table-cell;
+          width: 40px;
+          text-align: center;
+          background-color: #e5e5e5;
+          font-size: 16px;
+          border-radius: 0 4px 4px 0;
+          cursor: pointer;
+          vertical-align: middle;
+        }
+      }
+      &-order-text {
+        cursor: pointer;
+      }
+      &-order-select {
+        display: none;
+        color: @darkGray;
+      }
+    }
+    &-item {
+      width: 100%;
+      &-link {
+        background-color: #fff;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: @black;
+        text-decoration: none;
+        -webkit-touch-callout: none;
+        &:visited, &:focus {
+          color: @black;
+          text-decoration: none;
+          background-color: #fff;
+        }
+        &:hover {
+          text-decoration: none;
+        }
+        // 3カラムの場合でのみhoverの色を変える。
+        // 携帯端末でhover設定はui的にNG.
+        @media screen and (min-width: 992px) {
+          &:hover {
+            color: @black;
+            background-color: @hoverRed;
+          }
+        }
+      }
+      &-imgWrapper {
+        width: 50px;
+        height: 50px;
+        position: relative;
+        & > img {
+          max-height: 50px;
+          max-width: 50px;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          margin: auto;
+        }
+      }
+      &-main {
+        flex: 1;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-width: 0;
+        margin: 0 10px;
+        position: relative;
+        &-body {
+          white-space: normal;
+          height: 3em;
+          overflow: hidden;
+          line-height: 1.5em;
+          & > i {
+            margin-right: 4px;
+          }
+        }
+        &-footer {
+          color: @subColor3;
+          display: flex;
+          & > span {
+            display: block;
+          }
+          &-left {
+            flex: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+          &-right {
+            display: flex;
+          }
+        }
+      }
+    }
+    &-item + &-item {
+      border-top: 1px solid @lightGray;
+    }
+
+  }
+}
