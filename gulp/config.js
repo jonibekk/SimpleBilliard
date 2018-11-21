@@ -185,7 +185,8 @@ const config = {
     'invite',
     'payment_apply',
     'saved_item',
-    'campaign_plan_upgrade'
+    'campaign_plan_upgrade',
+    'search'
   ],
   css_vendor: {
     src: [
