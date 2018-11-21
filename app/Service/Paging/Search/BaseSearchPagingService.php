@@ -10,7 +10,7 @@ App::import('Lib/ElasticSearch', 'ESPagingRequest');
 abstract class BaseSearchPagingService
 {
     const DEFAULT_PAGE_LIMIT = 10;
-    const BASE_MODEL = 'model';
+    const ES_SEARCH_PARAM_MODEL = 'model';
 
     /**
      * Get search data using paging
@@ -33,12 +33,18 @@ abstract class BaseSearchPagingService
 
         $searchResult = $this->fetchData($pagingRequest);
 
-        if ($searchResult->getData(static::BASE_MODEL)->hasMore()) {
+        $data = $searchResult->getData(static::ES_SEARCH_PARAM_MODEL);
+
+        if (empty($data)) {
+            return $pageResult;
+        }
+
+        if ($data->hasMore()) {
             $pageResult['paging'] = $this->createPointer($pagingRequest);
         }
 
-        $pageResult['count'] = $searchResult->getData(static::BASE_MODEL)->getTotalResultCount();
-        $arrayData = $this->convertData($searchResult->getData(static::BASE_MODEL));
+        $pageResult['count'] = $searchResult->getData(static::ES_SEARCH_PARAM_MODEL)->getTotalResultCount();
+        $arrayData = $this->convertData($searchResult->getData(static::ES_SEARCH_PARAM_MODEL));
 
         $pageResult['data'] = $this->extendData($arrayData, $pagingRequest);
 

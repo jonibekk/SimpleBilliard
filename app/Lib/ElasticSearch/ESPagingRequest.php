@@ -66,7 +66,7 @@ class ESPagingRequest
     public function addQueryToCondition(string $key, bool $overwrite = false, $default = null)
     {
         if ($overwrite || empty($this->condition[$key])) {
-            $this->condition[$key] = $this->query[$key] ?: $default;
+            $this->condition[$key] = Hash::get($this->query, $key, $default);
         }
     }
 

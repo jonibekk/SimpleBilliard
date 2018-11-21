@@ -14,22 +14,20 @@ App::import('Service/Paging/Search', 'BaseSearchPagingService');
 /**
  * Created by PhpStorm.
  * User: Stephen Raharja
- * Date: 11/20/2018
- * Time: 5:36 PM
+ * Date: 11/21/2018
+ * Time: 2:43 PM
  */
-class PostSearchPagingService extends BaseSearchPagingService
+class ActionSearchPagingService extends BaseSearchPagingService
 {
-    const ES_SEARCH_PARAM_MODEL = 'post';
+    const ES_SEARCH_PARAM_MODEL = 'action';
 
     protected function setCondition(ESPagingRequest $pagingRequest): ESPagingRequest
     {
         $pagingRequest->addQueryToCondition('keyword', false);
         $pagingRequest->addQueryToCondition('limit', false, self::DEFAULT_PAGE_LIMIT);
         $pagingRequest->addQueryToCondition("file_name", false, 0);
-        $pagingRequest->addQueryToCondition("circle_only", false, 0);
-        $pagingRequest->addQueryToCondition("circle", false, []);
 
-        if (empty($pagingRequest->getCondition('keyword'))){
+        if (empty($pagingRequest->getCondition('keyword'))) {
             throw new InvalidArgumentException("Need keyword");
         }
 
@@ -45,11 +43,9 @@ class PostSearchPagingService extends BaseSearchPagingService
         $teamId = $pagingRequest->getCondition('team_id');
 
         $params[static::ES_SEARCH_PARAM_MODEL] = [
-            'pn'          => $pagingRequest->getCondition('pn'),
-            'rn'          => $pagingRequest->getCondition('limit'),
-            'file_name'   => $pagingRequest->getCondition('file_name'),
-            'circle'      => $pagingRequest->getCondition('circle'),
-            'circle_only' => $pagingRequest->getCondition('circle_only')
+            'pn'        => $pagingRequest->getCondition('pn'),
+            'rn'        => $pagingRequest->getCondition('limit'),
+            'file_name' => $pagingRequest->getCondition('file_name')
         ];
 
         return $ESClient->search($query, $teamId, $params);
@@ -193,49 +189,23 @@ class PostSearchPagingService extends BaseSearchPagingService
     {
         $teamId = $request->getCondition("team_id");
 
-        $postIds = Hash::extract($rawData, '{n}.id');
+        $actionIds = Hash::extract($rawData, '{n}.post.action_result_id');
 
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
         $Upload = new UploadHelper(new View());
 
-        $attachedImgEachPost = $AttachedFile->findAttachedImgEachPost($teamId, $postIds);
-        $attachedImgEachPost = Hash::combine($attachedImgEachPost, '{n}.post_id', '{n}');
-
-        // Fetch post resource
-        /** @var PostResource $PostResource */
-        $PostResource = ClassRegistry::init('PostResource');
-        $postResources = $PostResource->getResourcesByPostId($postIds, false);
+        /* Bulk set saved item image each post */
+        $attachedImgEachAction = $AttachedFile->findAttachedImgEachAction($teamId, $actionIds);
+        $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
         foreach ($rawData as &$item) {
-            $imgUrl = "";
+            $actionId = Hash::get($item, 'post.action_result_id');
+            $attachedImg = Hash::get($attachedImgEachAction, $actionId);
+            $imgUrl = $Upload->uploadUrl($attachedImg,
+                "AttachedFile.attached",
+                ['style' => 'x_small']);
 
-            $postId = Hash::get($item, 'id');
-            // Attached image with post
-            $attachedImg = Hash::get($attachedImgEachPost, $postId);
-
-            $resources = $postResources[$postId];
-            // check if post_resource have a video or not
-            $hasVideo = (0 < count($resources));
-
-            if ($hasVideo) {
-                $imgUrl = '/img/no-image-video.jpg';
-            } else {
-                if (!empty($attachedImg)) {
-                    $imgUrl = $Upload->uploadUrl($attachedImg,
-                        "AttachedFile.attached",
-                        ['style' => 'x_small']);
-                    // OGP image with post
-                } elseif (!empty(Hash::get($item, 'site_photo_file_name'))) {
-                    $postForGetImg = [
-                        'id'                   => $item['id'],
-                        'site_photo_file_name' => $item['post']['site_photo_file_name']
-                    ];
-                    $imgUrl = $Upload->uploadUrl($postForGetImg,
-                        "Post.site_photo",
-                        ['style' => 'small']);
-                }
-            }
             // Post creator's profile image
             if (empty($imgUrl)) {
                 $imgUrl = $item['post']['user']['profile_img_url']['medium'];

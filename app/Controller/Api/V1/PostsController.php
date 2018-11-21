@@ -1,9 +1,12 @@
 <?php
-App::uses('BaseV1PagingController', 'Controller/Api/V1');
+App::uses('ApiController', 'Controller/Api');
 App::uses('CircleMember', 'Model');
 App::import('Lib/ElasticSearch', 'PostService');
 App::import('Service', 'PostService');
+App::import('Service/Paging/Search', 'ActionSearchPagingService');
 App::import('Service/Paging/Search', 'PostSearchPagingService');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
 
 /**
  * Class PostsController
@@ -92,16 +95,17 @@ class PostsController extends ApiController
      */
     public function get_search()
     {
+        $error = $this->validateSearch();
+
+        if (!empty($error)) {
+            return $this->_getResponseValidationFail($error);
+        }
+
         $query = $this->request->query;
         $limit = $this->request->query('limit');
         $cursor = $this->request->query('cursor');
-
-        $userId = $this->Auth->user('id');
+        $type = $this->request->query('type') ?: "circle_post";
         $teamId = $this->current_team_id;
-
-        if (empty ($userId) || empty ($teamId)) {
-            return $this->_getResponseValidationFail(["Missing user/team ID"]);
-        }
 
         if (empty($cursor)) {
             $pagingRequest = new ESPagingRequest();
@@ -109,23 +113,56 @@ class PostsController extends ApiController
             /** @var CircleMember $CircleMember */
             $CircleMember = ClassRegistry::init('CircleMember');
 
-            $circleMember = $CircleMember->getMyCircleList();
-            $circleIds = Hash::extract($circleMember, '{n}.{*}');
-
             $pagingRequest->setQuery($query);
             $pagingRequest->addCondition('pn', 1);
             $pagingRequest->addCondition('limit', $limit);
             $pagingRequest->addCondition('team_id', $teamId);
-            $pagingRequest->addCondition('circle', $circleIds);
+
+            if ($type != "action") {
+                $circleMember = $CircleMember->getMyCircleList();
+                $circleIds = Hash::extract($circleMember, '{n}.{*}');
+                $pagingRequest->addCondition('circle', $circleIds);
+            }
         } else {
             $pagingRequest = ESPagingRequest::convertBase64($cursor);
         }
 
-        /** @var PostSearchPagingService $PostSearchPagingService */
-        $PostSearchPagingService = ClassRegistry::init('PostSearchPagingService');
+        switch ($type) {
+            case "action":
+                /** @var ActionSearchPagingService $ActionSearchPagingService */
+                $ActionSearchPagingService = ClassRegistry::init('ActionSearchPagingService');
+                $searchResult = $ActionSearchPagingService->getDataWithPaging($pagingRequest);
+                break;
+            case "circle_post":
+                /** @var PostSearchPagingService $PostSearchPagingService */
+                $PostSearchPagingService = ClassRegistry::init('PostSearchPagingService');
+                $searchResult = $PostSearchPagingService->getDataWithPaging($pagingRequest);
+                break;
+            default:
+                $searchResult = [];
+        }
 
-        $searchResult = $PostSearchPagingService->getDataWithPaging($pagingRequest);
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
+    }
 
-        return $this->_getResponseSuccess($searchResult);
+    private function validateSearch(): array
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        if (empty ($userId)) {
+            return ["No user ID"];
+        }
+
+        if (empty($teamId)) {
+            return ["No team ID"];
+        }
+        $query = $this->request->query;
+
+        if (empty($query['keyword'])) {
+            return ["Need keyword"];
+        }
+
+        return [];
     }
 }

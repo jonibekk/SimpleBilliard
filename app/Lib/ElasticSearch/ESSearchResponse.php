@@ -31,11 +31,11 @@ class ESSearchResponse
      *
      * @param string $model
      *
-     * @return ESSearchObject
+     * @return ESSearchObject | null
      */
-    public function getData(string $model): ESSearchObject
+    public function getData(string $model)
     {
-        return $this->searchData[$model];
+        return $this->searchData[$model] ?: null;
     }
 
     /**
