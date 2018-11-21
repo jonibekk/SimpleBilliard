@@ -110,17 +110,25 @@ class PostsController extends ApiController
         if (empty($cursor)) {
             $pagingRequest = new ESPagingRequest();
 
-            /** @var CircleMember $CircleMember */
-            $CircleMember = ClassRegistry::init('CircleMember');
-
             $pagingRequest->setQuery($query);
             $pagingRequest->addCondition('pn', 1);
             $pagingRequest->addCondition('limit', $limit);
             $pagingRequest->addCondition('team_id', $teamId);
 
             if ($type != "action") {
-                $circleMember = $CircleMember->getMyCircleList();
-                $circleIds = Hash::extract($circleMember, '{n}.{*}');
+                $circle = $this->request->query('circle');
+
+                if (!empty($circle)) {
+                    $circleIds = explode(',', $circle);
+                }
+
+                if (empty($circleIds)) {
+                    /** @var CircleMember $CircleMember */
+                    $CircleMember = ClassRegistry::init('CircleMember');
+
+                    $circleMember = $CircleMember->getMyCircleList();
+                    $circleIds = Hash::extract($circleMember, '{n}.{*}');
+                }
                 $pagingRequest->addCondition('circle', $circleIds);
             }
         } else {
