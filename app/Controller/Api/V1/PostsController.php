@@ -165,11 +165,6 @@ class PostsController extends ApiController
         if (empty($teamId)) {
             return ["No team ID"];
         }
-        $query = $this->request->query;
-
-        if (empty($query['keyword'])) {
-            return ["Need keyword"];
-        }
 
         return [];
     }

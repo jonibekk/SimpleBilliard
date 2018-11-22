@@ -6,13 +6,11 @@ const initialState = {
   search_result: {
     data: [],
     count: 0,
-    paging: {
-      next: ''
-    }
+    paging: ''
   },
-  keyword: "",
   search_conditions: {
-    type: "post"
+    keyword: '',
+    type: "circle_post"
   },
   loading: false,
   loading_more: false
@@ -24,7 +22,9 @@ export default function search(state = initialState, action) {
 
   switch (action.type) {
     case ActionTypes.FETCH_INITIAL_DATA:
-      return Object.assign({}, state, action.data, {
+      return Object.assign({}, state, {
+        search_result: action.data,
+        search_conditions: action.search_conditions,
         loading: false
       })
 

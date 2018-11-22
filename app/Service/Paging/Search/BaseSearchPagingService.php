@@ -31,6 +31,9 @@ abstract class BaseSearchPagingService
 
         $pagingRequest = $this->setCondition($pagingRequest);
 
+        if (empty($pagingRequest->getCondition('keyword'))) {
+            return $pageResult;
+        }
         $searchResult = $this->fetchData($pagingRequest);
 
         $data = $searchResult->getData(static::ES_SEARCH_PARAM_MODEL);

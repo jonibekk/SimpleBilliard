@@ -10,6 +10,7 @@ App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
 App::import('Model/Entity', 'PostEntity');
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Created by PhpStorm.
@@ -28,10 +29,6 @@ class PostSearchPagingService extends BaseSearchPagingService
         $pagingRequest->addQueryToCondition("file_name", false, 0);
         $pagingRequest->addQueryToCondition("circle_only", false, 0);
         $pagingRequest->addQueryToCondition("circle", false, []);
-
-        if (empty($pagingRequest->getCondition('keyword'))) {
-            throw new InvalidArgumentException("Need keyword");
-        }
 
         return $pagingRequest;
     }
@@ -96,6 +93,16 @@ class PostSearchPagingService extends BaseSearchPagingService
 
         //Extend IMG
         $baseData = $this->extendImage($baseData, $request);
+
+        //Extend display created
+        $TimeEx = new TimeExHelper(new View());
+        foreach ($baseData as &$data) {
+            if (empty($data['comment_id'])) {
+                $data['display_created'] = $TimeEx->elapsedTime($data['post']['created'], 'normal', false);
+            } else {
+                $data['display_created'] = $TimeEx->elapsedTime($data['comment']['created'], 'normal', false);
+            }
+        }
 
         return $baseData;
     }

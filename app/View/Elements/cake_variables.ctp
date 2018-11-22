@@ -712,6 +712,10 @@ App::uses('AttachedFile', 'Model');
             "Item not found": "<?= __("Item not found") ?>",
             "Item saved": "<?= __("Item saved") ?>",
             "Item removed": "<?= __("Item removed") ?>",
+            // Search
+            "Information matching the search could not be found": "<?= __("Information matching the search could not be found") ?>",
+            "Search post and comment": "<?= __("Search post and comment") ?>",
+            "Comments": "<?= __("Comments") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

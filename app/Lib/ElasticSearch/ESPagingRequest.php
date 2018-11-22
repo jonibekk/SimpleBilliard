@@ -13,7 +13,7 @@ class ESPagingRequest
      *
      * @var array
      */
-    private $query;
+    private $query = [];
 
     /**
      * Paging request condition
@@ -21,7 +21,7 @@ class ESPagingRequest
      * @var array
      *      [$key => $value]
      */
-    private $condition;
+    private $condition = [];
 
     /**
      * Temporary paging request condition.
