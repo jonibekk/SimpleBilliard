@@ -37,11 +37,11 @@ export default class SearchItems extends React.Component {
 
   fetchMoreResults() {
     const {search_result} = this.props.search
-    const url = search_result.paging.next
-    if (!url) {
+    const cursor = search_result.paging
+    if (!cursor) {
       return
     }
-    this.props.fetchMoreResults(url)
+    this.props.fetchMoreResults(cursor)
 
   }
 
@@ -49,7 +49,7 @@ export default class SearchItems extends React.Component {
     let uid = this.makeRandomStr()
     return items.map((item) => {
       return (
-        <SearchItem item={item} key={`${uid}-${item.id}`}/>
+        <SearchItem item={item} key={`${uid}-${item.id}-${item.comment_id}`}/>
       )
     })
   }

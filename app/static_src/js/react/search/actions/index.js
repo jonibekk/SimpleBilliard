@@ -32,10 +32,17 @@ export function fetchInitialData() {
     //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
     return axios.get(`/api/v1/posts/search` + location.search)
       .then((response) => {
-        let data = response.data.data
+        let data = response.data
+        const search_params = new URLSearchParams(location.search);
+        let search_conditions = {
+          type: search_params.get('type'),
+          keyword: search_params.get('keyword'),
+        };
+
         dispatch({
           type: ActionTypes.FETCH_INITIAL_DATA,
           data,
+          search_conditions
         })
       })
       .catch((response) => {
@@ -80,12 +87,12 @@ export function updateFilter(data) {
   }
 }
 
-export function fetchMoreResults(url) {
+export function fetchMoreResults(cursor) {
   return (dispatch, getState) => {
     dispatch({
       type: ActionTypes.LOADING_MORE,
     })
-    return axios.get(`${url}`)
+    return axios.get(`/api/v1/posts/search?cursor=${cursor}`)
       .then((response) => {
         const search_result = response.data
         dispatch({
