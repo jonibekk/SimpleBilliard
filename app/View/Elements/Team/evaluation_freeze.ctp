@@ -83,6 +83,6 @@
                 <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
-    </p>
+        </p>
 </section>
 <?= $this->App->viewEndComment() ?>
