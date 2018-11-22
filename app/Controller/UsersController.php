@@ -1,5 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Team', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('Device', 'Model');
 App::uses('AppUtil', 'Util');
@@ -80,12 +82,6 @@ class UsersController extends AppController
         if (!$userInfo) {
             $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
             $this->Notification->outError(__("Email address or Password is incorrect."));
-            return $this->render();
-        }
-
-        // Check if user belongs any team
-        if (empty($this->TeamMember->findBelongsByUser($userInfo['id']))) {
-            $this->Notification->outError(__("You don't belong to any team."));
             return $this->render();
         }
 
@@ -233,7 +229,35 @@ class UsersController extends AppController
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
             if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST) {
-                $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+                //If default_team_id is deleted, replace with new one
+                $teamId = $this->current_team_id;
+                if (empty($teamId)) {
+                    $teamId = $this->Auth->user('default_team_id');
+                }
+
+                $userId = $this->Auth->user('id');
+
+                $invitedTeamId = $this->Session->read('invited_team_id');
+                if (empty($invitedTeamId)) {
+                    $this->Notification->outError(__("Error, failed to invite."));
+                    GoalousLog::error("Empty invited team ID for user $userId");
+                    return $this->redirect("/");
+                }
+
+                //If default team is deleted or if user is not active in current team
+                if (empty($this->TeamMember->isActive($userId, $teamId))) {
+                    /** @var UserService $UserService */
+                    $UserService = ClassRegistry::init('UserService');
+                    if (!$UserService->updateDefaultTeam($userId, $invitedTeamId)) {
+                        $this->Notification->outError(__("Error, failed to invite."));
+                        GoalousLog::error("Failed updating default team ID $teamId to $invitedTeamId of user $userId");
+                        return $this->redirect("/");
+                    }
+                }
+                $activeTeams = $this->Team->TeamMember->getActiveTeamMembersList();
+                if (empty($activeTeams)) {
+                    $this->Session->write('current_team_id', $invitedTeamId);
+                }
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             }
@@ -247,12 +271,17 @@ class UsersController extends AppController
             $this->_refreshAuth();
             $this->_setAfterLogin();
 
+            if (!empty($teamId = $this->Session->read('invited_team_id'))) {
+                $this->Session->write('current_team_id', $teamId);
+            }
+
             // reset login failed count
             $ipAddress = $this->request->clientIp();
             $this->GlRedis->resetLoginFailedCount($this->request->data['User']['email'], $ipAddress);
 
             $this->Notification->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
                 ['title' => __("Succeeded to login")]);
+            $this->Session->delete('invited_team_id');
             return $this->redirect($redirect_url);
         } else {
             $this->Notification->outError(__("Error. Try to login again."));
@@ -263,34 +292,19 @@ class UsersController extends AppController
 
     /**
      * Common logout action
-     *
-     * @return void
      */
     public function logout()
     {
         $user = $this->Auth->user();
 
-        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
-        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
-        $installationId = $this->Session->read('installationId');
-        if ($installationId) {
-            /** @var Device $Device */
-            $Device = ClassRegistry::init('Device');
-            $Device->softDeleteAll([
-                'Device.installation_id' => $installationId,
-            ], false);
-        }
+        //Need to put the notification between logout process & the redirect
+        //If not notification can't reach the frontend
+        $logoutRedirect = $this->logoutProcess();
 
-        foreach ($this->Session->read() as $key => $val) {
-            if (in_array($key, ['Config', '_Token', 'Auth'])) {
-                continue;
-            }
-            $this->Session->delete($key);
-        }
-        $this->Cookie->destroy();
         $this->Notification->outInfo(__("See you %s", $user['display_username']),
             ['title' => __("Logged out")]);
-        return $this->redirect($this->Auth->logout());
+
+        return $this->redirect($logoutRedirect);
     }
 
     /**
@@ -855,6 +869,9 @@ class UsersController extends AppController
                 return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
+            //Save invited team ID
+            $this->Session->write('invited_team_id', $invitation['team_id']);
+
             // 登録済みユーザーかつ未ログインの場合はログイン画面へ
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
@@ -881,7 +898,7 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+        $this->Session->delete('referer_status');
         $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
     }
@@ -1139,6 +1156,9 @@ class UsersController extends AppController
             $currentTeamId = $this->Circle->current_team_id;
             $this->Circle->current_team_id = $inviteTeamId;
             $this->Circle->CircleMember->current_team_id = $inviteTeamId;
+
+            Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+
             $teamAllCircle = $this->Circle->getTeamAllCircle();
 
             // 「チーム全体」サークルに追加
