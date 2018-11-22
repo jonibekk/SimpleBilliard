@@ -103,8 +103,6 @@ class ApiSavedPostService extends ApiService
         $User = ClassRegistry::init('User');
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
-        /** @var ActionResultFile $ActionResultFile */
-        $ActionResultFile = ClassRegistry::init('ActionResultFile');
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
         App::uses('TimeExHelper', 'View/Helper');
