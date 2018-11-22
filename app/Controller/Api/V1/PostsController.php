@@ -114,6 +114,7 @@ class PostsController extends ApiController
             $pagingRequest->addCondition('pn', 1);
             $pagingRequest->addCondition('limit', $limit);
             $pagingRequest->addCondition('team_id', $teamId);
+            $pagingRequest->addCondition('type', $type);
 
             if ($type != "action") {
                 $circle = $this->request->query('circle');
