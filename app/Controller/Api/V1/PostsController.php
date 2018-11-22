@@ -134,6 +134,7 @@ class PostsController extends ApiController
             }
         } else {
             $pagingRequest = ESPagingRequest::convertBase64($cursor);
+            $type = $pagingRequest->getCondition('type');
         }
 
         switch ($type) {
