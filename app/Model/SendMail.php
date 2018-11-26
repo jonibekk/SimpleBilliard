@@ -35,21 +35,19 @@ class SendMail extends AppModel
     const TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE = 18;
     const TYPE_TMPL_ALERT_CHARGE_FAILURE = 19;
     const TYPE_TMPL_RECHARGE = 20;
-    const TYPE_TMPL_DELETE_TEAM_MANUAL = 21;
-    const TYPE_TMPL_DELETE_TEAM_AUTO = 22;
 
     static public $TYPE_TMPL = [
-        self::TYPE_TMPL_ACCOUNT_VERIFY          => [
+        self::TYPE_TMPL_ACCOUNT_VERIFY                    => [
             'subject'  => null,
             'template' => 'account_verification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET          => [
+        self::TYPE_TMPL_PASSWORD_RESET                    => [
             'subject'  => null,
             'template' => 'password_reset',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE => [
+        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE           => [
             'subject'  => null,
             'template' => 'password_reset_complete',
             'layout'   => 'default',
@@ -124,24 +122,14 @@ class SendMail extends AppModel
             'template' => 'move_read_only_for_charge_failure',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_ALERT_CHARGE_FAILURE    => [
+        self::TYPE_TMPL_ALERT_CHARGE_FAILURE              => [
             'subject'  => null,
             'template' => 'alert_charge_failure',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_RECHARGE                => [
+        self::TYPE_TMPL_RECHARGE                          => [
             'subject'  => null,
             'template' => 'recharge',
-            'layout'   => 'default',
-        ],
-        self::TYPE_TMPL_DELETE_TEAM_MANUAL      => [
-            'subject'  => null,
-            'template' => 'delete_team_manual',
-            'layout'   => 'default',
-        ],
-        self::TYPE_TMPL_DELETE_TEAM_AUTO        => [
-            'subject'  => null,
-            'template' => 'delete_team_auto',
             'layout'   => 'default',
         ],
     ];
@@ -166,8 +154,6 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_ALERT_CHARGE_FAILURE]['subject'] = __("We had a problem billing your team");
         self::$TYPE_TMPL[self::TYPE_TMPL_MOVE_READ_ONLY_FOR_CHARGE_FAILURE]['subject'] = __("We are downgrading your team to read-only");
         self::$TYPE_TMPL[self::TYPE_TMPL_RECHARGE]['subject'] = __("We recharged your team");
-        self::$TYPE_TMPL[self::TYPE_TMPL_DELETE_TEAM_MANUAL]['subject'] = __("The team has been deleted");
-        self::$TYPE_TMPL[self::TYPE_TMPL_DELETE_TEAM_AUTO]['subject'] = __("The team has been deleted");
     }
 
     function __construct($id = false, $table = null, $ds = null)

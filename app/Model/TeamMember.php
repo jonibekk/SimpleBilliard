@@ -113,7 +113,7 @@ class TeamMember extends AppModel
     /**
      * 現在有効なチーム一覧を取得
      *
-     * @param      $uid
+     * @param $uid
      *
      * @return array
      */
@@ -133,21 +133,10 @@ class TeamMember extends AppModel
                 $options = [
                     'conditions' => [
                         'TeamMember.user_id' => $uid,
-                        'TeamMember.status'  => self::USER_STATUS_ACTIVE,
-                        'TeamMember.del_flg' => false
+                        'TeamMember.status'  => self::USER_STATUS_ACTIVE
                     ],
                     'fields'     => ['TeamMember.team_id', 'Team.name'],
-                    'joins'      => [
-                        [
-                            'type'       => 'INNER',
-                            'table'      => 'teams',
-                            'alias'      => 'Team',
-                            'conditions' => [
-                                'Team.id = TeamMember.team_id',
-                                'Team.del_flg' => false,
-                            ]
-                        ]
-                    ]
+                    'contain'    => ['Team']
                 ];
                 $res = array_filter($model->findWithoutTeamId('list', $options));
                 return $res;
@@ -155,20 +144,19 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
-    public function getActiveTeamMembersList($use_cache = true, $teamId = null)
+    public function getActiveTeamMembersList($use_cache = true)
     {
-        $teamId = $teamId ?: $this->current_team_id;
         if ($use_cache && !empty($this->active_member_list)) {
             return $this->active_member_list;
         }
         //if team is not exist
-        if (!$this->Team->findById($teamId)) {
+        if (!$this->Team->findById($this->current_team_id)) {
             return [];
         }
         $options = [
             'conditions' => [
                 'status'  => self::USER_STATUS_ACTIVE,
-                'team_id' => $teamId
+                'team_id' => $this->current_team_id
             ],
             'fields'     => ['user_id', 'user_id']
         ];
@@ -246,21 +234,17 @@ class TeamMember extends AppModel
     /**
      * 通常のアクセス権限チェック（自分が所属しているチームかどうか？）
      *
-     * @param      $team_id
-     * @param      $uid
-     * @param bool $skipCheckUserStatus
+     * @param $team_id
+     * @param $uid
      *
      * @return bool
      * @throws RuntimeException
      */
-    public function permissionCheck($team_id, $uid, bool $skipCheckUserStatus = false): bool
+    public function permissionCheck($team_id, $uid)
     {
         //チームに入っていない場合
         if (!$team_id) {
             throw new RuntimeException(__("If you want to access this page, please switch to the team."));
-        }
-        if (empty($this->Team->findById($team_id))) {
-            throw new RuntimeException(__('Your team no longer has access to Goalous.'));
         }
         if (!$this->myStatusWithTeam) {
             $this->setMyStatusWithTeam($team_id, $uid);
@@ -268,22 +252,19 @@ class TeamMember extends AppModel
         if (empty($this->myStatusWithTeam['Team'])) {
             throw new RuntimeException(__("There is no team."));
         }
-        if (!$skipCheckUserStatus && $this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
+        if ($this->myStatusWithTeam['TeamMember']['status'] != self::USER_STATUS_ACTIVE) {
             throw new RuntimeException(__("You can't access to this team. Your account has been disabled."));
         }
         return true;
     }
 
     /**
-     * @deprecated
-     *
-     * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
      * @param $uid
-     * @param null $teamId
-     * @param bool $withCache
+     * @param $team_id
+     *
      * @return bool
      */
-    public function isActive($uid, $teamId = null, bool $withCache = true)
+    public function isActive($uid, $teamId = null)
     {
         if (!$teamId) {
             if (!$this->current_team_id) {
@@ -294,14 +275,12 @@ class TeamMember extends AppModel
         $isDefault = false;
         if ($uid == $this->my_uid && $teamId == $this->current_team_id) {
             $isDefault = true;
-            if ($withCache) {
-                $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
-                if ($res !== false) {
-                    if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
-                        return true;
-                    }
-                    return false;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+            if ($res !== false) {
+                if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
+                    return true;
                 }
+                return false;
             }
         }
         $options = [
@@ -315,20 +294,16 @@ class TeamMember extends AppModel
                 'User' => [
                     'conditions' => [
                         'User.active_flg' => true,
-                        'User.del_flg'    => false
                     ],
                     'fields'     => ['User.id']
                 ],
                 'Team' => [
-                    'conditions' => [
-                        'Team.del_flg' => false
-                    ],
-                    'fields'     => ['Team.id']
+                    'fields' => ['Team.id']
                 ]
             ]
         ];
         $res = $this->find('first', $options);
-        if ($withCache && $isDefault) {
+        if ($isDefault) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
         if (!empty($res) && Hash::get($res, 'User.id') && Hash::get($res, 'Team.id')) {
@@ -2303,67 +2278,4 @@ class TeamMember extends AppModel
 
         return $this->useType()->useEntity()->find('all', $condition);
     }
-    /**
-     * Get last logged in active team ID
-     *
-     * @param int $userId
-     *
-     * @return int | null Team ID, null for no available joined active team
-     */
-    public function getLatestLoggedInActiveTeamId(int $userId)
-    {
-        $condition = [
-            'conditions' => [
-                'TeamMember.user_id' => $userId,
-                'TeamMember.del_flg' => false,
-                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
-            ],
-            'fields'     => [
-                'TeamMember.team_id',
-            ],
-            'order'      => [
-                'TeamMember.last_login' => 'DESC'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'teams',
-                    'alias'      => 'Team',
-                    'conditions' => [
-                        'Team.id = TeamMember.team_id',
-                        'Team.del_flg' => false
-                    ]
-                ]
-            ]
-        ];
-        $res = $this->find('first', $condition);
-
-        return Hash::get($res, 'TeamMember.team_id', null);
-    }
-
-    /**
-     * Check if user is being invited to given team
-     *
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @return bool
-     */
-    public function isBeingInvited(int $userId, int $teamId): bool
-    {
-        $condition = [
-            'conditions' => [
-                'TeamMember.user_id' => $userId,
-                'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => Enum\TeamMember\Status::INVITED()->getValue(),
-                'TeamMember.del_flg' => false
-            ],
-            'fields'     => [
-                'TeamMember.id'
-            ]
-        ];
-
-        return !empty($this->find('count', $condition));
-    }
-
 }
