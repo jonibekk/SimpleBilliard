@@ -957,7 +957,7 @@ class UsersControllerTest extends GoalousControllerTestCase
                 'last_name'      => 'user',
                 'password'       => 'aaaaaaaaaa',
                 'password_token' => 'abcde',
-                'status'         => TeamMember::USER_STATUS_ACTIVE,
+                'status' => TeamMember::USER_STATUS_ACTIVE,
             ],
             'Email' => [
                 [

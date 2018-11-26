@@ -338,34 +338,6 @@ class GlEmailComponent extends Component
     }
 
     /**
-     * Send email that the team was deleted manually to team member
-     *
-     * @param int $toUid
-     * @param int $teamId
-     * @param string $teamName
-     */
-    public function sendTeamDeletedManual(int $toUid, int $teamId, string $teamName)
-    {
-        $item = compact('teamName');
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_DELETE_TEAM_MANUAL, $item, null, $teamId);
-        $this->execSendMailById($this->SendMail->id);
-    }
-
-    /**
-     * Send email that the team was deleted automatically to team member
-     *
-     * @param int $toUid
-     * @param int $teamId
-     * @param string $teamName
-     */
-    public function sendTeamDeletedAuto(int $toUid, int $teamId, string $teamName)
-    {
-        $item = compact('teamName');
-        $this->SendMail->saveMailData($toUid, Sendmail::TYPE_TMPL_DELETE_TEAM_AUTO, $item, null, $teamId);
-        $this->execSendMailById($this->SendMail->id);
-    }
-
-    /**
      * メールにてセットアップガイドメールを送信
      *
      * @param $to_user_id

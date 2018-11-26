@@ -1,15 +1,10 @@
 <?php
-App::uses('User', 'Model');
-App::uses('TeamMember', 'Model');
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'TeamService');
 
 /**
  * @property TeamService $TeamService
  */
-
-use Goalous\Enum as Enum;
-
 class TeamServiceTest extends GoalousTestCase
 {
     /**
@@ -21,7 +16,6 @@ class TeamServiceTest extends GoalousTestCase
         'app.term',
         'app.user',
         'app.team',
-        'app.team_member',
         'app.payment_setting',
         'app.invoice',
         'app.credit_card',
@@ -74,8 +68,7 @@ class TeamServiceTest extends GoalousTestCase
         $res = $this->TeamService->updateServiceUseStatus($teamId, Team::SERVICE_USE_STATUS_READ_ONLY, date('Y-m-d'));
 
         $this->assertTrue($res === true);
-        $this->assertEquals($this->TeamService->getServiceUseStatusByTeamId($teamId),
-            Team::SERVICE_USE_STATUS_READ_ONLY);
+        $this->assertEquals($this->TeamService->getServiceUseStatusByTeamId($teamId), Team::SERVICE_USE_STATUS_READ_ONLY);
     }
 
     function test_getTeamTimezone_success()
@@ -84,7 +77,7 @@ class TeamServiceTest extends GoalousTestCase
             'service_use_status'           => Team::SERVICE_USE_STATUS_READ_ONLY,
             'service_use_state_start_date' => '2017-01-10',
             'service_use_state_end_date'   => '2017-02-09',
-            'timezone'                     => 9,
+            'timezone'              => 9,
         ]);
         $this->setDefaultTeamIdAndUid(1, $teamId);
 
@@ -100,45 +93,6 @@ class TeamServiceTest extends GoalousTestCase
         // test error
         $timezone = $this->TeamService->getTeamTimezone(987987);
         $this->assertNull($timezone);
-    }
-
-    public function test_updateDefaultTeamOnDeletion_success()
-    {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        /** @var TeamService $TeamService */
-        $TeamService = ClassRegistry::init('TeamService');
-
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $newData = [
-            'team_id'    => 2,
-            'user_id'    => 9,
-            'last_login' => "2019-05-22 02:28:04",
-            'status'     => Enum\Model\TeamMember\Status::ACTIVE()->getValue()
-        ];
-
-        $TeamMember->create();
-        $TeamMember->save($newData, false);
-
-        $TeamService->updateDefaultTeamOnDeletion(1);
-
-        $user = $User->findById(9);
-        $this->assertEquals('2', $user['User']['default_team_id']);
-
-        $user = $User->findById(2);
-        $this->assertEquals('2', $user['User']['default_team_id']);
-
-        $user = $User->findById(3);
-        $this->assertEquals('2', $user['User']['default_team_id']);
-
-        $user = $User->findById(12);
-        $this->assertEquals('1', $user['User']['default_team_id']);
-
-        $user = $User->findById(13);
-        $this->assertEquals('1', $user['User']['default_team_id']);
     }
 
 }

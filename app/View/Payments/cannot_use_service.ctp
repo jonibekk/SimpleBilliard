@@ -9,13 +9,14 @@
         <?php else: ?>
             <h3><?= __('If you want to resume normal usage, please contact to your team administrators.') ?></h3>
         <?php endif; ?>
-        <p class="switchTeam-description"><?= __("Switch team") ?></p>
+        <p class="switchTeam-description"><?= __("Switch team")?></p>
         <form class="">
             <?php echo $this->Form->input('current_team',
                 array(
                     'type'      => 'select',
                     'options'   => !empty($my_teams) ? $my_teams : [
-                        __('There is no team.')
+                        __(
+                            'There is no team.')
                     ],
                     'value'     => $this->Session->read('current_team_id'),
                     'id'        => '',

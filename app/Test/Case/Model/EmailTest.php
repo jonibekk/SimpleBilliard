@@ -1,6 +1,5 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Email', 'Model');
-
 use Goalous\Enum as Enum;
 
 /**
