@@ -1,5 +1,5 @@
 <?= $this->App->viewStartComment()?>
-<?php  
+<?php
 /**
  * @var $is_mb_app
  */
@@ -17,10 +17,13 @@
         </a>
     <?php endif; ?>
 
-    <?php if($is_mb_app || $isMobileBrowser): ?>
-        <div class="header-icon-zoom <?= $is_mb_app || $isMobileBrowser ? 'search-icon-adjust' : '' ?>">
-            <a href="/search">
-    <?php else: ?>
+        <?php if ($is_mb_app || $isMobileBrowser): ?>
+            <div class="header-icon-zoom <?= $is_mb_app || $isMobileBrowser ? 'search-icon-adjust' : '' ?>">
+                <a href="/search">
+                    <i class="fa fa-search fa-adjust-search header-icons header-dropdown-icon-add header-function-icon header-icons header-drop-icons js-header-link"></i>
+                </a>
+            </div>
+        <?php else: ?>
         <div class="hidden-xxxs hidden-xxs visible-xs-flex visible-sm-flex visible-md-flex visible-lg-flex">
             <div class="header-icon-zoom">
                 <a href="/search">
