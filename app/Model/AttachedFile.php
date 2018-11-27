@@ -669,6 +669,61 @@ class AttachedFile extends AppModel
     }
 
     /**
+     * Get first attached image each comment
+     * condition: attached_files.id asc
+     *
+     * @param int   $teamId
+     * @param array $commentIds
+     *
+     * @return array
+     */
+    public function findAttachedImgEachComment(int $teamId, array $commentIds): array
+    {
+        if (empty($commentIds)) {
+            return [];
+        }
+
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => [
+                'MIN(AttachedFile.id) AS id',
+                'CommentFile.comment_id'
+            ],
+            'table'      => 'comment_files',
+            'alias'      => 'CommentFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.file_type' => self::TYPE_FILE_IMG,
+                        'AttachedFile.id = CommentFile.attached_file_id',
+                        'AttachedFile.del_flg'   => false,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'CommentFile.comment_id' => $commentIds,
+                'CommentFile.team_id'    => $teamId,
+            ],
+            'group'      => 'CommentFile.comment_id'
+        ], $this);
+
+        $options = $this->buildCondAttachedImg($subQuery, 'comment_id');
+        $data = $this->find('all', $options);
+        if (empty($data)) {
+            return [];
+        }
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
+        }
+        return $res;
+    }
+
+    /**
      * Get first attached image each action
      * condition: attached_files.id asc
      *

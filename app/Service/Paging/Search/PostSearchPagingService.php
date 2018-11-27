@@ -201,6 +201,7 @@ class PostSearchPagingService extends BaseSearchPagingService
         $teamId = $request->getCondition("team_id");
 
         $postIds = Hash::extract($rawData, '{n}.id');
+        $commentIds = Hash::extract($rawData, '{n}.comment_id');
 
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -208,6 +209,9 @@ class PostSearchPagingService extends BaseSearchPagingService
 
         $attachedImgEachPost = $AttachedFile->findAttachedImgEachPost($teamId, $postIds);
         $attachedImgEachPost = Hash::combine($attachedImgEachPost, '{n}.post_id', '{n}');
+
+        $attachedImgEachComment = $AttachedFile->findAttachedImgEachComment($teamId, $commentIds);
+        $attachedImgEachComment = Hash::combine($attachedImgEachComment, '{n}.comment_id', '{n}');
 
         // Fetch post resource
         /** @var PostResource $PostResource */
@@ -217,41 +221,68 @@ class PostSearchPagingService extends BaseSearchPagingService
         foreach ($rawData as &$item) {
             $imgUrl = "";
 
-            $postId = Hash::get($item, 'id');
-            // Attached image with post
-            $attachedImg = Hash::get($attachedImgEachPost, $postId);
+            if (!empty($item['comment_id'])) {
+                //If result is comment, use comment's images
+                $commentId = Hash::get($item, 'comment_id');
+                // Attached image with post
+                $attachedImg = Hash::get($attachedImgEachComment, $commentId);
 
-            $resources = $postResources[$postId];
-            // check if post_resource have a video or not
-            $hasVideo = (0 < count($resources));
-
-            if ($hasVideo) {
-                $imgUrl = '/img/no-image-video.jpg';
-            } else {
                 if (!empty($attachedImg)) {
                     $imgUrl = $Upload->uploadUrl($attachedImg,
                         "AttachedFile.attached",
                         ['style' => 'x_small']);
                     // OGP image with post
-                } elseif (!empty(Hash::get($item, 'post.site_photo_file_name'))) {
+                } elseif (!empty(Hash::get($item, 'comment.site_photo_file_name'))) {
                     $postForGetImg = [
-                        'id'                   => $item['id'],
-                        'site_photo_file_name' => $item['post']['site_photo_file_name']
+                        'id'                   => $commentId,
+                        'site_photo_file_name' => $item['comment']['site_photo_file_name']
                     ];
                     $imgUrl = $Upload->uploadUrl($postForGetImg,
-                        "Post.site_photo",
+                        "Comment.site_photo",
                         ['style' => 'small']);
-                } elseif (!empty(Hash::get($item, 'post.site_info'))) {
-                    $siteInfoArray = json_decode($item['post']['site_info'], true);
+                } elseif (!empty(Hash::get($item, 'comment.site_info'))) {
+                    $siteInfoArray = json_decode($item['comment']['site_info'], true);
                     $imgUrl = Hash::get($siteInfoArray, 'image');
                 }
-            }
-            // Post creator's profile image
-            if (empty($imgUrl)) {
-                // If result is a comment, use comment author's image
-                if (!empty($item['comment_id'])) {
+
+                // Post creator's profile image
+                if (empty($imgUrl)) {
                     $imgUrl = $item['comment']['user']['profile_img_url']['medium'];
+                }
+
+            } else {
+                // If result is not comment, use post's images
+                $postId = Hash::get($item, 'id');
+                // Attached image with post
+                $attachedImg = Hash::get($attachedImgEachPost, $postId);
+
+                $resources = $postResources[$postId];
+                // check if post_resource have a video or not
+                $hasVideo = (0 < count($resources));
+
+                if ($hasVideo) {
+                    $imgUrl = '/img/no-image-video.jpg';
                 } else {
+                    if (!empty($attachedImg)) {
+                        $imgUrl = $Upload->uploadUrl($attachedImg,
+                            "AttachedFile.attached",
+                            ['style' => 'x_small']);
+                        // OGP image with post
+                    } elseif (!empty(Hash::get($item, 'post.site_photo_file_name'))) {
+                        $postForGetImg = [
+                            'id'                   => $postId,
+                            'site_photo_file_name' => $item['post']['site_photo_file_name']
+                        ];
+                        $imgUrl = $Upload->uploadUrl($postForGetImg,
+                            "Post.site_photo",
+                            ['style' => 'small']);
+                    } elseif (!empty(Hash::get($item, 'post.site_info'))) {
+                        $siteInfoArray = json_decode($item['post']['site_info'], true);
+                        $imgUrl = Hash::get($siteInfoArray, 'image');
+                    }
+                }
+                // Post creator's profile image
+                if (empty($imgUrl)) {
                     $imgUrl = $item['post']['user']['profile_img_url']['medium'];
                 }
             }
