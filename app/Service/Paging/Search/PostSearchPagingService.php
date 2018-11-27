@@ -248,7 +248,12 @@ class PostSearchPagingService extends BaseSearchPagingService
             }
             // Post creator's profile image
             if (empty($imgUrl)) {
-                $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+                // If result is a comment, use comment author's image
+                if (!empty($item['comment_id'])) {
+                    $imgUrl = $item['comment']['user']['profile_img_url']['medium'];
+                } else {
+                    $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+                }
             }
 
             $item['img_url'] = $imgUrl;
