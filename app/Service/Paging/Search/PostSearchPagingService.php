@@ -233,7 +233,7 @@ class PostSearchPagingService extends BaseSearchPagingService
                         "AttachedFile.attached",
                         ['style' => 'x_small']);
                     // OGP image with post
-                } elseif (!empty(Hash::get($item, 'site_photo_file_name'))) {
+                } elseif (!empty(Hash::get($item, 'post.site_photo_file_name'))) {
                     $postForGetImg = [
                         'id'                   => $item['id'],
                         'site_photo_file_name' => $item['post']['site_photo_file_name']
@@ -241,6 +241,9 @@ class PostSearchPagingService extends BaseSearchPagingService
                     $imgUrl = $Upload->uploadUrl($postForGetImg,
                         "Post.site_photo",
                         ['style' => 'small']);
+                } elseif (!empty(Hash::get($item, 'post.site_info'))) {
+                    $siteInfoArray = json_decode($item['post']['site_info'], true);
+                    $imgUrl = Hash::get($siteInfoArray, 'image');
                 }
             }
             // Post creator's profile image
