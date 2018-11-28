@@ -1,60 +1,49 @@
 <?php
-App::uses('ApiController', 'Controller/Api');
-/** @noinspection PhpUndefinedClassInspection */
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Lib/Paging', 'PagingRequest');
+App::import('Service/Paging', 'TeamMemberPagingService');
+App::uses('BaseV1PagingController', 'Controller/Api/V1');
 
 /**
  * Class UsersController
  */
-class UsersController extends ApiController
+class UsersController extends BaseV1PagingController
 {
-
-    /**
-     * Search users
-     * url: GET /api/v1/users/search
-     *
-     * @queryParam int $cursor optional
-     * @queryParam int $limit optional
-     * @queryParam string $keyword optional
-     * @queryParam array $exclude_user_ids optional
-     * @return CakeResponse
-     * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+users
-     *             TODO: This is mock! We have to implement it!
-     */
-    function get_search()
+    public function get_search()
     {
-        $cursor = $this->request->query('cursor');
-        $limit = $this->request->query('limit');
-        $keyword = $this->request->query('keyword');
-        $excludeUserIds = $this->request->query('exclude_user_ids');
+        try {
+            $pagingRequest = $this->getPagingParameters();
 
-        $retMock = [];
-        $retMock['data'] = [
-            [
-                'id'               => 1,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '平形 大樹(Daiki Hirakata)',
-            ],
-            [
-                'id'               => 2,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '佐伯 翔平(Shohei Saeki)',
-            ],
-            [
-                'id'               => 3,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '菊池 厚平(Kohei Kikuchi)',
-            ],
-            [
-                'id'               => 4,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '吉田 将之(Masayuki Yoshida)',
-            ],
-        ];
+            $pagingRequest->addQueriesToCondition(['keyword']);
 
-        $retMock['paging'] = [
-            'next' => "/api/v1/users/search?cursor=11111&limit=10&keyword=hoge",
-        ];
-        return $this->_getResponsePagingSuccess($retMock);
+            if (empty($pagingRequest->getConditions()['keyword'])) {
+                return ErrorResponse::badRequest()->withMessage(__("Please enter text."))->getResponse();
+            }
+
+            $pagingRequest->addCondition(['excluded_ids' => [$this->Auth->user('id')]]);
+            $pagingRequest->addCondition(['lang' => $this->Auth->user('language')]);
+
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var TeamMemberPagingService $TeamMemberPagingService */
+        $TeamMemberPagingService = ClassRegistry::init('TeamMemberPagingService');
+
+        $userList = $TeamMemberPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            $this->getExtensionOptions() ?: $this->getDefaultTeamMemberExtension());
+
+        return ApiResponse::ok()->withBody($userList)->getResponse();
     }
 
+    /**
+     * Default extension option for searching circle
+     *
+     * @return array
+     */
+    private function getDefaultTeamMemberExtension()
+    {
+        return [TeamMemberPagingService::EXTEND_USER];
+    }
 }
