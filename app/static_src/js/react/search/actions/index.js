@@ -72,7 +72,7 @@ function serialize(obj, prefix) {
 function fetchByOldSearchAPI(type, keyword) {
   return axios.get(`/searchs/ajax_get_search_results?` + serialize({
     term: keyword,
-    page_limit: 10,
+    page_limit: 20,
     _: (new Date()).getTime()
   }), { headers: {'x-requested-with': 'XMLHttpRequest'} }).then((response) => {
     return new Promise(function(resolve, reject) {
