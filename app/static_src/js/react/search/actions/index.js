@@ -50,6 +50,50 @@ export function fetchInitialData() {
   }
 }
 
+function isfetchByOldSearchAPI(type) {
+  return type === "users" || type === "circles"
+}
+
+function serialize(obj, prefix) {
+  var str = [],
+    p;
+  for (p in obj) {
+    if (obj.hasOwnProperty(p)) {
+      var k = prefix ? prefix + "[" + p + "]" : p,
+        v = obj[p];
+      str.push((v !== null && typeof v === "object") ?
+        serialize(v, k) :
+        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+    }
+  }
+  return str.join("&");
+}
+
+function fetchByOldSearchAPI(type, keyword) {
+  return axios.get(`/searchs/ajax_get_search_results?` + serialize({
+    term: keyword,
+    page_limit: 10,
+    _: (new Date()).getTime()
+  }), { headers: {'x-requested-with': 'XMLHttpRequest'} }).then((response) => {
+    return new Promise(function(resolve, reject) {
+      const results = response.data["results_" + type].results;
+      const data = results.map(function(v) {
+        return {
+          type: type,
+          id: v.id.split('_')[1],// string is like "goal_11"
+          text: v.text,
+          image: v.image
+        }
+      });
+      resolve({
+        count: results.length,
+        data: data,
+        paging: ""
+      })
+    })
+  })
+}
+
 export function updateKeyword(data) {
   return {
     type: ActionTypes.UPDATE_KEYWORD,
@@ -73,17 +117,31 @@ export function updateFilter(data) {
     queries = querystring.stringify(queries)
     history.pushState(null, "", '?' + queries);
 
-    return axios.get(`/api/v1/posts/search?${queries}`)
-      .then((response) => {
-        const search_result = response.data
-        dispatch({
-          type: ActionTypes.SEARCH,
-          search_conditions,
-          search_result
+    const type = getState().search.search_conditions.type
+    if (isfetchByOldSearchAPI(type)) {
+      fetchByOldSearchAPI(type, getState().search.search_conditions.keyword)
+        .then((data) => {
+          dispatch({
+            type: ActionTypes.SEARCH,
+            search_conditions: search_conditions,
+            search_result: data
+          })
         })
-      })
-      .catch((response) => {
-      })
+        .catch((response) => {
+        })
+    } else {
+      return axios.get(`/api/v1/posts/search?${queries}`)
+        .then((response) => {
+          const search_result = response.data
+          dispatch({
+            type: ActionTypes.SEARCH,
+            search_conditions,
+            search_result
+          })
+        })
+        .catch((response) => {
+        })
+    }
   }
 }
 

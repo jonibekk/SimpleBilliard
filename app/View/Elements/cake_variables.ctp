@@ -707,6 +707,7 @@ App::uses('AttachedFile', 'Model');
             "SAVED ITEMS": "<?= __("SAVED ITEMS") ?>",
             "Actions": "<?= __("Actions") ?>",
             "Posts": "<?= __("Posts") ?>",
+            "Circles": "<?= __("Circles") ?>",
             "Save item": "<?= __("Save item") ?>",
             "Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.": "<?= __("Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved.") ?>",
             "Item not found": "<?= __("Item not found") ?>",
