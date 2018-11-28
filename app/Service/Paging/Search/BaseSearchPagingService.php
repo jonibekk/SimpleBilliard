@@ -2,6 +2,8 @@
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
 
 /**
+ * Base class for searching using elastic search
+ *
  * Created by PhpStorm.
  * User: Stephen Raharja
  * Date: 11/20/2018
