@@ -16,11 +16,20 @@ export default class SearchItems extends React.Component {
     this.props.fetchInitialData()
   }
 
+  componentDidMount() {
+    this.focusInput();
+  }
+
+  focusInput() {
+    ReactDOM.findDOMNode(this.refs.keyword).focus()
+  }
+
   componentWillReceiveProps(nextProps) {
   }
 
   updateFilter(e, key, val) {
     e.preventDefault()
+    this.focusInput();
     this.props.updateFilter({[key]: val})
   }
 
@@ -95,6 +104,8 @@ export default class SearchItems extends React.Component {
     const search_tabs = {
       "circle_post": __("Posts"),
       "action" : __("Actions"),
+      "users" : __("Members"),
+      "circles" : __("Circles"),
     }
     let search_tabs_el = [];
 
