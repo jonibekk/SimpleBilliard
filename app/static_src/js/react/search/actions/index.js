@@ -76,6 +76,14 @@ function fetchByOldSearchAPI(type, keyword) {
     _: (new Date()).getTime()
   }), { headers: {'x-requested-with': 'XMLHttpRequest'} }).then((response) => {
     return new Promise(function(resolve, reject) {
+      if (undefined === response.data["results_" + type]) {
+        resolve({
+          count: 0,
+          data: [],
+          paging: ""
+        })
+        return
+      }
       const results = response.data["results_" + type].results;
       const data = results.map(function(v) {
         return {
