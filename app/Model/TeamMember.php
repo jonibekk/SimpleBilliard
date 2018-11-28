@@ -2355,7 +2355,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $userId,
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => Enum\TeamMember\Status::INVITED()->getValue(),
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::INVITED,
                 'TeamMember.del_flg' => false
             ],
             'fields'     => [
