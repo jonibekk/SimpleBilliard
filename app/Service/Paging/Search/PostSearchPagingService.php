@@ -8,6 +8,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
+App::uses('MentionComponent', 'Controller/Component');
 App::import('Model/Entity', 'PostEntity');
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
 App::uses('TimeExHelper', 'View/Helper');
@@ -20,6 +21,7 @@ App::uses('TimeExHelper', 'View/Helper');
  */
 class PostSearchPagingService extends BaseSearchPagingService
 {
+
     const ES_SEARCH_PARAM_MODEL = 'post';
 
     protected function setCondition(ESPagingRequest $pagingRequest): ESPagingRequest
@@ -83,10 +85,15 @@ class PostSearchPagingService extends BaseSearchPagingService
         $commentData = $this->bulkFetchComment($commentIds);
         $commentData = $this->bulkExtendComment($commentData, $request);
         foreach ($baseData as &$data) {
-            foreach ($commentData as $comment) {
-                if ($data['comment_id'] == $comment['id']) {
-                    $data['comment'] = $comment;
-                    break;
+            if (!empty($data['comment_id'])) {
+                $highlight = $this->convertMention('Comment', $data['id'], $data['highlight']);
+                $item['highlight'] = $highlight;
+
+                foreach ($commentData as $comment) {
+                    if ($data['comment_id'] == $comment['id']) {
+                        $data['comment'] = $comment;
+                        break;
+                    }
                 }
             }
         }
@@ -291,5 +298,37 @@ class PostSearchPagingService extends BaseSearchPagingService
         }
 
         return $rawData;
+    }
+
+    /**
+     * Convert %%%user_x%%% mention in highlight
+     *
+     * @param string $modelName Model name
+     * @param int    $modelId
+     * @param array  $highlight
+     *
+     * @return string
+     */
+    private function convertMention(string $modelName, int $modelId, array $highlight): string
+    {
+        $rawBody = "";
+
+        foreach ($highlight as $string) {
+            $rawBody .= $string;
+        }
+
+        $mentions = [];
+
+        preg_match_all('/%%%[<>\/emrsu_0-9]+%%%/', $rawBody, $mentions);
+
+        foreach ($mentions as $mention) {
+
+            //Remove <em> tags from mention
+            $strippedMention = strip_tags($mention);
+
+            str_replace($mention, $strippedMention, $rawBody);
+        }
+
+        return MentionComponent::appendName($modelName, $modelId, $rawBody);
     }
 }

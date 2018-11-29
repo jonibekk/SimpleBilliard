@@ -79,10 +79,15 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $commentData = $this->bulkFetchComment($commentIds);
         $commentData = $this->bulkExtendComment($commentData, $request);
         foreach ($baseData as &$data) {
-            foreach ($commentData as $comment) {
-                if ($data['comment_id'] == $comment['id']) {
-                    $data['comment'] = $comment;
-                    break;
+            if (!empty($data['comment_id'])) {
+                $highlight = $this->convertMention('Comment', $data['id'], $data['highlight']);
+                $item['highlight'] = $highlight;
+
+                foreach ($commentData as $comment) {
+                    if ($data['comment_id'] == $comment['id']) {
+                        $data['comment'] = $comment;
+                        break;
+                    }
                 }
             }
         }
@@ -197,6 +202,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $teamId = $request->getCondition("team_id");
 
         $actionIds = Hash::extract($rawData, '{n}.post.action_result_id');
+        $commentIds = Hash::extract($rawData, '{n}.comment_id');
 
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -206,21 +212,88 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $attachedImgEachAction = $AttachedFile->findAttachedImgEachAction($teamId, $actionIds);
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
+        $attachedImgEachComment = $AttachedFile->findAttachedImgEachComment($teamId, $commentIds);
+        $attachedImgEachComment = Hash::combine($attachedImgEachComment, '{n}.comment_id', '{n}');
+
         foreach ($rawData as &$item) {
-            $actionId = Hash::get($item, 'post.action_result_id');
-            $attachedImg = Hash::get($attachedImgEachAction, $actionId);
-            $imgUrl = $Upload->uploadUrl($attachedImg,
-                "AttachedFile.attached",
-                ['style' => 'x_small']);
+            if (!empty($item['comment_id'])) {
 
-            // Post creator's profile image
-            if (empty($imgUrl)) {
-                $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+                //If result is comment, use comment's images
+                $commentId = Hash::get($item, 'comment_id');
+                // Attached image with post
+                $attachedImg = Hash::get($attachedImgEachComment, $commentId);
+
+                if (!empty($attachedImg)) {
+                    $imgUrl = $Upload->uploadUrl($attachedImg,
+                        "AttachedFile.attached",
+                        ['style' => 'x_small']);
+                    // OGP image with post
+                } elseif (!empty(Hash::get($item, 'comment.site_photo_file_name'))) {
+                    $postForGetImg = [
+                        'id'                   => $commentId,
+                        'site_photo_file_name' => $item['comment']['site_photo_file_name']
+                    ];
+                    $imgUrl = $Upload->uploadUrl($postForGetImg,
+                        "Comment.site_photo",
+                        ['style' => 'small']);
+                } elseif (!empty(Hash::get($item, 'comment.site_info'))) {
+                    $siteInfoArray = json_decode($item['comment']['site_info'], true);
+                    $imgUrl = Hash::get($siteInfoArray, 'image');
+                }
+
+                // Post creator's profile image
+                if (empty($imgUrl)) {
+                    $imgUrl = $item['comment']['user']['profile_img_url']['medium'];
+                }
+
+            } else {
+                $actionId = Hash::get($item, 'post.action_result_id');
+                $attachedImg = Hash::get($attachedImgEachAction, $actionId);
+                $imgUrl = $Upload->uploadUrl($attachedImg,
+                    "AttachedFile.attached",
+                    ['style' => 'x_small']);
+
+                // Post creator's profile image
+                if (empty($imgUrl)) {
+                    $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+                }
+
+                $item['img_url'] = $imgUrl;
             }
-
-            $item['img_url'] = $imgUrl;
         }
 
         return $rawData;
+    }
+
+    /**
+     * Convert %%%user_x%%% mention in highlight
+     *
+     * @param string $modelName Model name
+     * @param int    $modelId
+     * @param array  $highlight
+     *
+     * @return string
+     */
+    private function convertMention(string $modelName, int $modelId, array $highlight): string
+    {
+        $rawBody = "";
+
+        foreach ($highlight as $string) {
+            $rawBody .= $string;
+        }
+
+        $mentions = [];
+
+        preg_match_all('/%%%[<>\/emrsu_0-9]+%%%/', $rawBody, $mentions);
+
+        foreach ($mentions as $mention) {
+
+            //Remove <em> tags from mention
+            $strippedMention = strip_tags($mention);
+
+            str_replace($mention, $strippedMention, $rawBody);
+        }
+
+        return MentionComponent::appendName($modelName, $modelId, $rawBody);
     }
 }
