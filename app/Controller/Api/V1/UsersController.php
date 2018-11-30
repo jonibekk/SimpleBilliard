@@ -22,6 +22,7 @@ class UsersController extends BaseV1PagingController
             }
 
             $pagingRequest->addCondition(['excluded_ids' => [$this->Auth->user('id')]]);
+            $pagingRequest->addCondition(['lang' => $this->Auth->user('language')]);
 
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();

@@ -50,17 +50,17 @@ class TeamMemberPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
-        $prevLastLogin = $pagingRequest->getPointer('last_login')[2] ?? -1;
+    ): PointerTree
+    {
+        $prevLastLogin = $pagingRequest->getPointer(static::MAIN_MODEL . '.last_login')[2] ?? -1;
 
         if ($lastElement['last_login'] == $headNextElement['last_login'] ||
             $lastElement['last_login'] == $prevLastLogin) {
-            $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
-            $condition = new PointerTree('AND', $orCondition,
-                ['last_login', '<=', $lastElement['last_login']]);
+            $condition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']],
+                [static::MAIN_MODEL . '.last_login', '<=', $lastElement['last_login']]);
             return $condition;
         } else {
-            return new PointerTree(['last_login', '<', $lastElement['last_login']]);
+            return new PointerTree([static::MAIN_MODEL . '.last_login', '<', $lastElement['last_login']]);
         }
     }
 
@@ -124,7 +124,9 @@ class TeamMemberPagingService extends BasePagingService
                     'conditions' => [
                         'TeamMember.user_id = User.id',
                         'User.del_flg' => false,
-                        'User.id != '  => $excludedIds
+                        'NOT'          => [
+                            'User.id' => $excludedIds
+                        ]
                     ]
                 ],
                 [
