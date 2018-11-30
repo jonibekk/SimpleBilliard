@@ -31,7 +31,7 @@ class UsersController extends BaseV1PagingController
         $TeamMemberPagingService = ClassRegistry::init('TeamMemberPagingService');
 
         $userList = $TeamMemberPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
-            $this->getExtensionOptions() ?: $this->getDefaultTeamMemberExtension());
+            $this->getDefaultTeamMemberExtension());
 
         return ApiResponse::ok()->withBody($userList)->getResponse();
     }
@@ -43,6 +43,6 @@ class UsersController extends BaseV1PagingController
      */
     private function getDefaultTeamMemberExtension()
     {
-        return [TeamMemberPagingService::EXTEND_USER];
+        return [TeamMemberPagingService::EXTEND_USER, TeamMemberPagingService::EXTEND_SEARCH];
     }
 }

@@ -25,14 +25,16 @@ class CirclesController extends BaseV1PagingController
 
             $pagingRequest->addQueriesToCondition(['keyword']);
 
+            if (empty($pagingRequest->getConditions()['keyword'])) {
+                return ErrorResponse::badRequest()->withMessage(__("Please enter text."))->getResponse();
+            }
+
             if (empty($pagingRequest->getQuery('joined'))) {
                 //When searching, include not joined public circles by default unless specified
                 $pagingRequest->addCondition(['joined' => 0]);
             }
 
-            if (empty($pagingRequest->getConditions()['keyword'])) {
-                return ErrorResponse::badRequest()->withMessage(__("Please enter text."))->getResponse();
-            }
+            $pagingRequest->addCondition(['pinned' => 0], true);
 
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();

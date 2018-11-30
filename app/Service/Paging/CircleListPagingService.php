@@ -15,9 +15,11 @@ App::uses('CircleMember', 'Model');
  */
 class CircleListPagingService extends BasePagingService
 {
+    const MAIN_MODEL = 'Circle';
+
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
-    const MAIN_MODEL = 'Circle';
+    const EXTEND_SEARCH = 'ext:circle:search';
 
     /**
      * Get all circles and not including with paging data
@@ -234,7 +236,12 @@ class CircleListPagingService extends BasePagingService
 
             $CircleMemberInfoDataExtender->setUserId($userId);
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
-
+        }
+        if ($this->includeExt($options, self::EXTEND_SEARCH)) {
+            foreach ($resultArray as &$result) {
+                $imgUrl = $result['img_url']['medium_large'];
+                $result['img_url'] = $imgUrl;
+            }
         }
     }
 
