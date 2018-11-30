@@ -236,12 +236,10 @@ class ActionSearchPagingService extends BaseSearchPagingService
                     $siteInfoArray = json_decode($item['comment']['site_info'], true);
                     $imgUrl = Hash::get($siteInfoArray, 'image');
                 }
-
                 // Post creator's profile image
                 if (empty($imgUrl)) {
                     $imgUrl = $item['comment']['user']['profile_img_url']['medium'];
                 }
-
             } else {
                 $actionId = Hash::get($item, 'post.action_result_id');
                 $attachedImg = Hash::get($attachedImgEachAction, $actionId);
