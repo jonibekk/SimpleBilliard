@@ -80,9 +80,6 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $commentData = $this->bulkExtendComment($commentData, $request);
         foreach ($baseData as &$data) {
             if (!empty($data['comment_id'])) {
-                $highlight = $this->convertMention('Comment', $data['id'], $data['highlight']);
-                $item['highlight'] = $highlight;
-
                 foreach ($commentData as $comment) {
                     if ($data['comment_id'] == $comment['id']) {
                         $data['comment'] = $comment;
@@ -217,7 +214,6 @@ class ActionSearchPagingService extends BaseSearchPagingService
 
         foreach ($rawData as &$item) {
             if (!empty($item['comment_id'])) {
-
                 //If result is comment, use comment's images
                 $commentId = Hash::get($item, 'comment_id');
                 // Attached image with post
@@ -263,37 +259,5 @@ class ActionSearchPagingService extends BaseSearchPagingService
         }
 
         return $rawData;
-    }
-
-    /**
-     * Convert %%%user_x%%% mention in highlight
-     *
-     * @param string $modelName Model name
-     * @param int    $modelId
-     * @param array  $highlight
-     *
-     * @return string
-     */
-    private function convertMention(string $modelName, int $modelId, array $highlight): string
-    {
-        $rawBody = "";
-
-        foreach ($highlight as $string) {
-            $rawBody .= $string;
-        }
-
-        $mentions = [];
-
-        preg_match_all('/%%%[<>\/emrsu_0-9]+%%%/', $rawBody, $mentions);
-
-        foreach ($mentions as $mention) {
-
-            //Remove <em> tags from mention
-            $strippedMention = strip_tags($mention);
-
-            str_replace($mention, $strippedMention, $rawBody);
-        }
-
-        return MentionComponent::appendName($modelName, $modelId, $rawBody);
     }
 }
