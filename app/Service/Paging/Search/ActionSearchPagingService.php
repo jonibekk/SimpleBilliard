@@ -223,18 +223,6 @@ class ActionSearchPagingService extends BaseSearchPagingService
                     $imgUrl = $Upload->uploadUrl($attachedImg,
                         "AttachedFile.attached",
                         ['style' => 'x_small']);
-                    // OGP image with post
-                } elseif (!empty(Hash::get($item, 'comment.site_photo_file_name'))) {
-                    $postForGetImg = [
-                        'id'                   => $commentId,
-                        'site_photo_file_name' => $item['comment']['site_photo_file_name']
-                    ];
-                    $imgUrl = $Upload->uploadUrl($postForGetImg,
-                        "Comment.site_photo",
-                        ['style' => 'small']);
-                } elseif (!empty(Hash::get($item, 'comment.site_info'))) {
-                    $siteInfoArray = json_decode($item['comment']['site_info'], true);
-                    $imgUrl = Hash::get($siteInfoArray, 'image');
                 }
                 // Comment creator's profile image
                 if (empty($imgUrl)) {

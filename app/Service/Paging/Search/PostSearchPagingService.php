@@ -8,7 +8,6 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Lib/DataExtender', 'UserDataExtender');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
-App::uses('MentionComponent', 'Controller/Component');
 App::import('Model/Entity', 'PostEntity');
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
 App::uses('TimeExHelper', 'View/Helper');
@@ -21,7 +20,6 @@ App::uses('TimeExHelper', 'View/Helper');
  */
 class PostSearchPagingService extends BaseSearchPagingService
 {
-
     const ES_SEARCH_PARAM_MODEL = 'post';
 
     protected function setCondition(ESPagingRequest $pagingRequest): ESPagingRequest
