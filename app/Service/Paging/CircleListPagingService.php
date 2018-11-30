@@ -240,6 +240,7 @@ class CircleListPagingService extends BasePagingService
         if ($this->includeExt($options, self::EXTEND_SEARCH)) {
             foreach ($resultArray as &$result) {
                 $imgUrl = $result['img_url']['medium_large'];
+                unset($result['img_url']);
                 $result['img_url'] = $imgUrl;
             }
         }

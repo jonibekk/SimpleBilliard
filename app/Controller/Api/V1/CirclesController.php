@@ -34,6 +34,7 @@ class CirclesController extends BaseV1PagingController
                 $pagingRequest->addCondition(['joined' => 0]);
             }
 
+            //Always set pinned option to false when searching
             $pagingRequest->addCondition(['pinned' => 0], true);
 
         } catch (Exception $e) {
@@ -56,6 +57,6 @@ class CirclesController extends BaseV1PagingController
      */
     private function getDefaultCircleExtension()
     {
-        return [CircleListPagingService::EXTEND_MEMBER_INFO];
+        return [CircleListPagingService::EXTEND_MEMBER_INFO, CircleListPagingService::EXTEND_SEARCH];
     }
 }
