@@ -79,10 +79,12 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $commentData = $this->bulkFetchComment($commentIds);
         $commentData = $this->bulkExtendComment($commentData, $request);
         foreach ($baseData as &$data) {
-            foreach ($commentData as $comment) {
-                if ($data['comment_id'] == $comment['id']) {
-                    $data['comment'] = $comment;
-                    break;
+            if (!empty($data['comment_id'])) {
+                foreach ($commentData as $comment) {
+                    if ($data['comment_id'] == $comment['id']) {
+                        $data['comment'] = $comment;
+                        break;
+                    }
                 }
             }
         }
@@ -197,6 +199,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $teamId = $request->getCondition("team_id");
 
         $actionIds = Hash::extract($rawData, '{n}.post.action_result_id');
+        $commentIds = Hash::extract($rawData, '{n}.comment_id');
 
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -206,16 +209,36 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $attachedImgEachAction = $AttachedFile->findAttachedImgEachAction($teamId, $actionIds);
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
-        foreach ($rawData as &$item) {
-            $actionId = Hash::get($item, 'post.action_result_id');
-            $attachedImg = Hash::get($attachedImgEachAction, $actionId);
-            $imgUrl = $Upload->uploadUrl($attachedImg,
-                "AttachedFile.attached",
-                ['style' => 'x_small']);
+        $attachedImgEachComment = $AttachedFile->findAttachedImgEachComment($teamId, $commentIds);
+        $attachedImgEachComment = Hash::combine($attachedImgEachComment, '{n}.comment_id', '{n}');
 
-            // Post creator's profile image
-            if (empty($imgUrl)) {
-                $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+        foreach ($rawData as &$item) {
+            if (!empty($item['comment_id'])) {
+                //If result is comment, use comment's images
+                $commentId = Hash::get($item, 'comment_id');
+                // Attached image with post
+                $attachedImg = Hash::get($attachedImgEachComment, $commentId);
+
+                if (!empty($attachedImg)) {
+                    $imgUrl = $Upload->uploadUrl($attachedImg,
+                        "AttachedFile.attached",
+                        ['style' => 'x_small']);
+                }
+                // Comment creator's profile image
+                if (empty($imgUrl)) {
+                    $imgUrl = $item['comment']['user']['profile_img_url']['medium'];
+                }
+            } else {
+                $actionId = Hash::get($item, 'post.action_result_id');
+                $attachedImg = Hash::get($attachedImgEachAction, $actionId);
+                $imgUrl = $Upload->uploadUrl($attachedImg,
+                    "AttachedFile.attached",
+                    ['style' => 'x_small']);
+
+                // Post creator's profile image
+                if (empty($imgUrl)) {
+                    $imgUrl = $item['post']['user']['profile_img_url']['medium'];
+                }
             }
 
             $item['img_url'] = $imgUrl;

@@ -83,10 +83,12 @@ class PostSearchPagingService extends BaseSearchPagingService
         $commentData = $this->bulkFetchComment($commentIds);
         $commentData = $this->bulkExtendComment($commentData, $request);
         foreach ($baseData as &$data) {
-            foreach ($commentData as $comment) {
-                if ($data['comment_id'] == $comment['id']) {
-                    $data['comment'] = $comment;
-                    break;
+            if (!empty($data['comment_id'])) {
+                foreach ($commentData as $comment) {
+                    if ($data['comment_id'] == $comment['id']) {
+                        $data['comment'] = $comment;
+                        break;
+                    }
                 }
             }
         }
