@@ -14,6 +14,7 @@ App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
+App::import('Lib/DataExtender', 'CommentExtender');
 
 /**
  * Created by PhpStorm.
@@ -431,8 +432,10 @@ class PostsController extends BasePagingController
         $commentBody['site_info'] = Hash::get($requestBody, 'site_info');
         $fileIDs = Hash::get($requestBody, 'file_ids', []);
 
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
         try {
-            $res = $CommentService->add($commentBody, $postId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            $res = $CommentService->add($commentBody, $postId, $userId, $teamId, $fileIDs);
             $this->notifyNewComment($res['id'], $postId, $this->getUserId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
@@ -443,7 +446,12 @@ class PostsController extends BasePagingController
                 ->getResponse();
         }
 
-        return ApiResponse::ok()->withData($res->toArray())->getResponse();
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+        $comment = $res->toArray();
+        $comment = $CommentExtender->extend($comment, $userId, $teamId, [CommentExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withData($comment)->getResponse();
     }
 
     /**
