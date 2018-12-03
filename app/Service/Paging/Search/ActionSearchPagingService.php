@@ -37,7 +37,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
 
         $query = $pagingRequest->getCondition('keyword');
 
-        $teamId = $pagingRequest->getCondition('team_id');
+        $teamId = $pagingRequest->getTempCondition('team_id');
 
         $params[static::ES_SEARCH_PARAM_MODEL] = [
             'pn'        => intval($pagingRequest->getCondition('pn')),
@@ -46,14 +46,6 @@ class ActionSearchPagingService extends BaseSearchPagingService
         ];
 
         return $ESClient->search($query, $teamId, $params);
-    }
-
-    protected function createPointer(ESPagingRequest $params): string
-    {
-        $currentPage = $params->getCondition('pn');
-        $params->addCondition('pn', $currentPage + 1, true);
-
-        return $params->getBase64();
     }
 
     protected function extendData(array $baseData, ESPagingRequest $request): array
@@ -194,7 +186,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
      */
     private function extendImage(array $rawData, ESPagingRequest $request): array
     {
-        $teamId = $request->getCondition("team_id");
+        $teamId = $request->getTempCondition("team_id");
 
         $actionIds = Hash::extract($rawData, '{n}.post.action_result_id');
 

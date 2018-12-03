@@ -3,7 +3,6 @@ App::import('Lib/ElasticSearch', 'ESPagingRequest');
 
 /**
  * Base class for searching using elastic search
- *
  * Created by PhpStorm.
  * User: Stephen Raharja
  * Date: 11/20/2018
@@ -101,7 +100,13 @@ abstract class BaseSearchPagingService
      *
      * @return string
      */
-    abstract protected function createPointer(ESPagingRequest $params): string;
+    protected function createPointer(ESPagingRequest $params): string
+    {
+        $currentPage = $params->getCondition('pn');
+        $params->addCondition('pn', $currentPage + 1, true);
+
+        return $params->getBase64();
+    }
 
     /**
      * Extend search data

@@ -19,7 +19,6 @@ class CircleListPagingService extends BasePagingService
 
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
-    const EXTEND_SEARCH = 'ext:circle:search';
 
     /**
      * Get all circles and not including with paging data
@@ -97,11 +96,6 @@ class CircleListPagingService extends BasePagingService
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', false));
         if ($publicOnlyFlag === true) {
             $searchConditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
-        }
-
-        $keyword = trim(Hash::get($conditions, 'keyword', ""));
-        if (!empty($keyword)) {
-            $searchConditions['conditions']['Circle.name like '] = $keyword . '%';
         }
 
         /* filter pinned  */
@@ -236,13 +230,6 @@ class CircleListPagingService extends BasePagingService
 
             $CircleMemberInfoDataExtender->setUserId($userId);
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
-        }
-        if ($this->includeExt($options, self::EXTEND_SEARCH)) {
-            foreach ($resultArray as &$result) {
-                $imgUrl = $result['img_url']['medium_large'];
-                unset($result['img_url']);
-                $result['img_url'] = $imgUrl;
-            }
         }
     }
 

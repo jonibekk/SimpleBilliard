@@ -18,7 +18,6 @@ class TeamMemberPagingService extends BasePagingService
     const MAIN_MODEL = "TeamMember";
     const EXTEND_ALL = "ext:team_member:all";
     const EXTEND_USER = "ext:team_member:user";
-    const EXTEND_SEARCH = "ext:team_member:search";
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -66,20 +65,10 @@ class TeamMemberPagingService extends BasePagingService
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
-        // If extended for search result, must include user extension
-        if (in_array(self::EXTEND_SEARCH, $options)) {
-            $options[] = self::EXTEND_USER;
-        }
         if ($this->includeExt($options, self::EXTEND_USER)) {
             /** @var UserDataExtender $UserDataExtender */
             $UserDataExtender = ClassRegistry::init('UserDataExtender');
             $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
-        if ($this->includeExt($options, self::EXTEND_SEARCH)) {
-            foreach ($resultArray as &$result) {
-                $result['display_name'] = $result['user']['display_username'] . ' (' . $result['user']['roman_username'] . ')';
-                $result['img_url'] = $result['user']['profile_img_url']['medium_large'];
-            }
         }
     }
 
