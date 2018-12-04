@@ -123,7 +123,6 @@ class FilesController extends BaseApiController
     {
         if (empty($file) || !is_array($file)) {
             return ErrorResponse::badRequest()
-                ->withMessage(__('validation failed'))
                 ->getResponse();
         }
 

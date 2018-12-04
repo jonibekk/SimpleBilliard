@@ -92,7 +92,7 @@ abstract class BaseApiController extends Controller
         if (!$this->_checkSkipAuthentication($this->request)) {
 
             if (empty($this->_jwtToken)) {
-                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Please log in.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->getResponse();
                 return;
             }
 
@@ -104,7 +104,7 @@ abstract class BaseApiController extends Controller
             }
 
             if (!$userAuthentication) {
-                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Please log in.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->getResponse();
                 return;
             }
 
@@ -160,7 +160,6 @@ abstract class BaseApiController extends Controller
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
-                ->withMessage(__('validation failed'))
                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
@@ -373,7 +372,7 @@ abstract class BaseApiController extends Controller
                 'trace' => $throwable->getTraceAsString(),
             ]);
             return ErrorResponse::internalServerError()
-                ->withMessage('internal server error')
+                ->withMessage()
                 ->withException($throwable)
                 ->getResponse();
         }

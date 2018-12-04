@@ -5446,9 +5446,6 @@ msgstr ""
 msgid "Error, data conflicted."
 msgstr ""
 
-msgid "validation failed"
-msgstr "入力内容に誤りがあります。"
-
 msgid "Session doesn't exist"
 msgstr "セッションが存在しません。"
 
