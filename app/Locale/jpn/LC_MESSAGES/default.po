@@ -795,9 +795,6 @@ msgstr "新しいリカバリコードを生成しました。"
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
 
-msgid "You should be logged in."
-msgstr "ログインが必要です。"
-
 msgid "You cannot use service on the team."
 msgstr "このチームは現在、利用できません。"
 
@@ -5446,13 +5443,10 @@ msgstr "ここではメンションできません。"
 msgid "4"
 msgstr ""
 
-msgid "Please enter some text."
+msgid "This is a required field."
 msgstr "なにかテキストを入力してください。"
 
 msgid "Error, data conflicted."
-msgstr ""
-
-msgid "password and email did not match"
 msgstr ""
 
 msgid "validation failed"
@@ -5461,7 +5455,7 @@ msgstr "データの検証に失敗しました。"
 msgid "Session doesn't exist"
 msgstr "ゴールが存在しません。"
 
-msgid "Missing token."
+msgid "Please log in."
 msgstr ""
 
 msgid "You already joined to this circle."

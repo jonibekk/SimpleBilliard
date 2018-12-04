@@ -1082,7 +1082,7 @@
                   "$ref" : "#/components/schemas/Response.Error"
                 },
                 "example" : {
-                  "message" : "You should be logged in.",
+                  "message" : "Please log in.",
                   "errors" : [ ]
                 }
               }

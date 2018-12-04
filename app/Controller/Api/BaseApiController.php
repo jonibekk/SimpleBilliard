@@ -92,7 +92,7 @@ abstract class BaseApiController extends Controller
         if (!$this->_checkSkipAuthentication($this->request)) {
 
             if (empty($this->_jwtToken)) {
-                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Missing token.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Please log in.'))->getResponse();
                 return;
             }
 
@@ -104,7 +104,7 @@ abstract class BaseApiController extends Controller
             }
 
             if (!$userAuthentication) {
-                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('You should be logged in.'))->getResponse();
+                $this->_beforeFilterResponse = ErrorResponse::unauthorized()->withMessage(__('Please log in.'))->getResponse();
                 return;
             }
 
