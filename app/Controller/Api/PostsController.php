@@ -119,9 +119,7 @@ class PostsController extends BasePagingController
     private function getDefaultCommentsExtension()
     {
         return [
-            CommentExtender::EXTEND_USER,
-            CommentExtender::EXTEND_LIKE,
-            CommentExtender::EXTEND_READ,
+            CommentExtender::EXTEND_ALL
         ];
     }
 
