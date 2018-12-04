@@ -90,7 +90,38 @@ class ErrorResponse extends BaseApiResponse
     public function __construct(int $httpCode)
     {
         parent::__construct($httpCode);
-        $this->_responseBody['message'] = '';
+        $this->setDefaultMessageByStatusCode($httpCode);
+    }
+
+    /**
+     * Set default response message
+     * ※ Can overwrite message by parent::withMessage method
+     * @param int $httpCode
+     */
+    protected function setDefaultMessageByStatusCode(int $httpCode)
+    {
+        switch ($httpCode) {
+            case self::RESPONSE_BAD_REQUEST:
+                $this->_responseBody['message'] = __('Validation failed.');
+                break;
+            case self::RESPONSE_UNAUTHORIZED:
+                $this->_responseBody['message'] = __('Please log in.');
+                break;
+            case self::RESPONSE_FORBIDDEN:
+                $this->_responseBody['message'] = __('You have no permission.');
+                break;
+            case self::RESPONSE_NOT_FOUND:
+                $this->_responseBody['message'] = "";
+                break;
+            case self::RESPONSE_RESOURCE_CONFLICT:
+                $this->_responseBody['message'] = "";
+                break;
+            case self::RESPONSE_INTERNAL_SERVER_ERROR:
+                $this->_responseBody['message'] = __('Server error occurred. We apologize for the inconvenience. Please try again.');
+                break;
+            default:
+                $this->_responseBody['message'] = "The requested resource could not be found.";
+        }
     }
 
     /**

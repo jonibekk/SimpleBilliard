@@ -795,9 +795,6 @@ msgstr "新しいリカバリコードを生成しました。"
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
 
-msgid "You should be logged in."
-msgstr "ログインが必要です。"
-
 msgid "You cannot use service on the team."
 msgstr "このチームは現在、利用できません。"
 
@@ -5446,23 +5443,11 @@ msgstr "ここではメンションできません。"
 msgid "4"
 msgstr ""
 
-msgid "Please enter some text."
-msgstr "なにかテキストを入力してください。"
-
 msgid "Error, data conflicted."
 msgstr ""
 
-msgid "password and email did not match"
-msgstr ""
-
-msgid "validation failed"
-msgstr "データの検証に失敗しました。"
-
 msgid "Session doesn't exist"
-msgstr "ゴールが存在しません。"
-
-msgid "Missing token."
-msgstr ""
+msgstr "セッションが存在しません。"
 
 msgid "You already joined to this circle."
 msgstr "あなたはすでにこのサークルに参加しています。"
@@ -5574,3 +5559,9 @@ msgstr "チームが削除されました"
 
 msgid "%s in Goalous has been deleted because the usage expiration date has passed. After that, you can not use by that team."
 msgstr "利用期限を過ぎましたので、Goalous内のチーム「%s」が削除されました。以後、そのチームで利用することはできません。"
+
+msgid "This is a required field."
+msgstr "この項目は必須です。"
+
+msgid "Please log in."
+msgstr "ログインしてください。"

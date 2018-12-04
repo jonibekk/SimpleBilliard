@@ -22,19 +22,19 @@ class ErrorResponseTest extends GoalousTestCase
 
     function test_simpleError()
     {
-        $response = (new ErrorResponse(ErrorResponse::RESPONSE_BAD_REQUEST))
+        $response = (new ErrorResponse(ErrorResponse::RESPONSE_INTERNAL_SERVER_ERROR))
             ->getResponse();
 
         $this->assertSame(
             json_encode([
-                'message' => '',
+                'message' => __('Server error occurred. We apologize for the inconvenience. Please try again.'),
                 'errors' => []
             ]),
             $response->body()
         );
 
         $this->assertSame(
-            ErrorResponse::RESPONSE_BAD_REQUEST,
+            ErrorResponse::RESPONSE_INTERNAL_SERVER_ERROR,
             $response->statusCode()
         );
     }
@@ -63,7 +63,7 @@ class ErrorResponseTest extends GoalousTestCase
 
         $this->assertSame(
             json_encode([
-                'message' => __METHOD__,
+                'message' => __('Validation failed.'),
                 'errors' => [
                     [
                         'type' => Enum\Network\Response\ErrorType::GLOBAL,
@@ -84,7 +84,7 @@ class ErrorResponseTest extends GoalousTestCase
 
         $this->assertSame(
             json_encode([
-                'message' => $errorMessage1,
+                'message' => __('Validation failed.'),
                 'errors' => [
                     [
                         'type' => Enum\Network\Response\ErrorType::GLOBAL,

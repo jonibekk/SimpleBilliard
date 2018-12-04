@@ -45,7 +45,7 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                                ->withError(new ErrorTypeGlobal(__('password and email did not match')))
+                                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
                                 ->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency('user failed to login', [
@@ -129,7 +129,6 @@ class AuthController extends BaseApiController
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                                 ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
                                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
@@ -162,7 +161,6 @@ class AuthController extends BaseApiController
         $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $this->Session->id());
         if (empty($token)) {
             return ErrorResponse::badRequest()
-                ->withMessage(__('validation failed'))
                 ->getResponse();
         }
         $data = $this->_getAuthUserInfo($token, $user['id']);
