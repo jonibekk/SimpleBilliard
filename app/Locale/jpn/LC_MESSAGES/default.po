@@ -5443,20 +5443,14 @@ msgstr "ここではメンションできません。"
 msgid "4"
 msgstr ""
 
-msgid "This is a required field."
-msgstr "なにかテキストを入力してください。"
-
 msgid "Error, data conflicted."
 msgstr ""
 
 msgid "validation failed"
-msgstr "データの検証に失敗しました。"
+msgstr "入力内容に誤りがあります。"
 
 msgid "Session doesn't exist"
-msgstr "ゴールが存在しません。"
-
-msgid "Please log in."
-msgstr ""
+msgstr "セッションが存在しません。"
 
 msgid "You already joined to this circle."
 msgstr "あなたはすでにこのサークルに参加しています。"
@@ -5568,3 +5562,9 @@ msgstr "チームが削除されました"
 
 msgid "%s in Goalous has been deleted because the usage expiration date has passed. After that, you can not use by that team."
 msgstr "利用期限を過ぎましたので、Goalous内のチーム「%s」が削除されました。以後、そのチームで利用することはできません。"
+
+msgid "This is a required field."
+msgstr "この項目は必須です。"
+
+msgid "Please log in."
+msgstr "ログインしてください。"
