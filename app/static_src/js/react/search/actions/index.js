@@ -24,36 +24,6 @@ export function update(data) {
   }
 }
 
-export function fetchInitialData() {
-  return (dispatch) => {
-    dispatch({
-      type: ActionTypes.LOADING,
-    })
-    //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
-    return axios.get(`/api/v1/posts/search` + location.search)
-      .then((response) => {
-        let data = response.data
-        const search_params = new URLSearchParams(location.search);
-        let search_conditions = {
-          type: search_params.get('type'),
-          keyword: search_params.get('keyword'),
-        };
-
-        dispatch({
-          type: ActionTypes.FETCH_INITIAL_DATA,
-          data,
-          search_conditions
-        })
-      })
-      .catch((response) => {
-      })
-  }
-}
-
-function isfetchByOldSearchAPI(type) {
-  return type === "users" || type === "circles"
-}
-
 function serialize(obj, prefix) {
   var str = [],
     p;
@@ -69,37 +39,39 @@ function serialize(obj, prefix) {
   return str.join("&");
 }
 
-function fetchByOldSearchAPI(type, keyword) {
-  return axios.get(`/searchs/ajax_get_search_results?` + serialize({
-    term: keyword,
-    page_limit: 20,
-    _: (new Date()).getTime()
-  }), { headers: {'x-requested-with': 'XMLHttpRequest'} }).then((response) => {
-    return new Promise(function(resolve, reject) {
-      if (undefined === response.data["results_" + type]) {
-        resolve({
-          count: 0,
-          data: [],
-          paging: ""
-        })
-        return
-      }
-      const results = response.data["results_" + type].results;
-      const data = results.map(function(v) {
-        return {
-          type: type,
-          id: v.id.split('_')[1],// string is like "goal_11"
-          text: v.text,
-          image: v.image
-        }
-      });
-      resolve({
-        count: results.length,
-        data: data,
-        paging: ""
-      })
-    })
-  })
+function createFetchInitial(type, keyword) {
+  const limit = 5;
+  switch (type) {
+    case "circle_post":
+    case "action":
+      return axios.get(`/api/v1/posts/search?` + serialize({
+        keyword,
+        type,
+        limit
+      }));
+    case "users":
+      return axios.get(`/api/v1/users/search?` + serialize({
+        keyword,
+        limit
+      }));
+    case "circles":
+      return axios.get(`/api/v1/circles/search?` + serialize({
+        keyword,
+        limit
+      }));
+  }
+}
+
+function createFetchMore(type, cursor) {
+  switch (type) {
+    case "circle_post":
+    case "action":
+      return axios.get(`/api/v1/posts/search?cursor=` + cursor);
+    case "users":
+      return axios.get(`/api/v1/users/search?cursor=` + cursor);
+    case "circles":
+      return axios.get(`/api/v1/circles/search?cursor=` + cursor);
+  }
 }
 
 export function updateKeyword(data) {
@@ -126,39 +98,36 @@ export function updateFilter(data) {
     history.pushState(null, "", '?' + queries);
 
     const type = getState().search.search_conditions.type
-    if (isfetchByOldSearchAPI(type)) {
-      fetchByOldSearchAPI(type, getState().search.search_conditions.keyword)
-        .then((data) => {
-          dispatch({
-            type: ActionTypes.SEARCH,
-            search_conditions: search_conditions,
-            search_result: data
-          })
+    const keyword = getState().search.search_conditions.keyword
+    return createFetchInitial(type, keyword)
+      .then((response) => {
+        const search_result = response.data
+        dispatch({
+          type: ActionTypes.SEARCH,
+          search_conditions,
+          search_result
         })
-        .catch((response) => {
+      })
+      .catch((response) => {
+        dispatch({
+          type: ActionTypes.SEARCH,
+          search_conditions: search_conditions,
+          search_result: {
+            data: [],
+            count: 0,
+            paging: ""
+          }
         })
-    } else {
-      return axios.get(`/api/v1/posts/search?${queries}`)
-        .then((response) => {
-          const search_result = response.data
-          dispatch({
-            type: ActionTypes.SEARCH,
-            search_conditions,
-            search_result
-          })
-        })
-        .catch((response) => {
-        })
-    }
+      })
   }
 }
 
-export function fetchMoreResults(cursor) {
+export function fetchMoreResults(param) {
   return (dispatch, getState) => {
     dispatch({
       type: ActionTypes.LOADING_MORE,
     })
-    return axios.get(`/api/v1/posts/search?cursor=${cursor}`)
+    return createFetchMore(param.type, param.cursor)
       .then((response) => {
         const search_result = response.data
         dispatch({
@@ -167,6 +136,13 @@ export function fetchMoreResults(cursor) {
         })
       })
       .catch((response) => {
+        dispatch({
+          type: ActionTypes.FETCH_MORE_RESULTS,
+          search_result: {
+            data: [],
+            paging: ""
+          }
+        })
       })
   }
 }

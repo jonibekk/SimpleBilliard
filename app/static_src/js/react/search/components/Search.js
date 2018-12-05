@@ -13,7 +13,6 @@ export default class SearchItems extends React.Component {
   }
 
   componentWillMount() {
-    this.props.fetchInitialData()
   }
 
   componentDidMount() {
@@ -46,19 +45,20 @@ export default class SearchItems extends React.Component {
 
   fetchMoreResults() {
     const {search_result} = this.props.search
+    const type = this.props.search.search_conditions.type
     const cursor = search_result.paging
     if (!cursor) {
       return
     }
-    this.props.fetchMoreResults(cursor)
-
+    this.props.fetchMoreResults({type, cursor})
   }
 
   renderSearchItems(items) {
-    let uid = this.makeRandomStr()
+    const type = this.props.search.search_conditions.type
     return items.map((item) => {
+      const uid = this.makeRandomStr()
       return (
-        <SearchItem item={item} key={`${uid}-${item.id}-${item.comment_id}`}/>
+        <SearchItem item={item} type={type} key={`${uid}`}/>
       )
     })
   }

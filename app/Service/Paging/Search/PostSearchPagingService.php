@@ -92,9 +92,9 @@ class PostSearchPagingService extends BaseSearchPagingService
         $TimeEx = new TimeExHelper(new View());
         foreach ($baseData as &$data) {
             if (empty($data['comment_id'])) {
-                $data['display_created'] = $TimeEx->elapsedTime($data['post']['created'], 'normal', false);
+                $data['display_created'] = $TimeEx->elapsedTime($data['post']['created'], 'rough', false);
             } else {
-                $data['display_created'] = $TimeEx->elapsedTime($data['comment']['created'], 'normal', false);
+                $data['display_created'] = $TimeEx->elapsedTime($data['comment']['created'], 'rough', false);
             }
         }
 

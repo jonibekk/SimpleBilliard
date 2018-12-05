@@ -6,7 +6,7 @@ class SearchItem extends React.Component {
     super(props);
   }
 
-  renderFromSearchAPI(item) {
+  renderPostOrAction(item) {
     let username = '';
     let type_icon = '';
     let type_name = '';
@@ -47,23 +47,31 @@ class SearchItem extends React.Component {
     )
   }
 
-  renderFromOldSearch(item) {
-    let type = item.type
-    let url = ""
-    if (type === "circles") {
-      url = "/circle_feed/" + item.id
-    } else {
-      url = "/users/view_goals/user_id:" + item.id
-    }
+  renderCircle(item) {
     return (
       <div className="searchPage-item">
-        <a className="searchPage-item-link saved-item-click-target" href={url} target="_blank">
+        <a className="searchPage-item-link saved-item-click-target" href={"/circle_feed/" + item.id} target="_blank">
           <div className="searchPage-item-imgWrapper">
-            <img src={item.image} className="lazy"/>
+            <img src={item.img_url} className="lazy"/>
           </div>
           <div className="searchPage-item-main">
             <div className="searchPage-item-main-body">
-              {item.text}
+              {item.circle.name}
+            </div>
+            <div className="searchPage-item-main-footer">
+              <div className="searchPage-item-main-footer-left">
+                <span className="mr_8px">
+                  <i className={`fa mr_2px fa-user`}></i>
+                  {item.circle.circle_member_count}
+                </span>
+                <span className="mr_8px">
+                  <i className={`fa mr_2px ${item.circle.public_flg ? "fa-unlock" : "fa-lock"}`}></i>
+                  {item.circle.public_flg ? cake.word.public : cake.word.secret }
+                </span>
+              </div>
+              <div className="searchPage-item-main-footer-right">
+                <span>{item.display_last_post_created}</span>
+              </div>
             </div>
           </div>
         </a>
@@ -71,16 +79,51 @@ class SearchItem extends React.Component {
     )
   }
 
+  renderUser(item) {
+    const inactiveCssClass = !item.is_active ? " searchPage-item-link-inactive" : "";
+    return (
+      <div className="searchPage-item">
+        <a
+          className={"searchPage-item-link saved-item-click-target" + inactiveCssClass}
+          href={"/users/view_goals/user_id:" + item.id} target="_blank">
+          <div className="searchPage-item-imgWrapper">
+            <img src={item.img_url} className="lazy"/>
+          </div>
+          <div className="searchPage-item-main">
+            <div className="searchPage-item-main-body">
+              {item.user.display_username}
+            </div>
+          </div>
+        </a>
+      </div>
+    )
+  }
+
+  dateFormat(timestamp) {
+    const d = new Date(timestamp * 1000)
+    if (cake.lang === "jpn") {
+      return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+    }
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    return monthNames[d.getMonth()] + " " + d.getDate() + " " + d.getFullYear();
+  }
+
   render() {
-    const {item} = this.props
+    const {item, type} = this.props
     if (!item) {
       return null;
     }
 
-    if (!item.type) {
-      return this.renderFromSearchAPI(item);
-    } else {
-      return this.renderFromOldSearch(item);
+    switch (type) {
+      case "circle_post":
+      case "action":
+        return this.renderPostOrAction(item);
+      case "users":
+        return this.renderUser(item);
+      case "circles":
+        return this.renderCircle(item);
     }
   }
 }
