@@ -4,6 +4,7 @@ App::uses('UserAgent', 'Request');
 App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
+App::uses('Device', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -19,22 +20,25 @@ use Goalous\Enum as Enum;
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.Controller
  * @since         CakePHP(tm) v 0.2.9
- * @property SessionComponent   $Session
- * @property SecurityComponent  $Security
- * @property AuthComponent      $Auth
- * @property NotifyBizComponent $NotifyBiz
- * @property GlEmailComponent   $GlEmail
- * @property MixpanelComponent  $Mixpanel
- * @property LangComponent      $Lang
- * @property User               $User
- * @property Post               $Post
- * @property Goal               $Goal
- * @property Team               $Team
- * @property GlRedis            $GlRedis
+ * @property SessionComponent      $Session
+ * @property SecurityComponent     $Security
+ * @property AuthComponent         $Auth
+ * @property CookieComponent       $Cookie
+ * @property NotifyBizComponent    $NotifyBiz
+ * @property NotificationComponent $Notification
+ * @property GlEmailComponent      $GlEmail
+ * @property MixpanelComponent     $Mixpanel
+ * @property LangComponent         $Lang
+ * @property User                  $User
+ * @property Post                  $Post
+ * @property Goal                  $Goal
+ * @property Team                  $Team
+ * @property GlRedis               $GlRedis
  */
 class BaseController extends Controller
 {
     public $components = [
+        'Cookie',
         'Session',
         'Security' => [
             'csrfUseOnce' => false,
@@ -159,6 +163,18 @@ class BaseController extends Controller
         ],
     ];
 
+    /**
+     * List of pages to be ignored from forced redirection to team creation page.
+     *
+     * @var array
+     */
+    protected $ignoreForcedTeamCreation = [
+        'teams/add',
+        'users/logout',
+        'privacy_policy',
+        'terms'
+    ];
+
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
@@ -173,18 +189,60 @@ class BaseController extends Controller
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
+
+            //Check from DB whether user is deleted
+            $condition = [
+                'conditions' => [
+                    'User.id'      => $this->my_uid,
+                    'User.del_flg' => false
+                ],
+                'fields'     => [
+                    'User.id'
+                ]
+            ];
+            //If user is deleted, delete session & user cache, and redirect to login page
+            if (empty($this->User->find('first', $condition))) {
+                $logoutRedirect = $this->logoutProcess();
+                GoalousLog::info("User is deleted. Redirecting", [
+                    "user.id" => $this->my_uid,
+                ]);
+                $this->Notification->outError(__("This user does not exist."));
+                $this->redirect($logoutRedirect);
+            }
+            //Detect inconsistent data that current team id is empty.
             $sesId = $this->Session->id();
             // GL-7364：Enable to keep login status between old Goalous and new Goalous
             $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
             if (empty($mapSesAndJwt)) {
                 $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
             }
-
-            // TODO: Delete these lines after we fixed processing to update `default_team_id` when activate user
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
-                GoalousLog::emergency("Current team id is empty", ['user_id' => $this->my_uid]);
-                $this->redirect($this->Auth->logout());
+                //If user doesn't have other team, redirect to create team page
+                GoalousLog::info("User $this->my_uid is not active in any team");
+                $this->Session->write('user_has_no_team', true);
+            } elseif (!empty($this->current_team_id)) {
+                $this->Session->delete('user_has_no_team');
+                //If the team no longer exists or user becomes inactive, force logout.
+                //This simplifies process flow, since auto-team changes happens after login
+                //However, ignore this step if user is being invited since user's team_member won't be active yet
+                if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
+                    empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id, false))) {
+                    $this->Session->delete('user_has_no_team');
+                    $this->User->updateDefaultTeam(null, true, $this->my_uid);
+                    $logoutRedirect = $this->logoutProcess();
+                    $this->Notification->outInfo(__("Logged out because the team you logged in is deleted."));
+                    GoalousLog::info("Team is deleted. Redirecting", [
+                        "user.id" => $this->my_uid,
+                    ]);
+                    $this->redirect($logoutRedirect);
+                }
+            }
+            if ($this->Session->read('user_has_no_team') && !in_array($this->request->url,
+                    $this->ignoreForcedTeamCreation)) {
+                //If user tries to access other page, force redirect to team creation page
+                $this->Notification->outInfo(__("You need to create a team before using Goalous."));
+                $this->redirect(['controller' => 'teams', 'action' => 'add']);
             }
             $this->_setTeamStatus();
         }
@@ -475,5 +533,33 @@ class BaseController extends Controller
             return false;
         }
         return $this->Team->TeamMember->isActiveAdmin($userId, $teamId);
+    }
+
+    /**
+     * Logout process.
+     */
+    protected function logoutProcess()
+    {
+        // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
+        // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
+        $installationId = $this->Session->read('installationId');
+        if ($installationId) {
+            /** @var Device $Device */
+            $Device = ClassRegistry::init('Device');
+            $Device->softDeleteAll([
+                'Device.installation_id' => $installationId,
+            ], false);
+        }
+
+        foreach ($this->Session->read() as $key => $val) {
+            if (in_array($key, ['Config', '_Token', 'Auth'])) {
+                continue;
+            }
+            $this->Session->delete($key);
+        }
+
+        $this->Cookie->destroy();
+
+        return $this->Auth->logout();
     }
 }

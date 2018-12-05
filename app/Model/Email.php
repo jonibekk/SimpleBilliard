@@ -39,7 +39,7 @@ class Email extends AppModel
     ];
 
     public $contact_validate = [
-        'email'   => [
+        'email'      => [
             'maxLength' => ['rule' => ['maxLength', 255]],
             'notBlank'  => [
                 'rule' => 'notBlank',
@@ -54,16 +54,16 @@ class Email extends AppModel
                 'rule' => 'notBlank',
             ],
         ],
-        'name_last' => [
+        'name_last'  => [
             'maxLength' => ['rule' => ['maxLength', 50]],
             'notBlank'  => [
                 'rule' => 'notBlank',
             ],
         ],
-        'phone' => [
+        'phone'      => [
             'maxLength' => ['rule' => ['maxLength', 50]],
         ],
-        'company' => [
+        'company'    => [
             'maxLength' => ['rule' => ['maxLength', 50]],
         ],
     ];
@@ -111,27 +111,38 @@ class Email extends AppModel
         return $res;
     }
 
-    function isActiveOnTeamByEmail($email, $team_id)
+    /**
+     * Check whether user with given email address is active in the team
+     *
+     * @param string $email
+     * @param int    $teamId
+     *
+     * @return bool
+     */
+    public function isActiveOnTeamByEmail(string $email, int $teamId): bool
     {
         $options = [
             'conditions' => [
-                'Email.email' => $email,
+                'Email.email'   => $email,
+                'Email.del_flg' => false,
             ],
-            'fields'     => ['user_id'],
-            'contain'    => [
-                'User' => [
-                    'TeamMember' => [
-                        'conditions' => ['TeamMember.team_id' => $team_id],
-                        'fields'     => ['id', 'status']
+            'fields'     => ['Email.user_id'],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = Email.user_id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE,
+                        'TeamMember.del_flg' => false
                     ]
                 ]
+
             ]
         ];
-        $res = $this->find('first', $options);
-        if (isset($res['User']['TeamMember'][0]['status']) && $res['User']['TeamMember'][0]['status'] == TeamMember::USER_STATUS_ACTIVE) {
-            return true;
-        }
-        return false;
+        return (bool)$this->find('count', $options);
     }
 
     function getEmailsBelongTeamByEmail($emails, $teamId = null)
@@ -150,7 +161,7 @@ class Email extends AppModel
                     'TeamMember' => [
                         'conditions' => [
                             'TeamMember.team_id' => $teamId,
-                            'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
+                            'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE
                         ],
                         'fields'     => ['id']
                     ]
@@ -257,14 +268,14 @@ class Email extends AppModel
     {
 
         $options = [
-            'fields' => [
+            'fields'     => [
                 'Email.email'
             ],
             'conditions' => [
-                'Email.email' => $emails,
+                'Email.email'   => $emails,
                 'Email.del_flg' => false
             ],
-            'joins' => [
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'users',
