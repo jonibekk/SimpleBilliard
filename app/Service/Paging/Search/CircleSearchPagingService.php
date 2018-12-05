@@ -5,6 +5,7 @@ App::import('Lib/ElasticSearch', "ESSearchResponse");
 App::import('Service', 'ImageStorageService');
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
 App::uses('Circle', 'Model');
+App::uses('TimeExHelper', 'View/Helper');
 
 /**
  * Created by PhpStorm.
@@ -55,8 +56,16 @@ class CircleSearchPagingService extends BaseSearchPagingService
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
+        // For extending display_last_post_created
+        $TimeEx = new TimeExHelper(new View());
+
         foreach ($resultArray as &$result) {
             $result['img_url'] = $ImageStorageService->getImgUrlEachSize($result['circle'], 'Circle')['medium_large'];
+            $displayLatestPostCreated = '';
+            if (!empty($result['circle']['latest_post_created'])) {
+                $displayLatestPostCreated = $TimeEx->elapsedTime($result['circle']['latest_post_created'], 'rough', false);
+            }
+            $result['display_last_post_created'] = $displayLatestPostCreated;
         }
 
         return $resultArray;

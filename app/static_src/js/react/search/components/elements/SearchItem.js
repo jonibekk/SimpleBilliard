@@ -1,6 +1,5 @@
 import React from "react";
 import {connect} from "react-redux";
-import axios from "axios/index";
 
 class SearchItem extends React.Component {
   constructor(props) {
@@ -49,10 +48,6 @@ class SearchItem extends React.Component {
   }
 
   renderCircle(item) {
-    const hasLastPostCreated = (item.circle.latest_post_created > 0)
-    const date = hasLastPostCreated
-      ? this.dateFormat(item.circle.latest_post_created)
-      : "";
     return (
       <div className="searchPage-item">
         <a className="searchPage-item-link saved-item-click-target" href={"/circle_feed/" + item.id} target="_blank">
@@ -75,7 +70,7 @@ class SearchItem extends React.Component {
                 </span>
               </div>
               <div className="searchPage-item-main-footer-right">
-                <span>{date}</span>
+                <span>{item.display_last_post_created}</span>
               </div>
             </div>
           </div>

@@ -45,19 +45,19 @@ function createFetchInitial(type, keyword) {
     case "circle_post":
     case "action":
       return axios.get(`/api/v1/posts/search?` + serialize({
-        keyword: keyword,
-        type: type,
-        limit: limit
+        keyword,
+        type,
+        limit
       }));
     case "users":
       return axios.get(`/api/v1/users/search?` + serialize({
-        keyword: keyword,
-        limit: limit
+        keyword,
+        limit
       }));
     case "circles":
       return axios.get(`/api/v1/circles/search?` + serialize({
-        keyword: keyword,
-        limit: limit
+        keyword,
+        limit
       }));
   }
 }
