@@ -15,28 +15,30 @@ App::uses('CircleMember', 'Model');
  */
 class CircleListPagingService extends BasePagingService
 {
+    const MAIN_MODEL = 'Circle';
+
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
-    const MAIN_MODEL = 'Circle';
 
     /**
      * Get all circles and not including with paging data
-     * @param $pagingRequest
+     *
+     * @param       $pagingRequest
      * @param array $extendFlags
+     *
      * @return array
      */
     public function getAllData(
         $pagingRequest,
         $extendFlags = []
-    ): array
-    {
+    ): array {
         // Check whether exist current user id and team id
         $this->validatePagingResource($pagingRequest);
 
         $finalResult = [
-            'data' => [],
+            'data'   => [],
             'paging' => '',
-            'count' => 0
+            'count'  => 0
         ];
 
         //If only 1 flag is given, make it an array
@@ -114,9 +116,11 @@ class CircleListPagingService extends BasePagingService
 
     /**
      * Add condition for pinned circles
+     *
      * @param array $searchConditions
-     * @param int $userId
-     * @param int $teamId
+     * @param int   $userId
+     * @param int   $teamId
+     *
      * @return array
      */
     private function addSearchConditionForPinned(array $searchConditions, int $userId, int $teamId): array
@@ -131,14 +135,20 @@ class CircleListPagingService extends BasePagingService
 
     /**
      * Add condition for joined circles
+     *
      * @param array $searchConditions
-     * @param int $userId
-     * @param int $teamId
-     * @param bool $joinedFlag
+     * @param int   $userId
+     * @param int   $teamId
+     * @param bool  $joinedFlag
+     *
      * @return array
      */
-    private function addSearchConditionForJoined(array $searchConditions, int $userId, int $teamId, bool $joinedFlag): array
-    {
+    private function addSearchConditionForJoined(
+        array $searchConditions,
+        int $userId,
+        int $teamId,
+        bool $joinedFlag
+    ): array {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
@@ -149,11 +159,11 @@ class CircleListPagingService extends BasePagingService
                 'CircleMember.user_id' => $userId,
                 'CircleMember.del_flg' => false,
             ],
-            'fields' => [
+            'fields'     => [
                 'CircleMember.circle_id'
             ],
-            'table' => 'circle_members',
-            'alias' => 'CircleMember'
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember'
         ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
         $subQueryExpression = $db->expression($subQuery);
@@ -187,8 +197,7 @@ class CircleListPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree
-    {
+    ): PointerTree {
 
         $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
 
@@ -221,7 +230,6 @@ class CircleListPagingService extends BasePagingService
 
             $CircleMemberInfoDataExtender->setUserId($userId);
             $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
-
         }
     }
 

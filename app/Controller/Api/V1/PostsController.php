@@ -113,7 +113,6 @@ class PostsController extends ApiController
             $pagingRequest->setQuery($query);
             $pagingRequest->addCondition('pn', 1);
             $pagingRequest->addCondition('limit', $limit);
-            $pagingRequest->addCondition('team_id', $teamId);
             $pagingRequest->addCondition('type', $type);
 
             if ($type != "action") {
@@ -136,6 +135,8 @@ class PostsController extends ApiController
             $pagingRequest = ESPagingRequest::convertBase64($cursor);
             $type = $pagingRequest->getCondition('type');
         }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
 
         switch ($type) {
             case "action":
