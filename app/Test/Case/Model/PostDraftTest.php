@@ -3,7 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('PostDraft', 'Model');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * PostDraft Test Case
@@ -56,7 +56,7 @@ class PostDraftTest extends GoalousTestCase
             $this->createPostDraftWithVideoStreamResource($userId = 2, $teamId = 1, $videoStream = ['id' => $videoStreamId2], $bodyText = 'text2');
         $this->createPostDraftWithVideoStreamResource($userId = 2, $teamId = 1, $videoStream = ['id' => $videoStreamId2], $bodyText = 'text2');
 
-        $firstPostDraft = $this->PostDraft->getFirstByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId2);
+        $firstPostDraft = $this->PostDraft->getFirstByResourceTypeAndResourceId(Enum\Model\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId2);
         $this->assertEquals($firstPostDraft['id'], $postDraft['id']);
     }
 
@@ -68,7 +68,7 @@ class PostDraftTest extends GoalousTestCase
         $this->createPostDraftWithVideoStreamResource($userId = 2, $teamId = 1, $videoStream = ['id' => $videoStreamId2], $bodyText = 'text2');
         $this->createPostDraftWithVideoStreamResource($userId = 2, $teamId = 1, $videoStream = ['id' => $videoStreamId2], $bodyText = 'text2');
 
-        $postDrafts = $this->PostDraft->getByResourceTypeAndResourceId(Enum\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId2);
+        $postDrafts = $this->PostDraft->getByResourceTypeAndResourceId(Enum\Model\Post\PostResourceType::VIDEO_STREAM(), $videoStreamId2);
         $this->assertEquals(2, count($postDrafts));
     }
 }

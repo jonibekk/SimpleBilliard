@@ -6,7 +6,7 @@ App::uses('UserAgent', 'Request');
 App::import('Service', 'TeamService');
 App::uses('Device', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Application level Controller
@@ -210,6 +210,13 @@ class BaseController extends Controller
                 $this->redirect($logoutRedirect);
             }
             //Detect inconsistent data that current team id is empty.
+            $sesId = $this->Session->id();
+            // GL-7364：Enable to keep login status between old Goalous and new Goalous
+            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+            if (empty($mapSesAndJwt)) {
+                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+            }
+            // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
                 //If user doesn't have other team, redirect to create team page
                 GoalousLog::info("User $this->my_uid is not active in any team");
@@ -448,10 +455,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY) {
-            return true;
-        }
-        return false;
+        return boolval($TeamService->getServiceUseStatus() == Team::SERVICE_USE_STATUS_READ_ONLY);
     }
 
     /**
@@ -468,10 +472,7 @@ class BaseController extends Controller
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if ($TeamService->isCannotUseService()) {
-            return true;
-        }
-        return false;
+        return boolval($TeamService->isCannotUseService());
     }
 
     /**

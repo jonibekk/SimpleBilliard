@@ -4,8 +4,9 @@ App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('TransactionManager', 'Model');
 App::import('Service', 'UserService');
+App::import('Model/Entity', 'TeamMemberEntity');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * TeamMember Model
@@ -16,6 +17,10 @@ use Goalous\Model\Enum as Enum;
  * @property User        $CoachUser
  * @property JobCategory $JobCategory
  */
+
+use Goalous\Enum\Model\TeamMember as TeamMemberEnum;
+use Goalous\Enum\DataType\DataType as DataType;
+
 class TeamMember extends AppModel
 {
     const ADMIN_USER_FLAG = 1;
@@ -48,7 +53,7 @@ class TeamMember extends AppModel
             'inEnumList'      => [
                 'rule' => [
                     'inEnumList',
-                    "TeamMember\Status"
+                    "Goalous\Enum\Model\TeamMember\Status"
                 ],
             ],
             'isVerifiedEmail' => [
@@ -89,6 +94,21 @@ class TeamMember extends AppModel
     private $evaluations = [];
     private $active_member_list = [];
     private $local_lang_list = [];
+
+    public $modelConversionTable = [
+        'user_id'               => DataType::INT,
+        'team_id'               => DataType::INT,
+        'coach_user_id'         => DataType::INT,
+        'member_type_id'        => DataType::INT,
+        'job_category_id'       => DataType::INT,
+        'active_flg'            => DataType::BOOL,
+        'invitation_flg'        => DataType::BOOL,
+        'evaluation_enable_flg' => DataType::BOOL,
+        'admin_flg'             => DataType::BOOL,
+        'evaluable_count'       => DataType::INT,
+        'last_login'            => DataType::INT,
+        'status'                => DataType::INT,
+    ];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -2250,7 +2270,7 @@ class TeamMember extends AppModel
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
-                'TeamMember.status !=' => Enum\TeamMember\Status::INACTIVE
+                'TeamMember.status !=' => Enum\Model\TeamMember\Status::INACTIVE
             ],
         ];
         $res = $this->find('all', $options);
@@ -2260,6 +2280,29 @@ class TeamMember extends AppModel
         return Hash::extract($res, '{n}.TeamMember');
     }
 
+    /**
+     * Get list of team members
+     *
+     * @param int                        $teamId
+     * @param TeamMemberEnum\Status|null $status Status of member. If not given, will take all
+     *
+     * @return TeamMemberEntity[]
+     */
+    public function getMemberList(int $teamId, TeamMemberEnum\Status $status = null)
+    {
+        $condition = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'del_flg' => false
+            ]
+        ];
+
+        if (!empty($status)) {
+            $condition['conditions']['status'] = $status->getValue();
+        }
+
+        return $this->useType()->useEntity()->find('all', $condition);
+    }
     /**
      * Get last logged in active team ID
      *
@@ -2312,7 +2355,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $userId,
                 'TeamMember.team_id' => $teamId,
-                'TeamMember.status'  => Enum\TeamMember\Status::INVITED()->getValue(),
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::INVITED,
                 'TeamMember.del_flg' => false
             ],
             'fields'     => [

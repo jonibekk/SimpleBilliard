@@ -12,8 +12,6 @@ App::import('Service', 'TermService');
 App::import('Service', 'TermService');
 App::import('Service', 'ExperimentService');
 
-use Goalous\Model\Enum as Enum;
-
 /**
  * Users Controller
  *
@@ -45,6 +43,13 @@ class UsersController extends AppController
             'add_subscribe_email', 'ajax_validate_email');
 
         $this->_checkAdmin(['invite']);
+
+        // GL-7364
+        // TODO: remove these processing. but there is a problem that SecurityComponent.blackhole error occurs after update core.php `session.cookie_domain` to enable to share cookie across sub domains.
+        if ($this->request->params['action'] == 'login') {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     /**
@@ -909,7 +914,9 @@ class UsersController extends AppController
         if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = boolval($query['with_group'] ?? false);
             $with_self = boolval($query['with_self'] ?? false);
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self);
+            $excludedUsers = array_values($query['excluded_users'] ?? []);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group, $with_self,
+                $excludedUsers);
         }
         if (isset($query['in_post_id']) && !empty($query['in_post_id'])) {
             $res['results'] = $this->Mention::filterAsMentionableUser($query['in_post_id'], $res['results']);
@@ -1579,6 +1586,7 @@ class UsersController extends AppController
          * @var SubscribeEmail $SubscribeEmail
          */
         $SubscribeEmail = ClassRegistry::init('SubscribeEmail');
+
         if (!$SubscribeEmail->save($this->request->data)) {
             $this->Notification->outError($SubscribeEmail->validationErrors['email'][0]);
             return $this->redirect($this->referer());

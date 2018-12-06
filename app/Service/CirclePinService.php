@@ -29,11 +29,11 @@ class CirclePinService extends AppService
 
         $validation = $CirclePin->validates();
 
-        if($validation !== true){
+        if ($validation !== true) {
             $validation = $CirclePin->_validationExtract($CirclePin->validationErrors);
         }
 
-        if(!empty($validation)){
+        if (!empty($validation)) {
             return $validation;
         }
 
@@ -42,14 +42,14 @@ class CirclePinService extends AppService
 
     /**
      * Deletes specified circleId from circle pin order information
-     * example: 3,4,5 => ,3,4,5, => (,4,) => ,3,5, => 3,5 
+     * example: 3,4,5 => ,3,4,5, => (,4,) => ,3,5, => 3,5
      * @param $userId
      * @param $teamId
      * @param $circleId
      *
      * @return bool
      */
-    public function deleteCircleId(int $userId, int $teamId, string $circleId): bool 
+    public function deleteCircleId(int $userId, int $teamId, string $circleId): bool
     {
         /** @var CirclePin $CirclePin */
         $CirclePin = ClassRegistry::init('CirclePin');
@@ -58,28 +58,28 @@ class CirclePinService extends AppService
             'user_id' => $userId,
             'team_id' => $teamId,
         ];
-   
-        try {    
+
+        try {
             $row = $CirclePin->getUnique($userId, $teamId);
 
-            if(empty($row)){
+            if (empty($row)) {
                 return true;
             }
 
             $orders = ',' . $row['circle_orders'] . ',';
             $find = ',' . $circleId . ',';
 
-            if(strpos($orders, $find) !== false){
+            if (strpos($orders, $find) !== false) {
                 $orders = str_replace($find, ',', $orders);
                 $row['circle_orders'] = substr($orders, 1, -1);
                 $options['id'] = $row['id'];
 
-                if(!$CirclePin->save($row, false)) {
-                    throw new Exception($row['circle_orders'], 1);             
+                if (!$CirclePin->save($row, false)) {
+                    throw new Exception($row['circle_orders'], 1);
                 }
-            }   
+            }
         } catch (Exception $e) {
-            GoalousLog::error("deleteCircleId",[$e->getMessage(),$e->getTraceAsString()]);
+            GoalousLog::error("deleteCircleId", [$e->getMessage(), $e->getTraceAsString()]);
             return false;
         }
 
@@ -103,8 +103,8 @@ class CirclePinService extends AppService
         try {
             $data = [
                 'CirclePin' => [
-                    'user_id'       => $userId,
-                    'team_id'       => $teamId,
+                    'user_id' => $userId,
+                    'team_id' => $teamId,
                     'circle_orders' => $pinOrders,
                 ],
             ];
@@ -148,12 +148,12 @@ class CirclePinService extends AppService
         $circles = $CirclePin->getJoinedCircleData($userId, $teamId);
         $pinOrderInformation = $CirclePin->getPinData($userId, $teamId);
 
-        if($pinOrderInformation !== ''){
+        if ($pinOrderInformation !== '') {
             $pinOrders = explode(',', $pinOrderInformation);
         }
 
         foreach ($circles as &$circle) {
-            $circle['Data'] = array_merge($circle['Circle'],$circle['CircleMember']);
+            $circle['Data'] = array_merge($circle['Circle'], $circle['CircleMember']);
             $circle['Data']['image'] = $Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']);
             $circle = $circle['Data'];
             $circle['order'] = null;
@@ -163,12 +163,12 @@ class CirclePinService extends AppService
             unset($circle['Data']);
         }
 
-        
+
         $counter = 0;
         $circleIds = array_column($circles, 'id');
         foreach ($pinOrders as $key => $circleId) {
             $arrayKey = array_search($circleId, $circleIds);
-            if($arrayKey !== false){
+            if ($arrayKey !== false) {
                 $circles[$arrayKey]['order'] = $counter;
                 $counter++;
             }
@@ -176,17 +176,17 @@ class CirclePinService extends AppService
 
         $defaultCircle = [];
         $defaultCircleKey = array_search(true, array_column($circles, 'team_all_flg'));
-        if($defaultCircleKey !== false){
+        if ($defaultCircleKey !== false) {
             $defaultCircle = $circles[$defaultCircleKey];
             unset($circles[$defaultCircleKey]);
         }
 
         // $circles = Hash::sort($circles, '{n}.modified', 'desc', 'numeric');
-        $unsortedCircles = array_filter($circles, function($value, $key){
-           return !isset($value['order']);
+        $unsortedCircles = array_filter($circles, function ($value, $key) {
+            return !isset($value['order']);
         }, ARRAY_FILTER_USE_BOTH);
-        $sortedCircles = array_filter($circles, function($value, $key){
-           return isset($value['order']);
+        $sortedCircles = array_filter($circles, function ($value, $key) {
+            return isset($value['order']);
         }, ARRAY_FILTER_USE_BOTH);
         $sortedCircles = Hash::sort($sortedCircles, '{n}.order', 'asc', 'numeric');
         $orderedCircles = array_merge($sortedCircles, $unsortedCircles);
@@ -194,5 +194,29 @@ class CirclePinService extends AppService
         $returnArray['regular_circle'] = $orderedCircles;
         $returnArray['default_circle'] = $defaultCircle;
         return $returnArray;
+    }
+
+    /**
+     * Get pinned circls ids
+     * @param int $userId
+     * @param int $teamId
+     * @return array
+     */
+    public function getPinnedCircleIds(int $userId, int $teamId): array
+    {
+        /** @var CirclePin $CirclePin */
+        $CirclePin = ClassRegistry::init('CirclePin');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $pinOrderInformation = $CirclePin->getPinData($userId, $teamId);
+        // head of pinned circles is team default circle
+        $defaultCircle = $Circle->getTeamAllCircle($teamId);
+
+        $circleIds = [Hash::get($defaultCircle, 'Circle.id')];
+        if (!empty($pinOrderInformation)) {
+            $circleIds = array_merge($circleIds, explode(',', $pinOrderInformation));
+        }
+        return $circleIds;
     }
 }

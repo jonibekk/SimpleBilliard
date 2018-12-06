@@ -9,9 +9,9 @@ App::uses('CircleMember', 'Model');
  *
  * @property ActionService $ActionService
  * @property CircleService $CircleService
- * @property Circle $Circle
- * @property CircleMember $CircleMember
- * @property User $User
+ * @property Circle        $Circle
+ * @property CircleMember  $CircleMember
+ * @property User          $User
  */
 class CircleServiceTest extends GoalousTestCase
 {

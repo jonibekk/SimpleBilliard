@@ -10,7 +10,7 @@ App::uses('Component', 'Controller');
 App::uses('AppController', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class TeamService
@@ -240,11 +240,11 @@ class TeamService extends AppService
                 'del_flg'  => true
             ];
             if ($isManualDelete) {
-                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_MANUAL;
+                $deleteData['service_use_status'] = Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL;
                 // TODO: create db migration to add this column when implement manual team deletion
 //                $deleteData['ope_user_id'] = $opeUserId;
             } else {
-                $deleteData['service_use_status'] = Enum\Team\ServiceUseStatus::DELETED_AUTO;
+                $deleteData['service_use_status'] = Enum\Model\Team\ServiceUseStatus::DELETED_AUTO;
             }
 
             // Delete team
@@ -312,7 +312,7 @@ class TeamService extends AppService
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        if ($serviceUseStatus == Enum\Team\ServiceUseStatus::PAID) {
+        if ($serviceUseStatus == Enum\Model\Team\ServiceUseStatus::PAID) {
             $endDate = null;
         } else {
             $statusDays = Team::DAYS_SERVICE_USE_STATUS[$serviceUseStatus];
@@ -334,8 +334,8 @@ class TeamService extends AppService
             $this->TransactionManager->begin();
 
             // Delete all payment data only when changing from PAID to READ_ONLY
-            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Team\ServiceUseStatus::PAID &&
-                $serviceUseStatus == Enum\Team\ServiceUseStatus::READ_ONLY) {
+            if ($this->getServiceUseStatusByTeamId($teamId) == Enum\Model\Team\ServiceUseStatus::PAID &&
+                $serviceUseStatus == Enum\Model\Team\ServiceUseStatus::READ_ONLY) {
                 /** @var PaymentService $PaymentService */
                 $PaymentService = ClassRegistry::init('PaymentService');
                 if (!$PaymentService->deleteTeamsAllPaymentSetting($teamId)) {

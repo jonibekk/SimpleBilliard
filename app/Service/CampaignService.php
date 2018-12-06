@@ -7,7 +7,7 @@ App::uses('TeamMember', 'Model');
 App::uses('PaymentUtil', 'Util');
 App::import('Service', 'PaymentService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class CampaignService
@@ -231,7 +231,7 @@ class CampaignService extends AppService
         foreach ($pricePlans as $plan) {
             $currencyType = $plan['currency'];
             $subTotalCharge = $plan['price'];
-            $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP',
+            $tax = $currencyType == Enum\Model\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP',
                 $subTotalCharge) : 0;
             $totalCharge = $subTotalCharge + $tax;
             $formatSubTotal = $PaymentService->formatCharge($subTotalCharge, $currencyType);
@@ -344,7 +344,7 @@ class CampaignService extends AppService
             // Calc charge amount
             $chargeInfo = $PaymentService->calcRelatedTotalChargeForUpgradingPlan(
                 $teamId,
-                new Enum\PaymentSetting\Currency($currencyType),
+                new Enum\Model\PaymentSetting\Currency($currencyType),
                 $plan['code'],
                 $currentPlan['code']
             );
@@ -442,7 +442,7 @@ class CampaignService extends AppService
         $campaign = $this->getPlanByCode($pricePlanCode);
         $subTotalCharge = $campaign['price'];
         $currencyType = $campaign['currency'];
-        $tax = $currencyType == Enum\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
+        $tax = $currencyType == Enum\Model\PaymentSetting\Currency::JPY ? $PaymentService->calcTax('JP', $subTotalCharge) : 0;
         $totalCharge = $subTotalCharge + $tax;
         $chargeInfo = [
             'id'               => $campaign['id'],

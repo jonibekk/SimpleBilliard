@@ -1523,7 +1523,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['force_notify'] = true;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
-    
+
     private function _saveNotifications()
     {
         //通知onのユーザを取得
@@ -1760,7 +1760,12 @@ class NotifyBizComponent extends Component
     ) {
         $set_web_env = "";
         $nohup = "nohup ";
-        $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        if (ENV_NAME == 'local') {
+            $php = 'php ';
+        } else {
+            $php = '/opt/phpbrew/php/php-' . phpversion() . '/bin/php ';
+        }
+
         $cake_cmd = $php . APP . "Console" . DS . "cake.php";
         $cake_app = " -app " . APP;
         $cmd = " Operation.notify";

@@ -109,6 +109,25 @@ $(function () {
     resetNavBarPadding();
     setCookieCloseAlert(cake.data.team_id);
   });
+
+  var $navbar = $('.navbar');
+  // Workaround for buggy header/footer fixed position when virtual keyboard is on/off
+  $(document).on('focus','input,textarea',function(){
+    $navbar.css('position','fixed');
+  });
+  $(document).on('blur','input,textarea',function(){
+    $navbar.css('position','fixed');
+    setTimeout(function(){
+      if(typeof($.mobile) != 'undefined'){
+        window.scrollTo($.mobile.window.scrollLeft(),$.mobile.window.scrollTop());
+      }
+    },20)
+  });
+
+  if(cake.is_mb_app_ios_high_header){
+    insertSpaceTop(20);
+  }
+
 });
 
 // If team status is read only, Display read only alert box
@@ -123,6 +142,27 @@ if (cake.require_banner_notification && isClosedAlert(cake.data.team_id) === fal
   });
 }
 
+function instertSpaceTop(height){
+  var $header = $('#header'),
+      $jsLeftSideContainer = $('#jsLeftSideContainer'),
+      $jsRightSideContainer = $('#jsRightSideContainer'),
+      $body = $('body'),
+      $spFeedAltSub = $('#SpFeedAltSub'),
+      $sidebarSetting = $('#SidebarSetting'),
+      $scrollSpyContents = $('#ScrollSpyContents > div');
+  
+  $header.css('max-height', parseInt($header.css('max-height')) + height + 'px');
+  $header.css('padding-top', parseInt($header.css('padding-top')) + height + 'px');
+  $jsLeftSideContainer.css('top', parseInt($jsLeftSideContainer.css('top')) + height + 'px');
+  $jsRightSideContainer.css('top', parseInt($jsRightSideContainer.css('top')) + height + 'px');
+  $body.css('padding-top', parseInt($body.css('padding-top')) + height + 'px');
+  $spFeedAltSub.css('top', parseInt($spFeedAltSub.css('top')) + height + 'px');
+  $sidebarSetting.css('top', parseInt($sidebarSetting.css('top')) + height + 'px');
+  $scrollSpyContents.each(function(i,elem){
+    $(elem).css('padding-top',parseInt($(elem).css('padding-top')) + height + 'px');
+    $(elem).css('margin-top',parseInt($(elem).css('margin-top')) - height + 'px');
+  });
+}
 /**
  * Initialize page title
  */

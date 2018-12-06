@@ -7,6 +7,7 @@ App::uses('TimeExHelper', 'View/Helper');
  */
 class ApiGoalService extends ApiService
 {
+
     // ゴール検索デフォルト取得件数
     const GOAL_SEARCH_DEFAULT_LIMIT = 10;
 
@@ -296,4 +297,5 @@ class ApiGoalService extends ApiService
 
         return $ret;
     }
+
 }

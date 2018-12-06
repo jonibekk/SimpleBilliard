@@ -1,7 +1,10 @@
 <?php
 App::uses('MentionComponent', 'Controller/Component');
-trait HavingMentionTrait {
-    public function afterFind($results, $primary = false) {
+
+trait HavingMentionTrait
+{
+    public function afterFind($results, $primary = false)
+    {
         $hasMention = count($results) > 0;
         if ($hasMention) {
             foreach ($results as &$result) {
@@ -11,11 +14,13 @@ trait HavingMentionTrait {
                     // refactor this in case of others which possibly have mentions in the future, like Post/Action
                     if (isset($result[$this->alias]['post_id'])) {
                         $accessControlledId = $result[$this->alias]['post_id'];
-                        $result[$this->alias][$this->bodyProperty] = MentionComponent::appendName('Comment', $accessControlledId, $body);
+                        $result[$this->alias][$this->bodyProperty] = MentionComponent::appendName('Comment',
+                            $accessControlledId, $body);
                     }
                 }
             }
         }
-        return $results;
+
+        return parent::afterFind($results, $primary);
     }
 }

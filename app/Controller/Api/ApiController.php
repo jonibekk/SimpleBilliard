@@ -31,6 +31,7 @@ class ApiController extends BaseController
     public function __construct($request = null, $response = null)
     {
         parent::__construct($request, $response);
+
         $this->uses = am($this->uses, $this->merge_uses);
         $this->components = am($this->components, $this->merge_components);
         $this->helpers = am($this->helpers, $this->merge_helpers);
@@ -321,7 +322,6 @@ class ApiController extends BaseController
         $this->Auth->logoutRedirect = null;
         $this->Auth->loginAction = null;
     }
-
 
     /**
      * Check permission if team administrator

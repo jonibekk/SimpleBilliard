@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Team Model
@@ -782,7 +782,7 @@ class Team extends AppModel
     public function updatePaidPlan(int $teamId, string $date): bool
     {
         $data = [
-            'service_use_status'           => Enum\Team\ServiceUseStatus::PAID,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::PAID,
             'service_use_state_start_date' => $date,
             'service_use_state_end_date'   => null
         ];
@@ -852,8 +852,8 @@ class Team extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'Team.id = PaymentSetting.team_id',
-                        'Team.service_use_status' => Enum\Team\ServiceUseStatus::PAID,
-                        'PaymentSetting.type'     => Enum\PaymentSetting\Type::CREDIT_CARD,
+                        'Team.service_use_status' => Enum\Model\Team\ServiceUseStatus::PAID,
+                        'PaymentSetting.type'     => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                         'PaymentSetting.del_flg'  => false,
                     ]
                 ],
@@ -863,8 +863,8 @@ class Team extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'PaymentSetting.team_id = ChargeHistory.team_id',
-                        'ChargeHistory.charge_type'         => Enum\ChargeHistory\ChargeType::MONTHLY_FEE,
-                        'ChargeHistory.result_type'         => Enum\ChargeHistory\ResultType::FAIL,
+                        'ChargeHistory.charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+                        'ChargeHistory.result_type'         => Enum\Model\ChargeHistory\ResultType::FAIL,
                         'ChargeHistory.charge_datetime >= ' => $startTimestamp,
                         'ChargeHistory.charge_datetime <= ' => $endTimestamp,
                         'ChargeHistory.del_flg'             => false,

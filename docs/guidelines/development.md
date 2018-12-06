@@ -11,7 +11,7 @@ If there is a more efficient procedure or operation method, we will fix it more 
 Please be sure to install the following tools as they are essential for development on local environment.
 
 - Virtual Box `version = latest`
-- Vagrant `version = 1.8.7` https://releases.hashicorp.com/vagrant/1.8.7/
+- Vagrant `version = 2.0.2` https://releases.hashicorp.com/vagrant/2.0.2/
 - Git `version >= latest`
 - Chef Development Kit `version = 0.17.17` https://downloads.chef.io/chefdk/stable/0.17.17
 

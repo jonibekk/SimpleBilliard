@@ -10,7 +10,7 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Teams Controller
@@ -131,7 +131,7 @@ class TeamsController extends AppController
             'name',
             'photo_file_name',
         ];
-        $isPaidPlan = Hash::get($team, 'service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        $isPaidPlan = Hash::get($team, 'service_use_status') == Enum\Model\Team\ServiceUseStatus::PAID;
         if (!$isPaidPlan) {
             $updateFields[] = 'timezone';
         }
@@ -305,10 +305,10 @@ class TeamsController extends AppController
         $current_term = $this->Team->Term->getById($current_term_id);
         /** @var bool $current_term_exists */
         $current_term_exists = !is_null($current_term);
-        /** @var Enum\Term\EvaluateStatus $current_term_evaluation_status */
+        /** @var Enum\Model\Term\EvaluateStatus $current_term_evaluation_status */
         $current_term_evaluation_status = null;
         if ($current_term_exists) {
-            $current_term_evaluation_status = new Enum\Term\EvaluateStatus(intval($current_term['evaluate_status']));
+            $current_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval($current_term['evaluate_status']));
         }
 
         // previous term data
@@ -316,10 +316,10 @@ class TeamsController extends AppController
         $previous_term = $this->Team->Term->getById($previous_term_id);
         /** @var bool $previous_term_exists */
         $previous_term_exists = !is_null($previous_term);
-        /** @var Enum\Term\EvaluateStatus $previous_term_evaluation_status */
+        /** @var Enum\Model\Term\EvaluateStatus $previous_term_evaluation_status */
         $previous_term_evaluation_status = null;
         if ($previous_term_exists) {
-            $previous_term_evaluation_status = new Enum\Term\EvaluateStatus(intval($previous_term['evaluate_status']));
+            $previous_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval($previous_term['evaluate_status']));
         }
 
         $eval_start_button_enabled = true;
@@ -359,32 +359,32 @@ class TeamsController extends AppController
         $can_start_evaluation = false;
         // Decide $can_start_evaluation
         if (!$previous_term_exists) {
-            $can_start_evaluation = !$current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
+            $can_start_evaluation = !$current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         } elseif (!$current_term_exists) {
-            $can_start_evaluation = !$previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED());
+            $can_start_evaluation = !$previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         } else {
-            $isInProgress = $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS()) || $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS());
+            $isInProgress = $current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS()) || $previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS());
             $can_start_evaluation = !$isInProgress;
         }
         $disable_current_radio = false;
-        if (!$can_start_evaluation || !$current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())) {
+        if (!$can_start_evaluation || !$current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED())) {
             $disable_current_radio = true;
         }
         $disable_previous_radio = false;
-        if (!$can_start_evaluation || !$previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())) {
+        if (!$can_start_evaluation || !$previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED())) {
             $disable_previous_radio = true;
         }
 
         $either_start_button_enabled = ($eval_start_button_enabled xor $previous_eval_start_button_enabled);
         $current_radio_checked = false;
-        if ($current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS())) {
+        if ($current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS())) {
             $current_radio_checked = true;
         } elseif ($can_start_evaluation) {
             $current_radio_checked = ($either_start_button_enabled && $eval_start_button_enabled);
         }
 
         $previous_radio_checked = false;
-        if ($previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::IN_PROGRESS())) {
+        if ($previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS())) {
             $previous_radio_checked = true;
         } elseif ($can_start_evaluation) {
             $previous_radio_checked = ($either_start_button_enabled && $previous_eval_start_button_enabled);
@@ -392,8 +392,8 @@ class TeamsController extends AppController
 
         $both_term_selectable = ($current_term_exists
             && $previous_term_exists
-            && $current_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED())
-            && $previous_term_evaluation_status->equals(Enum\Term\EvaluateStatus::NOT_STARTED()));
+            && $current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED())
+            && $previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED()));
 
         // term changing init data
         /** @var TermService $TermService */
@@ -407,7 +407,7 @@ class TeamsController extends AppController
 
         //タイムゾーン
         $timezones = AppUtil::getTimezoneList();
-        $isPaidPlan = Hash::get($team, 'Team.service_use_status') == Enum\Team\ServiceUseStatus::PAID;
+        $isPaidPlan = Hash::get($team, 'Team.service_use_status') == Enum\Model\Team\ServiceUseStatus::PAID;
         // Get timezone label
         $timezoneLabel = $this->getTimezoneLabel($team['Team']['timezone']);
 
@@ -2896,7 +2896,7 @@ class TeamsController extends AppController
         $amountPerUser = $PaymentService->formatCharge($paymentSetting['amount_per_user'], $paymentSetting['currency']);
         $useDaysByNext = $PaymentService->getUseDaysByNextBaseDate($teamId);
         $allUseDays = $PaymentService->getCurrentAllUseDays($teamId);
-        $currency = new Enum\PaymentSetting\Currency((int)$paymentSetting['currency']);
+        $currency = new Enum\Model\PaymentSetting\Currency((int)$paymentSetting['currency']);
         $totalCharge = $PaymentService->formatTotalChargeByAddUsers($teamId, 1, $currency, $useDaysByNext, $allUseDays);
 
         $this->set(compact('teamMemberId', 'displayUserName', 'amountPerUser', 'useDaysByNext', 'totalCharge'));

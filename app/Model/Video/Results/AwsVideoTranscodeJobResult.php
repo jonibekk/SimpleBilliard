@@ -2,7 +2,7 @@
 
 App::uses('AwsVideoTranscodeRequest', 'Model/Video/Requests');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsVideoTranscodeJobResult
 {

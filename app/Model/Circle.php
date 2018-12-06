@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+
 /**
  * Circle Model
  *
@@ -8,6 +9,9 @@ App::uses('UploadHelper', 'View/Helper');
  * @property CircleMember    $CircleMember
  * @property PostShareCircle $PostShareCircle
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class Circle extends AppModel
 {
     /**
@@ -37,16 +41,17 @@ class Circle extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles'      => [
+                'styles'         => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
                     'medium_large' => '96x96',
                     'large'        => '128x128',
                     'x_large'      => '256x256',
                 ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-circle.jpg',
-                'quality'     => 100,
+                'path'           => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url'    => 'no-image-circle.jpg',
+                's3_default_url' => 'sys/defaults/no-image-circle.svg',
+                'quality'        => 100,
             ]
         ]
     ];
@@ -107,6 +112,14 @@ class Circle extends AppModel
         'Team'
     ];
 
+    public $modelConversionTable = [
+        'team_id'             => DataType::INT,
+        'public_flg'          => DataType::BOOL,
+        'team_all_flg'        => DataType::BOOL,
+        'circle_member_count' => DataType::INT,
+        'latest_post_created' => DataType::INT
+    ];
+
     /**
      * hasMany associations
      *
@@ -128,7 +141,7 @@ class Circle extends AppModel
     /**
      * Create new circle
      *
-     * @param array   $data
+     * @param array $data
      *
      * @return bool
      */
@@ -426,6 +439,13 @@ class Circle extends AppModel
         return $this->find('first', $options);
     }
 
+    /**
+     * Check whether this circle is the team's default one
+     *
+     * @param int $circle_id
+     *
+     * @return bool
+     */
     function isTeamAllCircle($circle_id)
     {
         $options = [
@@ -444,6 +464,7 @@ class Circle extends AppModel
     /**
      * returning teams circles exists
      * pass $teamId if this method is called from external API, or batch shell
+     *
      * @param int $teamId
      *
      * @return array|null
@@ -469,6 +490,7 @@ class Circle extends AppModel
 
     /**
      * Return team's all circles.id
+     *
      * @param int|null $teamId
      *
      * @return string|null circle.id by string
@@ -552,4 +574,53 @@ class Circle extends AppModel
         return (bool)$this->find('first', $options);
     }
 
+    /**
+     * Update the member count of a circle
+     *
+     * @param int $circleId
+     *
+     * @return int New member count
+     */
+    public function updateMemberCount(int $circleId): int
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $memberCount = $CircleMember->getMemberCount($circleId, true);
+
+        $newData = [
+            'circle_member_count' => $memberCount,
+            'modified'            => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $condition = [
+            'Circle.id' => $circleId,
+            'del_flg'   => false
+        ];
+
+        $this->updateAll($newData, $condition);
+
+        return $memberCount;
+    }
+
+    /**
+     * Get the team ID of this circle
+     *
+     * @param int $circleId
+     *
+     * @return int Team ID of the circle
+     */
+    public function getTeamId(int $circleId): int
+    {
+        $condition = [
+            'conditions' => [
+                'id' => $circleId
+            ],
+            'fields'     => [
+                'team_id'
+            ]
+        ];
+
+        return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
+    }
 }

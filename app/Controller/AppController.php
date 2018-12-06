@@ -22,7 +22,7 @@ App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Application Controller
@@ -41,7 +41,9 @@ use Goalous\Model\Enum as Enum;
  */
 class AppController extends BaseController
 {
-    // アクション件数 キャッシュ有効期限
+    /**
+     * アクション件数 キャッシュ有効期限
+     */
     const CACHE_KEY_ACTION_COUNT_EXPIRE = 60 * 60 * 24; // 1日
 
     /**
@@ -80,9 +82,14 @@ class AppController extends BaseController
         'PaymentSetting'
     ];
 
-    //基本タイトル
+    /**
+     * 基本タイトル
+     */
     public $title_for_layout;
-    //基本description
+
+    /**
+     * 基本description
+     */
     public $meta_description;
     /**
      * ページネータの初期設定
@@ -93,12 +100,12 @@ class AppController extends BaseController
 //        'limit' => 20,
 //    ];
 
-    /*
+    /**
      * 認定対象ゴール件数
      */
     public $unapproved_cnt = 0;
 
-    /*
+    /**
      * 評価対象ゴール件数
      */
     public $evaluable_cnt = 0;
@@ -363,7 +370,7 @@ class AppController extends BaseController
      *
      * @param CakeRequest $request
      *
-     * @return void
+     * @return bool
      */
     public function invokeAction(CakeRequest $request)
     {
@@ -402,7 +409,7 @@ class AppController extends BaseController
         $this->next_term_id = $this->Team->Term->getNextTermId();
     }
 
-    /*
+    /**
      * 各種アラート件数の合計
      */
     public function _setAllAlertCnt()
@@ -417,15 +424,16 @@ class AppController extends BaseController
         $this->set('notify_setting', $this->notify_setting);
     }
 
-    /*
+    /**
      * ログインユーザーが管理しているメンバーの中で認定されてないゴールの件数
      * - チームの評価設定がoffの場合はカウントしない。(0を返す)
+     *
      * @param $login_uid
      */
     public function _setUnApprovedCnt($login_uid)
     {
         if ($this->Team->EvaluationSetting->isEnabled() === false) {
-            return 0;
+            return;
         }
 
         /** @var GoalApprovalService $GoalApprovalService */
@@ -785,7 +793,7 @@ class AppController extends BaseController
                     'conditions' => array(
                         'user_id' => $id,
                         'team_id' => $this->Session->read('current_team_id'),
-                        'status'  => Enum\TeamMember\Status::ACTIVE,
+                        'status'  => Enum\Model\TeamMember\Status::ACTIVE,
                     ),
                 );
                 $team = $this->User->TeamMember->find('first', $options);
@@ -979,7 +987,7 @@ class AppController extends BaseController
 
         $serviceUseStatus = $TeamService->getServiceUseStatus();
         $this->set('serviceUseStatus', $serviceUseStatus);
-        $this->set('isTeamAdmin', $this->User->TeamMember->isAdmin());
+        $this->set('isTeamAdmin', boolval($this->User->TeamMember->isAdmin() ?? false));
         $this->set('stateEndDate', $TeamService->getStateEndDate());
 
         $isAdmin = $this->_isAdmin();
@@ -1052,7 +1060,7 @@ class AppController extends BaseController
         $this->Mixpanel->setUser($this->User->id);
     }
 
-    /*
+    /**
      * 自動でログインする
      */
     public function _autoLogin($user_id, $is_not_change_current_team = false)

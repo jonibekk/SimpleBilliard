@@ -1,6 +1,7 @@
 <?php
 App::uses('AppHelper', 'View/Helper');
 App::uses('UploadBehavior', 'Model/Behavior');
+App::uses('Security', 'Utility');
 
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
@@ -65,6 +66,7 @@ class UploadHelper extends AppHelper
 
     /**
      * It's for caching expires timestamp.
+     *
      * @var null|int
      */
     private $s3Expires = null;
@@ -144,7 +146,22 @@ class UploadHelper extends AppHelper
         return false;
     }
 
-    public function uploadUrl($data, $field, $options = array())
+    /**
+     * Get uploaded file URl
+     *
+     * @param       $data
+     * @param       $field
+     * @param array $options
+     * @param bool  $isDefImgFromCloud
+     * Until Angular renewal, default image path refer goalous repo assets.
+     * (e.g. <img src="/img/no-image-circle.jpg">)
+     * But from renewal, default images will be placed in s3, not assets.
+     * If old Goalous, set false to $isDefImgFromCloud,
+     * else if from renewal (API v2 later), set true to it.
+     *
+     * @return mixed|null|string
+     */
+    public function uploadUrl($data, $field, $options = array(), $isDefImgFromCloud = false)
     {
         $options += array('style' => 'original', 'urlize' => true);
         list($model, $field) = explode('.', $field);
@@ -167,6 +184,7 @@ class UploadHelper extends AppHelper
             return $this->cache[$hash];
         }
 
+        $defaultImgKey = $isDefImgFromCloud ? 's3_default_url' : 'default_url';
         if ($id && !empty($filename)) {
             $settings = UploadBehavior::interpolate($model, $id, $field, $filename, $options['style'],
                 array('webroot' => ''));
@@ -174,16 +192,11 @@ class UploadHelper extends AppHelper
         } else {
             $settings = UploadBehavior::interpolate($model, null, $field, null, $options['style'],
                 array('webroot' => ''));
-            $url = isset($settings['default_url']) ? $settings['default_url'] : null;
+            $url = isset($settings[$defaultImgKey]) ? $settings[$defaultImgKey] : null;
         }
 
-        if (isset($settings['default_url']) && $url == $settings['default_url']) {
-            $url = DS . IMAGES_URL . $url;
-            $url = $options['urlize'] ? $this->Html->url($url) : $url;
-        } else {
-            //s3用の処理追加
-            $url = $this->substrS3Url($url);
-        }
+        $url = $this->substrS3Url($url);
+
         $this->cache[$hash] = $url;
         return $url;
     }
@@ -375,11 +388,10 @@ class UploadHelper extends AppHelper
 
     public function substrS3Url($url)
     {
-        if (PUBLIC_ENV) {
-            $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
-            //$url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
-            $url = $this->gs_prepareS3URL($trimed_url, S3_ASSETS_BUCKET);
-        }
+        $trimed_url = str_replace(S3_TRIM_PATH, "", $url);
+        //$url = S3_BASE_URL . DS . S3_ASSETS_BUCKET . DS . $trimed_url;
+        $url = $this->gs_prepareS3URL($trimed_url, S3_ASSETS_BUCKET);
+
         return $url;
     }
 
@@ -398,21 +410,20 @@ class UploadHelper extends AppHelper
 
     function gs_prepareS3URL($file, $bucket)
     {
-
         $awsKeyId = AWS_ACCESS_KEY; // this is the non-secret key ID.
         $awsSecretKey = AWS_SECRET_KEY; // this is the SECRET access key!
 
         $file = rawurlencode($file);
-        $file = str_replace('%2F', '/', $file);
-        $path = $bucket . '/' . $file;
+        $file = $this->getLocalPrefix() . '/' . str_replace('%2F', '/', $file);
+
+        $path = $bucket . $file;
 
         $expires = $this->getS3Expires();
         $stringToSign = $this->gs_getStringToSign('GET', $expires, "/$path");
         $signature = $this->gs_encodeSignature($stringToSign, $awsSecretKey);
 
-        $protocol = env('HTTP_X_FORWARDED_PROTO');
+        $url = "https://$bucket.s3.amazonaws.com" . $file;
 
-        $url = $protocol . "://$bucket.s3.amazonaws.com/$file";
         $url .= '?AWSAccessKeyId=' . $awsKeyId
             . '&Expires=' . $expires
             . '&Signature=' . $signature;
@@ -455,4 +466,19 @@ class UploadHelper extends AppHelper
         return $this->s3Expires;
     }
 
+    /**
+     * Get special prefix when uploading from local
+     *
+     * @return string
+     */
+    private function getLocalPrefix(): string
+    {
+        if (ENV_NAME == "local") {
+            if (empty(AWS_S3_BUCKET_USERNAME)) {
+                throw new RuntimeException("Please define AWS_S3_BUCKET_USERNAME");
+            }
+            return "/" . AWS_S3_BUCKET_USERNAME;
+        }
+        return '';
+    }
 }

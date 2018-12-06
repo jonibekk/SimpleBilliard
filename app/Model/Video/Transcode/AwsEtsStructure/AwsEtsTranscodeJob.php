@@ -8,17 +8,17 @@ App::uses('AwsEtsTranscodeOutput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('AwsEtsTranscodeOutputFileNameDefinition', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('AwsEtsTranscodeOutputPlaylist', 'Model/Video/Transcode/AwsEtsStructure');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 class AwsEtsTranscodeJob implements TranscodeOutput
 {
     /**
-     * @var Enum\Video\TranscodeOutputVersion
+     * @var Enum\Model\Video\TranscodeOutputVersion
      */
     private $transcodeOutputVersion;
 
     /**
-     * @var Enum\Video\Transcoder
+     * @var Enum\Model\Video\Transcoder
      */
     private $transcoder;
 
@@ -38,7 +38,7 @@ class AwsEtsTranscodeJob implements TranscodeOutput
     private $outputPlaylists = [];
 
 
-    public function __construct(Enum\Video\TranscodeOutputVersion $transcodeOutputVersion, Enum\Video\Transcoder $transcoder)
+    public function __construct(Enum\Model\Video\TranscodeOutputVersion $transcodeOutputVersion, Enum\Model\Video\Transcoder $transcoder)
     {
         $this->transcodeOutputVersion = $transcodeOutputVersion;
         $this->transcoder = $transcoder;
@@ -59,7 +59,7 @@ class AwsEtsTranscodeJob implements TranscodeOutput
         array_push($this->outputPlaylists, $outputPlaylist);
     }
 
-    public function getTranscoder(): Enum\Video\Transcoder
+    public function getTranscoder(): Enum\Model\Video\Transcoder
     {
         return $this->transcoder;
     }

@@ -52,6 +52,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE = 'fail_email_verify_digit_code';
     const KEY_TYPE_CHANGED_TERM = 'changed_term';
     const KEY_TYPE_MST_CAMPAIGN_PLANS = 'mst_campaign_plans';
+    const KEY_TYPE_MAP_SES_AND_JWT = 'map_ses_and_jwt';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -78,6 +79,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
         self::KEY_TYPE_CHANGED_TERM,
         self::KEY_TYPE_MST_CAMPAIGN_PLANS,
+        self::KEY_TYPE_MAP_SES_AND_JWT
     ];
 
     /**
@@ -317,6 +319,16 @@ class GlRedis extends AppModel
         $changed_term = [
         'team'         => null,
         'changed_term' => null,
+    ];
+
+    /**
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $map_ses_and_jwt = [
+        'team'         => null,
+        'user'         => null,
+        'map_ses_and_jwt' => null,
     ];
 
     public function changeDbSource($config_name = "redis_test")
@@ -1515,4 +1527,47 @@ class GlRedis extends AppModel
 
         return $errorParameters;
     }
+
+
+    /**
+     * Save mapping between session id and jwt
+     *
+     * @param int $teamId
+     * @param int $userId
+     * @param string $sessionId
+     * @param string $jwt
+     * @param float|int $expire
+     * @return bool
+     */
+    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3)
+    {
+        App::uses('AccessAuthenticator', 'Lib/Auth');
+        $jwt = AccessAuthenticator::publish($userId, $teamId);
+        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
+        $this->Db->set($key, $jwt->token());
+        return $this->Db->setTimeout($key, $expire);
+    }
+
+
+    /**
+     * Get jwt from session id
+     *
+     * @param int $teamId
+     * @param int $userId
+     * @param string $sessionId
+     * @return mixed
+     */
+    function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    {
+        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
+        return $this->Db->get($key) ?? "";
+    }
+
+    function getKeyMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId, $userId);
+        $key .= $sessionId;
+        return $key;
+    }
+
 }

@@ -94,10 +94,17 @@ App::build([
 );
 
 //重複するコントローラを共存させる
-if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQUEST_URI'], $matches)) {
     App::build([
         'Controller' => [
-            ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS . strtoupper($matches[1]) . DS,
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS . 'V1' . DS,
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS,
+        ],
+    ]);
+} else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+    App::build([
+        'Controller' => [
+            ROOT . DS . APP_DIR . DS . 'Controller' . DS . 'Api' . DS,
             ROOT . DS . APP_DIR . DS . 'Controller' . DS,
         ],
     ]);
@@ -136,23 +143,10 @@ Configure::write('CakePdf', array(
     'encoding'    => 'UTF-8',
     'pageSize'    => 'A4',
 ));
+Configure::write('Exception.renderer', 'ApiV2ExceptionRenderer');
 
 // AdditionalExceptions
 require APP . "Lib/Error/Exceptions.php";
-
-
-// Autoload model constants
-spl_autoload_register(function ($class) {
-    // Get filePath path by namespace
-    // e.g. 「Goalous\Model\Enum\PaymentSetting\Currency」→「~/app/Model\Enum\PaymentSetting.php」
-    if (!preg_match("/Model\\\\Enum\\\\[A-Za-z]+/", $class, $match)) {
-        return;
-    }
-    $filePath = APP . DS . str_replace('\\', DS, $match[0]) . '.php';
-    if (file_exists($filePath)) {
-        return include $filePath;
-    }
-});
 
 /**
  * Goalous独自定数

@@ -8,7 +8,7 @@ App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
 
-use Goalous\Model\Enum as Enum;
+use Goalous\Enum as Enum;
 
 /**
  * Class InvitationService
@@ -220,7 +220,7 @@ class InvitationService extends AppService
                 // [Important] Transaction commit in this method
                 $PaymentService->charge(
                     $teamId,
-                    Enum\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                     $chargeUserCnt,
                     $fromUserId
                 );

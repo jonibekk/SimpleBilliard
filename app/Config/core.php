@@ -185,12 +185,16 @@ if (REDIS_SESSION_HOST) {
     $session_config = [
         'checkAgent'     => false,
         'userAgent'      => false,
-        'cookie'         => 'SID',
+        'cookie'         => 'GLS_SID',
         'timeout'        => null,
         'autoRegenerate' => false,
         'handler'        => [
             'engine' => 'RedisSession',
             'key'    => 'session:'
+        ],
+        'ini' => [
+            'session.cookie_domain' => 'goalous.com',
+            'session.cookie_secure' => false
         ]
     ];
     $session_ini = [];
@@ -207,7 +211,7 @@ if (REDIS_SESSION_HOST) {
 } else {
     Configure::write('Session', array(
         'defaults' => 'database',
-        'cookie'   => 'SID',
+        'cookie'   => 'GLS_SID',
         'timeout'  => 60 * 24 * 7 * 2, //60min * 24h * 7day * 2 = 2week
     ));
 }
@@ -216,6 +220,7 @@ if (REDIS_SESSION_HOST) {
  * A random string used in security hashing methods.
  */
 Configure::write('Security.salt', SECURITY_SALT);
+Configure::write('Security.level', 'low');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
@@ -347,8 +352,10 @@ if (REDIS_CACHE_HOST) {
 
 $core_cache_prefix = $prefix . 'cake_core:';
 //重複するコントローラを共存させる
-if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/(v[0-9]+)/i', $_SERVER['REQUEST_URI'], $matches)) {
-    $core_cache_prefix = $prefix . 'cake_core_api_' . $matches[1] . ':';
+if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQUEST_URI'], $matches)) {
+    $core_cache_prefix = $prefix . 'cake_core_api_v1:';
+} else if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
+    $core_cache_prefix = $prefix . 'cake_core_api:';
 }
 Cache::config('_cake_core_', array(
     'engine'   => 'Apc',

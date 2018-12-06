@@ -19,7 +19,11 @@
     "stripe/stripe-php": "^5.1",
     "nesbot/carbon": "^1.22",
     "myclabs/php-enum": "^1.5",
-    "friendsofcake/cakepdf": "1.0.3"
+    "friendsofcake/cakepdf": "1.0.3",
+    "respect/validation": "^1.1",
+    "firebase/php-jwt": "^5.0",
+    "ramsey/uuid": "^3.7",
+    "mockery/mockery": "~1.1"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",
@@ -28,10 +32,20 @@
   "config": {
     "vendor-dir": "Vendor/"
   },
-  "repositories": {
-    "packagist": {
+  "autoload": {
+    "psr-4": {
+      "Goalous\\Exception\\": "app/Exception",
+      "Goalous\\Enum\\": "app/Enum"
+    }
+  },
+  "repositories": [
+   {
       "type": "composer",
       "url": "https://packagist.jp"
+    },
+    {
+      "type":"vcs",
+      "url": "https://github.com/isaocorp/cakephp-entity"
     }
-  }
+  ]
 }
