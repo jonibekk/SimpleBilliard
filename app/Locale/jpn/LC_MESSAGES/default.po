@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-18 15:12+0900\n"
+"PO-Revision-Date: 2018-11-21 13:07+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1674,6 +1674,9 @@ msgstr "有効な日付を YYYY/MM/DD フォーマットで入力してくださ
 msgid "Input in the term."
 msgstr "評価期間内で入力してください。"
 
+msgid "Data is duplicated."
+msgstr "データが重複しています。"
+
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "許可されている数字は%2$dから%3$dです。"
 
@@ -1697,6 +1700,15 @@ msgstr "%s画素(pixel)がアップロードできるファイルの上限です
 
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
+
+msgid "You already liked it."
+msgstr "あなたはすでにいいね！しています。"
+
+msgid "You did not like it."
+msgstr "あなたはいいね！していません。"
+
+msgid "No results found"
+msgstr "一致する結果はありませんでした"
 
 msgid "Credit card settings does not exist."
 msgstr "クレジットカード設定が見つかりません。"
@@ -1874,9 +1886,6 @@ msgstr "選択必須項目です。"
 
 msgid "You haven't finished your input data yet. Do you want to leave without finishing?"
 msgstr "入力が途中です。このまま移動しますか？"
-
-msgid "Please enter text."
-msgstr "スペルを入力してください。"
 
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
@@ -4645,6 +4654,9 @@ msgstr "Goalousのブログ"
 msgid "The story of the team"
 msgstr "チームストーリー"
 
+msgid "Facebook page"
+msgstr "Facebook"
+
 msgid "Like us!"
 msgstr "Like us！"
 
@@ -5440,6 +5452,15 @@ msgstr "認定ステータス: %s"
 msgid "You can mention to no one here."
 msgstr "ここではメンションできません。"
 
+msgid "Information matching the search could not be found"
+msgstr "検索に一致する情報は見つかりませんでした"
+
+msgid "Search post and comment"
+msgstr "投稿とコメントから検索"
+
+msgid "Please enter text."
+msgstr "テキストを入力してください。"
+
 msgid "4"
 msgstr ""
 
@@ -5476,11 +5497,8 @@ msgstr ""
 msgid "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
 
-msgid "Data is duplicated."
-msgstr ""
-
 msgid "Not found"
-msgstr ""
+msgstr "お探しの情報は見つかりません。"
 
 msgid "You already read this post."
 msgstr "あなたはすでにこの投稿を読みました。"
@@ -5519,9 +5537,6 @@ msgid "お問い合わせ完了 | Goalous(ゴーラス)"
 msgstr ""
 
 msgid "お問い合わせ完了 | Goalous (ゴーラス)"
-msgstr ""
-
-msgid "Facebook page"
 msgstr ""
 
 msgid "Make your colleages Goal clear."

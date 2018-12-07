@@ -18,8 +18,10 @@ class CircleListPagingService extends BasePagingService
 
     /**
      * Get all circles and not including with paging data
-     * @param $pagingRequest
+     *
+     * @param       $pagingRequest
      * @param array $extendFlags
+     *
      * @return array
      */
     public function getAllData(
@@ -110,9 +112,11 @@ class CircleListPagingService extends BasePagingService
 
     /**
      * Add condition for pinned circles
+     *
      * @param array $searchConditions
      * @param int $userId
      * @param int $teamId
+     *
      * @return array
      */
     private function addSearchConditionForPinned(array $searchConditions, int $userId, int $teamId): array
@@ -127,15 +131,21 @@ class CircleListPagingService extends BasePagingService
 
     /**
      * Add condition for joined circles
+     *
      * @param array $searchConditions
      * @param int $userId
      * @param int $teamId
      * @param bool $joinedFlag
+     *
      * @return array
      */
-    private function addSearchConditionForJoined(array $searchConditions, int $userId, int $teamId, bool $joinedFlag): array
+    private function addSearchConditionForJoined(
+        array $searchConditions,
+        int $userId,
+        int $teamId,
+        bool $joinedFlag
+    ): array
     {
-
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+
 use Goalous\Enum as Enum;
 
 /**
@@ -61,8 +62,8 @@ class Team extends AppModel
     /**
      * Team credit card status
      */
-    const STATUS_CREDIT_CARD_CLEAR       = 0;
-    const STATUS_CREDIT_CARD_EXPIRED     = 1;
+    const STATUS_CREDIT_CARD_CLEAR = 0;
+    const STATUS_CREDIT_CARD_EXPIRED = 1;
     const STATUS_CREDIT_CARD_EXPIRE_SOON = 2;
 
     /**
@@ -862,8 +863,8 @@ class Team extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'PaymentSetting.team_id = ChargeHistory.team_id',
-                        'ChargeHistory.charge_type'     => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
-                        'ChargeHistory.result_type'     => Enum\Model\ChargeHistory\ResultType::FAIL,
+                        'ChargeHistory.charge_type'         => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+                        'ChargeHistory.result_type'         => Enum\Model\ChargeHistory\ResultType::FAIL,
                         'ChargeHistory.charge_datetime >= ' => $startTimestamp,
                         'ChargeHistory.charge_datetime <= ' => $endTimestamp,
                         'ChargeHistory.del_flg'             => false,
@@ -896,4 +897,5 @@ class Team extends AppModel
         }
         return null;
     }
+
 }

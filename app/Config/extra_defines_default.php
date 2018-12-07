@@ -105,7 +105,8 @@ $defines = [
     //https://confluence.goalous.com/x/agMQAQ
     'AWS_S3_BUCKET_USERNAME'                        => null,
     //For temporary files, such as upload buffering
-    'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp'
+    'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp',
+    'ES_API_BASE_URL'                               => 'dev-search.goalous.com'
 ];
 // for local
 if (file_exists(APP . 'Config/extra_defines_local.php')) {
