@@ -695,9 +695,6 @@ class CircleMember extends AppModel
             'group'      => 'CircleMember.circle_id'
         ];
         $res = $this->find('all', $options);
-        if (empty($res)) {
-            return [];
-        }
         $res = Hash::combine($res, '{n}.CircleMember.circle_id', '{n}.0.count');
         foreach ($circleIds as $circleId) {
             $res[$circleId] = array_key_exists($circleId, $res) ? (int)$res[$circleId] : 0;
