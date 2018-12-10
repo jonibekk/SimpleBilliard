@@ -61,6 +61,8 @@ class PostServiceTest extends GoalousTestCase
         'app.action_result_file',
         'app.key_result',
         'app.goal',
+        'app.post_file',
+        'app.comment_file'
     ];
 
     /**
@@ -996,8 +998,6 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
         $this->assertEquals($ret['comments']['cursor'], null);
-        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
-        $this->assertEquals($ret['circle']['id'], 1);
 
         $extensions = [
             PostExtender::EXTEND_ALL
@@ -1016,8 +1016,6 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
         $this->assertEquals($ret['comments']['cursor'], null);
-        $this->assertEquals($ret['circle']['team_id'], $req->getTeamId());
-        $this->assertEquals($ret['circle']['id'], 1);
 
         $req->setId(7);
         $req->setUserId(99);
