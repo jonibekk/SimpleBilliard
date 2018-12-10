@@ -38,6 +38,9 @@ class PostExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
             switch ((int)$data['type']) {
                 case Post::TYPE_NORMAL:
+                    // TODO: depends on spec
+                    break;
+                case Post::TYPE_CREATE_CIRCLE:
                     /** @var CircleExtension $CircleExtension */
                     $CircleExtension = ClassRegistry::init('CircleExtension');
                     $data = $CircleExtension->extend($data, "circle_id");
