@@ -136,14 +136,51 @@ class Message extends AppModel
 
         if ($cursor) {
             if ($direction == self::DIRECTION_OLD) {
-                $options['conditions']['Message.id <'] = $cursor;
+                $options['conditions']['Message.id <='] = $cursor;
             } elseif ($direction == self::DIRECTION_NEW) {
-                $options['conditions']['Message.id >'] = $cursor;
+                $options['conditions']['Message.id >='] = $cursor;
+                $options['order']['Message.id'] = 'ASC';
             }
         }
 
         $res = $this->find('all', $options);
+
+        if ($direction === self::DIRECTION_NEW) {
+            return array_reverse($res);
+        }
+
         return $res;
+    }
+
+    /**
+     * Return newer message.id in the topic.
+     * If not existing, returning null.
+     * @param int $topicId
+     * @param int $messageId
+     * @return int|null
+     */
+    function findNewerMessageId(int $topicId, int $messageId)
+    {
+
+        $options = [
+            'conditions' => [
+                'Message.topic_id' => $topicId,
+                'Message.id >' => $messageId,
+            ],
+            'fields'     => [
+                'id',
+            ],
+            'order'      => [
+                'Message.id' => 'ASC'
+            ],
+            'limit'      => 1,
+        ];
+
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            return null;
+        }
+        return Hash::get($res, 'Message.id');
     }
 
     /**

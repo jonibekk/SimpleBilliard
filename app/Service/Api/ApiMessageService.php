@@ -9,7 +9,11 @@ App::uses('Message', 'Model');
  */
 class ApiMessageService extends ApiService
 {
-    const MESSAGE_DEFAULT_LIMIT = 20;
+    // TODO fix to 20
+    const MESSAGE_DEFAULT_LIMIT = 3;
+
+    const PAGING_TYPE_NEXT = 0;
+    const PAGING_TYPE_BOTH = 1;
 
     /**
      * Finding messages. It will returns data as API response
@@ -19,6 +23,7 @@ class ApiMessageService extends ApiService
      * @param int|null    $cursor
      * @param int|null    $limit
      * @param string|null $direction "old" or "new"
+     * @param int $pagingType
      *
      * @return array
      */
@@ -27,12 +32,9 @@ class ApiMessageService extends ApiService
         int $loginUserId,
         $cursor = null,
         $limit = null,
-        $direction = Message::DIRECTION_OLD
+        $direction = Message::DIRECTION_OLD,
+        $pagingType = self::PAGING_TYPE_NEXT
     ): array {
-        /** @var Topic $Topic */
-        $Topic = ClassRegistry::init('Topic');
-        /** @var TopicMember $TopicMember */
-        $TopicMember = ClassRegistry::init('TopicMember');
         /** @var MessageService $MessageService */
         $MessageService = ClassRegistry::init('MessageService');
 
@@ -41,14 +43,6 @@ class ApiMessageService extends ApiService
             $limit = self::MESSAGE_DEFAULT_LIMIT;
         }
 
-        // it's default that will be returned
-        $ret = [
-            'data'           => [],
-            'paging'         => ['next' => null],
-            // set data only getting new message.
-            'latest_message' => []
-        ];
-
         // getting message data
         $messages = $MessageService->findMessages($topicId, $cursor, $limit + 1, $direction);
         // converting key names for response data
@@ -56,22 +50,30 @@ class ApiMessageService extends ApiService
             $message = $this->convertKeyNames($message);
         }
 
-        $ret['data'] = $messages;
-
         // update user last read message id
-        $this->updateLastReadMessageId($ret['data'], $topicId, $loginUserId);
+        $this->updateLastReadMessageId($messages, $topicId, $loginUserId);
 
-        if ($direction == Message::DIRECTION_OLD) {
-            $ret = $this->setPaging($ret, $topicId, $limit);
+        $paging = [];
+        switch ($pagingType) {
+            case self::PAGING_TYPE_BOTH:
+                $paging = $this->getPagingBoth($messages, $topicId, $limit, $direction);
+                break;
+            case self::PAGING_TYPE_NEXT:
+            default:
+                $paging = $this->getPaging($messages, $topicId, $limit, $direction);
+                break;
         }
-        // sending latest_message only getting messge
-        // Because need to update latest message info only when getting new message
-        if ($direction == Message::DIRECTION_NEW) {
-            $latestMessageId = $Topic->getLatestMessageId($topicId);
-            $ret['latest_message']['id'] = $latestMessageId;
-            $ret['latest_message']['read_count'] = $TopicMember->countReadMember($latestMessageId);
+
+        $selectCountEqualToLimit = (count($messages) === ($limit + 1));
+        // Remove the last message of N+1
+        if ($selectCountEqualToLimit) {
+            array_shift($messages);
         }
-        return $ret;
+
+        return [
+            'data' => $messages,
+            'paging' => $paging,
+        ];
     }
 
     /**
@@ -112,28 +114,102 @@ class ApiMessageService extends ApiService
     }
 
     /**
-     * Setting paging Information
-     * - $data includes extra record that will be removed.
+     * Returning next paging parameter considering paging direction new/old.
      *
-     * @param array $data
-     * @param int   $topicId
-     * @param int   $limit
+     * @param array     $messages
+     * @param int       $topicId
+     * @param int       $limit
+     * @param string    $direction
      *
      * @return array
      */
-    private function setPaging(array $data, int $topicId, int $limit): array
+    private function getPaging(array $messages, int $topicId, int $limit, string $direction): array
     {
-        // If next page is not exists, return
-        if (count($data['data']) < $limit + 1) {
-            return $data;
+        $url = null;
+        switch ($direction) {
+            case Message::DIRECTION_NEW:
+                $url = $this->getPagingUrlNew($messages, $topicId, $limit);
+                break;
+            case Message::DIRECTION_OLD:
+            default:
+                $url = $this->getPagingUrlOld($messages, $topicId, $limit);
+                break;
         }
-        // exclude that extra record for paging
-        array_shift($data['data']);
-        $cursor = reset($data['data'])['id'];
-        $queryParams = am(compact('cursor'), compact('limit'));
 
-        $data['paging']['next'] = "/api/v1/topics/{$topicId}/messages?" . http_build_query($queryParams);
-        return $data;
+        return [
+            'next' => $url,
+        ];
+    }
+
+    /**
+     * Resolve next paging parameter considering paging direction new/old.
+     *
+     * @param array $messages
+     * @param int $topicId
+     * @param int $limit
+     * @return array
+     */
+    private function getPagingBoth(array $messages, int $topicId, int $limit): array
+    {
+        return [
+            'new' => $this->getPagingUrlNew($messages, $topicId, $limit),
+            'old' => $this->getPagingUrlOld($messages, $topicId, $limit),
+        ];
+    }
+
+    /**
+     * Resolve the old url from messages
+     *
+     * @param array $messages
+     * @param int $topicId
+     * @param int $limit
+     * @return null|string
+     */
+    private function getPagingUrlOld(array $messages, int $topicId, int $limit)
+    {
+        if (empty($messages)) {
+            return null;
+        }
+        $selectCountLessThanLimit = (count($messages) < $limit + 1);
+        if ($selectCountLessThanLimit) {
+            return null;
+        }
+        $cursorOld = reset($messages)['id'];
+        return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
+                'cursor' => $cursorOld,
+                'direction' => Message::DIRECTION_OLD,
+                'limit' => $limit,
+            ]);
+    }
+
+    /**
+     * Resolve the new url from messages
+     *
+     * @param array $messages
+     * @param int $topicId
+     * @param int $limit
+     * @return null|string
+     */
+    private function getPagingUrlNew(array $messages, int $topicId, int $limit)
+    {
+        if (empty($messages)) {
+            return null;
+        }
+        $lastKey = count($messages) - 1;
+        $messageIdNewest = $messages[$lastKey]['id'];
+
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $cursorNew = $Message->findNewerMessageId($topicId, $messageIdNewest);
+
+        if ($cursorNew) {
+            return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
+                    'cursor'    => $cursorNew,
+                    'direction' => Message::DIRECTION_NEW,
+                    'limit'     => $limit,
+                ]);
+        }
+        return null;
     }
 
     /**
@@ -145,6 +221,9 @@ class ApiMessageService extends ApiService
      */
     function updateLastReadMessageId(array $messages, int $topicId, int $loginUserId)
     {
+        if (empty($messages)) {
+            return;
+        }
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
         /** @var Topic $Topic */

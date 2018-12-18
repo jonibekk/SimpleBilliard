@@ -83,6 +83,8 @@ class TopicsController extends ApiController
      */
     function get_detail(int $topicId)
     {
+        $messageId = $this->request->query('message_id');
+
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
 
@@ -94,7 +96,7 @@ class TopicsController extends ApiController
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
-        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId);
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId, $messageId);
 
         // updating notification for message
         $this->NotifyBiz->removeMessageNotification($topicId);
@@ -114,13 +116,14 @@ class TopicsController extends ApiController
      * @queryParam string $direction optional. "old" or "new" for getting older than cursor or newer
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+message+list
-     *             TODO: This is mock! We have to implement it!
      */
     function get_messages(int $topicId)
     {
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
-        $direction = $this->request->query('direction') ?? Message::DIRECTION_OLD;
+        $queryDirection = $this->request->query('direction');
+        $enabledDirection = [Message::DIRECTION_OLD, Message::DIRECTION_NEW];
+        $direction = in_array($queryDirection, $enabledDirection) ? $queryDirection : Message::DIRECTION_OLD;
         $loginUserId = $this->Auth->user('id');
 
         /** @var ApiMessageService $ApiMessageService */
