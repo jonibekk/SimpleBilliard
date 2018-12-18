@@ -8,11 +8,26 @@ App::uses('AppModel', 'Model');
  * @property User        $SenderUser
  * @property MessageFile $MessageFile
  */
+
+use Goalous\Enum as Enum;
+
 class Message extends AppModel
 {
+    /**
+     * @deprecated
+     */
     const TYPE_NORMAL = 1;
+    /**
+     * @deprecated
+     */
     const TYPE_ADD_MEMBER = 2;
+    /**
+     * @deprecated
+     */
     const TYPE_LEAVE = 3;
+    /**
+     * @deprecated
+     */
     const TYPE_SET_TOPIC_NAME = 4;
     const DIRECTION_OLD = "old";
     const DIRECTION_NEW = "new";
@@ -184,7 +199,7 @@ class Message extends AppModel
     function saveNormal(array $data, int $userId)
     {
         $data = am($data, [
-            'type'           => self::TYPE_NORMAL,
+            'type'           => Enum\Model\Message\MessageType::NORMAL,
             'sender_user_id' => $userId,
             'team_id'        => $this->current_team_id,
         ]);
@@ -206,7 +221,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
-            'type'           => self::TYPE_LEAVE,
+            'type'           => Enum\Model\Message\MessageType::LEAVE,
             'meta_data'      => json_encode(['target_user_ids' => $userId])
 
         ];
@@ -229,7 +244,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
-            'type'           => self::TYPE_SET_TOPIC_NAME,
+            'type'           => Enum\Model\Message\MessageType::SET_TOPIC_NAME,
             'meta_data'      => json_encode(['updated_topic_title' => $title])
         ];
         $ret = $this->save($data);
@@ -251,7 +266,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $loginUserId,
-            'type'           => self::TYPE_ADD_MEMBER,
+            'type'           => Enum\Model\Message\MessageType::ADD_MEMBER,
             'meta_data'      => json_encode(['target_user_ids' => $addUserIds])
         ];
         $ret = $this->save($data);
@@ -316,10 +331,10 @@ class Message extends AppModel
         $type = Hash::get($this->data, 'Message.type');
         if ($type === null) {
             // default type
-            $type = self::TYPE_NORMAL;
+            $type = Enum\Model\Message\MessageType::NORMAL;
         }
 
-        if ($type != self::TYPE_NORMAL) {
+        if ($type != Enum\Model\Message\MessageType::NORMAL) {
             return true;
         }
 
