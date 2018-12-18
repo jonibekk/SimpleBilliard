@@ -48,7 +48,8 @@ class CommentLikeExtension extends DataExtension
         array $parentData,
         string $parentKeyName,
         array $extData,
-        string $extDataKey
+        string $extDataKey,
+        string $extEntryKey = ""
     ): array {
         foreach ($parentData as $key => &$parentElement) {
             if (!is_int($key)){

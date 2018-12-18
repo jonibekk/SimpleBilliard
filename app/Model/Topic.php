@@ -441,7 +441,7 @@ class Topic extends AppModel
         $userFields = $User->profileFields;
 
         //If getting unique users, replace field id with DISTINCT id
-        if ($uniqueUserFlag){
+        if ($uniqueUserFlag) {
             $userFields[0] = 'DISTINCT id';
         }
 
@@ -471,7 +471,7 @@ class Topic extends AppModel
             ]
         ];
 
-        $result =  $User->useType()->useEntity()->find('all', $condition);
+        $result = $User->useType()->useEntity()->find('all', $condition);
 
         // Set profile image url each data
         /** @var ImageStorageService $ImageStorageService */

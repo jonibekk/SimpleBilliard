@@ -13,8 +13,8 @@ App::uses('AppUtil', 'Util');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
-App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging/Search', 'TopicSearchPagingService');
+App::import('Service/Paging/Search', 'MessageSearchPagingService');
 
 use Goalous\Enum as Enum;
 
@@ -47,6 +47,39 @@ class TopicsController extends ApiController
         /** @var TopicSearchPagingService $TopicSearchPagingService */
         $TopicSearchPagingService = ClassRegistry::init('TopicSearchPagingService');
         $searchResult = $TopicSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
+    }
+
+    public function get_search_messages(int $topicId)
+    {
+        $error = $this->validateSearchMessage($topicId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+        $teamId = $this->current_team_id;
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('topic_id', $topicId);
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+        $pagingRequest->addTempCondition('user_id', $this->Auth->user('id'));
+
+        /** @var MessageSearchPagingService $MessageSearchPagingService */
+        $MessageSearchPagingService = ClassRegistry::init('MessageSearchPagingService');
+        $searchResult = $MessageSearchPagingService->getDataWithPaging($pagingRequest);
 
         return ApiResponse::ok()->withBody($searchResult)->getResponse();
     }
@@ -524,5 +557,24 @@ class TopicsController extends ApiController
             return $this->_getResponseForbidden();
         }
         return true;
+    }
+
+    /**
+     * @param int $topicId
+     *
+     * @return BaseApiResponse|null
+     */
+    private function validateSearchMessage(int $topicId)
+    {
+        $userId = $this->Auth->user('id');
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        if (!$TopicMember->isMember($topicId, $userId)) {
+            return ErrorResponse::forbidden()->withMessage(__("You cannot access the topic"))->getResponse();
+        }
+
+        return null;
     }
 }

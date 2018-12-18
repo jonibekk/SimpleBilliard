@@ -9,6 +9,9 @@ App::uses('AppModel', 'Model');
  * @property MessageFile $MessageFile
  */
 
+use Goalous\Enum\DataType\DataType as DataType;
+
+
 use Goalous\Enum as Enum;
 
 class Message extends AppModel
@@ -85,6 +88,14 @@ class Message extends AppModel
      */
     public $hasMany = [
         'MessageFile',
+    ];
+
+    public $modelConversionTable = [
+        'topic_id'            => DataType::INT,
+        'sender_user_id'      => DataType::INT,
+        'team_id'             => DataType::INT,
+        'type'                => DataType::INT,
+        'attached_file_count' => DataType::INT
     ];
 
     /**
