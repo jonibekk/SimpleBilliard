@@ -1,6 +1,6 @@
 <?php
 App::uses("TeamMember", "Model");
-App::import('Lib/DataExtender', 'DataExtender');
+App::import('Lib/DataExtender/Extension', 'DataExtension');
 /**
  * Created by PhpStorm.
  * User: Stephen Raharja
@@ -8,7 +8,7 @@ App::import('Lib/DataExtender', 'DataExtender');
  * Time: 4:51 PM
  */
 
-class TeamMemberDataExtender extends DataExtender
+class TeamMemberExtension extends DataExtension
 {
     /** @var int */
     private $teamId;

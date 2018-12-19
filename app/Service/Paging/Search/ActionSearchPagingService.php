@@ -5,7 +5,7 @@ App::uses('Post', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('SavedPost', 'Model');
 App::uses('UploadHelper', 'View/Helper');
-App::import('Lib/DataExtender', 'UserDataExtender');
+App::import('Lib/DataExtender/Extension', 'UserExtension');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
 App::import('Model/Entity', 'PostEntity');
@@ -152,9 +152,9 @@ class ActionSearchPagingService extends BaseSearchPagingService
      */
     private function bulkExtendPost(array $rawData, ESPagingRequest $request): array
     {
-        /** @var UserDataExtender $UserDataExtender */
-        $UserDataExtender = ClassRegistry::init('UserDataExtender');
-        $resultArray = $UserDataExtender->extend($rawData, "{n}.user_id");
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        $resultArray = $UserExtension->extendMulti($rawData, "{n}.user_id");
 
         return $resultArray;
     }
@@ -170,9 +170,9 @@ class ActionSearchPagingService extends BaseSearchPagingService
      */
     private function bulkExtendComment(array $rawData, ESPagingRequest $request): array
     {
-        /** @var UserDataExtender $UserDataExtender */
-        $UserDataExtender = ClassRegistry::init('UserDataExtender');
-        $resultArray = $UserDataExtender->extend($rawData, "{n}.user_id");
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        $resultArray = $UserExtension->extendMulti($rawData, "{n}.user_id");
 
         return $resultArray;
     }
