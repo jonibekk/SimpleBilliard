@@ -200,7 +200,7 @@ class ApiTopicServiceTest extends GoalousTestCase
         $this->assertNull($r['messages']['paging']['old']);
     }
 
-    function createMessageTestData(): array
+    private function createMessageTestData(): array
     {
         $userId = 1;
         $teamId = 1;

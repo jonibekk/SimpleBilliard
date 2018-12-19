@@ -125,7 +125,8 @@ class ApiMessageService extends ApiService
     /**
      * Returning next paging parameter considering paging direction new/old.
      *
-     * @param array     $messages
+     * @param array     $messages Expecting value from $MessageService->findMessages().
+     *                              At least {n}.id is needed in the value.
      * @param int       $topicId
      * @param int       $limit
      * @param string    $direction
@@ -153,7 +154,8 @@ class ApiMessageService extends ApiService
     /**
      * Resolve next paging parameter considering paging direction new/old.
      *
-     * @param array $messages
+     * @param array $messages Expecting value from $MessageService->findMessages().
+     *                              At least {n}.id is needed in the value.
      * @param int $topicId
      * @param int $limit
      * @param string $direction

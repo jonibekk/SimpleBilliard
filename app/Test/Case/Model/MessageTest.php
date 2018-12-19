@@ -59,7 +59,7 @@ class MessageTest extends GoalousTestCase
         $this->markTestIncomplete('testClear not implemented.');
     }
 
-    function test_findNewerMessageId()
+    public function test_findNewerMessageId_success()
     {
         $data = $this->createMessageTestData();
         $r = $this->Message->findNewerMessageId($data["topic_id"], 100);
@@ -69,7 +69,7 @@ class MessageTest extends GoalousTestCase
     }
 
 
-    function createMessageTestData(): array
+    private function createMessageTestData(): array
     {
         $userId = 1;
         $teamId = 1;

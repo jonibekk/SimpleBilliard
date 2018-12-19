@@ -107,7 +107,6 @@ class Message extends AppModel
                 'id',
                 'body',
                 'type',
-                'meta_data',
                 'created'
             ],
             'order'      => [
