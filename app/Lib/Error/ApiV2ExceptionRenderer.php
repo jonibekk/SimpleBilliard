@@ -19,25 +19,30 @@ class ApiV2ExceptionRenderer extends ExceptionRenderer
         switch (get_class($error)) {
             case ReflectionException::class:
             case MissingActionException::class:
-                GoalousLog::error('Action not found', [
-                    'message' => $error->getMessage(),
-                ]);
+                if (getenv('ENV_NAME') != 'isao' && getenv('ENV_NAME') != 'www') {
+                    GoalousLog::error('Action not found', [
+                        'message' => $error->getMessage(),
+                    ]);
+                }
                 $response = ErrorResponse::notFound()->withMessage(__('Not Found'))->getResponse();
                 break;
             case MissingControllerException::class:
-                GoalousLog::error('Controller not found', [
-                    'message' => $error->getMessage(),
-                ]);
+                if (getenv('ENV_NAME') != 'isao' && getenv('ENV_NAME') != 'www') {
+                    GoalousLog::error('Controller not found', [
+                        'message' => $error->getMessage(),
+                    ]);
+                }
                 $response = ErrorResponse::notFound()->withMessage(__('Not Found'))->getResponse();
                 break;
             default:
                 GoalousLog::error('Uncaught exception', [
                     'exception' => get_class($error),
-                    'message' => $error->getMessage(),
-                    'file' => $error->getFile(),
-                    'line' => $error->getLine(),
+                    'message'   => $error->getMessage(),
+                    'file'      => $error->getFile(),
+                    'line'      => $error->getLine(),
                 ]);
-                $response = ErrorResponse::internalServerError()->withMessage(__('Internal Server Error'))->getResponse();
+                $response = ErrorResponse::internalServerError()->withMessage(__('Internal Server Error'))
+                                         ->getResponse();
                 break;
         }
 

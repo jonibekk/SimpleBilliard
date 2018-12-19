@@ -217,12 +217,6 @@ class BaseController extends Controller
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($logoutRedirect);
             }
-            $sesId = $this->Session->id();
-            // GL-7364：Enable to keep login status between old Goalous and new Goalous
-            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
-            if (empty($mapSesAndJwt)) {
-                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
-            }
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
                 //If user doesn't have other team, redirect to create team page
