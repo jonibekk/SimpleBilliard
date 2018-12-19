@@ -785,6 +785,12 @@ class AppModel extends Model
         return $this;
     }
 
+    public function useReset(): self
+    {
+        $this->postProcessFunctions = [];
+        return $this;
+    }
+
     /**
      * Add type conversion process to post process
      *
