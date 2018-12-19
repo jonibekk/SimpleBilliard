@@ -9,8 +9,7 @@ App::uses('Message', 'Model');
  */
 class ApiMessageService extends ApiService
 {
-    // TODO fix to 20
-    const MESSAGE_DEFAULT_LIMIT = 3;
+    const MESSAGE_DEFAULT_LIMIT = 20;
 
     const PAGING_TYPE_NEXT = 0;
     const PAGING_TYPE_BOTH = 1;
@@ -67,7 +66,15 @@ class ApiMessageService extends ApiService
         $selectCountEqualToLimit = (count($messages) === ($limit + 1));
         // Remove the last message of N+1
         if ($selectCountEqualToLimit) {
-            array_shift($messages);
+            switch ($direction) {
+                case Message::DIRECTION_NEW:
+                    array_pop($messages);
+                    break;
+                case Message::DIRECTION_OLD:
+                default:
+                    array_shift($messages);
+                    break;
+            }
         }
 
         return [
@@ -128,11 +135,11 @@ class ApiMessageService extends ApiService
         $url = null;
         switch ($direction) {
             case Message::DIRECTION_NEW:
-                $url = $this->getPagingUrlNew($messages, $topicId, $limit);
+                $url = $this->getPagingUrlNew($messages, $topicId, $limit, $direction);
                 break;
             case Message::DIRECTION_OLD:
             default:
-                $url = $this->getPagingUrlOld($messages, $topicId, $limit);
+                $url = $this->getPagingUrlOld($messages, $topicId, $limit, $direction);
                 break;
         }
 
@@ -147,13 +154,14 @@ class ApiMessageService extends ApiService
      * @param array $messages
      * @param int $topicId
      * @param int $limit
+     * @param string $direction
      * @return array
      */
-    private function getPagingBoth(array $messages, int $topicId, int $limit): array
+    private function getPagingBoth(array $messages, int $topicId, int $limit, string $direction): array
     {
         return [
-            'new' => $this->getPagingUrlNew($messages, $topicId, $limit),
-            'old' => $this->getPagingUrlOld($messages, $topicId, $limit),
+            'new' => $this->getPagingUrlNew($messages, $topicId, $limit, $direction),
+            'old' => $this->getPagingUrlOld($messages, $topicId, $limit, $direction),
         ];
     }
 
@@ -165,7 +173,7 @@ class ApiMessageService extends ApiService
      * @param int $limit
      * @return null|string
      */
-    private function getPagingUrlOld(array $messages, int $topicId, int $limit)
+    private function getPagingUrlOld(array $messages, int $topicId, int $limit, string $direction)
     {
         if (empty($messages)) {
             return null;
@@ -190,24 +198,36 @@ class ApiMessageService extends ApiService
      * @param int $limit
      * @return null|string
      */
-    private function getPagingUrlNew(array $messages, int $topicId, int $limit)
+    private function getPagingUrlNew(array $messages, int $topicId, int $limit, string $direction)
     {
         if (empty($messages)) {
             return null;
         }
-        $lastKey = count($messages) - 1;
-        $messageIdNewest = $messages[$lastKey]['id'];
+        $messageIds = Hash::extract($messages, '{n}.id');
+        $maxMessageId = max($messageIds);
 
-        /** @var Message $Message */
-        $Message = ClassRegistry::init('Message');
-        $cursorNew = $Message->findNewerMessageId($topicId, $messageIdNewest);
-
-        if ($cursorNew) {
-            return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
-                    'cursor'    => $cursorNew,
-                    'direction' => Message::DIRECTION_NEW,
-                    'limit'     => $limit,
-                ]);
+        switch ($direction) {
+            case Message::DIRECTION_NEW:
+                $selectCountLessThanLimit = (count($messages) < $limit + 1);
+                if ($selectCountLessThanLimit) {
+                    return null;
+                }
+                return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
+                        'cursor'    => $maxMessageId,
+                        'direction' => Message::DIRECTION_NEW,
+                        'limit'     => $limit,
+                    ]);
+            default:
+                /** @var Message $Message */
+                $Message = ClassRegistry::init('Message');
+                $cursorNew = $Message->findNewerMessageId($topicId, $maxMessageId);
+                if ($cursorNew) {
+                    return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
+                            'cursor'    => $cursorNew,
+                            'direction' => Message::DIRECTION_NEW,
+                            'limit'     => $limit,
+                        ]);
+                }
         }
         return null;
     }
@@ -246,7 +266,7 @@ class ApiMessageService extends ApiService
             return;
         }
 
-        // need not update if alread read
+        // need not update if already read
         if ($TopicMember->getLastReadMessageId($topicId, $loginUserId) == $latestMessageId) {
             return;
         }
