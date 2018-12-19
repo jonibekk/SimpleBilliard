@@ -4,6 +4,8 @@ App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
 App::uses('Message', 'Model');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class ApiMessageService
  */
@@ -31,7 +33,7 @@ class ApiMessageService extends ApiService
         int $loginUserId,
         $cursor = null,
         $limit = null,
-        $direction = Message::DIRECTION_OLD,
+        $direction = Enum\Model\Message\MessageDirection::OLD,
         $pagingType = self::PAGING_TYPE_NEXT
     ): array {
         /** @var MessageService $MessageService */
@@ -67,10 +69,10 @@ class ApiMessageService extends ApiService
         // Remove the last message of N+1
         if ($selectCountEqualToLimit) {
             switch ($direction) {
-                case Message::DIRECTION_NEW:
+                case Enum\Model\Message\MessageDirection::NEW:
                     array_pop($messages);
                     break;
-                case Message::DIRECTION_OLD:
+                case Enum\Model\Message\MessageDirection::OLD:
                 default:
                     array_shift($messages);
                     break;
@@ -134,10 +136,10 @@ class ApiMessageService extends ApiService
     {
         $url = null;
         switch ($direction) {
-            case Message::DIRECTION_NEW:
+            case Enum\Model\Message\MessageDirection::NEW:
                 $url = $this->getPagingUrlNew($messages, $topicId, $limit, $direction);
                 break;
-            case Message::DIRECTION_OLD:
+            case Enum\Model\Message\MessageDirection::OLD:
             default:
                 $url = $this->getPagingUrlOld($messages, $topicId, $limit, $direction);
                 break;
@@ -185,7 +187,7 @@ class ApiMessageService extends ApiService
         $cursorOld = reset($messages)['id'];
         return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
                 'cursor' => $cursorOld,
-                'direction' => Message::DIRECTION_OLD,
+                'direction' => Enum\Model\Message\MessageDirection::OLD,
                 'limit' => $limit,
             ]);
     }
@@ -207,14 +209,14 @@ class ApiMessageService extends ApiService
         $maxMessageId = max($messageIds);
 
         switch ($direction) {
-            case Message::DIRECTION_NEW:
+            case Enum\Model\Message\MessageDirection::NEW:
                 $selectCountLessThanLimit = (count($messages) < $limit + 1);
                 if ($selectCountLessThanLimit) {
                     return null;
                 }
                 return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
                         'cursor'    => $maxMessageId,
-                        'direction' => Message::DIRECTION_NEW,
+                        'direction' => Enum\Model\Message\MessageDirection::NEW,
                         'limit'     => $limit,
                     ]);
             default:
@@ -224,7 +226,7 @@ class ApiMessageService extends ApiService
                 if ($cursorNew) {
                     return "/api/v1/topics/{$topicId}/messages?" . http_build_query([
                             'cursor'    => $cursorNew,
-                            'direction' => Message::DIRECTION_NEW,
+                            'direction' => Enum\Model\Message\MessageDirection::NEW,
                             'limit'     => $limit,
                         ]);
                 }

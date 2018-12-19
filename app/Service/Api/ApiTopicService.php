@@ -7,6 +7,8 @@ App::uses('TopicMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class ApiTopicService
  */
@@ -102,7 +104,7 @@ class ApiTopicService extends ApiService
      *
      * @return array
      */
-    function findTopicDetailInitData(int $topicId, int $loginUserId, int $messageId = null): array
+    function findTopicDetailInitData(int $topicId, int $loginUserId, $messageId = null): array
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
@@ -111,7 +113,7 @@ class ApiTopicService extends ApiService
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');
         $limit = null;
-        $direction = Message::DIRECTION_OLD;
+        $direction = Enum\Model\Message\MessageDirection::OLD;
         $pagingType = ApiMessageService::PAGING_TYPE_BOTH;
         $messageData = $ApiMessageService->findMessages($topicId, $loginUserId, $messageId, $limit, $direction, $pagingType);
 

@@ -29,8 +29,6 @@ class Message extends AppModel
      * @deprecated
      */
     const TYPE_SET_TOPIC_NAME = 4;
-    const DIRECTION_OLD = "old";
-    const DIRECTION_NEW = "new";
 
     /**
      * Validation rules
@@ -99,7 +97,7 @@ class Message extends AppModel
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = Enum\Model\Message\MessageDirection::OLD): array
     {
         $options = [
             'conditions' => [
@@ -135,9 +133,9 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            if ($direction == self::DIRECTION_OLD) {
+            if ($direction == Enum\Model\Message\MessageDirection::OLD) {
                 $options['conditions']['Message.id <='] = $cursor;
-            } elseif ($direction == self::DIRECTION_NEW) {
+            } elseif ($direction == Enum\Model\Message\MessageDirection::NEW) {
                 $options['conditions']['Message.id >='] = $cursor;
                 $options['order']['Message.id'] = 'ASC';
             }
@@ -145,7 +143,7 @@ class Message extends AppModel
 
         $res = $this->find('all', $options);
 
-        if ($direction === self::DIRECTION_NEW) {
+        if ($direction === Enum\Model\Message\MessageDirection::NEW) {
             return array_reverse($res);
         }
 

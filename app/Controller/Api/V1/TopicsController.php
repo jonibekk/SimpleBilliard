@@ -11,6 +11,8 @@ App::import('Service/Api', 'ApiMessageService');
 App::import('Service/Api', 'ApiTopicService');
 App::uses('AppUtil', 'Util');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class TopicsController
  */
@@ -122,8 +124,7 @@ class TopicsController extends ApiController
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
         $queryDirection = $this->request->query('direction');
-        $enabledDirection = [Message::DIRECTION_OLD, Message::DIRECTION_NEW];
-        $direction = in_array($queryDirection, $enabledDirection) ? $queryDirection : Message::DIRECTION_OLD;
+        $direction = Enum\Model\Message\MessageDirection::isValid($queryDirection) ? $queryDirection : Enum\Model\Message\MessageDirection::OLD;
         $loginUserId = $this->Auth->user('id');
 
         /** @var ApiMessageService $ApiMessageService */
