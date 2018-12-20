@@ -1431,7 +1431,7 @@ class PostsController extends AppController
 
     public function _userCircleStatus($circle_id)
     {
-        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
+        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), intval($circle_id))) {
             return 'admin';
         } else {
             if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {

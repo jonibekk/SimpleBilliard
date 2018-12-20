@@ -39,21 +39,23 @@ class SetupController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->Goal->KeyResult->_setUnitName();
         $without_footer = true;
-        // TODO: 将来的にtry catch文削除
-        //       isao環境でエラーログが吐かれていないことが確認でき次第削除する
-        // GL-5589：原因特定用にエラーログ埋め込み
-        try {
-            $currentTerm = $this->Team->Term->getCurrentTermData();
-            if (empty($currentTerm)) {
-                throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
-            }
-            $current_term_start_date_format = AppUtil::dateYmdReformat($currentTerm['start_date'], "/");
-            $current_term_end_date_format = AppUtil::dateYmdReformat($currentTerm['end_date'], "/");
-        } catch (Exception $e) {
-            $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
-            $this->log($e->getTraceAsString());
+        if (empty($this->current_team_id)) {
             $current_term_start_date_format = "";
             $current_term_end_date_format = "";
+        } else {
+            try {
+                $currentTerm = $this->Team->Term->getCurrentTermData();
+                if (empty($currentTerm)) {
+                    throw new Exception(sprintf("Failed to get term data. team_id:%s", $this->current_team_id));
+                }
+                $current_term_start_date_format = AppUtil::dateYmdReformat($currentTerm['start_date'], "/");
+                $current_term_end_date_format = AppUtil::dateYmdReformat($currentTerm['end_date'], "/");
+            } catch (Exception $e) {
+                $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
+                $this->log($e->getTraceAsString());
+                $current_term_start_date_format = "";
+                $current_term_end_date_format = "";
+            }
         }
         $this->set(compact('without_footer', 'current_term_start_date_format', 'current_term_end_date_format'));
     }
