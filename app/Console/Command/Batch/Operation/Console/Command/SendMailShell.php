@@ -272,7 +272,7 @@ class SendMailShell extends AppShell
         $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user, $to_user_id);
         //ToUserデータを付加
         $to_user = $this->User->getProfileAndEmail($to_user_id, $lang);
-        $data['ToUser'] = $to_user['User'];
+        $data['ToUser'] = Hash::get($to_user, 'User', []);
         return $data;
     }
 
@@ -306,7 +306,7 @@ class SendMailShell extends AppShell
 
         try {
             $Email->to($options['to'])->subject($options['subject'])
-                ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
+                  ->template($options['template'], $options['layout'])->viewVars($viewVars)->send();
             $Email->reset();
         } catch (Exception $e) {
             GoalousLog::info('failed to send mail item', [
