@@ -1,13 +1,14 @@
 <?php
 App::uses("Topic", "Model");
 App::import('Lib/DataExtender', 'BaseExtender');
+App::import('Lib/DataExtender/Extension', 'UserExtension');
+
 /**
  * Created by PhpStorm.
  * User: Stephen Raharja
  * Date: 12/17/2018
  * Time: 2:37 PM
  */
-
 class TopicDataExtender extends BaseExtender
 {
     const EXTEND_ALL = "ext:topic:all";

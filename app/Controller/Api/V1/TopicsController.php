@@ -25,12 +25,6 @@ class TopicsController extends ApiController
 {
     public function get_search()
     {
-        $error = $this->validateSearch();
-
-        if (!empty($error)) {
-            return $this->_getResponseValidationFail($error);
-        }
-
         $query = $this->request->query;
         $limit = $this->request->query('limit');
         $cursor = $this->request->query('cursor');
@@ -530,26 +524,5 @@ class TopicsController extends ApiController
             return $this->_getResponseForbidden();
         }
         return true;
-    }
-
-    /**
-     * Validate parameters for searching
-     *
-     * @return array
-     */
-    private function validateSearch(): array
-    {
-        $userId = $this->Auth->user('id');
-        $teamId = $this->current_team_id;
-
-        if (empty ($userId)) {
-            return ["No user ID"];
-        }
-
-        if (empty($teamId)) {
-            return ["No team ID"];
-        }
-
-        return [];
     }
 }

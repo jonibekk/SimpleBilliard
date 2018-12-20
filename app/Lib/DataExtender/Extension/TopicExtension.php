@@ -22,8 +22,6 @@ class TopicExtension extends DataExtension
                 'Topic.id' => $keys,
                 'Topic.del_flg' => false
             ],
-            'table' => 'topics',
-            'alias' => 'Topic'
         ];
 
         return $Topic->useType()->find('all', $condition);
