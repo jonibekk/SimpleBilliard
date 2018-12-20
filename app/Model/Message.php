@@ -451,4 +451,5 @@ class Message extends AppModel
         }
         return $count;
     }
+
 }

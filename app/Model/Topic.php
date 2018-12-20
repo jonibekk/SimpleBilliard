@@ -1,6 +1,9 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Message', 'Model');
 App::uses('User', 'Model');
+App::import('Model/Entity', 'UserEntity');
+App::import('Service', 'ImageStorageService');
 
 /**
  * Topic Model
@@ -10,6 +13,9 @@ App::uses('User', 'Model');
  * @property Message     $Message
  * @property TopicMember $TopicMember
  */
+
+use Goalous\Enum as Enum;
+
 class Topic extends AppModel
 {
 
@@ -364,7 +370,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.user_id = User.id',
                         'User.active_flg' => true,
-                        'User.del_flg' => false,
+                        'User.del_flg'    => false,
                     ],
                 ],
                 [
@@ -374,7 +380,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.team_id = TeamMember.team_id',
                         'TopicMember.user_id = TeamMember.user_id',
-                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
+                        'TeamMember.status' => Enum\Model\TeamMember\Status::ACTIVE
                     ],
                 ],
                 [
@@ -415,4 +421,91 @@ class Topic extends AppModel
         return $topic['latest_message_id'];
     }
 
+    /**
+     * Get latest message senders in a topic
+     *
+     * @param int  $topicId
+     * @param int  $count
+     * @param bool $uniqueUserFlag
+     *
+     * @return UserEntity[]
+     */
+    public function getLatestSenders(
+        int $topicId,
+        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
+        bool $uniqueUserFlag = false
+    ): array {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $userFields = $User->profileFields;
+
+        //If getting unique users, replace field id with DISTINCT id
+        if ($uniqueUserFlag){
+            $userFields[0] = 'DISTINCT id';
+        }
+
+        $condition = [
+            'conditions' => [
+                'User.del_flg' => false
+            ],
+            'table'      => 'users',
+            'alias'      => 'User',
+            'limit'      => $count,
+            'fields'     => $userFields,
+            'joins'      => [
+                [
+                    'type'       => 'inner',
+                    'table'      => 'messages',
+                    'alias'      => 'Message',
+                    'conditions' => [
+                        'Message.sender_user_id = User.id',
+                        'Message.topic_id' => $topicId,
+                        'Message.del_flg'  => false,
+                        'Message.type'     => Enum\Model\Message\MessageType::NORMAL
+                    ]
+                ]
+            ],
+            'order'      => [
+                'Message.id' => 'DESC'
+            ]
+        ];
+
+        $result =  $User->useType()->useEntity()->find('all', $condition);
+
+        // Set profile image url each data
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        /** @var UserEntity $v */
+        foreach ($result as $v) {
+            $v['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($v->toArray(true), 'User');
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get latest message senders' profile images in a topic
+     *
+     * @param int  $topicId
+     * @param int  $count
+     * @param bool $uniqueUserFlag
+     *
+     * @return array
+     */
+    public function getLatestSendersImage(
+        int $topicId,
+        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
+        bool $uniqueUserFlag = false
+    ): array {
+        $users = $this->getLatestSenders($topicId, $count, $uniqueUserFlag);
+
+        $result = [];
+
+        foreach ($users as $user) {
+            $result[] = $user['profile_img_url']['medium_large'] ?: "";
+        }
+
+        return $result;
+    }
 }
