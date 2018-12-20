@@ -19,7 +19,7 @@ class ApiV2ExceptionRenderer extends ExceptionRenderer
         switch (get_class($error)) {
             case ReflectionException::class:
             case MissingActionException::class:
-                if (getenv('ENV_NAME') != 'isao' && getenv('ENV_NAME') != 'www') {
+                if (getenv('ENV_NAME') !== 'isao' && getenv('ENV_NAME') !== 'www') {
                     GoalousLog::error('Action not found', [
                         'message' => $error->getMessage(),
                     ]);
@@ -27,7 +27,7 @@ class ApiV2ExceptionRenderer extends ExceptionRenderer
                 $response = ErrorResponse::notFound()->withMessage(__('Not Found'))->getResponse();
                 break;
             case MissingControllerException::class:
-                if (getenv('ENV_NAME') != 'isao' && getenv('ENV_NAME') != 'www') {
+                if (getenv('ENV_NAME') !== 'isao' && getenv('ENV_NAME') !== 'www') {
                     GoalousLog::error('Controller not found', [
                         'message' => $error->getMessage(),
                     ]);
