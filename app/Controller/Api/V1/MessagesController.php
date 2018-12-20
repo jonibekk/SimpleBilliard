@@ -5,6 +5,8 @@ App::uses('TopicMember', 'Model');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class MessagesController
  */
@@ -79,7 +81,7 @@ class MessagesController extends ApiController
             return [$message];
         }
         // Get the latest message based on the ID of the last displayed message to prevent the message list from missing teeth
-        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, $lastMessageId, null, Message::DIRECTION_NEW);
+        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, $lastMessageId, null, Enum\Model\Message\MessageDirection::NEW);
         return $messages['data'];
     }
 

@@ -29,8 +29,6 @@ class Message extends AppModel
      * @deprecated
      */
     const TYPE_SET_TOPIC_NAME = 4;
-    const DIRECTION_OLD = "old";
-    const DIRECTION_NEW = "new";
 
     /**
      * Validation rules
@@ -99,7 +97,7 @@ class Message extends AppModel
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = Enum\Model\Message\MessageDirection::OLD): array
     {
         $options = [
             'conditions' => [
@@ -109,7 +107,6 @@ class Message extends AppModel
                 'id',
                 'body',
                 'type',
-                'meta_data',
                 'created'
             ],
             'order'      => [
@@ -135,15 +132,52 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            if ($direction == self::DIRECTION_OLD) {
-                $options['conditions']['Message.id <'] = $cursor;
-            } elseif ($direction == self::DIRECTION_NEW) {
-                $options['conditions']['Message.id >'] = $cursor;
+            if ($direction == Enum\Model\Message\MessageDirection::OLD) {
+                $options['conditions']['Message.id <='] = $cursor;
+            } elseif ($direction == Enum\Model\Message\MessageDirection::NEW) {
+                $options['conditions']['Message.id >='] = $cursor;
+                $options['order']['Message.id'] = 'ASC';
             }
         }
 
         $res = $this->find('all', $options);
+
+        if ($direction === Enum\Model\Message\MessageDirection::NEW) {
+            return array_reverse($res);
+        }
+
         return $res;
+    }
+
+    /**
+     * Return newer message.id in the topic.
+     * If not existing, returning null.
+     * @param int $topicId
+     * @param int $messageId
+     * @return int|null
+     */
+    function findNewerMessageId(int $topicId, int $messageId)
+    {
+
+        $options = [
+            'conditions' => [
+                'Message.topic_id' => $topicId,
+                'Message.id >' => $messageId,
+            ],
+            'fields'     => [
+                'id',
+            ],
+            'order'      => [
+                'Message.id' => 'ASC'
+            ],
+            'limit'      => 1,
+        ];
+
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            return null;
+        }
+        return Hash::get($res, 'Message.id');
     }
 
     /**
