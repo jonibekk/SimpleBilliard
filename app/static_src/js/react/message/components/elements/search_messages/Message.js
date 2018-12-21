@@ -5,7 +5,7 @@ import {emptyTopicList} from "~/message/actions/index";
 import {Link} from "react-router";
 import {connect} from "react-redux";
 
-class Topic extends React.Component {
+class Message extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,11 +26,6 @@ class Topic extends React.Component {
   render() {
     const topic = this.props.topic;
     const type = this.props.type;
-
-    // TODO:delete
-    topic.hit_message_count = 10;
-    topic.matching_member_count = 30;
-
     return (
       <li className="topicSearchList-item" key={ topic.id }>
         <Link to={ `/topics/${topic.id}/detail` }
@@ -60,4 +55,5 @@ class Topic extends React.Component {
   }
 }
 
-export default connect()(Topic);
+export default connect()(Message);
+

@@ -4,7 +4,8 @@ import {
   FetchMoreMessages,
   SaveMessageStatus,
   TopicTitleSettingStatus,
-  LeaveTopicStatus
+  LeaveTopicStatus,
+  JumpToLatest
 } from "~/message/constants/Statuses";
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
   messages: {
     data: [],
     paging: {
-      next: ""
+      old: "",
+      new: ""
     }
   },
   last_position_message_id: 0,
@@ -25,6 +27,7 @@ const initialState = {
   save_message_status: SaveMessageStatus.NONE,
   success_fetch_more: false,
   topic_title_setting_status: TopicTitleSettingStatus.NONE,
+  jump_to_latest_status: JumpToLatest.NONE,
   save_topic_title_err_msg: "",
   fetching_read_count: false,
   leave_topic_err_msg: "",
@@ -44,7 +47,10 @@ const initialState = {
     body_top: null,
     body_bottom: null,
     footer_bottom: null,
-  }
+  },
+  is_old_direction: true,
+  search_message_id: null,
+  is_fetched_search: false
 }
 
 export default function detail(state = initialState, action) {
@@ -71,22 +77,51 @@ export default function detail(state = initialState, action) {
     case ActionTypes.FETCH_INITIAL_DATA:
       return Object.assign({}, state, action.data, {
         loading: false,
-        is_fetched_initial: true
+        is_fetched_initial: true,
+        search_message_id: action.search_message_id
+      })
+    case ActionTypes.RESET_MESSAGES:
+      messages = {
+        data: action.messages.data,
+        paging: {
+          old: action.messages.paging.next,
+          new: ""
+        }
+      };
+      return Object.assign({}, state, {
+        messages,
+        loading: false,
+        is_old_direction: true,
+        jump_to_latest_status: JumpToLatest.DONE
       })
     // Fetch more messages
     case ActionTypes.LOADING_MORE:
       return Object.assign({}, state, {
         fetch_more_messages_status: FetchMoreMessages.LOADING,
-        last_position_message_id: action.last_position_message_id
+        is_old_direction: action.is_old_direction,
+        last_position_message_id: action.last_position_message_id,
+        is_fetched_search: true
       })
     case ActionTypes.FETCH_MORE_MESSAGES:
+      let data = [];
+      let paging = {};
+      if (action.is_old_direction) {
+        data = [...action.messages.data, ...state.messages.data];
+        paging = Object.assign({}, state.messages.paging, {old: action.messages.paging.next});
+      } else {
+        data = [...state.messages.data, ...action.messages.data];
+        paging = Object.assign({}, state.messages.paging, {new: action.messages.paging.next});
+      }
+
       messages = {
-        data: [...action.messages.data, ...state.messages.data],
-        paging: action.messages.paging,
+        data,
+        paging,
       }
       return Object.assign({}, state, {
         messages,
         fetch_more_messages_status: FetchMoreMessages.SUCCESS,
+        is_old_direction: action.is_old_direction,
+        is_fetched_search: true
       })
     // Fetch latest messages by pusher
     case ActionTypes.LOADING_LATEST_MESSAGES:
@@ -197,6 +232,10 @@ export default function detail(state = initialState, action) {
     case ActionTypes.RESET_TOPIC_TITLE_SETTING_STATUS:
       return Object.assign({}, state, {
         topic_title_setting_status: TopicTitleSettingStatus.NONE
+      })
+    case ActionTypes.SET_JUMP_TO_LATEST_STATUS:
+      return Object.assign({}, state, {
+        jump_to_latest_status: action.jump_to_latest_status
       })
     case ActionTypes.INIT_LAYOUT:
       return Object.assign({}, state, {

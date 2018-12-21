@@ -174,22 +174,24 @@ const config = {
     ]
   },
   react: [
-    'setup_guide',
-    'signup',
-    'goal_create',
-    'goal_edit',
-    'goal_approval',
-    'goal_search',
-    'kr_column',
+    // 'setup_guide',
+    // 'signup',
+    // 'goal_create',
+    // 'goal_edit',
+    // 'goal_approval',
+    // 'goal_search',
+    // 'kr_column',
     'message',
-    'invite',
-    'payment_apply',
-    'saved_item',
-    'campaign_plan_upgrade',
-    'search'
+    // 'invite',
+    // 'payment_apply',
+    // 'saved_item',
+    // 'campaign_plan_upgrade',
+    // 'search'
   ],
-  css_vendor: {
-    src: [
+  react_watch: [
+    assets_dir + '/js/react/message/**/*.js',
+  ],  css_vendor: {
+  src: [
       assets_dir + '/css/font-awesome.min.css',
       // node_modules_dir + '/font-awesome/css/font-awesome.css',
       assets_dir + '/css/jquery.nailthumb.1.1.css',

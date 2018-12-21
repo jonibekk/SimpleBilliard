@@ -1,11 +1,16 @@
 import * as types from '~/message/constants/ActionTypes'
 
 const initialState = {
+  hit_count: 0,
   topics: [],
   next_url: '',
   fetching: false,
-  current_searching_keyword: '',
-  is_mobile_app: false
+  changed_search_conditions: false,
+  search_conditions: {
+    keyword: '',
+    type: "topic"
+  },
+  is_mobile_app: false,
 }
 
 export default function search(state = initialState, action) {
@@ -18,6 +23,7 @@ export default function search(state = initialState, action) {
       return Object.assign({}, state, {
         topics: action.topics,
         next_url: action.next_url,
+        changed_search_conditions: false,
         fetching: false
       })
     case types.FETCH_MORE_SEARCH:
@@ -30,16 +36,22 @@ export default function search(state = initialState, action) {
       return Object.assign({}, state, {
         inputed_search_keyword: action.keyword
       })
-    case types.SET_SEARCHING_KEYWORD:
+    case types.UPDATE_SEARCH_CONDITION:
       return Object.assign({}, state, {
-        current_searching_keyword: action.keyword,
+        search_conditions: action.search_conditions,
+        changed_search_conditions: true,
         fetching: true,
         topics: []
       })
     case types.INITIALIZE_SEARCH:
+      console.log('types.INITIALIZE_SEARCH');
       const is_mobile_app = state.is_mobile_app
       return Object.assign({}, state, initialState, {
-        is_mobile_app
+        is_mobile_app,
+        search_conditions: {
+          keyword: "",
+          type: 'topic'
+        }
       })
     case types.SET_UA_INFO:
       return Object.assign({}, state, {

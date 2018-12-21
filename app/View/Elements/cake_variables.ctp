@@ -591,12 +591,14 @@ App::uses('AttachedFile', 'Model');
             "Add": "<?= __("Add") ?>",
             "Input topic title": "<?= __("Input topic title") ?>",
             "Update": "<?= __("Update") ?>",
-            // messgae
+            // Message
             "No results found": "<?= __("No results found") ?>",
             "Leave this topic": "<?= __("Leave this topic") ?>",
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            "Search result %d Topics hit": "<?= __("Search result %d Topics hit") ?>",
+            "View the latest messages": "<?= __("View the latest messages") ?>",
             /* Change to paid plan */
             // Select country and paymnet type
             "Select Country Location": "<?= __("Select Country Location") ?>",

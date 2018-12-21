@@ -13,6 +13,12 @@ export const FetchMoreMessages = Object.freeze({
   ERROR: 3,
 })
 
+export const JumpToLatest = Object.freeze({
+  NONE: 0,
+  VISIBLE: 1,
+  DONE: 2,
+})
+
 
 export const SaveMessageStatus = Object.freeze({
   NONE: 0,

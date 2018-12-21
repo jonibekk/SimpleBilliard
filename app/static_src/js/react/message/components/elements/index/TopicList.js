@@ -3,19 +3,25 @@ import Topic from "./Topic";
 import InfiniteScroll from "redux-infinite-scroll";
 import Loading from "~/message/components/elements/index/Loading";
 import {Link} from "react-router";
+import queryString from "query-string";
 
 export default class TopicList extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onFocusSearchBox = this.onFocusSearchBox.bind(this)
-    this.fetchMore = this.fetchMore.bind(this)
+    this.onFocusSearchBox = this.onFocusSearchBox.bind(this);
+    this.fetchMore = this.fetchMore.bind(this);
   }
 
   componentWillMount() {
+    this.fetchInit();
+  }
+
+  fetchInit() {
     if (this.props.data.topics.length == 0) {
       this.props.fetchInitData()
     }
+
   }
 
   fetchMore() {
@@ -44,21 +50,24 @@ export default class TopicList extends React.Component {
     return (
       <div className={`topicList ${!is_mobile_app && "panel panel-default"}`}>
         <div className="topicList-header">
-          <div className="searchBox">
-            <div className="searchBox-search-icon">
-              <i className="fa fa-search"></i>
+          <div className="topicList-header-top">
+            <div className="searchBox">
+              <div className="searchBox-search-icon">
+                <i className="fa fa-search"></i>
+              </div>
+              <input className="searchBox-input"
+                     placeholder={__("Search topic")}
+                     onFocus={ this.onFocusSearchBox }/>
             </div>
-            <input className="searchBox-input"
-                   placeholder={__("Search topic")}
-                   onFocus={ this.onFocusSearchBox }/>
+            <Link to="/topics/create" className="topicList-header-top-add">
+              <i className="fa fa-plus"></i> {__("Create")}
+
+            </Link>
           </div>
           <div className="topicList-header-middle">
             <div className="topicList-header-middle-label">
               {__("TOPICS")}
             </div>
-            <Link to="/topics/create" className="topicList-header-middle-add">
-              <i className="fa fa-plus-circle"></i> {__("New Message")}
-            </Link>
           </div>
         </div>
         <ul>

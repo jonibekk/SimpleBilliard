@@ -1,6 +1,7 @@
 import * as types from "~/message/constants/ActionTypes";
 import { get } from "~/util/api";
 import {isMobileApp} from "~/util/base";
+import * as common from "./common";
 
 export function fetchInitData() {
   return (dispatch) => {
@@ -37,7 +38,7 @@ export function fetchMore(url) {
         const topics = response.data.data
         const next_url = response.data.paging.next
         dispatch({
-          type: types.FETCH_MORE_TOPICS,
+          type: types.FETCH_MORE_MESSAGES,
           data: {
             topics,
             next_url
@@ -52,25 +53,6 @@ export function fetchMore(url) {
   }
 }
 
-export function changeToSearchMode() {
-  return (dispatch) => {
-    dispatch({
-      type: types.CHANGE_TO_SEARCH_MODE
-    })
-  }
-}
-
-export function cancelSearchMode() {
-  return (dispatch) => {
-    dispatch({
-      type: types.INITIALIZE_SEARCH
-    })
-    dispatch({
-      type: types.CHANGE_TO_INDEX_MODE
-    })
-  }
-}
-
 export function setUaInfo() {
   return {
     type: types.SET_UA_INFO,
@@ -78,17 +60,10 @@ export function setUaInfo() {
   }
 }
 
-export function emptyTopicList() {
-  return (dispatch) => {
-    dispatch({
-      type: types.EMPTY_TOPICS
-    })
-  }
-}
-export function init_completed() {
-  return (dispatch) => {
-    dispatch({
-      type: types.INIT_COMPLETED
-    })
+export function initLayout() {
+  const mobile_app_layout = common.getLayout();
+  return {
+    type: types.INIT_LAYOUT,
+    mobile_app_layout
   }
 }

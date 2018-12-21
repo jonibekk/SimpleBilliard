@@ -1,5 +1,7 @@
 import * as types from "~/message/constants/ActionTypes"
 import { get } from "~/util/api"
+import querystring from "querystring";
+import axios from "axios";
 
 export function inputKeyword(keyword) {
   return (dispatch) => {
@@ -13,7 +15,7 @@ export function inputKeyword(keyword) {
         type: types.INITIALIZE_SEARCH
       })
     } else {
-      dispatch(search(trimmed_keyword))
+      dispatch(search({keyword:trimmed_keyword}))
     }
   }
 }
@@ -51,27 +53,42 @@ export function fetchMoreSearch(url) {
   }
 }
 
+export function changeSearchType(type) {
+  return (dispatch) => {
+    dispatch(search({type}));
+  }
+}
+
 /**
  * search topics by keyword
  * - search request by keyword 0.5 sec later since user input keyword
  * - if user input other word within 0.5 sec, not sending request by previous word.
  *
  * @param  string keyword
+ * @param  string search_type
  */
-export function search(keyword) {
+export function search(data) {
   return (dispatch, getState) => {
+    let search_conditions = Object.assign(
+      getState().search.search_conditions,
+      data
+    )
+    const queries = Object.assign({}, search_conditions);
+    const qs = '?' + querystring.stringify(queries);
+    history.pushState(null, "", qs);
+
     dispatch({
-      type: types.SET_SEARCHING_KEYWORD,
-      keyword
+      type: types.UPDATE_SEARCH_CONDITION,
+      search_conditions,
     })
     return setTimeout(() => {
-      if (getState().search.current_searching_keyword != keyword) {
-        return
+      if (getState().search.search_conditions.keyword != search_conditions.keyword) {
+        return;
       }
-
-      return get(`/api/v1/topics/search?keyword=${keyword}`)
+      // TODO: separate calling api by type
+      return get(`/api/v1/topics/search${qs}`)
         .then((response) => {
-          if (getState().search.current_searching_keyword != keyword) {
+          if (getState().search.search_conditions.keyword != search_conditions.keyword) {
             return
           }
 
@@ -92,6 +109,32 @@ export function search(keyword) {
     }, 500)
   }
 }
+
+// export function fetchInitialData() {
+//   if (location.search === '') {
+//     return {
+//       type: types.FETCH_INITIAL_DATA
+//     };
+//   }
+//   return (dispatch) => {
+//
+//     dispatch({
+//       type: types.LOADING,
+//     })
+//     //ゴール検索ページでセットされたクエリパラメータをゴール検索初期化APIにそのままセット
+//     return axios.get(`/api/v1/goals/init_search` + location.search)
+//       .then((response) => {
+//         let data = response.data.data
+//         dispatch({
+//           type: types.FETCH_INITIAL_DATA,
+//           data,
+//         })
+//       })
+//       .catch((response) => {
+//       })
+//   }
+// }
+
 
 export function setTopicOnDetail(topic) {
   return {
