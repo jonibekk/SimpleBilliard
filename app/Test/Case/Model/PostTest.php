@@ -1064,8 +1064,8 @@ class PostTest extends GoalousTestCase
         $this->start_date = $this->Post->Team->Term->getCurrentTermData()['start_date'];
         $this->end_date = $this->Post->Team->Term->getCurrentTermData()['end_date'];
         $timezone = $this->Post->Team->Term->getCurrentTermData()['timezone'];
-        $this->start_date_format = (new GoalousDateTime($this->start_date))->addHour($timezone * HOUR)->format('Y-m-d');
-        $this->end_date_format = (new GoalousDateTime($this->end_date))->addHour($timezone * HOUR)->format('Y-m-d');
+        $this->start_date_format = (new GoalousDateTime($this->start_date))->addHour($timezone)->format('Y-m-d');
+        $this->end_date_format = (new GoalousDateTime($this->end_date))->addHour($timezone)->format('Y-m-d');
     }
 
     function repQuote($str)
