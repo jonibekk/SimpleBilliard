@@ -23,6 +23,42 @@ use Goalous\Enum as Enum;
  */
 class TopicsController extends ApiController
 {
+    public function get_list()
+    {
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init("Topic");
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init("ApiTopicService");
+
+        // get query params
+        $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
+        $offset = $this->request->query('offset') ?? 0;
+        $keyword = $this->request->query('keyword') ?? '';
+        $userId = $this->Auth->user('id');
+        // check limit param under max
+        if (!$ApiTopicService->checkMaxLimit($limit)) {
+            return $this->_getResponseBadFail(__("Get count over the upper limit"));
+        }
+        // define response data
+        $response = [
+            'data'   => [],
+            'paging' => [
+                'next' => ''
+            ]
+        ];
+        $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
+        $topics = $ApiTopicService->process($topics, $userId);
+        // Set paging text
+        //       for unifying with other controller logic.
+        if (count($topics) > $limit) {
+            $basePath = '/api/v1/topics/search';
+            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
+            array_pop($topics);
+        }
+        $response['data'] = $topics;
+        return $this->_getResponsePagingSuccess($response);
+    }
+
     public function get_search()
     {
         $query = $this->request->query;
