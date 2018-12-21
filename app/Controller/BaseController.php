@@ -563,4 +563,11 @@ class BaseController extends Controller
 
         return $this->Auth->logout();
     }
+
+    public function forceSSL()
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
+    }
+
 }

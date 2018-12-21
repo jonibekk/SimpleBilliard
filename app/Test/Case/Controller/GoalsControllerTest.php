@@ -1064,7 +1064,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
     function testForceSSL()
     {
         $Goals = $this->_getGoalsCommonMock();
-        $Goals->_forceSSL();
+        $Goals->forceSSL();
     }
 
     function testSwitchTeamBeforeCheckFalse()
