@@ -95,7 +95,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                                                     ? "https://www.goalous.com/blog/ja/"
                                                     : "https://www.goalous.com/blog/"
                     ?>
-                    <a href="<?=$blogUrl ?>">
+                    <a href="<?=$blogUrl ?>" target="_blank">
                         <div class="icon">
                             <i class="fa fa-rss"></i>
                         </div>
@@ -113,7 +113,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//item-->
             <div class="item col-md-4 col-sm-12 col-xs-12">
                 <div class="item-inner">
-                    <a href="https://www.facebook.com/goalous">
+                    <a href="https://www.facebook.com/goalous" target="_blank">
                         <div class="icon">
                             <i class="fa fa-facebook"></i>
                         </div>
@@ -127,7 +127,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//item-->
             <div class="item col-md-4 col-sm-12 col-xs-12">
                 <div class="item-inner">
-                    <a href="https://twitter.com/goalous">
+                    <a href="https://twitter.com/goalous" target="_blank">
                         <div class="icon">
                             <i class="fa fa-twitter"></i>
                         </div>
