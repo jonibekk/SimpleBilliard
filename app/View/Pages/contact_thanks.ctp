@@ -90,17 +90,22 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="row">
             <div class="item col-md-4 col-sm-12 col-xs-12">
                 <div class="item-inner">
-                    <div class="icon">
-                        <i class="fa fa-rss"></i>
-                    </div>
+                    <?php
+                        $blogUrl = ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
+                                                    ? "https://www.goalous.com/blog/ja/"
+                                                    : "https://www.goalous.com/blog/"
+                    ?>
+                    <a href="<?=$blogUrl ?>">
+                        <div class="icon">
+                            <i class="fa fa-rss"></i>
+                        </div>
+                    </a>
                     <div class="details">
                         <h4><?= __('Goalous Blog') ?></h4>
                         <p><?= __('The story of the team') ?></p>
                         <p><?= $this->Html->link(
                                 __('Blog'),
-                                ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
-                                    ? "https://www.goalous.com/blog/ja/"
-                                    : "https://www.goalous.com/blog/",
+                                $blogUrl,
                                 ['target' => '_blank']); ?>
                         </p>
                     </div><!--details-->
@@ -108,9 +113,11 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//item-->
             <div class="item col-md-4 col-sm-12 col-xs-12">
                 <div class="item-inner">
-                    <div class="icon">
-                        <i class="fa fa-facebook"></i>
-                    </div>
+                    <a href="https://www.facebook.com/goalous">
+                        <div class="icon">
+                            <i class="fa fa-facebook"></i>
+                        </div>
+                    </a>
                     <div class="details">
                         <h4><?= __('Facebook page') ?></h4>
                         <p><?= __('Like us!') ?></p>
@@ -120,9 +127,11 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div><!--//item-->
             <div class="item col-md-4 col-sm-12 col-xs-12">
                 <div class="item-inner">
-                    <div class="icon">
-                        <i class="fa fa-twitter"></i>
-                    </div>
+                    <a href="https://twitter.com/goalous">
+                        <div class="icon">
+                            <i class="fa fa-twitter"></i>
+                        </div>
+                    </a>
                     <div class="details">
                         <h4><?= __('Twitter') ?></h4>
                         <p><?= __('Follow now!') ?></p>
