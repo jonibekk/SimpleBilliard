@@ -19,8 +19,8 @@
                 <li><?= $this->Html->link(
                         __('Blog'),
                         ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
-                            ? 'http://www.goalous.com/blog/ja/'
-                            : 'http://www.goalous.com/blog/',
+                            ? 'https://www.goalous.com/blog/ja/'
+                            : 'https://www.goalous.com/blog/',
                         ['target' => '_blank']) ?>
                 </li>
                 <li><?=
