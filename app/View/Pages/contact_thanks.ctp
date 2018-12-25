@@ -96,7 +96,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <div class="details">
                         <h4><?= __('Goalous Blog') ?></h4>
                         <p><?= __('The story of the team') ?></p>
-                        <p><a href="http://blog.goalous.com/" target="_blank">http://blog.goalous.com/</a>
+                        <p><?= $this->Html->link(
+                                __('Blog'),
+                                ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
+                                    ? "https://www.goalous.com/blog/ja/"
+                                    : "https://www.goalous.com/blog/",
+                                ['target' => '_blank']); ?>
                         </p>
                     </div><!--details-->
                 </div><!--//item-inner-->

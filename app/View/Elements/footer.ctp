@@ -16,9 +16,13 @@
         <div class="col-lg-12">
 
             <ul class="list-unstyled">
-                <li><?=
-                    $this->Html->link(__('Blog'), 'http://blog.goalous.com/',
-                        ['target' => '_blank']) ?></li>
+                <li><?= $this->Html->link(
+                        __('Blog'),
+                        ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
+                            ? 'http://www.goalous.com/blog/ja/'
+                            : 'http://www.goalous.com/blog/',
+                        ['target' => '_blank']) ?>
+                </li>
                 <li><?=
                     $this->Html->link(__('Privacy Policy'),
                         [
