@@ -84,4 +84,5 @@ export const LeaveTopic = Object.freeze({
 export const SearchMessages = Object.freeze({
   INITIALIZE: 'SearchMessages/INITIALIZE',
   FETCH_MORE_MESSAGES: 'SearchMessages/FETCH_MORE_MESSAGES',
+  RESET: 'SearchMessages/RESET',
 })

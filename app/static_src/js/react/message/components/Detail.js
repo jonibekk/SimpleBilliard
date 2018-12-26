@@ -13,12 +13,20 @@ export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
+    this.state = {
+      back_url: '/topics',
+    }
   }
 
   componentWillMount() {
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
     this.props.setResourceId(topic_id);
+    const {state} = this.props.location
+    if (state && state.back_url) {
+    console.log('set state ');
+      this.setState({'back_url': state.back_url});
+    }
     this.props.setUaInfo();
     this.props.initLayout();
     const query_params = queryString.parse(location.search);
@@ -84,6 +92,7 @@ export default class Detail extends Base {
   }
 
   render() {
+    console.log({back_url: this.state.back_url});
     const {detail, file_upload} = this.props;
     return (
       <div className={`topicDetail ${isMobileApp() ? "" : "panel panel-default"}`}>
@@ -95,6 +104,7 @@ export default class Detail extends Base {
           mobile_app_layout={detail.mobile_app_layout}
           leave_topic_status={detail.leave_topic_status}
           leave_topic_err_msg={detail.leave_topic_err_msg}
+          back_url={this.state.back_url}
         />
         <Body
           topic={detail.topic}

@@ -191,8 +191,6 @@ class Topic extends AppModel
         foreach ($res as $i => $topic) {
             foreach ($topic['TopicMember'] as $j => $member) {
                 $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($res[$i]['TopicMember'][$j]['User'], 'User');
-//                $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
-//                    ['medium_large']);
                 // number of displaying user photo is less than 4.
                 if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;

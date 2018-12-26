@@ -4,17 +4,18 @@ import SearchMessagesComponent from '~/message/components/SearchMessages';
 
 function mapStateToProps(state) {
   return {
-    index: state.index,
-    search: state.search
+    search_messages: state.search_messages
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchInitData: () => dispatch(actions.fetchInitData()),
+    fetchInitialData: (topic_id, search_conditions) => dispatch(actions.fetchInitialData(topic_id, search_conditions)),
     fetchMore: (url) => dispatch(actions.fetchMore(url)),
     setUaInfo: () => dispatch(actions.setUaInfo()),
-    initLayout: () => dispatch(actions.initLayout())
+    initLayout: () => dispatch(actions.initLayout()),
+    setResourceId: (topic_id) => dispatch(actions.setResourceId(topic_id)),
+    reset: (topic_id) => dispatch(actions.reset(topic_id)),
   }
 }
 

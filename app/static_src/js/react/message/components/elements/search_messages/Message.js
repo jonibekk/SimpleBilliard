@@ -1,9 +1,9 @@
 import React from "react";
 import AvatarsBox from "~/common/components/AvatarsBox";
-import {setTopicOnDetail} from "~/message/actions/search";
 import {emptyTopicList} from "~/message/actions/index";
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import {connect} from "react-redux";
+import {setTopicOnDetail} from "~/message/actions/search";
 
 class Message extends React.Component {
   constructor(props) {
@@ -13,9 +13,10 @@ class Message extends React.Component {
     }
   }
 
-  onClickLinkToDetail() {
-    const {dispatch, topic} = this.props
-    dispatch(setTopicOnDetail(topic))
+  onClickLinkToDetail(url) {
+    const {dispatch, item} = this.props
+    browserHistory.push({pathname: url, state: {back_url: location.href}});
+    dispatch(setTopicOnDetail(item.topic))
     dispatch(emptyTopicList())
   }
 
@@ -24,32 +25,36 @@ class Message extends React.Component {
   }
 
   render() {
-    const topic = this.props.topic;
-    const type = this.props.type;
+    const item = this.props.item;
+    const userImages = [
+      {
+        id: item.message.sender.id,
+        profile_img_url: {
+          medium_large: item.img_url
+        }
+      }
+    ];
+
     return (
-      <li className="topicSearchList-item" key={ topic.id }>
-        <Link to={ `/topics/${topic.id}/detail` }
-              className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
-              onClick={ this.onClickLinkToDetail.bind(this) }
-              onTouchTap={ this.tapLink.bind(this) }>
-          <AvatarsBox users={ topic.users }/>
+      <li className="topicSearchList-item" key={ item.message.id }>
+        <a href="#"
+          className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
+          onClick={ this.onClickLinkToDetail.bind(this, `/topics/${item.topic.id}/detail`) }
+          onTouchTap={ this.tapLink.bind(this) }>
+          <AvatarsBox users={ userImages } key={item.message.id} />
           <div className="topicSearchList-item-main">
             <div className="topicSearchList-item-main-header">
               <div className="topicSearchList-item-main-header-title oneline-ellipsis">
-                { topic.display_title }
-              </div>
-              <div className="topicSearchList-item-main-header-count">
-                { (topic.members_count > 2 || topic.title) && `(${topic.members_count})` }
+                { item.message.sender.display_username }
               </div>
             </div>
-            <div className="topicSearchList-item-main-body oneline-ellipsis">
-                { type === 'message' ? `${topic.hit_message_count} messages hit` : `${topic.matching_member_count} matching_members` }
+            <div className="topicSearchList-item-main-body oneline-ellipsis" dangerouslySetInnerHTML={{__html: item.highlight}}>
             </div>
           </div>
           <div className="topicSearchList-item-right">
-            { topic.latest_message.display_created }
+            { item.message.display_created }
           </div>
-        </Link>
+        </a>
       </li>
     )
   }

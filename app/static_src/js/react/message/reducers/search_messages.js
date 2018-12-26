@@ -1,9 +1,11 @@
 import * as types from '~/message/constants/ActionTypes'
 
 const initialState = {
+  topic_id: 0,
   topic: {},
   messages: [],
   next_url: '',
+  search_total_count: 0,
   fetching: false,
   is_mobile_app: false,
   mobile_app_layout: {
@@ -11,27 +13,35 @@ const initialState = {
     body_top: null,
     body_bottom: null,
     footer_bottom: null,
+  },
+  search_conditions: {
+    keyword: ""
   }
-
 }
 
 export default function search_messages(state = initialState, action) {
   switch (action.type) {
+    case types.SET_RESOURCE_ID:
+      return Object.assign({}, state, {
+        topic_id: action.topic_id
+      });
     case types.FETCHING:
       return Object.assign({}, state, {
         fetching: true
       })
-    case types.INITIALIZE:
+    case types.SearchMessages.INITIALIZE:
       return Object.assign({}, state, {
-        topic: action.data.topic,
-        messages: action.data.messages,
-        next_url: action.data.next_url,
+        topic: action.topic,
+        messages: action.messages,
+        next_url: action.next_url,
+        search_conditions: action.search_conditions,
+        search_total_count: action.search_total_count,
         fetching: false
       })
-    case types.FETCH_MORE_MESSAGES:
+    case types.SearchMessages.FETCH_MORE_MESSAGES:
       return Object.assign({}, state, {
-        messages: [...state.messages, ...action.data.messages],
-        next_url: action.data.next_url,
+        messages: [...state.messages, ...action.messages],
+        next_url: action.next_url,
         fetching: false
       })
     case types.SET_UA_INFO:
@@ -42,6 +52,8 @@ export default function search_messages(state = initialState, action) {
       return Object.assign({}, state, {
         mobile_app_layout: action.mobile_app_layout
       })
+    case types.RESET:
+      return Object.assign({}, initialState);
 
     default:
       return state;

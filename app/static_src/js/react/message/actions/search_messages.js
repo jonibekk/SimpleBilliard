@@ -2,22 +2,24 @@ import * as types from "~/message/constants/ActionTypes";
 import { get } from "~/util/api";
 import {isMobileApp} from "~/util/base";
 import * as common from "./common";
+import {getSearchApiUrl} from "./search";
 
-export function fetchInitData() {
+export function fetchInitialData(topic_id, search_conditions) {
   return (dispatch) => {
     dispatch({
       type: types.FETCHING
     })
-    return get('/api/v1/topics/search')
+    return get(`/api/v1/topics/${topic_id}/init_search_messages?keyword=${search_conditions.keyword}`)
       .then((response) => {
-        const topics = response.data.data
-        const next_url = response.data.paging.next
+        const {topic, messages} = response.data;
+        const next_url = getSearchNextUrl(topic_id, messages.paging);
         dispatch({
-          type: types.INITIALIZE,
-          data: {
-            topics,
-            next_url
-          }
+          type: types.SearchMessages.INITIALIZE,
+          topic: topic,
+          next_url,
+          messages: messages.data,
+          search_total_count: messages.count,
+          search_conditions
         })
       })
       .catch((response) => {
@@ -28,21 +30,29 @@ export function fetchInitData() {
   }
 }
 
+export function getSearchNextUrl(topic_id, paging) {
+  if (!paging) {
+    return '';
+  }
+  return `/api/v1/topics/${topic_id}/search_messages?cursor=${paging}`;
+}
+
+
 export function fetchMore(url) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.FETCHING
     })
+
     return get(url)
       .then((response) => {
-        const topics = response.data.data
-        const next_url = response.data.paging.next
+        const {data, paging} = response.data;
+        const {topic_id} = getState().search_messages;
+        const next_url = getSearchNextUrl(topic_id, paging);
         dispatch({
-          type: types.FETCH_MORE_MESSAGES,
-          data: {
-            topics,
-            next_url
-          }
+          type: types.SearchMessages.FETCH_MORE_MESSAGES,
+          messages: data,
+          next_url
         })
       })
       .catch((response) => {
@@ -65,5 +75,19 @@ export function initLayout() {
   return {
     type: types.INIT_LAYOUT,
     mobile_app_layout
+  }
+}
+
+export function setResourceId(topic_id) {
+  return {
+    type: types.SET_RESOURCE_ID,
+    topic_id
+  }
+}
+
+export function reset() {
+  return {
+    type: types.RESET,
+    topic_id
   }
 }

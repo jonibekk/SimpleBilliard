@@ -2,7 +2,7 @@ import React from "react";
 import AvatarsBox from "~/common/components/AvatarsBox";
 import {setTopicOnDetail} from "~/message/actions/search";
 import {emptyTopicList} from "~/message/actions/index";
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import {connect} from "react-redux";
 import {SearchType} from "~/message/constants/Statuses";
 
@@ -14,8 +14,9 @@ class Topic extends React.Component {
     }
   }
 
-  onClickLinkToDetail() {
+  onClickLinkToDetail(url) {
     const {dispatch, topic} = this.props
+    browserHistory.push({pathname: url, state: {back_url: location.href}});
     dispatch(setTopicOnDetail(topic))
     dispatch(emptyTopicList())
   }
@@ -37,9 +38,9 @@ class Topic extends React.Component {
     }
     return (
       <li className="topicSearchList-item" key={ data.topic.id }>
-        <Link to={ url }
+        <a href="#"
               className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
-              onClick={ this.onClickLinkToDetail.bind(this) }
+              onClick={ this.onClickLinkToDetail.bind(this, url) }
               onTouchTap={ this.tapLink.bind(this) }>
           <AvatarsBox users={ data.users }/>
           <div className="topicSearchList-item-main">
@@ -58,7 +59,7 @@ class Topic extends React.Component {
           <div className="topicSearchList-item-right">
             { data.topic.display_created }
           </div>
-        </Link>
+        </a>
       </li>
     )
   }

@@ -313,7 +313,7 @@ class AppController extends BaseController
                         $this->redirect('/app_force_install');
                     }
                     if ($this->_isExpiredVersionMobileApp($userAgent)) {
-//                        $this->redirect('/app_force_update');
+                        $this->redirect('/app_force_update');
                     }
                 }
             }
