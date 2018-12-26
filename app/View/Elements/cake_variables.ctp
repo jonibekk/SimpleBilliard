@@ -599,6 +599,10 @@ App::uses('AttachedFile', 'Model');
             "Delete comment": "<?= __("Delete comment") ?>",
             "Search result %d Topics hit": "<?= __("Search result %d Topics hit") ?>",
             "View the latest messages": "<?= __("View the latest messages") ?>",
+            "member": "<?= __("member") ?>",
+            "topic": "<?= __("topic") ?>",
+            "message": "<?= __("message") ?>",
+
             /* Change to paid plan */
             // Select country and paymnet type
             "Select Country Location": "<?= __("Select Country Location") ?>",

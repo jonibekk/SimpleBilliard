@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import InfiniteScroll from "redux-infinite-scroll";
 import Loading from "~/message/components/elements/index/Loading";
 import Topic from "./Topic";
+import {SearchType} from "~/message/constants/Statuses";
 
 export default class TopicSearchList extends React.Component {
   constructor(props) {
@@ -58,19 +59,20 @@ export default class TopicSearchList extends React.Component {
   render() {
     console.log('TopicSearchList render');
     console.log(this.props.data);
-    const {topics, fetching, search_conditions, is_mobile_app, hit_count, changed_search_conditions} = this.props.data
-    const render_topics = topics.map((topic, index) => {
+    const {search_result, fetching, search_conditions, is_mobile_app, search_total_count, changed_search_conditions} = this.props.data
+    const render_topics = search_result.map((data, index) => {
       return (
-        <Topic topic={ topic }
-               key={ topic.id }
+        <Topic data={ data }
+               key={ data.topic.id }
                type={ search_conditions.type }
+               keyword={ search_conditions.keyword }
                index={ index }/>
       )
     })
 
     const search_tabs = {
-      "topic": __("Topics"),
-      "message" : __("Messages"),
+      "topics": __("Topics"),
+      "messages" : __("Messages"),
     }
     let search_tabs_el = [];
 
@@ -105,7 +107,7 @@ export default class TopicSearchList extends React.Component {
                 <i className="fa fa-remove"></i>
               </div>
               <input className="searchBox-input"
-                     placeholder={__("Search topic")}
+                     placeholder={`${__("member")}, ${__("topic")}, ${__("message")}`}
                      onChange={ this.inputKeyword.bind(this) }
                      ref="search"/>
             </div>
@@ -127,7 +129,7 @@ export default class TopicSearchList extends React.Component {
               return (
                 <Loading />
               )
-            } else if (!search_conditions.keyword || (!fetching && topics.length == 0)) {
+            } else if (!search_conditions.keyword || (!fetching && search_result.length == 0)) {
               // not results
               return (
                 <div className="topicSearchList-notFound">
@@ -135,11 +137,13 @@ export default class TopicSearchList extends React.Component {
                 </div>
               )
             } else {
+              const search_total_count_el = search_conditions.type === SearchType.TOPICS ? <p className="topicSearchList-hitCount">{__("Search result %d Topics hit", search_total_count)}</p> : "";
+
               // search results
               return (
                 <div>
-                  <p className="topicSearchList-hitCount">{__("Search result %d Topics hit", hit_count)}</p>
-                  <ul>
+                  {search_total_count_el}
+                  <ul className={search_conditions.type === SearchType.TOPICS ? '' : 'pt_10px'}>
                     <InfiniteScroll
                       loadingMore={ fetching }
                       loadMore={ this.fetchMoreSearch.bind(this) }
@@ -160,7 +164,7 @@ export default class TopicSearchList extends React.Component {
 
 TopicSearchList.defaultProps = {
   data: {
-    topics: [],
+    search_result: [],
     fetching: false
   }
 }

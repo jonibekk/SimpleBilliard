@@ -3,6 +3,7 @@ import TopicList from "./elements/index/TopicList";
 import TopicSearchList from "./elements/search/TopicSearchList";
 import {disableAsyncEvents} from "~/util/base";
 import queryString from "query-string";
+import {SearchType} from "~/message/constants/Statuses";
 
 export default class Index extends React.Component {
   constructor(props) {
@@ -14,6 +15,8 @@ export default class Index extends React.Component {
     if (!this.props.index.init_completed) {
       const search_conditions = queryString.parse(location.search);
       if (search_conditions.keyword || search_conditions.type) {
+        const searchTypes = Object.keys(SearchType).map(key => SearchType[key]);
+        search_conditions.type = searchTypes.indexOf(search_conditions.type) >= 0 ? search_conditions.type : SearchType.TOPICS;
         this.props.changeToSearchMode();
         this.props.searchData(search_conditions);
         return;

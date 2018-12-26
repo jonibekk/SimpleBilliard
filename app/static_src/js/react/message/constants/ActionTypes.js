@@ -80,3 +80,8 @@ export const LeaveTopic = Object.freeze({
   SAVE_ERROR: 'LeaveTopic/SAVE_ERROR',
   RESET_STATUS: 'LeaveTopic/RESET_STATUS',
 })
+
+export const SearchMessages = Object.freeze({
+  INITIALIZE: 'SearchMessages/INITIALIZE',
+  FETCH_MORE_MESSAGES: 'SearchMessages/FETCH_MORE_MESSAGES',
+})

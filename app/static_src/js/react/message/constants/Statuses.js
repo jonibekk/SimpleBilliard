@@ -1,3 +1,9 @@
+export const SearchType = Object.freeze({
+  MESSAGES: 'messages',
+  TOPICS: 'topics',
+})
+
+
 export const TopicTitleSettingStatus = Object.freeze({
   NONE: 0,
   EDITING: 1,

@@ -6,8 +6,9 @@ export function fetchInitData() {
   return (dispatch) => {
     dispatch({
       type: types.FETCHING
-    })
-    return get('/api/v1/topics/search')
+    });
+
+    return get('/api/v1/topics')
       .then((response) => {
         const topics = response.data.data
         const next_url = response.data.paging.next

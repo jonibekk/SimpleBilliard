@@ -56,7 +56,7 @@ export default class TopicList extends React.Component {
                 <i className="fa fa-search"></i>
               </div>
               <input className="searchBox-input"
-                     placeholder={__("Search topic")}
+                     placeholder={`${__("member")}, ${__("topic")}, ${__("message")}`}
                      onFocus={ this.onFocusSearchBox }/>
             </div>
             <Link to="/topics/create" className="topicList-header-top-add">

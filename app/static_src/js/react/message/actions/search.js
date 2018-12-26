@@ -29,20 +29,21 @@ export function emptyTopics() {
 }
 
 export function fetchMoreSearch(url) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.FETCHING_SEARCH
     })
     return get(url)
       .then((response) => {
-        const topics = response.data.data
-        const next_url = response.data.paging.next
+        const search_result = response.data.data
+        const api_url = getSearchApiUrl(getState().search.search_conditions.type);
+        const next_url = response.data.paging ? `${api_url}?cursor=${response.data.paging}` : '';
+
+
         dispatch({
           type: types.FETCH_MORE_SEARCH,
-          data: {
-            topics,
-            next_url
-          }
+          search_result,
+          next_url
         })
       })
       .catch((response) => {
@@ -59,6 +60,10 @@ export function changeSearchType(type) {
   }
 }
 
+export function getSearchApiUrl(type) {
+  return `/api/v1/${type}/search`;
+}
+
 /**
  * search topics by keyword
  * - search request by keyword 0.5 sec later since user input keyword
@@ -73,31 +78,34 @@ export function search(data) {
       getState().search.search_conditions,
       data
     )
-    const queries = Object.assign({}, search_conditions);
-    const qs = '?' + querystring.stringify(queries);
+    const qs = '?' + querystring.stringify(search_conditions);
     history.pushState(null, "", qs);
 
     dispatch({
       type: types.UPDATE_SEARCH_CONDITION,
       search_conditions,
     })
+
+    const api_url = getSearchApiUrl(search_conditions.type);
     return setTimeout(() => {
       if (getState().search.search_conditions.keyword != search_conditions.keyword) {
         return;
       }
       // TODO: separate calling api by type
-      return get(`/api/v1/topics/search${qs}`)
+      return get(`${api_url}?keyword=${search_conditions.keyword}`)
         .then((response) => {
           if (getState().search.search_conditions.keyword != search_conditions.keyword) {
             return
           }
 
-          const topics = response.data.data
-          const next_url = response.data.paging.next
+          const search_result = response.data.data;
+          const search_total_count = response.data.count;
+          const next_url = response.data.paging ? `${api_url}?cursor=${response.data.paging}` : '';
 
           dispatch({
             type: types.SEARCH,
-            topics,
+            search_total_count,
+            search_result,
             next_url
           })
         })
