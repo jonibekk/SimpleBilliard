@@ -51,7 +51,7 @@ class TopicsController extends ApiController
         // Set paging text
         //       for unifying with other controller logic.
         if (count($topics) > $limit) {
-            $basePath = '/api/v1/topics/search';
+            $basePath = '/api/v1/topics';
             $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
             array_pop($topics);
         }
@@ -152,6 +152,34 @@ class TopicsController extends ApiController
         $this->NotifyBiz->updateCountNewMessageNotification();
 
         return $this->_getResponseSuccess($ret);
+    }
+
+    /**
+     * Get topic detail
+     * url: GET /api/v1/topics/{topic_id}
+     *
+     * @param int $topicId
+     *
+     * @return CakeResponse
+     * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+detail+page
+     * TODO: This is mock! We have to implement it!
+     */
+    function get_init_search_messages(int $topicId)
+    {
+        $error = $this->validateSearchMessage($topicId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init('ApiTopicService');
+
+        $query = $this->request->query;
+        $loginUserId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+        $ret = $ApiTopicService->findInitSearchMessages($topicId, $loginUserId, $teamId, $query);
+
+        return ApiResponse::ok()->withBody($ret)->getResponse();
     }
 
     /**

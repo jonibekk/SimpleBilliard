@@ -32,29 +32,37 @@ gulp.task('angular_app:watch', () => {
 })
 
 // reactのみbrowser-syncを試験的導入。hot reloadが可能
+// reactのみbrowser-syncを試験的導入。hot reloadが可能
 gulp.task('react:watch', () => {
-  const bundler = webpack(webpackDebugConfig);
-  const proxy = proxyMiddleware('/', {target: 'http://192.168.50.4'});
-  browserSync({
-    server: {
-      baseDir: path.join(process.cwd(), config.compiled_assets_dir),
-      port: 3000,
-      middleware: [
-        webpackDevMiddleware(bundler, {
-          publicPath: webpackDebugConfig.output.publicPath,
-          stats: {colors: true},
-          watchOptions: {
-            poll: true,
-            ignored: /node_modules/
-          }
-        }),
-        webpackHotMiddleware(bundler),
-        proxy,
-      ]
-    },
-  });
+  const watcher = gulp.watch([...config.react_watch], ['react'])
+watcher.on('change', event => {
+  /* eslint-disable no-console */
+  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+/* eslint-enable no-console */
 })
 
+// const bundler = webpack(webpackDebugConfig);
+// // const proxy = proxyMiddleware('/', {target: 'http://localhost'});
+// browserSync({
+//   server: {
+//     baseDir: path.join(process.cwd(), config.compiled_assets_dir),
+//     port: 3000,
+//     open: false,
+//     middleware: [
+//       webpackDevMiddleware(bundler, {
+//         publicPath: webpackDebugConfig.output.publicPath,
+//         stats: {colors: true},
+//         // watchOptions: {
+//         //   poll: true,
+//         //   ignored: /node_modules/
+//         // }
+//       }),
+//       webpackHotMiddleware(bundler),
+//       // proxy,
+//     ]
+//   },
+// });
+})
 gulp.task('css:watch', () => {
   const watcher = gulp.watch([...config.less.watch_files], ['less'])
 

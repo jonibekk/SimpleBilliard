@@ -184,12 +184,15 @@ class Topic extends AppModel
             ];
         }
         $res = $this->find('all', $options);
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
         // attach user images
         foreach ($res as $i => $topic) {
             foreach ($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
-                    ['medium_large']);
+                $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($res[$i]['TopicMember'][$j]['User'], 'User');
+//                $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
+//                    ['medium_large']);
                 // number of displaying user photo is less than 4.
                 if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
@@ -424,14 +427,16 @@ class Topic extends AppModel
     /**
      * Get latest message senders in a topic
      *
-     * @param int  $topicId
-     * @param int  $count
+     * @param int $topicId
+     * @param int $userId
+     * @param int $count
      * @param bool $uniqueUserFlag
      *
      * @return UserEntity[]
      */
     public function getLatestSenders(
         int $topicId,
+        int $userId,
         int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
         bool $uniqueUserFlag = false
     ): array {
@@ -455,19 +460,19 @@ class Topic extends AppModel
             'fields'     => $userFields,
             'joins'      => [
                 [
-                    'type'       => 'inner',
-                    'table'      => 'messages',
-                    'alias'      => 'Message',
+                    'type'       => 'INNER',
+                    'table'      => 'topic_members',
+                    'alias'      => 'TopicMember',
                     'conditions' => [
-                        'Message.sender_user_id = User.id',
-                        'Message.topic_id' => $topicId,
-                        'Message.del_flg'  => false,
-                        'Message.type'     => Enum\Model\Message\MessageType::NORMAL
+                        'TopicMember.user_id = User.id',
+                        'TopicMember.user_id !=' => $userId,
+                        'TopicMember.topic_id' => $topicId,
+                        'TopicMember.del_flg'  => false,
                     ]
                 ]
             ],
             'order'      => [
-                'Message.id' => 'DESC'
+                'TopicMember.last_message_sent' => 'DESC'
             ]
         ];
 
@@ -498,7 +503,7 @@ class Topic extends AppModel
         int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
         bool $uniqueUserFlag = false
     ): array {
-        $users = $this->getLatestSenders($topicId, $count, $uniqueUserFlag);
+        $users = $this->getLatestSenders($topicId, $userId, $count, $uniqueUserFlag);
 
         $result = [];
 

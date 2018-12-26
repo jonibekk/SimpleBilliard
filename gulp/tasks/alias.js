@@ -198,19 +198,23 @@ gulp.task('angular_vendor', done => {
 
 // react all application
 gulp.task('react', done => {
-  //TODO:webpackからeslintを使用
+  return runSequence(
+    'react:all',
+    done
+  )
+})
 
+// css
+gulp.task('react:all', () => {
   // run webpack
   const webpackConfig = process.env.NODE_ENV === "production" ? webpackProdConfig : webpackDevConfig;
-  webpack(webpackConfig, function(err, stats) {
-    if(err) throw new gutil.PluginError("webpack:build", err);
+  webpack(webpackConfig, function (err, stats) {
+    if (err) throw new gutil.PluginError("webpack:build", err);
     gutil.log("[react]", stats.toString({
       colors: true
     }));
   });
-  return done;
 })
-
 // css
 gulp.task('css', done => {
   return runSequence(

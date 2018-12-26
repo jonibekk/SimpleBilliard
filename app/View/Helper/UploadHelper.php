@@ -178,7 +178,7 @@ class UploadHelper extends AppHelper
                 $filename = $data[$field . '_file_name'];
             }
         }
-
+$this->log(compact('filename'));
         $hash = Security::hash($model . $id . $field . $filename . $options['style'] . $options['urlize']);
         if (isset($this->cache[$hash])) {
             return $this->cache[$hash];
@@ -412,8 +412,11 @@ class UploadHelper extends AppHelper
     {
         $awsKeyId = AWS_ACCESS_KEY; // this is the non-secret key ID.
         $awsSecretKey = AWS_SECRET_KEY; // this is the SECRET access key!
-
+        $this->log('before');
+        $this->log(compact('file'));
+        $this->log('after');
         $file = rawurlencode($file);
+        $this->log(compact('file'));
         $file = $this->getLocalPrefix() . '/' . str_replace('%2F', '/', $file);
 
         $path = $bucket . $file;

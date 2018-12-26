@@ -1,3 +1,9 @@
+export const SearchType = Object.freeze({
+  MESSAGES: 'messages',
+  TOPICS: 'topics',
+})
+
+
 export const TopicTitleSettingStatus = Object.freeze({
   NONE: 0,
   EDITING: 1,
@@ -11,6 +17,12 @@ export const FetchMoreMessages = Object.freeze({
   LOADING: 1,
   SUCCESS: 2,
   ERROR: 3,
+})
+
+export const JumpToLatest = Object.freeze({
+  NONE: 0,
+  VISIBLE: 1,
+  DONE: 2,
 })
 
 
