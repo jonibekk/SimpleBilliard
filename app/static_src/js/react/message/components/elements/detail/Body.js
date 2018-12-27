@@ -47,7 +47,12 @@ class Body extends React.Component {
       );
       return;
     }
-
+    if (this.props.jump_to_latest_status === JumpToLatest.DONE) {
+      this.detachScrollListener();
+      this.scrollBottom(false);
+      this.attachScrollListener();
+      return;
+    }
     if (this.judgeScrollBottom()) {
       this.scrollBottom();
     } else {
@@ -197,11 +202,13 @@ class Body extends React.Component {
     return false;
   }
 
-  scrollBottom() {
+  scrollBottom(changeState = true) {
     const el = this._findElement();
     el.scrollTop = el.scrollHeight;
 
-    this.setState({init_scrolled_bottom: true})
+    if (changeState) {
+      this.setState({init_scrolled_bottom: true})
+    }
   }
 
   detachScrollListener() {
