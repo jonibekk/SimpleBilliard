@@ -201,7 +201,6 @@ class TopicTest extends GoalousTestCase
 
     private function insertNewMessage(int $topicId, int $senderId, int $teamId, int $currentTimeStamp)
     {
-        sleep(1);
         $newData = [
             'sender_user_id' => $senderId,
             'team_id'        => $teamId,

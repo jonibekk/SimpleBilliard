@@ -38,6 +38,9 @@ class Body extends React.Component {
       const el = this._findElement();
       this.setState({before_scroll_height: el.scrollHeight})
     }
+    if (this.props.jump_to_latest_status !== nextProps.jump_to_latest_status && nextProps.jump_to_latest_status === JumpToLatest.DONE) {
+      this.scrollBottom(true);
+    }
   }
 
   componentDidUpdate() {
@@ -45,12 +48,6 @@ class Body extends React.Component {
       this.props.dispatch(
         actions.fetchMoreMessages(this.props.paging.new, false)
       );
-      return;
-    }
-    if (this.props.jump_to_latest_status === JumpToLatest.DONE) {
-      this.detachScrollListener();
-      this.scrollBottom(false);
-      this.attachScrollListener();
       return;
     }
     if (this.judgeScrollBottom()) {

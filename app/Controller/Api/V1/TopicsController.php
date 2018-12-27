@@ -161,8 +161,6 @@ class TopicsController extends ApiController
      * @param int $topicId
      *
      * @return CakeResponse
-     * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+detail+page
-     * TODO: This is mock! We have to implement it!
      */
     function get_init_search_messages(int $topicId)
     {
