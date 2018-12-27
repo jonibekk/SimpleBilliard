@@ -221,18 +221,9 @@ class SendMailShell extends AppShell
                 'layout'   => 'default',
             ];
 
-            // GL-6355: Output log to investigate the cause of error.
-            // TODO: Remove try catch after we found the cause and fixed.
-            if (!isset($data['FromUser']['display_username'])) {
-                CakeLog::error(sprintf("Undefined index FromUser.display_username param_id:%s FromUser:%s"
-                    , $this->params['id']
-                    , AppUtil::jsonOneLine($data['FromUser'])
-                ));
-            }
-
             $viewVars = [
-                'to_user_name'   => $data['ToUser']['display_username'],
-                'from_user_name' => $data['FromUser']['display_username'] ?? null,
+                'to_user_name'   => Hash::get($data, 'ToUser.display_username'),
+                'from_user_name' => Hash::get($data, 'FromUser.display_username', null),
                 'url'            => $this->item['url'],
                 'body_title'     => $subject,
                 'body'           => $this->item['item_name'],
@@ -281,7 +272,7 @@ class SendMailShell extends AppShell
         $data = $this->SendMail->getDetail($this->params['id'], $lang, $with_notify_from_user, $to_user_id);
         //ToUserデータを付加
         $to_user = $this->User->getProfileAndEmail($to_user_id, $lang);
-        $data['ToUser'] = $to_user['User'];
+        $data['ToUser'] = Hash::get($to_user, 'User', []);
         return $data;
     }
 

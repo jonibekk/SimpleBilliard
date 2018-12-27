@@ -16,4 +16,5 @@ class DataType extends Enum
 {
     const INT = "int";
     const BOOL = "bool";
+    const JSON = "json";
 }

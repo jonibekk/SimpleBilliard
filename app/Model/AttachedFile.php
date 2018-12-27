@@ -489,17 +489,21 @@ class AttachedFile extends AppModel
     /**
      * ファイルが閲覧/ダウンロード可能か確認
      *
-     * @param int $file_id 添付ファイルのID
+     * @param int $fileId 添付ファイルのID
      *
+     * @param int $userId
+     * @param int $teamId
      * @return bool
      */
-    public function isReadable($file_id)
+    public function isReadable(int $fileId, $userId = null, $teamId = null)
     {
-        $file = $this->findById($file_id);
-        if (!$file) {
+        $file = $this->findById($fileId);
+        if (empty($file)) {
             return false;
         }
 
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
         // アクションに添付されたファイルは誰でも閲覧可能
         if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_ACTION_RESULT) {
             return true;
@@ -519,7 +523,7 @@ class AttachedFile extends AppModel
                         'type'       => 'INNER',
                         'conditions' => [
                             'MessageFile.message_id = Message.id',
-                            'Message.team_id' => $this->current_team_id,
+                            'Message.team_id' => $teamId,
                             'Message.del_flg' => false,
                         ]
                     ],
@@ -529,8 +533,8 @@ class AttachedFile extends AppModel
                         'type'       => 'INNER',
                         'conditions' => [
                             'Message.topic_id = TopicMember.topic_id',
-                            'TopicMember.user_id' => $this->my_uid,
-                            'TopicMember.team_id' => $this->current_team_id,
+                            'TopicMember.user_id' => $userId,
+                            'TopicMember.team_id' => $teamId,
                             'TopicMember.del_flg' => false,
                         ]
                     ]
@@ -543,7 +547,7 @@ class AttachedFile extends AppModel
 
         // 投稿とコメントへの添付ファイルの場合、その投稿自体が閲覧可能かを確認する。
         // アクションへのコメントの場合は、だれでも閲覧可能にする
-        $post_id = "";
+        $postId = "";
 
         // 投稿への添付ファイル
         // 関連テーブルから post_id 取得
@@ -554,7 +558,7 @@ class AttachedFile extends AppModel
                     'attached_file_id' => $file['AttachedFile']['id'],
                 ],
             ]);
-            $post_id = $row[$modelName]['post_id'];
+            $postId = $row[$modelName]['post_id'];
         }
         // コメントへの添付ファイル
         // 関連テーブルから post_id 取得
@@ -574,19 +578,19 @@ class AttachedFile extends AppModel
                 return true;
             }
 
-            $post_id = $row['Comment']['post_id'];
+            $postId = $row['Comment']['post_id'];
         }
 
         // 以下の場合は閲覧可能
         if (
             // 自分の投稿の場合
-            $this->PostFile->Post->isMyPost($post_id) ||
+            $this->PostFile->Post->isMyPost($postId, $userId, $teamId) ||
             // 公開サークルに共有されている場合
-            $this->PostFile->Post->PostShareCircle->isShareWithPublicCircle($post_id) ||
+            $this->PostFile->Post->PostShareCircle->isShareWithPublicCircle($postId, $teamId) ||
             // 自分が個人として共有されている場合
-            $this->PostFile->Post->PostShareUser->isShareWithMe($post_id) ||
+            $this->PostFile->Post->PostShareUser->isShareWithMe($postId, $userId, $teamId) ||
             // 自分の所属しているサークルに共有されている場合
-            $this->PostFile->Post->PostShareCircle->isMyCirclePost($post_id)
+            $this->PostFile->Post->PostShareCircle->isMyCirclePost($postId, $userId, $teamId)
         ) {
             return true;
         }
@@ -595,6 +599,8 @@ class AttachedFile extends AppModel
     }
 
     /**
+     * @deprecated
+     * Already this method moved to AttachedFileService.getFileUrl.
      * ファイルのURLを返す
      *
      * @param $file_id
@@ -657,6 +663,61 @@ class AttachedFile extends AppModel
         ], $this);
 
         $options = $this->buildCondAttachedImg($subQuery, 'post_id');
+        $data = $this->find('all', $options);
+        if (empty($data)) {
+            return [];
+        }
+        $res = [];
+        foreach ($data as $v) {
+            $res[] = am($v['AttachedFile'], $v['AttachedFile2']);
+        }
+        return $res;
+    }
+
+    /**
+     * Get first attached image each comment
+     * condition: attached_files.id asc
+     *
+     * @param int   $teamId
+     * @param array $commentIds
+     *
+     * @return array
+     */
+    public function findAttachedImgEachComment(int $teamId, array $commentIds): array
+    {
+        if (empty($commentIds)) {
+            return [];
+        }
+
+        /** @var DboSource $db */
+        $db = $this->getDataSource();
+        $subQuery = $db->buildStatement([
+            'fields'     => [
+                'MIN(AttachedFile.id) AS id',
+                'CommentFile.comment_id'
+            ],
+            'table'      => 'comment_files',
+            'alias'      => 'CommentFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.file_type' => self::TYPE_FILE_IMG,
+                        'AttachedFile.id = CommentFile.attached_file_id',
+                        'AttachedFile.del_flg'   => false,
+                    ],
+                ]
+            ],
+            'conditions' => [
+                'CommentFile.comment_id' => $commentIds,
+                'CommentFile.team_id'    => $teamId,
+            ],
+            'group'      => 'CommentFile.comment_id'
+        ], $this);
+
+        $options = $this->buildCondAttachedImg($subQuery, 'comment_id');
         $data = $this->find('all', $options);
         if (empty($data)) {
             return [];

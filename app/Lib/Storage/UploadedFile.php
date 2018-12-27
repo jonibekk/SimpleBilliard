@@ -73,6 +73,29 @@ class UploadedFile
     private $fileName;
 
     /**
+     * Suffix of file name
+     *
+     * @var string
+     */
+    private $suffix = '';
+
+    /**
+     * @return string
+     */
+    public function getSuffix(): string
+    {
+        return $this->suffix;
+    }
+
+    /**
+     * @param string $suffix
+     */
+    public function setSuffix(string $suffix)
+    {
+        $this->suffix = $suffix;
+    }
+
+    /**
      * Metadata of the file
      *
      * @var string
@@ -120,12 +143,18 @@ class UploadedFile
         return $this->binaryFile;
     }
 
-    public function getEncodedFile(): string
+    /**
+     * @param bool $withBase64Header Always returning result with base64 header
+     * @return string
+     */
+    public function getEncodedFile(bool $withBase64Header = false): string
     {
-        if (empty($this->encodedFile)) {
-            return base64_encode($this->binaryFile);
+        $encodedFile = empty($this->encodedFile) ? base64_encode($this->binaryFile) : $this->encodedFile;
+        if (!$withBase64Header) {
+            return $encodedFile;
         }
-        return $this->encodedFile;
+        $hasBase64Header = (0 === strpos($this->encodedFile, 'data:'));
+        return $hasBase64Header ? $encodedFile : sprintf('data://%s;base64,%s', $this->getMIME(), $encodedFile);
     }
 
     public function isEmpty(): bool

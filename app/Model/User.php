@@ -1133,6 +1133,7 @@ class User extends AppModel
     public function updateDefaultTeam($team_id, $force = false, $uid = null)
     {
         if (!$this->me['default_team_id'] || $force) {
+            $this->clear();
             $this->id = $uid ? $uid : $this->my_uid;
             $this->saveField('default_team_id', $team_id);
             return true;

@@ -8,14 +8,30 @@ App::uses('AppModel', 'Model');
  * @property User        $SenderUser
  * @property MessageFile $MessageFile
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
+
+use Goalous\Enum as Enum;
+
 class Message extends AppModel
 {
+    /**
+     * @deprecated
+     */
     const TYPE_NORMAL = 1;
+    /**
+     * @deprecated
+     */
     const TYPE_ADD_MEMBER = 2;
+    /**
+     * @deprecated
+     */
     const TYPE_LEAVE = 3;
+    /**
+     * @deprecated
+     */
     const TYPE_SET_TOPIC_NAME = 4;
-    const DIRECTION_OLD = "old";
-    const DIRECTION_NEW = "new";
 
     /**
      * Validation rules
@@ -74,6 +90,14 @@ class Message extends AppModel
         'MessageFile',
     ];
 
+    public $modelConversionTable = [
+        'topic_id'            => DataType::INT,
+        'sender_user_id'      => DataType::INT,
+        'team_id'             => DataType::INT,
+        'type'                => DataType::INT,
+        'attached_file_count' => DataType::INT
+    ];
+
     /**
      * Find messages
      *
@@ -84,7 +108,7 @@ class Message extends AppModel
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit, string $direction = self::DIRECTION_OLD): array
+    function findMessages(int $topicId, $cursor, int $limit, string $direction = Enum\Model\Message\MessageDirection::OLD): array
     {
         $options = [
             'conditions' => [
@@ -120,15 +144,52 @@ class Message extends AppModel
         ];
 
         if ($cursor) {
-            if ($direction == self::DIRECTION_OLD) {
-                $options['conditions']['Message.id <'] = $cursor;
-            } elseif ($direction == self::DIRECTION_NEW) {
-                $options['conditions']['Message.id >'] = $cursor;
+            if ($direction == Enum\Model\Message\MessageDirection::OLD) {
+                $options['conditions']['Message.id <='] = $cursor;
+            } elseif ($direction == Enum\Model\Message\MessageDirection::NEW) {
+                $options['conditions']['Message.id >='] = $cursor;
+                $options['order']['Message.id'] = 'ASC';
             }
         }
 
         $res = $this->find('all', $options);
+
+        if ($direction === Enum\Model\Message\MessageDirection::NEW) {
+            return array_reverse($res);
+        }
+
         return $res;
+    }
+
+    /**
+     * Return newer message.id in the topic.
+     * If not existing, returning null.
+     * @param int $topicId
+     * @param int $messageId
+     * @return int|null
+     */
+    function findNewerMessageId(int $topicId, int $messageId)
+    {
+
+        $options = [
+            'conditions' => [
+                'Message.topic_id' => $topicId,
+                'Message.id >' => $messageId,
+            ],
+            'fields'     => [
+                'id',
+            ],
+            'order'      => [
+                'Message.id' => 'ASC'
+            ],
+            'limit'      => 1,
+        ];
+
+        $res = $this->find('first', $options);
+        if (empty($res)) {
+            return null;
+        }
+        return Hash::get($res, 'Message.id');
     }
 
     /**
@@ -184,7 +245,7 @@ class Message extends AppModel
     function saveNormal(array $data, int $userId)
     {
         $data = am($data, [
-            'type'           => self::TYPE_NORMAL,
+            'type'           => Enum\Model\Message\MessageType::NORMAL,
             'sender_user_id' => $userId,
             'team_id'        => $this->current_team_id,
         ]);
@@ -206,7 +267,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
-            'type'           => self::TYPE_LEAVE,
+            'type'           => Enum\Model\Message\MessageType::LEAVE,
             'meta_data'      => json_encode(['target_user_ids' => $userId])
 
         ];
@@ -229,7 +290,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $userId,
-            'type'           => self::TYPE_SET_TOPIC_NAME,
+            'type'           => Enum\Model\Message\MessageType::SET_TOPIC_NAME,
             'meta_data'      => json_encode(['updated_topic_title' => $title])
         ];
         $ret = $this->save($data);
@@ -251,7 +312,7 @@ class Message extends AppModel
             'topic_id'       => $topicId,
             'team_id'        => $this->current_team_id,
             'sender_user_id' => $loginUserId,
-            'type'           => self::TYPE_ADD_MEMBER,
+            'type'           => Enum\Model\Message\MessageType::ADD_MEMBER,
             'meta_data'      => json_encode(['target_user_ids' => $addUserIds])
         ];
         $ret = $this->save($data);
@@ -316,10 +377,10 @@ class Message extends AppModel
         $type = Hash::get($this->data, 'Message.type');
         if ($type === null) {
             // default type
-            $type = self::TYPE_NORMAL;
+            $type = Enum\Model\Message\MessageType::NORMAL;
         }
 
-        if ($type != self::TYPE_NORMAL) {
+        if ($type != Enum\Model\Message\MessageType::NORMAL) {
             return true;
         }
 
@@ -402,4 +463,5 @@ class Message extends AppModel
         }
         return $count;
     }
+
 }

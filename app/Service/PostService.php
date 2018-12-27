@@ -23,6 +23,7 @@ App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
+App::import('Lib/DataExtender', 'PostExtender');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
@@ -34,6 +35,65 @@ use Goalous\Exception as GlException;
  */
 class PostService extends AppService
 {
+    /**
+     * Get single data based on model.
+     * extend data
+     *
+     * @param PostResourceRequest $req
+     * @param array $extensions
+     * @return array
+     */
+    function get(PostResourceRequest $req, array $extensions = []): array
+    {
+        $id = $req->getId();
+        $userId = $req->getUserId();
+        $teamId = $req->getTeamId();
+        if ($req->isCheckPermission() && !$this->canAccessPost($id, $userId, $teamId)
+        ) {
+            return [];
+        }
+
+        $data = $this->_getWithCache($id, 'Post');
+        if (empty($data)) {
+            return [];
+        }
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
+        $data = $PostExtender->extend($data, $userId, $teamId, $extensions);
+        return $data;
+    }
+
+    function canAccessPost(int $postId, int $userId, int $teamId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $condition = ['id' => $postId, 'team_id' => $teamId];
+        $data = $Post->useEntity()->useType()->find('first', $condition);
+        if (empty($data)) {
+            return false;
+        }
+        // Check whether self post
+        if ((int)$data['user_id'] === $userId) {
+            return true;
+        }
+
+        // Check if goal post
+        if ($Post->isGoalPost($postId, $userId, $teamId)) {
+            return true;
+        }
+
+        // Check circle post permission
+        try {
+            if ($this->checkUserAccessToCirclePost($userId, $postId)) {
+                return true;
+            }
+        } catch (Exception $exception) {
+            return false;
+        }
+        return false;
+    }
 
     /**
      * 月のインデックスからフィードの取得期間を取得
@@ -126,14 +186,25 @@ class PostService extends AppService
             );
             $this->TransactionManager->commit();
             return $post;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('failed adding post data', [
-                'message'  => $e->getMessage(),
-                'users.id' => $userId,
-                'teams.id' => $teamId,
-            ]);
-            GoalousLog::error($e->getTraceAsString());
+
+            // Logging for https://jira.goalous.com/browse/GL-7496
+            if (false !== strpos($e->getMessage(), 'Lock wait timeout exceeded')) {
+                GoalousLog::emergency('Got a DB lock when adding post', [
+                    'message'  => $e->getMessage(),
+                    'users.id' => $userId,
+                    'teams.id' => $teamId,
+                ]);
+                GoalousLog::emergency($e->getTraceAsString());
+            } else {
+                GoalousLog::error('failed adding post data', [
+                    'message'  => $e->getMessage(),
+                    'users.id' => $userId,
+                    'teams.id' => $teamId,
+                ]);
+                GoalousLog::error($e->getTraceAsString());
+            }
         }
         return false;
     }
@@ -317,6 +388,15 @@ class PostService extends AppService
                         ]);
                         throw new RuntimeException('Error on adding post: ' . $errorMessage);
                     }
+                    // Update last_post_created in circle
+                    if (false === $Circle->updateLatestPostedInCircles($circles)) {
+                        GoalousLog::error($errorMessage = 'failed updating last post created', [
+                            'post.id'    => $postId,
+                            'circles.id' => $circles,
+                            'teams.id'   => $teamId,
+                        ]);
+                        throw new RuntimeException('Error on adding post: ' . $errorMessage);
+                    }
                 } catch (\Throwable $e) {
                     $PostFile->AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);
                     throw $e;
@@ -412,13 +492,16 @@ class PostService extends AppService
         int $userId,
         int $teamId,
         array $fileIDs = []
-    ): PostEntity {
+    ): PostEntity
+    {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
 
         if (empty($postBody['body'])) {
             GoalousLog::error('Error on adding post: Invalid argument', [
@@ -442,6 +525,9 @@ class PostService extends AppService
             } elseif (empty($postBody['type'])) {
                 $postBody['type'] = Post::TYPE_NORMAL;
             }
+
+            // OGP
+            $postBody['site_info'] = !empty($postBody['site_info']) ? json_encode($postBody['site_info']): null;
 
             /** @var PostEntity $savedPost */
             $savedPost = $Post->useType()->useEntity()->save($postBody, false);
@@ -487,11 +573,22 @@ class PostService extends AppService
             // Update unread post numbers if specified sharing circle
             if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
                 GoalousLog::error($errorMessage = 'failed increment unread count', [
-                    'circles.ids' => $postId,
-                    'teams.id'    => $teamId,
+                    'post.id'    => $postId,
+                    'circles.id' => $circleId,
+                    'teams.id'   => $teamId,
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
+            // Update last_post_created in circle
+            if (false === $Circle->updateLatestPosted($circleId)) {
+                GoalousLog::error($errorMessage = 'failed updating last post created', [
+                    'post.id'    => $postId,
+                    'circles.id' => $circleId,
+                    'teams.id'   => $teamId,
+                ]);
+                throw new RuntimeException('Error on adding post: ' . $errorMessage);
+            }
+
             //Save attached files
             if (!empty($fileIDs)) {
                 $this->saveFiles($postId, $userId, $teamId, $fileIDs);
@@ -508,18 +605,6 @@ class PostService extends AppService
     }
 
     /**
-     * Get query condition for posts made by an user
-     *
-     * @param int $userId User ID of the posts author
-     *
-     * @return array
-     */
-    public function getUserPostListCondition(int $userId)
-    {
-        return ['Post.user_id' => $userId];
-    }
-
-    /**
      * Check whether the user can view the post
      *
      * @param int  $userId
@@ -528,7 +613,7 @@ class PostService extends AppService
      *
      * @return bool
      */
-    public function checkUserAccessToPost(int $userId, int $postId, bool $mustBelong = false): bool
+    public function checkUserAccessToCirclePost(int $userId, int $postId, bool $mustBelong = false): bool
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init("CircleMember");
@@ -560,7 +645,7 @@ class PostService extends AppService
             ]
         ];
 
-        /** @var CircleEntity $circles */
+        /** @var CircleEntity[] $circles */
         $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
 
         if (empty($circles)) {
@@ -594,7 +679,7 @@ class PostService extends AppService
     }
 
     /**
-     * Get list of attached files of a post
+     * Get list of attached files of a post despite of post typte
      *
      * @param int                                              $postId
      * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
@@ -602,6 +687,24 @@ class PostService extends AppService
      * @return AttachedFileEntity[]
      */
     public function getAttachedFiles(int $postId, AttachedFileType $type = null): array
+    {
+        $files = $this->getNormalAttachedFiles($postId, $type);
+        if (!empty($files)) {
+            return $files;
+        }
+        $files = $this->getActionAttachedFiles($postId, $type);
+        return $files;
+    }
+
+    /**
+     * Get list of normal attached files(e.g. circle post) of a post
+     *
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getNormalAttachedFiles(int $postId, AttachedFileType $type = null): array
     {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -618,6 +721,52 @@ class PostService extends AppService
                     'conditions' => [
                         'PostFile.post_id' => $postId,
                         'PostFile.attached_file_id = AttachedFile.id'
+                    ]
+                ],
+            ]
+        ];
+
+        if (!empty($type)) {
+            $conditions['conditions']['file_type'] = $type->getValue();
+        }
+
+        return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+
+    /**
+     * Get list of action attached files of a post
+     *
+     * @param int                                              $postId
+     * @param Goalous\Enum\Model\AttachedFile\AttachedFileType $type Filtered file type
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getActionAttachedFiles(int $postId, AttachedFileType $type = null): array
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $conditions = [
+            'conditions' => [],
+            'table'      => 'attached_files',
+            'alias'      => 'AttachedFile',
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'action_result_files',
+                    'alias'      => 'ActionResultFile',
+                    'conditions' => [
+                        'ActionResultFile.attached_file_id = AttachedFile.id'
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'posts',
+                    'alias'      => 'Post',
+                    'conditions' => [
+                        'Post.id' => $postId,
+                        'Post.action_result_id = ActionResultFile.action_result_id'
                     ]
                 ]
             ]
@@ -714,15 +863,11 @@ class PostService extends AppService
         $addedFiles = [];
 
         try {
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFiles = $UploadService->getBuffers($userId, $teamId, $fileIDs);
+
             //Save attached files
-            foreach ($fileIDs as $id) {
-
-                if (!is_string($id)) {
-                    throw new InvalidArgumentException("Buffered file ID must be string.");
-                }
-
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+            foreach ($uploadedFiles as $uploadedFile) {
 
                 /** @var AttachedFileEntity $attachedFile */
                 $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
@@ -793,86 +938,55 @@ class PostService extends AppService
      * @param int $userId
      * @param int $postsIds
      *
+     * @return bool
      * @throws Exception
      */
-    public function checkUserAccessToMultiplePost(int $userId, array $postsIds)
+    public function checkUserAccessToMultiplePost(int $userId, array $postsIds) : bool
     {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init("CircleMember");
-
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
 
-        $circleOption = [
+        $options = [
             'conditions' => [
-                'PostShareCircle.post_id' => $postsIds,
+                'Circle.del_flg' => false,
+                'CircleMember.id' => null
             ],
             'fields'     => [
-                'Circle.id',
+                'PostShareCircle.circle_id',
+                'PostShareCircle.post_id',
             ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
             'joins'      => [
                 [
                     'type'       => 'INNER',
                     'conditions' => [
                         'Circle.id = PostShareCircle.circle_id',
+                        'PostShareCircle.post_id' => $postsIds,
+                        'PostShareCircle.del_flg' => false,
+                        'Circle.public_flg' => false,
                     ],
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',
-                    'field'      => 'PostShareCircle.circle_id'
+                ],
+                [
+                    'type'       => 'LEFT',
+                    'conditions' => [
+                        'Circle.id = CircleMember.circle_id',
+                        'CircleMember.user_id' => $userId,
+                        'CircleMember.del_flg' => false,
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
                 ]
             ]
         ];
 
-        /** @var CircleEntity $circles */
-        $circlePostArray = $Circle->useType()->useEntity()->find('all', $circleOption);
-
-        if (empty($circlePostArray)) {
-            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        $noPermissionPosts = $Circle->find('all', $options);
+        $noPermissionPosts = Hash::extract($noPermissionPosts, '{n}.PostShareCircle');
+        if (!empty($noPermissionPosts)) {
+            GoalousLog::info('No permission posts', $noPermissionPosts);
+            throw new GlException\GoalousNotFoundException(__("You don't have permission to access this post"));
         }
 
-        if (count($circlePostArray) != count($postsIds)) {
-            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
-        }
-
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $db = $CircleMember->getDataSource();
-
-        $subQuery = $db->buildStatement([
-            'conditions' => [
-                'CircleMember.user_id' => $userId,
-                'CircleMember.del_flg' => false,
-            ],
-            'fields'     => [
-                'CircleMember.circle_id'
-            ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember'
-        ], $CircleMember);
-        $subQueryExpression = $db->expression($subQuery);
-
-        $query = [
-            'conditions' => [
-                'OR' => [
-                    $subQueryExpression,
-                    'Circle.public_flg' => true,
-                ]
-            ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
-            'fields'     => 'Circle.id'
-        ];
-
-        $circleUserArray = $Circle->find('all', $query);
-
-        $circleUserArray = Hash::extract($circleUserArray, '{n}.Circle.id');
-        $circlePostArray = Hash::extract($circlePostArray, '{n}.Circle.id');
-
-        if (count(array_intersect($circlePostArray, $circleUserArray)) != count($circlePostArray)) {
-            throw new GlException\GoalousConflictException(__("The circle doesn't exist or you don't have permission."));
-        }
+        return true;
     }
 }

@@ -100,7 +100,10 @@ class PageResourceHelper extends AppHelper
             'index'            => [
                 '/js/react_saved_item_app.min'
             ],
-        ]
+        ],
+        'search'         => [
+            'index'     => ['/js/react_search_app.min'],
+        ],
     ];
 
     private $cssMap = [
@@ -157,6 +160,10 @@ class PageResourceHelper extends AppHelper
             'invite'                  => ['signup.min'],
             'confirm_user_activation' => ['invite.min']
         ],
+        'search'         => [
+            'index'     => ['search.min'],
+        ],
+
     ];
 
     /**

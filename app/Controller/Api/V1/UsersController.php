@@ -1,60 +1,62 @@
 <?php
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Lib/Paging', 'PagingRequest');
 App::uses('ApiController', 'Controller/Api');
-/** @noinspection PhpUndefinedClassInspection */
+App::import('Service/Paging/Search', 'UserSearchPagingService');
 
 /**
  * Class UsersController
  */
 class UsersController extends ApiController
 {
-
-    /**
-     * Search users
-     * url: GET /api/v1/users/search
-     *
-     * @queryParam int $cursor optional
-     * @queryParam int $limit optional
-     * @queryParam string $keyword optional
-     * @queryParam array $exclude_user_ids optional
-     * @return CakeResponse
-     * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Search+users
-     *             TODO: This is mock! We have to implement it!
-     */
-    function get_search()
+    public function get_search()
     {
-        $cursor = $this->request->query('cursor');
+        $error = $this->validateSearch();
+
+        if (!empty($error)) {
+            return $this->_getResponseValidationFail($error);
+        }
+
+        $query = $this->request->query;
         $limit = $this->request->query('limit');
-        $keyword = $this->request->query('keyword');
-        $excludeUserIds = $this->request->query('exclude_user_ids');
+        $cursor = $this->request->query('cursor');
+        $teamId = $this->current_team_id;
 
-        $retMock = [];
-        $retMock['data'] = [
-            [
-                'id'               => 1,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '平形 大樹(Daiki Hirakata)',
-            ],
-            [
-                'id'               => 2,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '佐伯 翔平(Shohei Saeki)',
-            ],
-            [
-                'id'               => 3,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '菊池 厚平(Kohei Kikuchi)',
-            ],
-            [
-                'id'               => 4,
-                'img_url'          => '/img/no-image.jpg',
-                'display_username' => '吉田 将之(Masayuki Yoshida)',
-            ],
-        ];
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
 
-        $retMock['paging'] = [
-            'next' => "/api/v1/users/search?cursor=11111&limit=10&keyword=hoge",
-        ];
-        return $this->_getResponsePagingSuccess($retMock);
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+
+        /** @var UserSearchPagingService $UserSearchPagingService */
+        $UserSearchPagingService = ClassRegistry::init('UserSearchPagingService');
+        $searchResult = $UserSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
     }
 
+    private function validateSearch(): array
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        if (empty ($userId)) {
+            return ["No user ID"];
+        }
+
+        if (empty($teamId)) {
+            return ["No team ID"];
+        }
+
+        return [];
+    }
 }

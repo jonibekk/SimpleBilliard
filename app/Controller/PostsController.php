@@ -691,8 +691,8 @@ class PostsController extends AppController
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->Term->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['Term'])) {
-                $start = $term['Term']['start_date'];
-                $end = $term['Term']['end_date'];
+                $start = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['start_date'])->startOfDay()->format('Y-m-d H:i:s');
+                $end = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['end_date'])->endOfDay()->format('Y-m-d H:i:s');
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
@@ -1259,6 +1259,7 @@ class PostsController extends AppController
     }
 
     /**
+     * @deprecated
      * OGP のデータを取得する
      *
      * @return CakeResponse
@@ -1430,7 +1431,7 @@ class PostsController extends AppController
 
     public function _userCircleStatus($circle_id)
     {
-        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), $circle_id)) {
+        if ($this->Post->Circle->CircleMember->isAdmin($this->Auth->user('id'), intval($circle_id))) {
             return 'admin';
         } else {
             if ($this->Post->Circle->CircleMember->isBelong($circle_id, $this->Auth->user('id'))) {

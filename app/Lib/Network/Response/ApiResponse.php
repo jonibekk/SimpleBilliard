@@ -69,6 +69,31 @@ class ApiResponse extends BaseApiResponse
     }
 
     /**
+     * Get response for file download
+     *
+     * @param $content
+     * @param string $fileName
+     * @return ApiResponse
+     */
+    public function getResponseForDL(string $content, string $fileName): ApiResponse
+    {
+        // Set header to prevent file name garbled
+        $this->withHeader([
+            'Content-Disposition' => sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                $fileName,
+                rawurldecode($fileName)
+            ),
+            'Access-Control-Expose-Headers' => 'Content-Disposition'
+        ]);
+
+        $this->header($this->_responseHeader);
+        $this->type('application/octet-stream');
+        $this->length(strlen($content));
+        $this->body($content);
+        return $this;
+    }
+
+    /**
      * Set cursors for paging function
      *
      * @param array $paging

@@ -58,8 +58,12 @@ $backBtn = isset($_GET['backBtn']);
                             ]); ?>
                         </li>
                         <li class="nav-item" id="h-nav-blog">
-                            <?= $this->Html->link(__('Blog'), 'http://blog.goalous.com/',
-                                array('target' => '_blank')); ?>
+                            <?= $this->Html->link(
+                                __('Blog'),
+                                ($this->Lang->getLangCode() == LangHelper::LANG_CODE_JP)
+                                    ? "https://www.goalous.com/blog/ja/"
+                                    : "https://www.goalous.com/blog/",
+                                ['target' => '_blank']); ?>
                         </li>
                         <li class="nav-item" id="h-nav-contact">
                             <?= $this->Html->link(__('Contact us'),

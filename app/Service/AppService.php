@@ -17,10 +17,47 @@ class AppService extends CakeObject
     /** @var TransactionManager $TransactionManager */
     protected $TransactionManager = null;
 
+    /* variable cache not to avoid to get same data wastefully */
+    protected static $cacheList = [];
+
     function __construct()
     {
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
     }
+
+    /**
+     *
+     *
+     * @param int $id
+     * @param string $modelName
+     * @return entity|array
+     */
+    protected function _getWithCache(int $id, string $modelName) {
+        $path = $modelName.".".$id;
+        // In case already got data from db and cached, but data is empty
+        if (Hash::check(static::$cacheList, $path)
+            && empty(Hash::get(static::$cacheList, $path))) {
+            return [];
+        }
+
+        // In case already got data from db and cached, data is not empty
+        $data = Hash::get(static::$cacheList, $path);
+        if (!empty($data)) {
+            return $data;
+        }
+
+        $model = ClassRegistry::init($modelName);
+
+        // Get data from db and cache
+        $data = $model->useType()->findById($id);
+        $data = Hash::get($data, $modelName) ?? [];
+        static::$cacheList[$modelName][$id] = $data;
+        if (empty($data)) {
+            return [];
+        }
+        return $data;
+    }
+
 
     /**
      * バリデーションメッセージの展開

@@ -83,7 +83,7 @@ class CommentPagingServiceTest extends GoalousTestCase
         $request->addResource('current_user_id', 1);
         $request->addResource('current_team_id', 1);
 
-        $result = $CommentPagingService->getDataWithPaging($request, 1, CommentPagingService::EXTEND_USER);
+        $result = $CommentPagingService->getDataWithPaging($request, 1, CommentExtender::EXTEND_USER);
 
         $this->assertNotEmpty($result);
         $this->assertNotEmpty($result['cursor']);

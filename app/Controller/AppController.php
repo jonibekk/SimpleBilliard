@@ -11,6 +11,7 @@
 App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
+App::uses('User', 'Model');
 App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
@@ -30,14 +31,13 @@ use Goalous\Enum as Enum;
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent         $Lang
- * @property CookieComponent       $Cookie
- * @property CsvComponent          $Csv
- * @property NotificationComponent $Notification
- * @property MixpanelComponent     $Mixpanel
- * @property OgpComponent          $Ogp
- * @property BenchmarkComponent    $Benchmark
- * @property PaymentSetting        $PaymentSetting
+ * @property LangComponent      $Lang
+ * @property CsvComponent       $Csv
+ * @property CookieComponent    $Cookie
+ * @property MixpanelComponent  $Mixpanel
+ * @property OgpComponent       $Ogp
+ * @property BenchmarkComponent $Benchmark
+ * @property PaymentSetting     $PaymentSetting
  */
 class AppController extends BaseController
 {
@@ -55,7 +55,6 @@ class AppController extends BaseController
         'Paginator',
         'Lang',
         'Cookie',
-        'Notification',
         'Ogp',
         'Csv',
         'Flash',
@@ -162,7 +161,7 @@ class AppController extends BaseController
         }
         $this->set('my_prof', $this->User->getMyProf());
         //ログイン済みの場合のみ実行する
-        if ($this->Auth->user()) {
+        if ($this->Auth->user() && empty($this->Session->read('user_has_no_team'))) {
 
             $login_uid = $this->Auth->user('id');
 
@@ -192,6 +191,10 @@ class AppController extends BaseController
             // by not ajax request
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
+                    $currentTeam = $this->Team->getById($this->current_team_id);
+                    if (empty($currentTeam) && $this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST) {
+                        return $this->Auth->logout();
+                    }
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
@@ -215,15 +218,17 @@ class AppController extends BaseController
 
                 // アクティブチームリストに current_team_id が入っていない場合はログアウト
                 // （チームが削除された場合）
-                if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
-                    $this->Session->write('current_team_id', null);
-                    //もしdefault_teamがそのチームだった場合はdefault_teamにnullをセット
-                    if ($this->Auth->user('default_team_id') == $this->current_team_id) {
-                        $this->User->updateDefaultTeam(null, true, $login_uid);
+                if ($this->current_team_id) {
+                    if (!isset($active_team_list[$this->current_team_id]) && $this->Session->read('referer_status') !== REFERER_STATUS_INVITED_USER_EXIST) {
+                        $this->Session->write('current_team_id', null);
+                        //もしdefault_teamがそのチームだった場合はdefault_teamにnullをセット
+                        if ($this->Auth->user('default_team_id') == $this->current_team_id) {
+                            $this->User->updateDefaultTeam(null, true, $login_uid);
+                        }
+                        $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
+                        $this->Auth->logout();
+                        return;
                     }
-                    $this->Notification->outError(__("Logged out because the team you logged in is deleted."));
-                    $this->Auth->logout();
-                    return;
                 }
 
                 //リクエストがログイン中のチーム以外なら切り替える
@@ -276,6 +281,7 @@ class AppController extends BaseController
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
         $this->set('my_team_id', $this->current_team_id);
+        $this->set('userHasNoTeam', $this->Session->read('user_has_no_team') ?: false);
         $this->_redirectIfMobileAppVersionUnsupported();
     }
 
@@ -486,13 +492,6 @@ class AppController extends BaseController
             }
         }
     }
-
-    public function _forceSSL()
-    {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
-    }
-
     public function _setMyTeam()
     {
         $my_teams = [];
@@ -1017,19 +1016,18 @@ class AppController extends BaseController
         }
     }
 
-    public function _setDefaultTeam($team_id)
+    protected function _setDefaultTeam($team_id)
     {
-        if (!$team_id) {
-            return false;
-        }
+        $userId = $this->Auth->user('id');
         try {
-            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
+            $skipCheckUserStatus = !empty($this->Session->read('invited_team_id'));
+            $this->User->TeamMember->permissionCheck($team_id, $userId, $skipCheckUserStatus);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
-            $set_team_id = !empty($team_list) ? key($team_list) : null;
-            $this->Session->write('current_team_id', $set_team_id);
-            $this->User->updateDefaultTeam($set_team_id, true, $this->Auth->user('id'));
+            GoalousLog::error("Error on setting user $userId default_team_id. " . $e->getMessage());
+            $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
+            $this->Session->write('current_team_id', $newTeamId);
+            $this->User->updateDefaultTeam($newTeamId, true, $userId);
             return false;
         }
         $this->Session->write('current_team_id', $team_id);
