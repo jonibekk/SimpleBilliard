@@ -36,6 +36,22 @@ class Topic extends React.Component {
     } else {
       detail_url = `/topics/${data.topic.id}/search_messages?keyword=${keyword}`;
     }
+
+
+    let matching_count_word = "";
+    if (type === SearchType.TOPICS) {
+      if (data.highlight_member_count == 1) {
+        matching_count_word = sprintf(__("%d matched member"), data.highlight_member_count)
+      } else if (data.highlight_member_count > 1) {
+        matching_count_word = sprintf(__("%d matched members"), data.highlight_member_count)
+      }
+    } else {
+      if (data.doc_count == 1) {
+        matching_count_word = sprintf(__("%d matched message"), data.doc_count)
+      } else if (data.doc_count > 1) {
+        matching_count_word = sprintf(__("%d matched messages"), data.doc_count)
+      }
+    }
     return (
       <li className="topicSearchList-item" key={ data.topic.id }>
         <a href="#"
@@ -53,7 +69,7 @@ class Topic extends React.Component {
               </div>
             </div>
             <div className="topicSearchList-item-main-body oneline-ellipsis">
-                { type === SearchType.TOPICS ? `${data.highlight_member_count} matching_members` : `${data.doc_count} messages hit` }
+              {matching_count_word}
             </div>
           </div>
           <div className="topicSearchList-item-right">

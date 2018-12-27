@@ -5601,3 +5601,15 @@ msgstr "メッセージ"
 
 msgid "Topics"
 msgstr "トピック"
+
+msgid "%d matched member"
+msgstr "%d件のメンバーが一致"
+
+msgid "%d matched members"
+msgstr "%d件のメンバーが一致"
+
+msgid "%d matched message"
+msgstr "%d件のメッセージが一致"
+
+msgid "%d matched messages"
+msgstr "%d件のメッセージが一致"

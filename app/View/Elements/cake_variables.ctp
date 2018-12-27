@@ -605,6 +605,10 @@ App::uses('AttachedFile', 'Model');
             "message": "<?= __("message") ?>",
             "Topics": "<?= __("Topics") ?>",
             "Messages": "<?= __("Messages") ?>",
+            "%d matched member": "<?= __("%d matched member") ?>",
+            "%d matched members": "<?= __("%d matched members") ?>",
+            "%d matched message": "<?= __("%d matched message") ?>",
+            "%d matched messages": "<?= __("%d matched messages") ?>",
             /* Change to paid plan */
             // Select country and paymnet type
             "Select Country Location": "<?= __("Select Country Location") ?>",
