@@ -5595,3 +5595,9 @@ msgstr "メッセージ"
 
 msgid "View the latest messages"
 msgstr "最新のメッセージを見る"
+
+msgid "Messages"
+msgstr "メッセージ"
+
+msgid "Topics"
+msgstr "トピック"
