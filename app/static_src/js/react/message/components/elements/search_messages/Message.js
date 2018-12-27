@@ -13,9 +13,9 @@ class Message extends React.Component {
     }
   }
 
-  onClickLinkToDetail(url) {
-    const {dispatch, item} = this.props
-    browserHistory.push({pathname: url, state: {back_url: location.href}});
+  onClickLinkToDetail(base_url, query_string) {
+    const {dispatch, item} = this.props;
+    browserHistory.push({pathname: base_url, search: query_string, state: {back_url: location.href}});
     dispatch(setTopicOnDetail(item.topic))
     dispatch(emptyTopicList())
   }
@@ -37,9 +37,9 @@ class Message extends React.Component {
 
     return (
       <li className="topicSearchList-item" key={ item.message.id }>
-        <a href="#"
+        <div
           className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
-          onClick={ this.onClickLinkToDetail.bind(this, `/topics/${item.topic.id}/detail`) }
+          onClick={ this.onClickLinkToDetail.bind(this, `/topics/${item.topic.id}/detail`, `?message_id=${item.message.id}`) }
           onTouchTap={ this.tapLink.bind(this) }>
           <AvatarsBox users={ userImages } key={item.message.id} />
           <div className="topicSearchList-item-main">
@@ -54,7 +54,7 @@ class Message extends React.Component {
           <div className="topicSearchList-item-right">
             { item.message.display_created }
           </div>
-        </a>
+        </div>
       </li>
     )
   }

@@ -5581,8 +5581,11 @@ msgstr "検索に一致する情報は見つかりませんでした"
 msgid "Search post and comment"
 msgstr "投稿とコメントから検索"
 
-msgid "Search result %d Topics hit"
+msgid "Search result %d topics hit"
 msgstr "検索結果 %dトピックが一致しました"
+
+msgid "Search result %d messages hit"
+msgstr "検索結果 %dメッセージが一致しました"
 
 msgid "topic"
 msgstr "トピック"

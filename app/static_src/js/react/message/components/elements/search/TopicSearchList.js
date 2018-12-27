@@ -57,8 +57,6 @@ export default class TopicSearchList extends React.Component {
 
 
   render() {
-    console.log('TopicSearchList render');
-    console.log(this.props.data);
     const {search_result, fetching, search_conditions, is_mobile_app, search_total_count, changed_search_conditions} = this.props.data
     const render_topics = search_result.map((data, index) => {
       return (
@@ -137,7 +135,7 @@ export default class TopicSearchList extends React.Component {
                 </div>
               )
             } else {
-              const search_total_count_el = search_conditions.type === SearchType.TOPICS ? <p className="topicSearchList-hitCount">{__("Search result %d Topics hit", search_total_count)}</p> : "";
+              const search_total_count_el = search_conditions.type === SearchType.TOPICS ? <p className="topicSearchList-hitCount">{sprintf(__("Search result %d topics hit"), search_total_count)}</p> : "";
 
               // search results
               return (

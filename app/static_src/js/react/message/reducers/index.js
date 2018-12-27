@@ -32,7 +32,6 @@ export default function topic(state = initialState, action) {
         is_search_mode: true
       })
     case types.CHANGE_TO_INDEX_MODE:
-      console.log('types.CHANGE_TO_INDEX_MODE');
       return Object.assign({}, state, {
         is_search_mode: false
       })

@@ -43,10 +43,8 @@ export default class SearchMessages extends Base {
 
 
   render() {
-    console.log({props: this.props});
     // const {topic_id, search_total_count, fetching, is_mobile_app, mobile_app_layout, topic, messages} = this.props.search_messages;
     const props = this.props.search_messages;
-    console.log('SearchMessages: render');
     const render_messages = props.messages.map((item, index) => {
       return (
         <Message
@@ -82,7 +80,7 @@ export default class SearchMessages extends Base {
             </a>
           </div>
         </div>
-        <p className="topicSearchList-hitCount">{__("Search result %d Topics hit", props.search_total_count)}</p>
+        <p className="topicSearchList-hitCount">{sprintf(__("Search result %d messages hit"), props.search_total_count)}</p>
         <ul>
           <InfiniteScroll
             loadingMore={ props.fetching }

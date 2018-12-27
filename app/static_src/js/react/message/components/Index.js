@@ -31,7 +31,6 @@ export default class Index extends React.Component {
 
   render() {
     const {is_search_mode, init_completed} = this.props.index;
-console.log({is_search_mode, init_completed});
     if (!init_completed) {
       return null;
     }

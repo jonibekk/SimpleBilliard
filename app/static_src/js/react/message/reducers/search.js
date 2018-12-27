@@ -46,7 +46,6 @@ export default function search(state = initialState, action) {
         search_result: []
       })
     case types.INITIALIZE_SEARCH:
-      console.log('types.INITIALIZE_SEARCH');
       const is_mobile_app = state.is_mobile_app
       return Object.assign({}, state, initialState, {
         is_mobile_app,

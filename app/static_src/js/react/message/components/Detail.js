@@ -24,7 +24,6 @@ export default class Detail extends Base {
     this.props.setResourceId(topic_id);
     const {state} = this.props.location
     if (state && state.back_url) {
-    console.log('set state ');
       this.setState({'back_url': state.back_url});
     }
     this.props.setUaInfo();
@@ -92,7 +91,6 @@ export default class Detail extends Base {
   }
 
   render() {
-    console.log({back_url: this.state.back_url});
     const {detail, file_upload} = this.props;
     return (
       <div className={`topicDetail ${isMobileApp() ? "" : "panel panel-default"}`}>

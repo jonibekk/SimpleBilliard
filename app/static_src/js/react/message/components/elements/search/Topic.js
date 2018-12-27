@@ -30,17 +30,17 @@ class Topic extends React.Component {
     const keyword = this.props.keyword;
     const type = this.props.type;
 
-    let url = ""
+    let detail_url = ""
     if (type === SearchType.TOPICS) {
-      url = `/topics/${data.topic.id}/detail`;
+      detail_url = `/topics/${data.topic.id}/detail`;
     } else {
-      url = `/topics/${data.topic.id}/search_messages?keyword=${keyword}`;
+      detail_url = `/topics/${data.topic.id}/search_messages?keyword=${keyword}`;
     }
     return (
       <li className="topicSearchList-item" key={ data.topic.id }>
         <a href="#"
               className={`topicSearchList-item-link ${this.state.is_taped_item ? "is-hover" : ""}`}
-              onClick={ this.onClickLinkToDetail.bind(this, url) }
+              onClick={ this.onClickLinkToDetail.bind(this, detail_url) }
               onTouchTap={ this.tapLink.bind(this) }>
           <AvatarsBox users={ data.users }/>
           <div className="topicSearchList-item-main">
