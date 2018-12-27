@@ -1,6 +1,9 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Message', 'Model');
 App::uses('User', 'Model');
+App::import('Model/Entity', 'UserEntity');
+App::import('Service', 'ImageStorageService');
 
 /**
  * Topic Model
@@ -10,6 +13,9 @@ App::uses('User', 'Model');
  * @property Message     $Message
  * @property TopicMember $TopicMember
  */
+
+use Goalous\Enum as Enum;
+
 class Topic extends AppModel
 {
 
@@ -178,12 +184,13 @@ class Topic extends AppModel
             ];
         }
         $res = $this->find('all', $options);
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
         // attach user images
         foreach ($res as $i => $topic) {
             foreach ($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
-                    ['medium_large']);
+                $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($res[$i]['TopicMember'][$j]['User'], 'User');
                 // number of displaying user photo is less than 4.
                 if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
@@ -364,7 +371,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.user_id = User.id',
                         'User.active_flg' => true,
-                        'User.del_flg' => false,
+                        'User.del_flg'    => false,
                     ],
                 ],
                 [
@@ -374,7 +381,7 @@ class Topic extends AppModel
                     'conditions' => [
                         'TopicMember.team_id = TeamMember.team_id',
                         'TopicMember.user_id = TeamMember.user_id',
-                        'TeamMember.status' => TeamMember::USER_STATUS_ACTIVE
+                        'TeamMember.status' => Enum\Model\TeamMember\Status::ACTIVE
                     ],
                 ],
                 [
@@ -413,6 +420,64 @@ class Topic extends AppModel
             return null;
         }
         return $topic['latest_message_id'];
+    }
+
+    /**
+     * Get latest message senders in a topic
+     *
+     * @param int $topicId
+     * @param int $userId
+     * @param int $count
+     *
+     * @return UserEntity[]
+     */
+    public function getLatestSenders(
+        int $topicId,
+        int $userId,
+        int $count = Topic::MAX_DISPLAYING_USER_PHOTO
+    ): array {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $userFields = $User->profileFields;
+
+        $condition = [
+            'conditions' => [
+                'User.del_flg' => false
+            ],
+            'table'      => 'users',
+            'alias'      => 'User',
+            'limit'      => $count,
+            'fields'     => $userFields,
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'topic_members',
+                    'alias'      => 'TopicMember',
+                    'conditions' => [
+                        'TopicMember.user_id = User.id',
+                        'TopicMember.user_id !=' => $userId,
+                        'TopicMember.topic_id' => $topicId,
+                        'TopicMember.del_flg'  => false,
+                    ]
+                ]
+            ],
+            'order'      => [
+                'TopicMember.last_message_sent' => 'DESC'
+            ]
+        ];
+
+        $result = $User->useType()->useEntity()->find('all', $condition);
+
+        // Set profile image url each data
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        /** @var UserEntity $v */
+        foreach ($result as $v) {
+            $v['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($v->toArray(true), 'User');
+        }
+
+        return $result;
     }
 
 }

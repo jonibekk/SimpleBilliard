@@ -47,6 +47,7 @@ class TopicMember extends AppModel
             'conditions' => [
                 'topic_id' => $topicId,
                 'user_id'  => $userId,
+                'del_flg'  => false
             ]
         ];
         $ret = $this->find('first', $options);

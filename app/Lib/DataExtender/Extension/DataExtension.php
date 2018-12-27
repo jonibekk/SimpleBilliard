@@ -11,17 +11,23 @@ abstract class DataExtension
     /**
      * Method for extending a object array
      *
-     * @param  array $data The array to be extended
+     * @param  array $data        The array to be extended
      * @param string $parentKey
      * @param string $extKeyName
+     * @param string $extEntryKey Custom array key for data extension in the resulting array. Default to model name.
+     *
      * @return array Extended data
      */
-    public final function extend(array $data, string $parentKey, string $extKeyName = 'id'): array
-    {
+    public final function extend(
+        array $data,
+        string $parentKey,
+        string $extKeyName = 'id',
+        string $extEntryKey = ""
+    ): array {
         $keys = $this->getKeys($data, $parentKey);
         if (!empty($keys)) {
             $dataExtension = $this->fetchData($keys);
-            $tmp = $this->connectData([$data], $parentKey, $dataExtension, $extKeyName);
+            $tmp = $this->connectData([$data], $parentKey, $dataExtension, $extKeyName, $extEntryKey);
             $data = reset($tmp);
         }
         return $data;
@@ -30,14 +36,19 @@ abstract class DataExtension
     /**
      * Method for extending a object array
      *
-     * @param  array      $data       The array to be extended
-     * @param string|null $path       Hash::Extract() Path to the ID
-     * @param string|null $extKeyName Key name for the extended data. Insert if necessary
+     * @param  array      $data        The array to be extended
+     * @param string|null $path        Hash::Extract() Path to the ID
+     * @param string      $extKeyName  Key name for the extended data. Insert if necessary
+     * @param string      $extEntryKey Custom array key for data extension in the resulting array. Default to model name.
      *
      * @return array Extended data
      */
-    public final function extendMulti(array $data, string $path, string $extKeyName = 'id'): array
-    {
+    public final function extendMulti(
+        array $data,
+        string $path,
+        string $extKeyName = 'id',
+        string $extEntryKey = ""
+    ): array {
         $keys = $this->getKeys($data, $path);
 
         if (!empty($keys)) {
@@ -47,7 +58,7 @@ abstract class DataExtension
             $tokens = explode('.', $path);
             $parentKey = end($tokens);
 
-            return $this->connectData($data, $parentKey, $dataExtension, $extKeyName);
+            return $this->connectData($data, $parentKey, $dataExtension, $extKeyName, $extEntryKey);
         }
         return $data;
     }
@@ -68,6 +79,7 @@ abstract class DataExtension
      * @param string $parentKeyName
      * @param array  $extData
      * @param string $extDataKey
+     * @param string $extEntryKey Custom array key for data extension in the resulting array. Default to model name.
      *
      * @return array Connected original data with extension data
      */
@@ -75,7 +87,8 @@ abstract class DataExtension
         array $parentData,
         string $parentKeyName,
         array $extData,
-        string $extDataKey
+        string $extDataKey,
+        string $extEntryKey = ""
     ): array {
         foreach ($parentData as $key => &$parentElement) {
             foreach ($extData as $extension) {
@@ -85,8 +98,11 @@ abstract class DataExtension
                     //E.g. ['User'][...]
                     if (Hash::get($parentData, $parentKeyName) ==
                         Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-
-                        $parentData = array_merge($parentData, AppUtil::arrayChangeKeySnakeCase($extension));
+                        if (empty($extEntryKey)) {
+                            $parentData = array_merge($parentData, AppUtil::arrayChangeKeySnakeCase($extension));
+                        } else {
+                            $parentData[$extEntryKey] = Hash::extract($extension, '{s}')[0];
+                        }
                         break;
                     }
                     return $parentData;
@@ -96,7 +112,11 @@ abstract class DataExtension
                 //E.g. ['User'][...]
                 if (Hash::get($parentElement, $parentKeyName) ==
                     Hash::extract($extension, "{s}." . $extDataKey)[0]) {
-                    $parentElement = array_merge($parentElement, AppUtil::arrayChangeKeySnakeCase($extension));
+                    if (empty($extEntryKey)) {
+                        $parentElement = array_merge($parentElement, AppUtil::arrayChangeKeySnakeCase($extension));
+                    } else {
+                        $parentElement[$extEntryKey] = Hash::extract($extension, '{s}')[0];
+                    }
                     break;
                 }
 

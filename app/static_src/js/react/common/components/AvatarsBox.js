@@ -26,7 +26,7 @@ export default class AvatarsBox extends React.Component {
           }
           return (
             <div className={`avatorsBox-${size}`} key={ user.id }>
-              <img src={ user.medium_large_img_url } className="lazy" />
+              <img src={ user.profile_img_url.medium_large } className="lazy" />
             </div>
           )
         })}

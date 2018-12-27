@@ -43,11 +43,7 @@ class TopicService extends AppService
         }
         $membersCount = $TopicMember->countMember($topicId);
 
-        if (!$topic['title']) {
-            $displayTitle = $this->getMemberNamesAsString($topicId, 10, $loginUserId);
-        } else {
-            $displayTitle = $topic['title'];
-        }
+        $displayTitle = $this->getDisplayTopicTitle($topic, $loginUserId);
 
         $canLeaveTopic = true;
         if ($membersCount <= 2) {
@@ -62,6 +58,16 @@ class TopicService extends AppService
         ]);
 
         return $ret;
+    }
+
+    public function getDisplayTopicTitle(array $topic, int $userId)
+    {
+        if (!$topic['title']) {
+            $displayTitle = $this->getMemberNamesAsString($topic['id'], 10, $userId);
+        } else {
+            $displayTitle = $topic['title'];
+        }
+        return $displayTitle;
     }
 
     /**
@@ -468,5 +474,12 @@ class TopicService extends AppService
         }
 
         $TopicSearchKeyword->commit();
+    }
+
+    function countMembers(int $topicId)
+    {
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init("TopicMember");
+        return $TopicMember->countMember($topicId);
     }
 }

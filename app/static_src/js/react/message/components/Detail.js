@@ -7,20 +7,29 @@ import Base from "~/common/components/Base";
 import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {LeaveTopicStatus} from "~/message/constants/Statuses";
+import queryString from "query-string";
 
 export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
+    this.state = {
+      back_url: '/topics',
+    }
   }
 
   componentWillMount() {
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
     this.props.setResourceId(topic_id);
+    const {state} = this.props.location
+    if (state && state.back_url) {
+      this.setState({'back_url': state.back_url});
+    }
     this.props.setUaInfo();
     this.props.initLayout();
-    this.props.fetchInitialData(this.props.params.topic_id);
+    const query_params = queryString.parse(location.search);
+    this.props.fetchInitialData(this.props.params.topic_id, query_params);
   }
 
   componentDidMount() {
@@ -93,20 +102,25 @@ export default class Detail extends Base {
           mobile_app_layout={detail.mobile_app_layout}
           leave_topic_status={detail.leave_topic_status}
           leave_topic_err_msg={detail.leave_topic_err_msg}
+          back_url={this.state.back_url}
         />
         <Body
           topic={detail.topic}
+          search_message_id={detail.search_message_id}
           messages={detail.messages.data}
           paging={detail.messages.paging}
           is_fetched_initial={detail.is_fetched_initial}
           fetch_more_messages_status={detail.fetch_more_messages_status}
           fetch_latest_messages_status={detail.fetch_latest_messages_status}
+          jump_to_latest_status={detail.jump_to_latest_status}
           last_position_message_id={detail.last_position_message_id}
           save_message_status={detail.save_message_status}
           topic_title_setting_status={detail.topic_title_setting_status}
           is_mobile_app={detail.is_mobile_app}
           mobile_app_layout={detail.mobile_app_layout}
           fetching_read_count={detail.fetching_read_count}
+          is_fetched_search={detail.is_fetched_search}
+          is_old_direction={detail.is_old_direction}
         />
         <Footer
           body={detail.input_data.body}

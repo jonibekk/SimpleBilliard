@@ -60,6 +60,14 @@ class MessageFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'Message Type(1:Nomal,2:Add member,3:Remove member,4:Change topic name)'
         ],
+        'meta_data'           => [
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'Json data for not normal message(add/leave member ids, updated topic title, etc)',
+            'charset' => 'utf8mb4'
+        ],
         'target_user_ids'     => [
             'type'    => 'text',
             'null'    => true,
