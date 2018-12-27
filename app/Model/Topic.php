@@ -428,25 +428,18 @@ class Topic extends AppModel
      * @param int $topicId
      * @param int $userId
      * @param int $count
-     * @param bool $uniqueUserFlag
      *
      * @return UserEntity[]
      */
     public function getLatestSenders(
         int $topicId,
         int $userId,
-        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
-        bool $uniqueUserFlag = false
+        int $count = Topic::MAX_DISPLAYING_USER_PHOTO
     ): array {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
         $userFields = $User->profileFields;
-
-        //If getting unique users, replace field id with DISTINCT id
-        if ($uniqueUserFlag) {
-            $userFields[0] = 'DISTINCT id';
-        }
 
         $condition = [
             'conditions' => [
@@ -487,28 +480,4 @@ class Topic extends AppModel
         return $result;
     }
 
-    /**
-     * Get latest message senders' profile images in a topic
-     *
-     * @param int  $topicId
-     * @param int  $count
-     * @param bool $uniqueUserFlag
-     *
-     * @return array
-     */
-    public function getLatestSendersImage(
-        int $topicId,
-        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
-        bool $uniqueUserFlag = false
-    ): array {
-        $users = $this->getLatestSenders($topicId, $userId, $count, $uniqueUserFlag);
-
-        $result = [];
-
-        foreach ($users as $user) {
-            $result[] = $user['profile_img_url']['medium_large'] ?: "";
-        }
-
-        return $result;
-    }
 }
