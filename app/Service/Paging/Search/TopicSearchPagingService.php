@@ -8,6 +8,7 @@ App::import('Model/Entity', 'UserEntity');
 App::import('Lib/DataExtender/Extension', 'TopicExtension');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
+App::import('Service', "TopicService");
 
 /**
  * Created by PhpStorm.
@@ -56,20 +57,27 @@ class TopicSearchPagingService extends BaseSearchPagingService
         $Topic = ClassRegistry::init('Topic');
         /** @var TopicExtension $TopicExtension */
         $TopicExtension = ClassRegistry::init('TopicExtension');
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
 
         $resultArray = $TopicExtension->extendMulti($baseData, '{n}.id');
 
         //Extend display created
         $TimeEx = new TimeExHelper(new View());
 
+        $userId = $request->getTempCondition('user_id');
         foreach ($resultArray as &$result) {
             $result['highlight_member_count'] = count(Hash::get($result,'highlight_member', []));
             $result['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough', false);
-            $users = $Topic->getLatestSenders($result['id'], Topic::MAX_DISPLAYING_USER_PHOTO, true);
+            $users = $Topic->getLatestSenders($result['id'], $userId);
             /** @var UserEntity $user */
+            $result['users'] = [];
             foreach ($users as $user){
                 $result['users'][] = $user->toArray();
             }
+
+            $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId);
+            $result['topic']['members_count'] = $TopicService->countMembers($result['topic']['id']);
         }
 
         return $resultArray;

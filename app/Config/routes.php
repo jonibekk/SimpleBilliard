@@ -135,6 +135,7 @@ Router::connect('/goals/:id/edit',
 );
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);
 Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'action' => 'add_members']);
+Router::connect('/topics/:topic_id/search_messages', ['controller' => 'topics', 'action' => 'search_messages']);
 
 Router::connect('/evaluator_settings/:user_id/detail', ['controller' => 'evaluator_settings', 'action' => 'detail']);
 

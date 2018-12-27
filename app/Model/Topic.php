@@ -184,12 +184,13 @@ class Topic extends AppModel
             ];
         }
         $res = $this->find('all', $options);
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
         // attach user images
         foreach ($res as $i => $topic) {
             foreach ($topic['TopicMember'] as $j => $member) {
-                $res[$i]['TopicMember'][$j]['User'] = $this->attachImgUrl($topic['TopicMember'][$j]['User'], 'User',
-                    ['medium_large']);
+                $res[$i]['TopicMember'][$j]['User']['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($res[$i]['TopicMember'][$j]['User'], 'User');
                 // number of displaying user photo is less than 4.
                 if ($j >= self::MAX_DISPLAYING_USER_PHOTO) {
                     break;
@@ -424,26 +425,21 @@ class Topic extends AppModel
     /**
      * Get latest message senders in a topic
      *
-     * @param int  $topicId
-     * @param int  $count
-     * @param bool $uniqueUserFlag
+     * @param int $topicId
+     * @param int $userId
+     * @param int $count
      *
      * @return UserEntity[]
      */
     public function getLatestSenders(
         int $topicId,
-        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
-        bool $uniqueUserFlag = false
+        int $userId,
+        int $count = Topic::MAX_DISPLAYING_USER_PHOTO
     ): array {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
         $userFields = $User->profileFields;
-
-        //If getting unique users, replace field id with DISTINCT id
-        if ($uniqueUserFlag) {
-            $userFields[0] = 'DISTINCT id';
-        }
 
         $condition = [
             'conditions' => [
@@ -455,19 +451,19 @@ class Topic extends AppModel
             'fields'     => $userFields,
             'joins'      => [
                 [
-                    'type'       => 'inner',
-                    'table'      => 'messages',
-                    'alias'      => 'Message',
+                    'type'       => 'INNER',
+                    'table'      => 'topic_members',
+                    'alias'      => 'TopicMember',
                     'conditions' => [
-                        'Message.sender_user_id = User.id',
-                        'Message.topic_id' => $topicId,
-                        'Message.del_flg'  => false,
-                        'Message.type'     => Enum\Model\Message\MessageType::NORMAL
+                        'TopicMember.user_id = User.id',
+                        'TopicMember.user_id !=' => $userId,
+                        'TopicMember.topic_id' => $topicId,
+                        'TopicMember.del_flg'  => false,
                     ]
                 ]
             ],
             'order'      => [
-                'Message.id' => 'DESC'
+                'TopicMember.last_message_sent' => 'DESC'
             ]
         ];
 
@@ -484,28 +480,4 @@ class Topic extends AppModel
         return $result;
     }
 
-    /**
-     * Get latest message senders' profile images in a topic
-     *
-     * @param int  $topicId
-     * @param int  $count
-     * @param bool $uniqueUserFlag
-     *
-     * @return array
-     */
-    public function getLatestSendersImage(
-        int $topicId,
-        int $count = Topic::MAX_DISPLAYING_USER_PHOTO,
-        bool $uniqueUserFlag = false
-    ): array {
-        $users = $this->getLatestSenders($topicId, $count, $uniqueUserFlag);
-
-        $result = [];
-
-        foreach ($users as $user) {
-            $result[] = $user['profile_img_url']['medium_large'] ?: "";
-        }
-
-        return $result;
-    }
 }

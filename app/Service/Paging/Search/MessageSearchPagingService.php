@@ -10,6 +10,7 @@ App::import('Lib/DataExtender/Extension', 'TopicExtension');
 App::import('Lib/DataExtender/Extension', 'UserExtension');
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
 App::import('Model/Entity', 'UserEntity');
+App::import('Service', "TopicService");
 
 /**
  * Created by PhpStorm.
@@ -62,9 +63,13 @@ class MessageSearchPagingService extends BaseSearchPagingService
         $TopicExtension = ClassRegistry::init('TopicExtension');
         $resultArray = $TopicExtension->extendMulti($resultArray, '{n}.topic_id');
 
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
+
         //Extend display created
         $TimeEx = new TimeExHelper(new View());
 
+        $userId = $request->getTempCondition('user_id');
         //No topic id means searching for topics.
         if (empty($request->getCondition('topic_id'))) {
 
@@ -73,13 +78,16 @@ class MessageSearchPagingService extends BaseSearchPagingService
 
             foreach ($resultArray as $key => &$result) {
                 //No topic id means searching for topics.
-                $result['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough',
+                $result['topic']['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough',
                     false);
-                $users = $Topic->getLatestSenders($result['topic_id'], Topic::MAX_DISPLAYING_USER_PHOTO, true);
+                $users = $Topic->getLatestSenders($result['topic_id'], $userId);
                 /** @var UserEntity $user */
+                $result['users'] = [];
                 foreach ($users as $user){
                     $result['users'][] = $user->toArray();
                 }
+                $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId);
+                $result['topic']['members_count'] = $TopicService->countMembers($result['topic']['id']);
             }
         } else {
             $messageIds = Hash::extract($baseData, '{n}.id');
@@ -94,7 +102,8 @@ class MessageSearchPagingService extends BaseSearchPagingService
                         break;
                     }
                 }
-                $result['display_created'] = $TimeEx->elapsedTime($result['message']['created'], 'rough', false);
+                $result['message']['display_created'] = $TimeEx->elapsedTime($result['message']['created'], 'rough', false);
+
             }
         }
         return $resultArray;

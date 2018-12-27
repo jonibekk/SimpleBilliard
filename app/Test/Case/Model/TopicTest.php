@@ -1,5 +1,6 @@
 <?php
 App::uses('Topic', 'Model');
+App::uses('TopicMember', 'Model');
 App::uses('GoalousTestCase', 'Test');
 App::import('Model/Entity', 'UserEntity');
 
@@ -7,7 +8,10 @@ App::import('Model/Entity', 'UserEntity');
  * Topic Test Case
  *
  * @property Topic $Topic
+ * @property TopicMember $TopicMember
+ * @property Message Message
  */
+
 use Goalous\Enum as Enum;
 
 class TopicTest extends GoalousTestCase
@@ -36,6 +40,8 @@ class TopicTest extends GoalousTestCase
     {
         parent::setUp();
         $this->Topic = ClassRegistry::init('Topic');
+        $this->TopicMember = ClassRegistry::init('TopicMember');
+        $this->Message = ClassRegistry::init('Message');
     }
 
     /**
@@ -132,15 +138,16 @@ class TopicTest extends GoalousTestCase
     {
         $topicId = 1;
 
-        $this->insertNewMessage($topicId, 10, 1);
-        $this->insertNewMessage($topicId, 13, 1);
-        $this->insertNewMessage($topicId, 12, 1);
-        $this->insertNewMessage($topicId, 11, 1);
+        $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
+        $this->insertNewMessage($topicId, 10, 1, $currentTimeStamp++);
+        $this->insertNewMessage($topicId, 13, 1, $currentTimeStamp++);
+        $this->insertNewMessage($topicId, 12, 1, $currentTimeStamp++);
+        $this->insertNewMessage($topicId, 11, 1, $currentTimeStamp);
 
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
 
-        $result = $Topic->getLatestSenders(1, 3);
+        $result = $Topic->getLatestSenders(1, 10);
 
         $this->assertCount(3, $result);
 
@@ -151,20 +158,32 @@ class TopicTest extends GoalousTestCase
         $this->assertEquals(11, $result[0]['id']);
         $this->assertEquals(12, $result[1]['id']);
         $this->assertEquals(13, $result[2]['id']);
+
+        $result = $Topic->getLatestSenders(1, 1);
+
+        $this->assertCount(4, $result);
+        $this->assertEquals(11, $result[0]['id']);
+        $this->assertEquals(12, $result[1]['id']);
+        $this->assertEquals(13, $result[2]['id']);
+        $this->assertEquals(10, $result[3]['id']);
     }
 
     public function test_getLatestMembersUnique_success()
     {
         $topicId = 1;
 
-        $this->insertNewMessage($topicId, 10, 1);
-        $this->insertNewMessage($topicId, 13, 1);
-        $this->insertNewMessage($topicId, 10, 1);
+        $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
+        $this->insertNewMessage($topicId, 10, 1, $currentTimeStamp++);
+        $this->insertNewMessage($topicId, 13, 1, $currentTimeStamp++);
+        $this->insertNewMessage($topicId, 10, 1, $currentTimeStamp);
+
+        $tm = $this->TopicMember->find('all');
+        $ms = $this->Message->find('all');
 
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
 
-        $result = $Topic->getLatestSenders(1, 3, true);
+        $result = $Topic->getLatestSenders(1, 1);
 
         $this->assertCount(2, $result);
 
@@ -174,13 +193,14 @@ class TopicTest extends GoalousTestCase
 
         $this->assertEquals(10, $result[0]['id']);
         $this->assertEquals(13, $result[1]['id']);
+
+        $result = $Topic->getLatestSenders(1, 1, 1);
+
+        $this->assertCount(1, $result);
     }
 
-    private function insertNewMessage(int $topicId, int $senderId, int $teamId)
+    private function insertNewMessage(int $topicId, int $senderId, int $teamId, int $currentTimeStamp)
     {
-        /** @var Message $Message */
-        $Message = ClassRegistry::init('Message');
-
         $newData = [
             'sender_user_id' => $senderId,
             'team_id'        => $teamId,
@@ -189,7 +209,23 @@ class TopicTest extends GoalousTestCase
             'type'           => Enum\Model\Message\MessageType::NORMAL,
         ];
 
-        $Message->create();
-        $Message->save($newData, false);
+        $this->Message->create();
+        $this->Message->save($newData, false);
+
+        $this->TopicMember->create();
+        $topicMember = $this->TopicMember->find('first', [
+            'conditions' => ['user_id' => $senderId, 'topic_id' => $topicId]
+        ]);
+        $saveData = [
+            'user_id'           => $senderId,
+            'topic_id'          => $topicId,
+            'team_id'           => $teamId,
+            'last_message_sent' => $currentTimeStamp,
+        ];
+
+        if (!empty($topicMember)) {
+            $this->TopicMember->id = $topicMember['TopicMember']['id'];
+        }
+        $this->TopicMember->save($saveData, false);
     }
 }
