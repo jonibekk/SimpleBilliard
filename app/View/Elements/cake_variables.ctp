@@ -603,7 +603,8 @@ App::uses('AttachedFile', 'Model');
             "member": "<?= __("member") ?>",
             "topic": "<?= __("topic") ?>",
             "message": "<?= __("message") ?>",
-
+            "Topics": "<?= __("Topics") ?>",
+            "Messages": "<?= __("Messages") ?>",
             /* Change to paid plan */
             // Select country and paymnet type
             "Select Country Location": "<?= __("Select Country Location") ?>",
