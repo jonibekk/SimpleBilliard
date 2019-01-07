@@ -133,8 +133,8 @@ class TeamService extends AppService
      * changing service status expired teams
      *
      * @param string $targetExpireDate
-     * @param int $currentStatus
-     * @param int $nextStatus
+     * @param int    $currentStatus
+     * @param int    $nextStatus
      *
      * @return bool
      */
@@ -208,9 +208,10 @@ class TeamService extends AppService
     /**
      * Update Service Use Status
      *
-     * @param int $teamId
+     * @param int  $teamId
      * @param bool $isManualDelete
      * @param null $opeUserId
+     *
      * @return bool
      */
     public function deleteTeam(int $teamId, bool $isManualDelete = false, $opeUserId = null): bool
@@ -229,15 +230,15 @@ class TeamService extends AppService
 
             $now = GoalousDateTime::now();
             // CakePHP updateAll trap when update date column...
-            $serviceUseStateStartDate = "'".$now->setTimeZoneByHour($team['timezone'])->format('Y-m-d')."'";
+            $serviceUseStateStartDate = "'" . $now->setTimeZoneByHour($team['timezone'])->format('Y-m-d') . "'";
 
             // Created data for deleting
             $deleteData = [
                 'service_use_state_start_date' => $serviceUseStateStartDate,
-                'service_use_state_end_date' => null,
-                'deleted'  => $now->timestamp,
-                'modified'  => $now->timestamp,
-                'del_flg'  => true
+                'service_use_state_end_date'   => null,
+                'deleted'                      => $now->timestamp,
+                'modified'                     => $now->timestamp,
+                'del_flg'                      => true
             ];
             if ($isManualDelete) {
                 $deleteData['service_use_status'] = Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL;
@@ -257,8 +258,6 @@ class TeamService extends AppService
                 throw new Exception(sprintf('Failed to delete all team members. team_id:%s', $teamId));
             }
 
-            // TODO: Delete all data related team if necessary
-
             // Update team member's default team id
             $this->updateDefaultTeamOnDeletion($teamId);
 
@@ -266,6 +265,10 @@ class TeamService extends AppService
             $GlRedis = ClassRegistry::init("GlRedis");
             // delete all team cache
             $GlRedis->dellKeys("*team:{$teamId}:*");
+
+            foreach ($userIds as $userId) {
+                Cache::delete($TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false));
+            }
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -301,8 +304,8 @@ class TeamService extends AppService
     /**
      * Update Service Use Status
      *
-     * @param int $teamId
-     * @param int $serviceUseStatus
+     * @param int    $teamId
+     * @param int    $serviceUseStatus
      * @param string $startDate
      *
      * @return bool
