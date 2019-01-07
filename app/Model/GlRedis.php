@@ -326,8 +326,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $map_ses_and_jwt = [
-        'team'         => null,
-        'user'         => null,
+        'team'            => null,
+        'user'            => null,
         'map_ses_and_jwt' => null,
     ];
 
@@ -374,6 +374,28 @@ class GlRedis extends AppModel
         $pipe = $this->Db->multi(Redis::PIPELINE);
         $prefix = $this->Db->config['prefix'];
         foreach ($keys as $k) {
+            $k = str_replace($prefix, "", $k);
+            $pipe->delete($k);
+        }
+        $pipe->exec();
+    }
+
+    /**
+     * Delete users' active team lists from cache
+     *
+     * @param int[] $userIds
+     */
+    public function deleteUserTeamList(array $userIds)
+    {
+        $targetKeys = [];
+        foreach ($userIds as $userId) {
+            $pattern = $this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false);
+            $keys = $this->Db->keys($pattern);
+            $targetKeys = array_merge($targetKeys, $keys);
+        }
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($targetKeys as $k) {
             $k = str_replace($prefix, "", $k);
             $pipe->delete($k);
         }
@@ -851,8 +873,8 @@ class GlRedis extends AppModel
     }
 
     /**
-     * @param    int|string    $userId
-     * @param    $ipAddress
+     * @param    int|string $userId
+     * @param               $ipAddress
      *
      * @return bool|string
      * @throws Exception
@@ -1528,15 +1550,15 @@ class GlRedis extends AppModel
         return $errorParameters;
     }
 
-
     /**
      * Save mapping between session id and jwt
      *
-     * @param int $teamId
-     * @param int $userId
-     * @param string $sessionId
-     * @param string $jwt
+     * @param int       $teamId
+     * @param int       $userId
+     * @param string    $sessionId
+     * @param string    $jwt
      * @param float|int $expire
+     *
      * @return bool
      */
     function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3)
@@ -1548,13 +1570,13 @@ class GlRedis extends AppModel
         return $this->Db->setTimeout($key, $expire);
     }
 
-
     /**
      * Get jwt from session id
      *
-     * @param int $teamId
-     * @param int $userId
+     * @param int    $teamId
+     * @param int    $userId
      * @param string $sessionId
+     *
      * @return mixed
      */
     function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
