@@ -54,17 +54,10 @@ export default class SearchMessages extends Base {
           />
       )
     })
-    const sp_class = props.is_mobile_app ? "mod-sp" : "";
-    const header_styles = {
-      top: props.mobile_app_layout.header_top
-    };
 
     return (
       <div className={`topicSearchMessages ${isMobileApp() ? "" : "panel panel-default"}`}>
-        <div
-          className={`topicSearchMessages-header ${sp_class}`}
-          style={header_styles}
-        >
+        <div className={`topicSearchMessages-header`} >
           <div className="topicSearchMessages-header-left">
             <Link to={`/topics?keyword=${props.search_conditions.keyword}&type=messages`} className>
               <i className="fa fa-chevron-left topicSearchMessages-header-icon"/>

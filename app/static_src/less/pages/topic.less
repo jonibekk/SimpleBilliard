@@ -178,6 +178,11 @@
       }
       &-body {
         color: @subColor3;
+        em {
+          color: @acidRed;
+          font-style: normal;
+        }
+
       }
     }
     &-right {
@@ -401,6 +406,8 @@
   padding-bottom: 10px;
   &-header {
     .topic-header();
+    position:static !important;
+    padding: 14px 0;
   }
 }
 
