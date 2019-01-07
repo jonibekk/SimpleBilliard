@@ -266,9 +266,7 @@ class TeamService extends AppService
             // delete all team cache
             $GlRedis->dellKeys("*team:{$teamId}:*");
 
-            foreach ($userIds as $userId) {
-                Cache::delete($TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false));
-            }
+            $GlRedis->deleteUserTeamList($userIds);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
