@@ -65,17 +65,20 @@ class ESSearchObject
     }
 
     /**
-     * Check whether there is more search result after current page
+     * Check whether there is more search result after current page.
+     * Case 1: Search result has no total count. Check by comparing result count with record number
+     * Case 2: Search result has total count.
      *
      * @return bool
      */
     public function hasMore(): bool
     {
-        if (empty($this->pageNumber) || empty($this->recordNumber) || empty($this->totalResultCount)) {
+        if (empty($this->pageNumber) || empty($this->recordNumber) || is_null($this->totalResultCount)) {
             return false;
         }
 
-        return $this->totalResultCount > $this->pageNumber * $this->recordNumber;
+        return ($this->totalResultCount === 0 && count($this->searchResult) === $this->recordNumber)
+            || ($this->totalResultCount > $this->pageNumber * $this->recordNumber);
     }
 
     /**
