@@ -85,7 +85,7 @@ class ApiMessageService extends ApiService
         $TopicMember = ClassRegistry::init('TopicMember');
 
         $latestMessageId = $Topic->getLatestMessageId($topicId);
-        $latestMessageReadCount = $TopicMember->countReadMember($latestMessageId);
+        $latestMessageReadCount = $latestMessageId ? $TopicMember->countReadMember($latestMessageId) : 0;
 
         return [
             'data' => $messages,
