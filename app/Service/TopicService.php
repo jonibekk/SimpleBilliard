@@ -43,7 +43,7 @@ class TopicService extends AppService
         }
         $membersCount = $TopicMember->countMember($topicId);
 
-        $displayTitle = $this->getDisplayTopicTitle($topic, $loginUserId);
+        $displayTitle = $this->getDisplayTopicTitle($topic, $loginUserId, [], false);
 
         $canLeaveTopic = true;
         if ($membersCount <= 2) {
@@ -60,14 +60,28 @@ class TopicService extends AppService
         return $ret;
     }
 
-    public function getDisplayTopicTitle(array $topic, int $userId)
+    public function getDisplayTopicTitle(array $topic, int $userId, array $highlightedTitles = array(), bool $escape = true)
     {
-        if (!$topic['title']) {
-            $displayTitle = $this->getMemberNamesAsString($topic['id'], 10, $userId);
-        } else {
-            $displayTitle = $topic['title'];
+        if (!empty($highlightedTitles)) {
+            $highlightedTitle = reset($highlightedTitles);
+            if (!$escape) {
+                return $highlightedTitle;
+            }
+            return preg_replace('/&lt;(\/?em*?)&gt;/i', '<$1>', h($highlightedTitle));
         }
-        return $displayTitle;
+
+        if (!is_null($topic['title'])) {
+            $topicName = $topic['title'];
+        } else {
+            $topicName = $this->getMemberNamesAsString($topic['id'], 10, $userId);
+        }
+
+        if (!$escape) {
+            return $topicName;
+        }
+
+        return h($topicName);
+
     }
 
     /**
