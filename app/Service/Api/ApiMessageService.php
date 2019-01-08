@@ -79,23 +79,19 @@ class ApiMessageService extends ApiService
             }
         }
 
-        $latestMessageReadCount = [];
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
 
-        // Returning read count of latest message for showing read mark on
-        if ($direction === Enum\Model\Message\MessageDirection::NEW) {
-            /** @var Topic $Topic */
-            $Topic = ClassRegistry::init('Topic');
-            /** @var TopicMember $TopicMember */
-            $TopicMember = ClassRegistry::init('TopicMember');
+        $latestMessageId = $Topic->getLatestMessageId($topicId);
+        $latestMessageReadCount = $TopicMember->countReadMember($latestMessageId);
 
-            $latestMessageId = $Topic->getLatestMessageId($topicId);
-            $latestMessageReadCount['latest_message_read_count'] = $TopicMember->countReadMember($latestMessageId);
-        }
-
-        return am([
+        return [
             'data' => $messages,
             'paging' => $paging,
-        ], $latestMessageReadCount);
+            'latest_message_read_count' => $latestMessageReadCount,
+        ];
     }
 
     /**
