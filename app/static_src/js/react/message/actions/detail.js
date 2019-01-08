@@ -82,15 +82,17 @@ export function fetchLatestMessages(cursor) {
     })
     return get(`/api/v1/topics/${topic_id}/messages?direction=new&cursor=${cursor}`)
       .then((response) => {
+        const latest_messages = response.data.data;
         const messages = uniqueMessages(
           getState().detail.messages.data,
-          response.data.data
+          latest_messages
         );
-        const latest_message = response.data.latest_message
+        const latest_message_read_count = response.data.latest_message_read_count
         dispatch({
           type: ActionTypes.FETCH_LATEST_MESSAGES,
           messages,
-          latest_message
+          latest_message_read_count,
+          latest_message_id: latest_messages[latest_messages.length - 1].id
         })
       })
       .catch((response) => {
