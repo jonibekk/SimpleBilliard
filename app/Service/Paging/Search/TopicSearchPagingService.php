@@ -76,7 +76,7 @@ class TopicSearchPagingService extends BaseSearchPagingService
                 $result['users'][] = $user->toArray();
             }
 
-            $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId);
+            $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId, $result['highlight']);
             $result['topic']['members_count'] = $TopicService->countMembers($result['topic']['id']);
         }
 

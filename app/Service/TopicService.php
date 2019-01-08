@@ -60,14 +60,16 @@ class TopicService extends AppService
         return $ret;
     }
 
-    public function getDisplayTopicTitle(array $topic, int $userId)
+    public function getDisplayTopicTitle(array $topic, int $userId, array $highlightedTitles = array())
     {
-        if (!$topic['title']) {
-            $displayTitle = $this->getMemberNamesAsString($topic['id'], 10, $userId);
-        } else {
-            $displayTitle = $topic['title'];
+        if (!empty($highlightedTitles)) {
+            $highlightedTitle = reset($highlightedTitles);
+            return preg_replace('/&lt;(\/?em*?)&gt;/i', '<$1>', $highlightedTitle);
         }
-        return $displayTitle;
+        if (!is_null($topic['title'])) {
+            return h($topic['title']);
+        }
+        return h($this->getMemberNamesAsString($topic['id'], 10, $userId));
     }
 
     /**

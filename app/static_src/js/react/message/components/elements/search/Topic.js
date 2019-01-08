@@ -61,8 +61,7 @@ class Topic extends React.Component {
           <AvatarsBox users={ data.users }/>
           <div className="topicSearchList-item-main">
             <div className="topicSearchList-item-main-header">
-              <div className="topicSearchList-item-main-header-title oneline-ellipsis">
-                { data.topic.display_title }
+              <div className="topicSearchList-item-main-header-title oneline-ellipsis"  dangerouslySetInnerHTML={{__html: data.topic.display_title}}>
               </div>
               <div className="topicSearchList-item-main-header-count">
                 { (data.topic.members_count > 2 || data.topic.title) && `(${data.topic.members_count})` }
