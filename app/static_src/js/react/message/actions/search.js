@@ -4,7 +4,7 @@ import querystring from "querystring";
 import axios from "axios";
 
 export function inputKeyword(keyword) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.INPUT_KEYWORD,
       keyword
@@ -12,7 +12,8 @@ export function inputKeyword(keyword) {
     const trimmed_keyword = keyword.trim()
     if(trimmed_keyword == '') {
       dispatch({
-        type: types.INITIALIZE_SEARCH
+        type: types.INITIALIZE_SEARCH,
+        search_type: getState().search.search_conditions.type
       })
     } else {
       dispatch(search({keyword:trimmed_keyword}))
@@ -21,9 +22,10 @@ export function inputKeyword(keyword) {
 }
 
 export function emptyTopics() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
-      type: types.INITIALIZE_SEARCH
+      type: types.INITIALIZE_SEARCH,
+      search_type: getState().search.search_conditions.type
     })
   }
 }
