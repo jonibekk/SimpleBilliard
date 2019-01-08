@@ -76,12 +76,10 @@ export function getSearchApiUrl(type) {
  */
 export function search(data) {
   return (dispatch, getState) => {
-    let search_conditions = Object.assign(
+    let search_conditions = Object.assign({},
       getState().search.search_conditions,
       data
     )
-    const qs = '?' + querystring.stringify(search_conditions);
-    history.pushState(null, "", qs);
 
     dispatch({
       type: types.UPDATE_SEARCH_CONDITION,
@@ -93,13 +91,12 @@ export function search(data) {
       if (getState().search.search_conditions.keyword != search_conditions.keyword) {
         return;
       }
+      const qs = '?' + querystring.stringify(search_conditions);
+      history.pushState(null, "", qs);
+
       // TODO: separate calling api by type
       return get(`${api_url}?keyword=${search_conditions.keyword}`)
         .then((response) => {
-          if (getState().search.search_conditions.keyword != search_conditions.keyword) {
-            return
-          }
-
           const search_result = response.data.data;
           const search_total_count = response.data.count;
           const next_url = response.data.paging ? `${api_url}?cursor=${response.data.paging}` : '';
