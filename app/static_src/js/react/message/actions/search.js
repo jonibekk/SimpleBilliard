@@ -95,7 +95,8 @@ export function search(data) {
       history.pushState(null, "", qs);
 
       // TODO: separate calling api by type
-      return get(`${api_url}?keyword=${search_conditions.keyword}`)
+      const encodedKeyword = encodeURI(search_conditions.keyword);
+      return get(`${api_url}?keyword=${encodedKeyword}`)
         .then((response) => {
           const search_result = response.data.data;
           const search_total_count = response.data.count;
