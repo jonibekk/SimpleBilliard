@@ -3,6 +3,8 @@ import { get } from "~/util/api";
 import {isMobileApp} from "~/util/base";
 import * as common from "./common";
 import {getSearchApiUrl} from "./search";
+import {browserHistory} from "react-router";
+import Noty from 'noty';
 
 export function fetchInitialData(topic_id, search_conditions) {
   return (dispatch) => {
@@ -22,10 +24,12 @@ export function fetchInitialData(topic_id, search_conditions) {
           search_conditions
         })
       })
-      .catch((response) => {
-        /* eslint-disable no-console */
-        console.log(response)
-        /* eslint-enable no-console */
+      .catch(({response}) => {
+        browserHistory.push('/topics');
+        new Noty({
+          type: 'error',
+          text: response.data.message,
+        }).show();
       })
   }
 }

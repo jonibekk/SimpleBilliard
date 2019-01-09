@@ -6,6 +6,8 @@ import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
 import * as common from "./common";
+import {browserHistory} from "react-router";
+import Noty from "noty";
 
 export function fetchInitialData(topic_id, query_params) {
   return (dispatch) => {
@@ -28,7 +30,13 @@ export function fetchInitialData(topic_id, query_params) {
           updateMessageNotifyCnt()
         }
       })
-      .catch((response) => {
+      .catch(({response}) => {
+        browserHistory.push('/topics');
+        new Noty({
+          type: 'error',
+          text: response.data.message,
+        }).show();
+
       })
   }
 }

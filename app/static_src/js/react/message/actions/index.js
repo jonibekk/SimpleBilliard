@@ -62,9 +62,11 @@ export function changeToSearchMode() {
 }
 
 export function cancelSearchMode() {
+  history.pushState(null, null, "/topics");
   return (dispatch) => {
     dispatch({
-      type: types.INITIALIZE_SEARCH
+      type: types.INITIALIZE_SEARCH,
+      search_type: 'topics'
     })
     dispatch({
       type: types.CHANGE_TO_INDEX_MODE

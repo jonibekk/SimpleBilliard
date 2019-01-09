@@ -47,11 +47,12 @@ export default function search(state = initialState, action) {
       })
     case types.INITIALIZE_SEARCH:
       const is_mobile_app = state.is_mobile_app;
+
       return Object.assign({}, state, initialState, {
         is_mobile_app,
         search_conditions: {
           keyword: '',
-          type: "topics"
+          type: action.search_type ? action.search_type : initialState.search_conditions.type
         }
       })
     case types.SET_UA_INFO:
