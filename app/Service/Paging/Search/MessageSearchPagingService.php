@@ -78,7 +78,7 @@ class MessageSearchPagingService extends BaseSearchPagingService
 
             foreach ($resultArray as $key => &$result) {
                 //No topic id means searching for topics.
-                $result['topic']['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough',
+                $result['topic']['display_created'] = $TimeEx->elapsedTime($result['latest_matched_message_time'], 'rough',
                     false);
                 $users = $Topic->getLatestSenders($result['topic_id'], $userId);
                 /** @var UserEntity $user */
