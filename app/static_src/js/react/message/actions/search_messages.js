@@ -11,7 +11,8 @@ export function fetchInitialData(topic_id, search_conditions) {
     dispatch({
       type: types.FETCHING
     })
-    return get(`/api/v1/topics/${topic_id}/init_search_messages?keyword=${search_conditions.keyword}`)
+    const encodedKeyword = encodeURI(search_conditions.keyword);
+    return get(`/api/v1/topics/${topic_id}/init_search_messages?keyword=${encodedKeyword}`)
       .then((response) => {
         const {topic, messages} = response.data;
         const next_url = getSearchNextUrl(topic_id, messages.paging);
