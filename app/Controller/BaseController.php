@@ -190,6 +190,14 @@ class BaseController extends Controller
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
 
+            if (!empty($this->current_team_id)) {
+                $sesId = $this->Session->id();
+                // GL-7364：Enable to keep login status between old Goalous and new Goalous
+                $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                if (empty($mapSesAndJwt)) {
+                    $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                }
+            }
             //Check from DB whether user is deleted
             $condition = [
                 'conditions' => [
@@ -208,13 +216,6 @@ class BaseController extends Controller
                 ]);
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($logoutRedirect);
-            }
-            //Detect inconsistent data that current team id is empty.
-            $sesId = $this->Session->id();
-            // GL-7364：Enable to keep login status between old Goalous and new Goalous
-            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
-            if (empty($mapSesAndJwt)) {
-                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
             }
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
@@ -410,7 +411,7 @@ class BaseController extends Controller
     }
 
     /**
-     * @param string $class  __CLASS__
+     * @param string $class __CLASS__
      * @param string $method __METHOD__
      */
     function _logOldRequest(string $class, string $method)
@@ -562,4 +563,11 @@ class BaseController extends Controller
 
         return $this->Auth->logout();
     }
+
+    public function forceSSL()
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
+    }
+
 }

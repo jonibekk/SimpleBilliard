@@ -9,7 +9,7 @@
 App::import('Service', 'AppService');
 App::uses('AttachedFile', 'Model');
 App::uses('GlRedis', 'Model');
-
+App::uses('UploadHelper', 'View/Helper');
 /**
  * Class AttachedFileService
  */
@@ -32,6 +32,39 @@ class AttachedFileService extends AppService
     ];
 
     /**
+     * Get single file
+     *
+     * @param       $fileId
+     *
+     * @return AttachedFileEntity
+     */
+    public function get(int $fileId): AttachedFileEntity
+    {
+        // In case already got data from db and cached, but data is empty
+        if (array_key_exists($fileId, self::$cacheList) && empty(self::$cacheList[$fileId])) {
+            return [];
+        }
+
+        // In case already got data from db and cached, data is not empty
+        if (!empty(self::$cacheList[$fileId])) {
+            $data = self::$cacheList[$fileId];
+            return $data;
+        }
+
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init("AttachedFile");
+
+        // Get data from db and cache
+        $data = self::$cacheList[$fileId] = $AttachedFile->useType()->useEntity()->findById($fileId);
+        if (empty($data)) {
+            return [];
+        }
+
+        return $data;
+    }
+
+
+    /**
      * Redisに添付ファイルの仮アップロード
      * 返り値のフォーマット
      * success:
@@ -48,7 +81,7 @@ class AttachedFileService extends AppService
      * ];
      *
      * @param array $postData
-     * @param int   $type
+     * @param int $type
      *
      * @return array
      */
@@ -56,8 +89,8 @@ class AttachedFileService extends AppService
     {
         $ret = [
             'error' => false,
-            'msg'   => "",
-            'id'    => "",
+            'msg' => "",
+            'id' => "",
         ];
         $fileInfo = Hash::get($postData, 'file');
 
@@ -94,7 +127,7 @@ class AttachedFileService extends AppService
      * - ファイルの画素数チェック(画像の場合のみ)
      *
      * @param array $fileInfo
-     * @param int   $type
+     * @param int $type
      *
      * @return array
      */
@@ -103,7 +136,7 @@ class AttachedFileService extends AppService
         //default return values
         $ret = [
             'error' => true,
-            'msg'   => "",
+            'msg' => "",
         ];
 
         //不正データ
@@ -143,7 +176,7 @@ class AttachedFileService extends AppService
      * 画像バリデーションを行うかどうか判定
      *
      * @param array $fileInfo
-     * @param int   $type
+     * @param int $type
      *
      * @return array|bool
      */
@@ -177,7 +210,7 @@ class AttachedFileService extends AppService
     {
         $ret = [
             'error' => false,
-            'msg'   => "",
+            'msg' => "",
         ];
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -194,12 +227,12 @@ class AttachedFileService extends AppService
     /**
      * Add a new attached file
      *
-     * @param int               $userId
-     * @param int               $teamId
-     * @param UploadedFile      $file
+     * @param int $userId
+     * @param int $teamId
+     * @param UploadedFile $file
      * @param AttachedModelType $modelType
-     * @param bool              $displayFileList
-     * @param bool              $removable
+     * @param bool $displayFileList
+     * @param bool $removable
      *
      * @return AttachedFileEntity
      * @throws Exception
@@ -211,7 +244,8 @@ class AttachedFileService extends AppService
         AttachedModelType $modelType,
         bool $displayFileList = true,
         bool $removable = true
-    ): AttachedFileEntity {
+    ): AttachedFileEntity
+    {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
 
@@ -228,15 +262,16 @@ class AttachedFileService extends AppService
         }
 
         $newData = [
-            'user_id'               => $userId,
-            'team_id'               => $teamId,
-            'attached_file_name'    => $file->getFileName(),
-            'file_type'             => $fileType,
-            'file_ext'              => $file->getFileExt(),
-            'file_size'             => $file->getFileSize(),
-            'model_type'            => $modelType->getValue(),
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'attached_file_name' => $file->getFileName(),
+            'file_type' => $fileType,
+            'file_ext' => $file->getFileExt(),
+            'file_size' => $file->getFileSize(),
+            'model_type' => $modelType->getValue(),
             'display_file_list_flg' => $displayFileList,
-            'removable_flg'         => $removable
+            'removable_flg'         => $removable,
+            'created'               => GoalousDateTime::now()->getTimestamp()
         ];
 
         try {
@@ -247,13 +282,33 @@ class AttachedFileService extends AppService
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             GoalousLog::error($errorMessage = 'Failed saving attached files', [
-                'user.id'  => $userId,
-                'team.id'  => $teamId,
+                'user.id' => $userId,
+                'team.id' => $teamId,
                 'filename' => $file->getFileName(),
             ]);
             throw new RuntimeException('Error on adding attached file: ' . $errorMessage);
         }
 
         return $result;
+    }
+
+
+    /**
+     * Get file url
+     *
+     * @param int $fileId
+     * @param bool $isViewer
+     * @return bool|null|string
+     */
+    public function getFileUrl(int $fileId, bool $isViewer = false)
+    {
+        $file = $this->get($fileId);
+        if (empty($file)) {
+            return false;
+        }
+
+        $upload = new UploadHelper(new View());
+        $type = $isViewer ? 'viewer' : 'download';
+        return $upload->attachedFileUrl($file->toArray(), $type);
     }
 }

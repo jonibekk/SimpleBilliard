@@ -1,0 +1,63 @@
+<?php
+App::uses("SavedPost", "Model");
+App::import('Lib/DataExtender/Extension', 'DataExtension');
+
+class PostSavedExtension extends DataExtension
+{
+    /** @var int */
+    private $userId;
+
+    /**
+     * Set user ID for the extender function
+     *
+     * @param int $userId
+     */
+    public function setUserId(int $userId)
+    {
+        $this->userId = $userId;
+    }
+
+    protected function fetchData(array $keys): array
+    {
+        if (empty($this->userId)) {
+            throw new RuntimeException("Missing user ID");
+        }
+
+        $filteredKeys = $this->filterKeys($keys);
+
+        /** @var SavedPost $SavedPost */
+        $SavedPost = ClassRegistry::init('SavedPost');
+
+        $options = [
+            'conditions' => [
+                'post_id' => $filteredKeys,
+                'user_id' => $this->userId
+            ],
+            'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $result = $SavedPost->find('all', $options);
+
+        return Hash::extract($result, "{n}.{s}.post_id");;
+    }
+
+    protected function connectData(
+        array $parentData,
+        string $parentKeyName,
+        array $extData,
+        string $extDataKey,
+        string $extEntryKey = ""
+    ): array {
+        foreach ($parentData as $key => &$parentElement) {
+            if (!is_int($key)) {
+                $parentData['is_saved'] = in_array(Hash::get($parentData, $parentKeyName), $extData);
+                return $parentData;
+            }
+            $parentElement['is_saved'] = in_array(Hash::get($parentElement, $parentKeyName), $extData);
+        }
+        return $parentData;
+    }
+
+}

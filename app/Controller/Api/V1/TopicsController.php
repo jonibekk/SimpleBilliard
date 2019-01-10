@@ -10,42 +10,35 @@ App::import('Service/Api', 'ApiMessageService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service/Api', 'ApiTopicService');
 App::uses('AppUtil', 'Util');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Service/Paging/Search', 'TopicSearchPagingService');
+App::import('Service/Paging/Search', 'MessageSearchPagingService');
+
+use Goalous\Enum as Enum;
 
 /**
  * Class TopicsController
  */
 class TopicsController extends ApiController
 {
-    /**
-     * Init and search data for topic list page
-     * - path '/api/v1/topics/search'
-     * - also used as getting init list page data api
-     *
-     * @queryParam int $limit optional
-     * @queryParam int $offset optional
-     * @queryParam int $keyword optional
-     * @return CakeResponse
-     */
-    function get_search()
+    public function get_list()
     {
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init("Topic");
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init("ApiTopicService");
-        /** @var TopicSearchKeyword $TopicSearchKeyword */
-        $TopicSearchKeyword = ClassRegistry::init("TopicSearchKeyword");
 
         // get query params
         $limit = $this->request->query('limit') ?? ApiTopicService::DEFAULT_TOPICS_NUM;
         $offset = $this->request->query('offset') ?? 0;
         $keyword = $this->request->query('keyword') ?? '';
         $userId = $this->Auth->user('id');
-
         // check limit param under max
         if (!$ApiTopicService->checkMaxLimit($limit)) {
             return $this->_getResponseBadFail(__("Get count over the upper limit"));
         }
-
         // define response data
         $response = [
             'data'   => [],
@@ -53,22 +46,78 @@ class TopicsController extends ApiController
                 'next' => ''
             ]
         ];
-
         $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
         $topics = $ApiTopicService->process($topics, $userId);
-
         // Set paging text
-        // TODO: should move setting paging to service.
         //       for unifying with other controller logic.
         if (count($topics) > $limit) {
-            $basePath = '/api/v1/topics/search';
+            $basePath = '/api/v1/topics';
             $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
             array_pop($topics);
         }
-
         $response['data'] = $topics;
-
         return $this->_getResponsePagingSuccess($response);
+    }
+
+    public function get_search()
+    {
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('category', 1);
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+        $pagingRequest->addTempCondition('user_id', $userId);
+
+        /** @var TopicSearchPagingService $TopicSearchPagingService */
+        $TopicSearchPagingService = ClassRegistry::init('TopicSearchPagingService');
+        $searchResult = $TopicSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
+    }
+
+    public function get_search_messages(int $topicId)
+    {
+        $error = $this->validateSearchMessage($topicId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+        $teamId = $this->current_team_id;
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('topic_id', $topicId);
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+        $pagingRequest->addTempCondition('user_id', $this->Auth->user('id'));
+
+        /** @var MessageSearchPagingService $MessageSearchPagingService */
+        $MessageSearchPagingService = ClassRegistry::init('MessageSearchPagingService');
+        $searchResult = $MessageSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
     }
 
     /**
@@ -83,6 +132,8 @@ class TopicsController extends ApiController
      */
     function get_detail(int $topicId)
     {
+        $messageId = $this->request->query('message_id');
+
         /** @var TopicMember $TopicMember */
         $TopicMember = ClassRegistry::init('TopicMember');
 
@@ -94,13 +145,39 @@ class TopicsController extends ApiController
 
         /** @var ApiTopicService $ApiTopicService */
         $ApiTopicService = ClassRegistry::init('ApiTopicService');
-        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId);
+        $ret = $ApiTopicService->findTopicDetailInitData($topicId, $loginUserId, $messageId);
 
         // updating notification for message
         $this->NotifyBiz->removeMessageNotification($topicId);
         $this->NotifyBiz->updateCountNewMessageNotification();
 
         return $this->_getResponseSuccess($ret);
+    }
+
+    /**
+     * Get topic detail
+     * url: GET /api/v1/topics/{topic_id}
+     *
+     * @param int $topicId
+     *
+     * @return CakeResponse
+     */
+    function get_init_search_messages(int $topicId)
+    {
+        $error = $this->validateSearchMessage($topicId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var ApiTopicService $ApiTopicService */
+        $ApiTopicService = ClassRegistry::init('ApiTopicService');
+
+        $query = $this->request->query;
+        $loginUserId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+        $ret = $ApiTopicService->findInitSearchMessages($topicId, $loginUserId, $teamId, $query);
+
+        return ApiResponse::ok()->withBody($ret)->getResponse();
     }
 
     /**
@@ -114,13 +191,13 @@ class TopicsController extends ApiController
      * @queryParam string $direction optional. "old" or "new" for getting older than cursor or newer
      * @return CakeResponse
      * @link       https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+message+list
-     *             TODO: This is mock! We have to implement it!
      */
     function get_messages(int $topicId)
     {
         $cursor = $this->request->query('cursor');
         $limit = $this->request->query('limit');
-        $direction = $this->request->query('direction') ?? Message::DIRECTION_OLD;
+        $queryDirection = $this->request->query('direction');
+        $direction = Enum\Model\Message\MessageDirection::isValid($queryDirection) ? $queryDirection : Enum\Model\Message\MessageDirection::OLD;
         $loginUserId = $this->Auth->user('id');
 
         /** @var ApiMessageService $ApiMessageService */
@@ -544,4 +621,22 @@ class TopicsController extends ApiController
         return true;
     }
 
+    /**
+     * @param int $topicId
+     *
+     * @return BaseApiResponse|null
+     */
+    private function validateSearchMessage(int $topicId)
+    {
+        $userId = $this->Auth->user('id');
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        if (!$TopicMember->isMember($topicId, $userId)) {
+            return ErrorResponse::forbidden()->withMessage(__("You cannot access the topic"))->getResponse();
+        }
+
+        return null;
+    }
 }

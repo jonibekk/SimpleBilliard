@@ -12,6 +12,8 @@ App::uses('AppUtil', 'Util');
 /**
  * Class MessageService
  */
+use Goalous\Enum as Enum;
+
 class MessageService extends AppService
 {
     const CHAR_EMOJI_LIKE = "\xF0\x9F\x91\x8D";
@@ -164,7 +166,7 @@ class MessageService extends AppService
                     $outputBody = $body;
             }
 
-            if ($type != Message::TYPE_NORMAL && empty($outputBody)) {
+            if ($type != Enum\Model\Message\MessageType::NORMAL && empty($outputBody)) {
                 throw new Exception(
                     sprintf("Failed to create message body. data:%s"
                         , var_export($message, true)));

@@ -360,7 +360,7 @@ class TeamsController extends AppController
         // Decide $can_start_evaluation
         if (!$previous_term_exists) {
             $can_start_evaluation = !$current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED());
-        } elseif (!$current_term_exists) {
+        } else if (!$current_term_exists) {
             $can_start_evaluation = !$previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::NOT_STARTED());
         } else {
             $isInProgress = $current_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS()) || $previous_term_evaluation_status->equals(Enum\Model\Term\EvaluateStatus::IN_PROGRESS());
@@ -1535,7 +1535,7 @@ class TeamsController extends AppController
 
         // １つ前の期間との比較
         foreach ($insights[0] as $k => $v) {
-            if ($insights[1][$k]) {
+            if (isset($insights[1][$k])) {
                 $cmp_key = $k . "_cmp";
                 if (strpos($k, '_percent') !== false) {
                     $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
@@ -2132,7 +2132,7 @@ class TeamsController extends AppController
                 } else {
                     $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
                 }
-                $filter_ranking[$rankKey] = $ranking[$rankKey];
+                $filter_ranking[$rankKey] = $ranking[$rankKey];                
             }
             $rank++;
         }
@@ -2189,6 +2189,7 @@ class TeamsController extends AppController
             }
             $date_ranges['past_terms'] = $dateRangesMore;
         }
+
 
         return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }

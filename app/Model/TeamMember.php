@@ -2292,13 +2292,13 @@ class TeamMember extends AppModel
     {
         $condition = [
             'conditions' => [
-                'team_id' => $teamId,
-                'del_flg' => false
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.del_flg' => false
             ]
         ];
 
         if (!empty($status)) {
-            $condition['conditions']['status'] = $status->getValue();
+            $condition['conditions']['TeamMember.status'] = $status->getValue();
         }
 
         return $this->useType()->useEntity()->find('all', $condition);
@@ -2316,7 +2316,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $userId,
                 'TeamMember.del_flg' => false,
-                'TeamMember.status'  => TeamMember::USER_STATUS_ACTIVE
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE
             ],
             'fields'     => [
                 'TeamMember.team_id',

@@ -732,8 +732,8 @@ class PostTest extends GoalousTestCase
         $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->Post->PostFile->AttachedFile->expects($this->any())
-                                           ->method('updateRelatedFiles')
-                                           ->will($this->returnValue(true));
+            ->method('updateRelatedFiles')
+            ->will($this->returnValue(true));
         $data = [
             'Post'    => [
                 'id'   => 1,
@@ -750,8 +750,8 @@ class PostTest extends GoalousTestCase
         $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->Post->PostFile->AttachedFile->expects($this->any())
-                                           ->method('updateRelatedFiles')
-                                           ->will($this->returnValue(false));
+            ->method('updateRelatedFiles')
+            ->will($this->returnValue(false));
         $data = [
             'Post'    => [
                 'id'   => 1,
@@ -994,6 +994,34 @@ class PostTest extends GoalousTestCase
         );
         $res = $this->Post->getByActionResultId($this->Post->ActionResult->getLastInsertID());
         $this->assertNotEmpty($res);
+    }
+
+    public function test_updateCommentCount_success()
+    {
+        $postId = 1;
+        $newCommentCount = 123;
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $Post->updateCommentCount($postId, $newCommentCount);
+
+        $post = $Post->getEntity($postId);
+
+        $this->assertEquals($newCommentCount, $post['comment_count']);
+        $this->assertTrue($post['modified'] > 1);
+    }
+
+    public function test_getPostType_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postType = $Post->getPostType(1);
+        $this->assertEquals(1, $postType);
+
+        $postType = $Post->getPostType(6);
+        $this->assertEquals(7, $postType);
     }
 
     function _setDefault()
