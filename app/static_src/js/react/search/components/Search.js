@@ -50,7 +50,7 @@ export default class SearchItems extends React.Component {
     if (!cursor) {
       return
     }
-    this.props.fetchMore({type, cursor})
+    this.props.fetchMoreResults({type, cursor})
   }
 
   renderSearchItems(items) {
