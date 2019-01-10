@@ -132,7 +132,7 @@ export default function detail(state = initialState, action) {
       messages = {
         data: action.messages,
         paging: {
-          old: "",
+          old: state.messages.paging.old,
           new: ""
         }
       };
