@@ -12,7 +12,7 @@ function mapDispatchToProps(dispatch) {
     updateData: (data, key = "") => dispatch(actions.updateData(data, key = "")),
     updateFilter: (data) => dispatch(actions.updateFilter(data)),
     updateKeyword: (data) => dispatch(actions.updateKeyword(data)),
-    fetchMoreResults: (url) => dispatch(actions.fetchMore(url))
+    fetchMoreResults: (url) => dispatch(actions.fetchMoreResults(url))
   }
 }
 

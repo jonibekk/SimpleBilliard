@@ -169,6 +169,10 @@
           min-width: 0;
           font-weight: 700;
           overflow: hidden;
+          em {
+            color: @acidRed;
+            font-style: normal;
+          }
         }
         &-count {
           color: @black;
@@ -178,6 +182,11 @@
       }
       &-body {
         color: @subColor3;
+        em {
+          color: @acidRed;
+          font-style: normal;
+        }
+
       }
     }
     &-right {
@@ -401,6 +410,17 @@
   padding-bottom: 10px;
   &-header {
     .topic-header();
+    position:static !important;
+    padding: 14px 0;
+  }
+}
+
+@keyframes show{
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
   }
 }
 
@@ -409,10 +429,10 @@
     .topic-header();
   }
   &-jumpToLatest {
-    transition: opacity 0.3s;
-    opacity:0;
+    display:none;
     &.is-show {
-      opacity: 1;
+      display: block;
+      animation: show 0.3s linear 0s;
     }
 
     cursor: pointer;
@@ -517,6 +537,7 @@
       margin-left: 4px;
     }
     &-content {
+      min-width: 0;
       display: block;
       word-wrap:break-word;
       // Non standard for webkit

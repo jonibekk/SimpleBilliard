@@ -113,14 +113,9 @@ class TopicMember extends AppModel
      */
     function findUsersSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
-
         $options = [
             'conditions' => [
                 'TopicMember.topic_id' => $topicId,
-                'TopicMember.user_id'  => $activeTeamMembersList,
             ],
             'fields'     => [
                 'TopicMember.id',

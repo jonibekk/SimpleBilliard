@@ -5584,9 +5584,6 @@ msgstr "投稿とコメントから検索"
 msgid "Search result %d topics hit"
 msgstr "検索結果 %dトピックが一致しました"
 
-msgid "Search result %d messages hit"
-msgstr "検索結果 %dメッセージが一致しました"
-
 msgid "topic"
 msgstr "トピック"
 
@@ -5603,13 +5600,16 @@ msgid "Topics"
 msgstr "トピック"
 
 msgid "%d matched member"
-msgstr "%d件のメンバーが一致"
-
-msgid "%d matched members"
-msgstr "%d件のメンバーが一致"
+msgstr "%d人のメンバーが一致"
 
 msgid "%d matched message"
 msgstr "%d件のメッセージが一致"
+
+msgid "Search result %d messages hit"
+msgstr "検索結果 %dメッセージが一致しました"
+
+msgid "%d matched members"
+msgstr "%d人のメンバーが一致"
 
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"

@@ -160,9 +160,9 @@ function getSid(): string {
     $base = 'GLS_SID';
     switch (ENV_NAME) {
         case 'www':
-            return '_' . $base;
-        case 'isao':
             return $base;
+        case 'isao':
+            return '_' . $base;
         default:
             return sprintf('%s_%s', $base, strtoupper(ENV_NAME));
     }

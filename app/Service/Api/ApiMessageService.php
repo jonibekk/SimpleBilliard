@@ -79,9 +79,18 @@ class ApiMessageService extends ApiService
             }
         }
 
+        /** @var Topic $Topic */
+        $Topic = ClassRegistry::init('Topic');
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        $latestMessageId = $Topic->getLatestMessageId($topicId);
+        $latestMessageReadCount = $latestMessageId ? $TopicMember->countReadMember($latestMessageId) : 0;
+
         return [
             'data' => $messages,
             'paging' => $paging,
+            'latest_message_read_count' => $latestMessageReadCount,
         ];
     }
 

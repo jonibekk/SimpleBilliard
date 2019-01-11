@@ -6,6 +6,8 @@ import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
 import * as common from "./common";
+import {browserHistory} from "react-router";
+import Noty from "noty";
 
 export function fetchInitialData(topic_id, query_params) {
   return (dispatch) => {
@@ -28,7 +30,13 @@ export function fetchInitialData(topic_id, query_params) {
           updateMessageNotifyCnt()
         }
       })
-      .catch((response) => {
+      .catch(({response}) => {
+        browserHistory.push('/topics');
+        new Noty({
+          type: 'error',
+          text: response.data.message,
+        }).show();
+
       })
   }
 }
@@ -82,15 +90,17 @@ export function fetchLatestMessages(cursor) {
     })
     return get(`/api/v1/topics/${topic_id}/messages?direction=new&cursor=${cursor}`)
       .then((response) => {
+        const latest_messages = response.data.data;
         const messages = uniqueMessages(
           getState().detail.messages.data,
-          response.data.data
+          latest_messages
         );
-        const latest_message = response.data.latest_message
+        const latest_message_read_count = response.data.latest_message_read_count
         dispatch({
           type: ActionTypes.FETCH_LATEST_MESSAGES,
           messages,
-          latest_message
+          latest_message_read_count,
+          latest_message_id: latest_messages[latest_messages.length - 1].id
         })
       })
       .catch((response) => {

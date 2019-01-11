@@ -68,7 +68,7 @@ class TopicSearchPagingService extends BaseSearchPagingService
         $userId = $request->getTempCondition('user_id');
         foreach ($resultArray as &$result) {
             $result['highlight_member_count'] = count(Hash::get($result,'highlight_member', []));
-            $result['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough', false);
+            $result['topic']['display_created'] = $TimeEx->elapsedTime($result['topic']['latest_message_datetime'], 'rough', false);
             $users = $Topic->getLatestSenders($result['id'], $userId);
             /** @var UserEntity $user */
             $result['users'] = [];
@@ -76,7 +76,7 @@ class TopicSearchPagingService extends BaseSearchPagingService
                 $result['users'][] = $user->toArray();
             }
 
-            $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId);
+            $result['topic']['display_title'] = $TopicService->getDisplayTopicTitle($result['topic'], $userId, $result['highlight']);
             $result['topic']['members_count'] = $TopicService->countMembers($result['topic']['id']);
         }
 

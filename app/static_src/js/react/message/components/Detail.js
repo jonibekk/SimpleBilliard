@@ -86,8 +86,13 @@ export default class Detail extends Base {
 
   fetchLatestMessages() {
     const messages = this.props.detail.messages.data;
-    const latest_message_id = messages[messages.length - 1].id;
-    this.props.fetchLatestMessages(latest_message_id);
+    const displayed_latest_message_id = messages[messages.length - 1].id;
+    const latest_message_id = this.props.detail.topic.latest_message_id;
+    // if haven't displayed to latest, it is not updated as realtime
+    if (displayed_latest_message_id < latest_message_id) {
+      return;
+    }
+    this.props.fetchLatestMessages(displayed_latest_message_id);
   }
 
   render() {

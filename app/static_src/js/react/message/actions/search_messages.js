@@ -3,13 +3,16 @@ import { get } from "~/util/api";
 import {isMobileApp} from "~/util/base";
 import * as common from "./common";
 import {getSearchApiUrl} from "./search";
+import {browserHistory} from "react-router";
+import Noty from 'noty';
 
 export function fetchInitialData(topic_id, search_conditions) {
   return (dispatch) => {
     dispatch({
       type: types.FETCHING
     })
-    return get(`/api/v1/topics/${topic_id}/init_search_messages?keyword=${search_conditions.keyword}`)
+    const encodedKeyword = encodeURI(search_conditions.keyword);
+    return get(`/api/v1/topics/${topic_id}/init_search_messages?keyword=${encodedKeyword}`)
       .then((response) => {
         const {topic, messages} = response.data;
         const next_url = getSearchNextUrl(topic_id, messages.paging);
@@ -22,10 +25,12 @@ export function fetchInitialData(topic_id, search_conditions) {
           search_conditions
         })
       })
-      .catch((response) => {
-        /* eslint-disable no-console */
-        console.log(response)
-        /* eslint-enable no-console */
+      .catch(({response}) => {
+        browserHistory.push('/topics');
+        new Noty({
+          type: 'error',
+          text: response.data.message,
+        }).show();
       })
   }
 }

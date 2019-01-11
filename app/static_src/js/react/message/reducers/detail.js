@@ -130,11 +130,15 @@ export default function detail(state = initialState, action) {
       })
     case ActionTypes.FETCH_LATEST_MESSAGES:
       messages = {
-        data: action.messages
-      }
+        data: action.messages,
+        paging: {
+          old: state.messages.paging.old,
+          new: ""
+        }
+      };
       const updated_topic = Object.assign({}, state.topic, {
-        latest_message_id: action.latest_message.id,
-        read_count: action.latest_message.read_count
+        latest_message_id: action.latest_message_id,
+        read_count: action.latest_message_read_count
       })
       return Object.assign({}, state, {
         messages,
