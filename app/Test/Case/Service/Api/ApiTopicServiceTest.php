@@ -7,6 +7,9 @@ App::import('Service/Api', 'ApiTopicService');
  * Class ApiTopicServiceTest
  *
  * @property ApiTopicService $ApiTopicService
+ * @property Message $Message
+ * @property Topic $Topic
+ * @property TopicMember $TopicMember
  */
 class ApiTopicServiceTest extends GoalousTestCase
 {
@@ -16,7 +19,12 @@ class ApiTopicServiceTest extends GoalousTestCase
      * @var array
      */
     public $fixtures = [
-        'app.topic'
+        'app.topic',
+        'app.message',
+        'app.user',
+        'app.message_file',
+        'app.team',
+        'app.topic_member',
     ];
 
     /**
@@ -28,6 +36,9 @@ class ApiTopicServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->ApiTopicService = ClassRegistry::init('ApiTopicService');
+        $this->Message = ClassRegistry::init('Message');
+        $this->Topic = ClassRegistry::init('Topic');
+        $this->TopicMember = ClassRegistry::init('TopicMember');
     }
 
     /**
@@ -135,10 +146,96 @@ class ApiTopicServiceTest extends GoalousTestCase
         $this->markTestIncomplete('testClear not implemented.');
     }
 
-    function test_findTopicDetailInitData()
+    function test_findTopicDetailInitData_fromUnExisting()
     {
-        //TODO: it should be written later.
-        $this->markTestIncomplete('testClear not implemented.');
+        $r = $this->ApiTopicService->findTopicDetailInitData(1, 1);
+        $this->assertCount(0, $r['topic']);
+        $this->assertCount(0, $r['messages']['data']);
+    }
+
+    function test_findTopicDetailInitData_fromLatest()
+    {
+        $data = $this->createMessageTestData();
+        $r = $this->ApiTopicService->findTopicDetailInitData($data["topic_id"], $data["user_id"]);
+        $this->assertEquals('text100', end($r['messages']['data'])['body']);
+
+        // new
+        $this->assertNull($r['messages']['paging']['new']);
+
+        // old
+        $this->assertContains('limit=20', $r['messages']['paging']['old']);
+        $this->assertContains('cursor=80', $r['messages']['paging']['old']);
+        $this->assertContains('direction=old', $r['messages']['paging']['old']);
+    }
+
+    function test_findTopicDetailInitData_fromMiddle()
+    {
+        $data = $this->createMessageTestData();
+        $r = $this->ApiTopicService->findTopicDetailInitData($data["topic_id"], $data["user_id"], 50);
+        $this->assertEquals('text50', end($r['messages']['data'])['body']);
+
+        // new
+        $this->assertContains('limit=20', $r['messages']['paging']['new']);
+        $this->assertContains('cursor=51', $r['messages']['paging']['new']);
+        $this->assertContains('direction=new', $r['messages']['paging']['new']);
+
+        // old
+        $this->assertContains('limit=20', $r['messages']['paging']['old']);
+        $this->assertContains('cursor=30', $r['messages']['paging']['old']);
+        $this->assertContains('direction=old', $r['messages']['paging']['old']);
+    }
+
+    function test_findTopicDetailInitData_fromBeginning()
+    {
+        $data = $this->createMessageTestData();
+        $r = $this->ApiTopicService->findTopicDetailInitData($data["topic_id"], $data["user_id"], 5);
+        $this->assertEquals('text5', end($r['messages']['data'])['body']);
+
+        // new
+        $this->assertContains('limit=20', $r['messages']['paging']['new']);
+        $this->assertContains('cursor=6', $r['messages']['paging']['new']);
+        $this->assertContains('direction=new', $r['messages']['paging']['new']);
+
+        // old
+        $this->assertNull($r['messages']['paging']['old']);
+    }
+
+    private function createMessageTestData(): array
+    {
+        $userId = 1;
+        $teamId = 1;
+        $this->Message->my_uid = $userId;
+        $topic = $this->Topic->save([
+            'creator_user_id' => $userId,
+            'team_id' => $teamId,
+            'title' => "TestTopic",
+        ]);
+        $topicId = $topic['Topic']['id'];
+        $this->TopicMember->save([
+            'topic_id' => $topicId,
+            'user_id' => $userId,
+            'team_id' => $teamId,
+        ]);
+
+        $message = null;
+        for ($i =1; $i <= 100; $i++) {
+            $this->Message->create();
+            $message = $this->Message->save([
+                'topic_id' => $topicId,
+                'sender_user_id' => $userId,
+                'body' => "text" . $i,
+                'type' => 1,
+            ]);
+        }
+        $this->Topic->save([
+            'id' => $topicId,
+            'latest_message_id' => $message['Message']['id']
+        ]);
+
+        return [
+            'user_id' => $userId,
+            'topic_id' => $topicId,
+        ];
     }
 
     function test_getDisplayTitle()

@@ -83,8 +83,8 @@ class CommentTest extends GoalousTestCase
         $this->Comment->CommentFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->Comment->CommentFile->AttachedFile->expects($this->any())
-                                                 ->method('saveRelatedFiles')
-                                                 ->will($this->returnValue(true));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(true));
         $data = [
             'Comment' => [
                 'user_id' => 1,
@@ -104,8 +104,8 @@ class CommentTest extends GoalousTestCase
         $this->Comment->Post = $this->getMockForModel('Post', array('saveField'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->Comment->Post->expects($this->any())
-                            ->method('saveField')
-                            ->will($this->returnValue(false));
+            ->method('saveField')
+            ->will($this->returnValue(false));
 
         $data = [
             'Comment' => [
@@ -123,8 +123,8 @@ class CommentTest extends GoalousTestCase
         $this->Comment = $this->getMockForModel('Comment', array('save'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->Comment->expects($this->any())
-                      ->method('save')
-                      ->will($this->returnValue(false));
+            ->method('save')
+            ->will($this->returnValue(false));
 
         $res = $this->Comment->add([]);
         $this->assertFalse($res);

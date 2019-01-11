@@ -70,7 +70,7 @@ class CommentReaderPagingServiceTest extends GoalousTestCase
         $pagingRequest->setCurrentTeamId(1);
 
         $result = $CommentReaderPagingService->getDataWithPaging($pagingRequest, 1,
-            [CommentReaderPagingService::EXTEND_USER]);
+            [CommentReadExtender::EXTEND_USER]);
 
         $data = $result['data'][0]['user'];
 

@@ -1,4 +1,5 @@
 <?php
+App::import('Service', 'CommentService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Service', 'PostReadService');
@@ -13,6 +14,7 @@ App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
+App::import('Lib/DataExtender', 'CommentExtender');
 
 /**
  * Created by PhpStorm.
@@ -46,27 +48,30 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $post['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-        $post['type'] = (int)Hash::get($this->getRequestJsonBody(), 'type');
+        $requestData = $this->getRequestJsonBody();
+        $post['body'] = Hash::get($requestData, 'body');
+        $post['type'] = (int)Hash::get($requestData, 'type');
+        $post['site_info'] = Hash::get($requestData, 'site_info');
 
-        $circleId = (int)Hash::get($this->getRequestJsonBody(), 'circle_id');
-        $fileIDs = Hash::get($this->getRequestJsonBody(), 'file_ids', []);
+        $circleId = (int)Hash::get($requestData, 'circle_id');
+        $fileIds = Hash::get($requestData, 'file_ids', []);
 
         try {
-            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIDs);
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIds);
             $this->_notifyNewPost($res);
+
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                                ->getResponse();
+                ->getResponse();
         }
-
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 
     /**
      * Notify new post to other members
+     *
      * @param array $newPost
      */
     private function _notifyNewPost(PostEntity $newPost)
@@ -86,7 +91,7 @@ class PostsController extends BasePagingController
 
     public function get_comments(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -114,9 +119,7 @@ class PostsController extends BasePagingController
     private function getDefaultCommentsExtension()
     {
         return [
-            CommentPagingService::EXTEND_USER,
-            CommentPagingService::EXTEND_LIKE,
-            CommentPagingService::EXTEND_READ,
+            CommentExtender::EXTEND_ALL
         ];
     }
 
@@ -129,7 +132,7 @@ class PostsController extends BasePagingController
      */
     public function get_reads(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -181,8 +184,8 @@ class PostsController extends BasePagingController
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to post."))
-                                ->getResponse();
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to read post."))
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withData(["posts_ids" => $res])->getResponse();
@@ -196,7 +199,7 @@ class PostsController extends BasePagingController
     private function getDefaultReaderExtension()
     {
         return [
-            PostReaderPagingService::EXTEND_USER
+            PostReadExtender::EXTEND_USER
         ];
     }
 
@@ -208,7 +211,7 @@ class PostsController extends BasePagingController
     private function getDefaultLikesUserExtension()
     {
         return [
-            PostLikesPagingService::EXTEND_USER
+            PostLikeExtender::EXTEND_USER
         ];
     }
 
@@ -244,7 +247,7 @@ class PostsController extends BasePagingController
 
     public function post_likes(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -293,7 +296,7 @@ class PostsController extends BasePagingController
      */
     public function delete_likes(int $postId): CakeResponse
     {
-        $res = $this->validateLike($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -321,7 +324,7 @@ class PostsController extends BasePagingController
      */
     public function get_likes(int $postId)
     {
-        $error = $this->validateAccessToPost($postId);
+        $error = $this->validatePostAccess($postId);
         if (!empty($error)) {
             return $error;
         }
@@ -357,7 +360,7 @@ class PostsController extends BasePagingController
      */
     public function post_saves(int $postId): CakeResponse
     {
-        $res = $this->validateSave($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -384,7 +387,7 @@ class PostsController extends BasePagingController
      */
     public function delete_saves(int $postId): CakeResponse
     {
-        $res = $this->validateSave($postId);
+        $res = $this->validatePostAccess($postId);
 
         if (!empty($res)) {
             return $res;
@@ -394,12 +397,59 @@ class PostsController extends BasePagingController
         $SavedPostService = ClassRegistry::init('SavedPostService');
 
         try {
-            $count = $SavedPostService->delete($postId, $this->getUserId());
-
+            $SavedPostService->delete($postId, $this->getUserId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
         return ApiResponse::ok()->withData(["post_id" => $postId])->getResponse();
+    }
+
+    /**
+     * Endpoint for saving a new comment
+     *
+     * @param int $postId Id of the post to comment to
+     *
+     * @return CakeResponse
+     */
+    public function post_comments(int $postId)
+    {
+        /* Validate user access to this post */
+        $error = $this->validatePostComments($postId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $requestBody = $this->getRequestJsonBody();
+        $commentBody['body'] = Hash::get($requestBody, 'body');
+        $commentBody['site_info'] = Hash::get($requestBody, 'site_info');
+        $fileIDs = Hash::get($requestBody, 'file_ids', []);
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+        try {
+            $res = $CommentService->add($commentBody, $postId, $userId, $teamId, $fileIDs);
+            $this->notifyNewComment($res['id'], $postId, $this->getUserId());
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to comment."))
+                ->getResponse();
+        }
+
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+        $comment = $res->toArray();
+        $comment = $CommentExtender->extend($comment, $userId, $teamId, [CommentExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withData($comment)->getResponse();
     }
 
     /**
@@ -415,10 +465,9 @@ class PostsController extends BasePagingController
         $circleId = (int)Hash::get($requestBody, 'circle_id');
 
         if (!empty($circleId) && !$CircleMember->isJoined($circleId, $this->getUserId())) {
-            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
-                                ->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("The circle doesn't exist or you don't have permission."))
+                ->getResponse();
         }
-
         try {
             PostRequestValidator::createDefaultPostValidator()->validate($requestBody);
             PostRequestValidator::createFileUploadValidator()->validate($requestBody);
@@ -429,9 +478,8 @@ class PostsController extends BasePagingController
             }
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -444,13 +492,14 @@ class PostsController extends BasePagingController
     }
 
     /**
-     * Validation function for adding / removing like from a post
+     * Validate access to post
      *
-     * @param int $postId
+     * @param int  $postId
+     * @param bool $mustBelong Whether user must belong to the circle where post is made
      *
      * @return CakeResponse|null
      */
-    private function validateLike(int $postId)
+    private function validatePostAccess(int $postId, bool $mustBelong = false)
     {
         if (empty($postId) || !is_int($postId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -460,7 +509,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
@@ -470,7 +519,7 @@ class PostsController extends BasePagingController
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -489,7 +538,7 @@ class PostsController extends BasePagingController
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $access = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {
             return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
         } catch (Exception $exception) {
@@ -499,7 +548,7 @@ class PostsController extends BasePagingController
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -514,22 +563,18 @@ class PostsController extends BasePagingController
      */
     private function validateAccessToPost(int $postId)
     {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
-
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
         try {
-            $hasAccess = $PostService->checkUserAccessToPost($this->getUserId(), $postId);
+            $hasAccess = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         }
 
         if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -544,9 +589,6 @@ class PostsController extends BasePagingController
      */
     private function validateDelete(int $postId)
     {
-        if (empty($postId) || !is_int($postId)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -560,7 +602,7 @@ class PostsController extends BasePagingController
         if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
                 $this->getTeamId())) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
         return null;
     }
@@ -581,7 +623,7 @@ class PostsController extends BasePagingController
         //Check whether user is the owner of the post
         if (!$Post->isPostOwned($postId, $this->getUserId())) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         $body = $this->getRequestJsonBody();
@@ -592,9 +634,8 @@ class PostsController extends BasePagingController
 
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -619,9 +660,8 @@ class PostsController extends BasePagingController
             PostRequestValidator::createPostReadValidator()->validate($requestBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->withMessage(__('validation failed'))
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -642,5 +682,120 @@ class PostsController extends BasePagingController
         }
 
         return null;
+    }
+
+    private function validatePostComments(int $postId)
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        $requestBody = $this->getRequestJsonBody();
+
+        try {
+            PostRequestValidator::createPostCommentValidator()->validate($requestBody);
+            PostRequestValidator::createFileUploadValidator()->validate($requestBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        try {
+            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId, true);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                ->getResponse();
+        }
+        return null;
+    }
+
+    /**
+     * Send notification about new comment on a post.
+     * Will notify post's author & other users who've commented on the post
+     *
+     * @param int   $commentId      Comment ID of the new comment
+     * @param int   $postId         Post ID where the comment belongs to
+     * @param int   $userId         User ID of the author of the new comment
+     * @param int[] $mentionedUsers List of user IDs of mentioned users
+     */
+    private function notifyNewComment(int $commentId, int $postId, int $userId, array $mentionedUsers = [])
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $type = $Post->getPostType($postId);
+
+        switch ($type) {
+            case Post::TYPE_NORMAL:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
+                    $commentId);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId, $commentId);
+                //TODO Enable mention notification
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_ACTION:
+                // This notification must not be sent to those who mentioned
+                // because we exlude them in NotifyBiz#execSendNotify.
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                    $postId,
+                    $commentId);
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId, $commentId);
+                //TODO Enable mention notification
+//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                break;
+            case Post::TYPE_CREATE_GOAL:
+                $this->notifyUserOfGoalComment($userId, $postId);
+                break;
+        }
+    }
+
+    /**
+     * Send notification if a Goal post is commented
+     *
+     * @param int $commentAuthorUserId ID of user who made the comment
+     * @param int $postId              Post ID where the comment belongs to
+     */
+    private function notifyUserOfGoalComment(int $commentAuthorUserId, int $postId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postData = $Post->getEntity($postId);
+
+        $postId = $postData['id'];
+        $postOwnerUserId = $postData['user_id'];
+
+        //If commenter is not post owner, send notification to owner
+        if ($commentAuthorUserId !== $postOwnerUserId) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL, null, null,
+                [$postOwnerUserId], $commentAuthorUserId, $postData['team_id'], $postId);
+        }
+        $excludedUserList = array($postOwnerUserId, $commentAuthorUserId);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        $notificationReceiverUserList = $Comment->getCommentedUniqueUsersList($postId, false, $excludedUserList);
+
+        if (!empty($notificationReceiverUserList)) {
+            $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL, null, null,
+                $notificationReceiverUserList, $commentAuthorUserId, $postData['team_id'], $postId);
+        }
     }
 }

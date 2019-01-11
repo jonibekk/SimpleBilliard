@@ -589,13 +589,13 @@ class Circle extends AppModel
         $memberCount = $CircleMember->getMemberCount($circleId, true);
 
         $newData = [
-            'circle_member_count' => $memberCount,
-            'modified'            => GoalousDateTime::now()->getTimestamp()
+            'Circle.circle_member_count' => $memberCount,
+            'Circle.modified'            => GoalousDateTime::now()->getTimestamp()
         ];
 
         $condition = [
-            'Circle.id' => $circleId,
-            'del_flg'   => false
+            'Circle.id'      => $circleId,
+            'Circle.del_flg' => false
         ];
 
         $this->updateAll($newData, $condition);
@@ -622,5 +622,44 @@ class Circle extends AppModel
         ];
 
         return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
+    }
+
+    /**
+     * Update the latest_post_created
+     *
+     * @param int $circleId
+     * @param int $time
+     *
+     * @return bool
+     */
+    public function updateLatestPosted(int $circleId, int $time = null)
+    {
+        return $this->updateLatestPostedInCircles([$circleId], $time);
+    }
+
+    /**
+     * Update the latest_post_created column of circles
+     *
+     * @param array $circleIds
+     * @param int   $time
+     *
+     * @return bool
+     */
+    public function updateLatestPostedInCircles(array $circleIds, int $time = null): bool
+    {
+        if (empty($time)) {
+            $time = GoalousDateTime::now()->getTimestamp();
+        }
+
+        $newData = [
+            'Circle.latest_post_created' => $time,
+            'Circle.modified'            => $time
+        ];
+
+        $condition = [
+            'Circle.id' => $circleIds
+        ];
+
+        return $this->updateAll($newData, $condition);
     }
 }

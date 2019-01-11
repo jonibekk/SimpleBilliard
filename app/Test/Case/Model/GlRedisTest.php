@@ -14,7 +14,7 @@ class GlRedisTest extends GoalousTestCase
      *
      * @var array
      */
-    public $fixtures = array();
+    public $fixtures = [];
 
     /**
      * setUp method
@@ -441,7 +441,7 @@ class GlRedisTest extends GoalousTestCase
     {
         $this->markTestSkipped();
     }
-
+  
     public function test_deleteUserTeamList_success()
     {
         $userIds = [1, 13, 97];
@@ -454,6 +454,42 @@ class GlRedisTest extends GoalousTestCase
             $this->assertEmpty(Cache::read($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false),
                 'team_info'));
         }
+    }
+
+    function test_multiCircleMemberCount()
+    {
+        /* Single circle */
+        // Not saved yet
+        $memberCountEachCircle = [1 => 100];
+        $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
+        $this->assertEquals($res, []);
+
+        // Save
+        $this->GlRedis->saveMultiCircleMemberCount($memberCountEachCircle);
+        $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
+        $this->assertEquals($res, $memberCountEachCircle);
+
+        /* Multiple circles */
+        $memberCountEachCircle = [
+            1  => 100,
+            10 => 5,
+            20 => 1,
+            99 => 999
+        ];
+        $this->GlRedis->saveMultiCircleMemberCount($memberCountEachCircle);
+        $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
+        $this->assertEquals($res, $memberCountEachCircle);
+
+        /* one of redis data doesn't exist */
+        $circleIds = array_keys($memberCountEachCircle);
+        $circleIds[] = 100;
+        $res = $this->GlRedis->getMultiCircleMemberCount($circleIds);
+        $this->assertFalse(array_key_exists(100, $res));
+
+        /* Delete keys */
+        $this->GlRedis->deleteMultiCircleMemberCount(array_keys($memberCountEachCircle));
+        $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
+        $this->assertEquals($res, []);
     }
 
 }

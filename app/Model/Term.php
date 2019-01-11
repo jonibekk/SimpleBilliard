@@ -319,7 +319,7 @@ class Term extends AppModel
                     $this->currentTerm = $currentTermFromCache;
                 }
             }
-            if (!$this->currentTerm) {
+            if (!$this->currentTerm && isset($timezone) && !is_null($timezone) && $timezone !== "") {
                 $this->currentTerm = $this->getTermDataByDate(AppUtil::todayDateYmdLocal($timezone));
                 if ($this->currentTerm && $withCache) {
                     $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
@@ -443,10 +443,10 @@ class Term extends AppModel
         $timezone = $this->Team->getTimezone();
         $options = [
             'conditions' => [
-                'team_id'       => $this->current_team_id,
-                'end_date <'   => $lastTerm['start_date'],
+                'team_id'    => $this->current_team_id,
+                'end_date <' => $lastTerm['start_date'],
             ],
-            'order' => ['start_date desc']
+            'order'      => ['start_date desc']
         ];
         $res = $this->find('all', $options);
         $result = array();

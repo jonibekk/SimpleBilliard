@@ -1,5 +1,5 @@
 <?php
-App::import('Lib/DataExtender', 'CircleDataExtender');
+App::import('Lib/DataExtender/Extension', 'CircleExtension');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
 App::import('Service', 'ImageStorageService');
@@ -48,9 +48,9 @@ class CircleSearchPagingService extends BaseSearchPagingService
             return [];
         }
 
-        /** @var CircleDataExtender $CircleDataExtender */
-        $CircleDataExtender = ClassRegistry::init('CircleDataExtender');
-        $resultArray = $CircleDataExtender->extend($baseData, "{n}.id");
+        /** @var CircleExtension $CircleExtension */
+        $CircleExtension = ClassRegistry::init('CircleExtension');
+        $resultArray = $CircleExtension->extendMulti($baseData, "{n}.id");
 
         // Set image url each circle
         /** @var ImageStorageService $ImageStorageService */

@@ -47,6 +47,7 @@ class TopicMember extends AppModel
             'conditions' => [
                 'topic_id' => $topicId,
                 'user_id'  => $userId,
+                'del_flg'  => false
             ]
         ];
         $ret = $this->find('first', $options);
@@ -112,14 +113,9 @@ class TopicMember extends AppModel
      */
     function findUsersSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
-
         $options = [
             'conditions' => [
                 'TopicMember.topic_id' => $topicId,
-                'TopicMember.user_id'  => $activeTeamMembersList,
             ],
             'fields'     => [
                 'TopicMember.id',

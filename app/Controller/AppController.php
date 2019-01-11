@@ -492,13 +492,6 @@ class AppController extends BaseController
             }
         }
     }
-
-    public function _forceSSL()
-    {
-        /** @noinspection PhpUndefinedFieldInspection */
-        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
-    }
-
     public function _setMyTeam()
     {
         $my_teams = [];

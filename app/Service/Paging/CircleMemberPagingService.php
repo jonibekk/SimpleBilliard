@@ -1,21 +1,16 @@
 <?php
-App::import('Lib/DataExtender', 'UserDataExtender');
+
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses("CircleMember", 'Model');
 App::uses("User", 'Model');
+App::import('Lib/DataExtender', 'CircleMemberExtender');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/08/23
- * Time: 14:00
- */
+use Goalous\Enum as Enum;
+
 class CircleMemberPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'CircleMember';
-    const EXTEND_ALL = "ext:circle_member:all";
-    const EXTEND_USER = "ext:circle_member:user";
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -43,13 +38,14 @@ class CircleMemberPagingService extends BasePagingService
         return (int)$CircleMember->find('count', $conditions);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var CircleMemberExtender $CircleMemberExtender */
+        $CircleMemberExtender = ClassRegistry::init('CircleMemberExtender');
+        $data = $CircleMemberExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     private function createSearchCondition(PagingRequest $pagingRequest)
@@ -58,8 +54,6 @@ class CircleMemberPagingService extends BasePagingService
         $circleId = $pagingRequest->getResourceId();
 
         $conditions = [
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember',
             'fields'     => [
                 'CircleMember.id',
                 'CircleMember.user_id',
@@ -68,6 +62,19 @@ class CircleMemberPagingService extends BasePagingService
             'conditions' => [
                 'CircleMember.team_id'   => $teamId,
                 'CircleMember.circle_id' => $circleId
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.team_id = CircleMember.team_id',
+                        'TeamMember.user_id = CircleMember.user_id',
+                        'TeamMember.del_flg' => false,
+                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE,
+                    ]
+                ]
             ]
         ];
 
@@ -85,7 +92,8 @@ class CircleMemberPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
+    ): PointerTree
+    {
         $prevLastPosted = $pagingRequest->getPointer('last_posted')[2] ?? -1;
 
         if ($lastElement['last_posted'] == $headNextElement['last_posted'] ||

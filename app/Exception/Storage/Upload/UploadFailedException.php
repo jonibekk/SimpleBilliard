@@ -10,7 +10,7 @@ namespace Goalous\Exception\Storage\Upload;
 
 use Goalous\Exception\GoalousException;
 
-class UploadFailedException  extends GoalousException {};
+class UploadFailedException extends GoalousException
 {
 
 }

@@ -5,6 +5,7 @@ App::uses('CircleMember', 'Model');
  * CircleMember Test Case
  *
  * @property CircleMember $CircleMember
+ * @property TeamMember $TeamMember
  */
 class CircleMemberTest extends GoalousTestCase
 {
@@ -14,7 +15,7 @@ class CircleMemberTest extends GoalousTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.circle_member',
         'app.circle',
         'app.circle_pin',
@@ -24,7 +25,7 @@ class CircleMemberTest extends GoalousTestCase
         'app.group',
         'app.local_name',
         'app.member_group',
-    );
+    ];
 
     /**
      * setUp method
@@ -35,6 +36,7 @@ class CircleMemberTest extends GoalousTestCase
     {
         parent::setUp();
         $this->CircleMember = ClassRegistry::init('CircleMember');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
     }
 
     /**
@@ -572,5 +574,27 @@ class CircleMemberTest extends GoalousTestCase
         $CircleMember = ClassRegistry::init('CircleMember');
 
         $this->assertEquals(3, $CircleMember->getMemberCount(1));
+        $this->assertEquals(3, $CircleMember->getMemberCount(1, true));
+    }
+
+    public function test_countEachCircle()
+    {
+        // Normal
+        $res = $this->CircleMember->countEachCircle([1, 3, 4]);
+        $this->assertEquals($res, [1 => 3, 3 => 2, 4 => 2]);
+
+        // Specify circle doesn't exist
+        $res = $this->CircleMember->countEachCircle([1, 3, 99, 4]);
+        $this->assertEquals($res, [1 => 3, 3 => 2, 99 => 0, 4 => 2]);
+
+        // Count after inactivate uesr
+        $this->TeamMember->inactivate(2);
+        $res = $this->CircleMember->countEachCircle([1, 3, 4]);
+        $this->assertEquals($res, [1 => 2, 3 => 1, 4 => 1]);
+
+        // Count after delete circle_member
+        $this->CircleMember->softDeleteAll(['circle_id' => 1, 'user_id' => 12], false);
+        $res = $this->CircleMember->countEachCircle([1, 3, 4]);
+        $this->assertEquals($res, [1 => 1, 3 => 1, 4 => 1]);
     }
 }

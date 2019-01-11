@@ -5,43 +5,75 @@ import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
-import {getErrMsg} from "./common";
+import * as common from "./common";
+import {browserHistory} from "react-router";
+import Noty from "noty";
 
-export function fetchInitialData(topic_id) {
+export function fetchInitialData(topic_id, query_params) {
   return (dispatch) => {
     dispatch({
       type: ActionTypes.LOADING,
     })
-    return get(`/api/v1/topics/${topic_id}`)
+    const query_string = query_params.message_id ? `?message_id=${query_params.message_id}` : "";
+    return get(`/api/v1/topics/${topic_id}${query_string}`)
       .then((response) => {
         const data = response.data.data
         dispatch({
           type: ActionTypes.FETCH_INITIAL_DATA,
           data,
+          search_message_id: query_params.message_id ? parseInt(query_params.message_id) : null
         })
         // TODO: have to resolve to depend on gl_basic.js
         // this method defined in gl_basic.js
         // update header unread badge count
-        updateMessageNotifyCnt()
+        if (!query_params.message_id) {
+          updateMessageNotifyCnt()
+        }
+      })
+      .catch(({response}) => {
+        browserHistory.push('/topics');
+        new Noty({
+          type: 'error',
+          text: response.data.message,
+        }).show();
+
+      })
+  }
+}
+export function resetMessages() {
+  return (dispatch, getState) => {
+    const topic_id = getState().detail.topic_id;
+
+    dispatch({
+      type: ActionTypes.LOADING,
+    })
+    return get(`/api/v1/topics/${topic_id}/messages`)
+      .then((response) => {
+        dispatch({
+          type: ActionTypes.RESET_MESSAGES,
+          messages: response.data,
+        })
       })
       .catch((response) => {
       })
   }
 }
-export function fetchMoreMessages(url) {
+export function fetchMoreMessages(url, is_old_direction) {
   return (dispatch, getState) => {
     const messages = getState().detail.messages.data;
     const last_position_message_id = messages[0].id
     dispatch({
       type: ActionTypes.LOADING_MORE,
-      last_position_message_id
+      last_position_message_id,
+      is_old_direction
     })
     return get(url)
       .then((response) => {
         const messages = response.data
         dispatch({
           type: ActionTypes.FETCH_MORE_MESSAGES,
-          messages
+          messages,
+          is_old_direction
         })
       })
       .catch((response) => {
@@ -58,15 +90,17 @@ export function fetchLatestMessages(cursor) {
     })
     return get(`/api/v1/topics/${topic_id}/messages?direction=new&cursor=${cursor}`)
       .then((response) => {
+        const latest_messages = response.data.data;
         const messages = uniqueMessages(
           getState().detail.messages.data,
-          response.data.data
+          latest_messages
         );
-        const latest_message = response.data.latest_message
+        const latest_message_read_count = response.data.latest_message_read_count
         dispatch({
           type: ActionTypes.FETCH_LATEST_MESSAGES,
           messages,
-          latest_message
+          latest_message_read_count,
+          latest_message_id: latest_messages[latest_messages.length - 1].id
         })
       })
       .catch((response) => {
@@ -125,7 +159,7 @@ export function sendLike() {
         })
       },
       ({response}) => {
-        const err_msg = getErrMsg(response);
+        const err_msg = common.getErrMsg(response);
         dispatch({
           type: ActionTypes.SAVE_ERROR,
           err_msg
@@ -169,7 +203,7 @@ export function sendMessage() {
         }
       },
       ({response}) => {
-        const err_msg = getErrMsg(response);
+        const err_msg = common.getErrMsg(response);
         dispatch({
           type: ActionTypes.SAVE_ERROR,
           err_msg
@@ -253,7 +287,7 @@ export function leaveTopic() {
         })
       },
       ({response}) => {
-        const err_msg = getErrMsg(response);
+        const err_msg = common.getErrMsg(response);
         dispatch({
           type: ActionTypes.LeaveTopic.SAVE_ERROR,
           err_msg
@@ -337,22 +371,7 @@ export function resetTopicTitleSettingStatus() {
 }
 
 export function initLayout() {
-  let mobile_app_layout = {}
-  if (isOldIOSApp()) {
-    mobile_app_layout = {
-      header_top: PositionIOSApp.HEADER_TOP,
-      body_top: PositionIOSApp.BODY_TOP,
-      body_bottom: PositionIOSApp.BODY_BOTTOM,
-      footer_bottom: PositionIOSApp.FOOTER_BOTTOM
-    }
-  } else if (isMobileApp()) {
-    mobile_app_layout = {
-      header_top: PositionMobileApp.HEADER_TOP,
-      body_top: PositionMobileApp.BODY_TOP,
-      body_bottom: PositionMobileApp.BODY_BOTTOM,
-      footer_bottom: PositionMobileApp.FOOTER_BOTTOM
-    }
-  }
+  const mobile_app_layout = common.getLayout();
   return {
     type: ActionTypes.INIT_LAYOUT,
     mobile_app_layout
@@ -363,5 +382,12 @@ export function changeLayout(mobile_app_layout) {
   return {
     type: ActionTypes.CHANGE_LAYOUT,
     mobile_app_layout
+  }
+}
+
+export function setJumpToLatestStatus(jump_to_latest_status) {
+  return {
+    type: ActionTypes.SET_JUMP_TO_LATEST_STATUS,
+    jump_to_latest_status
   }
 }

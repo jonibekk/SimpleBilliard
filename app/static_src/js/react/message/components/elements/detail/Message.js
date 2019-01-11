@@ -18,7 +18,7 @@ class Message extends React.Component {
   }
 
   render() {
-    const {topic, message, fetching_read_count} = this.props
+    const {topic, message, fetching_read_count, is_active} = this.props
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -62,7 +62,7 @@ class Message extends React.Component {
     // System info message (Add members, etc)
     if (message.type != Model.Message.TYPE_NORMAL) {
       return (
-        <div className="topicDetail-messages-item mod-sysInfo">
+        <div className="topicDetail-messages-item mod-sysInfo is_active">
           <p className="topicDetail-messages-item-onlyText">
             {nl2br(message.body)}
           </p>
@@ -91,7 +91,7 @@ class Message extends React.Component {
     }
 
     return (
-      <div className={`topicDetail-messages-item`}>
+      <div className={`topicDetail-messages-item ${is_active ? 'is-active' : ''}`}>
         <div className="topicDetail-messages-item-left">
           <a href={`/users/view_goals/user_id:${message.user.id}`}
              className="topicDetail-messages-item-left-profileImg">
@@ -121,11 +121,13 @@ class Message extends React.Component {
 Message.propTypes = {
   topic: React.PropTypes.object,
   message: React.PropTypes.object,
+  is_active: React.PropTypes.bool,
 };
 
 Message.defaultProps = {
   topic: {},
   message: {},
+  is_active: false
 };
 
 export default connect()(Message);

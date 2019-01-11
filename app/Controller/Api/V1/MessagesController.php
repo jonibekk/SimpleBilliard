@@ -4,6 +4,12 @@ App::uses('Topic', 'Model');
 App::uses('TopicMember', 'Model');
 App::import('Service', 'MessageService');
 App::import('Service/Api', 'ApiMessageService');
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Service/Paging/Search', 'MessageSearchPagingService');
+
+use Goalous\Enum as Enum;
 
 /**
  * Class MessagesController
@@ -63,12 +69,14 @@ class MessagesController extends ApiController
 
     /**
      * Find Messages for api response
+     *
      * @param int $topicId
      * @param int $newMessageId
      *
      * @return array
      */
-    private function _findLatestMessages(int $topicId, int $newMessageId) {
+    private function _findLatestMessages(int $topicId, int $newMessageId)
+    {
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');
 
@@ -79,7 +87,8 @@ class MessagesController extends ApiController
             return [$message];
         }
         // Get the latest message based on the ID of the last displayed message to prevent the message list from missing teeth
-        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, $lastMessageId, null, Message::DIRECTION_NEW);
+        $messages = $ApiMessageService->findMessages($topicId, $loginUserId, $lastMessageId, null,
+            Enum\Model\Message\MessageDirection::NEW);
         return $messages['data'];
     }
 
@@ -122,6 +131,36 @@ class MessagesController extends ApiController
         // find the message as response data
         $latestMessages = $this->_findLatestMessages($topicId, $messageId);
         return $this->_getResponseSuccess(['latest_messages' => $latestMessages]);
+    }
+
+    /**
+     * Search endpoint for message
+     */
+    public function get_search()
+    {
+        $query = $this->request->query;
+        $limit = $this->request->query('limit');
+        $cursor = $this->request->query('cursor');
+        $teamId = $this->current_team_id;
+
+        if (empty($cursor)) {
+            $pagingRequest = new ESPagingRequest();
+            $pagingRequest->setQuery($query);
+            $pagingRequest->addCondition('pn', 1);
+            $pagingRequest->addCondition('limit', $limit);
+            $pagingRequest->addCondition('topic_id', 0);
+        } else {
+            $pagingRequest = ESPagingRequest::convertBase64($cursor);
+        }
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+        $pagingRequest->addTempCondition('user_id', $this->Auth->user('id'));
+
+        /** @var MessageSearchPagingService $MessageSearchPagingService */
+        $MessageSearchPagingService = ClassRegistry::init('MessageSearchPagingService');
+        $searchResult = $MessageSearchPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($searchResult)->getResponse();
     }
 
     /**

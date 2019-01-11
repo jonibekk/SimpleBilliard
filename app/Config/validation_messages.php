@@ -5,6 +5,6 @@
  * @see /app/Validator/BaseValidator.php::getValidationMessageFromConfig()
  */
 $config['validation_messages'] = [
-    'notEmpty' => __('validation.error.required'),
-    'email'    => __('validation.error.email_format'),
+    'notEmpty' => __('This is a required field.'),
+    'email'    => __('Email address is incorrect.'),
 ];

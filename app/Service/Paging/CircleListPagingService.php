@@ -1,11 +1,10 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
-App::import('Service', 'ImageStorageService');
 App::import('Service', 'CirclePinService');
-App::import('Lib/DataExtender', 'CircleMemberInfoDataExtender');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::import('Lib/DataExtender', 'CircleExtender');
 
 /**
  * Created by PhpStorm.
@@ -16,9 +15,6 @@ App::uses('CircleMember', 'Model');
 class CircleListPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Circle';
-
-    const EXTEND_ALL = 'ext:circle:all';
-    const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
 
     /**
      * Get all circles and not including with paging data
@@ -31,14 +27,15 @@ class CircleListPagingService extends BasePagingService
     public function getAllData(
         $pagingRequest,
         $extendFlags = []
-    ): array {
+    ): array
+    {
         // Check whether exist current user id and team id
         $this->validatePagingResource($pagingRequest);
 
         $finalResult = [
-            'data'   => [],
+            'data' => [],
             'paging' => '',
-            'count'  => 0
+            'count' => 0
         ];
 
         //If only 1 flag is given, make it an array
@@ -91,7 +88,6 @@ class CircleListPagingService extends BasePagingService
                 'Circle.team_id' => $teamId,
                 'Circle.del_flg' => false
             ],
-            'conversion' => true
         ];
         $publicOnlyFlag = boolval(Hash::get($conditions, 'public_only', false));
         if ($publicOnlyFlag === true) {
@@ -118,8 +114,8 @@ class CircleListPagingService extends BasePagingService
      * Add condition for pinned circles
      *
      * @param array $searchConditions
-     * @param int   $userId
-     * @param int   $teamId
+     * @param int $userId
+     * @param int $teamId
      *
      * @return array
      */
@@ -137,9 +133,9 @@ class CircleListPagingService extends BasePagingService
      * Add condition for joined circles
      *
      * @param array $searchConditions
-     * @param int   $userId
-     * @param int   $teamId
-     * @param bool  $joinedFlag
+     * @param int $userId
+     * @param int $teamId
+     * @param bool $joinedFlag
      *
      * @return array
      */
@@ -148,7 +144,8 @@ class CircleListPagingService extends BasePagingService
         int $userId,
         int $teamId,
         bool $joinedFlag
-    ): array {
+    ): array
+    {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
@@ -159,11 +156,11 @@ class CircleListPagingService extends BasePagingService
                 'CircleMember.user_id' => $userId,
                 'CircleMember.del_flg' => false,
             ],
-            'fields'     => [
+            'fields' => [
                 'CircleMember.circle_id'
             ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember'
+            'table' => 'circle_members',
+            'alias' => 'CircleMember'
         ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
         $subQueryExpression = $db->expression($subQuery);
@@ -197,7 +194,8 @@ class CircleListPagingService extends BasePagingService
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
+    ): PointerTree
+    {
 
         $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
 
@@ -212,25 +210,14 @@ class CircleListPagingService extends BasePagingService
         }
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        // Set image url each circle
-        /** @var ImageStorageService $ImageStorageService */
-        $ImageStorageService = ClassRegistry::init('ImageStorageService');
-        foreach ($resultArray as $i => $v) {
-            $resultArray[$i]['img_url'] = $ImageStorageService->getImgUrlEachSize($resultArray[$i], 'Circle');
-        }
+        $userId = $request->getResourceId() ?: $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
 
-        if (in_array(self::EXTEND_ALL, $options) || in_array(self::EXTEND_MEMBER_INFO, $options)) {
-
-            $userId = $request->getResourceId() ?: $request->getCurrentUserId();
-
-            /** @var CircleMemberInfoDataExtender $CircleMemberInfoDataExtender */
-            $CircleMemberInfoDataExtender = ClassRegistry::init('CircleMemberInfoDataExtender');
-
-            $CircleMemberInfoDataExtender->setUserId($userId);
-            $resultArray = $CircleMemberInfoDataExtender->extend($resultArray, "{n}.id", "circle_id");
-        }
+        /** @var CircleExtender $CircleExtender */
+        $CircleExtender = ClassRegistry::init('CircleExtender');
+        $data = $CircleExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     protected function beforeRead(PagingRequest $pagingRequest)
