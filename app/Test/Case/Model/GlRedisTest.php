@@ -446,11 +446,13 @@ class GlRedisTest extends GoalousTestCase
     {
         $userIds = [1, 13, 97];
         foreach ($userIds as $userId) {
-            Cache::write($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'some_value', 'team_info');
+            Cache::write($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'some_value',
+                'team_info');
         }
         $this->GlRedis->deleteUserTeamList($userIds);
         foreach ($userIds as $userId) {
-            $this->assertEmpty(Cache::read($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false)),'team_info');
+            $this->assertEmpty(Cache::read($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false),
+                'team_info'));
         }
     }
 

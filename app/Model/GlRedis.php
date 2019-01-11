@@ -389,9 +389,10 @@ class GlRedis extends AppModel
     {
         $targetKeys = [];
         foreach ($userIds as $userId) {
-            $pattern = $this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false);
-            $keys = $this->Db->keys($pattern);
-            $targetKeys = array_merge($targetKeys, $keys);
+            $pattern =
+                Cache::settings('team_info')['prefix'] .
+                $this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false);
+            $targetKeys[] = $pattern;
         }
         $pipe = $this->Db->multi(Redis::PIPELINE);
         $prefix = $this->Db->config['prefix'];
