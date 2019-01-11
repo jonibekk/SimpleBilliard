@@ -291,6 +291,15 @@ class PostRead extends AppModel
      */
     public function filterUnreadPost(array $postIds, int $circleId, int $userId, bool $filterCreatedTime = false): array
     {
+        $condition = [
+            'conditions' => [
+                'Post.id'        => $postIds,
+                'Post.del_flg'   => false,
+            ],
+            'table'      => 'posts',
+            'alias'      => 'Post',
+        ];
+
         if ($filterCreatedTime) {
             /** @var CircleMember $CircleMember */
             $CircleMember = ClassRegistry::init('CircleMember');
@@ -298,19 +307,9 @@ class PostRead extends AppModel
             $circleMember = $CircleMember->getCircleMember($circleId, $userId);
 
             $createdTimeLimit = $circleMember['created'];
-        } else {
-            $createdTimeLimit = -1;
-        }
 
-        $condition = [
-            'conditions' => [
-                'Post.id'        => $postIds,
-                'Post.del_flg'   => false,
-                'Post.created >' => $createdTimeLimit
-            ],
-            'table'      => 'posts',
-            'alias'      => 'Post',
-        ];
+            $condition['conditions']['Post.created > '] = $createdTimeLimit;
+        }
 
         $db = $this->getDataSource();
 

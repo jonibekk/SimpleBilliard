@@ -134,13 +134,13 @@ class PostReadService extends AppService
     /**
      * Update unread count in each circle_member where the user is joined to
      *
-     * @param array $postIds
+     * @param int[] $unreadPostIds Array of ids of unread posts
      * @param int   $userId
      * @param int   $teamId
      *
      * @throws Exception
      */
-    public function updateCircleUnreadCount(array $postIds, int $userId, int $teamId)
+    public function updateCircleUnreadCount(array $unreadPostIds, int $userId, int $teamId)
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -148,7 +148,7 @@ class PostReadService extends AppService
         try {
             $this->TransactionManager->begin();
 
-            $unreadCountList = $this->countUnreadInCircles($postIds, $userId);
+            $unreadCountList = $this->countUnreadInCircles($unreadPostIds, $userId);
 
             foreach ($unreadCountList as $circleId => $unreadCount) {
                 $CircleMember->updateUnreadCount($circleId, $unreadCount, $userId, $teamId);
@@ -159,7 +159,7 @@ class PostReadService extends AppService
             GoalousLog::error("Failed to update unread count", [
                 'user.id' => $userId,
                 'team_id' => $teamId,
-                'post.id' => $postIds
+                'post.id' => $unreadPostIds
             ]);
             throw $exception;
         }
@@ -168,25 +168,25 @@ class PostReadService extends AppService
     /**
      * Count unread count in each circle
      *
-     * @param array $postIds
+     * @param int[] $unreadPostIds Array of ids of unread posts
      * @param int   $userId
      *
      * @return array
      *              [circle_id => unread_count]
      */
-    private function countUnreadInCircles(array $postIds, int $userId): array
+    private function countUnreadInCircles(array $unreadPostIds, int $userId): array
     {
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
 
-        $postList = $PostShareCircle->getListOfPostByPostId($postIds);
+        $postList = $PostShareCircle->getListOfPostByPostId($unreadPostIds);
 
         $result = [];
 
         foreach ($postList as $circleId => $sharedPostList) {
-            $unreadPostList = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
+            $unreadPostList = $PostRead->filterUnreadPost($unreadPostIds, $circleId, $userId, true);
             $result[$circleId] = count($unreadPostList);
         }
 

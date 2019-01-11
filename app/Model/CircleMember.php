@@ -873,8 +873,12 @@ class CircleMember extends AppModel
             ]
         ];
 
-        $count = Hash::extract($this->find('all', $condition), '{n}.CircleMember.unread_count')[0] ?: 0;
+        $res = $this->useType()->find('first', $condition);
 
-        return $count;
+        if (empty($res['CircleMember']['unread_count'])) {
+            return 0;
+        }
+
+        return $res['CircleMember']['unread_count'];
     }
 }
