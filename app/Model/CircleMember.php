@@ -12,8 +12,8 @@ use Goalous\Enum as Enum;
  * CircleMember Model
  *
  * @property Circle $Circle
- * @property Team $Team
- * @property User $User
+ * @property Team   $Team
+ * @property User   $User
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
@@ -112,8 +112,8 @@ class CircleMember extends AppModel
     /**
      * Get list of circle that a given user joined to in a team
      *
-     * @param int $userId
-     * @param int $teamId
+     * @param int  $userId
+     * @param int  $teamId
      * @param bool $checkHideStatus Whether circle's hidden status is checked or not
      *
      * @return array List of circle IDs
@@ -144,8 +144,7 @@ class CircleMember extends AppModel
      */
     public function getMyCircle(
         $params = []
-    )
-    {
+    ) {
         ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
@@ -210,8 +209,7 @@ class CircleMember extends AppModel
     public function getAdminMemberList(
         $circle_id,
         $with_me = false
-    )
-    {
+    ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -232,8 +230,7 @@ class CircleMember extends AppModel
     public function getCircleInitMemberSelect2(
         $circle_id,
         $with_admin = false
-    )
-    {
+    ) {
         $users = $this->getMembers($circle_id, $with_admin);
         $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
@@ -244,8 +241,7 @@ class CircleMember extends AppModel
         $with_admin = false,
         $order = 'CircleMember.modified',
         $order_direction = "desc"
-    )
-    {
+    ) {
         $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
 
         $options = [
@@ -284,8 +280,7 @@ class CircleMember extends AppModel
         $keyword,
         $limit = 10,
         $with_group = false
-    )
-    {
+    ) {
         $member_list = $this->getMemberList($circle_id, true);
 
         $keyword = trim($keyword);
@@ -335,8 +330,7 @@ class CircleMember extends AppModel
         $with_admin = false,
         $with_me = true,
         array $usersToExclude = []
-    )
-    {
+    ) {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -405,14 +399,27 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    function updateUnreadCount($circle_id, $set_count = 0)
+    /**
+     * Update unread count
+     *
+     * @param int      $circleId
+     * @param int      $newUnreadCount
+     * @param int|null $userId
+     * @param int|null $teamId
+     *
+     * @return bool
+     */
+    public function updateUnreadCount(int $circleId, $newUnreadCount = 0, int $userId = null, int $teamId = null)
     {
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
         $conditions = [
-            'CircleMember.circle_id' => $circle_id,
-            'CircleMember.user_id'   => $this->my_uid,
-            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.user_id'   => $userId,
+            'CircleMember.team_id'   => $teamId,
         ];
-        $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
+        $res = $this->updateAll(['CircleMember.unread_count' => $newUnreadCount], $conditions);
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         return $res;
     }
@@ -420,8 +427,8 @@ class CircleMember extends AppModel
     /**
      * join Circle
      *
-     * @param int $circleId
-     * @param int $userId
+     * @param int     $circleId
+     * @param int     $userId
      * @param boolean $showForAllFeedFlg
      * @param boolean $getNotificationFlg
      *
@@ -433,8 +440,7 @@ class CircleMember extends AppModel
         bool $showForAllFeedFlg = true,
         bool $getNotificationFlg = true,
         bool $isAdmin = false
-    ): bool
-    {
+    ): bool {
         if (!empty($this->isBelong($circleId, $userId))) {
             return false;
         }
@@ -476,7 +482,7 @@ class CircleMember extends AppModel
      * - Update counter cache per circle
      *
      * @param  int | array $circleId
-     * @param  int $userId
+     * @param  int         $userId
      *
      * @return bool
      */
@@ -664,8 +670,8 @@ class CircleMember extends AppModel
      * array key: circle id, value: member count
      * e.g. [1 => 3, 10 => 100]
      *
-     *
      * @param array $circleIds
+     *
      * @return array
      */
     function countEachCircle(array $circleIds): array
@@ -814,7 +820,7 @@ class CircleMember extends AppModel
     /**
      * Count number of members in a circle
      *
-     * @param int $circleId
+     * @param int  $circleId
      * @param bool $activeOnly
      *
      * @return int
@@ -844,5 +850,35 @@ class CircleMember extends AppModel
         $count = (int)$this->find('count', $conditions);
 
         return $count;
+    }
+
+    /**
+     * Get post unread count in a circle for an user
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return int
+     */
+    public function getUnreadCount(int $circleId, int $userId): int
+    {
+        $condition = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId,
+                'del_flg'   => false
+            ],
+            'fields'     => [
+                'unread_count'
+            ]
+        ];
+
+        $res = $this->useType()->find('first', $condition);
+
+        if (empty($res['CircleMember']['unread_count'])) {
+            return 0;
+        }
+
+        return $res['CircleMember']['unread_count'];
     }
 }
