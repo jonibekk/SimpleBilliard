@@ -89,19 +89,19 @@ class PostReadService extends AppService
             ],
             'fields'     => 'PostRead.post_id'
         ];
-        $PostAlreadyReadArray = $PostRead->find('all', $query);
+        $readPosts = $PostRead->find('all', $query);
 
-        $PostAlreadyReadArray = Hash::extract($PostAlreadyReadArray, "{n}.PostRead.post_id");
-        $newReads = array_diff($postIds, $PostAlreadyReadArray);
+        $readPostIds = Hash::extract($readPosts, "{n}.PostRead.post_id");
+        $unreadPostIds = array_diff($postIds, $readPostIds);
 
-        if(!empty($newReads)){
+        if(!empty($unreadPostIds)){
             try {
                 $this->TransactionManager->begin();
                 $PostRead->create();
                 $newData = array();
-                foreach($newReads as $new){
+                foreach($unreadPostIds as $unreadPostId){
                     $data = [
-                        'post_id' => $new,
+                        'post_id' => $unreadPostId,
                         'user_id' => $userId,
                         'team_id' => $teamId
                     ];
@@ -111,7 +111,7 @@ class PostReadService extends AppService
                 /** @var PostReadEntity $result */
                 $PostRead->useType()->useEntity()->bulkInsert($newData);
 
-                $PostRead->updateReadersCountMultiplePost($newReads);
+                $PostRead->updateReadersCountMultiplePost($unreadPostIds);
 
                 $this->TransactionManager->commit();
 
@@ -122,6 +122,6 @@ class PostReadService extends AppService
             }
         } 
 
-        return $newReads;
+        return $unreadPostIds;
     }
 }

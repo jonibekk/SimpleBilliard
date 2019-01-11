@@ -591,12 +591,24 @@ App::uses('AttachedFile', 'Model');
             "Add": "<?= __("Add") ?>",
             "Input topic title": "<?= __("Input topic title") ?>",
             "Update": "<?= __("Update") ?>",
-            // messgae
+            // Message
             "No results found": "<?= __("No results found") ?>",
             "Leave this topic": "<?= __("Leave this topic") ?>",
             "Are you sure you want to leave this topic?": "<?= __("Are you sure you want to leave this topic?") ?>",
             "Do you really want to delete this comment?": "<?= __("Do you really want to delete this comment?") ?>",
             "Delete comment": "<?= __("Delete comment") ?>",
+            "Search result %d topics hit": "<?= __("Search result %d topics hit") ?>",
+            "Search result %d messages hit": "<?= __("Search result %d messages hit") ?>",
+            "View the latest messages": "<?= __("View the latest messages") ?>",
+            "member": "<?= __("member") ?>",
+            "topic": "<?= __("topic") ?>",
+            "message": "<?= __("message") ?>",
+            "Topics": "<?= __("Topics") ?>",
+            "Messages": "<?= __("Messages") ?>",
+            "%d matched member": "<?= __("%d matched member") ?>",
+            "%d matched members": "<?= __("%d matched members") ?>",
+            "%d matched message": "<?= __("%d matched message") ?>",
+            "%d matched messages": "<?= __("%d matched messages") ?>",
             /* Change to paid plan */
             // Select country and paymnet type
             "Select Country Location": "<?= __("Select Country Location") ?>",

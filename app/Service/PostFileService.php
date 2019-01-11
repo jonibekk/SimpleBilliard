@@ -41,12 +41,12 @@ class PostFileService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
-            GoalousLog::error($errorMessage = 'Failed saving post files', [
+            GoalousLog::error($errorMessage = 'Failed saving post_files', [
                 'posts.id'         => $postId,
                 'team.id'          => $teamId,
                 'attached_file.id' => $attachedFileId,
             ]);
-            throw new RuntimeException('Error on adding post file: ' . $errorMessage);
+            throw new RuntimeException('Error on adding post_files: ' . $errorMessage);
         }
         return $result;
     }

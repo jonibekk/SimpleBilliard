@@ -1,11 +1,13 @@
 <?php
 App::import('Service', 'CommentService');
 App::import('Service', 'CommentLikeService');
+App::import('Service', 'CommentReadService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service/Paging', 'CommentReaderPagingService');
 App::import('Service/Paging', 'CommentLikesPagingService');
+App::uses('CommentRequestValidator', 'Validator/Request/Api/V2');
 
 /**
  * Created by PhpStorm.
@@ -81,6 +83,38 @@ class CommentsController extends BasePagingController
         }
 
         return ApiResponse::ok()->withBody($result)->getResponse();
+    }
+
+    /**
+     * Add readers of the comment
+     *
+     * @param int $commentId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_reads()
+    {
+
+        $error = $this->validateCommentRead();
+        if (!empty($error)) {
+            return $error;
+        }
+
+        $commentsIds = Hash::get($this->getRequestJsonBody(), 'comment_ids', []);
+
+        /** @var CommentReadService $CommentReadService */
+        $CommentReadService = ClassRegistry::init('CommentReadService');
+
+        try {
+            $res = $CommentReadService->multipleAdd($commentsIds, $this->getUserId(), $this->getTeamId());
+        } catch (InvalidArgumentException $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->withMessage(__("Failed to read comment."))
+                                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(["comment_ids" => $res])->getResponse();
     }
 
     /**
@@ -168,7 +202,7 @@ class CommentsController extends BasePagingController
         }
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
-                                ->getResponse();
+                ->getResponse();
         }
 
         return null;
@@ -182,7 +216,7 @@ class CommentsController extends BasePagingController
     private function getDefaultReaderExtension()
     {
         return [
-            CommentReaderPagingService::EXTEND_USER
+            CommentReadExtender::EXTEND_USER
         ];
     }
 
@@ -194,7 +228,45 @@ class CommentsController extends BasePagingController
     private function getDefaultLikesUserExtension()
     {
         return [
-            CommentLikesPagingService::EXTEND_USER
+            CommentLikeExtender::EXTEND_USER
         ];
+    }
+
+    /**
+     *
+     * @return CakeResponse|null
+     */
+    private function validateCommentRead()
+    {
+        $requestBody = $this->getRequestJsonBody();
+
+        $commentsIds = Hash::get($requestBody, 'comment_ids', []);
+
+        try {
+            CommentRequestValidator::createCommentReadValidator()->validate($requestBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        try {
+            $CommentService->checkUserAccessToMultipleComment($this->getUserId(), $commentsIds);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return null;
     }
 }

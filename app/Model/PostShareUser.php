@@ -60,16 +60,19 @@ class PostShareUser extends AppModel
         return $this->saveAll($data);
     }
 
-    public function isShareWithMe($post_id)
+    public function isShareWithMe($postId, $userId = null, $teamId = null)
     {
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
         $backupPrimaryKey = $this->primaryKey;
         $this->primaryKey = 'post_id';
 
         $options = [
             'conditions' => [
-                'post_id' => $post_id,
-                'user_id' => $this->my_uid,
-                'team_id' => $this->current_team_id,
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'team_id' => $teamId,
             ],
             'fields'     => ['post_id'],
         ];

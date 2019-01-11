@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { routerReducer } from 'react-router-redux'
 import index from './index'
 import search from './search'
+import search_messages from './search_messages'
 import detail from './detail'
 import {file_upload} from '~/message/modules/file_upload'
 import topic_create from './topic_create'
@@ -13,6 +14,7 @@ export default function createReducer() {
       detail,
       index,
       search,
+      search_messages,
       topic_create,
       topic_members_add,
       file_upload,

@@ -7,6 +7,7 @@ App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Post', 'Model');
 App::import('Service', 'ImageStorageService');
+App::uses('GlRedis', 'Model');
 
 /**
  * Class CircleService
@@ -477,7 +478,7 @@ class CircleService extends AppService
         });
     }
 
-    function get(int $circleId): array
+    function get(int $circleId, int $userId): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -486,6 +487,46 @@ class CircleService extends AppService
 
         $circle = $Circle->useEntity()->useType()->findById($circleId)->toArray();
         $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
+        
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $circle['is_member'] = $CircleMember->isJoined($circle['id'], $userId);
+
+        $memberCountEachCircle = $this->getMemberCountEachCircle([$circle['id']]);
+        $circle['circle_member_count'] = $memberCountEachCircle[$circle['id']];
+
         return $circle;
     }
+
+
+    /*
+     * Get circle member count each circle
+     *
+     * @param array $circleIds
+     * @return array
+     */
+    function getMemberCountEachCircle(array $circleIds): array
+    {
+        // Get cached data from Redis
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+        $memberCountEachCircle = $GlRedis->getMultiCircleMemberCount($circleIds);
+        $noExistCacheCircleIds = array_diff($circleIds, array_keys($memberCountEachCircle));
+        if (empty($noExistCacheCircleIds)) {
+            return $memberCountEachCircle;
+        }
+
+        // Get DB data
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $memberCountEachNoExistCacheCircle = $CircleMember->countEachCircle($noExistCacheCircleIds);
+
+        // Cache data
+        $GlRedis->saveMultiCircleMemberCount($memberCountEachNoExistCacheCircle);
+
+        $res = $memberCountEachCircle + $memberCountEachNoExistCacheCircle;
+
+        return $res;
+    }
+
 }

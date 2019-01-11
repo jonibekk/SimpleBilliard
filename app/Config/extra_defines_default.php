@@ -108,6 +108,11 @@ $defines = [
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp',
     'ES_API_BASE_URL'                               => 'dev-search.goalous.com'
 ];
+// for local
+if (file_exists(APP . 'Config/extra_defines_local.php')) {
+    require_once(APP . 'Config/extra_defines_local.php');
+    $defines = array_merge($defines, $definesForLocal);
+}
 
 //If on docker, use redis container
 if (!empty(getenv('DOCKER_ENV'))) {

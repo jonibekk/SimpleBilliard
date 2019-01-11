@@ -65,15 +65,18 @@ class OgpComponent extends CakeObject
      *
      * @return array|null
      */
-    public function getOgpByUrlInText($text)
+    public function getOgpByUrlInText(string $text, bool $afterRenewal = false)
     {
         preg_match_all('(https?://[-_.!~*\'()a-zA-Z0-9;/?:@&=+$,%#]+)', $text, $urls);
         //一番目のurlを取り出す。
         if (!empty($urls[0][0])) {
-            // 内部 OPG のチェック
-            $ogp = $this->getInternalOgpByUrl($urls[0][0]);
-            if ($ogp) {
-                return $ogp;
+            // TODO.Renewal: Enable to get internalOgpByUrl after each page (url) were implemented
+            if (!$afterRenewal) {
+                // 内部 OPG のチェック
+                $ogp = $this->getInternalOgpByUrl($urls[0][0]);
+                if ($ogp) {
+                    return $ogp;
+                }
             }
 
             // 外部 OGP のチェック

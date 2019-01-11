@@ -81,7 +81,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const {topic, topic_title_setting_status, save_topic_title_err_msg, is_mobile_app} = this.props;
+    const {back_url, topic, topic_title_setting_status, save_topic_title_err_msg, is_mobile_app} = this.props;
     if (Object.keys(topic).length == 0) {
       return null;
     }
@@ -100,7 +100,7 @@ class Header extends React.Component {
           onTouchMove={this.onTouchMove}
         >
           <div className="topicDetail-header-left">
-            <Link to="/topics" className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></Link>
+            <Link to={back_url} className="true"><i className="fa fa-chevron-left topicDetail-header-icon"/></Link>
           </div>
           <div className="topicDetail-header-center">
             <input type="text"
@@ -146,7 +146,7 @@ class Header extends React.Component {
         onTouchMove={this.onTouchMove}
       >
         <div className="topicDetail-header-left">
-          <Link to="/topics" className>
+          <Link to={back_url} className>
             <i className="fa fa-chevron-left topicDetail-header-icon"/>
           </Link>
         </div>
@@ -203,6 +203,7 @@ Header.propTypes = {
   leave_topic_status: React.PropTypes.number,
   leave_topic_err_msg: React.PropTypes.string,
   is_mobile_app: React.PropTypes.bool,
+  back_url: React.PropTypes.string,
 };
 
 Header.defaultProps = {
@@ -212,5 +213,6 @@ Header.defaultProps = {
   leave_topic_status: LeaveTopicStatus.NONE,
   leave_topic_err_msg: "",
   is_mobile_app: false,
+  back_url: '',
 };
 export default connect()(Header);

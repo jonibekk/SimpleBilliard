@@ -6,6 +6,10 @@ App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
 App::uses('Topic', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
+App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Service/Paging/Search', 'MessageSearchPagingService');
+
+use Goalous\Enum as Enum;
 
 /**
  * Class ApiTopicService
@@ -14,6 +18,7 @@ class ApiTopicService extends ApiService
 {
     /* Default number of topics displaying */
     const DEFAULT_TOPICS_NUM = 10;
+//    const DEFAULT_MESSAGES_NUM = 10;
 
     /**
      * process topic data
@@ -98,10 +103,11 @@ class ApiTopicService extends ApiService
      *
      * @param int $topicId
      * @param int $loginUserId
+     * @param int $messageId
      *
      * @return array
      */
-    function findTopicDetailInitData(int $topicId, int $loginUserId): array
+    function findTopicDetailInitData(int $topicId, int $loginUserId, $messageId = null): array
     {
         /** @var TopicService $TopicService */
         $TopicService = ClassRegistry::init('TopicService');
@@ -109,11 +115,49 @@ class ApiTopicService extends ApiService
 
         /** @var ApiMessageService $ApiMessageService */
         $ApiMessageService = ClassRegistry::init('ApiMessageService');
-        $messageData = $ApiMessageService->findMessages($topicId, $loginUserId);
+        $limit = null;
+        $direction = Enum\Model\Message\MessageDirection::OLD;
+        $pagingType = ApiMessageService::PAGING_TYPE_BOTH;
+        $messageData = $ApiMessageService->findMessages($topicId, $loginUserId, $messageId, $limit, $direction, $pagingType);
 
         $ret = [
             'topic'    => $topicDetail,
             'messages' => $messageData,
+        ];
+        return $ret;
+    }
+
+    /**
+     * Find topic detail including latest messages.
+     *
+     * @param int $topicId
+     * @param int $loginUserId
+     * @param int $teamId
+     * @param array $query
+     * @return array
+     */
+    function findInitSearchMessages(int $topicId, int $loginUserId, int $teamId, array $query): array
+    {
+        /** @var TopicService $TopicService */
+        $TopicService = ClassRegistry::init('TopicService');
+        $topicDetail = $TopicService->findTopicDetail($topicId, $loginUserId);
+
+        $pagingRequest = new ESPagingRequest();
+        $pagingRequest->setQuery($query);
+        $pagingRequest->addCondition('pn', 1);
+//        $pagingRequest->addCondition('limit', self::DEFAULT_MESSAGES_NUM);
+        $pagingRequest->addCondition('topic_id', $topicId);
+
+        $pagingRequest->addTempCondition('team_id', $teamId);
+        $pagingRequest->addTempCondition('user_id', $loginUserId);
+
+        /** @var MessageSearchPagingService $MessageSearchPagingService */
+        $MessageSearchPagingService = ClassRegistry::init('MessageSearchPagingService');
+        $searchResult = $MessageSearchPagingService->getDataWithPaging($pagingRequest);
+
+        $ret = [
+            'topic'    => $topicDetail,
+            'messages' => $searchResult,
         ];
         return $ret;
     }

@@ -78,6 +78,8 @@ class AttachedFileTest extends GoalousTestCase
         $this->AttachedFile->PostFile->Post->PostShareCircle->my_uid = 1;
         $this->AttachedFile->PostFile->Post->PostShareUser->current_team_id = 1;
         $this->AttachedFile->PostFile->Post->PostShareUser->my_uid = 1;
+        $this->AttachedFile->PostFile->Post->PostShareCircle->Circle->CircleMember->my_uid = 1;
+        $this->AttachedFile->PostFile->Post->PostShareCircle->Circle->CircleMember->current_team_id = 1;
     }
 
     function testCancelUploadFileSuccess()
@@ -456,7 +458,15 @@ class AttachedFileTest extends GoalousTestCase
 
         // 秘密サークルへの添付ファイル
         $res = $this->AttachedFile->isReadable(7);
+        $this->assertTrue($res);
+
+        Cache::delete($this->AttachedFile->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->AttachedFile->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+
+        // 秘密サークルへの添付ファイル
+        $res = $this->AttachedFile->isReadable(7, 4, 1);
         $this->assertFalse($res);
+
 
         // 存在しないファイルID
         $res = $this->AttachedFile->isReadable(99889988);

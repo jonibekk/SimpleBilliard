@@ -12,8 +12,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     setResourceId: (topic_id) => dispatch(actions.setResourceId(topic_id)),
-    fetchInitialData: (topic_id) => dispatch(actions.fetchInitialData(topic_id)),
-    fetchMoreMessages: (url) => dispatch(actions.fetchMoreMessages(url)),
+    fetchInitialData: (topic_id, query_params) => dispatch(actions.fetchInitialData(topic_id, query_params)),
+    fetchMoreMessages: (url, is_old_direction) => dispatch(actions.fetchMoreMessages(url, is_old_direction)),
     sendMessage: () => dispatch(actions.sendMessage()),
     sendLike: () => dispatch(actions.sendLike()),
     inputMessage: (val) => dispatch(actions.inputMessage(val)),
@@ -21,7 +21,9 @@ function mapDispatchToProps(dispatch) {
     fetchLatestMessages: (cursor) => dispatch(actions.fetchLatestMessages(cursor)),
     setPusherInfo: (pusher_info) => dispatch(actions.setPusherInfo(pusher_info)),
     setUaInfo: () => dispatch(actions.setUaInfo()),
-    initLayout: () => dispatch(actions.initLayout())
+    initLayout: () => dispatch(actions.initLayout()),
+    resetMessages: () => dispatch(actions.resetMessages()),
+    setJumpToLatestStatus: (status) => dispatch(actions.setJumpToLatestStatus(status))
   }
 }
 

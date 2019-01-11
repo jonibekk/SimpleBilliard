@@ -21,6 +21,13 @@ class GlRedis extends AppModel
     private $config_name = 'redis';
 
     /**
+     * Skip checking if my_id actually defined
+     *
+     * @var bool
+     */
+    private $skipCheckMyId = false;
+
+    /**
      * @param bool $id
      * @param null $table
      * @param null $ds
@@ -433,7 +440,8 @@ class GlRedis extends AppModel
         $start = null,
         $end = null,
         $group = null
-    ) {
+    )
+    {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
         }
@@ -525,7 +533,8 @@ class GlRedis extends AppModel
         $date,
         $post_id = null,
         $options = []
-    ) {
+    )
+    {
 
         $parameterErrorArray = $this->_validateGlRedisParameters($type, $team_id, $my_id, $body, $url, $date);
 
@@ -1526,12 +1535,14 @@ class GlRedis extends AppModel
         } elseif ($teamId <= 0) {
             $errorParameters[] = 'team_id not positive';
         }
-        if (empty ($myId)) {
-            $errorParameters[] = 'my_id empty';
-        } elseif (!ctype_digit(strval($myId))) {
-            $errorParameters[] = 'my_id not int';
-        } elseif ($myId <= 0) {
-            $errorParameters[] = 'myId not positive';
+        if (!$this->skipCheckMyId) {
+            if (empty($myId)) {
+                $errorParameters[] = 'my_id empty';
+            } elseif (!ctype_digit(strval($myId))) {
+                $errorParameters[] = 'my_id not int';
+            } elseif ($myId <= 0) {
+                $errorParameters[] = 'myId not positive';
+            }
         }
         if (empty($body)) {
             $errorParameters[] = 'body empty';
@@ -1590,6 +1601,105 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId, $userId);
         $key .= $sessionId;
         return $key;
+    }
+
+    /**
+     * Set skip checking my_id
+     *
+     * @param bool $skip
+     */
+    public function setSkipCheckMyId(bool $skip)
+    {
+        $this->skipCheckMyId = $skip;
+    }
+
+
+    /**
+     * Save member count each circle as multiple
+     *
+     * @param array $memberCountEachCircle key: circle_id, value: member_count
+     *
+     * @return void
+     */
+    function saveMultiCircleMemberCount(array $memberCountEachCircle)
+    {
+        $expire = 2 * WEEK;
+
+        $keyValueList = [];
+        foreach($memberCountEachCircle as $circleId => $memberCount) {
+            $key = $this->getKeyNameForCircleMemberCount($circleId);
+            $keyValueList[$key] = $memberCount;
+        }
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($keyValueList as $k => $v) {
+            $k = str_replace($prefix, "", $k);
+            $pipe->set($k, $v);
+            $pipe->setTimeout($k, $expire);
+        }
+        $pipe->exec();
+    }
+
+    /**
+     * Get key name for circle member count
+     *
+     * @param int $circleId
+     *
+     * @return bool
+     */
+    function getKeyNameForCircleMemberCount(int $circleId)
+    {
+        $key = "circle:${circleId}:member_count";
+        return $key;
+    }
+
+    /**
+     * Get master data for circle member count
+     *
+     * @param  $circleIds
+     *
+     * @return array
+     */
+    function getMultiCircleMemberCount(array $circleIds): array
+    {
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($circleIds as $circleId) {
+            $k = $this->getKeyNameForCircleMemberCount($circleId);
+            $k = str_replace($prefix, "", $k);
+            $pipe->get($k);
+        }
+        $values = $pipe->exec();
+        if (empty($values)) {
+            return [];
+        }
+
+        // Make list key: circle id, value: member count
+        $ret = array_combine($circleIds, $values);
+        // Delete element if value is empty string
+        $ret = array_filter($ret, 'strlen');
+        // Convert member count to int
+        $ret = array_map('intval', $ret);
+        return $ret;
+    }
+
+    /**
+     * Delete circle member count as multiple
+     *
+     * @param  $circleId
+     *
+     * @return bool
+     */
+    function deleteMultiCircleMemberCount(array $circleIds)
+    {
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($circleIds as $circleId) {
+            $k = $this->getKeyNameForCircleMemberCount($circleId);
+            $k = str_replace($prefix, "", $k);
+            $pipe->del($k);
+        }
+        $pipe->exec();
     }
 
 }

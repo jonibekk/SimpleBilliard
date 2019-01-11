@@ -15,7 +15,7 @@ interface StorageClient
      *
      * @return bool
      */
-    public function save(UploadedFile $file): string;
+    public function save(UploadedFile $file): bool;
 
     /**
      * Delete file from a bucket
