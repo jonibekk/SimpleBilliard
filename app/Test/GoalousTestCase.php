@@ -698,7 +698,8 @@ class GoalousTestCase extends CakeTestCase
         array $team = [],
         array $paymentSetting = [],
         array $creditCard = [],
-        int $createActiveUserCount = 1
+        int $createActiveUserCount = 1,
+        bool $skipPayment = false
     ) {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
@@ -717,6 +718,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
+                'payment_skip'     => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
                 'company_country'  => 'JP',
@@ -750,7 +752,8 @@ class GoalousTestCase extends CakeTestCase
         array $team = [],
         array $paymentSetting = [],
         array $invoice = [],
-        int $createActiveUserCount = 1
+        int $createActiveUserCount = 1,
+        bool $skipPayment = false
     ) {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->Invoice = $this->Invoice ?? ClassRegistry::init('Invoice');
@@ -769,6 +772,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 1,
+                'payment_skip'     => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => 1980,
                 'company_country'  => 'JP',

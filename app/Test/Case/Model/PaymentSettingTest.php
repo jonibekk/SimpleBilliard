@@ -1,5 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
+
 use Goalous\Enum as Enum;
 
 /**
@@ -69,6 +70,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
+                'payment_skip'     => false
             ],
             'Team'           => [
                 'timezone' => 9.0
@@ -85,6 +87,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
+                'payment_skip'     => false
             ],
             'Team'           => [
                 'timezone' => 9.0

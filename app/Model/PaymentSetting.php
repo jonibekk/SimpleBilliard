@@ -313,6 +313,7 @@ class PaymentSetting extends AppModel
                 'PaymentSetting.id',
                 'PaymentSetting.team_id',
                 'PaymentSetting.payment_base_day',
+                'PaymentSetting.payment_skip',
                 'Team.timezone',
             ],
             'conditions' => [
