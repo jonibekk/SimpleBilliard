@@ -1,0 +1,54 @@
+.mobile-app-footer {
+  position: fixed;
+  bottom: 0;
+  margin: 0;
+  width: 100%;
+  z-index: 999;
+  &-list {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+
+    &-item {
+      flex: 1;
+      float: none;
+      margin:0;
+      display: block;
+      text-align: center;
+      position: relative;
+      &-link {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        height: 50px;
+        padding-top: 8px;
+        color: #ccc;
+        &:hover, &:visited, &:active {
+          text-decoration: none;
+          color: #ccc;
+        }
+        &.active {
+          color: #333;
+        }
+      }
+      .btn.notify-function-numbers {
+        top: 3px !important;
+        right: 12px !important;
+        font-size: 12px;
+        border: 0;
+        background-color: #ff0a19;
+      }
+
+      &-icon {
+        font-size: 22px;
+        height: 22px;
+      }
+      &-name {
+        margin-top: 2px;
+        font-size: 10px;
+      }
+    }
+  }
+}
