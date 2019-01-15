@@ -377,6 +377,17 @@ $(function () {
     $(".modal").on("hide.bs.modal", function() {
       $(".select2-display-none").css("display","none");
     });
+
+  // For Mobile App Footer (Web)
+  // Change menu to active(change color) immediately after click to make it look like native.
+  $(document).on("click", ".mobile-app-footer-list-item-link", function(e){
+    e.preventDefault();
+    $(".mobile-app-footer-list-item-link").removeClass('active');
+    $menuLink = $(e.target).closest('.mobile-app-footer-list-item-link');
+    $menuLink.addClass('active');
+    location.href = $menuLink.attr('href');
+  });
+
 });
 // Avoid `console` errors in browsers that lack a console.
 (function() {
@@ -830,7 +841,7 @@ function getModalFormFromUrl(e) {
           }
         });
       }
-      
+
       $modal_elm.modal();
       $('body').addClass('modal-open');
     });
