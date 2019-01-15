@@ -441,7 +441,20 @@ class GlRedisTest extends GoalousTestCase
     {
         $this->markTestSkipped();
     }
-
+  
+    public function test_deleteUserTeamList_success()
+    {
+        $userIds = [1, 13, 97];
+        foreach ($userIds as $userId) {
+            Cache::write($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'some_value',
+                'team_info');
+        }
+        $this->GlRedis->deleteUserTeamList($userIds);
+        foreach ($userIds as $userId) {
+            $this->assertEmpty(Cache::read($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false),
+                'team_info'));
+        }
+    }
 
     function test_multiCircleMemberCount()
     {
@@ -478,6 +491,5 @@ class GlRedisTest extends GoalousTestCase
         $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
         $this->assertEquals($res, []);
     }
-
 
 }
