@@ -144,7 +144,8 @@ class CircleMember extends AppModel
      */
     public function getMyCircle(
         $params = []
-    ) {
+    )
+    {
         ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
@@ -209,7 +210,8 @@ class CircleMember extends AppModel
     public function getAdminMemberList(
         $circle_id,
         $with_me = false
-    ) {
+    )
+    {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -230,7 +232,8 @@ class CircleMember extends AppModel
     public function getCircleInitMemberSelect2(
         $circle_id,
         $with_admin = false
-    ) {
+    )
+    {
         $users = $this->getMembers($circle_id, $with_admin);
         $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
@@ -241,7 +244,8 @@ class CircleMember extends AppModel
         $with_admin = false,
         $order = 'CircleMember.modified',
         $order_direction = "desc"
-    ) {
+    )
+    {
         $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
 
         $options = [
@@ -280,7 +284,8 @@ class CircleMember extends AppModel
         $keyword,
         $limit = 10,
         $with_group = false
-    ) {
+    )
+    {
         $member_list = $this->getMemberList($circle_id, true);
 
         $keyword = trim($keyword);
@@ -330,7 +335,8 @@ class CircleMember extends AppModel
         $with_admin = false,
         $with_me = true,
         array $usersToExclude = []
-    ) {
+    )
+    {
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -383,17 +389,27 @@ class CircleMember extends AppModel
         return (bool)$this->find('count', $options);
     }
 
-    function incrementUnreadCount($circle_list, $without_me = true, $team_id = null)
+    /**
+     * Increment unread count in circle_members by 1
+     *
+     * @param int|int[] $circle_list
+     * @param bool      $withoutMe
+     * @param int       $teamId
+     * @param int       $userId
+     *
+     * @return bool
+     */
+    public function incrementUnreadCount($circle_list, $withoutMe = true, $teamId = 0, $userId = 0)
     {
         if (empty($circle_list)) {
             return false;
         }
         $conditions = [
             'CircleMember.circle_id' => $circle_list,
-            'CircleMember.team_id'   => $team_id ?? $this->current_team_id,
+            'CircleMember.team_id'   => $teamId ?: $this->current_team_id,
         ];
-        if ($without_me) {
-            $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
+        if ($withoutMe) {
+            $conditions['NOT']['CircleMember.user_id'] = $userId ?: $this->my_uid;
         }
         $res = $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
         return $res;
@@ -440,7 +456,8 @@ class CircleMember extends AppModel
         bool $showForAllFeedFlg = true,
         bool $getNotificationFlg = true,
         bool $isAdmin = false
-    ): bool {
+    ): bool
+    {
         if (!empty($this->isBelong($circleId, $userId))) {
             return false;
         }
