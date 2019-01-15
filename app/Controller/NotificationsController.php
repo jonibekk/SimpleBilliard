@@ -12,6 +12,7 @@ class NotificationsController extends AppController
      */
     public function index()
     {
+        $this->NotifyBiz->resetCountNewNotification();
         $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER);
         $team = $this->Team->findById($this->current_team_id);
         $isExistMoreNotify = true;

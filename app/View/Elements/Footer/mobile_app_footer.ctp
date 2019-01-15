@@ -34,8 +34,8 @@ $footerMenuList = [
 ];
 
 $badgeCounts = [
-    'messages' => 1,
-    'notifications' => 3,
+    'messages' => $new_notify_message_cnt,
+    'notifications' => Router::url() === '/notifications' ? 0 : $new_notify_cnt,
 ]
 ?>
 
@@ -47,8 +47,8 @@ $badgeCounts = [
                     <i class="fa <?= $menu['icon']?> mobile-app-footer-list-item-icon"></i>
                     <span class="mobile-app-footer-list-item-name"><?= $menu['label']?></span>
                 </a>
-                <?php if(in_array($menu['name'], ['messages', 'notifications'], false) && !empty($badgeCounts[$menu['name']])):?>
-                    <div class="btn btn-xs notify-function-numbers">
+                <?php if(in_array($menu['name'], ['messages', 'notifications'], false)) :?>
+                    <div class="btn btn-xs notify-function-numbers js-mbAppFooter-setBadgeCnt-<?=$menu['name']?> <?= empty($badgeCounts[$menu['name']]) ? 'hidden' : '' ?>">
                          <span>
                            <?= $badgeCounts[$menu['name']] ?>
                          </span>

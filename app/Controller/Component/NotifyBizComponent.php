@@ -436,14 +436,28 @@ class NotifyBizComponent extends Component
      * @param $flag_name
      * @param $topic_id
      */
-    public function msgNotifyPush($from_user_id, $flag_name, $topic_id)
+    public function msgNotifyPush($from_user_id, $flag_name, $topic_id, $incrementCnt = true)
     {
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $chunk_channels = array_chunk($this->push_channels, 100);
         $data = compact('from_user_id', 'flag_name', 'topic_id');
+        $data['type'] = $incrementCnt ? 'increase' : 'decrease';
         foreach ($chunk_channels as $channels) {
             $pusher->trigger($channels, 'msg_count', $data);
         }
+    }
+
+    /**
+     * Send event with pusher for decreasing message count
+     * @param int $userId
+     * @param int $topicId
+     */
+    public function pusherNotifyDecreaseMsgCnt(int $userId, int $topicId)
+    {
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $data = ['type' => 'decrease', 'topic_id' => $topicId];
+        $pusher->trigger($this->push_channels, 'msg_count', $data);
     }
 
     public function commentPush($socketId, $data)
