@@ -259,18 +259,20 @@ class PostReadTest extends GoalousTestCase
         $PostRead = ClassRegistry::init('PostRead');
 
         $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId);
-
         $this->assertCount(2, $result);
 
-        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
+        $this->insertNewPostRead(5, $userId, 1);
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId);
+        $this->assertCount(1, $result);
 
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
         $this->assertCount(0, $result);
 
-        $this->insertNewPostRead(5, $userId, 1);
-
-        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId);
-
+        $CircleMember->updateAll(['created' => 1388603000], ['circle_id' => $circleId, 'user_id' => $userId]);
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
         $this->assertCount(1, $result);
+        $this->assertEquals([6], $result);
+
     }
 
 
