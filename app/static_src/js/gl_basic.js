@@ -380,7 +380,8 @@ $(function () {
 
   // For Mobile App Footer (Web)
   // Change menu to active(change color) immediately after click to make it look like native.
-  $('.mobile-app-footer-list').on("click", ".mobile-app-footer-list-item-link", function(e){
+  var _eventType = ("ontouchstart" in document) ? 'touchstart':'click';
+  $('.mobile-app-footer-list').on(_eventType, ".mobile-app-footer-list-item-link", function(e){
     // Note: why don't write 'e.preventDefault()' is that didn't react these code immediately, it means that it looks change to active after moved to page.
     $(".mobile-app-footer-list-item-link").removeClass('active');
     $menuLink = $(e.target).closest('.mobile-app-footer-list-item-link');
