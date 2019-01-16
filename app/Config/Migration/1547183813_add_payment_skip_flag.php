@@ -17,13 +17,13 @@ class AddPaymentSkipFlag extends CakeMigration {
 		'up' => array(
 			'create_field' => array(
 				'payment_settings' => array(
-					'payment_skip' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'after' => 'payment_base_day'),
+					'payment_skip_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'after' => 'payment_base_day', 'comment' => 'Skip monthly charge'),
 				),
 			),
 		),
 		'down' => array(
 			'drop_field' => array(
-				'payment_settings' => array('payment_skip'),
+				'payment_settings' => array('payment_skip_flg'),
 			),
 		),
 	);

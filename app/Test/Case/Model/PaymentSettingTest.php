@@ -70,7 +70,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
-                'payment_skip'     => false
+                'payment_skip_flg'     => false
             ],
             'Team'           => [
                 'timezone' => 9.0
@@ -87,7 +87,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
-                'payment_skip'     => false
+                'payment_skip_flg'     => false
             ],
             'Team'           => [
                 'timezone' => 9.0

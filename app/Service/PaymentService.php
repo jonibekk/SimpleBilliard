@@ -1728,8 +1728,8 @@ class PaymentService extends AppService
             $timezone = Hash::get($v, 'Team.timezone');
             $localCurrentTs = $time + ($timezone * HOUR);
             $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
-            $skipPayment = Hash::get($v, 'PaymentSetting.payment_skip');
-            if (!empty($skipPayment)) {
+            $skipPayment = !empty(Hash::get($v, 'PaymentSetting.payment_skip_flg'));
+            if ($skipPayment) {
                 return false;
             }
             // Check if today is payment base date
@@ -1794,8 +1794,8 @@ class PaymentService extends AppService
                 $timezone = Hash::get($v, 'Team.timezone');
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
-                $skipPayment = Hash::get($v, 'PaymentSetting.payment_skip');
-                if (!empty($skipPayment)) {
+                $skipPayment = !empty(Hash::get($v, 'PaymentSetting.payment_skip_flg'));
+                if ($skipPayment) {
                     return false;
                 }
                 // Check if today is payment base date
