@@ -30,6 +30,20 @@ export default class Detail extends Base {
     this.props.initLayout();
     const query_params = queryString.parse(location.search);
     this.props.fetchInitialData(this.props.params.topic_id, query_params);
+
+    // Decrease message badge count on mobile app footer as realtime
+    $(document).ready(function () {
+      var topic_idx = cake.unread_msg_topic_ids.indexOf(topic_id.toString());
+      if (topic_idx === -1) {
+        return;
+      }
+      cake.unread_msg_topic_ids.splice(topic_idx, 1);
+      if (cake.is_mb_app) {
+        setNotifyCntToMessageForMobileApp(-1, true);
+      } else {
+        setNotifyCntToMessageAndTitle(getMessageNotifyCnt() - 1);
+      }
+    });
   }
 
   componentDidMount() {

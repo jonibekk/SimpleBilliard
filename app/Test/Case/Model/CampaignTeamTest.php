@@ -49,6 +49,7 @@ class CampaignTeamTest extends CakeTestCase {
         // Exist
         $this->CampaignTeam->save([
             'team_id' => $teamId,
+            'start_date' => GoalousDateTime::now()->toIso8601String(),
         ]);
         $res = $this->CampaignTeam->isCampaignTeam($teamId);
         $this->assertTrue($res);

@@ -39,7 +39,7 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
 // TODO: .container is too general of a class for the main body container.
 //       We should update .container styles to .body-container styles.
 ?>
-<div class="container body-container <?= $containerClass?>">
+<div class="container body-container <?= $containerClass?> <?= $displayMobileAppFooter ? 'mod-mobile-app' : '' ?>" >
     <div id="containerSubDiv" class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
         <?php if (!$is_mb_app || $isTablet): ?>
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
@@ -79,6 +79,10 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
             <?= $this->Html->script('/js/react_kr_column_app.min', ['defer' => 'defer']);?>
 <?php endif; ?>
 </div>
+
+<?= $displayMobileAppFooter ? $this->element('Footer/mobile_app_footer') : '' ?>
+
+
 <?= $this->element('common_modules') ?>
 
 <?= $this->element('modals') ?>

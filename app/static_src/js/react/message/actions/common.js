@@ -22,14 +22,7 @@ export function getErrMsg(response) {
 }
 
 export function getLayout() {
-  if (isOldIOSApp()) {
-    return {
-      header_top: PositionIOSApp.HEADER_TOP,
-      body_top: PositionIOSApp.BODY_TOP,
-      body_bottom: PositionIOSApp.BODY_BOTTOM,
-      footer_bottom: PositionIOSApp.FOOTER_BOTTOM
-    }
-  } else if (isMobileApp()) {
+  if (isMobileApp()) {
     return {
       header_top: PositionMobileApp.HEADER_TOP,
       body_top: PositionMobileApp.BODY_TOP,

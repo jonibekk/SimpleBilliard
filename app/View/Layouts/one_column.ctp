@@ -28,13 +28,14 @@ if (!isset($with_header_menu)) {
     echo $this->element('Header/not_logged_in');
 }
 ?>
-<div id="container" class="container">
+<div id="container" class="container <?= $displayMobileAppFooter ? 'mod-mobile-app' : '' ?>">
     <?= $this->Session->flash(); ?>
     <?= $this->fetch('content'); ?>
     <?php if ($this->App->needDisplayFooter()): ?>
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>
+<?= $displayMobileAppFooter ? $this->element('Footer/mobile_app_footer') : '' ?>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->
