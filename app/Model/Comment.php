@@ -691,4 +691,27 @@ class Comment extends AppModel
 
         return $this->find('first', $condition)['Comment']['comment_like_count'];
     }
+
+    /**
+     * Check whether the owner is owned by the user
+     *
+     * @param int $commentId
+     * @param int $userId
+     *
+     * @return bool True if owned
+     */
+    public function isCommentOwned(int $commentId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $commentId,
+                'user_id' => $userId,
+            ]
+        ];
+        $res = $this->find('list', $options);
+        if (!empty($res)) {
+            return true;
+        }
+        return false;
+    }
 }

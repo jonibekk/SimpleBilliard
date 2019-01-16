@@ -6,11 +6,15 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
+App::uses('CommentFile', 'Model');
+App::uses('CommentLike', 'Model');
+App::uses('CommentRead', 'Model');
+App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
-App::import('Model/Entity', 'POstEntity');
+
 
 
 /**
@@ -183,6 +187,62 @@ class CommentService extends AppService
         }
 
         return $savedComment;
+    }
+
+    /**
+     *
+     * Delete comment 
+     *
+     * @param commentId
+     * @param userId
+     *
+     * @return bool
+     */
+    public function softDelete(int $commentId): bool
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        //Check if comment exists & not deleted
+        $commentCondition = [
+            'conditions' => [
+                'id'      => $commentId,
+                'del_flg' => false
+            ]
+        ];
+        if (empty($Comment->find('first', $commentCondition))) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        $modelsToDelete = [
+            'CommentFile'        => 'comment_id',
+            'CommentLike'        => 'comment_id',
+            'CommentRead'        => 'comment_id',
+            'CommentMention'     => 'post_id',
+            'Comment'            => 'Comment.id'
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            foreach ($modelsToDelete as $model => $column) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                $condition = [$column => $commentId];
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
+                }
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Error on deleting comment $commentId: failed comment soft delete", $e->getTrace());
+            throw $e;
+        }
+
+        return true;
     }
 
     /**

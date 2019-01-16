@@ -5,6 +5,9 @@ App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::uses('Comment', 'Model');
 App::uses('CommentFile', 'Model');
+App::uses('CommentLike', 'Model');
+App::uses('CommentRead', 'Model');
+App::uses('CommentMention', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('Post', 'Model');
@@ -33,6 +36,9 @@ class CommentServiceTest extends GoalousTestCase
         'app.post',
         'app.comment',
         'app.comment_file',
+        'app.comment_like',
+        'app.comment_read',
+        'app.comment_mention',
         'app.attached_file',
         'app.circle',
         'app.post_share_circle',
@@ -117,5 +123,77 @@ class CommentServiceTest extends GoalousTestCase
         $files = $CommentService->getAttachedFiles($postEntity['id']);
 
         $this->assertNotEmpty($files);
+    }
+
+    public function test_softDeleteComment_success()
+    {
+        $commentId = 1;
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $CommentService->softDelete($commentId);
+
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        /** @var CommentLike $CommentLike */
+        $CommentLike = ClassRegistry::init('CommentLike');
+
+        /** @var CommentRead $CommentRead */
+        $CommentRead = ClassRegistry::init('CommentRead');
+
+        /** @var CommentMention $CommentMention */
+        $CommentMention = ClassRegistry::init('CommentMention');
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $conditions = [
+            'conditions' => [
+                'comment_id' => $commentId,
+                'del_flg' => false
+            ]
+        ];
+
+        $commentCondition = [
+            'conditions' => [
+                'Comment.id'      => $commentId,
+                'Comment.del_flg' => false
+            ]
+        ];
+
+        $this->assertEmpty($CommentFile->find('first', $conditions));
+        $this->assertEmpty($CommentLike->find('first', $conditions));
+        $this->assertEmpty($CommentRead->find('first', $conditions));
+        $this->assertEmpty($CommentMention->find('first', $conditions));
+        $this->assertEmpty($Comment->find('first', $commentCondition));
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeleteCommentNotExist_failed()
+    {
+        $commentId = 10909;
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $CommentService->softDelete($commentId);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_softDeleteCommentDeleted_failed()
+    {
+        $commentId = 1;
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $CommentService->softDelete($commentId);
+        $CommentService->softDelete($commentId);
     }
 }
