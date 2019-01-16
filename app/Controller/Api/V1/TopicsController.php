@@ -150,7 +150,6 @@ class TopicsController extends ApiController
         // updating notification for message
         $this->NotifyBiz->removeMessageNotification($topicId);
         $this->NotifyBiz->updateCountNewMessageNotification();
-        $this->NotifyBiz->pusherNotifyDecreaseMsgCnt($loginUserId, $topicId);
 
         return $this->_getResponseSuccess($ret);
     }

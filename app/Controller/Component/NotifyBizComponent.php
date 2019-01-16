@@ -447,19 +447,6 @@ class NotifyBizComponent extends Component
         }
     }
 
-    /**
-     * Send event with pusher for decreasing message count
-     * @param int $userId
-     * @param int $topicId
-     */
-    public function pusherNotifyDecreaseMsgCnt(int $userId, int $topicId)
-    {
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $userId);
-        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $data = ['type' => 'decrease', 'topic_id' => $topicId];
-        $pusher->trigger($this->push_channels, 'msg_count', $data);
-    }
-
     public function commentPush($socketId, $data)
     {
         // push

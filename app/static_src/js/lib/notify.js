@@ -98,8 +98,6 @@ window.addEventListener('load', function() {
         }
     });
     pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
-
-      if (data.type == 'increase') {
         //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
         if (!cake.notify_setting[data.flag_name]) {
           return;
@@ -108,31 +106,21 @@ window.addEventListener('load', function() {
         // if display the topic page, nothing to do
         var topic_page_url = "/topics/" + data.topic_id + "/detail";
         if (location.pathname.indexOf(topic_page_url) !== -1) {
-            return;
+          return;
         }
 
         if (cake.data.user_id == data.from_user_id) {
-            return;
-        }
-        if (cake.unread_msg_topic_ids.indexOf(data.topic_id) >= 0) {
-            return;
-        }
-        cake.unread_msg_topic_ids.push(data.topic_id);
-      } else {
-        var topic_idx = cake.unread_msg_topic_ids.indexOf(data.topic_id.toString());
-        if (topic_idx === -1) {
-          console.log('deleteしないよ');
           return;
         }
-        cake.unread_msg_topic_ids.splice(topic_idx, 1);
-      }
-      // Decrease message count when see unread topic detail.
-      var cnt = data.type == 'increase' ? 1 : -1;
+        if (cake.unread_msg_topic_ids.indexOf(data.topic_id) >= 0) {
+          return;
+        }
+        cake.unread_msg_topic_ids.push(data.topic_id);
 
         if (cake.is_mb_app) {
-          setNotifyCntToMessageForMobileApp(cnt, true);
+          setNotifyCntToMessageForMobileApp(1, true);
         } else {
-          setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + cnt);
+          setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
         }
     });
 

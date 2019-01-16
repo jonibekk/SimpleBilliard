@@ -40,10 +40,12 @@ class Footer extends React.Component {
         threadBody.scrollTo(0,threadBody.scrollHeight);
     };
 
-    const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
-    this.props.dispatch(
-      detail.changeLayout({body_bottom})
-    );
+    // This doesn't work well after replace mobile app footer from native to web
+    // Delete after just wait and see a little.
+    // const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    // this.props.dispatch(
+    //   detail.changeLayout({body_bottom})
+    // );
   }
 
   sendLike(e) {
@@ -66,15 +68,6 @@ class Footer extends React.Component {
     this.props.dispatch(
       detail.inputMessage(e.target.value)
     );
-
-    if (isOldIOSApp()) {
-        // TODO: Scroll by document height
-        window.scrollTo(0, 1000)
-        const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
-        this.props.dispatch(
-            detail.changeLayout({body_bottom})
-        );
-    }
   }
 
   uploadFiles(files) {
