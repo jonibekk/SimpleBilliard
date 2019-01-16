@@ -260,7 +260,7 @@ class CommentsController extends BasePagingController
 
         if (!$Comment->isCommentOwned($commentId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
                 $this->getTeamId())) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
                 ->getResponse();
         }
         return null;
