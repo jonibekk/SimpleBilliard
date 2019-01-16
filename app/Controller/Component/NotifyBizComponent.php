@@ -436,12 +436,11 @@ class NotifyBizComponent extends Component
      * @param $flag_name
      * @param $topic_id
      */
-    public function msgNotifyPush($from_user_id, $flag_name, $topic_id, $incrementCnt = true)
+    public function msgNotifyPush($from_user_id, $flag_name, $topic_id)
     {
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $chunk_channels = array_chunk($this->push_channels, 100);
         $data = compact('from_user_id', 'flag_name', 'topic_id');
-        $data['type'] = $incrementCnt ? 'increase' : 'decrease';
         foreach ($chunk_channels as $channels) {
             $pusher->trigger($channels, 'msg_count', $data);
         }
