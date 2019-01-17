@@ -56,6 +56,11 @@ class PaymentSettingFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'Payment base day(1 - 31)'
         ),
+        'payment_skip_flg'                   => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0'
+        ),
         'company_name'                   => array(
             'type'    => 'string',
             'null'    => false,
