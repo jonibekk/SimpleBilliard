@@ -198,7 +198,7 @@ class CommentService extends AppService
      *
      * @return bool
      */
-    public function softDelete(int $commentId): bool
+    public function delete(int $commentId): bool
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');

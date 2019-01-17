@@ -125,14 +125,14 @@ class CommentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($files);
     }
 
-    public function test_softDeleteComment_success()
+    public function test_deleteComment_success()
     {
         $commentId = 1;
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $CommentService->softDelete($commentId);
+        $CommentService->delete($commentId);
 
         /** @var CommentFile $CommentFile */
         $CommentFile = ClassRegistry::init('CommentFile');
@@ -173,27 +173,27 @@ class CommentServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\GoalousNotFoundException
      */
-    public function test_softDeleteCommentNotExist_failed()
+    public function test_deleteCommentNotExist_failed()
     {
         $commentId = 10909;
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $CommentService->softDelete($commentId);
+        $CommentService->delete($commentId);
     }
 
     /**
      * @expectedException \Goalous\Exception\GoalousNotFoundException
      */
-    public function test_softDeleteCommentDeleted_failed()
+    public function test_deleteCommentDeleted_failed()
     {
         $commentId = 1;
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $CommentService->softDelete($commentId);
-        $CommentService->softDelete($commentId);
+        $CommentService->delete($commentId);
+        $CommentService->delete($commentId);
     }
 }

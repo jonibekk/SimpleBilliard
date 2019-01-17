@@ -167,7 +167,7 @@ class CommentsController extends BasePagingController
         $CommentService = ClassRegistry::init('CommentService');
 
         try {
-            $CommentService->softDelete($commentId);
+            $CommentService->delete($commentId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
