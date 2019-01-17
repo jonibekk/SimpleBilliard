@@ -708,10 +708,12 @@ class Comment extends AppModel
                 'user_id' => $userId,
             ]
         ];
-        $res = $this->find('list', $options);
-        if (!empty($res)) {
+        $res = $this->find('count', $options);
+        
+        if ($res === 1) {
             return true;
         }
+
         return false;
     }
 }

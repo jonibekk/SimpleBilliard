@@ -790,6 +790,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
 
         //Check if post exists & not deleted
         $postCondition = [
@@ -804,7 +806,6 @@ class PostService extends AppService
 
         $modelsToDelete = [
             'PostDraft'       => 'post_id',
-            'PostFile'        => 'post_id',
             'PostLike'        => 'post_id',
             'PostMention'     => 'post_id',
             'PostRead'        => 'post_id',
@@ -827,6 +828,10 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+
+            // Delete Attached file
+            $AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);
+
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();

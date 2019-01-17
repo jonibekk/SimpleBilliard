@@ -202,20 +202,29 @@ class CommentService extends AppService
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
 
         //Check if comment exists & not deleted
         $commentCondition = [
             'conditions' => [
                 'id'      => $commentId,
                 'del_flg' => false
+            ],'fields'     => [
+                'post_id'
             ]
         ];
-        if (empty($Comment->find('first', $commentCondition))) {
+
+        $postId = $Comment->useType()->find('first', $commentCondition);
+        $postId = Hash::get($postId,"Comment.post_id");
+
+        if (!$postId) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
         $modelsToDelete = [
-            'CommentFile'        => 'comment_id',
             'CommentLike'        => 'comment_id',
             'CommentRead'        => 'comment_id',
             'CommentMention'     => 'post_id',
@@ -233,8 +242,19 @@ class CommentService extends AppService
                 $res = $Model->softDeleteAll($condition, false);
                 if (!$res) {
                     throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
-                }
+                }                
             }
+
+            //Countdown the post comments number
+            $newCommentCount = $Comment->getCommentCount($postId);
+            if (!$Post->updateCommentCount($postId, $newCommentCount)) {
+                GoalousLog::error('Error on deleting comment: failed updating posts.comment_count');
+                throw new RuntimeException('Error on deleting post: failed updating posts.comment_count');
+            }
+
+            // Delete Attached file
+            $AttachedFile->deleteAllRelatedFiles($commentId, AttachedFile::TYPE_MODEL_COMMENT);
+
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();

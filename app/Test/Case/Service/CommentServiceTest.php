@@ -2,8 +2,10 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('AttachedFile', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('ActionResultFile', 'Model');
 App::uses('Circle', 'Model');
 App::uses('Comment', 'Model');
+App::uses('MessageFile', 'Model');
 App::uses('CommentFile', 'Model');
 App::uses('CommentLike', 'Model');
 App::uses('CommentRead', 'Model');
@@ -18,6 +20,7 @@ App::import('Model/Entity', 'CommentEntity');
 
 use Mockery as mock;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 /**
  * Created by PhpStorm.
@@ -34,6 +37,9 @@ class CommentServiceTest extends GoalousTestCase
      */
     public $fixtures = array(
         'app.post',
+        'app.post_file',
+        'app.action_result_file',
+        'app.message_file',
         'app.comment',
         'app.comment_file',
         'app.comment_like',
@@ -146,6 +152,9 @@ class CommentServiceTest extends GoalousTestCase
         /** @var CommentMention $CommentMention */
         $CommentMention = ClassRegistry::init('CommentMention');
 
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
 
@@ -163,7 +172,10 @@ class CommentServiceTest extends GoalousTestCase
             ]
         ];
 
+        $numAttachedFiles = $AttachedFile->getCountOfAttachedFiles($commentId, AttachedModelType::TYPE_MODEL_COMMENT);
+
         $this->assertEmpty($CommentFile->find('first', $conditions));
+        $this->assertEquals(0, $numAttachedFiles);
         $this->assertEmpty($CommentLike->find('first', $conditions));
         $this->assertEmpty($CommentRead->find('first', $conditions));
         $this->assertEmpty($CommentMention->find('first', $conditions));
