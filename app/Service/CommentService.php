@@ -249,7 +249,7 @@ class CommentService extends AppService
             $newCommentCount = $Comment->getCommentCount($postId);
             if (!$Post->updateCommentCount($postId, $newCommentCount)) {
                 GoalousLog::error('Error on deleting comment: failed updating posts.comment_count');
-                throw new RuntimeException('Error on deleting post: failed updating posts.comment_count');
+                throw new RuntimeException('Error on deleting post: failed updating post comment_count');
             }
 
             // Delete Attached file
