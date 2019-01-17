@@ -675,7 +675,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -747,7 +748,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 99;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -932,7 +934,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -947,7 +950,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -963,7 +967,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 3;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -979,7 +984,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 100;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1006,7 +1012,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1023,7 +1030,8 @@ class PaymentServiceTest extends GoalousTestCase
         $res = "";
         try {
             $chargeUserCnt = 1;
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $chargeUserCnt, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1050,7 +1058,8 @@ class PaymentServiceTest extends GoalousTestCase
         $userId = $this->createActiveUser($teamId);
         $res = "";
         try {
-            $this->PaymentService->applyCreditCardCharge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
                 $usersCount, $userId);
         } catch (Exception $e) {
             $res = $e->getMessage();
@@ -1127,7 +1136,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1164,7 +1174,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1201,7 +1212,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 3;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1240,7 +1252,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1262,7 +1275,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1283,7 +1297,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1304,7 +1319,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1348,7 +1364,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1386,7 +1403,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1000;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1432,7 +1450,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -1465,7 +1484,8 @@ class PaymentServiceTest extends GoalousTestCase
         try {
             $res = "";
             $chargeUserCnt = 1;
-            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(), $chargeUserCnt,
+            $this->PaymentService->charge($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt,
                 $userId);
 
         } catch (Exception $e) {
@@ -2938,17 +2958,21 @@ class PaymentServiceTest extends GoalousTestCase
     public function test_getChargeMaxUserCnt_noChargeHistory()
     {
         $teamId = 1;
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            0);
         $this->assertEquals($res, 0);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
-        $this->assertEquals($res, 3);
-
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
             3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+            3);
+        $this->assertEquals($res, 3);
+
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             3);
         $this->assertEquals($res, 3);
 
@@ -2967,17 +2991,21 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->ChargeHistory->save($data, false);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 0);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            0);
         $this->assertEquals($res, 0);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(), 3);
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE(),
+            3);
         $this->assertEquals($res, 3);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
             3);
         $this->assertEquals($res, 13);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             3);
         $this->assertEquals($res, 13);
 
@@ -2988,11 +3016,13 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $this->ChargeHistory->save($data, false);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
             3);
         $this->assertEquals($res, 8);
 
-        $res = $this->PaymentService->getChargeMaxUserCnt($teamId, Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
+        $res = $this->PaymentService->getChargeMaxUserCnt($teamId,
+            Enum\Model\ChargeHistory\ChargeType::USER_ACTIVATION_FEE(),
             20);
         $this->assertEquals($res, 25);
 
@@ -3098,49 +3128,59 @@ class PaymentServiceTest extends GoalousTestCase
         $paySettingId = $this->PaymentSetting->getLastInsertID();
 
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥137');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥6,415');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-28 23:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥75');
 
         GoalousDateTime::setTestNow('2017-03-01 00:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-04-01 03:29:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-09-01 11:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥68');
 
         GoalousDateTime::setTestNow('2017-09-01 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::JPY());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::JPY());
         $this->assertEquals($res, '¥2,138');
 
     }
@@ -3169,57 +3209,69 @@ class PaymentServiceTest extends GoalousTestCase
             Enum\Model\PaymentSetting\Currency::USD);
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$1.22');
 
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$57.00');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-27 23:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.67');
 
         GoalousDateTime::setTestNow('2017-02-28 00:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-03-31 03:29:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-03-31 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$18.36');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-08-31 11:59:59');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$0.61');
 
         GoalousDateTime::setTestNow('2017-08-31 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, $formattedAmountPerUser);
 
         GoalousDateTime::setTestNow('2017-09-10 12:00:00');
-        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12, Enum\Model\PaymentSetting\Currency::USD());
+        $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12,
+            Enum\Model\PaymentSetting\Currency::USD());
         $this->assertEquals($res, '$152.00');
 
     }
@@ -4509,6 +4561,36 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals(20, $reorderedChargeHistory['tax']);
         $this->assertEquals(Enum\Model\ChargeHistory\ChargeType::RECHARGE, $reorderedChargeHistory['charge_type']);
         $this->assertEquals($historyId, $reorderedChargeHistory['reorder_charge_history_id']);
+    }
+
+    public function test_paymentSkipped_success()
+    {
+        $team = ['timezone' => 9];
+        $paymentSetting = ['payment_base_day' => 1];
+        $invoice = ['credit_status' => Enum\Model\Invoice\CreditStatus::OK];
+        $invoiceTeamId = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice)[0];
+        $skippedInvoiceTeamId = $this->createInvoicePaidTeam($team, $paymentSetting, $invoice, 1, true)[0];
+
+        /** @var $PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+        // time is same as base date
+        $time = strtotime('2017-01-01') - (9 * HOUR);
+        $res = $PaymentService->findMonthlyChargeInvoiceTeams($time);
+        $this->assertCount(1, $res);
+        $this->assertContains($invoiceTeamId, Hash::extract($res, '{n}.PaymentSetting.team_id'));
+        $this->assertNotContains($skippedInvoiceTeamId, Hash::extract($res, '{n}.PaymentSetting.team_id'));
+
+        $ccTeamId = $this->createCcPaidTeam($team, $paymentSetting, $invoice)[0];
+        $skippedCcTeamId = $this->createCcPaidTeam($team, $paymentSetting, $invoice, 1, true)[0];
+        /** @var $PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+        // time is same as base date
+        $time = strtotime('2017-01-01') - (9 * HOUR);
+        $res1 = $PaymentService->findMonthlyChargeCcTeams($time);
+        $this->assertCount(1, $res1);
+        $this->assertContains($ccTeamId, Hash::extract($res1, '{n}.PaymentSetting.team_id'));
+        $this->assertNotContains($skippedCcTeamId, Hash::extract($res1, '{n}.PaymentSetting.team_id'));
+
     }
 
     /**

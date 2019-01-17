@@ -186,7 +186,7 @@ class PostReadService extends AppService
         $result = [];
 
         foreach ($postList as $circleId => $sharedPostList) {
-            $unreadPostList = $PostRead->filterUnreadPost($unreadPostIds, $circleId, $userId, true);
+            $unreadPostList = $PostRead->filterUnreadPost($sharedPostList, $circleId, $userId, true);
             $result[$circleId] = count($unreadPostList);
         }
 

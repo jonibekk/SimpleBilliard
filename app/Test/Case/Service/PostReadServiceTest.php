@@ -31,16 +31,10 @@ class PostReadServiceTest extends GoalousTestCase
     {
         $userId = 1;
         $teamId = 1;
-        $circleId = 1;
-
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
-
-        $unreadCount = $CircleMember->getUnreadCount($circleId, $userId);
 
         $postsIds = ["1", "2"];
 
@@ -51,27 +45,17 @@ class PostReadServiceTest extends GoalousTestCase
 
         /** Already two readers in the fixtures*/
         $this->assertEquals(3, $res);
-
-        $newUnreadCount = $CircleMember->getUnreadCount($circleId, $userId);
-
-        $this->assertNotEquals($newUnreadCount, $unreadCount);
     }
 
     public function test_multipleadd_JustOneNewReadPost_success()
     {
         $userId = 1;
         $teamId = 1;
-        $circleId = 1;
-
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
 
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
-
-        $unreadCount = $CircleMember->getUnreadCount($circleId, $userId);
 
         $postsIds = ["2"];
         $PostReadService->multipleAdd($postsIds, $userId, $teamId);
@@ -84,10 +68,28 @@ class PostReadServiceTest extends GoalousTestCase
 
         /** Already two readers in the fixtures*/
         $this->assertEquals(3, $res);
-
-        $newUnreadCount = $CircleMember->getUnreadCount($circleId, $userId);
-
-        $this->assertNotEquals($newUnreadCount, $unreadCount);
     }
 
+    public function test_multipleAddUpdatedUnreadCount_success()
+    {
+        $userId = 1;
+        $teamId = 1;
+        $circleId = 3;
+
+        /** @var PostReadService $PostReadService */
+        $PostReadService = ClassRegistry::init('PostReadService');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $PostReadService->updateCircleUnreadCount([5], $userId, $teamId);
+
+        $this->assertEquals(3, $CircleMember->getUnreadCount($circleId, $userId));
+
+        $PostReadService->multipleAdd([5], $userId, $teamId);
+        $this->assertEquals(2, $CircleMember->getUnreadCount($circleId, $userId));
+        $PostReadService->multipleAdd([5], $userId, $teamId);
+        $this->assertEquals(2, $CircleMember->getUnreadCount($circleId, $userId));
+        $PostReadService->multipleAdd([6], $userId, $teamId);
+        $this->assertEquals(1, $CircleMember->getUnreadCount($circleId, $userId));
+    }
 }

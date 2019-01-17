@@ -437,6 +437,6 @@ class PostShareCircle extends AppModel
             $result[$circleId][] = $postId;
         }
 
-        return $result;
+        return $result ?: [];
     }
 }
