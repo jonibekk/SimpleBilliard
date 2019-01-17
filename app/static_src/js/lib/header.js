@@ -356,6 +356,8 @@ function setNotifyCntToMessageForMobileApp(cnt, appendFlg) {
   _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent);
 }
 function _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent) {
+  if (!$badgeCntParent) return;
+  
   var $badgeCnt = $badgeCntParent.find('span');
   if (appendFlg) {
     cnt = cnt + parseInt($badgeCnt.text());

@@ -282,7 +282,7 @@ class AppController extends BaseController
         $this->set('my_id', $this->Auth->user('id'));
         $this->set('my_team_id', $this->current_team_id);
         $this->set('userHasNoTeam', $this->Session->read('user_has_no_team') ?: false);
-        $this->set('displayMobileAppFooter', $this->Auth->user() && $this->is_mb_app);
+        $this->set('displayMobileAppFooter', $this->Auth->user() && $this->is_mb_app_web_footer);
         $this->_redirectIfMobileAppVersionUnsupported();
     }
 

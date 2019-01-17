@@ -72,6 +72,12 @@ class BaseController extends Controller
     public $next_term_id = null;
 
     /**
+     * >= v1.3 app footer is web
+     * < v1.3 app footer is native
+     */
+    const MOBILE_APP_VERSION_WEB_FOOTER = 1.3;
+
+    /**
      * スマホからのリクエストか？
      * is request from mobile browser?
      *
@@ -109,6 +115,13 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
+
+    /**
+     * Native app's footer is whether web, not is native
+     * @var bool
+     */
+    public $is_mb_app_web_footer = false;
+
     /**
      * use it when you need stop after beforender
      */
@@ -433,10 +446,17 @@ class BaseController extends Controller
 
         // TODO: Remove  after NCMB apps been discontinued
         $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT') ?? '');
-        if ($userAgent->isiOSApp() && $userAgent->getMobileAppVersion() < MOBILE_APP_IOS_VERSION_NEW_HEADER) {
+        $mbAppVersion = $userAgent->getMobileAppVersion();
+        if ($userAgent->isiOSApp() && $mbAppVersion < MOBILE_APP_IOS_VERSION_NEW_HEADER) {
             $this->is_mb_app_ios_high_header = true;
         }
         $this->set('is_mb_app_ios_high_header', $this->is_mb_app_ios_high_header);
+
+        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
+            $this->is_mb_app_web_footer = true;
+        }
+        $this->log($this->is_mb_app_web_footer, LOG_INFO);
+        $this->set('is_mb_app_web_footer', $this->is_mb_app_web_footer);
     }
 
     /**
