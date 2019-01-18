@@ -903,7 +903,7 @@ class PostService extends AppService
      * @return PostEntity Updated post
      * @throws Exception
      */
-    public function editPost(string $newBody, int $postId): PostEntity
+    public function editPost(array $newBody, int $postId): PostEntity
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -915,7 +915,8 @@ class PostService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'     => '"' . $newBody . '"',
+                'body'     => '"' . $newBody['body'] . '"',
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']): null,
                 'modified' => REQUEST_TIMESTAMP
             ];
 

@@ -214,19 +214,21 @@ class CommentServiceTest extends GoalousTestCase
      */
     public function test_editCommentMissing_failed()
     {
-        $newBody = 'EDITED';
+        $updateComment['body'] = 'EDITED';
+
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $CommentService->editComment($newBody, 183281390);
+        $CommentService->editComment($updateComment, 183281390);
     }
     
     public function test_editComment_success()
     {
-        $newBody = 'EDITED';
+        $updateComment['body'] = 'EDITED';
+
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $res = $CommentService->editComment($newBody, 1);
+        $res = $CommentService->editComment($updateComment, 1);
         $this->assertTrue($res instanceof CommentEntity);
-        $this->assertEquals($newBody, $res['body']);
+        $this->assertEquals($updateComment['body'], $res['body']);
     }
 }
