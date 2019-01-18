@@ -30,10 +30,17 @@ export function getLayout() {
     footer_bottom: PositionMobileApp.FOOTER_BOTTOM
   };
   if (!cake.is_mb_app_web_footer) {
-    // If mobile app footer is native, change position to fit layout
-    const mobileAppFooterHeight = 50;
-    layout.body_bottom -= mobileAppFooterHeight;
-    layout.footer_bottom -= mobileAppFooterHeight;
+    return layout;
   }
+
+  const footerEl = document.getElementsByClassName('mobile-app-footer')[0];
+  if (!footerEl) {
+    return layout;
+  }
+  // If mobile app footer is native, change position to fit layout
+  const mobileAppFooterHeight = footerEl.clientHeight;
+  console.log({mobileAppFooterHeight});
+  layout.body_bottom += mobileAppFooterHeight;
+  layout.footer_bottom += mobileAppFooterHeight;
   return layout;
 }
