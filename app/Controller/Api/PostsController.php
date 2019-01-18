@@ -233,12 +233,12 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $postBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-        $postBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
 
         try {
             /** @var PostEntity $newPost */
-            $newPost = $PostService->editPost($postBody, $postId);
+            $newPost = $PostService->editPost($newBody, $postId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {

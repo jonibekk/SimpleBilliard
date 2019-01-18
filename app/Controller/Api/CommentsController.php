@@ -194,12 +194,12 @@ class CommentsController extends BasePagingController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $commentBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
-        $commentBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
 
         try {
             /** @var CommentEntity $newComment */
-            $newComment = $CommentService->editComment($commentBody, $commentId);
+            $newComment = $CommentService->editComment($newBody, $commentId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
