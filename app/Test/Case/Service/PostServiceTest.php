@@ -20,6 +20,7 @@ App::import('Service/Request/Resource', 'PostResourceRequest');
 use Goalous\Enum as Enum;
 use Mockery as mock;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 
 /**
@@ -738,6 +739,9 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
 
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -755,7 +759,10 @@ class PostServiceTest extends GoalousTestCase
             ]
         ];
 
+        $numAttachedFiles = $AttachedFile->getCountOfAttachedFiles($postId, AttachedModelType::TYPE_MODEL_POST);
+
         $this->assertEmpty($PostDraft->find('first', $conditions));
+        $this->assertEquals(0, $numAttachedFiles);
         $this->assertEmpty($PostFile->find('first', $conditions));
         $this->assertEmpty($PostLike->find('first', $conditions));
         $this->assertEmpty($PostMention->find('first', $conditions));
