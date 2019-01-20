@@ -831,20 +831,20 @@ class PostServiceTest extends GoalousTestCase
      */
     public function test_editPostMissing_failed()
     {
-        $newBody = 'EDITED';
+        $updatePost['body'] = 'EDITED';
 
-        $this->PostService->editPost($newBody, 183281390);
+        $this->PostService->editPost($updatePost, 183281390);
 
     }
 
     public function test_editPost_success()
     {
-        $newBody = 'EDITED';
+        $updatePost['body'] = 'EDITED';
 
-        $res = $this->PostService->editPost($newBody, 1);
+        $res = $this->PostService->editPost($updatePost, 1);
 
         $this->assertTrue($res instanceof PostEntity);
-        $this->assertEquals($newBody, $res['body']);
+        $this->assertEquals($updatePost['body'], $res['body']);
     }
 
     public function test_checkUserAccessToMultiplePost_failure()

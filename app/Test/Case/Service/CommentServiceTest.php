@@ -208,4 +208,27 @@ class CommentServiceTest extends GoalousTestCase
         $CommentService->delete($commentId);
         $CommentService->delete($commentId);
     }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_editCommentMissing_failed()
+    {
+        $updateComment['body'] = 'EDITED';
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        $CommentService->editComment($updateComment, 183281390);
+    }
+    
+    public function test_editComment_success()
+    {
+        $updateComment['body'] = 'EDITED';
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        $res = $CommentService->editComment($updateComment, 1);
+        $this->assertTrue($res instanceof CommentEntity);
+        $this->assertEquals($updateComment['body'], $res['body']);
+    }
 }

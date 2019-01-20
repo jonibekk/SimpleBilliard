@@ -266,6 +266,48 @@ class CommentService extends AppService
     }
 
     /**
+     * Edit a comment body
+     *
+     * @param string $newBody
+     * @param int    $commentId
+     *
+     * @return CommentEntity Updated comment
+     * @throws Exception
+     */
+    public function editComment(array $newBody, int $commentId): CommentEntity
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        if (!$Comment->exists($commentId)) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        try {
+            $this->TransactionManager->begin();
+
+            $newData = [
+                'body'      => '"' . $newBody['body'] . '"',
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']): null,
+                'modified'  => REQUEST_TIMESTAMP
+            ];
+            if (!$Comment->updateAll($newData, ['Comment.id' => $commentId])) {
+                throw new RuntimeException("Failed to update comment");
+            }
+
+            //TODO: edit attached files after implemented video post
+            
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+        /** @var CommentEntity $result */
+        $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $commentId]]);
+        return $result;
+    }
+
+    /**
      * Save uploaded files
      *
      * @param int   $commentId
