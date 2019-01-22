@@ -218,7 +218,6 @@
                            id="KeyResult0StartDateDefault_<?= $goalId ?>">
                                 <span
                                     class="pull-left"><?= $limitStartDate ?>
-                                    <?= __("(Today)") ?>
                                     &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
                                                    show-target-id="KeyResult0StartDateInputWrap_<?= $goalId ?>"
                                                    delete-target-id="KeyResult0StartDateDefault_<?= $goalId ?>">
