@@ -296,7 +296,6 @@ class GoalsController extends AppController
         $limitEndDate = AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/");
 
         $isCurrentTermGoal = $this->Goal->isPresentTermGoal($goalId);
-        $this->log(compact('isCurrentTermGoal'));
         if ($isCurrentTermGoal) {
             $limitStartDate = GoalousDateTime::now()->format('Y/m/d');
         } else {
