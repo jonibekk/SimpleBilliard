@@ -39,7 +39,6 @@ export function getLayout() {
   }
   // If mobile app footer is native, change position to fit layout
   const mobileAppFooterHeight = footerEl.clientHeight;
-  console.log({mobileAppFooterHeight});
   layout.body_bottom += mobileAppFooterHeight;
   layout.footer_bottom += mobileAppFooterHeight;
   return layout;
