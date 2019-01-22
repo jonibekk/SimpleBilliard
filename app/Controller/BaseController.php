@@ -455,7 +455,6 @@ class BaseController extends Controller
         if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
             $this->is_mb_app_web_footer = true;
         }
-        $this->log($this->is_mb_app_web_footer, LOG_INFO);
         $this->set('is_mb_app_web_footer', $this->is_mb_app_web_footer);
     }
 
