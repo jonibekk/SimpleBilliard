@@ -217,6 +217,11 @@ class CircleListPagingService extends BasePagingService
 
         /** @var CircleExtender $CircleExtender */
         $CircleExtender = ClassRegistry::init('CircleExtender');
+
+        // Set data whether user joined all circles or not to extend list
+        $joined = boolval(Hash::get($request->getConditions(), 'joined', true));
+        $CircleExtender->joined = $joined;
+
         $data = $CircleExtender->extendMulti($data, $userId, $teamId, $options);
     }
 

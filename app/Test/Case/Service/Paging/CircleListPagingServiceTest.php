@@ -72,6 +72,54 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $this->assertInternalType('bool', $data['admin_flg']);
     }
 
+
+    public function test_getCircleListWithIsMemberExtension()
+    {
+        /* All joined(Default) */
+        /** @var CircleListPagingService $CircleListPagingService */
+        $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
+
+        $cursor = new PagingRequest();
+        $cursor->setCurrentTeamId(1);
+        $cursor->setCurrentUserId(13);
+        $cursor->addOrder('latest_post_created');
+
+        $result = $CircleListPagingService->getDataWithPaging($cursor, 2,
+            [CircleExtender::EXTEND_IS_MEMBER]);
+
+        $data = $result['data'];
+        $this->assertTrue($data[0]['is_member']);
+        $this->assertTrue($data[1]['is_member']);
+
+        /* All joined(Specified) */
+        $cursor = new PagingRequest();
+        $cursor->setCurrentTeamId(1);
+        $cursor->setCurrentUserId(13);
+        $cursor->addOrder('latest_post_created');
+        $cursor->addCondition(['joined' => true]);
+
+        $result = $CircleListPagingService->getDataWithPaging($cursor, 2,
+            [CircleExtender::EXTEND_IS_MEMBER]);
+
+        $data = $result['data'];
+        $this->assertTrue($data[0]['is_member']);
+        $this->assertTrue($data[1]['is_member']);
+
+        /* All not joined(Specified) */
+        $cursor = new PagingRequest();
+        $cursor->setCurrentTeamId(1);
+        $cursor->setCurrentUserId(13);
+        $cursor->addOrder('latest_post_created');
+        $cursor->addCondition(['joined' => false]);
+
+        $result = $CircleListPagingService->getDataWithPaging($cursor, 2,
+            [CircleExtender::EXTEND_IS_MEMBER]);
+
+        $data = $result['data'];
+        $this->assertFalse($data[0]['is_member']);
+        $this->assertFalse($data[1]['is_member']);
+    }
+
     /**
      * Currently, if user is getting joined circles, it will skip pinned circles.
      * All of user 1's joined circles are pinned
