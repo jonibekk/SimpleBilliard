@@ -21,7 +21,7 @@
     echo $this->Html->meta(
         [
             'name'    => 'viewport',
-            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"
+            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
         ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
 

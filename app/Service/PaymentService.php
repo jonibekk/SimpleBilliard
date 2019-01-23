@@ -324,10 +324,10 @@ class PaymentService extends AppService
      * Ex. Upgrade plan from max members 50 to 200 and use days until next payment base date:20
      * (100,000 - 50,000) × 20 days / 1 month
      *
-     * @param int                          $teamId
+     * @param int                                $teamId
      * @param Enum\Model\PaymentSetting\Currency $currencyType
-     * @param string                       $upgradePlanCode
-     * @param string                       $currentPlanCode
+     * @param string                             $upgradePlanCode
+     * @param string                             $currentPlanCode
      *
      * @return array
      * @internal param int $upgradePlanPrice
@@ -422,11 +422,11 @@ class PaymentService extends AppService
     /**
      * Format total charge by users count when invite users.
      *
-     * @param int                          $teamId
-     * @param int                          $userCnt
+     * @param int                                $teamId
+     * @param int                                $userCnt
      * @param Enum\Model\PaymentSetting\Currency $currency
-     * @param null                         $useDaysByNext
-     * @param null                         $allUseDays
+     * @param null                               $useDaysByNext
+     * @param null                               $allUseDays
      *
      * @return string
      */
@@ -446,10 +446,10 @@ class PaymentService extends AppService
     /**
      * Calc total charge by charge type
      *
-     * @param int                           $teamId
-     * @param int                           $chargeUserCnt
+     * @param int                                 $teamId
+     * @param int                                 $chargeUserCnt
      * @param Enum\Model\ChargeHistory\ChargeType $chargeType
-     * @param array                         $paymentSetting
+     * @param array                               $paymentSetting
      *
      * @return array
      */
@@ -623,12 +623,12 @@ class PaymentService extends AppService
     /**
      * Apply Credit card charge for a specified team.
      *
-     * @param int                               $teamId
+     * @param int                                     $teamId
      * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
-     * @param int                               $usersCount
-     * @param int                               $opeUserId
-     * @param int|null                          $timestampChargeDateTime timestamp of charge_histories.charge_datetime
-     * @param array                             $chargeInfo
+     * @param int                                     $usersCount
+     * @param int                                     $opeUserId
+     * @param int|null                                $timestampChargeDateTime timestamp of charge_histories.charge_datetime
+     * @param array                                   $chargeInfo
      *
      * @return array charge response
      * @throws Exception
@@ -850,16 +850,16 @@ class PaymentService extends AppService
         $timeStampChargeTime = GoalousDateTime::now()->getTimestamp();
 
         $subTotalCharge = $targetChargeHistory['total_amount'];
-        $tax            = $targetChargeHistory['tax'];
+        $tax = $targetChargeHistory['tax'];
 
         // TODO: Currently several codes are using bcmath with magic number.
         // We have to replace this.
-        $totalCharge    = bcadd($subTotalCharge, $tax, 2);
+        $totalCharge = bcadd($subTotalCharge, $tax, 2);
         $chargeInfo = [
-            'sub_total_charge'            => $subTotalCharge,
-            'tax'                         => $tax,
-            'total_charge'                => $totalCharge,
-            'reorder_charge_history_id'   => $targetChargeHistoryId,
+            'sub_total_charge'          => $subTotalCharge,
+            'tax'                       => $tax,
+            'total_charge'              => $totalCharge,
+            'reorder_charge_history_id' => $targetChargeHistoryId,
         ];
 
         return $this->applyCreditCardCharge(
@@ -869,15 +869,15 @@ class PaymentService extends AppService
             $opeUserId,
             $timeStampChargeTime,
             $chargeInfo
-            );
+        );
     }
 
     /**
      * Get charge max user cnt by charge type
      *
-     * @param int                           $teamId
+     * @param int                                 $teamId
      * @param Enum\Model\ChargeHistory\ChargeType $chargeType
-     * @param int                           $usersCount
+     * @param int                                 $usersCount
      *
      * @return array
      */
@@ -1728,6 +1728,10 @@ class PaymentService extends AppService
             $timezone = Hash::get($v, 'Team.timezone');
             $localCurrentTs = $time + ($timezone * HOUR);
             $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+            $skipPayment = !empty(Hash::get($v, 'PaymentSetting.payment_skip_flg'));
+            if ($skipPayment) {
+                return false;
+            }
             // Check if today is payment base date
             $paymentBaseDate = AppUtil::correctInvalidDate(
                 date('Y', $localCurrentTs),
@@ -1788,9 +1792,12 @@ class PaymentService extends AppService
         $targetChargeTeams = array_filter($targetChargeTeams,
             function ($v) use ($time, $InvoiceHistory) {
                 $timezone = Hash::get($v, 'Team.timezone');
-
                 $localCurrentTs = $time + ($timezone * HOUR);
                 $paymentBaseDay = Hash::get($v, 'PaymentSetting.payment_base_day');
+                $skipPayment = !empty(Hash::get($v, 'PaymentSetting.payment_skip_flg'));
+                if ($skipPayment) {
+                    return false;
+                }
                 // Check if today is payment base date
                 $paymentBaseDate = AppUtil::correctInvalidDate(
                     date('Y', $localCurrentTs),
@@ -1904,10 +1911,10 @@ class PaymentService extends AppService
      *   }
      * ■Must catch Exception and handling in the caller
      *
-     * @param int                               $teamId
+     * @param int                                     $teamId
      * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
-     * @param int                               $usersCount
-     * @param int                               $opeUserId
+     * @param int                                     $usersCount
+     * @param int                                     $opeUserId
      *
      * @return array
      * @throws Exception

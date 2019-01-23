@@ -1,5 +1,5 @@
-import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
+
 /**
  * Get summary error message
  * @param response
@@ -22,20 +22,24 @@ export function getErrMsg(response) {
 }
 
 export function getLayout() {
-  if (isOldIOSApp()) {
-    return {
-      header_top: PositionIOSApp.HEADER_TOP,
-      body_top: PositionIOSApp.BODY_TOP,
-      body_bottom: PositionIOSApp.BODY_BOTTOM,
-      footer_bottom: PositionIOSApp.FOOTER_BOTTOM
-    }
-  } else if (isMobileApp()) {
-    return {
-      header_top: PositionMobileApp.HEADER_TOP,
-      body_top: PositionMobileApp.BODY_TOP,
-      body_bottom: PositionMobileApp.BODY_BOTTOM,
-      footer_bottom: PositionMobileApp.FOOTER_BOTTOM
-    }
+  if (!cake.is_mb_app) return {};
+  let layout = {
+    header_top: PositionMobileApp.HEADER_TOP,
+    body_top: PositionMobileApp.BODY_TOP,
+    body_bottom: PositionMobileApp.BODY_BOTTOM,
+    footer_bottom: PositionMobileApp.FOOTER_BOTTOM
+  };
+  if (!cake.is_mb_app_web_footer) {
+    return layout;
   }
-  return {};
+
+  const footerEl = document.getElementsByClassName('mobile-app-footer')[0];
+  if (!footerEl) {
+    return layout;
+  }
+  // If mobile app footer is native, change position to fit layout
+  const mobileAppFooterHeight = footerEl.clientHeight;
+  layout.body_bottom += mobileAppFooterHeight;
+  layout.footer_bottom += mobileAppFooterHeight;
+  return layout;
 }

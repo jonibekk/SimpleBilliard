@@ -347,6 +347,30 @@ function setNotifyCntToBellAndTitle(cnt) {
   return;
 }
 
+function setNotifyCntToBellForMobileApp(cnt, appendFlg) {
+  var $badgeCntParent = $('.js-mbAppFooter-setBadgeCnt-notifications');
+  _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent);
+}
+function setNotifyCntToMessageForMobileApp(cnt, appendFlg) {
+  var $badgeCntParent = $('.js-mbAppFooter-setBadgeCnt-messages');
+  _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent);
+}
+function _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent) {
+  if (!$badgeCntParent) return;
+  
+  var $badgeCnt = $badgeCntParent.find('span');
+  if (appendFlg) {
+    cnt = cnt + parseInt($badgeCnt.text());
+  }
+
+  if (cnt == 0) {
+    $badgeCntParent.addClass('hidden');
+  } else {
+    $badgeCntParent.removeClass('hidden');
+    $badgeCntParent.find('span').text(cnt);
+  }
+}
+
 function setNotifyCntToMessageAndTitle(cnt) {
   var cnt = parseInt(cnt);
   var $bellBoxs = $(".messageNum");
