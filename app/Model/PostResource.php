@@ -110,16 +110,12 @@ class PostResource extends AppModel
 
                     $resourceVideoStream['video_sources'] = $transcodeOutput->getVideoSources($urlBaseStorage);
                     $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
-                    $resourceVideoStream['post_resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM();
+                    $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
                     $resources = Hash::insert($resources, $hashKeyResource, $resourceVideoStream);
             }
         }
 
         $results = [];
-        // make the empty array of specified id's
-        foreach ($ids as $id) {
-            $results[$id] = [];
-        }
         // create $results:array = [
         //      (posts.id | post_draft_id):int => [
         //          resource data:array,
@@ -135,15 +131,16 @@ class PostResource extends AppModel
             switch ($resourceType->getValue()) {
                 case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
                     $hashKeyResource = sprintf('%s.%s', Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+                    $targetId = $postResource[$postOrDraftColumnName];
+                    if (empty($results[$targetId])) {
+                        $results[$targetId] = [];
+                    }
+                    $results[$targetId][] = Hash::get($resources, $hashKeyResource);
                     break;
                 default:
-                    GoalousLog::error('resource type not found for post resource', [
-                        'resource_type' => sprintf('%s:%s', $resourceType->getValue(), $resourceType->getKey()),
-                    ]);
+                    // Currently not returning image/file/video file resource.
                     break;
             }
-            $targetId = $postResource[$postOrDraftColumnName];
-            $results[$targetId][] = Hash::get($resources, $hashKeyResource);
         }
         return $results;
     }

@@ -35,7 +35,7 @@ class EnumTest extends GoalousTestCase
 
         Enum\Model\PaymentSetting\Currency::JPY;
         Enum\Model\PaymentSetting\Type::CREDIT_CARD;
-        Enum\Model\Post\PostResourceType::NONE;
+        Enum\Model\Post\PostResourceType::IMAGE;
         Enum\Model\Team\ServiceUseStatus::PAID;
 
         Enum\Model\TeamMember\Status::ACTIVE;
