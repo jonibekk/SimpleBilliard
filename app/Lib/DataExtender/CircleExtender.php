@@ -8,7 +8,10 @@ class CircleExtender extends BaseExtender
 {
     const EXTEND_ALL = 'ext:circle:all';
     const EXTEND_MEMBER_INFO = 'ext:circle:member_info';
+    const EXTEND_IS_MEMBER = 'ext:circle:is_member';
     const EXTEND_MEMBER_COUNT = 'ext:circle:member_count';
+
+    public $joined = false;
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -39,6 +42,13 @@ class CircleExtender extends BaseExtender
             /** @var CircleMemberCountExtension $CircleMemberCountExtension */
             $CircleMemberCountExtension = ClassRegistry::init('CircleMemberCountExtension');
             $data = $CircleMemberCountExtension->extendMulti($data, "{n}.id");
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_IS_MEMBER)) {
+            // Currently, there are patterns only get all joined circles or all not joined circles when get circle list.
+            // Mixed pattern doesn't exist (circle1:joined, circle1:not joined ...)
+            // As conclusion, all value is depends on condition.
+            $data = Hash::insert($data, '{n}.is_member', $this->joined);
         }
         return $data;
     }
