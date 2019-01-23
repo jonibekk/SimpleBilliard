@@ -512,7 +512,7 @@ function evTargetShowTargetDelete() {
   var $obj = $(this);
   var show_target_id = $obj.attr("show-target-id");
   var delete_target_id = $obj.attr("delete-target-id");
-  $("#" + show_target_id).removeClass('none');
+  $("#" + show_target_id).removeClass('hidden');
   $("#" + delete_target_id).remove();
   return false;
 }
