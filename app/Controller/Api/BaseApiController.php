@@ -372,7 +372,6 @@ abstract class BaseApiController extends Controller
                 'trace' => $throwable->getTraceAsString(),
             ]);
             return ErrorResponse::internalServerError()
-                ->withMessage()
                 ->withException($throwable)
                 ->getResponse();
         }

@@ -53,7 +53,7 @@ class CircleListPagingService extends BasePagingService
             $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
         }
 
-        $this->afterRead($pagingRequest);
+        $this->afterRead($queryResult, $pagingRequest);
 
         $finalResult['data'] = $queryResult;
 
