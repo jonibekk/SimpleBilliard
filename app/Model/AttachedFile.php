@@ -1,6 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'AttachedFileEntity');
+App::import('Service', 'PostResourceService');
+App::uses('PostResource', 'Model');
+App::import('Service', 'PostFileService');
+
 
 /**
  * AttachedFile Model
@@ -248,10 +252,11 @@ class AttachedFile extends AppModel
      * @param integer $foreign_key_id
      * @param integer $model_type
      * @param array   $file_hashes
+     * @param boolean $hasVideoStream Set true if having video stream resource
      *
      * @return bool
      */
-    public function saveRelatedFiles($foreign_key_id, $model_type, $file_hashes = [])
+    public function saveRelatedFiles($foreign_key_id, $model_type, $file_hashes = [], $hasVideoStream = false)
     {
         if ($this->isUnavailableModelType($model_type) || empty($file_hashes)) {
             return false;
@@ -298,13 +303,36 @@ class AttachedFile extends AppModel
                         $model['foreign_key'] => $foreign_key_id,
                         'user_id'             => $this->my_uid,
                         'team_id'             => $this->current_team_id,
-                        'index_num'           => $index,
+                        'index_num'           => $index + ($hasVideoStream ? 1 : 0),
                     ],
                 ],
                 'AttachedFile'              => $file_data
             ];
             if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
+            }
+        }
+        if ($model_type === self::TYPE_MODEL_POST) {
+            /** @var PostFileService $PostFileService */
+            $PostFileService = ClassRegistry::init('PostFileService');
+
+            /** @var PostResourceService $PostResourceService */
+            $PostResourceService = ClassRegistry::init('PostResourceService');
+
+            /** @var PostResource $PostResource */
+            $PostResource = ClassRegistry::init("PostResource");
+
+            $postFileAndAttachedFiles = $PostFileService->getPostFilesByPostId($foreign_key_id);
+            GoalousLog::info('$postFileAndAttachedFiles', $postFileAndAttachedFiles);
+            foreach ($postFileAndAttachedFiles as $postFileAndAttachedFile) {
+                $postFile = $postFileAndAttachedFile['PostFile'];
+                $attachedFile = $postFileAndAttachedFile['AttachedFile'];
+
+                $PostResourceService->addResourcePost(
+                    $foreign_key_id,
+                    $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                    $attachedFile['id'],
+                    $postFile['index_num']);
             }
         }
         return true;
@@ -327,6 +355,13 @@ class AttachedFile extends AppModel
         if ($this->isUnavailableModelType($model_type)) {
             return false;
         }
+
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
+
         //ファイル削除処理
         foreach ($delete_files as $id) {
             $this->delete($id);
@@ -351,6 +386,11 @@ class AttachedFile extends AppModel
                 }
                 $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
                     [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
+
+
+                if ($model_type === self::TYPE_MODEL_POST) {
+                    $PostResourceService->updatePostResourceIndex($foreign_key_id, $id_or_hash, $i);
+                }
                 continue;
             }
 
@@ -381,6 +421,31 @@ class AttachedFile extends AppModel
             ];
             if (!$res = $this->saveAll($save_data, ['validate' => false])) {
                 return false;
+            }
+        }
+
+        if ($model_type === self::TYPE_MODEL_POST) {
+
+            $postFileAndAttachedFiles = $PostFileService->getPostFilesByPostId($foreign_key_id);
+            foreach ($postFileAndAttachedFiles as $postFileAndAttachedFile) {
+                $postFile = $postFileAndAttachedFile['PostFile'];
+                $attachedFile = $postFileAndAttachedFile['AttachedFile'];
+
+                $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
+
+                if ($PostResourceService->isPostResourceExists($foreign_key_id, $attachedFile['id'], $postResourceType->getValue())) {
+                    continue;
+                }
+
+                $PostResourceService->addResourcePost(
+                    $foreign_key_id,
+                    $postResourceType,
+                    $attachedFile['id'],
+                    $postFile['index_num']);
+            }
+
+            foreach ($delete_files as $id) {
+                $PostResourceService->deletePostResource($foreign_key_id, $id);
             }
 
         }
@@ -424,7 +489,7 @@ class AttachedFile extends AppModel
             if (!in_array($type, $allowImageTypes)) {
                 return self::TYPE_FILE_DOC;
             }
-        }
+        }attached_file_list
         return $fileType;
     }
 
@@ -452,6 +517,15 @@ class AttachedFile extends AppModel
             $this->{$model['intermediateModel']}->delete($related_file[$model['intermediateModel']]['id']);
             $this->delete($related_file[$model['intermediateModel']]['attached_file_id']);
         }
+
+
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
+
+        if ($model_type === self::TYPE_MODEL_POST) {
+            $PostResourceService->deleteAllPostResourceByPostId($foreign_key_id);
+        }
+
         return true;
     }
 

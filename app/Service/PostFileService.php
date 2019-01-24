@@ -50,4 +50,55 @@ class PostFileService extends AppService
         }
         return $result;
     }
+
+    function getPostFilesByPostId(int $postId)
+    {
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+
+        $condition = [
+            'conditions' => [
+                'PostFile.post_id' => $postId,
+                'PostFile.del_flg'   => [0, 1],
+            ],
+            'fields' => [
+                'PostFile.id',
+                'PostFile.post_id',
+                'PostFile.attached_file_id',
+                'PostFile.team_id',
+                'PostFile.index_num',
+                'PostFile.del_flg',
+                'PostFile.deleted',
+                'PostFile.created',
+                'PostFile.modified',
+                'AttachedFile.id',
+                'AttachedFile.user_id',
+                'AttachedFile.team_id',
+                'AttachedFile.attached_file_name',
+                'AttachedFile.file_type',
+                'AttachedFile.file_ext',
+                'AttachedFile.file_size',
+                'AttachedFile.model_type',
+                'AttachedFile.display_file_list_flg',
+                'AttachedFile.removable_flg',
+                'AttachedFile.del_flg',
+                'AttachedFile.deleted',
+                'AttachedFile.created',
+                'AttachedFile.modified',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.id = PostFile.attached_file_id',
+                    ],
+                ]
+            ]
+        ];
+
+        $r = $PostFile->find('all', $condition);
+        return $r;
+    }
 }
