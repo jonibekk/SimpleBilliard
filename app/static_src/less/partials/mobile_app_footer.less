@@ -14,12 +14,26 @@
   margin: 0;
   width: 100%;
   z-index: 999;
+  background-color: #f9f9f9;
+  padding-bottom: 0;
+  // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
+  @supports (padding-bottom: constant(safe-area-inset-bottom)) {
+    & {
+      padding-bottom: constant(safe-area-inset-bottom);
+    }
+  }
+  // Browsers which fully support CSS Environment variables (iOS 11.2+).
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    & {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
   &-list {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    background-color: #f9f9f9;
-
+    background-color: inherit;
     &-item {
       flex: 1;
       float: none;
@@ -63,3 +77,4 @@
     }
   }
 }
+

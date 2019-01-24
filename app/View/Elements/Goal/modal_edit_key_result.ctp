@@ -212,7 +212,7 @@ $isTkr = Hash::get($this->request->data, 'KeyResult.tkr_flg');
                                     </span>
                         </p>
 
-                        <div class="input-group date plr_5px goal-set-date none"
+                        <div class="input-group date plr_5px goal-set-date hidden"
                              data-date-end-date="<?= $limit_end_date ?>"
                              data-date-start-date="<?= $limit_start_date ?>"
                              id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">

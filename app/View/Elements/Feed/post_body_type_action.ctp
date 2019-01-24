@@ -49,7 +49,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                                'post_id'    => $post['Post']['id']
                            ],
                                true) ?>'); return false;">
-                            <?= __("Copy Link") ?></a>
+                            <?= __("Display Link") ?></a>
                     </li>
                 </ul>
             </div>

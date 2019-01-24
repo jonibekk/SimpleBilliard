@@ -91,7 +91,7 @@ window.addEventListener('load', function() {
           return;
         }
 
-        if (cake.is_mb_app) {
+        if (cake.is_mb_app_web_footer) {
           setNotifyCntToBellForMobileApp(1, true);
         } else {
           setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
@@ -117,7 +117,7 @@ window.addEventListener('load', function() {
         }
         cake.unread_msg_topic_ids.push(data.topic_id);
 
-        if (cake.is_mb_app) {
+        if (cake.is_mb_app_web_footer) {
           setNotifyCntToMessageForMobileApp(1, true);
         } else {
           setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);

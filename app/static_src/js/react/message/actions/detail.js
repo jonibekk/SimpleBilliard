@@ -4,7 +4,7 @@ import {del, get, post, put} from "~/util/api";
 import {FileUpload} from "~/common/constants/App";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
-import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
+import {isMobileApp} from "~/util/base";
 import * as common from "./common";
 import {browserHistory} from "react-router";
 import Noty from "noty";
