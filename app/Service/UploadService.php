@@ -36,7 +36,7 @@ class UploadService extends AppService
 
     /**
      * @param string $modelName
-     * @param int    $modelId
+     * @param int $modelId
      *
      * @return AssetsStorageClient
      */
@@ -52,8 +52,8 @@ class UploadService extends AppService
     /**
      * Add a file into buffer
      *
-     * @param int    $userId
-     * @param int    $teamId
+     * @param int $userId
+     * @param int $teamId
      * @param string $encodedFile
      * @param string $fileName
      *
@@ -71,7 +71,8 @@ class UploadService extends AppService
 
         $uploader = $this->getBufferStorageClient($userId, $teamId);
 
-        return $uploader->save($uploadedFile);
+        $uploader->save($uploadedFile);
+        return $uploadedFile->getUUID();
     }
 
     /**
@@ -95,12 +96,38 @@ class UploadService extends AppService
     }
 
     /**
+     * Get buffered data list
+     *
+     * @param int $userId
+     * @param int $teamId
+     * @param array<string> $uuids
+     * @return UploadedFile[]
+     * @throws Exception
+     */
+    public function getBuffers(int $userId, int $teamId, array $uuids): array
+    {
+        foreach ($uuids as $uuid) {
+            if (!is_string($uuid)) {
+                throw new InvalidArgumentException("UUID must be string.");
+            }
+
+            if (preg_match(UploadedFile::UUID_REGEXP, $uuid) == 0) {
+                throw new InvalidArgumentException(("Invalid FILE UUID"));
+            }
+        }
+
+        $uploader = $this->getBufferStorageClient($userId, $teamId);
+
+        return $uploader->bulkGet($uuids);
+    }
+
+    /**
      * Write file to main storage
      *
-     * @param string       $modelName
-     * @param int          $modelId
+     * @param string $modelName
+     * @param int $modelId
      * @param UploadedFile $file
-     * @param string       $suffix
+     * @param string $suffix
      *
      * @return bool
      */
@@ -112,13 +139,28 @@ class UploadService extends AppService
     }
 
     /**
+     * Write file to main storage
+     *
+     * @param string $modelName
+     * @param int $modelId
+     * @param UploadedFile[] $fileGroups
+     * @return bool
+     */
+    public function bulkSave(string $modelName, int $modelId, array $fileGroups): bool
+    {
+        $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
+
+        return $assetStorageClient->bulkSave($fileGroups);
+    }
+
+    /**
      * Pre-process files before saving to S3
      *
-     * @param string       $modelName      Model which the file belongs to
-     * @param int          $modelId        Model ID
-     * @param string       $uploadCategory File category as written in Model's actAs array
+     * @param string $modelName Model which the file belongs to
+     * @param int $modelId Model ID
+     * @param string $uploadCategory File category as written in Model's actAs array
      *                                     E.g. photo, attached, etc.
-     * @param UploadedFile $file           File to upload
+     * @param UploadedFile $file File to upload
      *
      * @return bool TRUE on successful upload
      */
@@ -127,7 +169,8 @@ class UploadService extends AppService
         int $modelId,
         string $uploadCategory,
         UploadedFile $file
-    ): bool {
+    ): bool
+    {
         /** @var AppModel $Model */
         $Model = ClassRegistry::init($modelName);
 
@@ -136,11 +179,14 @@ class UploadService extends AppService
         if (empty($uploadConfig)) {
             throw new InvalidArgumentException("Upload style doesn't exist");
         }
+        /* @var UploadedFile[] */
+        $fileGroups = [];
 
-        $this->save($modelName, $modelId, $file, "_original");
+        // Original
+        $file->setSuffix('_original');
+        $fileGroups[] = $file;
 
         if ($file->getFileType() == 'image') {
-
             $ImageRotateProcessor = new ImageRotateProcessor();
             $ImageResizeProcessor = new ImageResizeProcessor();
 
@@ -150,10 +196,14 @@ class UploadService extends AppService
             foreach ($styles as $style => $geometry) {
                 $currentFile = $ImageRotateProcessor->process($file);
                 $currentFile = $ImageResizeProcessor->process($currentFile, $geometry, $quality);
-                $this->save($modelName, $modelId, $currentFile, "_" . $style);
+                $currentFile->setSuffix('_' . $style);
+                $fileGroups[] = $currentFile;
                 unset($currentFile);
             }
         }
+
+        // Bulk upload original file and file each size to s3
+        $this->bulkSave($modelName, $modelId, $fileGroups);
 
         return true;
     }
@@ -162,7 +212,7 @@ class UploadService extends AppService
      * Delete multiple objects based on same prefix
      *
      * @param string $modelName
-     * @param int    $modelId
+     * @param int $modelId
      * @param string $fileName Specific file name to delete
      *
      * @return bool

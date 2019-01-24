@@ -59,16 +59,19 @@ class PostShareCircle extends AppModel
         return $this->saveAll($data);
     }
 
-    public function isMyCirclePost($post_id)
+    public function isMyCirclePost($postId, $userId = null, $teamId = null)
     {
-        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList(null, $userId, $teamId);
         $backupPrimaryKey = $this->primaryKey;
         $this->primaryKey = 'post_id';
         $options = [
             'conditions' => [
-                'post_id'   => $post_id,
+                'post_id'   => $postId,
                 'circle_id' => $my_circle_list,
-                'team_id'   => $this->current_team_id,
+                'team_id'   => $teamId,
             ],
             'fields'     => ['post_id'],
         ];
@@ -83,16 +86,19 @@ class PostShareCircle extends AppModel
     /**
      * $post_id の投稿が公開サークルに共有されているか確認する
      *
-     * @param $post_id
+     * @param $postId
      *
+     * @param null $teamId
      * @return bool 公開サークルに共有されている時 true
      */
-    public function isShareWithPublicCircle($post_id)
+    public function isShareWithPublicCircle($postId, $teamId = null)
     {
+        $teamId = $teamId ?: $this->current_team_id;
+
         $options = [
             'conditions' => [
-                'PostShareCircle.post_id' => $post_id,
-                'PostShareCircle.team_id' => $this->current_team_id,
+                'PostShareCircle.post_id' => $postId,
+                'PostShareCircle.team_id' => $teamId,
                 'Circle.public_flg'       => 1,
             ],
             'contain'    => [

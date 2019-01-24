@@ -1,20 +1,11 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::import('Lib/DataExtender', "UserDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('PostLikes', 'Model');
-App::uses('User', 'Model');
+App::import('Lib/DataExtender', 'PostLikeExtender');
 
-/**
- * User: MartiFloriach
- * Date: 2018/09/03
- * Time: 13:56
- */
 class PostLikesPagingService extends BasePagingService
 {
-
-    const EXTEND_ALL = "ext:post_like:all";
-    const EXTEND_USER = "ext:post_like:user";
     const MAIN_MODEL = 'PostLike';
 
     /**
@@ -49,13 +40,14 @@ class PostLikesPagingService extends BasePagingService
         return (int)$PostLike->find('count', $options);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var PostLikeExtender $PostLikeExtender */
+        $PostLikeExtender = ClassRegistry::init('PostLikeExtender');
+        $data = $PostLikeExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     /**

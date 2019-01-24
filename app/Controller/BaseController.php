@@ -72,6 +72,12 @@ class BaseController extends Controller
     public $next_term_id = null;
 
     /**
+     * >= v1.3 app footer is web
+     * < v1.3 app footer is native
+     */
+    const MOBILE_APP_VERSION_WEB_FOOTER = 1.3;
+
+    /**
      * スマホからのリクエストか？
      * is request from mobile browser?
      *
@@ -109,6 +115,13 @@ class BaseController extends Controller
         'Goalous App iOS',
         'Goalous App Android'
     ];
+
+    /**
+     * Native app's footer is whether web, not is native
+     * @var bool
+     */
+    public $is_mb_app_web_footer = false;
+
     /**
      * use it when you need stop after beforender
      */
@@ -190,6 +203,14 @@ class BaseController extends Controller
             $this->current_team_id = $this->Session->read('current_team_id');
             $this->my_uid = $this->Auth->user('id');
 
+            if (!empty($this->current_team_id)) {
+                $sesId = $this->Session->id();
+                // GL-7364：Enable to keep login status between old Goalous and new Goalous
+                $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                if (empty($mapSesAndJwt)) {
+                    $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                }
+            }
             //Check from DB whether user is deleted
             $condition = [
                 'conditions' => [
@@ -208,13 +229,6 @@ class BaseController extends Controller
                 ]);
                 $this->Notification->outError(__("This user does not exist."));
                 $this->redirect($logoutRedirect);
-            }
-            //Detect inconsistent data that current team id is empty.
-            $sesId = $this->Session->id();
-            // GL-7364：Enable to keep login status between old Goalous and new Goalous
-            $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
-            if (empty($mapSesAndJwt)) {
-                $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
             }
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
@@ -410,7 +424,7 @@ class BaseController extends Controller
     }
 
     /**
-     * @param string $class  __CLASS__
+     * @param string $class __CLASS__
      * @param string $method __METHOD__
      */
     function _logOldRequest(string $class, string $method)
@@ -432,10 +446,16 @@ class BaseController extends Controller
 
         // TODO: Remove  after NCMB apps been discontinued
         $userAgent = UserAgent::detect(Hash::get($_SERVER, 'HTTP_USER_AGENT') ?? '');
-        if ($userAgent->isiOSApp() && $userAgent->getMobileAppVersion() < MOBILE_APP_IOS_VERSION_NEW_HEADER) {
+        $mbAppVersion = $userAgent->getMobileAppVersion();
+        if ($userAgent->isiOSApp() && $mbAppVersion < MOBILE_APP_IOS_VERSION_NEW_HEADER) {
             $this->is_mb_app_ios_high_header = true;
         }
         $this->set('is_mb_app_ios_high_header', $this->is_mb_app_ios_high_header);
+
+        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
+            $this->is_mb_app_web_footer = true;
+        }
+        $this->set('is_mb_app_web_footer', $this->is_mb_app_web_footer);
     }
 
     /**
@@ -562,4 +582,11 @@ class BaseController extends Controller
 
         return $this->Auth->logout();
     }
+
+    public function forceSSL()
+    {
+        /** @noinspection PhpUndefinedFieldInspection */
+        $this->redirect('https://' . env('HTTP_HOST') . $this->here);
+    }
+
 }

@@ -2,6 +2,7 @@
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'PostService');
 App::import('Service', 'UploadService');
+App::import('Service', 'CircleService');
 App::uses('PostFile', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -14,6 +15,7 @@ App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 App::import('Model/Entity', 'PostEntity');
+App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
 use Mockery as mock;
@@ -21,6 +23,7 @@ use Goalous\Exception as GlException;
 
 
 /**
+ * @property CircleService CircleService
  */
 class PostServiceTest extends GoalousTestCase
 {
@@ -33,6 +36,8 @@ class PostServiceTest extends GoalousTestCase
      */
     public $fixtures = [
         'app.post',
+        'app.team',
+        'app.user',
         'app.post_file',
         'app.attached_file',
         'app.circle',
@@ -47,7 +52,17 @@ class PostServiceTest extends GoalousTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.post_shared_log'
+        'app.post_shared_log',
+        'app.comment',
+        'app.comment_like',
+        'app.comment_read',
+        'app.saved_post',
+        'app.action_result',
+        'app.action_result_file',
+        'app.key_result',
+        'app.goal',
+        'app.post_file',
+        'app.comment_file'
     ];
 
     /**
@@ -99,6 +114,7 @@ class PostServiceTest extends GoalousTestCase
     {
         parent::setUp();
         $this->PostService = ClassRegistry::init('PostService');
+        $this->CircleService = ClassRegistry::init('CircleService');
         $this->Post = ClassRegistry::init('Post');
         $this->PostFile = ClassRegistry::init('PostFile');
         $this->AttachedFile = ClassRegistry::init('AttachedFile');
@@ -131,10 +147,10 @@ class PostServiceTest extends GoalousTestCase
     function test_addNormal_AttachFile_success()
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(true));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(true));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -156,11 +172,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_exception_not_rollback()
     {
-        $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -188,11 +204,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_AttachFile_error()
     {
-        $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post'    => [
@@ -317,6 +333,13 @@ class PostServiceTest extends GoalousTestCase
         ]);
         $this->assertCount(1, $sharedUserAll);
         $this->assertEquals(2, $sharedUserAll[0]['PostShareUser']['user_id']);
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $updatedCircle = $Circle->getById(1);
+
+        $this->assertTrue($updatedCircle['latest_post_created'] > 100);
     }
 
     function test_addNormal_withSharing_secret_circle()
@@ -408,11 +431,11 @@ class PostServiceTest extends GoalousTestCase
 
     function test_addNormal_with_resource_video_with_AttachFile()
     {
-        $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(true));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(true));
 
         $userId = 1;
         $teamId = 1;
@@ -444,11 +467,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_exception_rollback()
     {
-        $mock = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('saveRelatedFiles')
-             ->will($this->returnValue(false));
+            ->method('saveRelatedFiles')
+            ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -470,11 +493,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_PostShareUser_error()
     {
-        $mock = $this->getMockForModel('PostShareUser', array('add'));
+        $mock = $this->getMockForModel('PostShareUser', ['add']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('add')
-             ->will($this->returnValue(false));
+            ->method('add')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -491,11 +514,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_PostShareCircle_error()
     {
-        $mock = $this->getMockForModel('PostShareCircle', array('add'));
+        $mock = $this->getMockForModel('PostShareCircle', ['add']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('add')
-             ->will($this->returnValue(false));
+            ->method('add')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -512,11 +535,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_incrementUnreadCount_error()
     {
-        $mock = $this->getMockForModel('CircleMember', array('incrementUnreadCount'));
+        $mock = $this->getMockForModel('CircleMember', ['incrementUnreadCount']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('incrementUnreadCount')
-             ->will($this->returnValue(false));
+            ->method('incrementUnreadCount')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -533,11 +556,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_CircleMember_updateModified_error()
     {
-        $mock = $this->getMockForModel('CircleMember', array('updateModified'));
+        $mock = $this->getMockForModel('CircleMember', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -554,11 +577,11 @@ class PostServiceTest extends GoalousTestCase
      */
     function test_addNormal_Circle_updateModified_error()
     {
-        $mock = $this->getMockForModel('Circle', array('updateModified'));
+        $mock = $this->getMockForModel('Circle', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -571,11 +594,11 @@ class PostServiceTest extends GoalousTestCase
 
     function test_addNormalWithTransaction_Circle_updateModified_error()
     {
-        $mock = $this->getMockForModel('Circle', array('updateModified'));
+        $mock = $this->getMockForModel('Circle', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('updateModified')
-             ->will($this->returnValue(false));
+            ->method('updateModified')
+            ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -631,11 +654,11 @@ class PostServiceTest extends GoalousTestCase
 
     function test_addNormalFromPostDraft_rollback()
     {
-        $mock = $this->getMockForModel('PostDraft', array('save'));
+        $mock = $this->getMockForModel('PostDraft', ['save']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-             ->method('save')
-             ->will($this->returnValue(false));
+            ->method('save')
+            ->will($this->returnValue(false));
 
         $bodyText = sprintf('body text: %s', time());
         $videoStreamId = 11;
@@ -655,11 +678,8 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToPublicPost_success()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $result = $PostService->checkUserAccessToPost(4, 1);
-        $result1 = $PostService->checkUserAccessToPost(4, 1, true);
+        $result = $this->PostService->checkUserAccessToCirclePost(4, 1);
+        $result1 = $this->PostService->checkUserAccessToCirclePost(4, 1, true);
 
         $this->assertTrue($result);
         $this->assertFalse($result1);
@@ -667,11 +687,8 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_success()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $result = $PostService->checkUserAccessToPost(2, 7, true);
-        $result1 = $PostService->checkUserAccessToPost(2, 7);
+        $result = $this->PostService->checkUserAccessToCirclePost(2, 7, true);
+        $result1 = $this->PostService->checkUserAccessToCirclePost(2, 7);
 
         $this->assertTrue($result);
         $this->assertTrue($result1);
@@ -679,20 +696,14 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_userHasAccessToSecretPost_failed()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $result = $PostService->checkUserAccessToPost(4, 7);
+        $result = $this->PostService->checkUserAccessToCirclePost(4, 7);
 
         $this->assertFalse($result);
     }
 
     public function test_userHasAccessToJoinedPost_success()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $result = $PostService->checkUserAccessToPost(1, 1);
+        $result = $this->PostService->checkUserAccessToCirclePost(1, 1);
 
         $this->assertTrue($result);
     }
@@ -701,10 +712,7 @@ class PostServiceTest extends GoalousTestCase
     {
         $postId = 1;
 
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $PostService->softDelete($postId);
+        $this->PostService->softDelete($postId);
 
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
@@ -764,11 +772,7 @@ class PostServiceTest extends GoalousTestCase
     public function test_softDeletePostNotExist_failed()
     {
         $postId = 10909;
-
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $PostService->softDelete($postId);
+        $this->PostService->softDelete($postId);
     }
 
     /**
@@ -778,32 +782,27 @@ class PostServiceTest extends GoalousTestCase
     {
         $postId = 1;
 
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $PostService->softDelete($postId);
-        $PostService->softDelete($postId);
+        $this->PostService->softDelete($postId);
+        $this->PostService->softDelete($postId);
     }
 
     public function test_saveFileInPostAdd_success()
     {
         //Mock storage clients
         $bufferClient = mock::mock('BufferStorageClient');
-        $bufferClient->shouldReceive('get')->withAnyArgs()
-                     ->atLeast()->once()
-                     ->andReturn(new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a"));
+        $bufferClient->shouldReceive('bulkGet')->withAnyArgs()
+            ->atLeast()->once()
+            ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
         $bufferClient->shouldReceive('save')->withAnyArgs()
-                     ->atLeast()->once()
-                     ->andReturn("1234567890abcd.12345678");
+            ->atLeast()->once()
+            ->andReturn("1234567890abcd.12345678");
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
-        $assetsClient->shouldReceive('save')->withAnyArgs()
-                     ->atLeast()->once()->andReturn(true);
+        $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
+            ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
 
@@ -813,9 +812,9 @@ class PostServiceTest extends GoalousTestCase
             'type' => 1
         ];
 
-        $postEntity = $PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
+        $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
 
-        $files = $PostService->getAttachedFiles($postEntity['id']);
+        $files = $this->PostService->getNormalAttachedFiles($postEntity['id']);
 
         $this->assertNotEmpty($files);
     }
@@ -825,23 +824,17 @@ class PostServiceTest extends GoalousTestCase
      */
     public function test_editPostMissing_failed()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
         $newBody = 'EDITED';
 
-        $PostService->editPost($newBody, 183281390);
+        $this->PostService->editPost($newBody, 183281390);
 
     }
 
     public function test_editPost_success()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
         $newBody = 'EDITED';
 
-        $res = $PostService->editPost($newBody, 1);
+        $res = $this->PostService->editPost($newBody, 1);
 
         $this->assertTrue($res instanceof PostEntity);
         $this->assertEquals($newBody, $res['body']);
@@ -849,28 +842,200 @@ class PostServiceTest extends GoalousTestCase
 
     public function test_checkUserAccessToMultiplePost_failure()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $postsIds = [1,3];
+        /* Circle post and it was created by login user */
         $userId = 1;
+        $teamId = 1;
 
-        try{
-            $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
-        } catch (GlException\GoalousConflictException $e){
-            $this->assertEqual("The circle doesn't exist or you don't have permission.", $e->getMessage());
+        $postUserId = 1;
+        $circleId = 1;
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $postIds = [$post['id']];
+
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
         }
+        $this->assertEmpty($msg);
 
+        /* Other member's circle post and login user belongs to the circle */
+        $postUserId = 2;
+        $circleId = 1;
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $postIds[] = $post['id'];
+
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+        $this->assertEmpty($msg);
+
+        /* Action post */
+        $postData = [
+            'Post' => ['body' => 'test', 'type' => Post::TYPE_ACTION]
+        ];
+        $post = $this->PostService->addNormal($postData, $postUserId, $teamId);
+        $postIds[] = $post['id'];
+
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+        $this->assertEmpty($msg);
+
+        /* Other member's circle post and login user doesn't belong to the circle */
+        $circleId = 3;
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $postIds[] = $post['id'];
+
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+        $this->assertEmpty($msg);
+
+        /* Login user doesn't belong to secret circle */
+        $circleId = 4;
+        $postUserId = 1;
+        $userId = 9999;
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $postIds = [$post['id']];
+
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+        $this->assertNotEmpty($msg);
+
+
+        /* Login user belong to secret circle */
+        $this->CircleMember->join($circleId, $userId);
+        $msg = "";
+        try {
+            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
+        } catch (GlException\GoalousNotFoundException $e) {
+            $msg = $e->getMessage();
+        }
+        $this->assertEmpty($msg);
     }
 
     public function test_checkUserAccessToMultiplePost_success()
     {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        $postsIds = [1,101];
+        $postsIds = [1, 101];
         $userId = 1;
 
-        $PostService->checkUserAccessToMultiplePost($userId, $postsIds);
+        $this->PostService->checkUserAccessToMultiplePost($userId, $postsIds);
+    }
+
+    public function test_addCirclePost_success()
+    {
+        $userId = 1;
+        $teamId = 1;
+        $circleId = 1;
+        $body = "A new post";
+        $type = 1;
+
+        $newData['body'] = $body;
+        $newData['type'] = $type;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        $initialCircle = $Circle->getById($circleId);
+
+        $newPost = $this->PostService->addCirclePost($newData, $circleId, $userId, $teamId);
+
+        $this->assertEquals($body, $newPost['body']);
+        $this->assertEquals($userId, $newPost['user_id']);
+        $this->assertEquals($teamId, $newPost['team_id']);
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        $PostShareCircle->current_team_id = $teamId;
+
+        $this->assertCount(1, $PostShareCircle->getShareCircleList($newPost['id']));
+
+        $updatedCircle = $Circle->getById($circleId);
+
+        $this->assertLessThan($updatedCircle['latest_post_created'], $initialCircle['latest_post_created']);
+        $this->assertLessThan($updatedCircle['modified'], $initialCircle['modified']);
+    }
+
+    public function test_get()
+    {
+        $extensions = [
+            PostExtender::EXTEND_USER,
+            PostExtender::EXTEND_RELATED_TYPE,
+            PostExtender::EXTEND_COMMENTS,
+            PostExtender::EXTEND_POST_SHARE_CIRCLE,
+            PostExtender::EXTEND_POST_SHARE_USER,
+            PostExtender::EXTEND_POST_FILE,
+            PostExtender::EXTEND_LIKE,
+            PostExtender::EXTEND_SAVED,
+            PostExtender::EXTEND_READ,
+        ];
+
+        $req = new PostResourceRequest(1, 1, 1, true);
+        $ret = $this->PostService->get($req,$extensions);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals($ret['id'], $req->getId());
+        $this->assertEquals($ret['del_flg'], false);
+        $this->assertTrue(is_array($ret['user']));
+        $this->assertEquals($ret['is_liked'], false);
+        $this->assertEquals($ret['is_read'], false);
+        $this->assertEquals($ret['is_saved'], false);
+        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals(count($ret['comments']['data']), 2);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
+        $this->assertEquals($ret['comments']['count'], 2);
+        $this->assertEquals($ret['comments']['cursor'], null);
+
+        $extensions = [
+            PostExtender::EXTEND_ALL
+        ];
+        $ret = $this->PostService->get($req,$extensions);
+
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals($ret['id'], $req->getId());
+        $this->assertEquals($ret['del_flg'], false);
+        $this->assertTrue(is_array($ret['user']));
+        $this->assertEquals($ret['is_liked'], false);
+        $this->assertEquals($ret['is_read'], false);
+        $this->assertEquals($ret['is_saved'], false);
+        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals(count($ret['comments']['data']), 2);
+        $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
+        $this->assertEquals($ret['comments']['count'], 2);
+        $this->assertEquals($ret['comments']['cursor'], null);
+
+        $req->setId(7);
+        $req->setUserId(99);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertEquals($ret, []);
+
+        $req->setCheckPermission(false);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertNotEmpty($ret);
+
+        $req->setId(8);
+        $req->setUserId(2);
+        $req->setCheckPermission(true);
+        $ret = $this->PostService->get($req,$extensions);
+        $this->assertTrue(is_array($ret));
+        $this->assertEquals(count($ret['attached_files']), 1);
+        $this->assertEquals($ret['attached_files'][0]['id'], 2);
+
+        $this->assertEquals($ret['action_result']['id'], 1);
+        $this->assertEquals($ret['key_result']['id'], $ret['action_result']['key_result_id']);
+        $this->assertEquals($ret['goal']['id'], $ret['action_result']['goal_id']);
     }
 }

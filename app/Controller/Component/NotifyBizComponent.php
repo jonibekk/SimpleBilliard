@@ -62,6 +62,13 @@ class NotifyBizComponent extends Component
         self::PUSHER_CHANNEL_TYPE_GOAL
     ];
 
+    /**
+     * Whether from_user_id should be check for null value
+     *
+     * @var bool
+     */
+    private $skipCheckFromUserId = false;
+
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         parent::__construct($collection, $settings);
@@ -136,7 +143,8 @@ class NotifyBizComponent extends Component
         $user_id,
         $team_id,
         int $postId = null
-    ) {
+    )
+    {
         $this->notify_option['from_user_id'] = $user_id;
         $this->notify_option['options']['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
@@ -270,6 +278,11 @@ class NotifyBizComponent extends Component
         //通知するアイテムかどうかチェック
         if (!$this->_canNotify()) {
             return;
+        }
+
+        //Check if from_user_id is null
+        if (!$this->skipCheckFromUserId && empty($this->notify_option['from_user_id'])) {
+            GoalousLog::error("Missing from_user_id for notification type $notify_type");
         }
 
         //通常のアプリ通知データ保存
@@ -490,7 +503,8 @@ class NotifyBizComponent extends Component
             = $team_id;
     }
 
-    private function _fixReceiver($team_id, $user_ids, $body) {
+    private function _fixReceiver($team_id, $user_ids, $body)
+    {
         $mentionedUsers = $this->Mention->getUserList($body, $team_id, null, true);
         foreach ($mentionedUsers as $user) {
             $index = array_search($user, $user_ids);
@@ -1061,7 +1075,8 @@ class NotifyBizComponent extends Component
         int $commenterUserId,
         array $toUserList,
         int $postId
-    ) {
+    )
+    {
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
             NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
@@ -1368,6 +1383,7 @@ class NotifyBizComponent extends Component
         $teamName = $this->Goal->Team->findById($this->NotifySetting->current_team_id);
 
         $this->notify_option['from_user_id'] = null;
+        $this->skipCheckFromUserId = true;
         $this->notify_option['notify_type'] = $notifyType;
         $this->notify_option['url_data'] = $notifyListUrl;
         $this->notify_option['model_id'] = null;
@@ -1421,6 +1437,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commented_user_list);
     }
+
     /**
      * 自分の投稿、アクション、その他にコメントがあった場合のオプション取得
      *
@@ -1484,7 +1501,7 @@ class NotifyBizComponent extends Component
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
             $notify_type);
-        foreach($to_user_ids as $toUserId) {
+        foreach ($to_user_ids as $toUserId) {
             $this->notify_settings[$toUserId]['app'] = true;
         }
         if (!is_null($comment_id)) {
@@ -1506,11 +1523,11 @@ class NotifyBizComponent extends Component
             $actionResult = $this->Post->ActionResult->findById($post['Post']['action_result_id']);
             $keyResult = $this->Post->KeyResult->findById($actionResult['ActionResult']['key_result_id']);
             $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
-        }else if (!empty($post['Post']['key_result_id'])) {
+        } else if (!empty($post['Post']['key_result_id'])) {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
             $keyResult = $this->Post->KeyResult->findById($post['Post']['key_result_id']);
             $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
-        }else {
+        } else {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT;
             $itemName = '';
             if (!empty($share_circle_list)) {
@@ -1542,6 +1559,8 @@ class NotifyBizComponent extends Component
             $notificationBody[$k] = mb_strimwidth($v, 0, 40, "...");
         }
         $notificationBody = json_encode($notificationBody);
+
+        $this->GlRedis->setSkipCheckMyId($this->skipCheckFromUserId);
 
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
@@ -1757,7 +1776,8 @@ class NotifyBizComponent extends Component
         $teamId = null,
         $userId = null,
         $baseUrl = null
-    ) {
+    )
+    {
         $set_web_env = "";
         $nohup = "nohup ";
         if (ENV_NAME == 'local') {

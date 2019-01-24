@@ -1,6 +1,6 @@
 <?php
-App::import('Lib/DataExtender', 'TeamMemberDataExtender');
-App::import('Lib/DataExtender', 'UserDataExtender');
+App::import('Lib/DataExtender/Extension', 'TeamMemberExtension');
+App::import('Lib/DataExtender/Extension', 'UserExtension');
 App::import('Lib/ElasticSearch', "ESClient");
 App::import('Lib/ElasticSearch', "ESSearchResponse");
 App::import('Service/Paging/Search', 'BaseSearchPagingService');
@@ -49,19 +49,19 @@ class UserSearchPagingService extends BaseSearchPagingService
             return [];
         }
 
-        /** @var UserDataExtender $UserDataExtender */
-        $UserDataExtender = ClassRegistry::init('UserDataExtender');
-        $resultArray = $UserDataExtender->extend($baseData, "{n}.id");
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        $resultArray = $UserExtension->extendMulti($baseData, "{n}.id");
 
-        /** @var TeamMemberDataExtender $TeamMemberDataExtender */
-        $TeamMemberDataExtender = ClassRegistry::init('TeamMemberDataExtender');
-        $TeamMemberDataExtender->setTeamId($request->getTempCondition('team_id'));
-        $resultArray = $TeamMemberDataExtender->extend($resultArray, "{n}.id", "user_id");
+        /** @var TeamMemberExtension $TeamMemberExtension */
+        $TeamMemberExtension = ClassRegistry::init('TeamMemberExtension');
+        $TeamMemberExtension->setTeamId($request->getTempCondition('team_id'));
+        $resultArray = $TeamMemberExtension->extendMulti($resultArray, "{n}.id", "user_id");
 
         foreach ($resultArray as &$result) {
             $result['display_name'] = $result['user']['display_username'] . ' (' . $result['user']['roman_username'] . ')';
             $result['img_url'] = $result['user']['profile_img_url']['medium_large'];
-            $result['is_active'] = ($result['teammember']['status'] == Enum\Model\TeamMember\Status::ACTIVE);
+            $result['is_active'] = ($result['team_member']['status'] == Enum\Model\TeamMember\Status::ACTIVE);
         }
 
         return $resultArray;

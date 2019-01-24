@@ -3,12 +3,6 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Lib/Paging', 'PagingRequest');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/28
- * Time: 12:07
- */
 class CircleListPagingServiceTest extends GoalousTestCase
 {
     public $fixtures = [
@@ -16,6 +10,7 @@ class CircleListPagingServiceTest extends GoalousTestCase
         'app.user',
         'app.circle',
         'app.circle_member',
+        'app.circle_pin',
         'app.experiment',
         'app.post_share_circle'
     ];
@@ -26,11 +21,8 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $pagingRequest = new PagingRequest();
-        $pagingRequest->addResource('res_id', 1);
-        $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->setCurrentUserId(1);
-
-        $pagingRequest->addOrder('latest_post_created');
+        $pagingRequest->setCurrentTeamId(1);
+        $pagingRequest->setCurrentUserId(13);
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
 
@@ -45,17 +37,15 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $pagingRequest = new PagingRequest();
-        $pagingRequest->addResource('res_id', 1);
-        $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->setCurrentUserId(1);
+        $pagingRequest->setCurrentUserId(13);
+        $pagingRequest->setCurrentTeamId(1);
         $pagingRequest->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
         $pagingRequest = PagingRequest::decodeCursorToObject($result['cursor']);
-        $pagingRequest->addResource('current_team_id', 1);
-        $pagingRequest->setCurrentUserId(1);
-        $pagingRequest->addResource('res_id', 1);
+        $pagingRequest->setCurrentTeamId( 1);
+        $pagingRequest->setCurrentUserId(13);
 
         $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 1);
 
@@ -70,17 +60,35 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
         $cursor = new PagingRequest();
-        $cursor->addResource('current_team_id', 1);
-        $cursor->addResource('res_id', 1);
-        $cursor->setCurrentUserId(1);
+        $cursor->setCurrentTeamId(1);
+        $cursor->setCurrentUserId(13);
         $cursor->addOrder('latest_post_created');
 
         $result = $CircleListPagingService->getDataWithPaging($cursor, 1,
-            [CircleListPagingService::EXTEND_MEMBER_INFO]);
+            [CircleExtender::EXTEND_MEMBER_INFO]);
 
         $data = $result['data'][0];
-        
         $this->assertInternalType('int', $data['unread_count']);
         $this->assertInternalType('bool', $data['admin_flg']);
+    }
+
+    /**
+     * Currently, if user is getting joined circles, it will skip pinned circles.
+     * All of user 1's joined circles are pinned
+     */
+    public function test_getCircleListAllPinned_success()
+    {
+        /** @var CircleListPagingService $CircleListPagingService */
+        $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
+
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->setCurrentTeamId(1);
+        $pagingRequest->setCurrentUserId(1);
+
+        $result = $CircleListPagingService->getDataWithPaging($pagingRequest, 2);
+
+        $this->assertCount(0, $result['data']);
+        $this->assertEmpty($result['cursor']);
+        $this->assertEquals(0, $result['count']);
     }
 }

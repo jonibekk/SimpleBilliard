@@ -26,7 +26,7 @@ if (!isset($with_header_menu)) {
     echo $this->element('Header/not_logged_in');
 }
 ?>
-<div id="container" class="container">
+<div id="container" class="container <?= $displayMobileAppFooter ? 'mod-mobile-app' : '' ?>">
     <div class="row">
         <div class="col-xs-3 <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>hidden-xxs<?php endif ?>">
             <?= $this->fetch('sidebar') ?>
@@ -42,6 +42,7 @@ if (!isset($with_header_menu)) {
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>
+<?= $displayMobileAppFooter ? $this->element('Footer/mobile_app_footer') : '' ?>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->

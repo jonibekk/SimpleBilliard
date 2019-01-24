@@ -12,6 +12,8 @@ App::import('Lib/Storage', 'UploadedFile');
 
 use Aws\S3\Exception\S3Exception;
 use Goalous\Exception as GlException;
+use Aws\Exception\AwsException as AwsException;
+use Aws\CommandPool;
 
 class BufferStorageClient extends BaseStorageClient implements StorageClient
 {
@@ -44,7 +46,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
      *
      * @return string
      */
-    public function save(UploadedFile $file): string
+    public function save(UploadedFile $file): bool
     {
         $key = $this->createFileKey($file->getUUID());
         $key = $this->sanitize($key);
@@ -56,7 +58,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
             throw new GlException\Storage\Upload\UploadFailedException("Failed saving to S3");
         }
 
-        return $file->getUUID();
+        return true;
     }
 
     /**
@@ -78,6 +80,7 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
      * @param string $uuid
      *
      * @return UploadedFile
+     * @throws Exception
      */
     public function get(string $uuid): UploadedFile
     {
@@ -105,6 +108,42 @@ class BufferStorageClient extends BaseStorageClient implements StorageClient
         $data = $response['Body'];
 
         return UploadedFile::generate($data->getContents());
+    }
+
+    /**
+     * Bulk get buffered file from temporary bucket
+     *
+     * @param string[] $uuids
+     * @return UploadedFile[]
+     * @throws Exception
+     */
+    public function bulkGet(array $uuids): array
+    {
+        try {
+
+            $commands = [];
+
+            foreach ($uuids as $uuid) {
+                $key = $this->createFileKey($uuid);
+                $key = $this->sanitize($key);
+
+                $commands[] = $this->getCommandForGetObject(AWS_S3_BUCKET_TMP, $key);
+            }
+            $responses = CommandPool::batch($this->s3Instance, $commands);
+        } catch (AwsException $exception) {
+            throw new RuntimeException($exception->getMessage());
+        }
+
+        $fileContents = [];
+        foreach ($responses as $response) {
+            if (empty($response['Body'])) {
+                throw new UnexpectedValueException("File body can't be empty");
+            }
+            /** @var GuzzleHttp\Psr7\Stream $data */
+            $data = $response['Body'];
+            $fileContents[] = UploadedFile::generate($data->getContents());
+        }
+        return $fileContents;
     }
 
     /**

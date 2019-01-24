@@ -1,5 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('Model', 'Comment');
+App::import('Model/Entity', 'CommentReadEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -177,4 +179,74 @@ class CommentRead extends AppModel
         'user_id'       => DataType::INT,
         'team_id'       => DataType::INT
     ];
+
+    /**
+     * Update the count reader for multiple comments
+     * 
+     * @param array $commentsIds
+     *
+     * @var array $comments_counts
+     *      [[$comment_id] => [count]]
+     *
+     */
+    public function updateReadersCountMultipleComments(array $commentsIds)
+    {
+        $commentsCounts = $this->countCommentReadersMultipleComments($commentsIds);
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        foreach ($commentsCounts as $commentId => $count) {
+            $Comment->updateAll(['Comment.comment_read_count' => $count], ['Comment.id' => $commentId]);
+        }
+    }
+
+    /**
+     * Get comments readers
+     *
+     * @param array $commentsIds
+     *
+     * @return array $comments_counts
+     *      [[$comment_id] => [count]]
+     */
+    public function countCommentReadersMultipleComments(array $commentsIds): array
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentsIds,
+            ],
+            'fields'     => [
+                'comment_id',
+                'COUNT(comment_id) AS sum'
+            ],
+            'group'     => [
+                'comment_id'
+            ]
+        ];
+
+        $array = $this->find('all', $condition);
+
+        return Hash::combine($array, '{n}.CommentRead.comment_id', '{n}.0.sum');
+    }
+
+    /**
+     * Get actual comment readers
+     *
+     * @param int $commentId
+     *
+     * @return int
+     */
+    public function countCommentReaders(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        return (int)$this->find('count', $condition);
+    }
 }

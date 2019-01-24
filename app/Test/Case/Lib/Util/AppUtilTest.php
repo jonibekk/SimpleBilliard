@@ -294,4 +294,37 @@ class AppUtilTest extends GoalousTestCase
         $fullBaseUrl = AppUtil::fullBaseUrl('dev');
         $this->assertSame('https://dev.goalous.com', $fullBaseUrl);
     }
+
+    function test_arrayChangeKeySnakeCase()
+    {
+        $a = [
+            'ActionResult' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+            'Circle' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+            'testTestTest' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+        ];
+        $ret = AppUtil::arrayChangeKeySnakeCase($a);
+        $this->assertEquals($ret, [
+            'action_result' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+            'circle' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+            'test_test_test' => [
+                'id' => 1,
+                'user_id' => 1
+            ],
+        ]);
+    }
 }

@@ -117,7 +117,7 @@ class TeamServiceTest extends GoalousTestCase
             'team_id'    => 2,
             'user_id'    => 9,
             'last_login' => "2019-05-22 02:28:04",
-            'status'     => Enum\Model\TeamMember\Status::ACTIVE()->getValue()
+            'status'     => Enum\Model\TeamMember\Status::ACTIVE
         ];
 
         $TeamMember->create();

@@ -44,7 +44,7 @@
                                            'post_id'    => $post['Post']['id']
                                        ],
                                            true) ?>">
-                                        <?= __("Copy Link") ?></a>
+                                        <?= __("Display Link") ?></a>
                                 </li>
                             </ul>
                         </div>

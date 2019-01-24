@@ -66,10 +66,7 @@ class UploadBehavior extends ModelBehavior
         foreach ($settings as $field => $array) {
             self::$__settings[$model->name][$field] = array_merge($defaults, $array);
         }
-        if (PUBLIC_ENV) {
-            $this->_setupS3();
-        }
-
+        $this->_setupS3();
     }
 
     public function beforeSave(Model $model, $options = array())
@@ -1043,13 +1040,7 @@ class UploadBehavior extends ModelBehavior
 
     function s3Upload($from_path, $type)
     {
-        //公開環境じゃない場合は処理しない
-        if (!PUBLIC_ENV) {
-            return false;
-        }
-
-        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
-        $to_path = $img_path_exp[1];
+        $to_path = $this->processS3UploadPath($from_path);
 
         try {
             /**
@@ -1075,12 +1066,7 @@ class UploadBehavior extends ModelBehavior
 
     function s3Delete($from_path)
     {
-        //公開環境じゃない場合は処理しない
-        if (!PUBLIC_ENV) {
-            return false;
-        }
-        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
-        $to_path = $img_path_exp[1];
+        $to_path = $this->processS3UploadPath($from_path);
         try {
             $response = $this->s3->deleteObject(['Bucket' => S3_ASSETS_BUCKET, 'Key' => $to_path]);
             return $response;
@@ -1096,5 +1082,22 @@ class UploadBehavior extends ModelBehavior
         }
         // S3を操作するためのオブジェクトを生成
         $this->s3 = AwsClientFactory::createS3ClientForFileStorage();
+    }
+
+    /**
+     * @param string $tmpPath
+     * @return string
+     */
+    private function processS3UploadPath(string $tmpPath): string
+    {
+        $img_path_exp = explode(S3_TRIM_PATH, $tmpPath);
+        $path = $img_path_exp[1];
+        if (ENV_NAME === "local") {
+            if (empty(AWS_S3_BUCKET_USERNAME)) {
+                throw new RuntimeException("Please define AWS_S3_BUCKET_USERNAME");
+            }
+            $path = AWS_S3_BUCKET_USERNAME . "/" . $path;
+        }
+        return $path;
     }
 }

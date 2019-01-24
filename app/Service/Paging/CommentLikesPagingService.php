@@ -1,20 +1,12 @@
 <?php
 App::import('Lib/Paging', 'BasePagingService');
-App::import('Lib/DataExtender', "UserDataExtender");
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('CommentLikes', 'Model');
 App::uses('User', 'Model');
+App::import('Lib/DataExtender', 'CommentLikeExtender');
 
-/**
- * User: MartiFloriach
- * Date: 2018/09/13
- * Time: 13:56
- */
 class CommentLikesPagingService extends BasePagingService
 {
-
-    const EXTEND_ALL = "ext:comment_like:all";
-    const EXTEND_USER = "ext:comment_like:user";
     const MAIN_MODEL = 'CommentLike';
 
     /**
@@ -49,13 +41,14 @@ class CommentLikesPagingService extends BasePagingService
         return (int)$CommentLike->find('count', $options);
     }
 
-    protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
+    protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        $userId = $request->getCurrentUserId();
+        $teamId = $request->getCurrentTeamId();
+
+        /** @var CommentLikeExtender $CommentLikeExtender */
+        $CommentLikeExtender = ClassRegistry::init('CommentLikeExtender');
+        $data = $CommentLikeExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     /**

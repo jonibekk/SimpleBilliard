@@ -9,7 +9,7 @@ import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {nl2br} from "~/util/element";
-import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
+import {isIOSApp, isMobileApp} from "~/util/base";
 import {HotKeys} from "react-hotkeys";
 
 class Footer extends React.Component {
@@ -40,10 +40,12 @@ class Footer extends React.Component {
         threadBody.scrollTo(0,threadBody.scrollHeight);
     };
 
-    const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
-    this.props.dispatch(
-      detail.changeLayout({body_bottom})
-    );
+    // This doesn't work well after replace mobile app footer from native to web
+    // Delete after just wait and see a little.
+    // const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    // this.props.dispatch(
+    //   detail.changeLayout({body_bottom})
+    // );
   }
 
   sendLike(e) {
@@ -66,15 +68,6 @@ class Footer extends React.Component {
     this.props.dispatch(
       detail.inputMessage(e.target.value)
     );
-
-    if (isOldIOSApp()) {
-        // TODO: Scroll by document height
-        window.scrollTo(0, 1000)
-        const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
-        this.props.dispatch(
-            detail.changeLayout({body_bottom})
-        );
-    }
   }
 
   uploadFiles(files) {
@@ -137,25 +130,9 @@ class Footer extends React.Component {
   }
 
   focusInputBody(e) {
-    if (isIOSApp() && isOldIOSApp()) {
-      this.props.dispatch(
-        detail.changeLayout({
-          body_bottom: PositionMobileApp.BODY_BOTTOM,
-          footer_bottom: PositionMobileApp.FOOTER_BOTTOM,
-        })
-      );
-    }
   }
 
   blurInputBody(e) {
-    if (isIOSApp() && isOldIOSApp()) {
-      this.props.dispatch(
-        detail.changeLayout({
-          body_bottom: PositionIOSApp.BODY_BOTTOM,
-          footer_bottom: PositionIOSApp.FOOTER_BOTTOM,
-        })
-      );
-    }
   }
 
   render() {

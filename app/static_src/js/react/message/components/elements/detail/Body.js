@@ -8,7 +8,8 @@ import {
   FetchLatestMessageStatus,
   FetchMoreMessages,
   SaveMessageStatus,
-  TopicTitleSettingStatus
+  TopicTitleSettingStatus,
+  JumpToLatest
 } from "~/message/constants/Statuses";
 import {isIOSApp} from "~/util/base";
 import {PositionIOSApp} from "~/message/constants/Styles";
@@ -21,7 +22,7 @@ class Body extends React.Component {
       init_scrolled_bottom: false,
       is_scrolled_bottom: false,
       before_scroll_height: 0,
-    }
+    };
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
     this.onTouchMove = this.onTouchMove.bind(this)
@@ -34,12 +35,21 @@ class Body extends React.Component {
       }
     }
     if (nextProps.fetch_more_messages_status == FetchMoreMessages.SUCCESS) {
-      let el = this._findElement();
+      const el = this._findElement();
       this.setState({before_scroll_height: el.scrollHeight})
+    }
+    if (this.props.jump_to_latest_status !== nextProps.jump_to_latest_status && nextProps.jump_to_latest_status === JumpToLatest.DONE) {
+      this.scrollBottom(true);
     }
   }
 
   componentDidUpdate() {
+    if (this.props.search_message_id && !this.props.is_fetched_search && this.props.paging.new) {
+      this.props.dispatch(
+        actions.fetchMoreMessages(this.props.paging.new, false)
+      );
+      return;
+    }
     if (this.judgeScrollBottom()) {
       this.scrollBottom();
     } else {
@@ -93,12 +103,15 @@ class Body extends React.Component {
     if (this.props.fetch_more_messages_status !== FetchMoreMessages.SUCCESS) {
       return;
     }
+    if (!this.props.is_old_direction) {
+      return;
+    }
     if (!this.props.last_position_message_id) {
       return;
     }
-    let el = this._findElement();
+    const el = this._findElement();
     // Temporarily stop the inertial scroll to prevent message loading continuously
-    el.setAttribute('style', '-webkit-overflow-scrolling: auto;')
+    el.setAttribute('style', '-webkit-overflow-scrolling: auto;');
     // Scroll last position
     // 古いメッセージが読み込まれてることをわからせるために、読み込んだ古いメッセージが見えるよう-10pxだけ最後の読み込み位置より上に移動
     el.scrollTop = el.scrollHeight - this.state.before_scroll_height - 10;
@@ -117,7 +130,7 @@ class Body extends React.Component {
     if (!this.state.init_scrolled_bottom) {
       return;
     }
-    let el = this._findElement();
+    const el = this._findElement();
     el.addEventListener('scroll', this.scrollFunction, true);
   }
 
@@ -126,22 +139,41 @@ class Body extends React.Component {
     if (this.props.messages.length <= 0) {
       return;
     }
-    if (!this.props.paging.next) {
-      return;
-    }
     if (this.props.fetch_more_messages_status == FetchMoreMessages.LOADING) {
       return;
     }
 
-    let el = this._findElement();
-    let top_scroll_pos = el.scrollTop;
+    const el = this._findElement();
+    const top_scroll_pos = el.scrollTop;
+    const bottom_scroll_pos = el.offsetHeight + top_scroll_pos;
     const threshold = 0;
-    if (top_scroll_pos <= threshold) {
+    const height = el.scrollHeight;
+
+
+    if (this.props.search_message_id) {
+      if (this.props.jump_to_latest_status === JumpToLatest.NONE) {
+        this.props.dispatch(
+          actions.setJumpToLatestStatus(JumpToLatest.VISIBLE)
+        );
+      }
+      if (this.props.jump_to_latest_status === JumpToLatest.VISIBLE && !this.props.paging.new && bottom_scroll_pos + threshold >= height) {
+        this.props.dispatch(
+          actions.setJumpToLatestStatus(JumpToLatest.DONE)
+        );
+      }
+    }
+
+
+    if (this.props.paging.old && top_scroll_pos <= threshold) {
       this.detachScrollListener();
       this.props.dispatch(
-        actions.fetchMoreMessages(this.props.paging.next)
-      )
-
+        actions.fetchMoreMessages(this.props.paging.old, true)
+      );
+    } else if (this.props.paging.new && bottom_scroll_pos + threshold >= height) {
+      this.detachScrollListener();
+      this.props.dispatch(
+        actions.fetchMoreMessages(this.props.paging.new, false)
+      );
     }
   }
 
@@ -167,15 +199,17 @@ class Body extends React.Component {
     return false;
   }
 
-  scrollBottom() {
-    let el = this._findElement();
+  scrollBottom(changeState = true) {
+    const el = this._findElement();
     el.scrollTop = el.scrollHeight;
 
-    this.setState({init_scrolled_bottom: true})
+    if (changeState) {
+      this.setState({init_scrolled_bottom: true})
+    }
   }
 
   detachScrollListener() {
-    let el = this._findElement();
+    const el = this._findElement();
     el.removeEventListener('scroll', this.scrollFunction, true);
     el.removeEventListener('resize', this.scrollFunction, true);
   }
@@ -190,9 +224,15 @@ class Body extends React.Component {
     }
   }
 
-  render() {
-    const {topic, messages, fetch_more_messages_status, is_mobile_app, fetching_read_count} = this.props
+  jumpToLatest() {
+    this.props.dispatch(
+      actions.resetMessages()
+    );
 
+  }
+
+  render() {
+    const {topic, messages, fetch_more_messages_status, is_mobile_app, fetching_read_count, search_message_id, is_old_direction} = this.props;
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
     const body_styles = {
@@ -210,6 +250,7 @@ class Body extends React.Component {
         return (
           <Message
             topic={topic}
+            is_active={search_message_id == message.id}
             ref={`message_${message.id}`}
             message={message}
             key={message.id}
@@ -217,12 +258,23 @@ class Body extends React.Component {
           />
         )
       });
-    }
+    };
+
 
     return (
-      <div className={`topicDetail-body ${sp_class} ${isIOSApp() ? 'mod-ios-app' : ''}`} ref="messages" onTouchMove={this.onTouchMove} style={body_styles}>
-        {(fetch_more_messages_status == FetchMoreMessages.LOADING) && <Loading/>}
-        {renderMessages()}
+      <div className={`topicDetail-body ${sp_class} ${isIOSApp() ? 'mod-ios-app' : ''}`}  style={body_styles}>
+        <div className={`topicDetail-body-inner ${sp_class}`}  ref="messages"
+             onTouchMove={this.onTouchMove}>
+          {(fetch_more_messages_status == FetchMoreMessages.LOADING && is_old_direction) && <Loading/>}
+          {renderMessages()}
+          {(fetch_more_messages_status == FetchMoreMessages.LOADING && !is_old_direction) && <Loading/>}
+        </div>
+        <div
+          className={`topicDetail-jumpToLatest ${this.props.jump_to_latest_status === JumpToLatest.VISIBLE ? 'is-show' : ''}`}
+          onClick={this.jumpToLatest.bind(this)}>
+          <i className="fa fa-arrow-circle-down"></i>
+          <span>{__("View the latest messages")}</span>
+        </div>
       </div>
     )
   }
@@ -230,22 +282,28 @@ class Body extends React.Component {
 
 Body.propTypes = {
   topic: React.PropTypes.object,
+  search_message_id: React.PropTypes.number,
   fetch_more_messages_status: React.PropTypes.number,
+  jump_to_latest_status: React.PropTypes.number,
   messages: React.PropTypes.array,
   paging: React.PropTypes.object,
   is_fetched_initial: React.PropTypes.bool,
   is_mobile_app: React.PropTypes.bool,
-  fetching_read_count: React.PropTypes.bool
+  fetching_read_count: React.PropTypes.bool,
+  is_fetched_search: React.PropTypes.bool
 };
 
 Body.defaultProps = {
   topic: {},
+  search_message_id: null,
   fetch_more_messages_status: FetchMoreMessages.NONE,
   fetch_latest_messages_status: FetchLatestMessageStatus.NONE,
+  jump_to_latest_status: JumpToLatest.NONE,
   messages: [],
-  paging: {next: ""},
+  paging: {old: "", new: ""},
   is_fetched_initial: false,
   is_mobile_app: false,
-  fetching_read_count: false
+  fetching_read_count: false,
+  is_fetched_search: false
 };
 export default connect()(Body);

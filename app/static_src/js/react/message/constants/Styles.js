@@ -2,8 +2,8 @@
 export const PositionIOSApp = Object.freeze({
   HEADER_TOP: 64,
   BODY_TOP: 114,
-  BODY_BOTTOM: 61,
-  FOOTER_BOTTOM: 6,
+  BODY_BOTTOM: 111,
+  FOOTER_BOTTOM: 56,
 })
 export const PositionMobileApp = Object.freeze({
   HEADER_TOP: 45,

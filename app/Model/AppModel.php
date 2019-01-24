@@ -785,6 +785,12 @@ class AppModel extends Model
         return $this;
     }
 
+    public function useReset(): self
+    {
+        $this->postProcessFunctions = [];
+        return $this;
+    }
+
     /**
      * Add type conversion process to post process
      *
@@ -831,6 +837,9 @@ class AppModel extends Model
                         break;
                     case (DataType::BOOL):
                         $data[$key] = boolval($value);
+                        break;
+                    case (DataType::JSON):
+                        $data[$key] = json_decode($value, true);
                         break;
                 }
             }
