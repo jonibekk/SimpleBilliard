@@ -510,10 +510,12 @@ function evTargetShowTargetDelete() {
   attrUndefinedCheck(this, 'show-target-id');
   attrUndefinedCheck(this, 'delete-target-id');
   var $obj = $(this);
+  var $parent = $obj.closest('.form-group');
   var show_target_id = $obj.attr("show-target-id");
   var delete_target_id = $obj.attr("delete-target-id");
-  $("#" + show_target_id).removeClass('hidden');
-  $("#" + delete_target_id).remove();
+  $parent.find("#" + show_target_id).removeClass('hidden');
+  $parent.find("#" + delete_target_id).remove();
+
   return false;
 }
 
