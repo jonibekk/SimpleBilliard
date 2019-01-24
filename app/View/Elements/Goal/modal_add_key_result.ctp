@@ -225,7 +225,7 @@
                                 </span>
                         </p>
 
-                        <div class="input-group date plr_5px goal-set-date none"
+                        <div class="input-group date plr_5px goal-set-date hidden"
                              data-date-end-date="<?= $limitEndDate ?>"
                              data-date-start-date="<?= $limitStartDate ?>"
                              id="KeyResult0StartDateInputWrap_<?= $goalId ?>">
