@@ -441,8 +441,12 @@ class GlRedisTest extends GoalousTestCase
     {
         $this->markTestSkipped();
     }
-  
-    public function test_deleteUserTeamList_success()
+
+    /**
+     * TODO: 2019-01-24 Research the cause
+     * Fatal error: Cannot redeclare GlRedisTest::test_deleteUserTeamList_success() in /home/travis/build/IsaoCorp/goalous/app/Test/Case/Model/GlRedisTest.php on line 495
+     */
+    public function test_deleteUserTeamList_success_renamed_because_redeclare()
     {
         $userIds = [1, 13, 97];
         foreach ($userIds as $userId) {
