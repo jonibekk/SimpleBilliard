@@ -489,7 +489,7 @@ class AttachedFile extends AppModel
             if (!in_array($type, $allowImageTypes)) {
                 return self::TYPE_FILE_DOC;
             }
-        }attached_file_list
+        }
         return $fileType;
     }
 
