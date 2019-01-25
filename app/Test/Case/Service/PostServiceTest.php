@@ -20,6 +20,7 @@ App::import('Service/Request/Resource', 'PostResourceRequest');
 use Goalous\Enum as Enum;
 use Mockery as mock;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 
 /**
@@ -530,7 +531,7 @@ class PostServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException         RuntimeException
+     * @expectedException        RuntimeException
      * @expectedExceptionMessage Error on adding post: failed increment unread count
      */
     function test_addNormal_incrementUnreadCount_error()
@@ -738,6 +739,9 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
 
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -755,7 +759,10 @@ class PostServiceTest extends GoalousTestCase
             ]
         ];
 
+        $numAttachedFiles = $AttachedFile->getCountOfAttachedFiles($postId, AttachedModelType::TYPE_MODEL_POST);
+
         $this->assertEmpty($PostDraft->find('first', $conditions));
+        $this->assertEquals(0, $numAttachedFiles);
         $this->assertEmpty($PostFile->find('first', $conditions));
         $this->assertEmpty($PostLike->find('first', $conditions));
         $this->assertEmpty($PostMention->find('first', $conditions));
@@ -824,20 +831,20 @@ class PostServiceTest extends GoalousTestCase
      */
     public function test_editPostMissing_failed()
     {
-        $newBody = 'EDITED';
+        $updatePost['body'] = 'EDITED';
 
-        $this->PostService->editPost($newBody, 183281390);
+        $this->PostService->editPost($updatePost, 183281390);
 
     }
 
     public function test_editPost_success()
     {
-        $newBody = 'EDITED';
+        $updatePost['body'] = 'EDITED';
 
-        $res = $this->PostService->editPost($newBody, 1);
+        $res = $this->PostService->editPost($updatePost, 1);
 
         $this->assertTrue($res instanceof PostEntity);
-        $this->assertEquals($newBody, $res['body']);
+        $this->assertEquals($updatePost['body'], $res['body']);
     }
 
     public function test_checkUserAccessToMultiplePost_failure()
@@ -984,7 +991,7 @@ class PostServiceTest extends GoalousTestCase
         ];
 
         $req = new PostResourceRequest(1, 1, 1, true);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
 
         $this->assertTrue(is_array($ret));
         $this->assertEquals($ret['id'], $req->getId());
@@ -1002,7 +1009,7 @@ class PostServiceTest extends GoalousTestCase
         $extensions = [
             PostExtender::EXTEND_ALL
         ];
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
 
         $this->assertTrue(is_array($ret));
         $this->assertEquals($ret['id'], $req->getId());
@@ -1019,17 +1026,17 @@ class PostServiceTest extends GoalousTestCase
 
         $req->setId(7);
         $req->setUserId(99);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertEquals($ret, []);
 
         $req->setCheckPermission(false);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertNotEmpty($ret);
 
         $req->setId(8);
         $req->setUserId(2);
         $req->setCheckPermission(true);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertTrue(is_array($ret));
         $this->assertEquals(count($ret['attached_files']), 1);
         $this->assertEquals($ret['attached_files'][0]['id'], 2);

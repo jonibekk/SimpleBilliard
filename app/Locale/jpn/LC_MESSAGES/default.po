@@ -3156,8 +3156,8 @@ msgstr "評価者なし"
 msgid "Edit Action"
 msgstr "アクションを編集"
 
-msgid "Copy Link"
-msgstr "リンクをコピー"
+msgid "Display Link"
+msgstr "リンクを表示"
 
 msgid "Like!"
 msgstr "いいね！"

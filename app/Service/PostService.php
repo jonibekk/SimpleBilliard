@@ -40,7 +40,8 @@ class PostService extends AppService
      * extend data
      *
      * @param PostResourceRequest $req
-     * @param array $extensions
+     * @param array               $extensions
+     *
      * @return array
      */
     function get(PostResourceRequest $req, array $extensions = []): array
@@ -492,8 +493,7 @@ class PostService extends AppService
         int $userId,
         int $teamId,
         array $fileIDs = []
-    ): PostEntity
-    {
+    ): PostEntity {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
@@ -527,7 +527,7 @@ class PostService extends AppService
             }
 
             // OGP
-            $postBody['site_info'] = !empty($postBody['site_info']) ? json_encode($postBody['site_info']): null;
+            $postBody['site_info'] = !empty($postBody['site_info']) ? json_encode($postBody['site_info']) : null;
 
             /** @var PostEntity $savedPost */
             $savedPost = $Post->useType()->useEntity()->save($postBody, false);
@@ -571,7 +571,7 @@ class PostService extends AppService
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
             // Update unread post numbers if specified sharing circle
-            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId)) {
                 GoalousLog::error($errorMessage = 'failed increment unread count', [
                     'post.id'    => $postId,
                     'circles.id' => $circleId,
@@ -733,7 +733,6 @@ class PostService extends AppService
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
     }
 
-
     /**
      * Get list of action attached files of a post
      *
@@ -791,6 +790,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
 
         //Check if post exists & not deleted
         $postCondition = [
@@ -805,7 +806,6 @@ class PostService extends AppService
 
         $modelsToDelete = [
             'PostDraft'       => 'post_id',
-            'PostFile'        => 'post_id',
             'PostLike'        => 'post_id',
             'PostMention'     => 'post_id',
             'PostRead'        => 'post_id',
@@ -828,6 +828,10 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+
+            // Delete Attached file
+            $AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);
+
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
@@ -899,7 +903,7 @@ class PostService extends AppService
      * @return PostEntity Updated post
      * @throws Exception
      */
-    public function editPost(string $newBody, int $postId): PostEntity
+    public function editPost(array $newBody, int $postId): PostEntity
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -911,7 +915,8 @@ class PostService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'     => '"' . $newBody . '"',
+                'body'     => '"' . $newBody['body'] . '"',
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']): null,
                 'modified' => REQUEST_TIMESTAMP
             ];
 
@@ -941,14 +946,14 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function checkUserAccessToMultiplePost(int $userId, array $postsIds) : bool
+    public function checkUserAccessToMultiplePost(int $userId, array $postsIds): bool
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
 
         $options = [
             'conditions' => [
-                'Circle.del_flg' => false,
+                'Circle.del_flg'  => false,
                 'CircleMember.id' => null
             ],
             'fields'     => [
@@ -962,7 +967,7 @@ class PostService extends AppService
                         'Circle.id = PostShareCircle.circle_id',
                         'PostShareCircle.post_id' => $postsIds,
                         'PostShareCircle.del_flg' => false,
-                        'Circle.public_flg' => false,
+                        'Circle.public_flg'       => false,
                     ],
                     'table'      => 'post_share_circles',
                     'alias'      => 'PostShareCircle',

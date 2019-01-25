@@ -8,6 +8,8 @@ App::uses('BaseApiController', 'Controller/Api');
 App::import('Service/Paging', 'CommentReaderPagingService');
 App::import('Service/Paging', 'CommentLikesPagingService');
 App::uses('CommentRequestValidator', 'Validator/Request/Api/V2');
+App::uses('Comment', 'Model');
+App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -147,6 +149,66 @@ class CommentsController extends BasePagingController
     }
 
     /**
+     * Endpoint for removing a comment
+     *
+     * @param int $commentId
+     *
+     * @return CakeResponse|null
+     */
+    public function delete(int $commentId)
+    {
+        $error = $this->validateDelete($commentId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        try {
+            $CommentService->delete($commentId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withData(["comment_id" => $commentId])->getResponse();
+    }
+
+    /**
+     * Endpoint for editing a comment
+     *
+     * @param int $commentId
+     *
+     * @return CakeResponse
+     */
+    public function put(int $commentId): CakeResponse
+    {
+        $error = $this->validatePut($commentId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+
+        $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+
+        try {
+            /** @var CommentEntity $newComment */
+            $newComment = $CommentService->editComment($newBody, $commentId);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+        return ApiResponse::ok()->withData($newComment->toArray())->getResponse();
+    }
+
+    /**
      * Get list of the user who likes the comment
      *
      * @param int $commentId
@@ -205,6 +267,67 @@ class CommentsController extends BasePagingController
                 ->getResponse();
         }
 
+        return null;
+    }
+
+    /**
+     * Validate whether user is the owner of the comment
+     *
+     * @param int $commentId
+     *
+     * @return ErrorResponse | null
+     */
+    private function validateDelete(int $commentId)
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        if (!$Comment->exists($commentId)) {
+            return ErrorResponse::notFound()->withMessage(__("This comment doesn't exist."))->getResponse();
+        }
+
+        if (!$Comment->isCommentOwned($commentId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
+                $this->getTeamId())) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
+                ->getResponse();
+        }
+        return null;
+    }
+
+    /**
+     * @param $commentId
+     *
+     * @return CakeResponse| null
+     */
+    private function validatePut(int $commentId)
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        if (!$Comment->exists($commentId)) {
+            return ErrorResponse::notFound()->withMessage(__("This comment doesn't exist."))->getResponse();
+        }
+        //Check whether user is the owner of the comment
+        if (!$Comment->isCommentOwned($commentId, $this->getUserId())) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this comment"))
+                ->getResponse();
+        }
+        $body = $this->getRequestJsonBody();
+        try {
+            CommentRequestValidator::createCommentEditValidator()->validate($body);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class'   => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
         return null;
     }
 
