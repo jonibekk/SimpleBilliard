@@ -157,7 +157,12 @@ class PostsController extends AppController
                     $postDraft = $PostDraftService->createPostDraftWithResources($this->request->data,
                         $userId,
                         $teamId,
-                        [$videoStream]
+                        [
+                            [
+                                'is_video' => true,
+                                'video_stream_id' => $videoStream['id'],
+                            ]
+                        ]
                     );
                     if (false === $postDraft) {
                         // バリデーションエラーのケース

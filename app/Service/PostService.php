@@ -4,6 +4,7 @@ App::uses('AttachedFile', 'Model');
 App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
+App::import('Service', 'VideoStreamService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
 App::uses('Circle', 'Model');
@@ -482,7 +483,12 @@ class PostService extends AppService
      * @param int      $circleId
      * @param int      $userId
      * @param int      $teamId
-     * @param string[] $fileIDs
+     * @param array[] $files
+     *  [
+     *     {"file_uuid": "5c3eae43d92d06.36873270"},
+     *     {"is_video": true, "video_stream_id": "33"},
+     *     ...
+     *  ]
      *
      * @return PostEntity Entity of saved post
      * @throws Exception
@@ -492,7 +498,7 @@ class PostService extends AppService
         int $circleId,
         int $userId,
         int $teamId,
-        array $fileIDs = []
+        array $files = []
     ): PostEntity {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -590,8 +596,8 @@ class PostService extends AppService
             }
 
             //Save attached files
-            if (!empty($fileIDs)) {
-                $this->saveFiles($postId, $userId, $teamId, $fileIDs);
+            if (!empty($files)) {
+                $this->saveFiles($postId, $userId, $teamId, $files);
             }
 
             $this->TransactionManager->commit();
@@ -848,12 +854,12 @@ class PostService extends AppService
      * @param int      $postId
      * @param int      $userId
      * @param int      $teamId
-     * @param string[] $fileIDs
+     * @param array    $files Refer addCirclePost() method document
      *
      * @return bool
      * @throws Exception
      */
-    private function saveFiles(int $postId, int $userId, int $teamId, array $fileIDs): bool
+    function saveFiles(int $postId, int $userId, int $teamId, array $files, $isDraft = false): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -871,27 +877,55 @@ class PostService extends AppService
         $addedFiles = [];
 
         try {
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFiles = $UploadService->getBuffers($userId, $teamId, $fileIDs);
+            foreach ($files as $file) {
+                if (isset($file['file_uuid'])) {
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFiles = $UploadService->getBuffers($userId, $teamId, [$file['file_uuid']]);
 
-            //Save attached files
-            foreach ($uploadedFiles as $uploadedFile) {
+                    //Save attached files
+                    foreach ($uploadedFiles as $uploadedFile) {
 
-                /** @var AttachedFileEntity $attachedFile */
-                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
-                    AttachedModelType::TYPE_MODEL_POST());
+                        /** @var AttachedFileEntity $attachedFile */
+                        $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
+                            AttachedModelType::TYPE_MODEL_POST());
 
-                $addedFiles[] = $attachedFile['id'];
+                        $addedFiles[] = $attachedFile['id'];
 
-                $PostResourceService->addResourcePost(
-                    $postId,
-                    $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
-                    $attachedFile['id'],
-                    $postFileIndex);
-                $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+                        if ($isDraft) {
+                            $PostResourceService->addResourceDraft(
+                                $postId,
+                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $attachedFile['id'],
+                                $postFileIndex);
+                            // Could not insert to post_files (post_id is not exists on here).
+                        } else {
+                            $PostResourceService->addResourcePost(
+                                $postId,
+                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $attachedFile['id'],
+                                $postFileIndex);
+                            $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+                        }
+
+                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                    }
+                } else if (isset($file['is_video'])) {
+                    // VideoStream (file is already in transcode)
+                    if ($isDraft) {
+                        $PostResourceService->addResourceDraft(
+                            $postId,
+                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                            $file['video_stream_id'],
+                            $postFileIndex);
+                    } else {
+                        $PostResourceService->addResourcePost(
+                            $postId,
+                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                            $file['video_stream_id'],
+                            $postFileIndex);
+                    }
+                }
                 $postFileIndex++;
-
-                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
             }
         } catch (Exception $e) {
             //If any error happened, remove uploaded file

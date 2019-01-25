@@ -41,10 +41,21 @@ class PostDraft extends AppModel
         $postDraftResources = $PostResource->getResourcesByPostDraftId($postDraftIds);
 
         foreach ($postDrafts as $i => $postDraft) {
-            $postDraft['data'] = json_decode($postDraft['draft_data'], true);
+            $dataDecoded = json_decode($postDraft['draft_data'], true);
+            $data = [];
+            if (isset($dataDecoded['is_api_v2'])) {
+                $data = [
+                    'Post' => $dataDecoded,
+                    'is_api_v2' => true
+                ];
+            } else {
+                $data = $dataDecoded;
+            }
+            $postDraft['data'] = $data;
             $postDraft['post_resources'] = $postDraftResources[$postDraft['id']] ?? [];
             $postDrafts[$i] = $postDraft;
         }
+
         return $postDrafts;
     }
 
@@ -85,7 +96,11 @@ class PostDraft extends AppModel
     function getByResourceTypeAndResourceId(Enum\Model\Post\PostResourceType $postResourceType, int $resourceId): array
     {
         $result = $this->find('all', $this->getQueryByResourceTypeAndResourceId($postResourceType, $resourceId));
-        return Hash::extract($result, '{n}.PostDraft');
+        $postDrafts = Hash::extract($result, '{n}.PostDraft');
+        foreach ($postDrafts as $key => $postDraft) {
+            $postDrafts[$key]['data'] = json_decode($postDraft['draft_data'], true);
+        }
+        return $postDrafts;
     }
 
     /**
@@ -100,6 +115,8 @@ class PostDraft extends AppModel
         if (empty($result)) {
             return [];
         }
-        return reset($result);
+        $postDraft = reset($result);
+        $postDraft['data'] = json_decode($postDraft['draft_data'], true);
+        return $postDraft;
     }
 }

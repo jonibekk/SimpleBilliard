@@ -12,6 +12,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostDraftService');
 App::import('Service', 'VideoStreamService');
+App::import('Service', 'PostResourceService');
 
 use Goalous\Enum as Enum;
 
@@ -180,7 +181,23 @@ class TranscodeNotificationsController extends ApiController
                         ]);
                         continue;
                     }
-                    $post = $PostService->addNormalFromPostDraft($postDraft);
+                    if ($postDraft['data']['is_api_v2']) {
+                        $post = $PostService->addCirclePost(
+                            $postDraft['data'],
+                            $postDraft['data']['circle_id'],
+                            $postDraft['user_id'],
+                            $postDraft['team_id']);
+
+                        /** @var PostResourceService $PostResourceService */
+                        $PostResourceService = ClassRegistry::init('PostResourceService');
+                        $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
+                        $PostDraft->delete($postDraft['id']);
+
+                        // Copy data to post_files
+                        $PostResourceService->copyResourceToPostFiles($post['id']);
+                    } else {
+                        $post = $PostService->addNormalFromPostDraft($postDraft);
+                    }
                     if (false === $post) {
                         // failed post from draft post
                         GoalousLog::error('Failed posting from draft post', [
