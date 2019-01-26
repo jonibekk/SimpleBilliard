@@ -12,6 +12,7 @@ App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 App::uses('AwsEtsTranscodeInput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('VideoTranscodeLog', 'Model');
+App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 
 use Goalous\Enum as Enum;
 
@@ -393,5 +394,33 @@ class VideoStreamService extends AppService
         }
 
         return true;
+    }
+
+    function getVideoStreamForPlayer(int $videoStreamId)
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $resourceVideoStream = $VideoStream->getById($videoStreamId);
+        if (empty($resourceVideoStream)) {
+            return false;
+        }
+        $videoStoragePath = $resourceVideoStream['storage_path'];
+        $urlBaseStorage = sprintf('%s/%s/%s', S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, $videoStoragePath);
+        $transcoderOutputVersion = new Enum\Model\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($transcoderOutputVersion);
+
+        $videoSources = [];
+        foreach ($transcodeOutput->getVideoSources($urlBaseStorage) as $videoSource) {
+            array_push($videoSources, [
+                'type' => $videoSource->getType()->getValue(),
+                'url' => sprintf('/api/v1/video_streams/%s/source?type=%s', $videoStreamId, $videoSource->getType()->getValue()),
+            ]);
+        }
+        $resourceVideoStream['video_sources'] = $videoSources;
+        $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
+        $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
+
+        return $resourceVideoStream;
     }
 }
