@@ -32,14 +32,10 @@ class PostDraftService extends AppService
 
         $postDrafts = $PostDraft->getByUserIdAndTeamId($userId, $teamId);
 
-        GoalousLog::info('$limitByCircleIds', $limitByCircleIds);
-        GoalousLog::info('$postDrafts', $postDrafts);
         // get share circles/peoples
         foreach ($postDrafts as $key => $postDraft) {
             if (!isset($postDraft['data']['Post']['share'])
                 || !is_string($postDraft['data']['Post']['share'])) {
-                //unset($postDrafts[$key]);
-                GoalousLog::info('continue 1');
                 continue;
             }
             $shares = explode(',', $postDraft['data']['Post']['share']);
@@ -52,11 +48,9 @@ class PostDraftService extends AppService
                 // if having same circles.id in both array, the post_draft is to shown
                 if (0 === count(array_intersect($circleIds, $limitByCircleIds))) {
                     unset($postDrafts[$key]);
-                    GoalousLog::info('continue 2');
                     continue;
                 }
             }
-            GoalousLog::info('no limit?');
             $postDraft['PostShareUser'] = [];
             $postDraft['PostShareCircle'] = [];
             foreach ($userIds as $userId) {
@@ -83,7 +77,6 @@ class PostDraftService extends AppService
 
             $postDrafts[$key] = $postDraft;
         }
-        //GoalousLog::info('$postDrafts', $postDrafts);
         //１件のサークル名をランダムで取得
         $postDrafts = $Post->getRandomShareCircleNames($postDrafts);
         //１件のユーザ名をランダムで取得
@@ -117,7 +110,6 @@ class PostDraftService extends AppService
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
-        GoalousLog::info('$postData', $postData);
 //        $Post->set($postData['Post']);
 //        if (!$Post->validates()) {
 //            return false;

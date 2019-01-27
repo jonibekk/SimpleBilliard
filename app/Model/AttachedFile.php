@@ -323,7 +323,6 @@ class AttachedFile extends AppModel
             $PostResource = ClassRegistry::init("PostResource");
 
             $postFileAndAttachedFiles = $PostFileService->getPostFilesByPostId($foreign_key_id);
-            GoalousLog::info('$postFileAndAttachedFiles', $postFileAndAttachedFiles);
             foreach ($postFileAndAttachedFiles as $postFileAndAttachedFile) {
                 $postFile = $postFileAndAttachedFile['PostFile'];
                 $attachedFile = $postFileAndAttachedFile['AttachedFile'];
