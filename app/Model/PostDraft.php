@@ -1,14 +1,20 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
+App::import('Model/Entity', 'PostDraftEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /**
  * Class PostDraft
  */
 class PostDraft extends AppModel
 {
+    protected $modelConversionTable = [
+        'post_id' => DataType::INT
+    ];
+
     function getByUserIdAndTeamId(int $userId, int $teamId): array
     {
         $options = [

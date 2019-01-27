@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Model/Entity', 'PostEntity');
 
 /**
  * Post Model
