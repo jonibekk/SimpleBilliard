@@ -37,6 +37,7 @@
     echo $this->Html->script('/js/goalous.prerender.exif.min');
     echo $this->Html->script('/js/goalous.prerender.min');
     ?>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">

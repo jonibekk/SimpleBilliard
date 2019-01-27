@@ -314,6 +314,12 @@
       max-width:1008px;
   }
 }
+#goalousNavigation > .nav-container {
+  height: 40px;
+  @media screen and (min-width: @tablet-min-width) {
+    height: 48px;
+  }
+}
 
 // .navbar and .navbar-[children]
 
@@ -327,7 +333,7 @@
     transition: box-shadow 1s;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0);
     &.mod-box-shadow {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+      box-shadow: 0 1px 2px 0 @box-shadow-color;
     }
     &.mb-app-nav {
         background-color: @backgroundColor1;

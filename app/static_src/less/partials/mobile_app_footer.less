@@ -47,14 +47,14 @@
         flex-direction: column;
         justify-content: end;
         height: 50px;
-        padding-top: 8px;
-        color: #ccc;
+        padding-top: 4px;
+        color: @color-04-gray;
         &:hover, &:visited, &:active {
           text-decoration: none;
-          color: #ccc;
+          color: @color-04-gray;
         }
         &.active {
-          color: #333;
+          color: @color-02-gray;
         }
       }
       .btn.notify-function-numbers {
@@ -64,11 +64,18 @@
         border: 0;
         background-color: #ff0a19;
         animation: show 0.3s linear 0s;
+        &.mod-small {
+          top: 6px !important;
+          right: 22px !important;
+          width: 8px;
+          height: 8px;
+          font-size: 0;
+        }
       }
 
       &-icon {
-        font-size: 22px;
-        height: 22px;
+        font-size: 28px !important;
+        height: 28px !important;
       }
       &-name {
         margin-top: 2px;
