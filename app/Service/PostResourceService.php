@@ -10,7 +10,7 @@ use Goalous\Enum as Enum;
  */
 class PostResourceService extends AppService
 {
-    function updatePostResourceIndex(int $postId, int $resourceId, int $resourceOrder)
+    public function updatePostResourceIndex(int $postId, int $resourceId, int $resourceOrder)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
@@ -23,7 +23,7 @@ class PostResourceService extends AppService
         ]);
     }
 
-    function deleteAllPostResourceByPostId(int $postId)
+    public function deleteAllPostResourceByPostId(int $postId)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
@@ -36,7 +36,7 @@ class PostResourceService extends AppService
         ]);
     }
 
-    function deletePostResource(int $postId, int $resourceId)
+    public function deletePostResource(int $postId, int $resourceId)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
@@ -50,7 +50,7 @@ class PostResourceService extends AppService
         ]);
     }
 
-    function isPostResourceExists(int $postId, int $resourceId, int $resourceType): bool
+    public function isPostResourceExists(int $postId, int $resourceId, int $resourceType): bool
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
@@ -69,7 +69,7 @@ class PostResourceService extends AppService
         return !empty($r);
     }
 
-    function addResourcePost(int $postId, Enum\Model\Post\PostResourceType $postResourceType, int $resourceId, int $resourceOrder)
+    public function addResourcePost(int $postId, Enum\Model\Post\PostResourceType $postResourceType, int $resourceId, int $resourceOrder)
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init("PostResource");
@@ -105,7 +105,7 @@ class PostResourceService extends AppService
         return reset($result);
     }
 
-    function getPostResourceTypeFromAttachedFileType(int $attachedFileType): Enum\Model\Post\PostResourceType
+    public function getPostResourceTypeFromAttachedFileType(int $attachedFileType): Enum\Model\Post\PostResourceType
     {
         switch ($attachedFileType) {
             case Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_IMG:
@@ -118,7 +118,7 @@ class PostResourceService extends AppService
         throw new RuntimeException('Unknown AttachedFileType: ' . $attachedFileType);
     }
 
-    function updatePostIdByPostDraftId(int $postId, $postDraftId): bool
+    public function updatePostIdByPostDraftId(int $postId, $postDraftId): bool
     {
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');

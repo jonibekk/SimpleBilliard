@@ -51,7 +51,7 @@ class PostFileService extends AppService
         return $result;
     }
 
-    function getPostFilesByPostId(int $postId)
+    public function getPostFilesByPostId(int $postId)
     {
         /** @var PostFile $PostFile */
         $PostFile = ClassRegistry::init('PostFile');
