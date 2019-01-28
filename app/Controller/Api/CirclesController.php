@@ -364,7 +364,7 @@ class CirclesController extends BasePagingController
             CirclePostExtender::EXTEND_READ,
             CirclePostExtender::EXTEND_USER,
             CirclePostExtender::EXTEND_COMMENTS,
-            CirclePostExtender::EXTEND_POST_FILE
+            CirclePostExtender::EXTEND_RESOURCES
         ];
     }
 

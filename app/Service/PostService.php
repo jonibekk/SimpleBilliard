@@ -25,6 +25,7 @@ App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
+App::import('Model/Entity', 'PostResourceEntity');
 App::import('Lib/DataExtender', 'PostExtender');
 
 use Goalous\Enum as Enum;
@@ -737,6 +738,42 @@ class PostService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+    public function getResourcesByPostId(int $postId): array
+    {
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        $conditions = [
+            'fields'     => [
+                'PostResource.*',
+                'AttachedFile.*',
+            ],
+            'table'      => 'post_resources',
+            'alias'      => 'PostResource',
+            'conditions' => [
+                'PostResource.post_id' => $postId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.id = PostResource.resource_id',
+                        'PostResource.resource_type' => [
+                            Enum\Model\Post\PostResourceType::IMAGE,
+                            Enum\Model\Post\PostResourceType::FILE,
+                            Enum\Model\Post\PostResourceType::FILE_VIDEO,
+                        ],
+                    ]
+                ],
+            ],
+            'order' => ['PostResource.resource_order' => 'ASC'],
+        ];
+
+        return $PostResource->useType()->useEntity()->find('all', $conditions);
     }
 
     /**
