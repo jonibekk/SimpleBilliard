@@ -88,6 +88,13 @@
             </div>
 
         </li>
+        <li class="glHeaderPc-nav-menu">
+            <a href="/circles" class="glHeaderPc-nav-menu-link">
+                <i class="material-icons">group_work</i>
+                <span>Circle</span>
+            </a>
+        </li>
+
         <li class="glHeaderPc-nav-menu has-notify-dropdown">
             <a href="#" class="glHeaderPc-nav-menu-link click-header-bell btn-notify-header" data-toggle="dropdown">
                 <i class="material-icons">notifications</i>
