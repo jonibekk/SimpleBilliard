@@ -110,10 +110,12 @@ class PostDraftService extends AppService
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
-//        $Post->set($postData['Post']);
-//        if (!$Post->validates()) {
-//            return false;
-//        }
+        if (isset($postData['Post'])) {
+            $Post->set($postData['Post']);
+            if (!$Post->validates()) {
+                return false;
+            }
+        }
 
         try {
             $this->TransactionManager->begin();

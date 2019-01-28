@@ -912,7 +912,7 @@ class PostService extends AppService
                 } else if (isset($file['is_video'])) {
                     // VideoStream (file is already in transcode)
                     if ($isDraft) {
-                        $PostResourceService->addResourceDraft(
+                        $postResource = $PostResourceService->addResourceDraft(
                             $postId,
                             Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
                             $file['video_stream_id'],
