@@ -2,6 +2,7 @@
 
 App::import('Service', 'AppService');
 App::uses('PostResource', 'Model');
+App::uses('PostFile', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -130,5 +131,44 @@ class PostResourceService extends AppService
         ]);
 
         return !empty($ret);
+    }
+
+    /**
+     * Copy post_resources to post_files
+     *
+     * @param int $postId
+     * @throws Exception
+     */
+    public function copyResourceToPostFiles(int $postId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init("PostResource");
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init("PostFileService");
+
+        $post = $Post->getById($postId);
+
+        $postResources = $PostResource->find('all', [
+            'conditions' => [
+                'post_id' => $postId
+            ]
+        ]);
+        $postResources = Hash::extract($postResources, '{n}.PostResource');
+        foreach ($postResources as $postResource) {
+            $isAttachedFileResource = in_array($postResource['resource_type'], [
+                Enum\Model\Post\PostResourceType::IMAGE,
+                Enum\Model\Post\PostResourceType::FILE,
+                Enum\Model\Post\PostResourceType::FILE_VIDEO
+            ]);
+            if ($isAttachedFileResource) {
+                $PostFileService->add(
+                    $postId,
+                    $postResource['resource_id'],
+                    $post['team_id'],
+                    $postResource['resource_order']);
+            }
+        }
     }
 }

@@ -95,12 +95,14 @@ class PostDraftService extends AppService
      * @param array $postData
      * @param int $userId
      * @param int $teamId
-     * @param array $resources
+     * @param array $files
      *
      * @return array|false
      */
-    public function createPostDraftWithResources(array $postData, int $userId, int $teamId, array $resources)
+    public function createPostDraftWithResources(array $postData, int $userId, int $teamId, array $files)
     {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
         /** @var PostResourceService $PostResourceService */
@@ -108,9 +110,11 @@ class PostDraftService extends AppService
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
-        $Post->set($postData['Post']);
-        if (!$Post->validates()) {
-            return false;
+        if (isset($postData['Post'])) {
+            $Post->set($postData['Post']);
+            if (!$Post->validates()) {
+                return false;
+            }
         }
 
         try {
@@ -132,21 +136,7 @@ class PostDraftService extends AppService
                 throw new RuntimeException('failed to save post_draft');
             }
             $postDraft = reset($postDraft);
-            foreach ($resources as $resource) {
-                $PostResourceService->addResourceDraft($postDraft['id'],
-                    Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
-                    $resource['id'],
-                    $order = 0
-                );
-                if (false ===$postDraft) {
-                    GoalousLog::error('failed to save post resource', [
-                        'users.id' => $userId,
-                        'teams.id' => $teamId,
-                        'Post'     => $postData,
-                    ]);
-                    throw new RuntimeException('failed to save post resource');
-                }
-            }
+            $PostService->saveFiles($postDraft['id'], $userId, $teamId, $files, $isDraft = true);
             $this->TransactionManager->commit();
             return $postDraft;
         } catch (Exception $e) {
@@ -185,13 +175,17 @@ class PostDraftService extends AppService
             return true;
         }
         foreach ($resources[$postDraftId] as $resource) {
-            // TODO: currently we have only type of video resource
-            // should be wrapped by kind of resource class
-            $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
-            if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
-                continue;
+            switch ($resource['resource_type']) {
+                case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
+                    $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                    if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+                        continue;
+                    }
+                    return false;
+                default:
+                    // Other resource did not need to wait anything.
+                    continue;
             }
-            return false;
         }
 
         return true;

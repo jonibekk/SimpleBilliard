@@ -168,7 +168,8 @@ class PostDraftServiceTest extends GoalousTestCase
         ], $userId, $teamId, [
             // TODO: https://jira.goalous.com/browse/GL-6601
             [
-                'id' => $resourceId,
+                'is_video' => true,
+                'video_stream_id' => $resourceId,
             ],
         ]);
 

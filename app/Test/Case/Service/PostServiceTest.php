@@ -819,7 +819,9 @@ class PostServiceTest extends GoalousTestCase
             'type' => 1
         ];
 
-        $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
+        $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [
+            ["file_uuid" => $uuid],
+        ]);
 
         $files = $this->PostService->getNormalAttachedFiles($postEntity['id']);
 

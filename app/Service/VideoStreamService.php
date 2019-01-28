@@ -368,4 +368,30 @@ class VideoStreamService extends AppService
             'reason' => $errorMessage,
         ]);
     }
+
+    public function isAllCompletedTrancode(array $videoStreamIds): bool
+    {
+        if (empty($videoStreamIds)) {
+            return true;
+        }
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $transcodeStatus = $VideoStream->find('all', [
+            'conditions' => [
+                'id' => $videoStreamIds,
+            ],
+            'fields' => [
+                'VideoStream.transcode_status'
+            ]
+        ]);
+        $transcodeStatuses = Hash::extract($transcodeStatus, '{n}.VideoStream');
+        foreach ($transcodeStatuses as $transcodeStatus) {
+            if ((int)$transcodeStatus['transcode_status'] !== Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
