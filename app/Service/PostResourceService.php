@@ -133,6 +133,12 @@ class PostResourceService extends AppService
         return !empty($ret);
     }
 
+    /**
+     * Copy post_resources to post_files
+     *
+     * @param int $postId
+     * @throws Exception
+     */
     public function copyResourceToPostFiles(int $postId)
     {
         /** @var Post $Post */
