@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('Post', 'Model');
@@ -102,8 +103,8 @@ class PostDraftService extends AppService
     {
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
-        /** @var PostResource $PostResource */
-        $PostResource = ClassRegistry::init("PostResource");
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
@@ -132,17 +133,11 @@ class PostDraftService extends AppService
             }
             $postDraft = reset($postDraft);
             foreach ($resources as $resource) {
-                $PostResource->create([
-                    'post_id' => null,
-                    'post_draft_id' => $postDraft['id'],
-                    // TODO: currently only resource type of video only https://jira.goalous.com/browse/GL-6601
-                    // need to determine what type of resource is passed from arguments
-                    // (maybe should wrap by class, not simple array)
-                    // same as in Post::addNormal()
-                    'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
-                    'resource_id' => $resource['id'],
-                ]);
-                $postResource = $PostResource->save();
+                $PostResourceService->addResourceDraft($postDraft['id'],
+                    Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                    $resource['id'],
+                    $order = 0
+                );
                 if (false ===$postDraft) {
                     GoalousLog::error('failed to save post resource', [
                         'users.id' => $userId,
