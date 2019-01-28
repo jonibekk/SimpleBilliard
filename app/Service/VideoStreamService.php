@@ -370,7 +370,7 @@ class VideoStreamService extends AppService
         ]);
     }
 
-    function isAllCompletedTrancode(array $videoStreamIds): bool
+    public function isAllCompletedTrancode(array $videoStreamIds): bool
     {
         if (empty($videoStreamIds)) {
             return true;

@@ -194,6 +194,8 @@ class TranscodeNotificationsController extends ApiController
                         $PostDraft->delete($postDraft['id']);
 
                         // Copy data to post_files
+                        // When the draft_data is created, post_resources is already saved.
+                        // But post_files is not created yet.
                         $PostResourceService->copyResourceToPostFiles($post['id']);
                     } else {
                         $post = $PostService->addNormalFromPostDraft($postDraft);

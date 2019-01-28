@@ -896,7 +896,7 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    function saveFiles(int $postId, int $userId, int $teamId, array $files, $isDraft = false): bool
+    public function saveFiles(int $postId, int $userId, int $teamId, array $files, $isDraft = false): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -928,17 +928,18 @@ class PostService extends AppService
 
                         $addedFiles[] = $attachedFile['id'];
 
+                        $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
                         if ($isDraft) {
                             $PostResourceService->addResourceDraft(
                                 $postId,
-                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $postResourceType,
                                 $attachedFile['id'],
                                 $postFileIndex);
                             // Could not insert to post_files (post_id is not exists on here).
                         } else {
                             $PostResourceService->addResourcePost(
                                 $postId,
-                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $postResourceType,
                                 $attachedFile['id'],
                                 $postFileIndex);
                             $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
@@ -949,7 +950,7 @@ class PostService extends AppService
                 } else if (isset($file['is_video'])) {
                     // VideoStream (file is already in transcode)
                     if ($isDraft) {
-                        $PostResourceService->addResourceDraft(
+                        $postResource = $PostResourceService->addResourceDraft(
                             $postId,
                             Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
                             $file['video_stream_id'],

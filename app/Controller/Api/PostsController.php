@@ -60,7 +60,7 @@ class PostsController extends BasePagingController
         $files = Hash::get($requestData, 'files', []);
 
         try {
-            // Draft post?
+            // Checking if needs to create a draft post
             $videoStreamIds = [];
             foreach ($files as $file) {
                 if (isset($file['is_video']) && $file['is_video']) {
