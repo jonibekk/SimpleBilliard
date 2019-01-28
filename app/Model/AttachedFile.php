@@ -5,6 +5,8 @@ App::import('Service', 'PostResourceService');
 App::uses('PostResource', 'Model');
 App::import('Service', 'PostFileService');
 
+use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /**
  * AttachedFile Model
@@ -15,9 +17,6 @@ App::import('Service', 'PostFileService');
  * @property PostFile         $PostFile
  * @property ActionResultFile $ActionResultFile
  */
-
-use Goalous\Enum\DataType\DataType as DataType;
-
 class AttachedFile extends AppModel
 {
     /**
@@ -312,7 +311,7 @@ class AttachedFile extends AppModel
                 return false;
             }
         }
-        if ($model_type === self::TYPE_MODEL_POST) {
+        if ($model_type === Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_POST) {
             /** @var PostFileService $PostFileService */
             $PostFileService = ClassRegistry::init('PostFileService');
 
