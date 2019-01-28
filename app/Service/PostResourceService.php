@@ -133,7 +133,7 @@ class PostResourceService extends AppService
         return !empty($ret);
     }
 
-    function copyResourceToPostFiles(int $postId)
+    public function copyResourceToPostFiles(int $postId)
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");

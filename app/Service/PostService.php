@@ -859,7 +859,7 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    function saveFiles(int $postId, int $userId, int $teamId, array $files, $isDraft = false): bool
+    public function saveFiles(int $postId, int $userId, int $teamId, array $files, $isDraft = false): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
