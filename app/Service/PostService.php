@@ -891,17 +891,18 @@ class PostService extends AppService
 
                         $addedFiles[] = $attachedFile['id'];
 
+                        $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
                         if ($isDraft) {
                             $PostResourceService->addResourceDraft(
                                 $postId,
-                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $postResourceType,
                                 $attachedFile['id'],
                                 $postFileIndex);
                             // Could not insert to post_files (post_id is not exists on here).
                         } else {
                             $PostResourceService->addResourcePost(
                                 $postId,
-                                $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']),
+                                $postResourceType,
                                 $attachedFile['id'],
                                 $postFileIndex);
                             $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
