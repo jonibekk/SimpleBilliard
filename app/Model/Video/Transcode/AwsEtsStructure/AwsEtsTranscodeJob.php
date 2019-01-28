@@ -116,7 +116,6 @@ class AwsEtsTranscodeJob implements TranscodeOutput
 
         foreach ($this->outputVideos as $outputVideo) {
             if ($outputVideo->isForVideoSource()) {
-                GoalousLog::info('$outputVideo->getVideoSource($baseUrl)', (array)$outputVideo->getVideoSource($baseUrl));
                 array_push($sources, $outputVideo->getVideoSource($baseUrl));
             }
         }

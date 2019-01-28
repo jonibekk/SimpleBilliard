@@ -396,7 +396,7 @@ class VideoStreamService extends AppService
         return true;
     }
 
-    function getVideoStreamForPlayer(int $videoStreamId)
+    public function getVideoStreamForPlayer(int $videoStreamId)
     {
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");

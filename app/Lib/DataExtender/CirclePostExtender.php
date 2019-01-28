@@ -66,9 +66,7 @@ class CirclePostExtender extends BaseExtender
             foreach ($data as $index => $entry) {
 
 
-                $data[$index]['resources'] = [
-
-                ];
+                $data[$index]['resources'] = [];
 
                 /** @var PostService $PostService */
                 $PostService = ClassRegistry::init('PostService');
@@ -99,8 +97,6 @@ class CirclePostExtender extends BaseExtender
                         //  $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
                         $attachedFile['download_url'] = '';
 
-
-                        GoalousLog::info('$attachedFile', $attachedFile);
                         if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                             $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile',
                                 'attached');
