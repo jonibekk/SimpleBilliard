@@ -84,6 +84,9 @@ class CirclePostExtender extends BaseExtender
                     $postResource = $resource->offsetGet('PostResource');
                     $attachedFile = $resource->offsetGet('AttachedFile');
 
+                    // TODO: joined table does not cast types even if using useEntity()
+                    $attachedFile['file_type'] = (int)$attachedFile['file_type'];
+
                     // Fetch data from attached_files
                     if (in_array($postResource['resource_type'], [
                         Enum\Model\Post\PostResourceType::IMAGE,

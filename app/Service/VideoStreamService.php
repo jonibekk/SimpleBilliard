@@ -414,12 +414,13 @@ class VideoStreamService extends AppService
         foreach ($transcodeOutput->getVideoSources($urlBaseStorage) as $videoSource) {
             array_push($videoSources, [
                 'type' => $videoSource->getType()->getValue(),
-                'url' => sprintf('/api/v1/video_streams/%s/source?type=%s', $videoStreamId, $videoSource->getType()->getValue()),
+                // FIX: TODO: In local, angular running on local:5790, need to return full path on local.
+                'url' => sprintf('http://local.goalous.com/api/videostreams/%s/source?type=%s', $videoStreamId, $videoSource->getType()->getValue()),
             ]);
         }
         $resourceVideoStream['video_sources'] = $videoSources;
         $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
-        $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
+        $resourceVideoStream['file_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
 
         return $resourceVideoStream;
     }
