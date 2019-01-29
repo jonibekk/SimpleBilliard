@@ -23,6 +23,12 @@ class VideoStreamsController extends BaseApiController
         parent::beforeFilter();
     }
 
+    /**
+     * @skipAuthentication
+     *
+     * @param $id
+     * @return $this|BaseApiResponse|void
+     */
     function get_source($id)
     {
         $type = $this->request->query('type');
@@ -35,9 +41,11 @@ class VideoStreamsController extends BaseApiController
             return ErrorResponse::notFound()->getResponse();
         }
 
-        if (false === $this->isPlayableVideoStreamByUser($videoStream, $this->getUserId())) {
-            return ErrorResponse::notFound()->getResponse();
-        }
+        // TODO: Unknown user because Videogular couldn't add header to video stream play list source.
+//        if (false === $this->isPlayableVideoStreamByUser($videoStream, $this->getUserId())) {
+//            GoalousLog::info('isPlayableVideoStreamByUser', [$videoStream]);
+//            return ErrorResponse::notFound()->getResponse();
+//        }
 
         // If user's browser is not supporting cross-origin redirecting of manifest
         // redirecting to manifest API that showing manifest string in same origin
