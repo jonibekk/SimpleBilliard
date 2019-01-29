@@ -2,7 +2,7 @@
 <div class="glHeaderPc">
     <div class="glHeaderPc-left">
         <a href="/">
-            <img src="/img/svg/logo.svg" alt="Goalous" width="32" height="32"/>
+            <img src="/img/svg/logomark_primary01.svg" alt="Goalous" width="32" height="32"/>
         </a>
     </div>
     <div class="glHeaderPc-right">

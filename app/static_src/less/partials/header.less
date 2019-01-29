@@ -797,7 +797,7 @@ header-nav-add.open ul {
     padding-left: 0px;
   }
   @media screen and (min-width: @pc-min-width) {
-    min-width: @pc-min-width;
+    min-width: 976px;
     max-width: none;
   }
 
@@ -844,43 +844,9 @@ header-nav-add.open ul {
       }
 
       &-link {
-        cursor: pointer;
-        display: inline-block;
-        font-size: 0;
+        .glNavMenuLink;
         height: @header-height;
-        position: relative;
-        text-align: center;
-        width: 64px;
-        text-decoration: none !important;
-        border: none !important;
-
-        &:hover, &:visited, &:target {
-          text-decoration: none;
-        }
-
-        > i,
-        > img {
-          font-size: 28px;
-          color: @color-04-gray;
-          display: block;
-          margin: 4px auto 0;
-        }
-
-        > span {
-          color: @color-04-gray;
-          font-size: 10.5px;
-          text-decoration: none;
-        }
-
-        &.active {
-          > i,
-          > span {
-            color: @color-02-gray;
-          }
-        }
       }
-
-
     }
   }
 }

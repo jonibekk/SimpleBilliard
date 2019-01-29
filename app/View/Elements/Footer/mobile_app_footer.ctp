@@ -1,10 +1,10 @@
 <?php
 $footerMenuList = [
     [
-        'name' => 'feed',
+        'name' => 'home',
         'url'  => '/',
-        'iconSrc' => '/img/svg/logo.svg',
-        'label' => 'Feed'
+        'icon' => '',
+        'label' => 'Home'
 
     ],
     [
@@ -46,16 +46,16 @@ $badgeCounts = [
         <?php foreach ($footerMenuList as $menu): ?>
             <li class="mobile-app-footer-list-item">
                 <a href="<?= $menu['url']?>" class="mobile-app-footer-list-item-link <?= Router::url() === $menu['url'] ? 'active' : '' ?>">
-                    <?php if(!empty($menu['iconSrc'])) :?>
-                        <img src="<?= $menu['iconSrc']?>" class="mobile-app-footer-list-item-icon"/>
+                    <?php if($menu['name'] === 'home') :?>
+                        <div class="material-icons mod-feed"></div>
                     <?php else: ?>
-                        <i class="material-icons mobile-app-footer-list-item-icon"><?= $menu['icon']?></i>
+                        <i class="material-icons"><?= $menu['icon']?></i>
                     <?php endif;?>
-                    <span class="mobile-app-footer-list-item-name"><?= $menu['label']?></span>
+                    <span class=""><?= $menu['label']?></span>
                 </a>
                 <?php if(in_array($menu['name'], ['messages', 'notifications', 'circles', 'more'], false)) :?>
                     <div class="btn btn-xs notify-function-numbers <?= $menu['name'] === 'circles'? 'mod-small' : ''?> js-mbAppFooter-setBadgeCnt-<?=$menu['name']?> <?= empty($badgeCounts[$menu['name']]) ? 'hidden' : '' ?>">
-                         <span>
+                         <span class="<?= $badgeCounts[$menu['name']] > 99 ? 'oval' : ''?>">
                            <?= $badgeCounts[$menu['name']] ?>
                          </span>
                     </div>

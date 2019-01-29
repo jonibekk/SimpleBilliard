@@ -24,7 +24,7 @@
             </a>
         </li>
         <li class="glHeaderPc-nav-menu">
-            <a href="/search" class="glHeaderPc-nav-menu-link">
+            <a href="/search" class="glHeaderPc-nav-menu-link <?= Router::url() === '/search' ? 'active' : '' ?>" >
                 <i class="material-icons">search</i>
                 <span>Search</span>
             </a>
@@ -76,6 +76,7 @@
                     <span>0</span><sup class="notify-plus none">+</sup>
                 </div>
             </a>
+            <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
             <div class="header-nav-message-contents-wrap none">
                 <div class="header-nav-message-contents-scrolling">
                     <ul class="header-nav-message-contents message-dropdown" role="menu">
@@ -92,6 +93,14 @@
             <a href="/circles" class="glHeaderPc-nav-menu-link">
                 <i class="material-icons">group_work</i>
                 <span>Circle</span>
+                <?php // TODO.Renewal: Fix badge count processing when init display/realtime change  ?>
+                <?php if(!empty($circleBadgeCount)):?>
+                    <div class="btn btn-xs notify-function-numbers mod-small">
+                         <span>
+                           <?= $circleBadgeCount ?>
+                         </span>
+                    </div>
+                <?php endif;?>
             </a>
         </li>
 
@@ -99,11 +108,12 @@
             <a href="#" class="glHeaderPc-nav-menu-link click-header-bell btn-notify-header" data-toggle="dropdown">
                 <i class="material-icons">notifications</i>
                 <span>Notification</span>
+                <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
+                <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
+                     style="opacity: 0;">
+                    <span>0</span><sup class="notify-plus none">+</sup>
+                </div>
             </a>
-            <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
-                 style="opacity: 0;">
-                <span>0</span><sup class="notify-plus none">+</sup>
-            </div>
 
             <div class="dropdown-menu header-nav-notify-contents-wrap">
                 <div class="header-nav-notify-contents-scrolling">
@@ -147,10 +157,10 @@
             <?php if (!empty($userHasNoTeam) && $userHasNoTeam): ?> style="float:right; margin-right:8px;" <?php endif; ?>>
             <i class="material-icons">dehaze</i>
             <span>More</span>
-
+            <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
             <?php if (!empty($all_alert_cnt) && $all_alert_cnt > 0): ?>
-                <div class="btn btn-xs notify-function-numbers <?= $is_mb_app ? "mb-header-badge-shift" : "" ?>">
-                 <span>
+                <div class="btn btn-xs notify-function-numbers">
+                 <span class="<?= $all_alert_cnt > 99 ? 'oval' : ''?>">
                    <?= $all_alert_cnt ?>
                  </span>
                 </div>
