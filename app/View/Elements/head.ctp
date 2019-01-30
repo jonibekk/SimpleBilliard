@@ -18,10 +18,11 @@
     </title>
     <meta name='description' content='<?= $meta_description ?>'/>
     <?php echo $this->Html->meta('icon');
+    $additional = $displayMobileAppFooter ? ', viewport-fit=cover' : '';
     echo $this->Html->meta(
         [
             'name'    => 'viewport',
-            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no ${additional}"
         ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
 
