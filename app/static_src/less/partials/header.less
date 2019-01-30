@@ -852,14 +852,19 @@ header-nav-add.open ul {
 }
 
 .glHeader-nav-dropdown {
+  padding: 8px 0 !important;
   &.mod-mobile {
     right: 0;
   }
   &-menu {
     display: inline-block;
     width: 100%;
+    height: 40px;
     margin: 0;
     padding: 0;
+    :hover {
+      background-color: @color-07-gray !important;
+    }
     @media screen and (max-width: 991px) {
       height: 40px;
       line-height: 40px;
@@ -873,14 +878,20 @@ header-nav-add.open ul {
       &-left {
         text-align: center;
         width: 30px;
-
+        margin-right: 8px;
         > i {
           vertical-align: middle;
+          font-size: 28px;
+          height: 28px;
+          line-height: 28px;
+          color: @color-04-gray;
         }
       }
 
       > p {
         flex: 1;
+        color: @color-02-gray;
+        font-size: 14px;
       }
     }
   }

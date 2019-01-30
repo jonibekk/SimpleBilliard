@@ -6,11 +6,6 @@
     <div class="glHeaderMobile-right">
         <ul class="glHeaderMobile-nav">
             <li class="glHeaderMobile-nav-menu">
-                <a href="/search" class="glHeaderMobile-nav-menu-link">
-                    <i class="material-icons">search</i>
-                </a>
-            </li>
-            <li class="glHeaderMobile-nav-menu">
                 <a id="GlHeaderMenuDropdown-Create" href="#" class="glHeaderMobile-nav-menu-link" data-toggle="dropdown">
                     <i class="material-icons">add_circle</i>
                 </a>
@@ -47,6 +42,11 @@
                     </li>
                 </ul>
 
+            </li>
+            <li class="glHeaderMobile-nav-menu">
+                <a href="/search" class="glHeaderMobile-nav-menu-link">
+                    <i class="material-icons">search</i>
+                </a>
             </li>
         </ul>
     </div>
