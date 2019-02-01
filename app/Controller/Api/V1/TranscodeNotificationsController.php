@@ -115,6 +115,15 @@ class TranscodeNotificationsController extends ApiController
             // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id');
 
             $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
+
+            $envVideoUploaded = $transcodeNotificationAwsSns->getMetaData('env');
+            if (!is_null($envVideoUploaded) && ENV_NAME !== $envVideoUploaded) {
+                GoalousLog::error('env does not match', [
+                    'envVideoUploaded' => $envVideoUploaded,
+                    'video_streams.id' => $videoStreamId,
+                ]);
+                return $this->_getResponseNotFound();
+            }
             if (is_null($videoStreamId)) {
                 GoalousLog::error('transcode callback error', [
                     'message' => 'video_streams.id not found',

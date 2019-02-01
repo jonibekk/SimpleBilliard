@@ -308,6 +308,7 @@ class VideoStreamService extends AppService
         $transcodeRequest->setUserMetaData([
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStreamId,
+            'env'              => ENV_NAME,
         ]);
         // set watermark if env is not production
         $transcodeRequest->setPutWaterMark(in_array(ENV_NAME, ['local', 'dev', 'stage']));
