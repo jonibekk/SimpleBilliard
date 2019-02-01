@@ -46,7 +46,6 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
             <div id="leftSideContainerInner" class="">
                 <?= $this->element('dashboard_profile_card') ?>
                 <?= $this->element('dashboard_saved_item') ?>
-                <?= $this->element('circle_list') ?>
             </div>
         </div>
         <?php endif; ?>

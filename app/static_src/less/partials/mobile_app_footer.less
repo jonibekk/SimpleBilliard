@@ -9,17 +9,36 @@
 
 
 .mobile-app-footer {
+  @media screen and (min-width: @tablet-min-width) {
+    display: none;
+  }
+
   position: fixed;
   bottom: 0;
   margin: 0;
   width: 100%;
   z-index: 999;
+  background-color: @white;
+  padding-bottom: 0;
+  box-shadow: 0 -2px 4px 0 @box-shadow-color;
+  // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
+  @supports (padding-bottom: constant(safe-area-inset-bottom)) {
+    & {
+      padding-bottom: constant(safe-area-inset-bottom);
+    }
+  }
+  // Browsers which fully support CSS Environment variables (iOS 11.2+).
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    & {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
   &-list {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    background-color: #f9f9f9;
-
+    background-color: inherit;
     &-item {
       flex: 1;
       float: none;
@@ -28,19 +47,13 @@
       text-align: center;
       position: relative;
       &-link {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        justify-content: end;
-        height: 50px;
-        padding-top: 8px;
-        color: #ccc;
-        &:hover, &:visited, &:active {
-          text-decoration: none;
-          color: #ccc;
-        }
+        .glNavMenuLink;
         &.active {
-          color: #333;
+          color: @color-02-gray;
+          .mod-feed {
+            // TODO: ON/OFFで画像を変えるとちらつきがあるので、svgスプライトにするか要素をON/OFFどちらとも要素を生成しておいて表示を出し分ける。
+            background: url("../img/svg/logomark_gray02.svg") center center no-repeat;
+          }
         }
       }
       .btn.notify-function-numbers {
@@ -49,12 +62,20 @@
         font-size: 12px;
         border: 0;
         background-color: #ff0a19;
+        background-color: #d9230f;
         animation: show 0.3s linear 0s;
+        &.mod-small {
+          top: 6px !important;
+          right: 22px !important;
+        }
       }
 
       &-icon {
-        font-size: 22px;
-        height: 22px;
+        font-size: 28px !important;
+        height: 28px !important;
+        &.mod-feed {
+          background: url("../img/svg/logomark_gray04.svg") center center no-repeat;
+        }
       }
       &-name {
         margin-top: 2px;
@@ -63,3 +84,4 @@
     }
   }
 }
+
