@@ -452,9 +452,11 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios_high_header', $this->is_mb_app_ios_high_header);
 
-        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
-            $this->is_mb_app_web_footer = true;
-        }
+        // TODO: Delete line after fixed final spec
+//        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
+//            $this->is_mb_app_web_footer = true;
+//        }
+        $this->is_mb_app_web_footer = true;
         $this->set('is_mb_app_web_footer', $this->is_mb_app_web_footer);
     }
 

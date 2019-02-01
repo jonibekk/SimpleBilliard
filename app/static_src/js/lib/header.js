@@ -77,14 +77,6 @@ $(function () {
     prevScrollTop = currentScrollTop;
   });
 
-  $(window).scroll(function () {
-    if ($(this).scrollTop() > 10) {
-      $(".navbar").addClass("mod-box-shadow");
-    } else {
-      $(".navbar").removeClass("mod-box-shadow");
-    }
-  });
-
   //チーム切り換え
   $('#SwitchTeam, .js-switchTeam').change(function () {
     var val = $(this).val();
