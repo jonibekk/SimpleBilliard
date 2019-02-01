@@ -22,6 +22,7 @@ use Goalous\Enum\Model\TeamMember as TeamMemberEnum;
 use Goalous\Enum\DataType\DataType as DataType;
 
 class TeamMember extends AppModel
+
 {
     const ADMIN_USER_FLAG = 1;
     const MAX_NUMBER_OF_EVALUATORS = 7;
@@ -119,7 +120,8 @@ class TeamMember extends AppModel
      */
     function getActiveTeamList($uid)
     {
-        if (empty($this->myTeams)) {
+        $teamListCache = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
+        if (empty($this->myTeams) || empty($teamListCache)) {
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -276,11 +278,12 @@ class TeamMember extends AppModel
 
     /**
      * @deprecated
-     *
      * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
-     * @param $uid
+     *
+     * @param      $uid
      * @param null $teamId
      * @param bool $withCache
+     *
      * @return bool
      */
     public function isActive($uid, $teamId = null, bool $withCache = true)
@@ -2303,6 +2306,7 @@ class TeamMember extends AppModel
 
         return $this->useType()->useEntity()->find('all', $condition);
     }
+
     /**
      * Get last logged in active team ID
      *

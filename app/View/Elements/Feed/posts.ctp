@@ -161,7 +161,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                            'post_id'    => $post['Post']['id']
                                        ],
                                            true) ?>'); return false;">
-                                        <?= __("Copy Link") ?></a>
+                                        <?= __("Display Link") ?></a>
                                 </li>
                             </ul>
                         </div>

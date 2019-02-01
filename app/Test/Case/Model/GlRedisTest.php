@@ -442,6 +442,23 @@ class GlRedisTest extends GoalousTestCase
         $this->markTestSkipped();
     }
 
+    /**
+     * TODO: 2019-01-24 Research the cause
+     * Fatal error: Cannot redeclare GlRedisTest::test_deleteUserTeamList_success() in /home/travis/build/IsaoCorp/goalous/app/Test/Case/Model/GlRedisTest.php on line 495
+     */
+    public function test_deleteUserTeamList_success_renamed_because_redeclare()
+    {
+        $userIds = [1, 13, 97];
+        foreach ($userIds as $userId) {
+            Cache::write($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'some_value',
+                'team_info');
+        }
+        $this->GlRedis->deleteUserTeamList($userIds);
+        foreach ($userIds as $userId) {
+            $this->assertEmpty(Cache::read($this->GlRedis->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false),
+                'team_info'));
+        }
+    }
 
     function test_multiCircleMemberCount()
     {
@@ -478,6 +495,5 @@ class GlRedisTest extends GoalousTestCase
         $res = $this->GlRedis->getMultiCircleMemberCount(array_keys($memberCountEachCircle));
         $this->assertEquals($res, []);
     }
-
 
 }

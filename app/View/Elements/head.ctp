@@ -18,10 +18,11 @@
     </title>
     <meta name='description' content='<?= $meta_description ?>'/>
     <?php echo $this->Html->meta('icon');
+    $additional = $displayMobileAppFooter ? ', viewport-fit=cover' : '';
     echo $this->Html->meta(
         [
             'name'    => 'viewport',
-            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"
+            'content' => "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no ${additional}"
         ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
 
@@ -37,6 +38,7 @@
     echo $this->Html->script('/js/goalous.prerender.exif.min');
     echo $this->Html->script('/js/goalous.prerender.min');
     ?>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">

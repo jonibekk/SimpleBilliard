@@ -9,7 +9,7 @@ import LoadingButton from "~/common/components/LoadingButton";
 import {SaveMessageStatus} from "~/message/constants/Statuses";
 import {PositionIOSApp, PositionMobileApp} from "~/message/constants/Styles";
 import {nl2br} from "~/util/element";
-import {isIOSApp, isMobileApp, isOldIOSApp} from "~/util/base";
+import {isIOSApp, isMobileApp} from "~/util/base";
 import {HotKeys} from "react-hotkeys";
 
 class Footer extends React.Component {
@@ -130,25 +130,9 @@ class Footer extends React.Component {
   }
 
   focusInputBody(e) {
-    if (isIOSApp() && isOldIOSApp()) {
-      this.props.dispatch(
-        detail.changeLayout({
-          body_bottom: PositionMobileApp.BODY_BOTTOM,
-          footer_bottom: PositionMobileApp.FOOTER_BOTTOM,
-        })
-      );
-    }
   }
 
   blurInputBody(e) {
-    if (isIOSApp() && isOldIOSApp()) {
-      this.props.dispatch(
-        detail.changeLayout({
-          body_bottom: PositionIOSApp.BODY_BOTTOM,
-          footer_bottom: PositionIOSApp.FOOTER_BOTTOM,
-        })
-      );
-    }
   }
 
   render() {

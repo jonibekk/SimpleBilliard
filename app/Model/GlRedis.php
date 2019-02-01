@@ -388,6 +388,29 @@ class GlRedis extends AppModel
     }
 
     /**
+     * Delete users' active team lists from cache
+     *
+     * @param int[] $userIds
+     */
+    public function deleteUserTeamList(array $userIds)
+    {
+        $targetKeys = [];
+        foreach ($userIds as $userId) {
+            $pattern =
+                Cache::settings('team_info')['prefix'] .
+                $this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false);
+            $targetKeys[] = $pattern;
+        }
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $prefix = $this->Db->config['prefix'];
+        foreach ($targetKeys as $k) {
+            $k = str_replace($prefix, "", $k);
+            $pipe->delete($k);
+        }
+        $pipe->exec();
+    }
+
+    /**
      * @param string        $key_type One of $KEY_TYPES
      * @param int           $team_id
      * @param null|int      $user_id
@@ -1539,7 +1562,6 @@ class GlRedis extends AppModel
         return $errorParameters;
     }
 
-
     /**
      * Save mapping between session id and jwt
      *
@@ -1559,7 +1581,6 @@ class GlRedis extends AppModel
         $this->Db->set($key, $jwt->token());
         return $this->Db->setTimeout($key, $expire);
     }
-
 
     /**
      * Get jwt from session id
