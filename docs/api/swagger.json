@@ -1349,6 +1349,55 @@
         }
       }
     },
+    "/api/me/notifications" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "List current user's notifications",
+        "description" : "Get current user's notifications\\.",
+        "operationId" : "/api/me/notifications",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "name" : "extoption",
+          "in" : "query",
+          "description" : "Extension option of the notification",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ext:notification:all", "ext:notification:user" ]
+            },
+            "default" : [ "ext:notification:all" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get personal notification list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PagingResult.Model.Notification.Paging.Me"
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/posts" : {
       "post" : {
         "tags" : [ "Posts" ],
@@ -3584,6 +3633,78 @@
           "admin_flg" : false
         }
       },
+      "Model.Notification" : {
+        "description": "Notification model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "to_user_count" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "body" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "type" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "score" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "is_read" : {
+            "type" : "boolean"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/Model.User.Profile"
+          }
+        },
+        "example": {
+          "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
+          "to_user_count": 2,
+          "user_id": "615",
+          "body": "出典: フリー百科事典『ウィキペディア...",
+          "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
+          "type": 1,
+          "created": 1549265863,
+          "score": 15492658631380,
+          "is_read": true,
+          "user": {
+            "id": "615",
+            "first_name": "Jiro",
+            "last_name": "Gorasu",
+            "photo_file_name": null,
+            "cover_photo_file_name": null,
+            "language": "jpn",
+            "auto_language_flg": false,
+            "romanize_flg": false,
+            "display_first_name": "Jiro",
+            "display_last_name": "Gorasu",
+            "display_username": "Jiro Gorasu",
+            "local_username": null,
+            "roman_username": "Jiro Gorasu",
+            "last_first": true,
+            "profile_img_url": {
+              "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+            }
+          }
+        }
+      },
       "Model.Comment" : {
         "allOf" : [ {
           "$ref" : "#/components/schemas/Model"
@@ -4146,6 +4267,101 @@
           } ],
           "cursor" : "",
           "count" : 5
+        }
+      },
+      "PagingResult.Model.Notification.Paging.Me" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Model.Notification"
+            }
+          },
+          "cursor" : {
+            "type" : "string"
+          },
+          "unread_count" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "data" : [
+            {
+              "to_user_count": 2,
+              "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
+              "user_id": "615",
+              "body": "出典: フリー百科事典『ウィキペディア...",
+              "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
+              "type": 1,
+              "created": 1549265863,
+              "score": 15492658631380,
+              "is_read": true,
+              "user": {
+                "id": "615",
+                "first_name": "Jiro",
+                "last_name": "Gorasu",
+                "photo_file_name": null,
+                "cover_photo_file_name": null,
+                "language": "jpn",
+                "auto_language_flg": false,
+                "romanize_flg": false,
+                "display_first_name": "Jiro",
+                "display_last_name": "Gorasu",
+                "display_username": "Jiro Gorasu",
+                "local_username": null,
+                "roman_username": "Jiro Gorasu",
+                "last_first": true,
+                "profile_img_url": {
+                  "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+                }
+              }
+            },
+            {
+              "to_user_count": 2,
+              "id": "5c57ebb3-2128-43b7-8f01-07faac120004",
+              "user_id": "615",
+              "body": "ssss",
+              "url": "http://local.goalous.com/post_permanent/71908?notify_id=5c57ebb3-2128-43b7-8f01-07faac120004",
+              "type": 1,
+              "created": 1549265843,
+              "score": 15492658436460,
+              "is_read": true,
+              "user": {
+                "id": "615",
+                "first_name": "Jiro",
+                "last_name": "Gorasu",
+                "photo_file_name": null,
+                "cover_photo_file_name": null,
+                "language": "jpn",
+                "auto_language_flg": false,
+                "romanize_flg": false,
+                "display_first_name": "Jiro",
+                "display_last_name": "Gorasu",
+                "display_username": "Jiro Gorasu",
+                "local_username": null,
+                "roman_username": "Jiro Gorasu",
+                "last_first": true,
+                "profile_img_url": {
+                  "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+                }
+              }
+            }
+          ],
+          "cursor" : "eyJjb25kaXRpb25zIjp7ImZyb21fdGltZXN0YW1wIjowfSwicG9pbnRlciI6W1siZnJvbV90aW1lc3RhbXAiLCI8IiwxNTQ5MjY1ODQzNjQ2MF1dfQ=",
+          "unread_count" : 1,
+          "count": 4
         }
       },
       "PagingResult.Model.Comment" : {
