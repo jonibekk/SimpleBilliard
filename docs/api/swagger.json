@@ -3647,6 +3647,9 @@
           "user_id" : {
             "$ref" : "#/components/schemas/Object.String.ID"
           },
+          "html_title" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
           "body" : {
             "$ref" : "#/components/schemas/Object.String.ID"
           },
@@ -3673,6 +3676,7 @@
           "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
           "to_user_count": 2,
           "user_id": "615",
+          "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
           "body": "出典: フリー百科事典『ウィキペディア...",
           "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
           "type": 1,
@@ -4292,6 +4296,7 @@
               "to_user_count": 2,
               "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
               "user_id": "615",
+              "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
               "body": "出典: フリー百科事典『ウィキペディア...",
               "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
               "type": 1,
@@ -4330,6 +4335,7 @@
               "body": "ssss",
               "url": "http://local.goalous.com/post_permanent/71908?notify_id=5c57ebb3-2128-43b7-8f01-07faac120004",
               "type": 1,
+              "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
               "created": 1549265843,
               "score": 15492658436460,
               "is_read": true,

@@ -43,9 +43,38 @@ class NotificationPagingService extends BasePagingService
             $body = json_decode($noti['body'], true);
             $noti['body'] = is_array($body) ? reset($body): $body;
             $noti['is_read'] = !$noti['unread_flg'];
-            unset($noti['options']);
+            $noti['options'] = json_decode($noti['options'], true);
             unset($noti['unread_flg']);
         }
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var NotifySetting $NotifySetting */
+        $NotifySetting = ClassRegistry::init('NotifySetting');
+
+        //fetch User
+        $userIds = Hash::extract($notifications, '{n}.user_id');
+        $userIds = array_merge($userIds, Hash::extract($notifications, '{n}.options.post_user_id'));
+        $users = Hash::combine($User->getUsersProf($userIds), '{n}.User.id', '{n}');
+
+        foreach($notifications as &$noti) {
+            $userId = null;
+            $userName = null;
+
+            if (isset($users[$noti['user_id']])) {
+                $userId = $noti['user_id'];
+                $user = $users[$userId]['User'];
+                $userName = $user['display_username'];
+            }
+            //get title
+            $title = $NotifySetting->getTitle($noti['type'],
+                $userName, 1,
+                $noti['body'],
+                array_merge($noti['options'],
+                    ['from_user_id' => $userId]));
+            $noti['html_title'] = $title;
+        }
+
         return $notifications;
     }
 
