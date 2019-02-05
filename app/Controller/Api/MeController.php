@@ -55,8 +55,6 @@ class MeController extends BasePagingController
             return $error;
         }
 
-        // parameter: from unixtimestamp, limit, direction
-
         try {
             $pagingRequest = $this->getPagingParameters();
             $pagingRequest->addCondition(['from_timestamp' => 0]);
