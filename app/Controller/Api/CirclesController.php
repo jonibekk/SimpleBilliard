@@ -10,6 +10,7 @@ App::import('Service/Paging', 'PostDraftPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::import('Service', 'PostDraftService');
 
 /**
  * Created by PhpStorm.
@@ -193,21 +194,21 @@ class CirclesController extends BasePagingController
 
         try {
             $pagingRequest = $this->getPagingParameters();
+            $pagingRequest->addCondition(['circle_id' => $circleId]);
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
         try {
-            $data = $PostDraftPagingService->getDataWithPaging(
-                $pagingRequest,
-                $this->getPagingLimit(),
-                $this->getExtensionOptions() ?: $this->getDefaultPostDraftExtension());
+            $data = $PostDraftPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(), PostDraftExtender::EXTEND_ALL);
         } catch (InvalidArgumentException $exception) {
             return ErrorResponse::badRequest()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
 
         }
+
+        $data['count'] = count($data['data']);
 
         return ApiResponse::ok()->withBody($data)->getResponse();
     }

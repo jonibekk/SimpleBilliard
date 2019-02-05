@@ -3,6 +3,7 @@ App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Lib/DataExtender', 'PostDraftExtender');
 App::uses('PostDraft', 'Model');
+App::import('Service', 'PostDraftService');
 
 /**
  * Created by PhpStorm.
@@ -17,17 +18,22 @@ class PostDraftPagingService extends BasePagingService
     {
         $options = $this->createSearchCondition($pagingRequest);
 
-        $options['limit'] = $limit;
-        $options['order'] = $pagingRequest->getOrders();
-        $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
 
-        /** @var PostDraft $PostDraft */
-        $PostDraft = ClassRegistry::init('PostDraft');
+        $conditions = $pagingRequest->getConditions();
 
-        $result = $PostDraft->useType()->find('all', $options);
+        $postDrafts = $PostDraftService->getPostDraftsFilterByCircleId(
+            $pagingRequest->getCurrentUserId(),
+            $pagingRequest->getCurrentTeamId(),
+            $conditions['circle_id']
+        );
 
-        //Remove 'PostDraft' from array
-        return Hash::extract($result, '{n}.PostDraft');
+        return array_map(function($v) {
+            return $v->toArray();
+        }, $postDrafts);
+
+        return $postDrafts;
     }
 
     protected function countData(PagingRequest $pagingRequest): int
@@ -100,7 +106,8 @@ class PostDraftPagingService extends BasePagingService
     {
         foreach ($queryResult as &$result) {
             $draftData = json_decode($result['draft_data'], true);
-            $result['body'] = $draftData['Post']['body'];
+            $result['body'] = $draftData['body'];
+            unset($result['draft_data']);
         }
 
         return $queryResult;
