@@ -68,7 +68,7 @@ class PostsController extends BasePagingController
                 }
             }
             if (1 < count($videoStreamIds)) {
-                throw new RuntimeException('You can only post one video file.');
+                return ErrorResponse::badRequest()->withMessage(__('You can only post one video file.'))->getResponse();
             }
             if (1 === count($videoStreamIds)) {
                 if (!$VideoStreamService->isAllCompletedTrancode($videoStreamIds)) {
