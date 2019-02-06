@@ -190,4 +190,31 @@ class PostDraftService extends AppService
 
         return true;
     }
+
+    public function getPostDraftsFilterByCircleId(int $userId, int $teamId, $circleId = null)
+    {
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+
+        $conditions = [
+            'conditions' => [
+                'PostDraft.user_id' => $userId,
+                'PostDraft.team_id' => $teamId,
+            ],
+        ];
+
+        $postDrafts = $PostDraft->useType()->useEntity()->find('all', $conditions);
+        if (empty($circleId)) {
+            return $postDrafts;
+        }
+
+        // Returning data belongs to $circleId
+        $postDrafts = array_filter($postDrafts, function ($v) use ($circleId) {
+            $postDraft = $v->toArray();
+            $draftData = json_decode($postDraft['draft_data'], true);
+            return $circleId === (int)$draftData['circle_id'];
+        });
+
+        return array_values($postDrafts);
+    }
 }

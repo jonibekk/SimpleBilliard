@@ -10,6 +10,7 @@ App::import('Service/Paging', 'PostDraftPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::import('Service', 'PostDraftService');
 
 /**
  * Created by PhpStorm.
@@ -180,36 +181,50 @@ class CirclesController extends BasePagingController
      */
     public function get_post_drafts(int $circleId)
     {
-
         $error = $this->validateCircleAccess($circleId);
 
         if (!empty($error)) {
             return $error;
         }
 
-        /** @var PostDraftPagingService $PostDraftPagingService */
-        $PostDraftPagingService = ClassRegistry::init('PostDraftPagingService');
-
-
-        try {
-            $pagingRequest = $this->getPagingParameters();
-        } catch (Exception $e) {
-            return ErrorResponse::badRequest()->withException($e)->getResponse();
-        }
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
 
         try {
-            $data = $PostDraftPagingService->getDataWithPaging(
-                $pagingRequest,
-                $this->getPagingLimit(),
-                $this->getExtensionOptions() ?: $this->getDefaultPostDraftExtension());
-        } catch (InvalidArgumentException $exception) {
-            return ErrorResponse::badRequest()->withException($exception)->getResponse();
-        } catch (Exception $e) {
-            return ErrorResponse::badRequest()->withException($e)->getResponse();
+            $postDrafts = $PostDraftService->getPostDraftsFilterByCircleId(
+                $this->getUserId(),
+                $this->getTeamId(),
+                $circleId
+            );
 
+            $postDrafts = array_map(function($v) {
+                $postDraft = $v->toArray();
+                $draftData = json_decode($postDraft['draft_data'], true);
+                $postDraft['body'] = $draftData['body'];
+                unset($postDraft['draft_data']);
+
+                return $postDraft;
+            }, $postDrafts);
+
+            /** @var PostDraftExtender $PostDraftExtender */
+            $PostDraftExtender = ClassRegistry::init('PostDraftExtender');
+
+            $postDrafts = $PostDraftExtender->extendMulti(
+                $postDrafts,
+                $this->getUserId(),
+                $this->getTeamId(),
+                [PostDraftExtender::EXTEND_ALL]
+            );
+
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withBody($data)->getResponse();
+        return ApiResponse::ok()->withBody([
+            'data' => $postDrafts,
+            'count' => count($postDrafts)
+        ])->getResponse();
     }
 
     /**
