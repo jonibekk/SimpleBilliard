@@ -209,10 +209,12 @@ class PostDraftService extends AppService
         }
 
         // Returning data belongs to $circleId
-        return array_filter($postDrafts, function ($v) use ($circleId) {
+        $postDrafts = array_filter($postDrafts, function ($v) use ($circleId) {
             $postDraft = $v->toArray();
             $draftData = json_decode($postDraft['draft_data'], true);
             return $circleId === (int)$draftData['circle_id'];
         });
+
+        return array_values($postDrafts);
     }
 }
