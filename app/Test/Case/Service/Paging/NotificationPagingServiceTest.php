@@ -25,7 +25,9 @@ class NotificationPagingServiceTest extends GoalousTestCase
         $teamId = 1;
         $fromUserId = 2;
         $userId = 1;
+
         for($i = 1; $i <= 5; $i++) {
+            usleep(100);
             $this->GlRedis->setNotifications(1, $teamId, [$userId], $fromUserId, json_encode("body${i}"), '/', microtime(true));
         }
 
@@ -46,8 +48,8 @@ class NotificationPagingServiceTest extends GoalousTestCase
         $this->assertEquals($res['data'][0]['body'], "body5");
         $this->assertEquals($res['data'][0]['user']['id'], $fromUserId);
 
-        // TODO: The failure that the order of the data falls apart When unit test
-//        // Get more notifications
+        // TODO: The failure that the order of the data falls apart when unit test. it is possibility that phpredis is not stable.
+        // Get more notifications
 //        $cursor = $res['cursor'];
 //        $nextRequest = PagingRequest::decodeCursorToObject($cursor);
 //        $nextRequest->setCurrentTeamId($teamId);
@@ -58,4 +60,17 @@ class NotificationPagingServiceTest extends GoalousTestCase
 //        $this->assertCount(2, $res['data']);
 //        $this->assertEmpty($res['cursor']);
     }
+
+
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->GlRedis->deleteAllData();
+        parent::tearDown();
+    }
+
 }

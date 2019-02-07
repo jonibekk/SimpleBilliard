@@ -582,7 +582,7 @@ class GlRedis extends AppModel
                 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         }
 
-        $score = substr_replace((string)(microtime(true) * 10000), '1', -1, 1);
+        $score = substr_replace((string)(bcmul($date, '10000')), '1', -1, 1);
 
         //save notification user process
         foreach ($to_user_ids as $uid) {
