@@ -115,9 +115,9 @@ class CirclePostExtender extends BaseExtender
 
                     // Fetch data from video stream
                     if ((int)$postResource['resource_type'] === Enum\Model\Post\PostResourceType::VIDEO_STREAM) {
-                        $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id']);
+                        $isUserAgentSupportManifestRedirect = $VideoStreamService->isBrowserSupportManifestRedirects();
+                        $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'], !$isUserAgentSupportManifestRedirect);
                         $data[$index]['resources'][] = $resourceVideoStream;
-
                     }
                 }
             }

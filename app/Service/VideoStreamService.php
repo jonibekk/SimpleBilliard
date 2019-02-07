@@ -397,7 +397,7 @@ class VideoStreamService extends AppService
         return true;
     }
 
-    public function getVideoStreamForPlayer(int $videoStreamId)
+    public function getVideoStreamForPlayer(int $videoStreamId, bool $setDirectUrl = false)
     {
         /** @var VideoStream $VideoStream */
         $VideoStream = ClassRegistry::init("VideoStream");
@@ -413,15 +413,54 @@ class VideoStreamService extends AppService
 
         $videoSources = [];
         foreach ($transcodeOutput->getVideoSources($urlBaseStorage) as $videoSource) {
-            array_push($videoSources, [
+            $source = [
                 'video_stream_id'   => $videoStreamId,
                 'type' => $videoSource->getType()->getValue(),
-            ]);
+            ];
+            if ($setDirectUrl && $videoSource->getType()->equals(Goalous\Enum\Model\Video\VideoSourceType::PLAYLIST_M3U8_HLS())) {
+                $source['url'] = $urlBaseStorage . 'playlist.m3u8';
+            }
+            array_push($videoSources, $source);
         }
         $resourceVideoStream['video_sources'] = $videoSources;
         $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
         $resourceVideoStream['file_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
 
         return $resourceVideoStream;
+    }
+
+    /**
+     * Decide current user browser is supporting redirecting on HLS video play.
+     *
+     * @see
+     *     https://github.com/videojs/videojs-contrib-hls/pull/912#discussion_r164196518
+     *     https://developer.mozilla.org/ja/docs/XMLHttpRequest/responseURL
+     *     IE11 does not have responseURL property,
+     *     unless we are redirecting, IE11 cant play video if we redirects Cross-Origin
+     *
+     * @return bool
+     */
+    public function isBrowserSupportManifestRedirects(): bool
+    {
+        try {
+            $currentBrowser = (new \BrowscapPHP\Browscap())->getBrowser();
+        } catch (Exception $e) {
+            // logging on info
+            // not critical if exception throws on here
+            GoalousLog::info('Failed to detect browser', [
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
+
+        $browser = strtolower(trim($currentBrowser->browser ?? ''));
+        $version = intval($currentBrowser->majorver ?? 0);
+
+        // IE is not supporting
+        if ('ie' === $browser && $version <= 11) {
+            return false;
+        }
+
+        return true;
     }
 }
