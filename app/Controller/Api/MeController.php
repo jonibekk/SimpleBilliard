@@ -1,7 +1,9 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
+App::import('Service/Paging', 'NotificationPagingService');
 App::import('Lib/Paging', 'PagingRequest');
+App::uses('GlRedis', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -40,6 +42,55 @@ class MeController extends BasePagingController
             $this->getExtensionOptions() ?: $this->getDefaultCircleExtension());
 
         return ApiResponse::ok()->withBody($circleData)->getResponse();
+    }
+
+    /**
+     * Get list of notifications for user authorized
+     */
+    public function get_notifications()
+    {
+        $error = $this->validateNotifications();
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+            $pagingRequest->addCondition(['from_timestamp' => 0]);
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var NotificationPagingService $NotificationPagingService */
+        $NotificationPagingService = ClassRegistry::init('NotificationPagingService');
+
+        $notifications = $NotificationPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(), [NotificationExtender::EXTEND_ALL]);
+
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        // unread_count doesn't deal as `count` return value of paging service because it is paging `total` count
+        $notifications['unread_count'] = $GlRedis->getCountOfNewNotification($pagingRequest->getCurrentTeamId(), $pagingRequest->getCurrentUserId());
+
+        return ApiResponse::ok()
+            ->withBody($notifications)->getResponse();
+    }
+
+    /**
+     * Validate parameters for getting notifications
+     *
+     * @return ErrorResponse | null
+     */
+    private function validateNotifications()
+    {
+        $fromTimestamp = $this->request->query('from_timestamp');
+
+        if (!empty($fromTimestamp) && !AppUtil::isInt($fromTimestamp)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
+        return null;
     }
 
     /**
