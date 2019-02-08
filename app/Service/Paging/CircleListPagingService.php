@@ -228,6 +228,7 @@ class CircleListPagingService extends BasePagingService
     protected function beforeRead(PagingRequest $pagingRequest)
     {
         $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
+        return $pagingRequest;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest

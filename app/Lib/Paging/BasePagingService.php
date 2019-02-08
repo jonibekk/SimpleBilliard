@@ -41,7 +41,7 @@ abstract class BasePagingService implements PagingServiceInterface
             $extendFlags = [$extendFlags];
         }
 
-        $this->beforeRead($pagingRequest);
+        $pagingRequest = $this->beforeRead($pagingRequest);
         $pagingRequest = $this->addDefaultValues($pagingRequest);
 
         $queryResult = $this->readData($pagingRequest, $limit + 1);
@@ -92,11 +92,11 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @param PagingRequest $pagingRequest
      *
-     * @return bool
+     * @return PagingRequest
      */
     protected function beforeRead(PagingRequest $pagingRequest)
     {
-        return true;
+        return $pagingRequest;
     }
 
     /**
