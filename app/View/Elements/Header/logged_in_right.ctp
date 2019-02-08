@@ -115,36 +115,45 @@
                 </div>
             </a>
 
-            <div class="dropdown-menu header-nav-notify-contents-wrap">
-                <div class="header-nav-notify-contents-scrolling">
-                    <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
-                        <i class="fa fa-check" class="mark_all_read"></i>
-                        <span class="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
+            <div class="dropdown-menu notiListFlyout">
+                <div class="notiListFlyout-inner">
+                    <div class="header">
+                        <div class="left">
+                            <a href="/users/settings#notification">
+                                <i class="material-icons">settings</i>
+                            </a>
+                        </div>
+                        <div class="center">
+                            <span class="title"><?= __("Notification")?></span>
+                        </div>
+                        <div class="right"><a class="mark_all_read"><?= __("Mark All as Read")?></a></div>
                     </div>
-                    <ul class="header-nav-notify-contents notify-dropdown-cards bell-dropdown" role="menu"
-                        style="overflow-y:scroll">
-                        <li class="notify-card-empty">
-                            <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                                class="notify-empty-text"><?= __('No new notification') ?></span>
-                        </li>
-                    </ul>
+                    <div class="content-container" id="NotiListScroll">
+                        <ul class="header-nav-notify-contents notify-dropdown-cards" role="menu"
+                            >
+                            <li class="notify-card-empty">
+                                <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
+                                    class="notify-empty-text"><?= __('No new notification') ?></span>
+                            </li>
+                        </ul>
+                        <a
+                            href="#"
+                            style="display: none;"
+                            class="noti-loading NotifyDropDownReadMore click-notify-read-more-dropdown"
+                            get-url="<?= $this->Html->url([
+                                'controller' => 'notifications',
+                                'action'     => 'ajax_get_old_notify_more',
+                            ]) ?>"
+                        >
+                            <svg class="spinner" width="24px" height="24px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle class="path" cx="50%" cy="50%" r="7"></circle></svg>
+                        </a>
+                    </div>
+                    <div class="footer">
+                        <a href="/notifications" class="view-all-link">
+                            <?= __("View All Notifications")?>
+                        </a>
+                    </div>
                 </div>
-                <a href="#"
-                   class="NotifyDropDownReadMore btn btn-link font_bold click-notify-read-more-dropdown"
-                   style="display:none;"
-                   get-url="<?= $this->Html->url([
-                       'controller' => 'notifications',
-                       'action'     => 'ajax_get_old_notify_more',
-                   ]) ?>">
-                </a>
-
-                <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
-                   get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
-                   class="call-notifications">
-                    <div class="notify-all-view-link">
-                        <?= __('See All') ?>
-                    </div>
-                </a>
             </div>
 
         </li>

@@ -30,57 +30,52 @@ switch ($location_type) {
 <?php $status_read = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $status_read ?> <?= h($list_type_class) ?>" data-score="<?= $notification['score'] ?>">
     <a href="<?= h($notification['url']) ?>"
-       class="col col-xxs-12 notify-card-link <?php if (empty($is_message_notify)): ?>notify-click-target<?php endif; ?>"
+       class="notify-card-link"
        id="notifyCard"
        get-url="<?= h($notification['url']) ?>">
-        <!-- <div class="notify-card-pic-box"> -->
-        <?php if (!empty($user)): ?>
-            <?=
-            $this->Html->image(
-                $this->Upload->uploadUrl(
-                    $user,
-                    'User.photo',
-                    ['style' => 'medium_large']
-                ),
-                array(
-                    'class' => array('pull-left notify-card-pic')
-                )
-            );
-            ?>
-        <?php else: ?>
-            <?=
-            $this->Html->image(
-                $this->Upload->uploadUrl(
-                    $team,
-                    'Team.photo',
-                    ['style' => 'medium_large']
-                ),
-                array(
-                    'class' => array('pull-left notify-card-pic')
-                )
-            );
-            ?>
-        <?php endif; ?>
-        <!-- </div> -->
-        <div class="<?= h($card_type_class) ?>">
-            <div class="col col-xxs-12 notify-card-head">
-              <span class="font_verydark">
-                  <?=
-                  // HTMLが入るのでエスケープしない
-                  // NotifySetting::getTitle() 内で必要な処理を行っている
-                  $notification['title']
-                  ?>
-              </span>
-            </div>
-            <div class="col col-xxs-12 notify-card-text-wrapper">
-                <div class="notify-text notify-line-number notify-card-text" id="CommentTextBody_67">
-                    <?php if (NotifySetting::$TYPE[$notification['type']]['icon_class']): ?>
-                        <i class="fa <?= NotifySetting::$TYPE[$notification['type']]['icon_class'] ?> font_bold"></i>
-                    <?php endif; ?>
-                    <?= h(json_decode($notification['body'])[0]); ?>
-                </div>
-                <span class="notify-card-aside"><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></span>
-            </div>
+
+        <div class="left">
+            <?php if (!empty($user)): ?>
+                <?=
+                $this->Html->image(
+                    $this->Upload->uploadUrl(
+                        $user,
+                        'User.photo',
+                        ['style' => 'medium_large']
+                    ),
+                    array(
+                        'class' => array('')
+                    )
+                );
+                ?>
+            <?php else: ?>
+                <?=
+                $this->Html->image(
+                    $this->Upload->uploadUrl(
+                        $team,
+                        'Team.photo',
+                        ['style' => 'medium_large']
+                    ),
+                    array(
+                        'class' => array('')
+                    )
+                );
+                ?>
+            <?php endif; ?>
+        </div>
+        <div class="right">
+            <p class="title">
+                <?=
+                // HTMLが入るのでエスケープしない
+                // NotifySetting::getTitle() 内で必要な処理を行っている
+                $notification['title']
+                ?>
+            </p>
+            <p class="body">
+                <i class="material-icons"><?= Hash::get(NotifySetting::$TYPE, $notification['type'].".icon_class")?></i>
+                <?= h(json_decode($notification['body'])[0]); ?>
+            </p>
+            <span class="time"><?= $this->TimeEx->elapsedTime(h($notification['created'])) ?></span>
         </div>
     </a>
 </li>

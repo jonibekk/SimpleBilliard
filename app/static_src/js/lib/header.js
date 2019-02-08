@@ -39,7 +39,7 @@ $(function () {
     }
   });
   $(document).on("click", ".call-notifications", evNotifications);
-  $(document).on('click', '.mark_all_read,.mark_all_read_txt', function (e) {
+  $(document).on('click', '.mark_all_read', function (e) {
     e.preventDefault();
     $.ajax({
       type: 'GET',
@@ -64,10 +64,9 @@ $(function () {
 
   // ヘッダーのお知らせ一覧ポップアップのオートローディング
   var prevScrollTop = 0;
-  $('.bell-dropdown').scroll(function () {
+  $('#NotiListScroll').scroll(function () {
     var $this = $(this);
     var currentScrollTop = $this.scrollTop();
-
     if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
       if (!autoload_more) {
         autoload_more = true;
@@ -237,11 +236,10 @@ function evMessageList(options) {
 }
 
 function updateListBox() {
-  var $bellDropdown = $(".bell-dropdown");
+  var $bellDropdown = $(".header-nav-notify-contents");
   $bellDropdown.empty();
-  var $loader_html = $('<li class="notification-refresh text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
   //ローダー表示
-  $bellDropdown.append($loader_html);
+  $(".noti-loading").show();
   var url = cake.url.g;
   $.ajax({
     type: 'GET',
@@ -250,7 +248,7 @@ function updateListBox() {
     success: function (data) {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
-      $(".notification-refresh").remove();
+      $(".noti-loading").hide();
       $bellDropdown.append($notifyItems);
       //画像をレイジーロード
       imageLazyOn();
