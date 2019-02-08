@@ -3,9 +3,6 @@
   notify-cardsのスタイル
 */
 .notify-card-link {
-  display: flex;
-  padding: 4px 5px;
-
   // 3カラムの場合でのみhoverの色を変える。
   // 携帯端末でhover設定はui的にNG.
   @media screen and (min-width: 992px) {
@@ -15,7 +12,80 @@
       background-color: @hoverRed;
     }
   }
+  border-right: 2px solid @color-background-white;
+  cursor: pointer;
+  display: flex;
+  font-size: 0;
+  min-width: 0;
+  text-decoration: none;
+  padding: @content-half-padding @content-padding 0;
+  > .left {
+    width: 40px;
+    flex-shrink: 0;
+    > img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  > .right {
+    border-bottom: 1px solid @color-06-gray;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: @content-padding;
+    min-width: 0;
+
+    > .title {
+      color: @color-02-gray;
+      display: inline-block;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 0;
+      margin: 0;
+      span {
+        font-weight: 600;
+      }
+    }
+    > .body {
+      padding: 0;
+      color: @color-04-gray;
+      font-size: 10.5px;
+      line-height: 16px;
+      margin: 2px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      > i {
+        font-size: 10.5px;
+        line-height: 10.5px;
+        height: 10.5px;
+        vertical-align: middle;
+      }
+    }
+    > .time {
+      color: @color-04-gray;
+      font-size: 1.05rem;
+      line-height: 16px;
+      margin: 4px 0;
+      padding: 0;
+    }
+  }
+  &:hover,
+  &.unread {
+    background-color: @color-primary-99-light-02;
+    text-decoration: none;
+  }
 }
+.noti-loading {
+  padding: @content-padding;
+  text-align: center;
+  display: block;
+  > .spinner {
+    margin: 0 auto;
+  }
+}
+
 
 .notify-page-cards {
   .notify-card-link {
@@ -29,13 +99,14 @@
 .header-nav-notify-contents {
   margin: 0;
   padding: 0;
-  max-height: 360px;
   white-space: normal;
-  width: @headerNotifiCardWidth;
+  width: @menu-max-width;
   overflow-y: scroll;
   text-overflow: ellipsis;
   box-shadow: none;
   -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -90,22 +161,8 @@
   padding-left: 0;
 }
 
-.notify-card-list {
-  clear: both;
-  overflow:hidden;
-  line-height: 1.4;
-  .notify-card-link {
-    border-top: 1px solid @lightGray;
-  }
-  &:first-child{
-    .notify-card-link {
-      border-top: none;
-    }
-  }
-}
-
 .notify-dropdown-card {
-  width: 318px;
+  width: @menu-max-width;
 }
 
 .notify-card-pic-box {
