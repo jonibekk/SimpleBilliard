@@ -5613,3 +5613,6 @@ msgstr "%d人のメンバーが一致"
 
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"
+
+msgid "View All Notifications"
+msgstr "すべての通知を見る"
