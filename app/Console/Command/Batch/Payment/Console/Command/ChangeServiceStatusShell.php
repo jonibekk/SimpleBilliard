@@ -61,5 +61,7 @@ class ChangeServiceStatusShell extends AppShell
             Team::SERVICE_USE_STATUS_CANNOT_USE
         );
         $this->TeamService->deleteTeamCannotUseServiceExpired($targetExpireDate);
+        // updating status from Paid to Read-only
+        $this->TeamService->changePaidTeamToReadOnly($targetExpireDate);
     }
 }

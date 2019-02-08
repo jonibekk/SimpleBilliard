@@ -19,12 +19,12 @@ class PricePlanPurchaseTeam extends AppModel
      */
     public $validate = [
         'price_plan_code' => [
-            'notBlank'                => [
+            'notBlank'                 => [
                 'required' => true,
                 'rule'     => 'notBlank',
             ],
-            'customValidateCodeFormat'                => [
-                'rule'     => 'customValidateCodeFormat',
+            'customValidateCodeFormat' => [
+                'rule' => 'customValidateCodeFormat',
             ],
         ],
     ];

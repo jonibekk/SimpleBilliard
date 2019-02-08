@@ -766,7 +766,6 @@ class GoalousTestCase extends CakeTestCase
             ]
         );
         $teamId = $this->createTeam($saveTeam);
-
         $savePaymentSetting = array_merge(
             [
                 'team_id'          => $teamId,
@@ -802,8 +801,8 @@ class GoalousTestCase extends CakeTestCase
             $invoice
         );
         $this->Invoice->create();
-        $this->Invoice->save($saveInvoice, false);
-        $invoiceId = $this->Invoice->getLastInsertID();
+        $savedInvoice = $this->Invoice->save($saveInvoice, false);
+        $invoiceId = $savedInvoice['Invoice']['id'];
 
         for ($i = 0; $i < $createActiveUserCount; $i++) {
             $this->createActiveUser($teamId);

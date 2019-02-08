@@ -9,6 +9,10 @@ App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('AppController', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
+App::uses('CampaignTeam', 'Model');
+App::uses('CreditCard', 'Model');
+App::uses('Invoice', 'Model');
+App::uses('PricePlanPurchaseTeam', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -423,6 +427,52 @@ class TeamService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * Change paid team status to read only
+     *
+     * @param string $targetDate
+     */
+    public function changePaidTeamToReadOnly(string $targetDate)
+    {
+        /** @var CampaignTeam $CampaignTeam */
+        $CampaignTeam = ClassRegistry::init('CampaignTeam');
+        /** @var CreditCard $CreditCard */
+        $CreditCard = ClassRegistry::init('CreditCard');
+        /** @var Invoice $Invoice */
+        $Invoice = ClassRegistry::init('Invoice');
+        /** @var PricePlanPurchaseTeam $PricePlanPurchaseTeam */
+        $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+
+        $targetTeamIds = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, $targetDate);
+        if (empty($targetTeamIds)) return;
+
+        try {
+            $this->TransactionManager->begin();
+            $res = $this->changeStatusAllTeamExpired($targetDate, Enum\Model\Team\ServiceUseStatus::PAID, Enum\Model\Team\ServiceUseStatus::READ_ONLY);
+            if (!$res) {
+                throw new RuntimeException();
+            }
+            foreach ($targetTeamIds as $teamId) {
+                $CampaignTeam->softDeleteAllByTeamId($teamId);
+                $CreditCard->softDeleteAllByTeamId($teamId);
+                $Invoice->softDeleteAllByTeamId($teamId);
+                $PaymentSetting->softDeleteAllByTeamId($teamId);
+                $PricePlanPurchaseTeam->softDeleteAllByTeamId($teamId);
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::emergency("Failed to expire paid teams.", [
+                'target_date' => $targetDate,
+                'teams'       => $targetTeamIds
+            ]);
+        }
 
     }
 }
