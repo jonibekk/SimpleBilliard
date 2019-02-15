@@ -67,14 +67,28 @@ class MeController extends BasePagingController
 
         $notifications = $NotificationPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(), [NotificationExtender::EXTEND_ALL]);
 
+        return ApiResponse::ok()
+            ->withBody($notifications)->getResponse();
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function get_unread_notification_count()
+    {
+        $error = $this->validateNotifications();
+
+        if (!empty($error)) {
+            return $error;
+        }
 
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
         // unread_count doesn't deal as `count` return value of paging service because it is paging `total` count
-        $notifications['unread_count'] = $GlRedis->getCountOfNewNotification($pagingRequest->getCurrentTeamId(), $pagingRequest->getCurrentUserId());
+        $unreadCount = $GlRedis->getCountOfNewNotification($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()
-            ->withBody($notifications)->getResponse();
+            ->withBody(['unread_notification_count' => $unreadCount])->getResponse();
     }
 
     /**

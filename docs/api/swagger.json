@@ -1398,6 +1398,48 @@
         }
       }
     },
+    "/api/me/unread_notification_count" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "Current user's unread notification count",
+        "description" : "Get current user's unread notification count\\.",
+        "operationId" : "/api/me/unread_notification_count",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get personal notification list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "unread_notification_count" ],
+                  "properties" : {
+                    "unread_notification_count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                },
+                "example" : {
+                  "unread_notification_count" : 10
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/posts" : {
       "post" : {
         "tags" : [ "Posts" ],
@@ -4285,7 +4327,7 @@
           "cursor" : {
             "type" : "string"
           },
-          "unread_count" : {
+          "count" : {
             "type" : "integer",
             "format" : "int32"
           }
@@ -4366,7 +4408,6 @@
             }
           ],
           "cursor" : "eyJjb25kaXRpb25zIjp7ImZyb21fdGltZXN0YW1wIjowfSwicG9pbnRlciI6W1siZnJvbV90aW1lc3RhbXAiLCI8IiwxNTQ5MjY1ODQzNjQ2MF1dfQ=",
-          "unread_count" : 1,
           "count": 4
         }
       },
