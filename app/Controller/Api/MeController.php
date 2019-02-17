@@ -87,8 +87,10 @@ class MeController extends BasePagingController
         // unread_count doesn't deal as `count` return value of paging service because it is paging `total` count
         $unreadCount = $GlRedis->getCountOfNewNotification($this->getTeamId(), $this->getUserId());
 
+        $data = ['unread_notification_count' => $unreadCount];
+
         return ApiResponse::ok()
-            ->withBody(['unread_notification_count' => $unreadCount])->getResponse();
+            ->withBody(compact('data'))->getResponse();
     }
 
     /**
