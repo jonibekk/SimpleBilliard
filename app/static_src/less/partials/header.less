@@ -199,28 +199,28 @@
         text-decoration: none;
       }
     }
-
     > .content-container {
       flex: 1 1 auto;
       overflow-y: auto;
       position: relative;
       width: 100%;
     }
-
     .empty {
-      padding: 24px @content-padding;
-
+      padding-top: 72px;
       > .empty-box {
-        align-items: center;
-        color: @color-04-gray;
-        display: flex;
-        justify-content: center;
-        margin: 0 auto;
+        text-align: center;
+        > i {
+          font-size: 56px;
+          height: 56px;
+          line-height: 56px;
+          width: 56px;
 
+          color: @color-04-gray;
+        }
         > p {
           color: @color-04-gray;
           font-size: 1.4rem;
-          margin-left: 4px;
+          margin-top: @content-padding;
         }
       }
     }

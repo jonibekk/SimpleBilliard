@@ -148,7 +148,7 @@
                             <svg class="spinner" width="24px" height="24px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle class="path" cx="50%" cy="50%" r="7"></circle></svg>
                         </a>
                     </div>
-                    <div class="footer">
+                    <div class="footer js-notiListFlyout-footer" style="display:none;">
                         <a href="/notifications" class="view-all-link">
                             <?= __("View All Notifications")?>
                         </a>
