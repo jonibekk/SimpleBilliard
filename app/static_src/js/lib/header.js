@@ -321,15 +321,15 @@ function setNotifyCntToBellAndTitle(cnt) {
   }
 
   for(var i = 0; i < $bellBoxs.length; i++){
-    $bellBox = $($bellBoxs[i]);
+    var $bellBox = $($bellBoxs[i]);
     // set notify number
-    if (parseInt(cnt) <= 20) {
-      $bellBox.children('span').html(cnt);
-      $bellBox.children('sup').addClass('none');
+    var $badge = $bellBox.children('span');
+    if (parseInt(cnt) > 99) {
+      $badge.addClass('oval');
     } else {
-      $bellBox.children('span').html(20);
-      $bellBox.children('sup').removeClass('none');
+      $badge.removeClass('oval');
     }
+    $badge.html(cnt);
     updateTitleCount();
 
     if (existingBellCnt == 0) {

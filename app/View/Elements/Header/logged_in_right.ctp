@@ -111,7 +111,7 @@
                 <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
                 <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
                      style="opacity: 0;">
-                    <span>0</span><sup class="notify-plus none">+</sup>
+                    <span>0</span>
                 </div>
             </a>
 
