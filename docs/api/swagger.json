@@ -1398,12 +1398,12 @@
         }
       }
     },
-    "/api/me/unread_notification_count" : {
+    "/api/me/new_notification_count" : {
       "get" : {
         "tags" : [ "Me" ],
         "summary" : "Current user's unread notification count",
         "description" : "Get current user's unread notification count\\.",
-        "operationId" : "/api/me/unread_notification_count",
+        "operationId" : "/api/me/new_notification_count",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
         } ],
@@ -1414,16 +1414,16 @@
               "application/json" : {
                 "schema" : {
                   "type" : "object",
-                  "required" : [ "unread_notification_count" ],
+                  "required" : [ "new_notification_count" ],
                   "properties" : {
-                    "unread_notification_count" : {
+                    "new_notification_count" : {
                       "type" : "integer",
                       "format" : "int32"
                     }
                   }
                 },
                 "example" : {
-                  "unread_notification_count" : 10
+                  "new_notification_count" : 10
                 }
               }
             }
@@ -1437,6 +1437,27 @@
           "AllowDynamicQueryParameters" : false,
           "AllowDynamicFormParameters" : false,
           "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/notifications/read_all" : {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Read logged in user's all notifications",
+        "description": "Read logged in user's all notifications",
+        "operationId": "/api/notifications/read_all",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
         }
       }
     },
