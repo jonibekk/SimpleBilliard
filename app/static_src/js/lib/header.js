@@ -249,7 +249,10 @@ function updateListBox() {
       //取得したhtmlをオブジェクト化
       var $notifyItems = data;
       $(".noti-loading").hide();
-      $bellDropdown.append($notifyItems);
+      if ($notifyItems.has_noti) {
+        $(".js-notiListFlyout-footer").show();
+      }
+      $bellDropdown.append($notifyItems.html);
       //画像をレイジーロード
       imageLazyOn();
     },

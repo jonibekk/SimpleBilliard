@@ -12,7 +12,7 @@
     "mixpanel/mixpanel-php": "~2.6",
     "aws/aws-sdk-php": "~3.0",
     "pragmarx/google2fa": "~0.7",
-    "oefenweb/cakephp-redis": "~1.1.0",
+    "oefenweb/cakephp-redis": "^2.0",
     "dereuromark/cakephp-url-cache": "~1.0.0",
     "kaz29/cake_slack": "dev-master",
     "browscap/browscap-php": "dev-master",
