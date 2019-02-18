@@ -111,7 +111,7 @@
                 <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
                 <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
                      style="opacity: 0;">
-                    <span>0</span><sup class="notify-plus none">+</sup>
+                    <span>0</span>
                 </div>
             </a>
 
@@ -129,12 +129,7 @@
                         <div class="right"><a class="mark_all_read"><?= __("Mark All as Read")?></a></div>
                     </div>
                     <div class="content-container" id="NotiListScroll">
-                        <ul class="header-nav-notify-contents notify-dropdown-cards" role="menu"
-                            >
-                            <li class="notify-card-empty">
-                                <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                                    class="notify-empty-text"><?= __('No new notification') ?></span>
-                            </li>
+                        <ul class="header-nav-notify-contents notify-dropdown-cards" role="menu">
                         </ul>
                         <a
                             href="#"
