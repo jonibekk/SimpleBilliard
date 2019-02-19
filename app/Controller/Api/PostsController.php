@@ -4,6 +4,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Service', 'PostReadService');
 App::import('Service', 'SavedPostService');
+App::import('Service', 'PostDraftService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service/Paging', 'PostLikesPagingService');
@@ -47,6 +48,8 @@ class PostsController extends BasePagingController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init("VideoStreamService");
 
         $requestData = $this->getRequestJsonBody();
         $post['body'] = Hash::get($requestData, 'body');
@@ -54,10 +57,34 @@ class PostsController extends BasePagingController
         $post['site_info'] = Hash::get($requestData, 'site_info');
 
         $circleId = (int)Hash::get($requestData, 'circle_id');
-        $fileIds = Hash::get($requestData, 'file_ids', []);
+        $files = Hash::get($requestData, 'files', []);
 
         try {
-            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIds);
+            // Checking if needs to create a draft post
+            $videoStreamIds = [];
+            foreach ($files as $file) {
+                if (isset($file['is_video']) && $file['is_video']) {
+                    $videoStreamIds[] = $file['video_stream_id'];
+                }
+            }
+            if (1 < count($videoStreamIds)) {
+                return ErrorResponse::badRequest()->withMessage(__('You can only post one video file.'))->getResponse();
+            }
+            if (1 === count($videoStreamIds)) {
+                if (!$VideoStreamService->isAllCompletedTrancode($videoStreamIds)) {
+                    // Transcode not completed, creating draft post
+                    $postDraft = $this->createDraftPost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+                    $draftData = json_decode($postDraft['draft_data'], true);
+                    $data = am($postDraft, [
+                        'is_draft' => true,
+                        'body' => $draftData['body'],
+                    ]);
+                    unset($data['draft_data']);
+                    return ApiResponse::ok()->withData($data)->getResponse();
+                }
+            }
+
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
             $this->_notifyNewPost($res);
 
         } catch (InvalidArgumentException $e) {
@@ -67,6 +94,29 @@ class PostsController extends BasePagingController
                 ->getResponse();
         }
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
+    }
+
+    private function createDraftPost(array $postBody, $circleId, $userId, $teamId, array $files)
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init("PostDraftService");
+        $postDraft = $PostDraftService->createPostDraftWithResources(
+            am($postBody, [
+                'is_api_v2' => true,
+                'circle_id' => $circleId,
+                'files' => $files,
+                'share' => 'circle_' . $circleId,
+            ]),
+            $userId,
+            $teamId,
+            $files
+        );
+        return $postDraft;
     }
 
     /**

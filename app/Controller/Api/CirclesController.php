@@ -2,12 +2,15 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Service', 'CircleService');
 App::import('Service', 'CircleMemberService');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::import('Service/Paging', 'CircleMemberPagingService');
+App::import('Service/Paging', 'PostDraftPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::import('Service', 'PostDraftService');
 
 /**
  * Created by PhpStorm.
@@ -27,7 +30,7 @@ class CirclesController extends BasePagingController
 
     public function get_posts(int $circleId)
     {
-        $error = $this->validateGetCircle($circleId);
+        $error = $this->validateCircleAccess($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -57,7 +60,7 @@ class CirclesController extends BasePagingController
 
     public function get_members(int $circleId)
     {
-        $error = $this->validateGetCircle($circleId);
+        $error = $this->validateCircleAccess($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -170,13 +173,68 @@ class CirclesController extends BasePagingController
     }
 
     /**
+     * Get list of post drafts in a circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse;
+     */
+    public function get_post_drafts(int $circleId)
+    {
+        $error = $this->validateCircleAccess($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init('PostDraftService');
+
+        try {
+            $postDrafts = $PostDraftService->getPostDraftsFilterByCircleId(
+                $this->getUserId(),
+                $this->getTeamId(),
+                $circleId
+            );
+
+            $postDrafts = array_map(function($v) {
+                $postDraft = $v->toArray();
+                $draftData = json_decode($postDraft['draft_data'], true);
+                $postDraft['body'] = $draftData['body'];
+                unset($postDraft['draft_data']);
+
+                return $postDraft;
+            }, $postDrafts);
+
+            /** @var PostDraftExtender $PostDraftExtender */
+            $PostDraftExtender = ClassRegistry::init('PostDraftExtender');
+
+            $postDrafts = $PostDraftExtender->extendMulti(
+                $postDrafts,
+                $this->getUserId(),
+                $this->getTeamId(),
+                [PostDraftExtender::EXTEND_ALL]
+            );
+
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => $postDrafts,
+            'count' => count($postDrafts)
+        ])->getResponse();
+    }
+
+    /**
      * Validation for endpoint get_posts
      *
      * @param int $circleId
      *
      * @return ErrorResponse | null
      */
-    private function validateGetCircle(int $circleId)
+    private function validateCircleAccess(int $circleId)
     {
         if (!is_int($circleId)) {
             return ErrorResponse::badRequest()->getResponse();
@@ -192,7 +250,7 @@ class CirclesController extends BasePagingController
         if (!$Circle->isBelongCurrentTeam($circleId, $this->getTeamId()) ||
             ($Circle->isSecret($circleId) && !$CircleMember->isBelong($circleId, $this->getUserId(),
                     $this->getTeamId()))) {
-            return ErrorResponse::forbidden()->withMessage(__("The circle dosen't exist or you don't have permission."))
+            return ErrorResponse::notFound()->withMessage(__("The circle doesn't exist or you don't have permission."))
                 ->getResponse();
         }
 
@@ -321,7 +379,7 @@ class CirclesController extends BasePagingController
             CirclePostExtender::EXTEND_READ,
             CirclePostExtender::EXTEND_USER,
             CirclePostExtender::EXTEND_COMMENTS,
-            CirclePostExtender::EXTEND_POST_FILE
+            CirclePostExtender::EXTEND_RESOURCES
         ];
     }
 
@@ -346,7 +404,7 @@ class CirclesController extends BasePagingController
      */
     public function get_detail(int $circleId)
     {
-        $error = $this->validateGetCircle($circleId);
+        $error = $this->validateCircleAccess($circleId);
 
         if (!empty($error)) {
             return $error;
@@ -377,7 +435,14 @@ class CirclesController extends BasePagingController
         $memberList = $CircleMember->getMemberList($circleId, true, false, [$userId]);
 
         // Notify to circle member
-       $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+        $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+    }
+
+    private function getDefaultPostDraftExtension()
+    {
+        return [
+            PostDraftExtender::EXTEND_USER
+        ];
     }
 
 }

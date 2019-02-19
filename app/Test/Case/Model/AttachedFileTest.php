@@ -36,6 +36,7 @@ class AttachedFileTest extends GoalousTestCase
         'app.post_share_circle',
         'app.post_share_user',
         'app.message_file',
+        'app.post_resource',
     );
 
     /**
