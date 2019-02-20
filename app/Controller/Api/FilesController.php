@@ -85,7 +85,7 @@ class FilesController extends BaseApiController
     public function post_upload()
     {
         $file = Hash::get($this->request->params, 'form.file');
-
+        $allowVideo = $this->request->data('allow_video');
         $error = $this->validatePost($file);
         if (!empty($error)) {
             return $error;
@@ -94,7 +94,7 @@ class FilesController extends BaseApiController
 
         $isVideo = $this->isVideo($file['tmp_name']);
         // Uploading video to transcode
-        if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+        if ($allowVideo && $isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
 
