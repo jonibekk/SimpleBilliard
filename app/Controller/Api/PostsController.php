@@ -16,6 +16,7 @@ App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
+App::import('Lib/DataExtender', 'PostExtender');
 
 /**
  * Created by PhpStorm.
@@ -77,7 +78,7 @@ class PostsController extends BasePagingController
                     $draftData = json_decode($postDraft['draft_data'], true);
                     $data = am($postDraft, [
                         'is_draft' => true,
-                        'body' => $draftData['body'],
+                        'body'     => $draftData['body'],
                     ]);
                     unset($data['draft_data']);
                     return ApiResponse::ok()->withData($data)->getResponse();
@@ -109,8 +110,8 @@ class PostsController extends BasePagingController
             am($postBody, [
                 'is_api_v2' => true,
                 'circle_id' => $circleId,
-                'files' => $files,
-                'share' => 'circle_' . $circleId,
+                'files'     => $files,
+                'share'     => 'circle_' . $circleId,
             ]),
             $userId,
             $teamId,
@@ -285,17 +286,22 @@ class PostsController extends BasePagingController
 
         $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
         $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $resources = Hash::get($this->getRequestJsonBody(), 'resources');
 
         try {
             /** @var PostEntity $newPost */
-            $newPost = $PostService->editPost($newBody, $postId);
+            $newPost = $PostService->editPost($newBody, $postId, $this->getUserId(), $this->getTeamId(), $resources);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
 
-        return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
+        $newPost = $PostExtender->extend($newPost->toArray(), $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_POST_RESOURCES]);
+
+        return ApiResponse::ok()->withData($newPost)->getResponse();
     }
 
     public function post_likes(int $postId): CakeResponse
@@ -684,7 +690,11 @@ class PostsController extends BasePagingController
         try {
 
             PostRequestValidator::createPostEditValidator()->validate($body);
-
+            /**
+             * FixMe For now, post edit doesn't allow new videos.
+             * JIRA task: GL-7826
+             */
+            PostRequestValidator::createPostEditFileValidator()->validate($body);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)

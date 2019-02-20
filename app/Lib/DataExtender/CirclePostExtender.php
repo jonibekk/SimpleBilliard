@@ -24,6 +24,7 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_LIKE = "ext:circle_post:like";
     const EXTEND_SAVED = "ext:circle_post:saved";
     const EXTEND_READ = "ext:circle_post:read";
+    const EXTEND_RELATED_TYPE = "ext:circle_post:related_type";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -61,11 +62,40 @@ class CirclePostExtender extends BaseExtender
                 $result['comments'] = $comments;
             }
         }
+        if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
+
+            foreach ($data as &$entry) {
+                switch ((int)$data['type']) {
+                    case Post::TYPE_NORMAL:
+                        // TODO: depends on spec
+                        break;
+                    case Post::TYPE_CREATE_CIRCLE:
+                        /** @var CircleExtension $CircleExtension */
+                        $CircleExtension = ClassRegistry::init('CircleExtension');
+                        $entry = $CircleExtension->extend($entry, "circle_id");
+                        break;
+                    case Post::TYPE_ACTION:
+                    case Post::TYPE_KR_COMPLETE:
+                    case Post::TYPE_CREATE_GOAL:
+                    case Post::TYPE_GOAL_COMPLETE:
+                        /** @var ActionExtension $ActionExtension */
+                        $ActionExtension = ClassRegistry::init('ActionExtension');
+                        $entry = $ActionExtension->extend($entry, "action_result_id");
+
+                        /** @var KeyResultExtension $KeyResultExtension */
+                        $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
+                        $entry = $KeyResultExtension->extend($entry, "action_result.key_result_id");
+
+                        /** @var GoalExtension $GoalExtension */
+                        $GoalExtension = ClassRegistry::init('GoalExtension');
+                        $entry = $GoalExtension->extend($entry, "action_result.goal_id");
+                        break;
+                }
+            }
+        }
         if ($this->includeExt($extensions, self::EXTEND_RESOURCES)) {
 
             foreach ($data as $index => $entry) {
-
-
                 $data[$index]['resources'] = [];
 
                 /** @var PostService $PostService */

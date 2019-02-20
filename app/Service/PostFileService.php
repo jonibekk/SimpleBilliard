@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Model/Entity', 'PostFileEntity');
 App::uses('PostFile', 'Model');
+App::uses('AttachedFile', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -59,9 +60,9 @@ class PostFileService extends AppService
         $condition = [
             'conditions' => [
                 'PostFile.post_id' => $postId,
-                'PostFile.del_flg'   => [0, 1],
+                'PostFile.del_flg' => [0, 1],
             ],
-            'fields' => [
+            'fields'     => [
                 'PostFile.id',
                 'PostFile.post_id',
                 'PostFile.attached_file_id',
@@ -100,5 +101,34 @@ class PostFileService extends AppService
 
         $r = $PostFile->find('all', $condition);
         return $r;
+    }
+
+    /**
+     * Delete attached files of a post
+     *
+     * @param int[] $attachedFileIds
+     *
+     * @throws Exception;
+     */
+    public function deleteByAttachedFileIds(array $attachedFileIds)
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+        try {
+            $this->TransactionManager->begin();
+            $result = $AttachedFile->softDeleteAll(['AttachedFile.id' => $attachedFileIds], false) &&
+                $PostFile->softDeleteAll(['PostFile.attached_file_id' => $attachedFileIds], false);
+            if (!$result) {
+                throw new RuntimeException();
+            };
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to delete post files & their attached files.',
+                ['attached_file_ids' => $attachedFileIds]);
+            throw $e;
+        }
     }
 }

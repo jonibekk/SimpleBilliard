@@ -1,10 +1,13 @@
 <?php
 
 App::import('Service', 'AppService');
+App::import('Service', 'PostFileService');
+App::import('Service', 'VideoStreamService');
 App::uses('PostResource', 'Model');
 App::uses('PostFile', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Model\Post\PostResourceType as PostResourceTypeEnum;
 
 /**
  * Class PostResourceService
@@ -18,8 +21,8 @@ class PostResourceService extends AppService
 
         $PostResource->updateAll([
             'resource_order' => $resourceOrder,
-        ],[
-            'post_id' => $postId,
+        ], [
+            'post_id'     => $postId,
             'resource_id' => $resourceId,
         ]);
     }
@@ -32,7 +35,7 @@ class PostResourceService extends AppService
         $PostResource->updateAll([
             'del_flg' => true,
             'deleted' => GoalousDateTime::now()->timestamp
-        ],[
+        ], [
             'post_id' => $postId,
         ]);
     }
@@ -45,8 +48,8 @@ class PostResourceService extends AppService
         $PostResource->updateAll([
             'del_flg' => true,
             'deleted' => GoalousDateTime::now()->timestamp
-        ],[
-            'post_id' => $postId,
+        ], [
+            'post_id'     => $postId,
             'resource_id' => $resourceId,
         ]);
     }
@@ -58,10 +61,10 @@ class PostResourceService extends AppService
 
         $r = $PostResource->find('first', [
             'conditions' => [
-                'PostResource.post_id' => $postId,
+                'PostResource.post_id'       => $postId,
                 'PostResource.resource_type' => $resourceType,
-                'PostResource.resource_id' => $resourceId,
-                'PostResource.del_flg'   => [0, 1],
+                'PostResource.resource_id'   => $resourceId,
+                'PostResource.del_flg'       => [0, 1],
             ],
             'fields'     => [
                 'PostResource.id'
@@ -95,10 +98,10 @@ class PostResourceService extends AppService
 
         $PostResource->create();
         $result = $PostResource->save([
-            'post_id' => null,
-            'post_draft_id' => $postDraftId,
-            'resource_type' => $postResourceType->getValue(),
-            'resource_id'   => $resourceId,
+            'post_id'        => null,
+            'post_draft_id'  => $postDraftId,
+            'resource_type'  => $postResourceType->getValue(),
+            'resource_id'    => $resourceId,
             'resource_order' => $resourceOrder,
         ], [
             'atomic' => false
@@ -137,6 +140,7 @@ class PostResourceService extends AppService
      * Copy post_resources to post_files
      *
      * @param int $postId
+     *
      * @throws Exception
      */
     public function copyResourceToPostFiles(int $postId)
@@ -169,6 +173,53 @@ class PostResourceService extends AppService
                     $post['team_id'],
                     $postResource['resource_order']);
             }
+        }
+    }
+
+
+    /**
+     * Delete specified post resources from a post
+     *
+     * @param int[] $postResourceIds
+     *
+     * @throws Exception
+     */
+    public function deleteResources(array $postResourceIds)
+    {
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        try {
+            $this->TransactionManager->begin();
+            $condition = [
+                'conditions' => [
+                    'id' => $postResourceIds
+                ]
+            ];
+
+            $postResources = Hash::extract($PostResource->find('all', $condition), '{n}.{s}');
+
+            foreach ($postResources as $postResource) {
+                $resourceId = $postResource['resource_id'];
+                $resourceType = $postResource['resource_type'];
+                switch ($resourceType) {
+                    case    PostResourceTypeEnum::VIDEO_STREAM:
+                        $VideoStreamService->deleteStreamsAndVideos([$resourceId]);
+                        break;
+                    default:
+                        $PostFileService->deleteByAttachedFileIds([$resourceId]);
+                        break;
+                };
+            }
+            $PostResource->softDeleteAll(['id' => $postResourceIds], false);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to delete post resources.", ['post_resources.id' => $postResourceIds]);
+            throw $exception;
         }
     }
 }
