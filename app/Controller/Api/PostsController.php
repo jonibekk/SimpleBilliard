@@ -487,7 +487,7 @@ class PostsController extends BasePagingController
         $teamId = $this->getTeamId();
         try {
             $res = $CommentService->add($commentBody, $postId, $userId, $teamId, $fileIDs);
-            $this->notifyNewComment($res['id'], $postId, $this->getUserId());
+            $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
@@ -779,12 +779,13 @@ class PostsController extends BasePagingController
      * Send notification about new comment on a post.
      * Will notify post's author & other users who've commented on the post
      *
-     * @param int   $commentId      Comment ID of the new comment
-     * @param int   $postId         Post ID where the comment belongs to
-     * @param int   $userId         User ID of the author of the new comment
+     * @param int $commentId Comment ID of the new comment
+     * @param int $postId Post ID where the comment belongs to
+     * @param int $userId User ID of the author of the new comment
+     * @param int $teamId
      * @param int[] $mentionedUsers List of user IDs of mentioned users
      */
-    private function notifyNewComment(int $commentId, int $postId, int $userId, array $mentionedUsers = [])
+    private function notifyNewComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUsers = [])
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -795,22 +796,45 @@ class PostsController extends BasePagingController
             case Post::TYPE_NORMAL:
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
-                    $commentId);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                    $postId, $commentId);
-                //TODO Enable mention notification
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                //TODO Enable mention notification after GL-7599
 //                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_ACTION:
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
                     $postId,
-                    $commentId);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
-                    $postId, $commentId);
-                //TODO Enable mention notification
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                //TODO Enable mention notification after GL-7599 and implemented action comment
 //                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
                 break;
             case Post::TYPE_CREATE_GOAL:
