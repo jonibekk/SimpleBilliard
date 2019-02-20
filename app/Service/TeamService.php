@@ -139,17 +139,20 @@ class TeamService extends AppService
      * @param string $targetExpireDate
      * @param int    $currentStatus
      * @param int    $nextStatus
+     * @param int[]  $targetTeamIds
      *
      * @return bool
      */
-    public function changeStatusAllTeamExpired(string $targetExpireDate, int $currentStatus, int $nextStatus): bool
+    public function changeStatusAllTeamExpired(string $targetExpireDate, int $currentStatus, int $nextStatus, array $targetTeamIds = []): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
-        $targetTeamIds = $Team->findTeamIdsStatusExpired($currentStatus, $targetExpireDate);
         if (empty($targetTeamIds)) {
-            return false;
+            $targetTeamIds = $Team->findTeamIdsStatusExpired($currentStatus, $targetExpireDate);
+            if (empty($targetTeamIds)) {
+                return false;
+            }
         }
         CakeLog::info(sprintf('update teams service status and dates: %s', AppUtil::jsonOneLine([
             'teams.ids'                    => $targetTeamIds,
@@ -449,12 +452,16 @@ class TeamService extends AppService
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
 
-        $targetTeamIds = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, $targetDate);
+        $targetTeamIds = $Team->findExpiredPaidTeamIds($targetDate);
+
         if (empty($targetTeamIds)) return;
 
         try {
             $this->TransactionManager->begin();
-            $res = $this->changeStatusAllTeamExpired($targetDate, Enum\Model\Team\ServiceUseStatus::PAID, Enum\Model\Team\ServiceUseStatus::READ_ONLY);
+            $res = $this->changeStatusAllTeamExpired($targetDate,
+                Enum\Model\Team\ServiceUseStatus::PAID,
+                Enum\Model\Team\ServiceUseStatus::READ_ONLY,
+                $targetTeamIds);
             if (!$res) {
                 throw new RuntimeException();
             }

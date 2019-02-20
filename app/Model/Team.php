@@ -667,12 +667,38 @@ class Team extends AppModel
      *
      * @return array
      */
-    function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    public function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
     {
         $options = [
             'conditions' => [
                 'service_use_status'            => $serviceStatus,
                 'service_use_state_end_date <=' => $targetExpireDate
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+        $res = $this->find('all', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return Hash::extract($res, '{n}.Team.id');
+    }
+
+    /**
+     * Find team_id list of expired paid teams
+     *
+     * @param string $targetExpireDate
+     *
+     * @return array
+     */
+    public function findExpiredPaidTeamIds(string $targetExpireDate): array
+    {
+        $options = [
+            'conditions' => [
+                'service_use_status'           => Enum\Model\Team\ServiceUseStatus::PAID,
+                'service_use_state_end_date <' => $targetExpireDate,
+                'del_flg'                      => false
             ],
             'fields'     => [
                 'id'
