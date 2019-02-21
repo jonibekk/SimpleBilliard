@@ -209,9 +209,9 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId1)['service_use_status']);
         $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
         $this->assertEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId2)['service_use_status']);
-        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertNotEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
+        $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
         $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
         $this->assertNotEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
@@ -224,9 +224,9 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
         $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
-        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
-        $this->assertNotEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId3)['service_use_status']);
+        $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEmpty($Invoice->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
     }
 
     public function test_changeCreditCardPaidTeamToReadOnly_success()
@@ -261,9 +261,9 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId1)['service_use_status']);
         $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
         $this->assertEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId2)['service_use_status']);
-        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertNotEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
+        $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
         $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
         $this->assertNotEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
@@ -276,9 +276,9 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
         $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
-        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
-        $this->assertNotEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId3)['service_use_status']);
+        $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEmpty($CreditCard->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
     }
 
     public function test_changeCampaignPaidTeamToReadOnly_success()
@@ -307,8 +307,8 @@ class TeamServiceTest extends GoalousTestCase
 
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId1)['service_use_status']);
         $this->assertEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId2)['service_use_status']);
-        $this->assertNotEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
+        $this->assertEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
         $this->assertNotEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
 
@@ -318,8 +318,8 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
         $this->assertEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
-        $this->assertNotEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId3)['service_use_status']);
+        $this->assertEmpty($CampaignTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
     }
 
     public function test_checkPricePlanAfterPaidTeamToReadOnly_success()
@@ -348,8 +348,8 @@ class TeamServiceTest extends GoalousTestCase
 
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId1)['service_use_status']);
         $this->assertEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId2)['service_use_status']);
-        $this->assertNotEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
+        $this->assertEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
         $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
         $this->assertNotEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
 
@@ -359,8 +359,8 @@ class TeamServiceTest extends GoalousTestCase
         $this->assertEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId1]]));
         $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId2)['service_use_status']);
         $this->assertEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId2]]));
-        $this->assertEquals(TeamUseStatusEnum::PAID, $Team->getEntity($paidTeamId3)['service_use_status']);
-        $this->assertNotEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
+        $this->assertEquals(TeamUseStatusEnum::READ_ONLY, $Team->getEntity($paidTeamId3)['service_use_status']);
+        $this->assertEmpty($PricePlanPurchaseTeam->find('first', ['conditions' => ['team_id' => $paidTeamId3]]));
     }
 
     private function createPaidTeam(

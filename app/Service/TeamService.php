@@ -452,7 +452,7 @@ class TeamService extends AppService
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
 
-        $targetTeamIds = $Team->findExpiredPaidTeamIds($targetDate);
+        $targetTeamIds = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, $targetDate);
 
         if (empty($targetTeamIds)) return;
 

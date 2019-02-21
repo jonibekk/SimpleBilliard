@@ -462,24 +462,24 @@ class TeamTest extends GoalousTestCase
         $this->assertEmpty($res);
     }
 
-    public function test_findExpiredPaidTeamIds_success()
+    public function test_findExpiredTeamIds_success()
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
         $this->createInvoicePaidTeam(['service_use_state_end_date' => '2020-01-02']);
 
-        $result = $Team->findExpiredPaidTeamIds('2019-01-01');
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2019-01-01');
         $this->assertEmpty($result);
 
-        $result = $Team->findExpiredPaidTeamIds('2020-01-01');
-        $this->assertEmpty($result);
-
-        $result = $Team->findExpiredPaidTeamIds('2020-01-02');
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2020-01-01');
         $this->assertCount(5, $result);
 
-        $result = $Team->findExpiredPaidTeamIds('2020-01-03');
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2020-01-02');
         $this->assertCount(6, $result);
+
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::FREE_TRIAL, '2020-01-02');
+        $this->assertEmpty($result);
     }
 
     function _setDefault()
