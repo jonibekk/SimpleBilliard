@@ -70,7 +70,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => false
+                'payment_skip_flg' => false
             ],
             'Team'           => [
                 'timezone' => 9.0
@@ -87,7 +87,7 @@ class PaymentSettingTest extends GoalousTestCase
                 'id'               => $paymentSettingId,
                 'team_id'          => $teamId,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => false
+                'payment_skip_flg' => false
             ],
             'Team'           => [
                 'timezone' => 9.0
@@ -226,5 +226,31 @@ class PaymentSettingTest extends GoalousTestCase
     public function test_getUnique()
     {
         // TODO.Payment: implement test code
+    }
+
+    public function test_deleteByTeamId_success()
+    {
+        $teamId1 = 1923;
+        $teamId2 = 1924;
+
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+
+        $PaymentSetting->create();
+        $PaymentSetting->save([
+            'team_id' => $teamId1
+        ], false);
+
+        $PaymentSetting->create();
+        $PaymentSetting->save([
+            'team_id' => $teamId2
+        ], false);
+
+        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $teamId1]]));
+
+        $PaymentSetting->softDeleteAllByTeamId($teamId1);
+
+        $this->assertEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $teamId1, 'del_flg' => false]]));
+        $this->assertNotEmpty($PaymentSetting->find('first', ['conditions' => ['team_id' => $teamId2, 'del_flg' => false]]));
     }
 }
