@@ -391,7 +391,10 @@ class UploadBehavior extends ModelBehavior
             ));
             $pathinfo = pathinfo("");
         } else {
+            $orig_locale = setlocale(LC_CTYPE, 0);
+            setlocale(LC_CTYPE, 'C.UTF-8');
             $pathinfo = pathinfo($filename);
+            setlocale(LC_CTYPE, $orig_locale);
         }
         // PHP < 5.2.0 doesn't include 'filename' key in pathinfo. Let's try to fix this.
         if (empty($pathinfo['filename'])) {

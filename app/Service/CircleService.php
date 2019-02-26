@@ -7,6 +7,7 @@ App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Post', 'Model');
 App::import('Service', 'ImageStorageService');
+App::import('Model/Entity', 'CircleEntity');
 App::uses('GlRedis', 'Model');
 
 /**
@@ -478,22 +479,23 @@ class CircleService extends AppService
         });
     }
 
-    function get(int $circleId, int $userId): array
+    public function get(int $circleId, int $userId): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
 
-        $circle = $Circle->useEntity()->useType()->findById($circleId)->toArray();
+        $circle = $Circle->getEntity($circleId)->toArray();
+
         $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
         
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
-        $circle['is_member'] = $CircleMember->isJoined($circle['id'], $userId);
+        $circle['is_member'] = $CircleMember->isJoined($circleId, $userId);
 
-        $memberCountEachCircle = $this->getMemberCountEachCircle([$circle['id']]);
-        $circle['circle_member_count'] = $memberCountEachCircle[$circle['id']];
+        $memberCountEachCircle = $this->getMemberCountEachCircle([$circleId]);
+        $circle['circle_member_count'] = $memberCountEachCircle[$circleId];
 
         return $circle;
     }

@@ -70,5 +70,8 @@ class UploadedFileTest extends GoalousTestCase
 
         $file1 = new UploadedFile($this->getTestFileData(), 'test.test.png');
         $this->assertEquals('test.test', $file1->getFileName(true));
+
+        $file2 = new UploadedFile($this->getTestFileData(), 'あの.png');
+        $this->assertEquals('あの', $file2->getFileName(true));
     }
 }
