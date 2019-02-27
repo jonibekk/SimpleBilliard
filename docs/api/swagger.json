@@ -768,6 +768,123 @@
         }
       }
     },
+    "/api/mentions/search" : {
+      "get" : {
+        "tags" : [ "Mentions" ],
+        "summary" : "Search mention items (users and circles)",
+        "description" : "Search mention items",
+        "operationId" : "/api/mentions/search",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "name" : "keyword",
+          "in" : "query",
+          "required" : true,
+          "description" : "Search keyword",
+          "schema" : {
+            "type": "string"
+          }
+        }, {
+          "name" : "post_id",
+          "in" : "query",
+          "required" : false,
+          "description" : "Post id that comment belongs if mention in comment. Need to filter mention range.(if secret circle's post id, mention items is only secret circle and secret circle members)",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get search result mention items",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "img_url": {
+                            "$ref": "#/components/schemas/Model.ImgUrls"
+                          }
+                        }
+                      }
+                    },
+                    "cursor" : {
+                      "type" : "string"
+                    },
+                    "count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  },
+                  "example": {
+                    "data" : [
+                      {
+                        "id" : 1,
+                        "type" : "user",
+                        "label" : "Tarou Gorasu",
+                        "img_url" : {
+                          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+                          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+                          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+                          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+                          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+                          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
+                        }
+                      },
+                      {
+                        "id" : 2,
+                        "type" : "circle",
+                        "label" : "Tokyo",
+                        "img_url" : {
+                          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+                          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+                          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+                          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+                          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+                          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
+                        }
+                      }
+                    ],
+                    "count" : 2,
+                    "cursor" : ""
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.User.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/v2/users/{user.id}/goals" : {
       "get" : {
         "tags" : [ "Users" ],
@@ -3503,27 +3620,7 @@
               "default" : 0
             },
             "img_url" : {
-              "type" : "object",
-              "properties" : {
-                "small" : {
-                  "type" : "string"
-                },
-                "medium" : {
-                  "type" : "string"
-                },
-                "medium_large" : {
-                  "type" : "string"
-                },
-                "large" : {
-                  "type" : "string"
-                },
-                "x_large" : {
-                  "type" : "string"
-                },
-                "original" : {
-                  "type" : "string"
-                }
-              }
+              "$ref" : "#/components/schemas/Model.ImgUrls"
             },
             "is_member" : {
               "type" : "boolean"
@@ -3612,6 +3709,42 @@
           "created" : 1535966985,
           "modified" : 1535966985,
           "id" : "13726"
+        }
+      },
+      "Model.ImgUrls" : {
+        "description" : "Model of image urls each size",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Model"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "small" : {
+              "type" : "string"
+            },
+            "medium" : {
+              "type" : "string"
+            },
+            "medium_large" : {
+              "type" : "string"
+            },
+            "large" : {
+              "type" : "string"
+            },
+            "x_large" : {
+              "type" : "string"
+            },
+            "original" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "example" : {
+          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
         }
       },
       "Model.Circle.Paging" : {
