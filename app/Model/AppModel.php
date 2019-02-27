@@ -857,7 +857,7 @@ class AppModel extends Model
      * @param array  $data
      * @param string $className Entity wrapper class name
      *
-     * @return array | BaseEntity
+     * @return BaseEntity[] | BaseEntity
      */
     protected function convertEntity(array $data, string $className = null)
     {
@@ -924,7 +924,7 @@ class AppModel extends Model
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
-        return $return;
+        return $return ?: $this->entityWrapperClass;
     }
 
 }

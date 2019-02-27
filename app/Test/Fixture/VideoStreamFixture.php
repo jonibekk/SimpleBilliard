@@ -20,6 +20,7 @@ class VideoStreamFixture extends CakeTestFixtureEx {
         'output_version' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'specific version of output type'),
         'transcode_status' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 4, 'unsigned' => false, 'comment' => '-1=error, 0=none, 1=uploading(to cloud storage), 2=upload complete, 3=queued, 4=transcoding, 5=transcode complete'),
         'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'indexes' => array(

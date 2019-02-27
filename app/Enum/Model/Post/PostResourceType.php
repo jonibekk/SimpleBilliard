@@ -12,6 +12,9 @@ use MyCLabs\Enum\Enum;
  */
 class PostResourceType extends Enum
 {
+    /** @var array Available API versions */
+    const RESOURCE_TYPE_LIST = [PostResourceType::IMAGE, PostResourceType::VIDEO_STREAM, PostResourceType::FILE, PostResourceType::FILE_VIDEO];
+
     /**
      * Uploaded image user can view
      * Refer attached_files table
