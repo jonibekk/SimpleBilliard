@@ -3,6 +3,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
+App::import('Model/Entity', 'PostResourceEntity');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\DataType\DataType as DataType;
@@ -271,7 +272,7 @@ class PostResource extends AppModel
      *
      * @return array
      */
-    public function findAllResourcesOfPost(int $postId): array
+    public function getAllPostResources(int $postId): array
     {
         $condition = [
             'conditions' => [
@@ -281,5 +282,49 @@ class PostResource extends AppModel
         $result = $this->useType()->find('all', $condition);
 
         return Hash::extract($result, '{n}.{s}');
+    }
+
+    /**
+     * Check whether video stream is only used by a single post
+     *
+     * @param int $videoStreamId
+     *
+     * @return bool
+     */
+    public function isVideoStreamUnique(int $videoStreamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'resource_id'   => $videoStreamId,
+                'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM,
+                'del_flg'       => false
+            ]
+        ];
+
+        return $this->find('count', $condition) == 1;
+    }
+
+    /**
+     * Get PostResource ID
+     *
+     * @param int                              $resourceId
+     * @param Enum\Model\Post\PostResourceType $type
+     *
+     * @return int[] PostResource.id
+     */
+    public function getPostResourceId(int $resourceId, Enum\Model\Post\PostResourceType $type): array {
+
+        $condition = [
+            'conditions' => [
+                'resource_id'   => $resourceId,
+                'resource_type' => $type->getValue(),
+                'del_flg'       => false
+            ],
+            'fields' => [
+                'id'
+            ]
+        ];
+
+        return Hash::extract($this->find('all', $condition), '{n}.{s}.id') ?: [];
     }
 }

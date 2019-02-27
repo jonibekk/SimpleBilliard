@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'VideoStreamEntity');
 
 use Goalous\Enum as Enum;
 

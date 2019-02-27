@@ -206,8 +206,10 @@ class PostResourceService extends AppService
                 $resourceId = $postResource['resource_id'];
                 $resourceType = $postResource['resource_type'];
                 switch ($resourceType) {
-                    case    PostResourceTypeEnum::VIDEO_STREAM:
-                        $VideoStreamService->deleteStreamsAndVideos([$resourceId]);
+                    case PostResourceTypeEnum::VIDEO_STREAM:
+                        if ($PostResource->isVideoStreamUnique($resourceId)) {
+                            $VideoStreamService->deleteStreamsAndVideos([$resourceId]);
+                        }
                         break;
                     default:
                         $PostFileService->deleteByAttachedFileIds([$resourceId]);

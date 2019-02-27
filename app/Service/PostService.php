@@ -1118,7 +1118,7 @@ class PostService extends AppService
         if (empty($resources)) {
             /** @var PostResource $PostResource */
             $PostResource = ClassRegistry::init('PostResource');
-            return $PostResource->findAllResourcesOfPost($postId);
+            return $PostResource->getAllPostResources($postId);
         }
 
         $groupedResource = [];
