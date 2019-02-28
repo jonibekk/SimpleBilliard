@@ -118,12 +118,12 @@ class MentionPagingService extends BasePagingService
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         $res = [];
         foreach ($users as $user) {
-            $profileImgUrls = $ImageStorageService->getImgUrlEachSize($user, 'User');
+            $user['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($user, 'User');
             $res[] = [
                 'type'    => 'user',
                 'id'      => $user['id'],
                 'label'   => $user['display_username'],
-                'img_url' => $profileImgUrls
+                'user' => $user
             ];
         }
         return $res;
@@ -141,12 +141,12 @@ class MentionPagingService extends BasePagingService
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         $res = [];
         foreach ($circles as $circle) {
-            $imgUrls = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
+            $circle['img_url'] = $ImageStorageService->getImgUrlEachSize($circle, 'Circle');
             $res[] = [
                 'type'    => 'circle',
                 'id'      => $circle['id'],
                 'label'   => $circle['name'],
-                'img_url' => $imgUrls
+                'circle' => $circle
             ];
         }
         return $res;
