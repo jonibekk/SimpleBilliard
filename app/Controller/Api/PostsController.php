@@ -481,7 +481,6 @@ class PostsController extends BasePagingController
         $teamId = $this->getTeamId();
         try {
             $res = $CommentService->add($commentData, $postId, $userId, $teamId, $fileIDs);
-            $this->log(__METHOD__);
             $mentionedUserIds = $this->Mention->getUserList($commentData['body'], $this->getTeamId(), $this->getUserId());
             $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId(), $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {
