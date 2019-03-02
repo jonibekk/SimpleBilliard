@@ -95,7 +95,7 @@ class PostRequestValidator extends BaseValidator
     {
         $rules = [
             "resources" => [
-                validator::arrayVal()::each(validator::not(validator::key('video_stream_id'))),
+                validator::arrayType()::length(null, 10),
                 "optional"
             ]
         ];
