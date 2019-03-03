@@ -1,6 +1,6 @@
 <?php
 
-App::import('Lib/Paging', 'BasePagingService');
+App::import('Lib/Paging', 'BaseGetAllService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service', 'UserService');
 App::import('Service', 'CircleService');
@@ -8,59 +8,9 @@ App::import('Service', 'ImageStorageService');
 
 use Goalous\Enum as Enum;
 
-class MentionPagingService extends BasePagingService
+class MentionPagingService extends BaseGetAllService
 {
     const MAIN_MODEL = 'User';
-
-    /**
-     * Get all mentions and not including with paging data
-     *
-     * @param       $pagingRequest
-     * @param array $extendFlags
-     *
-     * @return array
-     */
-    public function getAllData(
-        $pagingRequest,
-        $extendFlags = []
-    ): array
-    {
-        // Check whether exist current user id and team id
-        $this->validatePagingResource($pagingRequest);
-
-        $finalResult = [
-            'data'   => [],
-            'paging' => '',
-            'count'  => 0
-        ];
-
-        //If only 1 flag is given, make it an array
-        if (!is_array($extendFlags)) {
-            $extendFlags = [$extendFlags];
-        }
-
-        $this->beforeRead($pagingRequest);
-        $pagingRequest = $this->addDefaultValues($pagingRequest);
-
-        $queryResult = $this->readData($pagingRequest, 0);
-        $finalResult['count'] = count($queryResult);
-
-        if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
-        }
-
-        $this->afterRead($queryResult, $pagingRequest);
-
-        $finalResult['data'] = $queryResult;
-
-        return $finalResult;
-    }
-
-    // this method is not called
-    protected function countData(PagingRequest $request): int
-    {
-        return 0;
-    }
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -123,6 +73,7 @@ class MentionPagingService extends BasePagingService
                 'type'    => 'user',
                 'id'      => $user['id'],
                 'label'   => $user['display_username'],
+                'url'   => "/users/view_goals/user_id:".$user['id'],
                 'user' => $user
             ];
         }
@@ -146,6 +97,7 @@ class MentionPagingService extends BasePagingService
                 'type'    => 'circle',
                 'id'      => $circle['id'],
                 'label'   => $circle['name'],
+                'url'   => "/circles/".$circle['id']."/posts",
                 'circle' => $circle
             ];
         }
