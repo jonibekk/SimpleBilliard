@@ -872,4 +872,34 @@ class CircleMember extends AppModel
 
         return $res['CircleMember']['unread_count'];
     }
+
+    /**
+     * Get notification flg of an user in a circle
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function getNotificationFlg(int $circleId, int $userId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId,
+                'del_flg'   => false
+            ],
+            'fields'     => [
+                'get_notification_flg'
+            ]
+        ];
+
+        $res = $this->useType()->find('first', $condition);
+
+        if (empty($res['CircleMember']['get_notification_flg'])) {
+            return false;
+        }
+
+        return $res['CircleMember']['get_notification_flg'];
+    }
 }
