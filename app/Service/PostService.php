@@ -1014,7 +1014,7 @@ class PostService extends AppService
                 $PostResourceService = ClassRegistry::init('PostResourceService');
                 $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
             }
-            $newResources = $this->filterNewResources($resources);
+            $newResources = $this->filterNewResources($postId, $resources);
 
             if (!empty($newResources)) {
                 /** @var PostResource $PostResource */
@@ -1093,14 +1093,29 @@ class PostService extends AppService
     /**
      * Find resources newly added during post edit
      *
+     * @param int $postId
      * @param array $resources
      *
      * @return array
      */
-    private function filterNewResources(array $resources): array
+    private function filterNewResources($postId, array $resources): array
     {
-        return array_filter($resources, function ($element) {
-            return array_key_exists('file_uuid', $element);
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        $currentPostResources = $PostResource->getAllPostResources($postId);
+
+        return array_filter($resources, function ($resource) use ($currentPostResources) {
+            if (array_key_exists('is_video', $resource)) {
+                // Check about given resources are already set to post.
+                foreach ($currentPostResources as $currentPostResource) {
+                    if ($currentPostResource["resource_type"] === Enum\Model\Post\PostResourceType::VIDEO_STREAM
+                        && $currentPostResource["resource_id"] === (int)$resource["video_stream_id"]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return array_key_exists('file_uuid', $resource);
         });
     }
 
@@ -1126,6 +1141,9 @@ class PostService extends AppService
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
         foreach ($resources as $resource) {
+            if (isset($resource['is_video']) && $resource['is_video']) {
+                $groupedResource[Enum\Model\Post\PostResourceType::VIDEO_STREAM][] = $resource['video_stream_id'];
+            }
             if (!array_key_exists('resource_type', $resource)) continue;
             $groupedResource[$resource['resource_type']][] = $resource['id'];
         }
