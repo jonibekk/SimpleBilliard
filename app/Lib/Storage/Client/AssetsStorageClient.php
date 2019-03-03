@@ -39,13 +39,15 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
 
     /**
      * Upload single file
+     *
      * @param UploadedFile $file
-     * @param string $suffix
+     * @param string       $suffix
+     *
      * @return bool
      */
     public function save(UploadedFile $file, string $suffix = ""): bool
     {
-        $key = $this->createFileKey($file->getFileName(true), $suffix, $file->getFileExt());
+        $key = $this->createFileKey($file->getFileName(), $suffix, $file->getFileExt());
         $key = $this->sanitize($key);
 
         try {
@@ -61,20 +63,22 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
 
     /**
      * Bulk upload
+     *
      * @param UploadedFile[] $files
+     *
      * @return bool
      */
     public function bulkSave(array $files): bool
     {
-
         try {
             $commands = [];
 
             foreach ($files as $file) {
-                $key = $this->createFileKey($file->getFileName(true), $file->getSuffix(), $file->getFileExt());
+                $key = $this->createFileKey($file->getFileName(), $file->getSuffix(), $file->getFileExt());
                 $key = $this->sanitize($key);
 
-                $commands[] = $this->getCommandForUpload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
+                $commands[] = $this->getCommandForUpload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(),
+                    $file->getMIME());
             }
 
             CommandPool::batch($this->s3Instance, $commands);
@@ -167,7 +171,14 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         if (!empty($fileName)) {
             $hashedFileName = md5($fileName . Configure::read('Security.salt'));
         } else {
-            $hashedFileName = $fileName;
+            GoalousLog::error("Empty file name");
+            throw new RuntimeException("Empty file name");
+        }
+
+        if (empty($hashedFileName)) {
+            $message = "Empty hashed file name";
+            GoalousLog::error($message);
+            throw new RuntimeException($message);
         }
 
         $key = $this->getLocalPrefix() . "/" . Inflector::tableize($this->modelName) . "/" . $this->modelId . "/" . $hashedFileName;
@@ -185,15 +196,18 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
     /**
      * Remove file extension from file name
      *
-     * @param string $filename
+     * @param string $fullFileName
      *
      * @return string
      */
-    protected function removeExtension(string $filename): string
+    protected function removeExtension(string $fullFileName): string
     {
-        return pathinfo($filename, PATHINFO_FILENAME);
+        $originalLocale = setlocale(LC_CTYPE, 0);
+        setlocale(LC_CTYPE, 'C.UTF-8');
+        $fileName = pathinfo($fullFileName, PATHINFO_FILENAME);
+        setlocale(LC_CTYPE, $originalLocale);
+        return $fileName;
     }
-
 
     /**
      * Upload a file to S3

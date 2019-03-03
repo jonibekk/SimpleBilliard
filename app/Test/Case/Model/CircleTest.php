@@ -527,4 +527,24 @@ class CircleTest extends GoalousTestCase
         $circle = $Circle->getEntity(2);
         $this->assertTrue($newTime < $circle['latest_post_created']);
     }
+
+    public function test_getEntity_success(){
+
+        $id = 1;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $result = $Circle->getEntity($id);
+
+        $this->assertTrue($result instanceof BaseEntity);
+
+        $arrayForm = $result->toArray();
+
+        $this->assertInternalType('array',$arrayForm);
+
+        $this->assertEquals($id, $arrayForm['id']);
+        $this->assertNotEmpty($arrayForm['name']);
+    }
+
 }

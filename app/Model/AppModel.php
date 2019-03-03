@@ -800,7 +800,7 @@ class AppModel extends Model
      */
     public function useType(): self
     {
-        $this->postProcessFunctions['type'] = function ($data): array {
+        $this->postProcessFunctions['type'] = function ($data) {
             return $this->convertType($data);
         };
 
@@ -911,7 +911,7 @@ class AppModel extends Model
     {
         $conditions = [
             'conditions' => [
-                'id' => $id
+                $this->alias . '.id' => $id
             ]
         ];
         if ($excludeDeleted) {
