@@ -362,9 +362,9 @@ class TeamTest extends GoalousTestCase
     {
         $teamId = 1;
         $fields = [
-            'service_use_status' => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL,
             'service_use_state_start_date' => '2017-01-01',
-            'service_use_state_end_date' => '2017-01-16',
+            'service_use_state_end_date'   => '2017-01-16',
         ];
         $this->Team->updateAll($fields, ['id' => $teamId]);
         $startDate = '2017-01-15';
@@ -372,9 +372,9 @@ class TeamTest extends GoalousTestCase
         $this->assertTrue($res);
         $team = $this->Team->getById($teamId, array_keys($fields));
         $this->assertEquals($team, [
-            'service_use_status' => Enum\Model\Team\ServiceUseStatus::PAID,
+            'service_use_status'           => Enum\Model\Team\ServiceUseStatus::PAID,
             'service_use_state_start_date' => $startDate,
-            'service_use_state_end_date' => null,
+            'service_use_state_end_date'   => null,
         ]);
     }
 
@@ -457,9 +457,29 @@ class TeamTest extends GoalousTestCase
 
         // Charge fail 3 count but not continuously
         $this->ChargeHistory->id = $historyId2;
-        $this->ChargeHistory->save(['result_type'      => Enum\Model\ChargeHistory\ResultType::SUCCESS], false);
+        $this->ChargeHistory->save(['result_type' => Enum\Model\ChargeHistory\ResultType::SUCCESS], false);
         $res = $this->Team->findTargetsForMovingReadOnly($startTs, $endTs);
         $this->assertEmpty($res);
+    }
+
+    public function test_findExpiredTeamIds_success()
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $this->createInvoicePaidTeam(['service_use_state_end_date' => '2020-01-02']);
+
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2019-01-01');
+        $this->assertEmpty($result);
+
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2020-01-01');
+        $this->assertCount(5, $result);
+
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, '2020-01-02');
+        $this->assertCount(6, $result);
+
+        $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::FREE_TRIAL, '2020-01-02');
+        $this->assertEmpty($result);
     }
 
     function _setDefault()

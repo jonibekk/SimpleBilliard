@@ -299,7 +299,8 @@ class AppModel extends Model
     public function generateToken(
         $length = 22,
         $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    ) {
+    )
+    {
         $token = "";
         $i = 0;
 
@@ -453,7 +454,8 @@ class AppModel extends Model
         bool $addDate = true,
         array $updateCounterCacheFields = [],
         int $chunkSize = 100
-    ): bool {
+    ): bool
+    {
         if (empty($data) || empty($data[0])) {
             return false;
         }
@@ -923,6 +925,18 @@ class AppModel extends Model
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
         return $return;
+    }
+
+    /**
+     * Soft delete all entries by their team id
+     *
+     * @param int $teamId
+     */
+    public function softDeleteAllByTeamId(int $teamId)
+    {
+        if (!$this->softDeleteAll([$this->alias . '.team_id' => $teamId], false)) {
+            throw new RuntimeException();
+        }
     }
 
 }
