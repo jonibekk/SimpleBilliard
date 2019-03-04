@@ -611,7 +611,7 @@ class CircleTest extends GoalousTestCase
         $res = $this->Circle->getSharedSecretCircleByPostId(8);
         $this->assertEquals($res, []);
     }
-    
+
     public function test_getEntity_success(){
 
         $id = 1;

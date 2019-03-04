@@ -21,7 +21,7 @@ abstract class BaseGetAllService
 
         $finalResult = [
             'data'   => [],
-            'paging' => '',
+            'cursor' => '',
             'count'  => 0
         ];
 
