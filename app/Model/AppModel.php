@@ -800,7 +800,7 @@ class AppModel extends Model
      */
     public function useType(): self
     {
-        $this->postProcessFunctions['type'] = function ($data): array {
+        $this->postProcessFunctions['type'] = function ($data) {
             return $this->convertType($data);
         };
 
@@ -857,7 +857,7 @@ class AppModel extends Model
      * @param array  $data
      * @param string $className Entity wrapper class name
      *
-     * @return array | BaseEntity
+     * @return BaseEntity[] | BaseEntity
      */
     protected function convertEntity(array $data, string $className = null)
     {
@@ -911,7 +911,7 @@ class AppModel extends Model
     {
         $conditions = [
             'conditions' => [
-                'id' => $id
+                $this->alias . '.id' => $id
             ]
         ];
         if ($excludeDeleted) {
@@ -924,7 +924,19 @@ class AppModel extends Model
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
-        return $return;
+        return $return ?: $this->entityWrapperClass;
+    }
+
+    /**
+     * Soft delete all entries by their team id
+     *
+     * @param int $teamId
+     */
+    public function softDeleteAllByTeamId(int $teamId)
+    {
+        if (!$this->softDeleteAll([$this->alias . '.team_id' => $teamId], false)) {
+            throw new RuntimeException();
+        }
     }
 
 }

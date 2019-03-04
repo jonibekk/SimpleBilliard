@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'TeamEntity');
 
 use Goalous\Enum as Enum;
 
@@ -645,7 +646,8 @@ class Team extends AppModel
     function findByServiceUseStatus(
         int $serviceUseStatus,
         array $fields = ['id', 'name', 'service_use_state_start_date', 'service_use_state_end_date', 'timezone']
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'service_use_status' => $serviceUseStatus
@@ -665,7 +667,7 @@ class Team extends AppModel
      *
      * @return array
      */
-    function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
+    public function findTeamIdsStatusExpired(int $serviceStatus, string $targetExpireDate): array
     {
         $options = [
             'conditions' => [

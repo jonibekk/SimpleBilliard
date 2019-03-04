@@ -155,7 +155,7 @@ class VideoStreamService extends AppService
         $VideoStream = ClassRegistry::init("VideoStream");
 
         $video = $Video->getByUserIdAndTeamIdAndHash($userId, $teamId, $hash);
-        if(empty($video)) {
+        if (empty($video)) {
             return [];
         }
         $videoId = $video['id'];
@@ -168,6 +168,7 @@ class VideoStreamService extends AppService
 
     /**
      * return video output path
+     *
      * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
      *
      * @param string $inputS3FileKey
@@ -220,9 +221,9 @@ class VideoStreamService extends AppService
         $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
         if (!empty($videoStreamIfExists)) {
             GoalousLog::info('uploaded same hash video exists', [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'hash'    => $hash,
+                'user_id'          => $userId,
+                'team_id'          => $teamId,
+                'hash'             => $hash,
                 'video_streams.id' => $videoStreamIfExists['id'],
             ]);
             return $videoStreamIfExists;
@@ -383,7 +384,7 @@ class VideoStreamService extends AppService
             'conditions' => [
                 'id' => $videoStreamIds,
             ],
-            'fields' => [
+            'fields'     => [
                 'VideoStream.transcode_status'
             ]
         ]);
@@ -414,8 +415,8 @@ class VideoStreamService extends AppService
         $videoSources = [];
         foreach ($transcodeOutput->getVideoSources($urlBaseStorage) as $videoSource) {
             $source = [
-                'video_stream_id'   => $videoStreamId,
-                'type' => $videoSource->getType()->getValue(),
+                'video_stream_id' => $videoStreamId,
+                'type'            => $videoSource->getType()->getValue(),
             ];
             if ($setDirectUrl && $videoSource->getType()->equals(Goalous\Enum\Model\Video\VideoSourceType::PLAYLIST_M3U8_HLS())) {
                 $source['url'] = $urlBaseStorage . 'playlist.m3u8';
@@ -425,6 +426,7 @@ class VideoStreamService extends AppService
         $resourceVideoStream['video_sources'] = $videoSources;
         $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
         $resourceVideoStream['file_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
+        $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
 
         return $resourceVideoStream;
     }
@@ -462,5 +464,34 @@ class VideoStreamService extends AppService
         }
 
         return true;
+    }
+
+    /**
+     * Soft delete entries in video_streams by their ids
+     *
+     * @param array $videoStreamIds
+     *
+     * @throws Exception
+     */
+    public function deleteStreamsAndVideos(array $videoStreamIds)
+    {
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+        try {
+            $this->TransactionManager->begin();
+            $videoIds = $VideoStream->getVideoIds($videoStreamIds);
+            $result = $VideoStream->softDeleteAll(['id' => $videoStreamIds], false) &&
+                $Video->softDeleteAll(['id' => $videoIds], false);
+            if (!$result) {
+                throw new RuntimeException();
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to delete video_streams", ['video_stream_ids' => $videoStreamIds]);
+            throw $e;
+        }
     }
 }

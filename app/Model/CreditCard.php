@@ -87,7 +87,7 @@ class CreditCard extends AppModel
             'conditions' => [
                 'team_id' => $teamIds
             ],
-            'fields' => [
+            'fields'     => [
                 'customer_code'
             ]
         ];
@@ -115,8 +115,8 @@ class CreditCard extends AppModel
                 'payment_setting_id',
             ],
             'conditions' => [
-                'del_flg'    => false,
-                'customer_code'  => $customerCodes,
+                'del_flg'       => false,
+                'customer_code' => $customerCodes,
             ],
         ];
         $res = $this->find('all', $options);

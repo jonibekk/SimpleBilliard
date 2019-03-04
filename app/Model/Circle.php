@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+App::import('Model/Entity', 'CircleEntity');
 
 /**
  * Circle Model

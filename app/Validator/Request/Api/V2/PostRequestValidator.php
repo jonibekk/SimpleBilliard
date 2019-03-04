@@ -15,13 +15,13 @@ class PostRequestValidator extends BaseValidator
     public function getDefaultValidationRule(): array
     {
         $rules = [
-            "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
-            "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
-            "site_info"     => [
+            "body"      => [validator::stringType()::length(1, 10000)::notEmpty()],
+            "type"      => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+            "site_info" => [
                 validator::optional(validator::arrayType()),
                 "optional"
             ],
-            "file_ids" => [
+            "file_ids"  => [
                 validator::arrayType()::length(null, 10),
                 "optional"
             ]
@@ -87,6 +87,23 @@ class PostRequestValidator extends BaseValidator
     }
 
     /**
+     * Validation rules for uploading file during post edit
+     *
+     * @return array
+     */
+    public function getPostEditFileValidationRule(): array
+    {
+        $rules = [
+            "resources" => [
+                validator::arrayType()::length(null, 10),
+                "optional"
+            ]
+        ];
+
+        return $rules;
+    }
+
+    /**
      * Validation rules for posting comments into a post
      *
      * @return array
@@ -99,7 +116,7 @@ class PostRequestValidator extends BaseValidator
                 validator::arrayType()::length(null, 10),
                 "optional"
             ],
-            "site_info"     => [
+            "site_info" => [
                 validator::optional(validator::arrayType()),
                 "optional"
             ]
@@ -149,11 +166,18 @@ class PostRequestValidator extends BaseValidator
         $self->addRule($self->getFileUploadValidationRule(), true);
         return $self;
     }
-  
+
     public static function createPostCommentValidator(): self
     {
         $self = new self();
         $self->addRule($self->getPostCommentValidationRule(), true);
+        return $self;
+    }
+
+    public static function createPostEditFileValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostEditFileValidationRule(), true);
         return $self;
     }
 }

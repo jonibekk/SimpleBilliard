@@ -1,6 +1,7 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('PostDraft', 'Model');
+App::uses('PostResource', 'Model');
 App::uses('TestPostDraftTrait', 'Test/Trait');
 
 use Goalous\Enum as Enum;
@@ -17,11 +18,20 @@ class PostResourceTest extends GoalousTestCase
      *
      * @var array
      */
-    public $fixtures = array(
+    public $fixtures = [
         'app.post',
-        'app.post_draft',
+        'app.user',
+        'app.circle',
+        'app.circle_member',
+        'app.post_file',
+        'app.attached_file',
+        'app.post_share_circle',
+        'app.post_share_user',
+        'app.video',
+        'app.video_stream',
         'app.post_resource',
-    );
+        'app.post_file',
+    ];
 
     /**
      * setUp method
@@ -64,5 +74,23 @@ class PostResourceTest extends GoalousTestCase
     {
         // TODO: write test
         $this->assertTrue(true);
+    }
+
+    public function test_findDeletedPostResource_success(){
+        //TODO: write test
+    }
+
+    public function test_getMaxResourceOrder_success(){
+
+        $circleId = 1;
+        $userId = 1;
+        $teamId = 1;
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        $this->assertEquals(1, $PostResource->findMaxResourceOrderOfPost($newPostId));
     }
 }
