@@ -190,22 +190,22 @@ class CommentService extends AppService
     }
 
     /**
-     *
      * Delete comment 
      *
      * @param commentId
-     * @param userId
      *
      * @return bool
+     *
+     * @throws Exception
      */
     public function delete(int $commentId): bool
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        /** @var CommentFileService $CommentFileService */
+        $CommentFileService = ClassRegistry::init('CommentFileService');
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init('AttachedFile');
 
         //Check if comment exists & not deleted
         $commentCondition = [
@@ -244,6 +244,7 @@ class CommentService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
                 }                
             }
+            $CommentFileService->softDeleteAllFiles($commentId);
 
             //Countdown the post comments number
             $newCommentCount = $Comment->getCommentCount($postId);
@@ -251,9 +252,6 @@ class CommentService extends AppService
                 GoalousLog::error('Error on deleting comment: failed updating posts.comment_count');
                 throw new RuntimeException('Error on deleting post: failed updating post comment_count');
             }
-
-            // Delete Attached file
-            $AttachedFile->deleteAllRelatedFiles($commentId, AttachedFile::TYPE_MODEL_COMMENT);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {

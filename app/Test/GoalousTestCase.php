@@ -1308,4 +1308,64 @@ class GoalousTestCase extends CakeTestCase
         return [$postId, $addedFiles, $addedVideos];
     }
 
+    protected function createAttachedFile(int $userId, int $teamId, Enum\Model\AttachedFile\AttachedFileType $type, Enum\Model\AttachedFile\AttachedModelType $modelType): AttachedFileEntity
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $fileName = "user_" . $userId . "_team_" . $teamId . ".test";
+
+        $newData = [
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $fileName,
+            'file_type'             => $type->getValue(),
+            'file_ext'              => 'test',
+            'file_size'             => 123,
+            'model_type'            => $modelType->getValue(),
+            'display_file_list_flg' => true,
+            'removable_flg'         => true,
+        ];
+
+        $AttachedFile->create();
+        /** @var AttachedFileEntity $newAttachedFile */
+        $newAttachedFile = $AttachedFile->useType()->useEntity()->save($newData, false);
+
+        return $newAttachedFile;
+    }
+
+    /**
+     * Create new comment file
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $count Number of files to create
+     *
+     * @return CommentFileEntity[]
+     */
+    protected function createCommentFile(int $commentId, int $userId, int $teamId, int $count = 1): array
+    {
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        $result = [];
+
+        for ($indexNum = 0; $indexNum < $count; $indexNum++) {
+
+            $newAttachedFile = $this->createAttachedFile($userId, $teamId, Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_DOC(), Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_COMMENT());
+
+            $newCommentFile = [
+                'comment_id'       => $commentId,
+                'attached_file_id' => $newAttachedFile['id'],
+                'team_id'          => $teamId,
+                'index_num'        => $indexNum
+            ];
+
+            $CommentFile->create();
+            $result[] = $CommentFile->useType()->useEntity()->save($newCommentFile, false);
+        }
+
+        return $result;
+    }
 }
