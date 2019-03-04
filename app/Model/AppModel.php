@@ -927,4 +927,16 @@ class AppModel extends Model
         return $return ?: $this->entityWrapperClass;
     }
 
+    /**
+     * Soft delete all entries by their team id
+     *
+     * @param int $teamId
+     */
+    public function softDeleteAllByTeamId(int $teamId)
+    {
+        if (!$this->softDeleteAll([$this->alias . '.team_id' => $teamId], false)) {
+            throw new RuntimeException();
+        }
+    }
+
 }

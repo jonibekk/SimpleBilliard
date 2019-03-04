@@ -20,7 +20,7 @@ class Invoice extends AppModel
                 'rule' => ['numeric'],
             ],
             'notBlank' => [
-                'rule'     => 'notBlank',
+                'rule' => 'notBlank',
             ],
         ],
         'company_name'                   => [
@@ -74,20 +74,20 @@ class Invoice extends AppModel
             ],
         ],
         'contact_person_first_name_kana' => [
-            'notBlank'  => [
+            'notBlank'     => [
                 'required' => true,
-                'rule' => 'notBlank'
+                'rule'     => 'notBlank'
             ],
             'katakanaOnly' => ['rule' => ['katakanaOnly']],
-            'maxLength' => ['rule' => ['maxLength', 128]],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
         ],
         'contact_person_last_name_kana'  => [
-            'notBlank'  => [
+            'notBlank'     => [
                 'required' => true,
-                'rule' => 'notBlank'
+                'rule'     => 'notBlank'
             ],
             'katakanaOnly' => ['rule' => ['katakanaOnly']],
-            'maxLength' => ['rule' => ['maxLength', 128]],
+            'maxLength'    => ['rule' => ['maxLength', 128]],
         ],
         'contact_person_tel'             => [
             'maxLength' => ['rule' => ['maxLength', 20]],
@@ -107,4 +107,5 @@ class Invoice extends AppModel
         ],
 
     ];
+
 }

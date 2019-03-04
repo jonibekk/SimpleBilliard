@@ -2345,6 +2345,44 @@ class TeamMember extends AppModel
         return Hash::get($res, 'TeamMember.team_id', null);
     }
 
+
+    /**
+     * Filter active member's user id
+     *
+     * @param array $userIds
+     * @param int $teamId
+     * @return array user ids array
+     */
+    public function filterActiveMembers(array $userIds, int $teamId): array
+    {
+        $condition = [
+            'conditions' => [
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.user_id' => $userIds,
+                'TeamMember.del_flg' => false,
+                'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE
+            ],
+            'fields'     => [
+                'TeamMember.user_id',
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'users',
+                    'alias'      => 'User',
+                    'conditions' => [
+                        'User.id = TeamMember.user_id',
+                        'User.active_flg' => true,
+                        'User.del_flg' => false
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $condition);
+
+        return Hash::extract($res, '{n}.TeamMember.user_id');
+    }
+
     /**
      * Check if user is being invited to given team
      *
