@@ -18,13 +18,6 @@ App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/18
- * Time: 15:00
- */
-
 use Goalous\Exception as GlException;
 
 class PostsController extends BasePagingController
@@ -32,6 +25,7 @@ class PostsController extends BasePagingController
     public $components = [
         'NotifyBiz',
         'GlEmail',
+        'Mention'
     ];
 
     /**
@@ -485,15 +479,16 @@ class PostsController extends BasePagingController
         $CommentService = ClassRegistry::init('CommentService');
 
         $requestBody = $this->getRequestJsonBody();
-        $commentBody['body'] = Hash::get($requestBody, 'body');
-        $commentBody['site_info'] = Hash::get($requestBody, 'site_info');
+        $commentData['body'] = Hash::get($requestBody, 'body');
+        $commentData['site_info'] = Hash::get($requestBody, 'site_info');
         $fileIDs = Hash::get($requestBody, 'file_ids', []);
 
         $userId = $this->getUserId();
         $teamId = $this->getTeamId();
         try {
-            $res = $CommentService->add($commentBody, $postId, $userId, $teamId, $fileIDs);
-            $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId());
+            $res = $CommentService->add($commentData, $postId, $userId, $teamId, $fileIDs);
+            $mentionedUserIds = $this->Mention->getUserList($commentData['body'], $this->getTeamId(), $this->getUserId());
+            $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId(), $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
@@ -793,9 +788,9 @@ class PostsController extends BasePagingController
      * @param int $postId Post ID where the comment belongs to
      * @param int $userId User ID of the author of the new comment
      * @param int $teamId
-     * @param int[] $mentionedUsers List of user IDs of mentioned users
+     * @param int[] $mentionedUserIds List of user IDs of mentioned users
      */
-    private function notifyNewComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUsers = [])
+    private function notifyNewComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUserIds = [])
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -822,8 +817,14 @@ class PostsController extends BasePagingController
                     $teamId,
                     $userId
                 );
-                //TODO Enable mention notification after GL-7599
-//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
             case Post::TYPE_ACTION:
                 // This notification must not be sent to those who mentioned
@@ -844,8 +845,14 @@ class PostsController extends BasePagingController
                     $teamId,
                     $userId
                 );
-                //TODO Enable mention notification after GL-7599 and implemented action comment
-//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
             case Post::TYPE_CREATE_GOAL:
                 $this->notifyUserOfGoalComment($userId, $postId);

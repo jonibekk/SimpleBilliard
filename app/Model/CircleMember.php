@@ -110,32 +110,6 @@ class CircleMember extends AppModel
     }
 
     /**
-     * Get list of circle that a given user joined to in a team
-     *
-     * @param int  $userId
-     * @param int  $teamId
-     * @param bool $checkHideStatus Whether circle's hidden status is checked or not
-     *
-     * @return array List of circle IDs
-     */
-    public function getUserCircleList(int $userId, int $teamId, bool $checkHideStatus = false)
-    {
-        $options = [
-            'conditions' => [
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ],
-            'fields'     => ['circle_id'],
-        ];
-
-        if ($checkHideStatus) {
-            $options['conditions']['show_for_all_feed_flg'] = $checkHideStatus;
-        }
-
-        return $this->find('list', $options);
-    }
-
-    /**
      * 自分が所属しているサークルを返す
      *
      * @param array $params

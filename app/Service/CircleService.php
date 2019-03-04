@@ -531,4 +531,44 @@ class CircleService extends AppService
         return $res;
     }
 
+
+    /**
+     * Search circles for mention by keyword
+     *
+     * @param string $keyword
+     * @param int $teamId
+     * @param int $userId
+     * @param int $limit
+     * @param int|null $postId: Affection range by post (especially post is in secret circle, search range is only secret circle)
+     * @return array
+     */
+    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $postId) : array
+    {
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $filterCircleIds = [];
+        $publicFlg = true;
+        if (!empty($postId)) {
+            $circle = $Circle->getSharedSecretCircleByPostId($postId);
+            if (!empty($circle) && $circle['public_flg'] === false) {
+                $filterCircleIds = [$circle['id']];
+                $publicFlg = false;
+            }
+        }
+        if (empty($filterCircleIds)) {
+            $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
+        }
+
+        $circles = $Circle->findByKeyword($keyword, $limit, $filterCircleIds, $publicFlg);
+        return $circles;
+    }
+
 }
