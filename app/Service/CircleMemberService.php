@@ -249,12 +249,16 @@ class CircleMemberService extends AppService
             $this->TransactionManager->begin();
             $result = $CircleMember->updateAll($newData, $condition);
             if (!$result) {
-                throw new RuntimeException("Failed to update notification setting of user $userId in circle $circleId");
+                throw new RuntimeException("Failed to set notification setting of user $userId in circle $circleId");
             }
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
-            GoalousLog::error($exception->getMessage(), $exception->getTrace());
+            GoalousLog::error("Failed to set notification",
+                [
+                    "message" => $exception->getMessage(),
+                    "trace"   => $exception->getTrace()
+                ]);
             throw $exception;
         }
     }
