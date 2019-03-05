@@ -70,12 +70,13 @@ class CommentFileService extends AppService
 
         if (empty($commentFiles)) return;
 
-        $commentFileIds = array_map(function ($data) {
-            return $data['id'];
-        }, $commentFiles);
-        $attachedFileIds = array_map(function ($data) {
-            return $data['attached_file_id'];
-        }, $commentFiles);
+        $commentFileIds = [];
+        $attachedFileIds = [];
+
+        foreach ($commentFiles as $commentFile) {
+            $commentFileIds[] = $commentFile['id'];
+            $attachedFileIds[] = $commentFile['attached_file_id'];
+        }
 
         try {
             $this->TransactionManager->begin();
