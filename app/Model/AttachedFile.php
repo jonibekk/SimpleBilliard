@@ -318,9 +318,6 @@ class AttachedFile extends AppModel
             /** @var PostResourceService $PostResourceService */
             $PostResourceService = ClassRegistry::init('PostResourceService');
 
-            /** @var PostResource $PostResource */
-            $PostResource = ClassRegistry::init("PostResource");
-
             $postFileAndAttachedFiles = $PostFileService->getPostFilesByPostId($foreign_key_id);
             foreach ($postFileAndAttachedFiles as $postFileAndAttachedFile) {
                 $postFile = $postFileAndAttachedFile['PostFile'];

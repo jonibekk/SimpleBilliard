@@ -173,6 +173,70 @@ class CirclesController extends BasePagingController
     }
 
     /**
+     * Endpoint for enabling notification setting for an user in a circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_enable_notification(int $circleId)
+    {
+        $error = $this->validateCircleJoined($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        try {
+            $CircleMemberService->setNotificationSetting($circleId, $this->getUserId(), true);
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $data = $CircleMember->getCircleMember($circleId, $this->getUserId());
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    /**
+     * Endpoint for disabling notification setting for an user in a circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_disable_notification(int $circleId)
+    {
+        $error = $this->validateCircleJoined($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        try {
+            $CircleMemberService->setNotificationSetting($circleId, $this->getUserId(), false);
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $data = $CircleMember->getCircleMember($circleId, $this->getUserId());
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    /**
      * Get list of post drafts in a circle
      *
      * @param int $circleId
@@ -197,7 +261,7 @@ class CirclesController extends BasePagingController
                 $circleId
             );
 
-            $postDrafts = array_map(function($v) {
+            $postDrafts = array_map(function ($v) {
                 $postDraft = $v->toArray();
                 $draftData = json_decode($postDraft['draft_data'], true);
                 $postDraft['body'] = $draftData['body'];
@@ -222,13 +286,14 @@ class CirclesController extends BasePagingController
         }
 
         return ApiResponse::ok()->withBody([
-            'data' => $postDrafts,
+            'data'  => $postDrafts,
             'count' => count($postDrafts)
         ])->getResponse();
     }
 
     /**
-     * Validation for endpoint get_posts
+     * Validation for endpoint get_posts. True if circle is in team and circle is public, or the user is joined to the
+     * secret circle.
      *
      * @param int $circleId
      *
@@ -255,6 +320,24 @@ class CirclesController extends BasePagingController
         }
 
         return null;
+    }
+
+    private function validateCircleJoined(int $circleId)
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init("Circle");
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        if (!$Circle->exists($circleId) || !$CircleMember->isBelong($circleId, $this->getUserId(),
+                $this->getTeamId())) {
+            return ErrorResponse::notFound()->withMessage(__("The circle doesn't exist or you don't have permission."))
+                ->getResponse();
+        }
+
+        return null;
+
     }
 
     /**
