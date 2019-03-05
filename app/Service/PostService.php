@@ -834,8 +834,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
 
         //Check if post exists & not deleted
         $postCondition = [
@@ -853,7 +853,6 @@ class PostService extends AppService
             'PostLike'        => 'post_id',
             'PostMention'     => 'post_id',
             'PostRead'        => 'post_id',
-            'PostResource'    => 'post_id',
             'PostShareCircle' => 'post_id',
             'PostShareUser'   => 'post_id',
             'Post'            => 'Post.id'
@@ -861,6 +860,7 @@ class PostService extends AppService
 
         try {
             $this->TransactionManager->begin();
+
             foreach ($modelsToDelete as $model => $column) {
                 /** @var AppModel $Model */
                 $Model = ClassRegistry::init($model);
@@ -873,8 +873,14 @@ class PostService extends AppService
                 }
             }
 
-            // Delete Attached file
-            $AttachedFile->deleteAllRelatedFiles($postId, AttachedFile::TYPE_MODEL_POST);
+            //Delete post resources
+            $deletedPosts = $PostResource->getAllPostResources($postId);
+
+            if (!empty($deletedPosts)) {
+                /** @var PostResourceService $PostResourceService */
+                $PostResourceService = ClassRegistry::init('PostResourceService');
+                $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
+            }
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
