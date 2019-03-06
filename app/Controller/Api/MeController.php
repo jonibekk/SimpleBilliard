@@ -2,6 +2,8 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
+App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 
@@ -88,6 +90,20 @@ class MeController extends BasePagingController
         $unreadCount = $GlRedis->getCountOfNewNotification($this->getTeamId(), $this->getUserId());
 
         $data = ['new_notification_count' => $unreadCount];
+
+        return ApiResponse::ok()
+            ->withBody(compact('data'))->getResponse();
+    }
+
+    /**
+     * Get user detail
+     */
+    public function get_detail()
+    {
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+        $req = new UserResourceRequest($this->getUserId(), $this->getTeamId(), true);
+        $data = $UserService->get($req, [MeExtender::EXTEND_ALL]);
 
         return ApiResponse::ok()
             ->withBody(compact('data'))->getResponse();

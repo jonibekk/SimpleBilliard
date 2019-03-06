@@ -2,6 +2,8 @@
 App::uses('AppModel', 'Model');
 App::uses('Post', 'Model');
 
+use Goalous\Enum\DataType\DataType as DataType;
+
 /**
  * NotifySetting Model
  *
@@ -52,7 +54,7 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
-    const TYPE_EVALUATOR_SET_TO_COACH = 41;  
+    const TYPE_EVALUATOR_SET_TO_COACH = 41;
     const TYPE_FEED_COMMENTED_ON_GOAL = 42;
     const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
     const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
@@ -377,7 +379,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                  => [
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -385,7 +387,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_COACH           => [
+        self::TYPE_EVALUATOR_SET_TO_COACH                    => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -393,7 +395,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_GOAL           => [
+        self::TYPE_FEED_COMMENTED_ON_GOAL                    => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -401,7 +403,7 @@ class NotifySetting extends AppModel
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL => [
+        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
@@ -515,6 +517,94 @@ class NotifySetting extends AppModel
     public $belongsTo = [
         'User'
     ];
+
+    public $modelConversionTable = [
+        "feed_post_app_flg"                                => DataType::BOOL,
+        "feed_post_email_flg"                              => DataType::BOOL,
+        "feed_post_mobile_flg"                             => DataType::BOOL,
+        "feed_commented_on_my_post_app_flg"                => DataType::BOOL,
+        "feed_commented_on_my_post_email_flg"              => DataType::BOOL,
+        "feed_commented_on_my_post_mobile_flg"             => DataType::BOOL,
+        "feed_commented_on_my_commented_post_app_flg"      => DataType::BOOL,
+        "feed_commented_on_my_commented_post_email_flg"    => DataType::BOOL,
+        "feed_commented_on_my_commented_post_mobile_flg"   => DataType::BOOL,
+        "circle_user_join_app_flg"                         => DataType::BOOL,
+        "circle_user_join_email_flg"                       => DataType::BOOL,
+        "circle_user_join_mobile_flg"                      => DataType::BOOL,
+        "circle_changed_privacy_setting_app_flg"           => DataType::BOOL,
+        "circle_changed_privacy_setting_email_flg"         => DataType::BOOL,
+        "circle_changed_privacy_setting_mobile_flg"        => DataType::BOOL,
+        "circle_add_user_app_flg"                          => DataType::BOOL,
+        "circle_add_user_email_flg"                        => DataType::BOOL,
+        "circle_add_user_mobile_flg"                       => DataType::BOOL,
+        "my_goal_follow_app_flg"                           => DataType::BOOL,
+        "my_goal_follow_email_flg"                         => DataType::BOOL,
+        "my_goal_follow_mobile_flg"                        => DataType::BOOL,
+        "my_goal_collaborate_app_flg"                      => DataType::BOOL,
+        "my_goal_collaborate_email_flg"                    => DataType::BOOL,
+        "my_goal_collaborate_mobile_flg"                   => DataType::BOOL,
+        "my_goal_changed_by_leader_app_flg"                => DataType::BOOL,
+        "my_goal_changed_by_leader_email_flg"              => DataType::BOOL,
+        "my_goal_changed_by_leader_mobile_flg"             => DataType::BOOL,
+        "my_goal_target_for_evaluation_app_flg"            => DataType::BOOL,
+        "my_goal_target_for_evaluation_email_flg"          => DataType::BOOL,
+        "my_goal_target_for_evaluation_mobile_flg"         => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_app_flg"      => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_email_flg"    => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_mobile_flg"   => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_app_flg"        => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_email_flg"      => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_mobile_flg"     => DataType::BOOL,
+        "my_member_create_goal_app_flg"                    => DataType::BOOL,
+        "my_member_create_goal_email_flg"                  => DataType::BOOL,
+        "my_member_create_goal_mobile_flg"                 => DataType::BOOL,
+        "my_member_collaborate_goal_app_flg"               => DataType::BOOL,
+        "my_member_collaborate_goal_email_flg"             => DataType::BOOL,
+        "my_member_collaborate_goal_mobile_flg"            => DataType::BOOL,
+        "my_member_change_goal_app_flg"                    => DataType::BOOL,
+        "my_member_change_goal_email_flg"                  => DataType::BOOL,
+        "my_member_change_goal_mobile_flg"                 => DataType::BOOL,
+        "start_evaluation_app_flg"                         => DataType::BOOL,
+        "start_evaluation_email_flg"                       => DataType::BOOL,
+        "start_evaluation_mobile_flg"                      => DataType::BOOL,
+        "fleeze_evaluation_app_flg"                        => DataType::BOOL,
+        "fleeze_evaluation_email_flg"                      => DataType::BOOL,
+        "fleeze_evaluation_mobile_flg"                     => DataType::BOOL,
+        "start_can_oneself_evaluation_app_flg"             => DataType::BOOL,
+        "start_can_oneself_evaluation_email_flg"           => DataType::BOOL,
+        "start_can_oneself_evaluation_mobile_flg"          => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_app_flg"          => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_email_flg"        => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_mobile_flg"       => DataType::BOOL,
+        "my_evaluator_evaluated_app_flg"                   => DataType::BOOL,
+        "my_evaluator_evaluated_email_flg"                 => DataType::BOOL,
+        "my_evaluator_evaluated_mobile_flg"                => DataType::BOOL,
+        "final_evaluation_is_done_app_flg"                 => DataType::BOOL,
+        "final_evaluation_is_done_email_flg"               => DataType::BOOL,
+        "final_evaluation_is_done_mobile_flg"              => DataType::BOOL,
+        "feed_commented_on_my_action_app_flg"              => DataType::BOOL,
+        "feed_commented_on_my_action_email_flg"            => DataType::BOOL,
+        "feed_commented_on_my_action_mobile_flg"           => DataType::BOOL,
+        "feed_commented_on_my_commented_action_app_flg"    => DataType::BOOL,
+        "feed_commented_on_my_commented_action_email_flg"  => DataType::BOOL,
+        "feed_commented_on_my_commented_action_mobile_flg" => DataType::BOOL,
+        "feed_action_app_flg"                              => DataType::BOOL,
+        "feed_action_email_flg"                            => DataType::BOOL,
+        "feed_action_mobile_flg"                           => DataType::BOOL,
+        "user_joined_to_invited_team_app_flg"              => DataType::BOOL,
+        "user_joined_to_invited_team_email_flg"            => DataType::BOOL,
+        "user_joined_to_invited_team_mobile_flg"           => DataType::BOOL,
+        "feed_message_app_flg"                             => DataType::BOOL,
+        "feed_message_email_flg"                           => DataType::BOOL,
+        "feed_message_mobile_flg"                          => DataType::BOOL,
+        "setup_guide_app_flg"                              => DataType::BOOL,
+        "setup_guide_email_flg"                            => DataType::BOOL,
+        "setup_guide_mobile_flg"                           => DataType::BOOL,
+        "feed_mentioned_in_app_flg"                        => DataType::BOOL,
+        "feed_mentioned_in_email_flg"                      => DataType::BOOL,
+        "feed_mentioned_in_mobile_flg"                     => DataType::BOOL,
+    ];
+
 
     /**
      * 指定タイプのアプリ、メール、モバイルの通知設定を返却
@@ -1261,7 +1351,7 @@ class NotifySetting extends AppModel
      * 通知先とグループに応じて DB 登録用の キー/値 の配列を作成して返す
      *
      * @param string $notify_target 通知先 ('app' or 'email' or 'mobile')
-     * @param string $type_group    通知タイプのグループ ('all' or 'primary' or 'none')
+     * @param string $type_group 通知タイプのグループ ('all' or 'primary' or 'none')
      *
      * @return array
      */
@@ -1274,13 +1364,15 @@ class NotifySetting extends AppModel
         return $values;
     }
 
-    public function getMySettings()
+    public function getMySettings($userId = null)
     {
+        $userId = $userId ?: $this->my_uid;
         $model = $this;
+        $this->log($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false));
         $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false),
-            function () use ($model) {
+            function () use ($model, $userId) {
                 /** @noinspection PhpMethodParametersCountMismatchInspection */
-                $res = $model->findByUserId($model->my_uid);
+                $res = $model->useType()->findByUserId($userId);
                 $res = Hash::extract($res, 'NotifySetting');
                 if (!empty($res)) {
                     $res['force_notify'] = true;
@@ -1292,6 +1384,7 @@ class NotifySetting extends AppModel
                 foreach ($schema as $k => $v) {
                     $res[$k] = $v['default'];
                 }
+                $res = $this->convertType($res);
                 if (!empty($res)) {
                     $res['force_notify'] = true;
                 }

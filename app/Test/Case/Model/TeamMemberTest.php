@@ -2232,8 +2232,6 @@ class TeamMemberTest extends GoalousTestCase
             'conditions' => ['team_id' => $teamId]
         ]), '{n}.TeamMember.user_id');
 
-
-
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
         $this->assertEquals($res, $allMemberIds);
 
@@ -2265,6 +2263,17 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
         $this->assertEquals(count($res), 4);
         $this->assertEquals($res, [2, 12, 13, $userId]);
+
+    }
+    public function test_getUnique()
+    {
+        $res = $this->TeamMember->getUnique(1, 1);
+        $this->assertNotEmpty($res);
+        $this->assertEqual($res['user_id'], 1);
+        $this->assertEqual($res['team_id'], 1);
+
+        $res = $this->TeamMember->getUnique(99999, 100);
+        $this->assertEquals($res, []);
 
     }
 }

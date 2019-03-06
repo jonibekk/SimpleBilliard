@@ -55,7 +55,10 @@ class AuthController extends BaseApiController
                                 ->getResponse();
         }
 
-        $data = $this->_getAuthUserInfo($jwt->token(), $jwt->getUserId());
+        $data = [
+            'me' => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
+            'token' => $jwt->token()
+        ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
@@ -63,23 +66,16 @@ class AuthController extends BaseApiController
     /**
      * Get auth user info for Login API response
      *
-     * @param string $token
      * @param int $userId
+     * @param int $teamId
      * @return array
      */
-    private function _getAuthUserInfo(string $token, int $userId): array
+    private function _getAuthUserInfo(int $userId, int $teamId): array
     {
-        /** @var ImageStorageService $ImageStorageService */
-        $ImageStorageService = ClassRegistry::init('ImageStorageService');
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $data = $User->getUserForLoginResponse($userId)->toArray();
-        $data['token'] = $token;
-        $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
-        $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
-        $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
-        return $data;
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+        $req = new UserResourceRequest($userId, $teamId, true);
+        return $UserService->get($req, [MeExtender::EXTEND_ALL]);
     }
 
     /**
@@ -163,7 +159,10 @@ class AuthController extends BaseApiController
             return ErrorResponse::badRequest()
                 ->getResponse();
         }
-        $data = $this->_getAuthUserInfo($token, $user['id']);
+        $data = [
+            'me' => $this->_getAuthUserInfo($user['id'], $teamId),
+            'token' => $token
+        ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
