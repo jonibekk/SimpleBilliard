@@ -79,6 +79,14 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     );
 } elseif (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     /**
+     * Special cases
+     */
+    Router::connect('/api/notifications/:action',
+        ['controller' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']);
+    Router::connect('/api/me',
+        ['controller' => 'me', 'action' => 'detail', 'prefix' => 'get', '[method]' => 'GET']);
+
+    /**
      * REST Endpoints with version in header 'X-API-Version'
      * No action
      */
@@ -116,8 +124,6 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
 
-    Router::connect('/api/notifications/:action',
-        ['controller' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']);
 }
 
 /**

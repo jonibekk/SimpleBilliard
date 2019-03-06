@@ -3,6 +3,10 @@ App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
 App::uses("Circle", 'Model');
+App::import('Lib/DataExtender', 'MeExtender');
+App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'UserService');
+
 use Goalous\Enum as Enum;
 
 /**
@@ -10,6 +14,40 @@ use Goalous\Enum as Enum;
  */
 class UserService extends AppService
 {
+    /**
+     * Get single data based on model.
+     * extend data
+     *
+     * @param PostResourceRequest $req
+     * @param array               $extensions
+     *
+     * @return array
+     */
+    public function get(UserResourceRequest $req, array $extensions = []): array
+    {
+        $userId = $req->getId();
+        $teamId = $req->getTeamId();
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $fields = $req->isMe() ? $User->loginUserFields : $User->profileFields;
+        $data = $this->_getWithCache($userId, 'User', $fields);
+        if (empty($data)) {
+            return [];
+        }
+
+        if ($req->isMe()) {
+            /** @var MeExtender $MeExtender */
+            $MeExtender = ClassRegistry::init('MeExtender');
+
+            $data = $MeExtender->extend($data, $userId, $teamId, $extensions);
+        } else {
+            // TODO: create UserExtender
+        }
+        return $data;
+    }
+
     /**
      * Getting user names as string from user id list.
      *

@@ -1082,33 +1082,186 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "allOf" : [ {
-                    "$ref" : "#/components/schemas/Model.User.Profile"
-                  }, {
-                    "type" : "object",
-                    "properties" : {
-                      "token" : {
-                        "type" : "string"
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "me" : {
+                          "$ref" : "#/components/schemas/Model.Me"
+                        },
+                        "token" : {
+                          "type" : "string"
+                        }
                       }
                     }
-                  } ],
+                  },
                   "example" : {
                     "data" : {
-                      "id" : 1,
-                      "first_name" : "Admin",
-                      "last_name\"" : "Test",
-                      "photo_file_name" : null,
-                      "cover_photo_file_name" : null,
-                      "language" : "jpn",
-                      "auto_language_flg" : false,
-                      "romanize_flg" : false,
-                      "display_first_name" : "Admin",
-                      "display_last_name" : "Test",
-                      "display_username" : "Admin Test",
-                      "local_username" : null,
-                      "roman_username" : "Admin Test",
-                      "last_first" : true,
-                      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyNWZhZjQwOC05ZWIzLTQ3ZGQtYWMzOC0zZjhiYzBiNDFmZjkiLCJleHAiOjE1MzUzNjE4NjcsImlhdCI6MTUzNDE1MjI2NywiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjoxLCJ0ZWFtX2lkIjoxfX0.GRYBMO64MM6AFafluYmEWbWWrTalnbXRjzH0DO9PvIsw0Ew6SIsMOELmvyfZnSNcS_V02wWE_BvrEZrm-zswWw"
+                      "me": {
+                        "id": "614",
+                        "photo_file_name": "aa682cea8bd3530212fe0493601dd618_photo.jpg",
+                        "cover_photo_file_name": null,
+                        "first_name": "Taro",
+                        "last_name": "Gorasu",
+                        "middle_name": null,
+                        "language": "ja",
+                        "active_flg": true,
+                        "last_login": "1551833398",
+                        "admin_flg": false,
+                        "default_team_id": "66",
+                        "timezone": 9,
+                        "romanize_flg": false,
+                        "update_email_flg": true,
+                        "agreed_terms_of_service_id": "2",
+                        "gender_type": "1",
+                        "birth_day": "2000-01-01",
+                        "hide_year_flg": false,
+                        "phone_no": null,
+                        "hometown": "",
+                        "display_first_name": "Taro",
+                        "display_last_name": "Gorasu",
+                        "display_username": "Taro Gorasu",
+                        "local_username": null,
+                        "roman_username": "Taro Gorasu",
+                        "last_first": true,
+                        "profile_img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_small.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=cZOCP%2BiY1qBBMyLzWSA%2Fv6DbtZc%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_medium.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=4bVGBI50A2NdMfAY6OPCyd2ZLjI%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_medium_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=rVANQsdZGuYU4vYfv4Kvcy5dTzE%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=T9drebSIcIPioFtc5JtMJXZ2Q6A%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_x_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=PyXMoIepSEwaXQnRRN7jm0%2BLPcM%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_original.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=0Ffc6ZUkTldHOhmQ8NkOOTS%2BXf8%3D"
+                        },
+                        "cover_img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D"
+                        },
+                        "current_team_id": "66",
+                        "current_team_member_own": {
+                          "id": "693",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "coach_user_id": "",
+                          "member_no": null,
+                          "member_type_id": "",
+                          "job_category_id": "",
+                          "active_flg": true,
+                          "invitation_flg": false,
+                          "evaluation_enable_flg": true,
+                          "admin_flg": true,
+                          "evaluable_count": 0,
+                          "last_login": 1551833398,
+                          "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+                          "status": 1,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1534133785,
+                          "modified": 1551833298
+                        },
+                        "my_active_teams": [
+                          {
+                            "id": "66",
+                            "name": "E2ETest"
+                          }
+                        ],
+                        "notify_setting": {
+                          "id": "",
+                          "user_id": "",
+                          "feed_post_app_flg": true,
+                          "feed_post_email_flg": true,
+                          "feed_post_mobile_flg": true,
+                          "feed_commented_on_my_post_app_flg": true,
+                          "feed_commented_on_my_post_email_flg": true,
+                          "feed_commented_on_my_post_mobile_flg": true,
+                          "feed_commented_on_my_commented_post_app_flg": true,
+                          "feed_commented_on_my_commented_post_email_flg": true,
+                          "feed_commented_on_my_commented_post_mobile_flg": true,
+                          "circle_user_join_app_flg": true,
+                          "circle_user_join_email_flg": true,
+                          "circle_user_join_mobile_flg": true,
+                          "circle_changed_privacy_setting_app_flg": true,
+                          "circle_changed_privacy_setting_email_flg": true,
+                          "circle_changed_privacy_setting_mobile_flg": true,
+                          "circle_add_user_app_flg": true,
+                          "circle_add_user_email_flg": true,
+                          "circle_add_user_mobile_flg": true,
+                          "my_goal_follow_app_flg": true,
+                          "my_goal_follow_email_flg": true,
+                          "my_goal_follow_mobile_flg": true,
+                          "my_goal_collaborate_app_flg": true,
+                          "my_goal_collaborate_email_flg": true,
+                          "my_goal_collaborate_mobile_flg": true,
+                          "my_goal_changed_by_leader_app_flg": true,
+                          "my_goal_changed_by_leader_email_flg": true,
+                          "my_goal_changed_by_leader_mobile_flg": true,
+                          "my_goal_target_for_evaluation_app_flg": true,
+                          "my_goal_target_for_evaluation_email_flg": true,
+                          "my_goal_target_for_evaluation_mobile_flg": true,
+                          "my_goal_as_leader_request_to_change_app_flg": true,
+                          "my_goal_as_leader_request_to_change_email_flg": true,
+                          "my_goal_as_leader_request_to_change_mobile_flg": true,
+                          "my_goal_not_target_for_evaluation_app_flg": true,
+                          "my_goal_not_target_for_evaluation_email_flg": true,
+                          "my_goal_not_target_for_evaluation_mobile_flg": true,
+                          "my_member_create_goal_app_flg": true,
+                          "my_member_create_goal_email_flg": true,
+                          "my_member_create_goal_mobile_flg": true,
+                          "my_member_collaborate_goal_app_flg": true,
+                          "my_member_collaborate_goal_email_flg": true,
+                          "my_member_collaborate_goal_mobile_flg": true,
+                          "my_member_change_goal_app_flg": true,
+                          "my_member_change_goal_email_flg": true,
+                          "my_member_change_goal_mobile_flg": true,
+                          "start_evaluation_app_flg": true,
+                          "start_evaluation_email_flg": true,
+                          "start_evaluation_mobile_flg": true,
+                          "fleeze_evaluation_app_flg": true,
+                          "fleeze_evaluation_email_flg": true,
+                          "fleeze_evaluation_mobile_flg": true,
+                          "start_can_oneself_evaluation_app_flg": true,
+                          "start_can_oneself_evaluation_email_flg": true,
+                          "start_can_oneself_evaluation_mobile_flg": true,
+                          "start_can_evaluate_as_evaluator_app_flg": true,
+                          "start_can_evaluate_as_evaluator_email_flg": true,
+                          "start_can_evaluate_as_evaluator_mobile_flg": true,
+                          "my_evaluator_evaluated_app_flg": true,
+                          "my_evaluator_evaluated_email_flg": true,
+                          "my_evaluator_evaluated_mobile_flg": true,
+                          "final_evaluation_is_done_app_flg": true,
+                          "final_evaluation_is_done_email_flg": true,
+                          "final_evaluation_is_done_mobile_flg": true,
+                          "feed_commented_on_my_action_app_flg": true,
+                          "feed_commented_on_my_action_email_flg": true,
+                          "feed_commented_on_my_action_mobile_flg": true,
+                          "feed_commented_on_my_commented_action_app_flg": true,
+                          "feed_commented_on_my_commented_action_email_flg": true,
+                          "feed_commented_on_my_commented_action_mobile_flg": true,
+                          "feed_action_app_flg": true,
+                          "feed_action_email_flg": true,
+                          "feed_action_mobile_flg": true,
+                          "user_joined_to_invited_team_app_flg": true,
+                          "user_joined_to_invited_team_email_flg": true,
+                          "user_joined_to_invited_team_mobile_flg": true,
+                          "feed_message_app_flg": true,
+                          "feed_message_email_flg": true,
+                          "feed_message_mobile_flg": true,
+                          "setup_guide_app_flg": true,
+                          "setup_guide_email_flg": true,
+                          "setup_guide_mobile_flg": true,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": null,
+                          "modified": null,
+                          "feed_mentioned_in_app_flg": true,
+                          "feed_mentioned_in_email_flg": true,
+                          "feed_mentioned_in_mobile_flg": true,
+                          "force_notify": true
+                        }
+                      },
+                      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0YzJjNjZmNy0yMjBjLTQ4ZGEtYmQ5MC1jYmY3YTg3MmRkOGUiLCJleHAiOjE1NTMwNDYxMjYsImlhdCI6MTU1MTgzNjUyNiwiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjo2MTQsInRlYW1faWQiOjY2fX0.k-nERIj7BQm-vBIDjud8NLY4Gim0r2k5OvkPSW-xEyOKzhVynNNti0rWOp11GB7ArCREQpoCv_tCTNMGmjn2zA"
                     }
                   }
                 }
@@ -1247,6 +1400,43 @@
         "responses" : {
           "200" : {
             "description" : ""
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/me" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "Get current user info",
+        "description" : "Get current user info.",
+        "operationId" : "/api/me",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get current user info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Me"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
           }
         },
         "x-operation-settings" : {
@@ -3484,6 +3674,717 @@
             "format" : "int32"
           }
         }
+      },
+      "Model.Me" : {
+        "description" : "Logged in user info",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Model.UserProfile"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "current_team_id": {
+              "type": "string"
+            },
+            "current_team_member_own": {
+              "$ref": "#/components/schemas/Mode.TeamMember"
+            },
+            "my_active_teams": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/Object.String.ID"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "notify_setting": {
+              "$ref": "#/components/schemas/Mode.NotifySetting"
+            }
+          }
+        }],
+        "example" : {
+          "id": "614",
+          "photo_file_name": null,
+          "cover_photo_file_name": null,
+          "first_name": "Taro",
+          "last_name": "Gorasu",
+          "middle_name": null,
+          "language": "ja",
+          "active_flg": true,
+          "last_login": "1551260824",
+          "admin_flg": false,
+          "default_team_id": "66",
+          "timezone": 9,
+          "romanize_flg": false,
+          "update_email_flg": true,
+          "agreed_terms_of_service_id": "2",
+          "gender_type": "1",
+          "birth_day": "2000-01-01",
+          "hide_year_flg": false,
+          "phone_no": null,
+          "hometown": "",
+          "display_first_name": "Taro",
+          "display_last_name": "Gorasu",
+          "display_username": "Taro Gorasu",
+          "local_username": null,
+          "roman_username": "Taro Gorasu",
+          "last_first": true,
+          "profile_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D"
+          },
+          "cover_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D"
+          },
+          "current_team_id": "66",
+          "current_team_member_own": {
+            "id": "693",
+            "user_id": "614",
+            "team_id": "66",
+            "coach_user_id": "",
+            "member_no": null,
+            "member_type_id": "",
+            "job_category_id": "",
+            "active_flg": true,
+            "invitation_flg": false,
+            "evaluation_enable_flg": true,
+            "admin_flg": true,
+            "evaluable_count": 0,
+            "last_login": 1551260824,
+            "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+            "status": 1,
+            "del_flg": false,
+            "deleted": null,
+            "created": 1534133785,
+            "modified": 1534141942
+          },
+          "my_active_teams": [
+            {
+              "id": "66",
+              "name": "E2ETest"
+            }
+          ],
+          "notify_setting": {
+            "id": "",
+            "user_id": "",
+            "feed_post_app_flg": true,
+            "feed_post_email_flg": true,
+            "feed_post_mobile_flg": true,
+            "feed_commented_on_my_post_app_flg": true,
+            "feed_commented_on_my_post_email_flg": true,
+            "feed_commented_on_my_post_mobile_flg": true,
+            "feed_commented_on_my_commented_post_app_flg": true,
+            "feed_commented_on_my_commented_post_email_flg": true,
+            "feed_commented_on_my_commented_post_mobile_flg": true,
+            "circle_user_join_app_flg": true,
+            "circle_user_join_email_flg": true,
+            "circle_user_join_mobile_flg": true,
+            "circle_changed_privacy_setting_app_flg": true,
+            "circle_changed_privacy_setting_email_flg": true,
+            "circle_changed_privacy_setting_mobile_flg": true,
+            "circle_add_user_app_flg": true,
+            "circle_add_user_email_flg": true,
+            "circle_add_user_mobile_flg": true,
+            "my_goal_follow_app_flg": true,
+            "my_goal_follow_email_flg": true,
+            "my_goal_follow_mobile_flg": true,
+            "my_goal_collaborate_app_flg": true,
+            "my_goal_collaborate_email_flg": true,
+            "my_goal_collaborate_mobile_flg": true,
+            "my_goal_changed_by_leader_app_flg": true,
+            "my_goal_changed_by_leader_email_flg": true,
+            "my_goal_changed_by_leader_mobile_flg": true,
+            "my_goal_target_for_evaluation_app_flg": true,
+            "my_goal_target_for_evaluation_email_flg": true,
+            "my_goal_target_for_evaluation_mobile_flg": true,
+            "my_goal_as_leader_request_to_change_app_flg": true,
+            "my_goal_as_leader_request_to_change_email_flg": true,
+            "my_goal_as_leader_request_to_change_mobile_flg": true,
+            "my_goal_not_target_for_evaluation_app_flg": true,
+            "my_goal_not_target_for_evaluation_email_flg": true,
+            "my_goal_not_target_for_evaluation_mobile_flg": true,
+            "my_member_create_goal_app_flg": true,
+            "my_member_create_goal_email_flg": true,
+            "my_member_create_goal_mobile_flg": true,
+            "my_member_collaborate_goal_app_flg": true,
+            "my_member_collaborate_goal_email_flg": true,
+            "my_member_collaborate_goal_mobile_flg": true,
+            "my_member_change_goal_app_flg": true,
+            "my_member_change_goal_email_flg": true,
+            "my_member_change_goal_mobile_flg": true,
+            "start_evaluation_app_flg": true,
+            "start_evaluation_email_flg": true,
+            "start_evaluation_mobile_flg": true,
+            "fleeze_evaluation_app_flg": true,
+            "fleeze_evaluation_email_flg": true,
+            "fleeze_evaluation_mobile_flg": true,
+            "start_can_oneself_evaluation_app_flg": true,
+            "start_can_oneself_evaluation_email_flg": true,
+            "start_can_oneself_evaluation_mobile_flg": true,
+            "start_can_evaluate_as_evaluator_app_flg": true,
+            "start_can_evaluate_as_evaluator_email_flg": true,
+            "start_can_evaluate_as_evaluator_mobile_flg": true,
+            "my_evaluator_evaluated_app_flg": true,
+            "my_evaluator_evaluated_email_flg": true,
+            "my_evaluator_evaluated_mobile_flg": true,
+            "final_evaluation_is_done_app_flg": true,
+            "final_evaluation_is_done_email_flg": true,
+            "final_evaluation_is_done_mobile_flg": true,
+            "feed_commented_on_my_action_app_flg": true,
+            "feed_commented_on_my_action_email_flg": true,
+            "feed_commented_on_my_action_mobile_flg": true,
+            "feed_commented_on_my_commented_action_app_flg": true,
+            "feed_commented_on_my_commented_action_email_flg": true,
+            "feed_commented_on_my_commented_action_mobile_flg": true,
+            "feed_action_app_flg": true,
+            "feed_action_email_flg": true,
+            "feed_action_mobile_flg": true,
+            "user_joined_to_invited_team_app_flg": true,
+            "user_joined_to_invited_team_email_flg": true,
+            "user_joined_to_invited_team_mobile_flg": true,
+            "feed_message_app_flg": true,
+            "feed_message_email_flg": true,
+            "feed_message_mobile_flg": true,
+            "setup_guide_app_flg": true,
+            "setup_guide_email_flg": true,
+            "setup_guide_mobile_flg": true,
+            "del_flg": false,
+            "deleted": null,
+            "created": null,
+            "modified": null,
+            "feed_mentioned_in_app_flg": true,
+            "feed_mentioned_in_email_flg": true,
+            "feed_mentioned_in_mobile_flg": true,
+            "force_notify": true
+          }
+        }
+      },
+      "Model.TeamMember" : {
+        "description" : "TeamMember model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "team_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "coach_user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "member_no" : {
+            "type" : "string"
+          },
+          "member_type_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "job_category_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "active_flg" : {
+            "type" : "boolean",
+            "default" : true
+          },
+          "invitation_flg" : {
+            "type" : "boolean",
+            "default" : false
+          },
+          "evaluation_enable_flg" : {
+            "type" : "boolean",
+            "default" : true
+          },
+          "admin_flg" : {
+            "type" : "boolean",
+            "default" : false
+          },
+          "evaluable_count" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          },
+          "last_login" : {
+            "type" : "integer"
+          },
+          "comment" : {
+            "type" : "string"
+          },
+          "status": {
+            "type" : "integer"
+          }
+        },
+        "example" : {
+          "id": "693",
+          "user_id": "614",
+          "team_id": "66",
+          "coach_user_id": "",
+          "member_no": null,
+          "member_type_id": "",
+          "job_category_id": "",
+          "active_flg": true,
+          "invitation_flg": false,
+          "evaluation_enable_flg": true,
+          "admin_flg": true,
+          "evaluable_count": 0,
+          "last_login": 1551260824,
+          "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+          "status": 1
+        }
+      },
+      "Model.NotifySetting" : {
+        "description" : "NotifySetting model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "feed_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_post_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_post_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_post_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_post_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_post_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_commented_post_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_user_join_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "circle_user_join_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_user_join_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_changed_privacy_setting_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "circle_changed_privacy_setting_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_changed_privacy_setting_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "circle_add_user_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_add_user_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_add_user_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_follow_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_follow_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_follow_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_collaborate_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_collaborate_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_collaborate_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_target_for_evaluation_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_target_for_evaluation_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_target_for_evaluation_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_not_target_for_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_not_target_for_evaluation_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_not_target_for_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_create_goal_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_create_goal_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_member_create_goal_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_change_goal_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_member_change_goal_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_change_goal_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "start_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_evaluation_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "fleeze_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "fleeze_evaluation_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "fleeze_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_oneself_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_oneself_evaluation_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "start_can_oneself_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_evaluator_evaluated_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_evaluator_evaluated_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_evaluator_evaluated_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_action_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_action_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_action_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_action_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_commented_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_action_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_action_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "user_joined_to_invited_team_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "user_joined_to_invited_team_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "user_joined_to_invited_team_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_message_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_message_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_message_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "setup_guide_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "setup_guide_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "setup_guide_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_mentioned_in_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_mentioned_in_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_mentioned_in_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "force_notify": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "example" : {
+          "id": "1",
+          "user_id": "1",
+          "feed_post_app_flg": true,
+          "feed_post_email_flg": true,
+          "feed_post_mobile_flg": true,
+          "feed_commented_on_my_post_app_flg": true,
+          "feed_commented_on_my_post_email_flg": true,
+          "feed_commented_on_my_post_mobile_flg": true,
+          "feed_commented_on_my_commented_post_app_flg": true,
+          "feed_commented_on_my_commented_post_email_flg": true,
+          "feed_commented_on_my_commented_post_mobile_flg": true,
+          "circle_user_join_app_flg": true,
+          "circle_user_join_email_flg": true,
+          "circle_user_join_mobile_flg": true,
+          "circle_changed_privacy_setting_app_flg": true,
+          "circle_changed_privacy_setting_email_flg": true,
+          "circle_changed_privacy_setting_mobile_flg": true,
+          "circle_add_user_app_flg": true,
+          "circle_add_user_email_flg": true,
+          "circle_add_user_mobile_flg": true,
+          "my_goal_follow_app_flg": true,
+          "my_goal_follow_email_flg": true,
+          "my_goal_follow_mobile_flg": true,
+          "my_goal_collaborate_app_flg": true,
+          "my_goal_collaborate_email_flg": true,
+          "my_goal_collaborate_mobile_flg": true,
+          "my_goal_changed_by_leader_app_flg": true,
+          "my_goal_changed_by_leader_email_flg": true,
+          "my_goal_changed_by_leader_mobile_flg": true,
+          "my_goal_target_for_evaluation_app_flg": true,
+          "my_goal_target_for_evaluation_email_flg": true,
+          "my_goal_target_for_evaluation_mobile_flg": true,
+          "my_goal_as_leader_request_to_change_app_flg": true,
+          "my_goal_as_leader_request_to_change_email_flg": true,
+          "my_goal_as_leader_request_to_change_mobile_flg": true,
+          "my_goal_not_target_for_evaluation_app_flg": true,
+          "my_goal_not_target_for_evaluation_email_flg": true,
+          "my_goal_not_target_for_evaluation_mobile_flg": true,
+          "my_member_create_goal_app_flg": true,
+          "my_member_create_goal_email_flg": true,
+          "my_member_create_goal_mobile_flg": true,
+          "my_member_collaborate_goal_app_flg": true,
+          "my_member_collaborate_goal_email_flg": true,
+          "my_member_collaborate_goal_mobile_flg": true,
+          "my_member_change_goal_app_flg": true,
+          "my_member_change_goal_email_flg": true,
+          "my_member_change_goal_mobile_flg": true,
+          "start_evaluation_app_flg": true,
+          "start_evaluation_email_flg": true,
+          "start_evaluation_mobile_flg": true,
+          "fleeze_evaluation_app_flg": true,
+          "fleeze_evaluation_email_flg": true,
+          "fleeze_evaluation_mobile_flg": true,
+          "start_can_oneself_evaluation_app_flg": true,
+          "start_can_oneself_evaluation_email_flg": true,
+          "start_can_oneself_evaluation_mobile_flg": true,
+          "start_can_evaluate_as_evaluator_app_flg": true,
+          "start_can_evaluate_as_evaluator_email_flg": true,
+          "start_can_evaluate_as_evaluator_mobile_flg": true,
+          "my_evaluator_evaluated_app_flg": true,
+          "my_evaluator_evaluated_email_flg": true,
+          "my_evaluator_evaluated_mobile_flg": true,
+          "final_evaluation_is_done_app_flg": true,
+          "final_evaluation_is_done_email_flg": true,
+          "final_evaluation_is_done_mobile_flg": true,
+          "feed_commented_on_my_action_app_flg": true,
+          "feed_commented_on_my_action_email_flg": true,
+          "feed_commented_on_my_action_mobile_flg": true,
+          "feed_commented_on_my_commented_action_app_flg": true,
+          "feed_commented_on_my_commented_action_email_flg": true,
+          "feed_commented_on_my_commented_action_mobile_flg": true,
+          "feed_action_app_flg": true,
+          "feed_action_email_flg": true,
+          "feed_action_mobile_flg": true,
+          "user_joined_to_invited_team_app_flg": true,
+          "user_joined_to_invited_team_email_flg": true,
+          "user_joined_to_invited_team_mobile_flg": true,
+          "feed_message_app_flg": true,
+          "feed_message_email_flg": true,
+          "feed_message_mobile_flg": true,
+          "setup_guide_app_flg": true,
+          "setup_guide_email_flg": true,
+          "setup_guide_mobile_flg": true,
+          "del_flg": false,
+          "deleted": null,
+          "created": null,
+          "modified": null,
+          "feed_mentioned_in_app_flg": true,
+          "feed_mentioned_in_email_flg": true,
+          "feed_mentioned_in_mobile_flg": true,
+          "force_notify": true        }
       },
       "Model.User.Profile" : {
         "description" : "User model with profile fields",
