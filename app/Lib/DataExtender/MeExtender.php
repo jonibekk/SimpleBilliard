@@ -2,6 +2,8 @@
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
 App::uses('TeamMember', 'Model');
+App::uses('Evaluation', 'Model');
+App::import('Service', 'GoalApprovalService');
 App::uses('LangUtil', 'Util');
 use Goalous\Enum as Enum;
 
@@ -11,6 +13,8 @@ class MeExtender extends BaseExtender
     const EXTEND_CURRENT_TEAM_MEMBER_OWN = "ext:user:is_current_team_admin";
     const EXTEND_JOINED_ACTIVE_TEAMS = "ext:user:joined_active_teams";
     const EXTEND_NOTIFICATION_SETTING = "ext:user:notification_setting";
+    const EXTEND_UNAPPROVED_GOAL_COUNT = "ext:user:unapproved_goal_count";
+    const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -43,6 +47,16 @@ class MeExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_NOTIFICATION_SETTING)) {
             $NotifySetting->current_team_id = $teamId;
             $data['notify_setting'] = $NotifySetting->getMySettings($userId);
+        }
+        if ($this->includeExt($extensions, self::EXTEND_UNAPPROVED_GOAL_COUNT)) {
+            /** @var GoalApprovalService $GoalApprovalService */
+            $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+            $data['unapproved_goal_count'] = $GoalApprovalService->countUnapprovedGoal($userId);
+        }
+        if ($this->includeExt($extensions, self::EXTEND_EVALUABLE_COUNT)) {
+            /** @var Evaluation $Evaluation */
+            $Evaluation = ClassRegistry::init("Evaluation");
+            $data['evaluable_count'] = $Evaluation->getMyTurnCount();
         }
 
         return $data;
