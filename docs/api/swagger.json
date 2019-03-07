@@ -1447,6 +1447,75 @@
         }
       }
     },
+    "/api/me/switch_team": {
+      "put": {
+        "tags": [
+          "Me"
+        ],
+        "summary": "Login user switch team",
+        "description": "Login user switch team",
+        "operationId": "/api/me/switch_team\"",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "requestBody" : {
+          "description" : "",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "team_id"],
+                "properties" : {
+                  "team_id" : {
+                    "type" : "string"
+                  }
+                }
+              },
+              "example" : {
+                "team_id" : "1"
+              }
+            }
+          },
+          "required" : true
+        },
+
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string"
+                        }
+                      }
+                    }
+                  }
+
+                },
+                "example" : {
+                  "data" : {
+                    "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0YzJjNjZmNy0yMjBjLTQ4ZGEtYmQ5MC1jYmY3YTg3MmRkOGUiLCJleHAiOjE1NTMwNDYxMjYsImlhdCI6MTU1MTgzNjUyNiwiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjo2MTQsInRlYW1faWQiOjY2fX0.k-nERIj7BQm-vBIDjud8NLY4Gim0r2k5OvkPSW-xEyOKzhVynNNti0rWOp11GB7ArCREQpoCv_tCTNMGmjn2zA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+
     "/api/v2/me/email" : {
       "get" : {
         "tags" : [ "Me" ],
@@ -3685,6 +3754,20 @@
             "current_team_id": {
               "type": "string"
             },
+            "unapproved_goal_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "evaluable_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "is_evaluation_available": {
+              "type": "boolean",
+              "default" : false
+            },
             "current_team_member_own": {
               "$ref": "#/components/schemas/Mode.TeamMember"
             },
@@ -3746,6 +3829,9 @@
             "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D"
           },
           "current_team_id": "66",
+          "unapproved_goal_count": 3,
+          "evaluable_count": 2,
+          "is_evaluation_available": true,
           "current_team_member_own": {
             "id": "693",
             "user_id": "614",

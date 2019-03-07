@@ -154,14 +154,12 @@
         </li>
     <?php endif; ?>
     <li class="glHeaderPc-nav-menu">
-        <a href="#"
-           data-toggle="dropdown"
+        <a href="/others"
            class="glHeaderPc-nav-menu-link"
            id="GlHeaderMenuDropdown-More"
             <?php if (!empty($userHasNoTeam) && $userHasNoTeam): ?> style="float:right; margin-right:8px;" <?php endif; ?>>
             <i class="material-icons">dehaze</i>
             <span>More</span>
-            <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
             <?php if (!empty($all_alert_cnt) && $all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span class="<?= $all_alert_cnt > 99 ? 'oval' : ''?>">
@@ -170,77 +168,6 @@
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu"
-            role="menu"
-            aria-labelledby="GlHeaderMenuDropdown-more">
-            <?php if (empty($userHasNoTeam)): ?>
-                <li class="header-nav-function-contents-list">
-                    <?= $this->Html->link(__('User Setting'),
-                        ['controller' => 'users', 'action' => 'settings'],
-                        ['class' => 'header-nav-function-contents-user-setting']) ?>
-                </li>
-                <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-                if (!empty($my_member_status) && Hash::get($my_member_status, 'TeamMember.admin_flg', false)):?>
-                    <li class="header-nav-function-contents-list">
-                        <?=
-                        $this->Html->link(__('Team Setting'),
-                            ['controller' => 'teams', 'action' => 'settings'],
-                            ['class' => 'header-nav-function-contents-team-setting']) ?>
-                    </li>
-                    <li class="header-nav-function-contents-list">
-                        <?=
-                        $this->Html->link(__('Billing'),
-                            ['controller' => 'payments', 'action' => 'index'],
-                            ['class' => 'header-nav-function-contents-billing']) ?>
-                    </li>
-                <?php endif; ?>
-                <?php if (!empty($is_evaluation_available) && $is_evaluation_available): ?>
-                    <li class="header-nav-function-contents-list">
-                        <?=
-                        $this->Html->link(__('Evaluation'),
-                            ['controller' => 'evaluations', 'action' => 'index'],
-                            ['class' => 'header-nav-function-contents-evaluation'])
-                        ?>
-                        <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
-                            <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
-                        <?php endif; ?>
-                    </li>
-                <?php endif; ?>
-                <li class="header-nav-function-contents-list">
-                    <?= $this->Html->link(__('Goal Approval'),
-                        ['controller' => 'goals', 'action' => 'approval', 'list'],
-                        ['class' => 'header-nav-function-contents-approvement'])
-                    ?>
-                    <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
-                        <div class="header-nav-function-approve-count">
-                            <?php echo $unapproved_cnt; ?>
-                        </div>
-                    <?php } ?>
-                </li>
-            <?php endif; ?>
-            <li class="header-nav-function-contents-list">
-                <a href=<?= $this->Lang->getLangCode() == 'en' ? 'https://drive.google.com/open?id=17c2lbrWEuqQYvOlVSb3Sn1dyFatXq2XD' : 'https://drive.google.com/open?id=1HZBsB3EdS1dciMLY3RXuc1FYHU1uuW73'; ?>
-                   class="header-nav-function-contents-user-guidelines"><?= __('User Guide'); ?></a>
-            </li>
-            <li class="header-nav-function-contents-list">
-                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
-                   class="header-nav-function-contents-tutorial">
-                    <?= __('Tutorial') ?>
-                </a>
-            </li>
-            <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-                <li class="header-nav-function-contents-list">
-                    <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                       class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
-                </li>
-            <?php endif; ?>
-            <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__('Logout'),
-                    ['controller' => 'users', 'action' => 'logout'],
-                    ['class' => 'header-nav-function-contents-logout']) ?>
-            </li>
-        </ul>
     </li>
 </ul>
 <?= $this->App->viewEndComment() ?>
