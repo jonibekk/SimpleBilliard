@@ -1,7 +1,10 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
+App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
+App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
 App::uses('LangUtil', 'Util');
