@@ -17,7 +17,7 @@ class MeExtender extends BaseExtender
     const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
     const EXTEND_IS_EVALUATION_AVAILABLE = "ext:user:is_evaluation_available";
 
-    public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
+    public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
@@ -29,42 +29,42 @@ class MeExtender extends BaseExtender
         $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
         $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
 
-        $data['current_team_id'] = $teamId;
+        $data['current_team_id'] = $currentTeamId;
         $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
 
         if ($this->includeExt($extensions, self::EXTEND_CURRENT_TEAM_MEMBER_OWN)) {
-            $data['current_team_member_own'] = $TeamMember->getUnique($userId, $teamId);
+            $data['current_team_member_own'] = $TeamMember->getUnique($userId, $currentTeamId);
         }
         if ($this->includeExt($extensions, self::EXTEND_JOINED_ACTIVE_TEAMS)) {
             $activeTeams = $TeamMember->getActiveTeamList($userId);
             $data['my_active_teams'] = [];
-            foreach ($activeTeams as $teamId => $name) {
+            foreach ($activeTeams as $activeTeamId => $name) {
                 $data['my_active_teams'][] = [
-                    'id' => $teamId,
+                    'id' => $activeTeamId,
                     'name' => $name
                 ];
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_NOTIFICATION_SETTING)) {
-            $NotifySetting->current_team_id = $teamId;
+            $NotifySetting->current_team_id = $currentTeamId;
             $data['notify_setting'] = $NotifySetting->getMySettings($userId);
         }
         if ($this->includeExt($extensions, self::EXTEND_UNAPPROVED_GOAL_COUNT)) {
             /** @var GoalApprovalService $GoalApprovalService */
             $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-            $data['unapproved_goal_count'] = $GoalApprovalService->countUnapprovedGoal($userId, $teamId);
+            $data['unapproved_goal_count'] = $GoalApprovalService->countUnapprovedGoal($userId, $currentTeamId);
         }
         if ($this->includeExt($extensions, self::EXTEND_EVALUABLE_COUNT)) {
             /** @var Evaluation $Evaluation */
             $Evaluation = ClassRegistry::init("Evaluation");
-            $Evaluation->current_team_id = $teamId;
+            $Evaluation->current_team_id = $currentTeamId;
             $Evaluation->my_uid = $userId;
             $data['evaluable_count'] = $Evaluation->getMyTurnCount();
         }
         if ($this->includeExt($extensions, self::EXTEND_IS_EVALUATION_AVAILABLE)) {
             /** @var EvaluationSetting $EvaluationSetting */
             $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
-            $EvaluationSetting->current_team_id = $teamId;
+            $EvaluationSetting->current_team_id = $currentTeamId;
             $EvaluationSetting->my_uid = $userId;
             $data['is_evaluation_available'] = $EvaluationSetting->isEnabled();
         }
