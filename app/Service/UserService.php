@@ -18,7 +18,7 @@ class UserService extends AppService
      * Get single data based on model.
      * extend data
      *
-     * @param PostResourceRequest $req
+     * @param UserResourceRequest $req
      * @param array               $extensions
      *
      * @return array
