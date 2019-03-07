@@ -15,6 +15,7 @@ class MeExtender extends BaseExtender
     const EXTEND_NOTIFICATION_SETTING = "ext:user:notification_setting";
     const EXTEND_UNAPPROVED_GOAL_COUNT = "ext:user:unapproved_goal_count";
     const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
+    const EXTEND_IS_EVALUATION_AVAILABLE = "ext:user:is_evaluation_available";
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -51,12 +52,21 @@ class MeExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_UNAPPROVED_GOAL_COUNT)) {
             /** @var GoalApprovalService $GoalApprovalService */
             $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-            $data['unapproved_goal_count'] = $GoalApprovalService->countUnapprovedGoal($userId);
+            $data['unapproved_goal_count'] = $GoalApprovalService->countUnapprovedGoal($userId, $teamId);
         }
         if ($this->includeExt($extensions, self::EXTEND_EVALUABLE_COUNT)) {
             /** @var Evaluation $Evaluation */
             $Evaluation = ClassRegistry::init("Evaluation");
+            $Evaluation->current_team_id = $teamId;
+            $Evaluation->my_uid = $userId;
             $data['evaluable_count'] = $Evaluation->getMyTurnCount();
+        }
+        if ($this->includeExt($extensions, self::EXTEND_IS_EVALUATION_AVAILABLE)) {
+            /** @var EvaluationSetting $EvaluationSetting */
+            $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+            $EvaluationSetting->current_team_id = $teamId;
+            $EvaluationSetting->my_uid = $userId;
+            $data['is_evaluation_available'] = $EvaluationSetting->isEnabled();
         }
 
         return $data;

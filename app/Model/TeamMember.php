@@ -120,7 +120,6 @@ class TeamMember extends AppModel
      */
     function getActiveTeamList($uid)
     {
-        $this->log($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false));
         $teamListCache = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         if (empty($this->myTeams) || empty($teamListCache)) {
             $this->setActiveTeamList($uid);

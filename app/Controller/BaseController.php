@@ -208,7 +208,8 @@ class BaseController extends Controller
                 // GL-7364：Enable to keep login status between old Goalous and new Goalous
                 $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
                 if (empty($mapSesAndJwt)) {
-                    $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                    $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                    $this->set('jwt_token', $jwt->token());
                 }
             }
             //Check from DB whether user is deleted
@@ -573,6 +574,10 @@ class BaseController extends Controller
             ], false);
         }
 
+        // Delete mapping jwt and session id
+        $sesId = $this->Session->id();
+        $this->GlRedis->delMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
         foreach ($this->Session->read() as $key => $val) {
             if (in_array($key, ['Config', '_Token', 'Auth'])) {
                 continue;
@@ -581,7 +586,6 @@ class BaseController extends Controller
         }
 
         $this->Cookie->destroy();
-
         return $this->Auth->logout();
     }
 

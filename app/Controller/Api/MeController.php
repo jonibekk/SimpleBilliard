@@ -7,6 +7,7 @@ App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
+App::import('Controller/Traits', 'AuthTrait');
 
 /**
  * Created by PhpStorm.
@@ -16,6 +17,7 @@ App::uses('TeamMember', 'Model');
  */
 class MeController extends BasePagingController
 {
+    use AuthTrait;
     /**
      * Get list of circles that an user is joined in
      *
@@ -166,11 +168,7 @@ class MeController extends BasePagingController
         }
 
         try {
-            $TeamMember->updateLastLogin($teamId, $userId);
-            $this->Session->write('current_team_id', $teamId);
-            /** @var AuthService $AuthService */
-            $AuthService = ClassRegistry::init("AuthService");
-            $jwt = $AuthService->recreateJwt($this->getJwtAuth());
+            $jwt = $this->resetAuth($userId, $teamId, $this->getJwtAuth());
         } catch (Exception $e) {
             GoalousLog::error('failed to switch team', [
                 'user_id' => $userId,

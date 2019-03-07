@@ -3754,6 +3754,20 @@
             "current_team_id": {
               "type": "string"
             },
+            "unapproved_goal_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "evaluable_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "is_evaluation_available": {
+              "type": "boolean",
+              "default" : false
+            },
             "current_team_member_own": {
               "$ref": "#/components/schemas/Mode.TeamMember"
             },
@@ -3815,6 +3829,9 @@
             "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D"
           },
           "current_team_id": "66",
+          "unapproved_goal_count": 3,
+          "evaluable_count": 2,
+          "is_evaluation_available": true,
           "current_team_member_own": {
             "id": "693",
             "user_id": "614",

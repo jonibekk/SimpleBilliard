@@ -162,17 +162,18 @@ class AuthService extends AppService
      * Recreate new jwt
      * use case: switch team
      *
-     * @param JwtAuthentication $jwt
+     * @param JwtAuthentication $jwt: old jwt
      * @param int $teamId
-     * @return AuthorizedAccessInfo Authentication token of the user. Will return null on failed login
+     * @return JwtAuthentication new jwt
      */
-    public function recreateJwt(JwtAuthentication $jwt, int $teamId): AuthorizedAccessInfo
+    public function recreateJwt(JwtAuthentication $jwt, int $teamId): JwtAuthentication
     {
         try {
+            $userId = $jwt->getUserId();
             // Del old jwt
             $this->invalidateUser($jwt);
             // Recreate with switched team id
-            return AccessAuthenticator::publish($jwt->getUserId(), $teamId)->getJwtAuthentication();
+            return AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
         } catch (\Throwable $e) {
             throw new GlException\Auth\AuthFailedException($e->getMessage());
         }
