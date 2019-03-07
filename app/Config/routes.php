@@ -85,6 +85,8 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['controller' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']);
     Router::connect('/api/me',
         ['controller' => 'me', 'action' => 'detail', 'prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/me/switch_team',
+        ['controller' => 'me', 'action' => 'switch_team', 'prefix' => 'put', '[method]' => 'PUT']);
 
     /**
      * REST Endpoints with version in header 'X-API-Version'

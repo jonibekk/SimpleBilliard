@@ -6,6 +6,7 @@ App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
+App::uses('TeamMember', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -145,5 +146,44 @@ class MeController extends BasePagingController
         return [
             CircleExtender::EXTEND_ALL
         ];
+    }
+
+    /**
+     * Switch team
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function put_switch_team()
+    {
+        $teamId = Hash::get($this->getRequestJsonBody(), 'team_id');
+        $userId = $this->getUserId();
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        // Check permission whether access team
+        $myTeams = $TeamMember->getActiveTeamList($userId);
+        if (!array_key_exists($teamId, $myTeams)) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have access right to this team."))->getResponse();
+        }
+
+        try {
+            $TeamMember->updateLastLogin($teamId, $userId);
+            $this->Session->write('current_team_id', $teamId);
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $jwt = $AuthService->recreateJwt($this->getJwtAuth());
+        } catch (Exception $e) {
+            GoalousLog::error('failed to switch team', [
+                'user_id' => $userId,
+                'switch_team_id' => $teamId,
+            ]);
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        $data = [
+            'token' => $jwt->token(),
+        ];
+
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 }
