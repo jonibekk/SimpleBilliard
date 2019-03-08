@@ -415,6 +415,17 @@ abstract class BaseApiController extends Controller
             $requestedVersion : ApiVer::getLatestApiVersion();
     }
 
+    /**
+     * Get requested Socket id for pusher
+     *
+     * @return string
+     */
+    protected function getSocketId(): string
+    {
+        $socketId = $this->request::header('X-Socket-Id');
+        return $socketId;
+    }
+
     private function hasAcceptLanguage(): bool
     {
         return !empty($this->request->header('Accept-Language'));

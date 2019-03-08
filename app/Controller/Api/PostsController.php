@@ -5,6 +5,7 @@ App::import('Service', 'PostLikeService');
 App::import('Service', 'PostReadService');
 App::import('Service', 'SavedPostService');
 App::import('Service', 'PostDraftService');
+App::import('Service', 'PusherService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service/Paging', 'PostLikesPagingService');
@@ -80,7 +81,7 @@ class PostsController extends BasePagingController
             }
 
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
-            $this->_notifyNewPost($res);
+            $this->_notifyNewPost($res, $circleId);
 
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -117,10 +118,12 @@ class PostsController extends BasePagingController
     /**
      * Notify new post to other members
      *
-     * @param array $newPost
+     * @param PostEntity $newPost
+     * @param int $circleId
      */
-    private function _notifyNewPost(PostEntity $newPost)
+    private function _notifyNewPost(PostEntity $newPost, int $circleId)
     {
+        $socketId = $this->getSocketId();
         // Notify to other members
         $postedPostId = $newPost['id'];
         $notifyType = NotifySetting::TYPE_FEED_POST;
@@ -128,9 +131,9 @@ class PostsController extends BasePagingController
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
 
-        // TODO: Realtime notification with WebSocket.
-        // But to implement, we have to decide how realize WebSocket at first
-        // e.g. use Pusher like old Goalous, or scratch implementing, etc
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        $PusherService->notifyNewPost($socketId, $newPost, $circleId);
     }
 
 
