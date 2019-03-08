@@ -5619,3 +5619,6 @@ msgstr "すべての通知を見る"
 
 msgid "No notifications"
 msgstr "通知がありません"
+
+msgid "Goals"
+msgstr "ゴール一覧"
