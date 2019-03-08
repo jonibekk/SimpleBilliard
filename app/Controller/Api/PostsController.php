@@ -298,6 +298,25 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withData($newPost)->getResponse();
     }
 
+    public function get_detail(int $postId): CakeResponse
+    {
+        $error = $this->validatePostAccess($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        $post = $Post->getById($postId);
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
+        $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_POST_RESOURCES, PostExtender::EXTEND_POST_SHARE_CIRCLE]);
+
+        return ApiResponse::ok()->withData($post)->getResponse();
+    }
+
     public function post_likes(int $postId): CakeResponse
     {
         $res = $this->validatePostAccess($postId);
