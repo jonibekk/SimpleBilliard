@@ -18,6 +18,7 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
+App::import('Lib/Pusher', 'NewPostNotifiable');
 
 use Goalous\Exception as GlException;
 
@@ -133,7 +134,10 @@ class PostsController extends BasePagingController
 
         /** @var PusherService $PusherService */
         $PusherService = ClassRegistry::init("PusherService");
-        $PusherService->notifyNewPost($socketId, $newPost, $circleId);
+        /** @var NewPostNotifiable $NewPostNotifiable */
+        $NewPostNotifiable = ClassRegistry::init("NewPostNotifiable");
+        $NewPostNotifiable->build($newPost, $circleId);
+        $PusherService->notify($socketId, $NewPostNotifiable);
     }
 
 
