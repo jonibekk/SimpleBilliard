@@ -26,13 +26,13 @@
         <li class="glHeaderPc-nav-menu">
             <a href="/search" class="glHeaderPc-nav-menu-link <?= Router::url() === '/search' ? 'active' : '' ?>" >
                 <i class="material-icons">search</i>
-                <span>Search</span>
+                <span><?= __('Search')?></span>
             </a>
         </li>
         <li class="glHeaderPc-nav-menu">
             <a id="GlHeaderMenuDropdown-Create" href="#" class="glHeaderPc-nav-menu-link" data-toggle="dropdown">
                 <i class="material-icons">add_circle</i>
-                <span>Create</span>
+                <span><?= __('Create')?></span>
             </a>
             <ul class="dropdown-menu glHeader-nav-dropdown"
                 aria-labelledby="GlHeaderMenuDropdown-Create">
@@ -71,7 +71,7 @@
         <li class="glHeaderPc-nav-menu has-notify-dropdown">
             <a href="#" class="glHeaderPc-nav-menu-link click-header-message" data-toggle="dropdown">
                 <i class="material-icons">send</i>
-                <span>Message</span>
+                <span><?= __('Message')?></span>
                 <div class="btn btn-xs notify-bell-numbers messageNum" style="opacity: 0;">
                     <span>0</span><sup class="notify-plus none">+</sup>
                 </div>
@@ -92,7 +92,7 @@
         <li class="glHeaderPc-nav-menu">
             <a href="/circles" class="glHeaderPc-nav-menu-link">
                 <i class="material-icons">group_work</i>
-                <span>Circle</span>
+                <span><?= __('Circle')?></span>
                 <?php // TODO.Renewal: Fix badge count processing when init display/realtime change  ?>
                 <?php if(!empty($circleBadgeCount)):?>
                     <div class="btn btn-xs notify-function-numbers mod-small">
@@ -107,7 +107,7 @@
         <li class="glHeaderPc-nav-menu has-notify-dropdown">
             <a href="#" class="glHeaderPc-nav-menu-link click-header-bell btn-notify-header" data-toggle="dropdown">
                 <i class="material-icons">notifications</i>
-                <span>Notification</span>
+                <span><?= __('Notification')?></span>
                 <?php // TODO.Renewal: Fix badge count processing when init display/realtime change ?>
                 <div class="btn btn-xs bell-notify-box notify-bell-numbers bellNum"
                      style="opacity: 0;">
@@ -159,7 +159,7 @@
            id="GlHeaderMenuDropdown-More"
             <?php if (!empty($userHasNoTeam) && $userHasNoTeam): ?> style="float:right; margin-right:8px;" <?php endif; ?>>
             <i class="material-icons">dehaze</i>
-            <span>More</span>
+            <span><?= __('More')?></span>
             <?php if (!empty($all_alert_cnt) && $all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span class="<?= $all_alert_cnt > 99 ? 'oval' : ''?>">
