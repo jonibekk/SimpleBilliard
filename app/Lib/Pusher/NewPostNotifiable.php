@@ -14,20 +14,18 @@ class NewPostNotifiable extends BaseNotifiable
     {
         switch ($post['type']) {
             case Enum\Model\Post\Type::NORMAL:
-                $this->eventName = "circle_feed";
+                $this->eventName = "circle_feed.new_post";
                 break;
             case Enum\Model\Post\Type::ACTION:
-                $this->eventName = "goal_feed";
+                $this->eventName = "goal_feed.new_post";
                 break;
         }
     }
     protected function setData(int $circleId = 0, PostEntity $post = null)
     {
-        $notifyId = Security::hash(time());
         $this->data = [
-            'notify_id' => $notifyId,
-            'circle_id' => $circleId,
-            'post_id' => $post['id']
+            'circle_id' => (string)$circleId,
+            'post_id' => (string)$post['id']
         ];
     }
 
