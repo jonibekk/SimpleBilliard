@@ -236,6 +236,35 @@ class CirclesController extends BasePagingController
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
+
+    /**
+     * Endpoint for resetting current user's unread count for target circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function put_reset_unread_count(int $circleId)
+    {
+        $error = $this->validateCircleJoined($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        try {
+            $CircleMember->updateUnreadCount($circleId, 0, $this->getUserId(), $this->getTeamId());
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        return ApiResponse::ok()->getResponse();
+    }
+
+
     /**
      * Get list of post drafts in a circle
      *
