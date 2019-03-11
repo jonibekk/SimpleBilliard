@@ -69,27 +69,4 @@ class PostReadServiceTest extends GoalousTestCase
         /** Already two readers in the fixtures*/
         $this->assertEquals(3, $res);
     }
-
-    public function test_multipleAddUpdatedUnreadCount_success()
-    {
-        $userId = 1;
-        $teamId = 1;
-        $circleId = 3;
-
-        /** @var PostReadService $PostReadService */
-        $PostReadService = ClassRegistry::init('PostReadService');
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $PostReadService->updateCircleUnreadCount([5], $userId, $teamId);
-
-        $this->assertEquals(3, $CircleMember->getUnreadCount($circleId, $userId));
-
-        $PostReadService->multipleAdd([5], $userId, $teamId);
-        $this->assertEquals(2, $CircleMember->getUnreadCount($circleId, $userId));
-        $PostReadService->multipleAdd([5], $userId, $teamId);
-        $this->assertEquals(2, $CircleMember->getUnreadCount($circleId, $userId));
-        $PostReadService->multipleAdd([6], $userId, $teamId);
-        $this->assertEquals(1, $CircleMember->getUnreadCount($circleId, $userId));
-    }
 }
