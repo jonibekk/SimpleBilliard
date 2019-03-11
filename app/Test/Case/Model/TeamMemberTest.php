@@ -1,6 +1,8 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamMember', 'Model');
 
+use Goalous\Enum as Enum;
+
 /**
  * TeamMember Test Case
  *
@@ -2220,5 +2222,58 @@ class TeamMemberTest extends GoalousTestCase
 
         $res = $this->TeamMember->getUserById($tmId);
         $this->assertEquals($res['id'], $userId);
+    }
+
+    public function test_filterActiveMembers()
+    {
+        $teamId = 1;
+        $allMemberIds = Hash::extract($this->TeamMember->find('all', [
+            'fields' => ['user_id'],
+            'conditions' => ['team_id' => $teamId]
+        ]), '{n}.TeamMember.user_id');
+
+        $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
+        $this->assertEquals($res, $allMemberIds);
+
+        $this->TeamMember->updateAll(
+            ['status' => Enum\Model\TeamMember\Status::INACTIVE],
+            ['user_id' => 3, 'team_id' => 1]
+        );
+        $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
+        $this->assertEquals(count($res), 4);
+        $diff = array_values(array_diff($allMemberIds, $res));
+        $this->assertEquals($diff, [3]);
+
+        $this->TeamMember->updateAll(
+            ['status' => Enum\Model\TeamMember\Status::INVITED],
+            ['user_id' => 1, 'team_id' => 1]
+        );
+        $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals($res, [2, 12, 13]);
+
+        $userId = $this->createActiveUser(1);
+        $tmId = $this->TeamMember->getLastInsertId();
+
+        $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals($res, [2, 12, 13]);
+
+        $allMemberIds[] = $userId;
+        $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res, [2, 12, 13, $userId]);
+
+    }
+    public function test_getUnique()
+    {
+        $res = $this->TeamMember->getUnique(1, 1);
+        $this->assertNotEmpty($res);
+        $this->assertEqual($res['user_id'], 1);
+        $this->assertEqual($res['team_id'], 1);
+
+        $res = $this->TeamMember->getUnique(99999, 100);
+        $this->assertEquals($res, []);
+
     }
 }

@@ -299,7 +299,8 @@ class AppModel extends Model
     public function generateToken(
         $length = 22,
         $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    ) {
+    )
+    {
         $token = "";
         $i = 0;
 
@@ -453,7 +454,8 @@ class AppModel extends Model
         bool $addDate = true,
         array $updateCounterCacheFields = [],
         int $chunkSize = 100
-    ): bool {
+    ): bool
+    {
         if (empty($data) || empty($data[0])) {
             return false;
         }
@@ -756,7 +758,7 @@ class AppModel extends Model
      *
      * @return array | BaseEntity
      */
-    private function postProcess(array $data = [])
+    private function postProcess($data = [])
     {
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
@@ -798,7 +800,7 @@ class AppModel extends Model
      */
     public function useType(): self
     {
-        $this->postProcessFunctions['type'] = function (array $data): array {
+        $this->postProcessFunctions['type'] = function ($data) {
             return $this->convertType($data);
         };
 
@@ -808,11 +810,11 @@ class AppModel extends Model
     /**
      * Convert data from string to configured ones
      *
-     * @param array $data
+     * @param array | BaseEntity $data
      *
-     * @return array
+     * @return array | BaseEntity
      */
-    protected function convertType(array $data): array
+    protected function convertType($data)
     {
         $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
 
@@ -855,7 +857,7 @@ class AppModel extends Model
      * @param array  $data
      * @param string $className Entity wrapper class name
      *
-     * @return array | BaseEntity
+     * @return BaseEntity[] | BaseEntity
      */
     protected function convertEntity(array $data, string $className = null)
     {
@@ -909,7 +911,7 @@ class AppModel extends Model
     {
         $conditions = [
             'conditions' => [
-                'id' => $id
+                $this->alias . '.id' => $id
             ]
         ];
         if ($excludeDeleted) {
@@ -922,7 +924,19 @@ class AppModel extends Model
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
-        return $return;
+        return $return ?: $this->entityWrapperClass;
+    }
+
+    /**
+     * Soft delete all entries by their team id
+     *
+     * @param int $teamId
+     */
+    public function softDeleteAllByTeamId(int $teamId)
+    {
+        if (!$this->softDeleteAll([$this->alias . '.team_id' => $teamId], false)) {
+            throw new RuntimeException();
+        }
     }
 
 }

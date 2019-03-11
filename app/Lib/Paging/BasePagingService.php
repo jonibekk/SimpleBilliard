@@ -24,7 +24,8 @@ abstract class BasePagingService implements PagingServiceInterface
         $pagingRequest,
         $limit = BasePagingController::DEFAULT_PAGE_LIMIT,
         $extendFlags = []
-    ): array {
+    ): array
+    {
 
         // Check whether exist current user id and team id
         $this->validatePagingResource($pagingRequest);
@@ -40,7 +41,7 @@ abstract class BasePagingService implements PagingServiceInterface
             $extendFlags = [$extendFlags];
         }
 
-        $this->beforeRead($pagingRequest);
+        $pagingRequest = $this->beforeRead($pagingRequest);
         $pagingRequest = $this->addDefaultValues($pagingRequest);
 
         $queryResult = $this->readData($pagingRequest, $limit + 1);
@@ -61,7 +62,7 @@ abstract class BasePagingService implements PagingServiceInterface
             $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
         }
 
-        $this->afterRead($pagingRequest);
+        $queryResult = $this->afterRead($queryResult, $pagingRequest);
 
         $finalResult['data'] = $queryResult;
 
@@ -91,11 +92,11 @@ abstract class BasePagingService implements PagingServiceInterface
      *
      * @param PagingRequest $pagingRequest
      *
-     * @return bool
+     * @return PagingRequest
      */
     protected function beforeRead(PagingRequest $pagingRequest)
     {
-        return true;
+        return $pagingRequest;
     }
 
     /**
@@ -108,7 +109,8 @@ abstract class BasePagingService implements PagingServiceInterface
         array $lastElement,
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
-    ): PointerTree {
+    ): PointerTree
+    {
         return new PointerTree([static::MAIN_MODEL . '.id', ">", $lastElement['id']]);
     }
 
@@ -116,13 +118,14 @@ abstract class BasePagingService implements PagingServiceInterface
      * Method to be called after reading data from db
      * Override to use
      *
+     * @param array         $queryResult
      * @param PagingRequest $pagingRequest
      *
-     * @return bool
+     * @return array
      */
-    protected function afterRead(PagingRequest $pagingRequest)
+    protected function afterRead(array $queryResult, PagingRequest $pagingRequest): array
     {
-        return true;
+        return $queryResult;
     }
 
     /**
@@ -148,9 +151,9 @@ abstract class BasePagingService implements PagingServiceInterface
      * Extend result arrays with additional contents
      * Override to use
      *
-     * @param array         $data Content to be extended
-     * @param PagingRequest $request     Conditions used for getting the result
-     * @param array         $options     Extension options
+     * @param array         $data    Content to be extended
+     * @param PagingRequest $request Conditions used for getting the result
+     * @param array         $options Extension options
      *
      * @return array
      */

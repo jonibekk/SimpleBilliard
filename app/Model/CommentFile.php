@@ -1,6 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
-App::import('Model/Entity', 'CommentFileENtity');
+App::import('Model/Entity', 'CommentFileEntity');
 
 /**
  * CommentFile Model
@@ -45,4 +45,23 @@ class CommentFile extends AppModel
         'team_id'          => DataType::INT,
         'index_num'        => DataType::INT
     ];
+
+    /**
+     * Get all comment files of a comment
+     *
+     * @param int $commentId
+     *
+     * @return CommentFileEntity[]
+     */
+    public function getAllCommentFiles(int $commentId): array
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId,
+                'del_flg'    => false
+            ]
+        ];
+
+        return $this->useType()->useEntity()->find('all', $condition);
+    }
 }

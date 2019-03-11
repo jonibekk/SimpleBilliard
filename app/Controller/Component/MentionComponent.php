@@ -1,6 +1,6 @@
 <?php
 App::uses('Component', 'Controller');
-
+App::uses('TeamMember', 'Model');
 /**
  * Class MentionComponent
  */
@@ -173,25 +173,36 @@ class MentionComponent extends Component
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
 
+        $userIds = [];
         foreach ($mentions as $key => $mention) {
             if ($mention['isUser']) {
                 $userId = $mention['id'];
                 if ($returnAsBelonging && $userId != $me) {
                     continue;
                 }
-                $result[] = $returnAsBelonging ? self::$USER_ID_PREFIX . self::$ID_DELIMITER . $userId : $userId;
+                $userIds[] = $userId;
             } else {
                 if ($mention['isCircle']) {
                     $notifyCircles[] = $mention['id'];
                 }
             }
         }
+        if (!empty($userIds)) {
+            /* @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+            $userIds = $TeamMember->filterActiveMembers($userIds, $teamId);
+
+            foreach ($userIds as $userId) {
+                $result[] = $returnAsBelonging ? self::$USER_ID_PREFIX . self::$ID_DELIMITER . $userId : $userId;
+            }
+        }
+
         if (!empty($notifyCircles)) {
             foreach ($notifyCircles as $circleId) {
+                /* @var PlainCircle $CircleMember */
                 $CircleMember = ClassRegistry::init('PlainCircle');
-                $circleMembers = $CircleMember->getMembers($circleId);
-                foreach ($circleMembers as $member) {
-                    $userId = $member['CircleMember']['user_id'];
+                $circleMemberIds = $CircleMember->getMembers($circleId);
+                foreach ($circleMemberIds as $userId) {
                     if ($returnAsBelonging && $userId != $me) {
                         continue;
                     }
@@ -201,6 +212,7 @@ class MentionComponent extends Component
                 }
             }
         }
+        $result = array_unique($result);
         return $result;
     }
 
@@ -256,8 +268,8 @@ class MentionComponent extends Component
             if ($isPublic) return $list;
             $circleMembers = $circleModel->getMembers($circleId);
             $members = array();
-            foreach ($circleMembers as $circleMember) {
-                $members[] = $circleMember['CircleMember']['user_id'];
+            foreach ($circleMembers as $userId) {
+                $members[] = $userId;
             }
             $filterMembers = array_merge($filterMembers, $members);
         }

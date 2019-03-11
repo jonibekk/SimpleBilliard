@@ -192,6 +192,68 @@ class CircleTest extends GoalousTestCase
         $this->assertNotEmpty($this->Circle->edit($edit_data));
     }
 
+    public function test_findByKeyword()
+    {
+        $allCircles = Hash::combine($this->Circle->find('all'), '{n}.Circle.id', '{n}.Circle.name');
+        $allCircleIds = array_keys($allCircles);
+        /* Japanese */
+        $res = $this->Circle->findByKeyword('チーム全体', 10, []);
+        $this->assertEmpty($res);
+
+        $res = $this->Circle->findByKeyword('チーム全体', 10, $allCircleIds);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+        $this->assertEquals($res[0]['name'], 'チーム全体');
+
+        $res = $this->Circle->findByKeyword('ち', 10, $allCircleIds);
+        $this->assertEmpty($res);
+
+        $res = $this->Circle->findByKeyword('全', 10, $allCircleIds);
+        $this->assertEmpty($res);
+
+        $res = $this->Circle->findByKeyword('チ', 10, $allCircleIds);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+
+        $res = $this->Circle->findByKeyword('チー', 10, $allCircleIds);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+
+        /* Alphabet */
+        // Uppercase
+        $res = $this->Circle->findByKeyword('l', 10, $allCircleIds);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals(Hash::extract($res, '{n}.id'), [15, 16, 17]);
+
+        // Lowercase
+        $res = $this->Circle->findByKeyword('L', 10, $allCircleIds);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals(Hash::extract($res, '{n}.id'), [15, 16, 17]);
+
+        // Perfect match
+        $res = $this->Circle->findByKeyword('Lorem ipsum dolor sit amet', 10, $allCircleIds);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals(Hash::extract($res, '{n}.id'), [15, 16, 17]);
+
+        /* Secret circles */
+        // Public flg: true
+        $res = $this->Circle->findByKeyword('秘', 10, $allCircleIds);
+        $this->assertEmpty($res);
+        // Public flg: false
+        $res = $this->Circle->findByKeyword('秘', 10, $allCircleIds, false);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals(Hash::extract($res, '{n}.id'), [4, 6]);
+
+        // Perfect match
+        $res = $this->Circle->findByKeyword('秘密サークル', 10, $allCircleIds, false);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals(Hash::extract($res, '{n}.id'), [4, 6]);
+
+        /* Only space */
+        $res = $this->Circle->findByKeyword(' ', 10, $allCircleIds, false);
+        $this->assertEmpty($res);
+    }
+
     public function testGetCirclesByKeyword()
     {
         $this->Circle->current_team_id = 1;
@@ -526,5 +588,46 @@ class CircleTest extends GoalousTestCase
 
         $circle = $Circle->getEntity(2);
         $this->assertTrue($newTime < $circle['latest_post_created']);
+    }
+
+
+    function test_getSharedSecretCircleByPostId()
+    {
+        // Exist
+        $res = $this->Circle->getSharedSecretCircleByPostId(7);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['id'], 4);
+        $this->assertEquals($res['name'], '秘密サークル');
+
+        // Not exist post in secret circle
+        $res = $this->Circle->getSharedSecretCircleByPostId(99);
+        $this->assertEquals($res, []);
+
+        // Post belongs to circle, but public circle
+        $res = $this->Circle->getSharedSecretCircleByPostId(1);
+        $this->assertEquals($res, []);
+
+        // Post doesn't belong to circle, action post
+        $res = $this->Circle->getSharedSecretCircleByPostId(8);
+        $this->assertEquals($res, []);
+    }
+
+    public function test_getEntity_success(){
+
+        $id = 1;
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $result = $Circle->getEntity($id);
+
+        $this->assertTrue($result instanceof BaseEntity);
+
+        $arrayForm = $result->toArray();
+
+        $this->assertInternalType('array',$arrayForm);
+
+        $this->assertEquals($id, $arrayForm['id']);
+        $this->assertNotEmpty($arrayForm['name']);
     }
 }

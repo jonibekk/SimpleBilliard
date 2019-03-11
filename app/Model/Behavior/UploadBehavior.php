@@ -358,7 +358,15 @@ class UploadBehavior extends ModelBehavior
             'attachment' => Inflector::pluralize($field),
             'hash'       => md5((!empty($filename) ? $pathinfo['filename'] : "") . Configure::read('Security.salt'))
         ), $defaults);
-        $settings = self::$__settings[$modelName][$field];
+            $settings = self::$__settings[$modelName][$field] ??
+                [
+                    'path'                   => ':webroot/upload/:model/:id/:hash_:style.:extension',
+                    'styles'                 => [],
+                    'resizeToMaxWidth'       => false,
+                    'quality'                => 75,
+                    'alpha'                  => false,
+                    'addFieldNameOnFileName' => true,
+                ];
         $keys = array('path', 'url', 'default_url');
         foreach ($interpolations as $k => $v) {
             foreach ($keys as $key) {
@@ -383,7 +391,10 @@ class UploadBehavior extends ModelBehavior
             ));
             $pathinfo = pathinfo("");
         } else {
+            $orig_locale = setlocale(LC_CTYPE, 0);
+            setlocale(LC_CTYPE, 'C.UTF-8');
             $pathinfo = pathinfo($filename);
+            setlocale(LC_CTYPE, $orig_locale);
         }
         // PHP < 5.2.0 doesn't include 'filename' key in pathinfo. Let's try to fix this.
         if (empty($pathinfo['filename'])) {

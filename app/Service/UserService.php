@@ -2,6 +2,10 @@
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
+App::uses("Circle", 'Model');
+App::import('Lib/DataExtender', 'MeExtender');
+App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'UserService');
 
 use Goalous\Enum as Enum;
 
@@ -11,9 +15,43 @@ use Goalous\Enum as Enum;
 class UserService extends AppService
 {
     /**
+     * Get single data based on model.
+     * extend data
+     *
+     * @param UserResourceRequest $req
+     * @param array               $extensions
+     *
+     * @return array
+     */
+    public function get(UserResourceRequest $req, array $extensions = []): array
+    {
+        $userId = $req->getId();
+        $teamId = $req->getTeamId();
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $fields = $req->isMe() ? $User->loginUserFields : $User->profileFields;
+        $data = $this->_getWithCache($userId, 'User', $fields);
+        if (empty($data)) {
+            return [];
+        }
+
+        if ($req->isMe()) {
+            /** @var MeExtender $MeExtender */
+            $MeExtender = ClassRegistry::init('MeExtender');
+
+            $data = $MeExtender->extend($data, $userId, $teamId, $extensions);
+        } else {
+            // TODO: create UserExtender
+        }
+        return $data;
+    }
+
+    /**
      * Getting user names as string from user id list.
      *
-     * @param array  $userIds   e.g. [1,2,3]
+     * @param array $userIds e.g. [1,2,3]
      * @param string $delimiter
      * @param string $fieldName it should be included in user profile fields.
      *
@@ -32,9 +70,9 @@ class UserService extends AppService
     /**
      * find topic new members for select2 on message
      *
-     * @param  string  $keyword
+     * @param  string $keyword
      * @param  integer $limit
-     * @param  int     $topicId
+     * @param  int $topicId
      * @param  boolean $withGroup
      *
      * @return array
@@ -87,5 +125,39 @@ class UserService extends AppService
             $this->TransactionManager->rollback();
             throw $exception;
         }
+    }
+
+
+    /**
+     * Search users for mention by keyword
+     *
+     * @param string $keyword
+     * @param int $teamId
+     * @param int $userId
+     * @param int $limit
+     * @param int|null $postId: Affection range by post (especially post is in secret circle, search range is only target secret circle members)
+     * @return array
+     */
+    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $postId = null) : array
+    {
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        if (!empty($postId)) {
+            $circle = $Circle->getSharedSecretCircleByPostId($postId);
+            $secretCircleId = !empty($circle) && $circle['public_flg'] === false ? $circle['id'] : null;
+        } else {
+            $secretCircleId = null;
+        }
+
+        $users = $User->findByKeywordRangeCircle($keyword, $teamId, $userId, $limit, true, $secretCircleId);
+        return $users;
     }
 }

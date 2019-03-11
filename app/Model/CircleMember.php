@@ -110,32 +110,6 @@ class CircleMember extends AppModel
     }
 
     /**
-     * Get list of circle that a given user joined to in a team
-     *
-     * @param int  $userId
-     * @param int  $teamId
-     * @param bool $checkHideStatus Whether circle's hidden status is checked or not
-     *
-     * @return array List of circle IDs
-     */
-    public function getUserCircleList(int $userId, int $teamId, bool $checkHideStatus = false)
-    {
-        $options = [
-            'conditions' => [
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ],
-            'fields'     => ['circle_id'],
-        ];
-
-        if ($checkHideStatus) {
-            $options['conditions']['show_for_all_feed_flg'] = $checkHideStatus;
-        }
-
-        return $this->find('list', $options);
-    }
-
-    /**
      * 自分が所属しているサークルを返す
      *
      * @param array $params
@@ -897,5 +871,35 @@ class CircleMember extends AppModel
         }
 
         return $res['CircleMember']['unread_count'];
+    }
+
+    /**
+     * Get notification flg of an user in a circle
+     *
+     * @param int $circleId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function getNotificationFlg(int $circleId, int $userId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'circle_id' => $circleId,
+                'user_id'   => $userId,
+                'del_flg'   => false
+            ],
+            'fields'     => [
+                'get_notification_flg'
+            ]
+        ];
+
+        $res = $this->useType()->find('first', $condition);
+
+        if (empty($res['CircleMember']['get_notification_flg'])) {
+            return false;
+        }
+
+        return $res['CircleMember']['get_notification_flg'];
     }
 }

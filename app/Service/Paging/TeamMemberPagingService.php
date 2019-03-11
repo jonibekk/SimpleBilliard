@@ -142,6 +142,7 @@ class TeamMemberPagingService extends BasePagingService
     protected function beforeRead(PagingRequest $pagingRequest)
     {
         $pagingRequest->addQueriesToCondition(['excluded_ids', 'active_only']);
+        return $pagingRequest;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest

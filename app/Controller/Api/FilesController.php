@@ -5,6 +5,7 @@ App::import('Service', 'UploadService');
 App::import('Service', 'AttachedFileService');
 App::uses('HttpSocket', 'Network/Http');
 App::import('Validator/Lib/Storage', 'UploadValidator');
+App::import('Service', 'VideoStreamService');
 
 /**
  * Class FilesController
@@ -84,10 +85,42 @@ class FilesController extends BaseApiController
     public function post_upload()
     {
         $file = Hash::get($this->request->params, 'form.file');
-
+        $allowVideo = $this->request->data('allow_video');
         $error = $this->validatePost($file);
         if (!empty($error)) {
             return $error;
+        }
+
+
+        $isVideo = $this->isVideo($file['tmp_name']);
+        // Uploading video to transcode
+        if ($allowVideo && $isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+            /** @var VideoStreamService $VideoStreamService */
+            $VideoStreamService = ClassRegistry::init('VideoStreamService');
+
+            try {
+                $videoStream = $VideoStreamService->uploadVideoStream(
+                    $file,
+                    $this->getUserId(),
+                    $this->getTeamId());
+                GoalousLog::info('video uploaded stream', [
+                    'video_streams.id' => $videoStream['id'],
+                ]);
+                return ApiResponse::ok()
+                    ->withData([
+                        "is_video" => true,
+                        "video_stream_id" => $videoStream['id']
+                    ])
+                    ->getResponse();
+            } catch (Exception $e) {
+                GoalousLog::error('upload new video stream failed', [
+                    'message' => $e->getMessage(),
+                    'users.id' => $this->getUserId(),
+                    'teams.id' => $this->getTeamId(),
+                ]);
+                GoalousLog::error($e->getTraceAsString());
+                return ErrorResponse::badRequest()->getResponse();
+            }
         }
 
         /** @var UploadService $UploadService */
@@ -150,5 +183,32 @@ class FilesController extends BaseApiController
         }
 
         return null;
+    }
+
+
+    /**
+     * Decide the posted file is video file or not
+     *
+     * @param string $filePath
+     * Posted file data array from 'multipart/form-data'
+     * $requestFileUpload should be the
+     * value get from Hash::get($this->request->params, 'form');
+     *
+     * @return bool
+     */
+    public function isVideo(string $filePath): bool
+    {
+        // Do not trust the ['file']['type'](= mime-type) value posted from browser
+        // ['file']['type'] is resolved from only by file extension in several browser
+
+        // TODO:
+        // Investigating more certainty if the file is video or not.
+        // We should use ffmpeg/ffprove
+
+        // checking in mime-types in the file for more certain info
+        $fileMimeType = mime_content_type($filePath);
+        $fileMimeType = strtolower($fileMimeType);
+        $allowVideoTypes = Configure::read("allow_video_types");
+        return in_array($fileMimeType, $allowVideoTypes);
     }
 }

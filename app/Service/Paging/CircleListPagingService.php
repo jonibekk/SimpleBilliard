@@ -1,64 +1,14 @@
 <?php
-App::import('Lib/Paging', 'BasePagingService');
+App::import('Lib/Paging', 'BaseGetAllService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/28
- * Time: 11:23
- */
-class CircleListPagingService extends BasePagingService
+class CircleListPagingService extends BaseGetAllService
 {
     const MAIN_MODEL = 'Circle';
-
-    /**
-     * Get all circles and not including with paging data
-     *
-     * @param       $pagingRequest
-     * @param array $extendFlags
-     *
-     * @return array
-     */
-    public function getAllData(
-        $pagingRequest,
-        $extendFlags = []
-    ): array
-    {
-        // Check whether exist current user id and team id
-        $this->validatePagingResource($pagingRequest);
-
-        $finalResult = [
-            'data' => [],
-            'paging' => '',
-            'count' => 0
-        ];
-
-        //If only 1 flag is given, make it an array
-        if (!is_array($extendFlags)) {
-            $extendFlags = [$extendFlags];
-        }
-
-        $this->beforeRead($pagingRequest);
-        $pagingRequest = $this->addDefaultValues($pagingRequest);
-
-        $queryResult = $this->readData($pagingRequest, 0);
-        $finalResult['count'] = count($queryResult);
-
-        if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
-        }
-
-        $this->afterRead($pagingRequest);
-
-        $finalResult['data'] = $queryResult;
-
-        return $finalResult;
-    }
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
@@ -180,36 +130,6 @@ class CircleListPagingService extends BasePagingService
         return $searchConditions;
     }
 
-    protected function countData(PagingRequest $request): int
-    {
-        $options = $this->createSearchCondition($request);
-
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-
-        return (int)$Circle->find('count', $options);
-    }
-
-    protected function createPointer(
-        array $lastElement,
-        array $headNextElement = [],
-        PagingRequest $pagingRequest = null
-    ): PointerTree
-    {
-
-        $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
-
-        if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
-            $lastElement['latest_post_created'] == $prevLatestPost) {
-            $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
-            $condition = new PointerTree('AND', $orCondition,
-                ['latest_post_created', '<=', $lastElement['latest_post_created']]);
-            return $condition;
-        } else {
-            return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
-        }
-    }
-
     protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
         $userId = $request->getResourceId() ?: $request->getCurrentUserId();
@@ -228,6 +148,7 @@ class CircleListPagingService extends BasePagingService
     protected function beforeRead(PagingRequest $pagingRequest)
     {
         $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
+        return $pagingRequest;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest

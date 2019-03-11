@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 
 /**
  * Class CampaignTeam
- *
  * Teams applicable to campaigns
  * キャンペーン適用チーム
  */
@@ -22,7 +21,7 @@ class CampaignTeam extends AppModel
 
         $now = GoalousDateTime::now();
         $start = new GoalousDateTime($campaignTeam['start_date']);
-        if (!empty($campaignTeam) &&  $now->greaterThanOrEqualTo($start)) {
+        if (!empty($campaignTeam) && $now->greaterThanOrEqualTo($start)) {
             return true;
         }
         return false;
@@ -32,22 +31,23 @@ class CampaignTeam extends AppModel
      * find price plans belongs team campaign group
      *
      * @param int $teamId
+     *
      * @return array
      */
     function findPricePlans(int $teamId): array
     {
         $options = [
-            'fields'     => [
+            'fields' => [
                 'ViewCampaignPricePlan.id',
                 'ViewCampaignPricePlan.code',
                 'ViewCampaignPricePlan.price',
                 'ViewCampaignPricePlan.max_members',
                 'ViewCampaignPricePlan.currency',
             ],
-            'order'      => [
+            'order'  => [
                 'ViewCampaignPricePlan.max_members ASC'
             ],
-            'joins'      => [
+            'joins'  => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'view_price_plans',
@@ -70,7 +70,7 @@ class CampaignTeam extends AppModel
     /**
      * Check is allowed price plan as team campaign groups
      *
-     * @param int $teamId
+     * @param int    $teamId
      * @param string $pricePlanCode
      *
      * @return bool
@@ -78,18 +78,18 @@ class CampaignTeam extends AppModel
     function isTeamPricePlan(int $teamId, string $pricePlanCode): bool
     {
         $options = [
-            'fields'     => [
+            'fields' => [
                 'ViewCampaignPricePlan.id'
             ],
-            'joins'      => [
+            'joins'  => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'view_price_plans',
                     'alias'      => 'ViewCampaignPricePlan',
                     'conditions' => [
                         'ViewCampaignPricePlan.group_id = CampaignTeam.price_plan_group_id',
-                        'CampaignTeam.team_id'     => $teamId,
-                        'CampaignTeam.del_flg'     => false,
+                        'CampaignTeam.team_id'       => $teamId,
+                        'CampaignTeam.del_flg'       => false,
                         'ViewCampaignPricePlan.code' => $pricePlanCode
                     ],
                 ],

@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Model/Entity', 'PostEntity');
 
 /**
  * Post Model
@@ -35,6 +36,7 @@ App::import('Service', 'PostService');
 
 use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\Post\PostResourceType as PostResourceType;
 
 class Post extends AppModel
 {
@@ -762,13 +764,12 @@ class Post extends AppModel
             $res[$key] = am($post, [
                 'PostResources' => $postResources[$post['Post']['id']] ?? [],
             ]);
-            // check if post_resource have a video or not
-            // TODO: https://jira.goalous.com/browse/GL-6601
             $res[$key]['hasVideoResource'] = false;
             foreach ($res[$key]['PostResources'] as $resource) {
-                // we have only video resource now, if in the loop, we have video resource
-                $res[$key]['hasVideoResource'] = true;
-                break;
+                if ($resource['resource_type'] === PostResourceType::VIDEO_STREAM) {
+                    $res[$key]['hasVideoResource'] = true;
+                    break;
+                }
             }
         }
 

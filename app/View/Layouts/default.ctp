@@ -45,8 +45,7 @@ if (in_array($this->request->params['controller'], ['topics', 'saved_items']) &&
         <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <div id="leftSideContainerInner" class="">
                 <?= $this->element('dashboard_profile_card') ?>
-                <?= $this->element('dashboard_saved_item') ?>
-                <?= $this->element('circle_list') ?>
+                <?= $this->element('dashboard_menu_list') ?>
             </div>
         </div>
         <?php endif; ?>

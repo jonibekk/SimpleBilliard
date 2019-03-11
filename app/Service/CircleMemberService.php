@@ -213,4 +213,53 @@ class CircleMemberService extends AppService
 
         return $res;
     }
+
+    /**
+     * Set notification setting for an user in a circle
+     *
+     * @param int  $circleId
+     * @param int  $userId
+     * @param bool $notificationFlg
+     *
+     * @throws Exception
+     */
+    public function setNotificationSetting(int $circleId, int $userId, bool $notificationFlg)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $newData = [
+            'get_notification_flg' => $notificationFlg,
+            'modified'             => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $condition = [
+            'CircleMember.user_id'   => $userId,
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.del_flg'   => false
+        ];
+
+        $circleMember = $CircleMember->find('first', ['conditions' => $condition]);
+
+        if (empty($circleMember)) {
+            throw new GlException\GoalousNotFoundException(__("Not exist"));
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $result = $CircleMember->updateAll($newData, $condition);
+            if (!$result) {
+                throw new RuntimeException("Failed to set notification setting of user $userId in circle $circleId");
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to set notification",
+                [
+                    "message" => $exception->getMessage(),
+                    "trace"   => $exception->getTrace()
+                ]);
+            throw $exception;
+        }
+    }
 }

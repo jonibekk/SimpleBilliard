@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+  // Save jwt to local storage before move to new Goalous
+  if(cake.jwt_token) {
+    localStorage.setItem('token', cake.jwt_token);
+  }
+
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});

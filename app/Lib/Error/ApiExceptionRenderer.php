@@ -39,6 +39,12 @@ class ApiExceptionRenderer extends ExceptionRenderer
             case 'MissingActionException':
             case 'MissingControllerException':
                 $message = __('Api Endpoint not found.');
+                //TODO GL-7836 In rare case, API endpoint is reported as missing
+                $errorData = [
+                    'URI'   => $_SERVER['REQUEST_URI'],
+                    'trace' => $error->getTrace()
+                ];
+                CakeLog::error($message, $errorData);
                 break;
             case 'BadRequestException':
                 if ($message == 'The request has been black-holed') {

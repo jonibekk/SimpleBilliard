@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+use Goalous\Enum as Enum;
 
 /**
  * PlainCircle Model
@@ -11,9 +12,8 @@ App::uses('AppModel', 'Model');
 class PlainCircle extends AppModel {
     public $useTable = 'circles';
     
-    public function getMembers(string $id) {
+    public function getMembers(int $circleId): array {
         $members = $this->find('all', [
-            'conditions' => ['PlainCircle.id' => $id],
             'joins'      => [
                 [
                     'table' => 'circle_members',
@@ -21,15 +21,38 @@ class PlainCircle extends AppModel {
                     'foreignKey' => false,
                     'conditions'=> [
                         'PlainCircle.id = CircleMember.circle_id',
+                        'PlainCircle.id' => $circleId,
+                        'CircleMember.del_flg' => false
+                    ]
+                ],
+                [
+                    'table' => 'team_members',
+                    'alias' => 'TeamMember',
+                    'conditions'=> [
+                        'CircleMember.team_id = TeamMember.team_id',
+                        'CircleMember.user_id = TeamMember.user_id',
+                        'TeamMember.status'  => Enum\Model\TeamMember\Status::ACTIVE,
+                        'TeamMember.del_flg' => false,
+                    ]
+                ],
+                [
+                    'table' => 'users',
+                    'alias' => 'User',
+                    'conditions'=> [
+                        'TeamMember.user_id = User.id',
+                        'User.active_flg' => true,
+                        'User.del_flg' => false,
                     ]
                 ],
             ],
             'fields'    => [
-                'CircleMember.circle_id',
-                'CircleMember.id',
                 'CircleMember.user_id'
             ]
         ]);
-        return $members;
+
+        if (empty($members)) {
+            return [];
+        }
+        return Hash::extract($members, '{n}.CircleMember.user_id');
     }
 }
