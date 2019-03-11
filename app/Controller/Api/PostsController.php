@@ -300,7 +300,7 @@ class PostsController extends BasePagingController
         /** @var PostExtender $PostExtender */
         $PostExtender = ClassRegistry::init('PostExtender');
 
-        $newPost = $PostExtender->extend($newPost->toArray(), $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_POST_RESOURCES]);
+        $newPost = $PostExtender->extend($newPost->toArray(), $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_ALL]);
 
         return ApiResponse::ok()->withData($newPost)->getResponse();
     }
