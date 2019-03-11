@@ -19,6 +19,7 @@ App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewPostNotifiable');
+App::import('Lib/Pusher', 'NewCommentNotifiable');
 
 use Goalous\Exception as GlException;
 
@@ -865,6 +866,14 @@ class PostsController extends BasePagingController
                 $this->notifyUserOfGoalComment($userId, $postId);
                 break;
         }
+
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        /** @var NewCommentNotifiable $NewCommentNotifiable */
+        $socketId = $this->getSocketId();
+        $NewCommentNotifiable = ClassRegistry::init("NewCommentNotifiable");
+        $NewCommentNotifiable->build($commentId, $postId, $teamId);
+        $PusherService->notify($socketId, $NewCommentNotifiable);
     }
 
     /**

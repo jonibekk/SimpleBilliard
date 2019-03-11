@@ -2086,6 +2086,23 @@
         }, {
           "$ref" : "#/components/parameters/Paging.Cursor"
         }, {
+          "name" : "cursor_comment_id",
+          "in" : "query",
+          "description" : "base comment id as cursor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "direction for data getting. (ord or new)",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "old", "new" ]
+          }
+        }, {
           "name" : "extoption",
           "in" : "query",
           "required" : false,
