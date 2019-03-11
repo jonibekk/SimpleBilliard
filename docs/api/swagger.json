@@ -244,6 +244,42 @@
         }
       }
     },
+    "/api/circles/{circle.id}/reset_unread_count" : {
+      "put" : {
+        "tags" : [ "Circles" ],
+        "summary" : "Reset circle posts unread count of current user",
+        "description" : "Reset circle posts unread count of current user",
+        "operationId" : "/api/circles/{circle.id}/reset_unread_count",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : ""
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.Member.Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/circles/{circle.id}/remove_members" : {
       "post" : {
         "tags" : [ "Circles" ],
@@ -3764,7 +3800,7 @@
       "Model.Me" : {
         "description" : "Logged in user info",
         "allOf" : [ {
-          "$ref" : "#/components/schemas/Model.UserProfile"
+          "$ref" : "#/components/schemas/Model.User.Profile"
         }, {
           "type" : "object",
           "properties" : {
@@ -3786,7 +3822,7 @@
               "default" : false
             },
             "current_team_member_own": {
-              "$ref": "#/components/schemas/Mode.TeamMember"
+              "$ref": "#/components/schemas/Model.TeamMember"
             },
             "my_active_teams": {
               "type": "object",
@@ -3800,7 +3836,7 @@
               }
             },
             "notify_setting": {
-              "$ref": "#/components/schemas/Mode.NotifySetting"
+              "$ref": "#/components/schemas/Model.NotifySetting"
             }
           }
         }],
