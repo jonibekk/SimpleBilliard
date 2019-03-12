@@ -308,11 +308,13 @@ class CircleServiceTest extends GoalousTestCase
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
-        $circle = $CircleService->get($circleId,1);
+        $circle = $CircleService->get($circleId,new UserResourceRequest(1,1, true));
 
         $this->assertEquals($circleId, $circle['id']);
         $this->assertNotEmpty($circle['img_url']);
         $this->assertNotEmpty($circle['is_member']);
+        $this->assertArrayHasKey('get_notification_flg', $circle);
+        $this->assertArrayHasKey('admin_flg', $circle);
     }
 
 
