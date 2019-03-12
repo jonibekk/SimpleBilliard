@@ -4,32 +4,32 @@ $footerMenuList = [
         'name' => 'home',
         'url'  => '/',
         'icon' => '',
-        'label' => 'Home'
+        'label' => __('Home')
 
     ],
     [
         'name' => 'messages',
         'url'  => '/topics',
         'icon' => 'send',
-        'label' => 'Message'
+        'label' => __('Message')
     ],
     [
         'name' => 'circles',
         'url'  => '/circles',
         'icon' => 'group_work',
-        'label' => 'Circles'
+        'label' => __('Circle')
     ],
     [
         'name' => 'notifications',
         'url'  => '/notifications',
         'icon' => 'notifications',
-        'label' => 'Notifications'
+        'label' => __('Notification')
     ],
     [
         'name' => 'more',
         'url'  => '/others',
         'icon' => 'dehaze',
-        'label' => 'More'
+        'label' => __('More')
     ],
 ];
 
@@ -37,7 +37,7 @@ $badgeCounts = [
     'messages' => $new_notify_message_cnt,
     'notifications' => Router::url() === '/notifications' ? 0 : $new_notify_cnt,
     'circles' => 0, // TODO.Renewal: set
-    'more' => 0, // TODO.Renewal: set
+    'more' => $all_alert_cnt
 ]
 ?>
 

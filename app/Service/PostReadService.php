@@ -117,7 +117,8 @@ class PostReadService extends AppService
 
                 $PostRead->updateReadersCountMultiplePost($unreadPostIds);
 
-                $this->updateCircleUnreadCount($unreadPostIds, $userId, $teamId);
+                // Deal unread count as unrelated post_reads record
+//                $this->updateCircleUnreadCount($unreadPostIds, $userId, $teamId);
 
                 $this->TransactionManager->commit();
 

@@ -1917,7 +1917,7 @@ msgstr "検索中･･･"
 msgid "Following"
 msgstr "フォロー中"
 
-msgid "More"
+msgid "More "
 msgstr "もっと見る"
 
 msgid "View previous posts ▼"
@@ -2082,7 +2082,7 @@ msgstr "画像を選択"
 msgid "Reselect an image"
 msgstr "画像を再選択"
 
-msgid "Create"
+msgid "Create "
 msgstr "作成する"
 
 msgid "Initial point"
@@ -5622,3 +5622,13 @@ msgstr "通知がありません"
 
 msgid "Goals"
 msgstr "ゴール一覧"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "More"
+msgstr "その他"
+
+msgid "Create"
+msgstr "作成"
+
