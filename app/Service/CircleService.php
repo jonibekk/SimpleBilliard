@@ -498,7 +498,7 @@ class CircleService extends AppService
         $CircleMember = ClassRegistry::init('CircleMember');
         $circle['is_member'] = $CircleMember->isJoined($circleId, $userId);
         $circle['get_notification_flg'] = $CircleMember->getNotificationFlg($circle['id'], $userId);
-
+        $circle['admin_flg'] = $CircleMember->isAdmin($userId, $circleId);
         $memberCountEachCircle = $this->getMemberCountEachCircle([$circleId]);
         $circle['circle_member_count'] = $memberCountEachCircle[$circleId];
 
