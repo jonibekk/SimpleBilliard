@@ -633,7 +633,7 @@ class PostService extends AppService
 
         $post = $Post->findById($postId);
         if (empty($post)) {
-            throw new GlException\GoalousNotFoundException("This post doesn't exist.");
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
         $circleOption = [
