@@ -1933,9 +1933,214 @@
       }
     },
     "/api/posts/{post.id}" : {
+      "get" : {
+        "tags" : [ "Posts" ],
+        "summary" : "Get single post data",
+        "description" : "For get single post detail data",
+        "operationId" : "/api/posts/{post.id}",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Post.Id"
+        } ],
+        "requestBody" : {
+          "description" : "New post body",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "body" : {
+                    "type" : "string",
+                    "minLength" : 1,
+                    "maxLength" : 10000
+                  }
+                }
+              },
+              "example" : {
+                "body" : "The quick brown fox jumps over the lazily build PHP code ver 3"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get post",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Post"
+                    }
+                  }
+                },
+                "example" : {
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "type": "1",
+                    "comment_count": "3",
+                    "post_like_count": "0",
+                    "post_read_count": "0",
+                    "important_flg": false,
+                    "goal_id": "",
+                    "circle_id": "",
+                    "action_result_id": "",
+                    "key_result_id": "",
+                    "photo1_file_name": null,
+                    "photo2_file_name": null,
+                    "photo3_file_name": null,
+                    "photo4_file_name": null,
+                    "photo5_file_name": null,
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    },
+                    "comments": {
+                      "data": [
+                        {
+                          "id": "43",
+                          "post_id": "71943",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "body": "asdfa",
+                          "comment_like_count": 0,
+                          "comment_read_count": 0,
+                          "photo1_file_name": null,
+                          "photo2_file_name": null,
+                          "photo3_file_name": null,
+                          "photo4_file_name": null,
+                          "photo5_file_name": null,
+                          "site_info": null,
+                          "site_photo_file_name": null,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1552326677,
+                          "modified": 1552326677,
+                          "user": {
+                            "id": "614",
+                            "first_name": "Taro",
+                            "last_name": "Gorasu",
+                            "photo_file_name": null,
+                            "cover_photo_file_name": null,
+                            "language": "jpn",
+                            "auto_language_flg": false,
+                            "romanize_flg": false,
+                            "display_first_name": "Taro",
+                            "display_last_name": "Gorasu",
+                            "display_username": "Taro Gorasu",
+                            "local_username": null,
+                            "roman_username": "Taro Gorasu",
+                            "last_first": true,
+                            "profile_img_url": {
+                              "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                            }
+                          },
+                          "is_liked": false,
+                          "is_read": true,
+                          "attached_files": [],
+                          "mentions_to_me": []
+                        }
+                      ],
+                      "cursor": "",
+                      "count": 1
+                    },
+                    "attached_files": [],
+                    "resources": [],
+                    "is_liked": false,
+                    "is_saved": false,
+                    "is_read": true,
+                    "shared_circles": [
+                      {
+                        "id": "502",
+                        "team_id": "66",
+                        "name": "\u30c1\u30fc\u30e0\u5168\u4f53",
+                        "description": "Circle description",
+                        "photo_file_name": null,
+                        "public_flg": true,
+                        "team_all_flg": true,
+                        "circle_member_count": 3,
+                        "latest_post_created": 1552326655,
+                        "del_flg": false,
+                        "deleted": null,
+                        "created": 1534133785,
+                        "modified": 1552326655,
+                        "img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D"
+                        },
+                        "is_member": true,
+                        "get_notification_flg": true
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      },
       "put" : {
         "tags" : [ "Posts" ],
-        "summary" : "/api/posts/{post.id}",
+        "summary" : "Edit single post",
         "description" : "For editing post content\nFor the moment, only able to update its text body",
         "operationId" : "/api/posts/{post.id}",
         "parameters" : [ {
@@ -1978,19 +2183,141 @@
                   }
                 },
                 "example" : {
-                  "data" : {
-                    "type" : 1,
-                    "comment_count" : 0,
-                    "post_like_count" : 0,
-                    "post_read_count" : 0,
-                    "important_flg" : false,
-                    "del_flg" : false,
-                    "created" : 1534154797,
-                    "modified" : 1534154797,
-                    "body" : "The quick brown fox jumps over the lazily build PHP code 2",
-                    "user_id" : 1,
-                    "team_id" : 1,
-                    "id" : 55
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "type": "1",
+                    "comment_count": "3",
+                    "post_like_count": "0",
+                    "post_read_count": "0",
+                    "important_flg": false,
+                    "goal_id": "",
+                    "circle_id": "",
+                    "action_result_id": "",
+                    "key_result_id": "",
+                    "photo1_file_name": null,
+                    "photo2_file_name": null,
+                    "photo3_file_name": null,
+                    "photo4_file_name": null,
+                    "photo5_file_name": null,
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    },
+                    "comments": {
+                      "data": [
+                        {
+                          "id": "43",
+                          "post_id": "71943",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "body": "asdfa",
+                          "comment_like_count": 0,
+                          "comment_read_count": 0,
+                          "photo1_file_name": null,
+                          "photo2_file_name": null,
+                          "photo3_file_name": null,
+                          "photo4_file_name": null,
+                          "photo5_file_name": null,
+                          "site_info": null,
+                          "site_photo_file_name": null,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1552326677,
+                          "modified": 1552326677,
+                          "user": {
+                            "id": "614",
+                            "first_name": "Taro",
+                            "last_name": "Gorasu",
+                            "photo_file_name": null,
+                            "cover_photo_file_name": null,
+                            "language": "jpn",
+                            "auto_language_flg": false,
+                            "romanize_flg": false,
+                            "display_first_name": "Taro",
+                            "display_last_name": "Gorasu",
+                            "display_username": "Taro Gorasu",
+                            "local_username": null,
+                            "roman_username": "Taro Gorasu",
+                            "last_first": true,
+                            "profile_img_url": {
+                              "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                            }
+                          },
+                          "is_liked": false,
+                          "is_read": true,
+                          "attached_files": [],
+                          "mentions_to_me": []
+                        }
+                      ],
+                      "cursor": "",
+                      "count": 1
+                    },
+                    "attached_files": [],
+                    "resources": [],
+                    "is_liked": false,
+                    "is_saved": false,
+                    "is_read": true,
+                    "shared_circles": [
+                      {
+                        "id": "502",
+                        "team_id": "66",
+                        "name": "\u30c1\u30fc\u30e0\u5168\u4f53",
+                        "description": "Circle description",
+                        "photo_file_name": null,
+                        "public_flg": true,
+                        "team_all_flg": true,
+                        "circle_member_count": 3,
+                        "latest_post_created": 1552326655,
+                        "del_flg": false,
+                        "deleted": null,
+                        "created": 1534133785,
+                        "modified": 1552326655,
+                        "img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D"
+                        },
+                        "is_member": true,
+                        "get_notification_flg": true
+                      }
+                    ]
                   }
                 }
               }
