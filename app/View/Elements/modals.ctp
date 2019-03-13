@@ -13,10 +13,6 @@
  * @var View $this
  */
 echo $this->element('modal_tutorial');
-//チーム参加済みの場合
-if ($this->Session->read('current_team_id')) {
-    echo $this->element('modal_add_circle');
-}
 echo "<div id='layerBlack' onclick='toggleNav()'></div>";
 echo $this->App->viewEndComment();
 

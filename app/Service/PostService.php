@@ -628,6 +628,13 @@ class PostService extends AppService
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $post = $Post->findById($postId);
+        if (empty($post)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
 
         $circleOption = [
             'conditions' => [

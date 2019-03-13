@@ -980,6 +980,48 @@ class PostsController extends AppController
                     $this->request->params)
             ]);
 
+            // If specified post_id, showing post detail.
+            if (!empty($this->request->params['post_id'])) {
+                $postId = $this->request->params['post_id'];
+                /** @var Post $Post */
+                $Post = ClassRegistry::init('Post');
+                $post = $Post->findById($postId);
+                $url = sprintf('/posts/%s?%s', $postId, http_build_query($this->request->query));
+                if (ENV_NAME == 'local') {
+                    $url = "http://local.goalous.com:5790".$url;
+                }
+                do {
+                    if (empty($post)) {
+                        // Post doesn't exists
+                        // But redirecting to show new 404
+                        $this->redirect($url);
+                        break;
+                    }
+
+                    /** @var PostService $PostService */
+                    $PostService = ClassRegistry::init('PostService');
+                    if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
+                        // User can't access post
+                        // But redirecting to show new 404
+                        $this->redirect($url);
+                        break;
+                    }
+
+                    $postType = (int)$post['Post']['type'];
+                    $typesCanViewOnAngular = [
+                        Enum\Model\Post\Type::NORMAL
+                    ];
+                    if (!in_array($postType, $typesCanViewOnAngular)) {
+                        // Angular could not show this type of post yet.
+                        // Show post on old Goalous.
+                        break;
+                    }
+                    // User can see this type of post on Angular
+                    $this->redirect($url);
+                    return;
+                } while (false);
+            }
+
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
             $PostDraftService = ClassRegistry::init('PostDraftService');

@@ -22,8 +22,7 @@
                             </a>
                         </li>
                         <li class="glHeader-nav-dropdown-menu">
-                            <a class="glHeader-nav-dropdown-menu-link" href="#" data-toggle="modal"
-                               data-target="#modal_add_circle">
+                            <a class="glHeader-nav-dropdown-menu-link" href="/circles/create">
                                 <div class="glHeader-nav-dropdown-menu-link-left">
                                     <i class="material-icons">group_work</i>
                                 </div>

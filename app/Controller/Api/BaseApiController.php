@@ -7,6 +7,7 @@ App::uses('LangComponent', 'Controller/Component');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
+App::import('Service/Request/Resource', 'UserResourceRequest');
 
 /**
  * Parent controller for API v2
@@ -476,6 +477,13 @@ abstract class BaseApiController extends Controller
     protected function getUserId()
     {
         return $this->_currentUserId;
+    }
+
+    /**
+     * @return UserResourceRequest Current user's resource request
+     */
+    protected function getUserResourceRequest(){
+        return new UserResourceRequest($this->_currentUserId, $this->_currentTeamId, true);
     }
 
     /**

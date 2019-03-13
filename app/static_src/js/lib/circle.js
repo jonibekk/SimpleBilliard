@@ -148,10 +148,10 @@ $(function () {
     });
     // サークル編集画面のタブ切り替え
     // タブによって footer 部分を切り替える
-    $(document).on('shown.bs.tab', '.modal-dialog.edit-circle a[data-toggle="tab"]', function (e) {
+    $(document).on('shown.bs.tab', '#CircleEdit a[data-toggle="tab"]', function (e) {
         var $target = $(e.target);
         var tabId = $target.attr('href').replace('#', '');
-        $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
+        $target.closest('#CircleEdit').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
     });
 
 
