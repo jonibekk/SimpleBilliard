@@ -33,6 +33,7 @@ class PostShareCircleExtensionTest extends GoalousTestCase
         /** @var PostShareCircleExtension $PostShareCircleExtension */
         $PostShareCircleExtension = ClassRegistry::init('PostShareCircleExtension');
         $PostShareCircleExtension->setUserId(1);
+        $PostShareCircleExtension->setTeamId(1);
         $extended = $PostShareCircleExtension->extendMulti($posts, 'id', 'post_id');
 
         $this->assertTrue(isset($extended['shared_circles']));
@@ -50,6 +51,7 @@ class PostShareCircleExtensionTest extends GoalousTestCase
         /** @var PostShareCircleExtension $PostShareCircleExtension */
         $PostShareCircleExtension = ClassRegistry::init('PostShareCircleExtension');
         $PostShareCircleExtension->setUserId(1);
+        $PostShareCircleExtension->setTeamId(1);
         $extended = $PostShareCircleExtension->extend($posts, 'id');
 
         $this->assertTrue(isset($extended['shared_circles']));

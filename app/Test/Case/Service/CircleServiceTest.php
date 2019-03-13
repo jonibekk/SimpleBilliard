@@ -4,6 +4,7 @@ App::import('Service', 'CircleService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('GlRedis', 'Model');
+App::import('Service/Request/Resource', 'CircleResourceRequest');
 
 /**
  * CircleService Test Case
@@ -308,7 +309,8 @@ class CircleServiceTest extends GoalousTestCase
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
 
-        $circle = $CircleService->get($circleId,new UserResourceRequest(1,1, true));
+        $circleRequestResource = new CircleResourceRequest($circleId, 1, 1);
+        $circle = $CircleService->get($circleRequestResource);
 
         $this->assertEquals($circleId, $circle['id']);
         $this->assertNotEmpty($circle['img_url']);
