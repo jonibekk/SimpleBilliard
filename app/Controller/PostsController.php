@@ -981,8 +981,7 @@ class PostsController extends AppController
             ]);
 
             // If specified post_id, showing post detail.
-            if (isset($this->request->params['post_id'])
-                && $this->request->params['post_id']) {
+            if (!empty($this->request->params['post_id'])) {
                 $postId = $this->request->params['post_id'];
                 /** @var Post $Post */
                 $Post = ClassRegistry::init('Post');
