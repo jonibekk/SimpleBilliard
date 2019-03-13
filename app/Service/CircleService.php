@@ -7,7 +7,7 @@ App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Post', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
-App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Model/Entity', 'CircleEntity');
 App::uses('GlRedis', 'Model');
 
@@ -480,20 +480,20 @@ class CircleService extends AppService
         });
     }
 
-    public function get(int $circleId, UserResourceRequest $request): array
+    public function get(CircleResourceRequest $request): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
         /** @var CircleExtender $CircleExtender */
         $CircleExtender = ClassRegistry::init('CircleExtender');
 
-        $circle = $Circle->getEntity($circleId)->toArray();
+        $circle = $Circle->getEntity($request->getId())->toArray();
 
         if (empty($circle)) {
             return [];
         }
 
-        $circle = $CircleExtender->extend($circle, $request->getId(), $request->getTeamId(), [CircleExtender::EXTEND_ALL]);
+        $circle = $CircleExtender->extend($circle, $request->getUserId(), $request->getTeamId(), [CircleExtender::EXTEND_ALL]);
 
         return $circle;
     }

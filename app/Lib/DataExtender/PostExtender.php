@@ -9,6 +9,7 @@ App::import('Lib/DataExtender/Extension', 'GoalExtension');
 App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
+App::import('Lib/DataExtender/Extension', 'PostShareCircleExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
@@ -186,7 +187,13 @@ class PostExtender extends BaseExtender
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extend($data, "id", "post_id");
         }
-
+        if ($this->includeExt($extensions, self::EXTEND_POST_SHARE_CIRCLE)) {
+            /** @var PostShareCircleExtension $PostShareCircleExtension */
+            $PostShareCircleExtension = ClassRegistry::init('PostShareCircleExtension');
+            $PostShareCircleExtension->setUserId($userId);
+            $PostShareCircleExtension->setTeamId($teamId);
+            $data = $PostShareCircleExtension->extend($data, "id", "post_id");
+        }
         return $data;
     }
 
