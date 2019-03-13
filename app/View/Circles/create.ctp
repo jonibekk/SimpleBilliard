@@ -1,23 +1,8 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: bigplants
- * Date: 6/6/14
- * Time: 3:19 PM
- *
- * @var CodeCompletionView $this
- * @var                    $my_member_status
- */
-?>
 <?= $this->App->viewStartComment()?>
-<div class="modal fade" tabindex="-1" id="modal_add_circle">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
-                    <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("Create a circle") ?></h4>
-            </div>
+<div class="row" id="CircleAdd">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?= __("Create a circle") ?></div>
             <?=
             $this->Form->create('Circle', [
                 'url'           => ['controller' => 'circles', 'action' => 'add'],
@@ -33,7 +18,7 @@
                 'type'          => 'file',
                 'id'            => 'AddCircleForm',
             ]); ?>
-            <div class="modal-body modal-circle-body">
+            <div class="modal-body " style="max-height: none;">
                 <?=
                 $this->Form->input('name',
                     [
@@ -139,10 +124,10 @@
 
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
-                    <div class="h">
-                        <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal">
+                    <div class="team-button pull-right">
+                        <a href="/" class="btn btn-link design-cancel">
                             <?= __("Cancel") ?>
-                        </button>
+                        </a>
                         <?=
                         $this->Form->submit(__("Create a circle"),
                             ['class' => 'btn btn-primary', 'div' => false]) ?>
@@ -154,4 +139,5 @@
         </div>
     </div>
 </div>
+
 <?= $this->App->viewEndComment()?>

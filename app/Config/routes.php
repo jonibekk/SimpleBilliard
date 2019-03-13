@@ -144,6 +144,10 @@ Router::connect('/goals/:id/edit',
     ['controller' => 'goals', 'action' => 'edit', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
+Router::connect('/circles/:id/edit',
+    ['controller' => 'circles', 'action' => 'edit', '[method]' => 'GET'],
+    ['id' => '[0-9]+', 'pass' => ['id']]
+);
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);
 Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'action' => 'add_members']);
 Router::connect('/topics/:topic_id/search_messages', ['controller' => 'topics', 'action' => 'search_messages']);

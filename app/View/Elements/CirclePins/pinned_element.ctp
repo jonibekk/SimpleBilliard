@@ -12,9 +12,9 @@
 	        ]
 	    )
 	?>
-	<label class='circle-name-label'><?php echo $circle['name'];?></label>
+	<label class='circle-name-label'><?php echo h($circle['name']);?></label>
 	<?php if ($circle['admin_flg']): ?>
-	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url="/circles/ajax_get_edit_modal/circle_id:<?php echo $circle['id']; ?>"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
+	<a href="/circles/<?php echo $circle['id']; ?>/edit" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element"><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
 	<?php else :?>
 	<a href="#" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element ajax-url" data-url=""><i class="fa fa-cog fa-lg pin-circle-cog style-hidden"></i></a>
 	<?php endif; ?>
