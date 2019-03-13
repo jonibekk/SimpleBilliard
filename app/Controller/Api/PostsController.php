@@ -186,6 +186,7 @@ class PostsController extends BasePagingController
     public function get_reads(int $postId)
     {
         $error = $this->validatePostAccess($postId);
+        
         if (!empty($error)) {
             return $error;
         }

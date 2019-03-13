@@ -191,6 +191,7 @@ class PostExtender extends BaseExtender
             /** @var PostShareCircleExtension $PostShareCircleExtension */
             $PostShareCircleExtension = ClassRegistry::init('PostShareCircleExtension');
             $PostShareCircleExtension->setUserId($userId);
+            $PostShareCircleExtension->setTeamId($teamId);
             $data = $PostShareCircleExtension->extend($data, "id", "post_id");
         }
         return $data;

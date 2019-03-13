@@ -11,6 +11,7 @@ App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::import('Service', 'PostDraftService');
+App::import('Service/Request/Resource', 'CircleResourceRequest');
 
 /**
  * Created by PhpStorm.
@@ -525,7 +526,7 @@ class CirclesController extends BasePagingController
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init("CircleService");
 
-        $circle = $CircleService->get($circleId, $this->getUserId());
+        $circle = $CircleService->get(new CircleResourceRequest($circleId, $this->getUserId(), $this->getTeamId()));
 
         return ApiResponse::ok()->withData($circle)->getResponse();
     }

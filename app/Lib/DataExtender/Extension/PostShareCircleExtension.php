@@ -3,11 +3,15 @@ App::uses("PostShareCircle", "Model");
 App::uses("Circle", "Model");
 App::import('Service', 'CircleService');
 App::import('Lib/DataExtender/Extension', 'DataExtension');
+App::import('Service/Request/Resource', 'CircleResourceRequest');
 
 class PostShareCircleExtension extends DataExtension
 {
     /** @var int */
     private $userId;
+
+    /** @var int */
+    private $teamId;
 
     /**
      * Set user ID for the extender function
@@ -17,6 +21,16 @@ class PostShareCircleExtension extends DataExtension
     public function setUserId(int $userId)
     {
         $this->userId = $userId;
+    }
+
+    /**
+     * Set team ID for the extender function
+     *
+     * @param int $teamId
+     */
+    public function setTeamId(int $teamId)
+    {
+        $this->teamId = $teamId;
     }
 
     protected function fetchData(array $keys): array
@@ -45,7 +59,8 @@ class PostShareCircleExtension extends DataExtension
         $sharedCircleIds = Hash::extract($resultPostShareCircle, '{n}.PostShareCircle.circle_id');
 
         $sharedCircles = array_map(function($circleId) use ($CircleService) {
-            return $CircleService->get($circleId, $this->userId);
+            $circleRequestResource = new CircleResourceRequest($circleId, $this->userId, $this->teamId);
+            return $CircleService->get($circleRequestResource);
         }, $sharedCircleIds, []);
 
         return $sharedCircles;
