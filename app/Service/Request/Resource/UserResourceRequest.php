@@ -12,7 +12,7 @@ class UserResourceRequest {
      * @param int $teamId
      * @param bool $isMe
      */
-    public function __construct(int $id, int $teamId, bool $isMe)
+    public function __construct(int $id, int $teamId, bool $isMe = false)
     {
         $this->id = $id;
         $this->teamId = $teamId;
