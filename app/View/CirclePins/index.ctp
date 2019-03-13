@@ -27,7 +27,7 @@
                                     ]
                                 )
                                 ?>
-                                <label class="circle-name-label"><?php echo $defaultCircle['name'];?></label>
+                                <label class="circle-name-label"><?php echo h($defaultCircle['name']);?></label>
                                 <?php if ($defaultCircle['admin_flg']): ?>
                                 <a href="/circles/<?php echo $defaultCircle['id']; ?>/edit" class="fa-pull-right-pin-circle-cog pin-circle-dropdown-element "><i class="fa fa-cog fa-lg pin-circle-cog"></i></a>
                                 <?php else :?>
