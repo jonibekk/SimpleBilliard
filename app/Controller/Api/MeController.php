@@ -43,7 +43,9 @@ class MeController extends BasePagingController
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $circleData = $CircleListPagingService->getAllData($pagingRequest,
+        $circleData = $CircleListPagingService->getDataWithPaging(
+            $pagingRequest,
+            $this->getPagingLimit(1000), // To get all
             $this->getExtensionOptions() ?: $this->getDefaultCircleExtension());
 
         return ApiResponse::ok()->withBody($circleData)->getResponse();

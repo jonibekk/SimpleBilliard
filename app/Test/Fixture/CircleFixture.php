@@ -353,7 +353,7 @@ class CircleFixture extends CakeTestFixtureEx
             'deleted'             => 0,
             'created'             => 10,
             'modified'            => 10,
-            'latest_post_created' => 113
+            'latest_post_created' => 114
         ),
         array(
             'id'                  => 17,
