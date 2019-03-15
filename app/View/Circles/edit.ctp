@@ -313,7 +313,7 @@
                         'onclick' => "document.getElementById('EditCircleFormSubmit').click();",
                         'div'     => false,
                     ]) ?>
-                <a href="/circle/<?= $circleId?>/about" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px">
+                <a href="/circles/<?= $circleId?>/about" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px">
                     <?= __("Cancel") ?>
                 </a>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>

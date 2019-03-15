@@ -43,7 +43,13 @@ class MeController extends BasePagingController
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 
-        $circleData = $CircleListPagingService->getAllData($pagingRequest,
+        // TODO: stop to get all pinned circles
+        // Related issue: GL-7944
+        // In fact, infinite loading pinned circles is not working well, I guess other infinite loading latest update circles below it is a cause,
+        // that's not better, but we prioritize fixing other critical bugs
+        $circleData = $CircleListPagingService->getDataWithPaging(
+            $pagingRequest,
+            $this->getPagingLimit(1000), // To get all
             $this->getExtensionOptions() ?: $this->getDefaultCircleExtension());
 
         return ApiResponse::ok()->withBody($circleData)->getResponse();

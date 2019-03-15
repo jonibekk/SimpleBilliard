@@ -1,12 +1,12 @@
 <?php
-App::import('Lib/Paging', 'BaseGetAllService');
+App::import('Lib/Paging', 'BasePagingService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service', 'CirclePinService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
 
-class CircleListPagingService extends BaseGetAllService
+class CircleListPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Circle';
 
@@ -14,7 +14,9 @@ class CircleListPagingService extends BaseGetAllService
     {
         $options = $this->createSearchCondition($pagingRequest);
 
-        $options['limit'] = $limit == 0 ? null : $limit;
+        if ($limit) {
+            $options['limit'] = $limit;
+        }
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Circle $Circle */
@@ -24,6 +26,17 @@ class CircleListPagingService extends BaseGetAllService
 
         return Hash::extract($result, '{n}.Circle');
     }
+
+    protected function countData(PagingRequest $request): int
+    {
+        $options = $this->createSearchCondition($request);
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        return (int)$Circle->find('count', $options);
+    }
+
 
     private function createSearchCondition(PagingRequest $pagingRequest)
     {
@@ -153,9 +166,34 @@ class CircleListPagingService extends BaseGetAllService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder('latest_post_created');
-        $pagingRequest->addOrder('id');
+        $conditions = $pagingRequest->getConditions();
+        if (empty(Hash::get($conditions, 'pinned'))) {
+            $pagingRequest->addOrder('Circle.latest_post_created');
+            $pagingRequest->addOrder('Circle.id');
+        }
         return $pagingRequest;
+    }
+
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
+        $conditions = $pagingRequest->getConditions();
+        if (empty(Hash::get($conditions, 'pinned'))) {
+            $prevLastPosted = $pagingRequest->getPointer('last_posted')[2] ?? -1;
+
+            if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
+                $lastElement['latest_post_created'] == $prevLastPosted) {
+                $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
+                $condition = new PointerTree('AND', $orCondition,
+                    ['latest_post_created', '<=', $lastElement['latest_post_created']]);
+                return $condition;
+            } else {
+                return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
+            }
+        }
+        return new PointerTree();
     }
 
 }
