@@ -108,15 +108,14 @@ class CircleMemberService extends AppService
             'circle_id' => $circleId,
             'user_id'   => $userId,
             'team_id'   => $teamId,
-            'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN(),
+            'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN,
             'created'   => GoalousDateTime::now()->getTimestamp(),
             'modified'  => GoalousDateTime::now()->getTimestamp()
         ];
 
-        $CircleMember->create();
-
         try {
             $this->TransactionManager->begin();
+            $CircleMember->create();
             /** @var CircleMemberEntity $return */
             $return = $CircleMember->useType()->useEntity()->save($newData, false);
             if (empty($return)) {

@@ -65,6 +65,7 @@ class CircleMemberServiceTest extends GoalousTestCase
         $this->assertEquals($newCircleId, $result['circle_id']);
         $this->assertEquals($newUserId, $result['user_id']);
         $this->assertEquals($newTeamId, $result['team_id']);
+        $this->assertEquals(0, $result['admin_flg']);
         $this->assertEquals($initialMemberCount + 1, $newMemberCount);
     }
 
