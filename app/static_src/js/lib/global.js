@@ -364,6 +364,9 @@ function setChangeWarningForAllStaticPage() {
         $(document).on('submit', 'form', function () {
             flag = true;
         });
+        $(document).on('click', '#AddCircleMemberFormSubmit', function () {
+            flag = true;
+        });
         $(window).on("beforeunload", function () {
             if ($(".changed").length != "" && flag == false) {
                 return cake.message.notice.a;

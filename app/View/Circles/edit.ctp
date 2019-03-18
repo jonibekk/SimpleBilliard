@@ -337,6 +337,7 @@
                     <?=
                     $this->Form->button(__("Add member(s)"),
                         [
+                            'id' => 'AddCircleMemberFormSubmit',
                             'class'   => 'btn btn-primary pull-right',
                             'onclick' => "document.getElementById('AddCircleMemberForm').submit();",
                             'div'     => false,
