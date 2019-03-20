@@ -34,6 +34,7 @@ App::uses('Experiment', 'Model');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostFileService');
 App::import('Service', 'PostResourceService');
+App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -532,7 +533,7 @@ class GoalousTestCase extends CakeTestCase
         return $userId;
     }
 
-    function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
+    protected function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
     {
         $this->Team->TeamMember->create();
         $this->Team->TeamMember->save([
@@ -1366,5 +1367,23 @@ class GoalousTestCase extends CakeTestCase
         }
 
         return $result;
+    }
+
+    protected function createCircleMember(int $circleId, int $teamId, int $userId, array $options = []): array
+    {
+        $mainData = [
+            'circle_id' => $circleId,
+            'team_id'   => $teamId,
+            'user_id'   => $userId
+        ];
+
+        $newData = array_merge($mainData, $options);
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $CircleMember->create();
+        $insertedData = $CircleMember->save($newData, false);
+
+        return $insertedData['CircleMember'];
     }
 }
