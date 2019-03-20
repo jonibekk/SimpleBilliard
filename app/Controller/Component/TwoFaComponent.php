@@ -50,6 +50,11 @@ class TwoFaComponent extends CakeObject
         return $this->Google2Fa->getQRCodeGoogleUrl($company, $holder, $secret);
     }
 
+    function getQRCodeInline($company, $holder, $secret)
+    {
+        return $this->Google2Fa->getQRCodeInline($company, $holder, $secret);
+    }
+
     function verifyKey($b32seed, $key, $window = 4, $useTimeStamp = true)
     {
         return $this->Google2Fa->verifyKey($b32seed, $key, $window, $useTimeStamp);

@@ -73,10 +73,7 @@
             <div class="two_fa_step_box">
                 <label for=""><?= __("STEP 2 : ") ?><?= __("Scan QR") ?></label>
                 <p><?= __("Start the app and read QR by camera.") ?></p>
-                <?= $this->Html->image($url_2fa, [
-                    'width'  => '120',
-                    'height' => '120',
-                ]) ?>
+                <img src="<?=$url_2fa?>" width="120" height="120">
             </div>
 
             <div class="two_fa_step_box">
