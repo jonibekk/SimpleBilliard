@@ -8,6 +8,7 @@ App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('CircleMember', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 
 /**
@@ -19,6 +20,7 @@ App::import('Controller/Traits', 'AuthTrait');
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
     /**
      * Get list of circles that an user is joined in
      *
@@ -120,6 +122,19 @@ class MeController extends BasePagingController
     }
 
     /**
+     * Get boolean whether user has any unread post in any circle
+     */
+    public function get_check_unread_post()
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $res = $CircleMember->getAllUnread($this->getUserId(), true);
+
+        return ApiResponse::ok()->withData($res)->getResponse();
+    }
+
+    /**
      * Validate parameters for getting notifications
      *
      * @return ErrorResponse | null
@@ -159,6 +174,7 @@ class MeController extends BasePagingController
 
     /**
      * Switch team
+     *
      * @return ApiResponse|BaseApiResponse
      */
     public function put_switch_team()
@@ -178,7 +194,7 @@ class MeController extends BasePagingController
             $jwt = $this->resetAuth($userId, $teamId, $this->getJwtAuth());
         } catch (Exception $e) {
             GoalousLog::error('failed to switch team', [
-                'user_id' => $userId,
+                'user_id'        => $userId,
                 'switch_team_id' => $teamId,
             ]);
             return ErrorResponse::internalServerError()

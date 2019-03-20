@@ -117,7 +117,11 @@ window.addEventListener('load', function() {
         setNotifyCntToMessageForMobileApp(1, true);
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
-
+    pusher.subscribe('team_' + cake.data.team_id).bind('nav.circle_badge', function(data) {
+        $('#nav-circle-badge').css('opacity', 1);
+        // Since we only need to show badge new unread in old Goalous
+        $('#nav-circle-badge-count').text('1');
+    });
 });
 
 function appendSocketId(form, socketId) {

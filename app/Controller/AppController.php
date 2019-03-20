@@ -12,6 +12,7 @@ App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::uses('User', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
@@ -273,6 +274,7 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
                 $this->_setTimeZoneEnvironment();
+                $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
@@ -855,6 +857,14 @@ class AppController extends BaseController
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
         $unread_msg_topic_ids = $this->NotifyBiz->getUnreadMessagePostIds();
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_topic_ids'));
+    }
+
+    public function _setCircleBadgeCount(){
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $unreadCircles = $CircleMember->getAllUnread($this->Auth->user('id'), true);
+        $circleBadgeCount = count($unreadCircles);
+        $this->set('circle_badge_cnt', $circleBadgeCount);
     }
 
     function _getRedirectUrl()

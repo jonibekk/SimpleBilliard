@@ -902,4 +902,36 @@ class CircleMember extends AppModel
 
         return $res['CircleMember']['get_notification_flg'];
     }
+
+    /**
+     * Get all unread count
+     *
+     * @param int  $userId
+     * @param bool $checkNotifSetting
+     *
+     * @return array
+     */
+    public function getAllUnread(int $userId, bool $checkNotifSetting = false): array
+    {
+        $condition = [
+            'conditions' => [
+                'user_id'        => $userId,
+                'unread_count >' => 0,
+                'del_flg'        => false,
+            ]
+            ,
+            'fields'     => [
+                'circle_id',
+                'unread_count'
+            ]
+        ];
+
+        if ($checkNotifSetting) {
+            $condition ['conditions']['get_notification_flg'] = true;
+        }
+
+        $res = $this->useType()->find('all', $condition);
+
+        return Hash::extract($res, '{n}.CircleMember', []);
+    }
 }
