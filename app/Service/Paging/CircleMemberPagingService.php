@@ -58,7 +58,8 @@ class CircleMemberPagingService extends BasePagingService
                 'CircleMember.id',
                 'CircleMember.user_id',
                 'CircleMember.last_posted',
-                'CircleMember.admin_flg'
+                'CircleMember.admin_flg',
+                'CircleMember.created'
             ],
             'conditions' => [
                 'CircleMember.team_id'   => $teamId,
