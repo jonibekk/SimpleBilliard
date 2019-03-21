@@ -998,15 +998,6 @@ class PostsController extends AppController
                         break;
                     }
 
-                    /** @var PostService $PostService */
-                    $PostService = ClassRegistry::init('PostService');
-                    if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
-                        // User can't access post
-                        // But redirecting to show new 404
-                        $this->redirect($url);
-                        break;
-                    }
-
                     $postType = (int)$post['Post']['type'];
                     $typesCanViewOnAngular = [
                         Enum\Model\Post\Type::NORMAL
@@ -1016,6 +1007,16 @@ class PostsController extends AppController
                         // Show post on old Goalous.
                         break;
                     }
+
+                    /** @var PostService $PostService */
+                    $PostService = ClassRegistry::init('PostService');
+                    if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
+                        // User can't access post
+                        // But redirecting to show new 404
+                        $this->redirect($url);
+                        break;
+                    }
+                    
                     // User can see this type of post on Angular
                     $this->redirect($url);
                     return;
