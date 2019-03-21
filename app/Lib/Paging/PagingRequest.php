@@ -69,7 +69,8 @@ class PagingRequest
         array $conditions = [],
         $pointerValues = [],
         array $order = []
-    ) {
+    )
+    {
         if (!empty($conditions)) {
             $this->conditions = $conditions;
         }
@@ -116,7 +117,8 @@ class PagingRequest
         array $conditions = [],
         $pointerValues = null,
         array $order = []
-    ): string {
+    ): string
+    {
 
         $array = array();
 
@@ -335,6 +337,21 @@ class PagingRequest
     public function getConditions(bool $includeResourceId = false)
     {
         return ($includeResourceId) ? array_merge($this->conditions, $this->resources) : $this->conditions;
+    }
+
+    /**
+     * Get specific stored condition
+     *
+     * @param string $key                Resource array key
+     * @param bool   $includedResourceId Whether should include resource ID
+     *
+     * @return mixed
+     */
+    public function getCondition(string $key, bool $includedResourceId = false)
+    {
+        $resources = $this->getConditions($includedResourceId);
+
+        return Hash::get($resources, $key) ?? null;
     }
 
     /**

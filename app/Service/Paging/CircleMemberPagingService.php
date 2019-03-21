@@ -84,11 +84,17 @@ class CircleMemberPagingService extends BasePagingService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder(static::MAIN_MODEL . '.admin_flg');
+        $pagingRequest->addQueriesToCondition('admin_first');
+        if (!empty($pagingRequest->getQuery('admin_first'))) {
+            $pagingRequest->addOrder(static::MAIN_MODEL . '.admin_flg');
+        }
         $pagingRequest->addOrder(static::MAIN_MODEL . '.last_posted');
         $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
+
         return $pagingRequest;
     }
+
+
 
     protected function createPointer(
         array $lastElement,
@@ -104,6 +110,10 @@ class CircleMemberPagingService extends BasePagingService
             $lastElement['last_posted'] == $prevLastPosted) {
             $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
             $lastPostedTree = new PointerTree('AND', $orCondition, ['last_posted', '<=', $lastElement['last_posted']]);
+        }
+
+        if (empty($pagingRequest->getCondition('admin_first'))) {
+            return $lastPostedTree;
         }
 
         $lastAdmin = $lastElement['admin_flg'];
