@@ -265,10 +265,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                          style="padding-top: <?= $paddingTop ?>%">
                                         <video id="<?= $videoStreamId ?>"
                                                class="video-js vjs-default-skin vjs-big-play-centered video-responsive"
-                                               controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
+                                               controls playsinline preload="none"
+                                               poster="<?= $resource["thumbnail"] ?>">
                                             <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
                                                 <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()
-                                                                                                                                      ->getValue() ?>"
+                                                    ->getValue() ?>"
                                                         type="<?= $videoSource->getType()->getValue() ?>">
                                             <?php endforeach; ?>
                                         </video>
@@ -294,11 +295,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
                     <div class="col pt_10px">
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'posts',
-                            'action'     => 'feed',
-                            'circle_id'  => $post['Circle']['id']
-                        ]) ?>"
+                        <a href="<?= "/circles/" . $post['Circle']['id'] ."/posts"
+                        ?>"
                            class="no-line font_verydark">
                             <div class="site-info bd-radius_4px">
                                 <div class="media">
@@ -460,7 +458,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     </div>
                     <?php if (!$without_add_comment): ?>
                         <?= $this->element('Feed/comment_form', [
-                                'post'  => $post
+                            'post' => $post
                         ]) ?>
                     <?php endif; ?>
                 </div>
