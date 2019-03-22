@@ -4148,6 +4148,16 @@
               "type": "boolean",
               "default" : false
             },
+            "new_notification_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "new_message_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
             "current_team_member_own": {
               "$ref": "#/components/schemas/Model.TeamMember"
             },
@@ -4212,6 +4222,8 @@
           "unapproved_goal_count": 3,
           "evaluable_count": 2,
           "is_evaluation_available": true,
+          "new_notification_count": 1,
+          "new_message_count": 1,
           "current_team_member_own": {
             "id": "693",
             "user_id": "614",
