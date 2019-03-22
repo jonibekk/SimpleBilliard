@@ -5,6 +5,7 @@ App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::uses('LangUtil', 'Util');
+App::uses('GlRedis', 'Model');
 use Goalous\Enum as Enum;
 
 class MeExtender extends BaseExtender
@@ -16,6 +17,8 @@ class MeExtender extends BaseExtender
     const EXTEND_UNAPPROVED_GOAL_COUNT = "ext:user:unapproved_goal_count";
     const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
     const EXTEND_IS_EVALUATION_AVAILABLE = "ext:user:is_evaluation_available";
+    const EXTEND_NEW_NOTIFICATION_COUNT = "ext:user:new_notification_count";
+    const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -23,6 +26,8 @@ class MeExtender extends BaseExtender
         $TeamMember = ClassRegistry::init('TeamMember');
         /** @var NotifySetting $NotifySetting */
         $NotifySetting = ClassRegistry::init('NotifySetting');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
 
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
@@ -67,6 +72,12 @@ class MeExtender extends BaseExtender
             $EvaluationSetting->current_team_id = $currentTeamId;
             $EvaluationSetting->my_uid = $userId;
             $data['is_evaluation_available'] = $EvaluationSetting->isEnabled();
+        }
+        if ($this->includeExt($extensions, self::EXTEND_NEW_MESSAGE_COUNT)) {
+            $data['new_message_count'] = $GlRedis->getCountOfNewMessageNotification($currentTeamId, $userId);
+        }
+        if ($this->includeExt($extensions, self::EXTEND_NEW_NOTIFICATION_COUNT)) {
+            $data['new_notification_count'] = $GlRedis->getCountOfNewNotification($currentTeamId, $userId);
         }
 
         return $data;
