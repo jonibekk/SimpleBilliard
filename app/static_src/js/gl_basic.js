@@ -4,6 +4,10 @@ $(document).ready(function () {
   if(cake.jwt_token) {
     localStorage.setItem('token', cake.jwt_token);
   }
+  // Delete token to prevent access to new Goalous after logout
+  if(!cake.data.user_id && localStorage.getItem('token')) {
+    localStorage.removeItem('token');
+  }
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
