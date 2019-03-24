@@ -53,8 +53,7 @@
         &.active {
           color: @color-02-gray;
           .mod-feed {
-            // TODO: ON/OFFで画像を変えるとちらつきがあるので、svgスプライトにするか要素をON/OFFどちらとも要素を生成しておいて表示を出し分ける。
-            background: url("../img/svg/logomark_gray02.svg") center center no-repeat;
+            background-position: 50% 0%;
           }
         }
       }
@@ -76,7 +75,9 @@
         font-size: 28px !important;
         height: 28px !important;
         &.mod-feed {
-          background: url("../img/svg/logomark_gray04.svg") center center no-repeat;
+          background: url('../img/svg/logomark.svg') no-repeat;
+          background-position: 50% 100%;
+          background-size: 200% 200%;
         }
       }
       &-name {
