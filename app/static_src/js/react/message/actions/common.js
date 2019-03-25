@@ -24,22 +24,16 @@ export function getErrMsg(response) {
 export function getLayout() {
   if (!cake.is_mb_app) return {};
   let layout = {
-    header_top: PositionMobileApp.HEADER_TOP,
-    body_top: PositionMobileApp.BODY_TOP,
-    body_bottom: PositionMobileApp.BODY_BOTTOM,
-    footer_bottom: PositionMobileApp.FOOTER_BOTTOM
+    // header_top: PositionMobileApp.HEADER_TOP,
+    // body_top: PositionMobileApp.BODY_TOP,
+    // body_bottom: PositionMobileApp.BODY_BOTTOM,
+    // footer_bottom: PositionMobileApp.FOOTER_BOTTOM
+    // header_top: 0,
+    // body_top: 0,
+    // body_bottom: 0,
+    // footer_bottom: 0
   };
-  if (!cake.is_mb_app_web_footer) {
-    return layout;
-  }
-
-  const footerEl = document.getElementsByClassName('mobile-app-footer')[0];
-  if (!footerEl) {
-    return layout;
-  }
-  // If mobile app footer is native, change position to fit layout
-  const mobileAppFooterHeight = footerEl.clientHeight;
-  layout.body_bottom += mobileAppFooterHeight;
-  layout.footer_bottom += mobileAppFooterHeight;
+  // console.log(document.getElementById('TopicDetailFooter').style.marginBottom);
+  // layout.body_bottom -= document.getElementById('TopicDetailFooter').style.marginBottom;
   return layout;
 }

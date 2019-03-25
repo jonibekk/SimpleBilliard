@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDom from "react-dom";
+import ReactDOM from "react-dom";
 import {connect} from "react-redux";
 import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
@@ -21,11 +21,13 @@ class Footer extends React.Component {
     this.state = {
       is_drag_over: false,
       is_drag_start: false,
+      is_scrolled_input: false,
     }
     this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
+    this.footerMarginBottom = ReactDOM.findDOMNode(this.refs.topic_detail_footer).style.marginBottom;
     var ta = document.getElementsByClassName('topicDetail-footer-inputBody')[0];
     if (!isMobileApp()) {
       autosize(ta);
@@ -42,7 +44,7 @@ class Footer extends React.Component {
 
     // This doesn't work well after replace mobile app footer from native to web
     // Delete after just wait and see a little.
-    // const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    // const body_bottom = ReactDOM.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
     // this.props.dispatch(
     //   detail.changeLayout({body_bottom})
     // );
@@ -64,12 +66,18 @@ class Footer extends React.Component {
   }
 
   inputMessage(e) {
-
     this.props.dispatch(
       detail.inputMessage(e.target.value)
     );
+    // if (e.target.value.length > 0) {
+    //   this.setState({is_scrolled_input: true});
+      // setTimeout(function(){
+      //   const scrollHeight = (document.body.scrollHeight || document.documentElement.scrollHeight);
+      //   window.scrollTo(0, scrollHeight);
+      //   document.body.scrollTop = scrollHeight;
+      // }, 0);
+    // }
   }
-
   uploadFiles(files) {
     if (!files || !files.length) {
       return;
@@ -121,7 +129,7 @@ class Footer extends React.Component {
       this.props.dispatch(file_upload.setUploadingStatus(false))
       document.body.onfocus = originalEvent
     }
-    ReactDom.findDOMNode(this.refs.file).click();
+    ReactDOM.findDOMNode(this.refs.file).click();
   }
 
   changeFile(e) {
@@ -130,9 +138,31 @@ class Footer extends React.Component {
   }
 
   focusInputBody(e) {
+    if (cake.is_mb_app) {
+      //TODO:delete if necessary
+      ////////
+      const scrollHeight = document.body.scrollHeight;
+      window.scrollTo(0, scrollHeight);
+      document.body.scrollTop = scrollHeight;
+      ////////
+      ReactDOM.findDOMNode(this.refs.topic_detail_footer).style.marginBottom = 0;
+      this.props.dispatch(
+        detail.focusInputBody(true)
+      );
+
+    }
   }
 
   blurInputBody(e) {
+    if (cake.is_mb_app) {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      ReactDOM.findDOMNode(this.refs.topic_detail_footer).style.marginBottom = this.footerMarginBottom;
+      this.props.dispatch(
+        detail.focusInputBody(false)
+      );
+    }
+
   }
 
   render() {
@@ -155,8 +185,8 @@ class Footer extends React.Component {
         onDragEnter={this.dragEnter.bind(this)}
         onDragOver={this.dragOver.bind(this)}
         onDragLeave={this.dragLeave.bind(this)}
-        style={footer_style}
         ref="topic_detail_footer"
+        id="TopicDetailFooter"
       >
         {this.state.is_drag_over && <UploadDropZone/>}
         <UploadPreview files={this.props.preview_files}/>
@@ -181,6 +211,7 @@ class Footer extends React.Component {
                   onInput={this.inputMessage.bind(this)}
                   onFocus={this.focusInputBody.bind(this)}
                   onBlur={this.blurInputBody.bind(this)}
+                  ref="input_body"
                 />
               </HotKeys>
               {this.props.err_msg &&

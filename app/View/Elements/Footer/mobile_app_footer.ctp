@@ -41,7 +41,7 @@ $badgeCounts = [
 ]
 ?>
 
-<footer class="mobile-app-footer">
+<footer class="mobile-app-footer" id="MobileAppFooter">
     <ul class="mobile-app-footer-list">
         <?php foreach ($footerMenuList as $menu): ?>
             <li class="mobile-app-footer-list-item">

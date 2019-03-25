@@ -19,6 +19,10 @@ export default class Detail extends Base {
   }
 
   componentWillMount() {
+    const mobile_app_footer_el = document.getElementById('MobileAppFooter');
+    mobile_app_footer_el.style.display = 'none';
+    document.documentElement.style.overflow = 'hidden';
+
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
     this.props.setResourceId(topic_id);
@@ -84,11 +88,14 @@ export default class Detail extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
+    document.documentElement.style.overflow = 'visible';
 
     this.props.resetStates();
     // Unsubscribe
     let {channel} = this.props.detail.pusher_info;
     channel.unbind('new_message', self.fetchLatestMessages);
+    const mobile_app_footer_el = document.getElementById('MobileAppFooter');
+    mobile_app_footer_el.style.display = 'block';
   }
 
   // for SPA page route
@@ -112,7 +119,7 @@ export default class Detail extends Base {
   render() {
     const {detail, file_upload} = this.props;
     return (
-      <div className={`topicDetail ${isMobileApp() ? "" : "panel panel-default"}`}>
+      <div className={`topicDetail ${isMobileApp() ? "mod-sp" : "panel panel-default"}`}>
         <Header
           topic={detail.topic}
           topic_title_setting_status={detail.topic_title_setting_status}
@@ -140,6 +147,7 @@ export default class Detail extends Base {
           fetching_read_count={detail.fetching_read_count}
           is_fetched_search={detail.is_fetched_search}
           is_old_direction={detail.is_old_direction}
+          focus_input_body={detail.focus_input_body}
         />
         <Footer
           body={detail.input_data.body}
