@@ -4,6 +4,24 @@ $(document).ready(function () {
   if(cake.jwt_token) {
     localStorage.setItem('token', cake.jwt_token);
   }
+  var mbFooter = document.getElementById('MobileAppFooter');
+  if (mbFooter) {
+    document.body.addEventListener('MobileKeyboardStatusChanged', function(e) {
+      // TODO:delete
+      console.log('MobileKeyboardStatusChanged');
+      console.log({detail: e.detail});
+
+      var mbKeyboardStatus = e.detail.status;
+      if (!mbKeyboardStatus) {
+        return;
+      }
+      if (mbKeyboardStatus === 'displayed') {
+        mbFooter.style.display = 'none';
+      } else if (mbKeyboardStatus === 'closed') {
+        mbFooter.style.display = 'block';
+      }
+    });
+  }
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
@@ -859,3 +877,14 @@ function getModalFormFromUrl(e) {
 window.addEventListener('load', function () {
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
+
+function triggerMobileKeyboardStatusChanged(status, height) {
+  // TODO:delete
+  console.log('triggerMobileKeyboardStatusChanged');
+  // Native side
+  var event = new CustomEvent('MobileKeyboardStatusChanged', {detail: {
+      status: status, // keyboard status 'displayed', 'closed', 'changed_height', 'started_closing'
+      height: height // keyboard height
+    }})
+  document.body.dispatchEvent(event);
+}
