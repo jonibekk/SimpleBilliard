@@ -1917,6 +1917,9 @@ msgstr "検索中･･･"
 msgid "Following"
 msgstr "フォロー中"
 
+msgid "More"
+msgstr "その他"
+
 msgid "More "
 msgstr "もっと見る"
 
@@ -2081,6 +2084,9 @@ msgstr "画像を選択"
 
 msgid "Reselect an image"
 msgstr "画像を再選択"
+
+msgid "Create"
+msgstr "作成"
 
 msgid "Create "
 msgstr "作成する"
@@ -5614,21 +5620,23 @@ msgstr "%d人のメンバーが一致"
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"
 
-msgid "View All Notifications"
-msgstr "すべての通知を見る"
+msgid "{{field}} is a required field."
+msgstr "{{field}}は必須です"
 
-msgid "No notifications"
-msgstr "通知がありません"
+msgid "{{field}} must have a length between {{minValue}} and {{maxValue}}"
+msgstr "{{field}}の文字数は {{minValue}} 文字以上 {{maxValue}} 文字以下です"
 
-msgid "Goals"
-msgstr "ゴール一覧"
+msgid "{{field}} max limit is {{maxValue}}"
+msgstr "{{field}}の上限数は {{maxValue}} です"
 
 msgid "Search"
 msgstr "検索"
 
-msgid "More"
-msgstr "その他"
+msgid "Goals"
+msgstr "ゴール一覧"
 
-msgid "Create"
-msgstr "作成"
+msgid "No notifications"
+msgstr "通知がありません"
 
+msgid "View All Notifications"
+msgstr "すべての通知を見る"

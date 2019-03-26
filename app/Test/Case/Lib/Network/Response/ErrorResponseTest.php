@@ -145,12 +145,12 @@ class ErrorResponseTest extends GoalousTestCase
         $response = $errorResponseBody->getResponse();
 
         $expectedBody = [
-            'message' => __METHOD__,
+            'message' => 'Email address is incorrect.',
             'errors' => [
                 [
                     'type' => Enum\Network\Response\ErrorType::VALIDATION,
                     'field' => 'email',
-                    'message' => 'validation.error.email_format',
+                    'message' => 'Email address is incorrect.',
                 ],
                 [
                     'type' => Enum\Network\Response\ErrorType::VALIDATION,
