@@ -33,7 +33,7 @@ class RespectTranslationTest extends GoalousTestCase
                         $this->assertSame($exception->getMessage(), 'Email address is incorrect.');
                         break;
                     case 'password':
-                        $this->assertSame($exception->getMessage(), 'This is a required field.');
+                        $this->assertSame($exception->getMessage(), '{{field}} is a required field.');
                         break;
                 }
             }
@@ -65,7 +65,7 @@ class RespectTranslationTest extends GoalousTestCase
                         $this->assertSame($exception->getMessage(), __('Email address is incorrect.'));
                         break;
                     case 'password':
-                        $this->assertSame($exception->getMessage(), __('This is a required field.'));
+                        $this->assertSame($exception->getMessage(), __('{{field}} is a required field.'));
                         break;
                 }
             }
