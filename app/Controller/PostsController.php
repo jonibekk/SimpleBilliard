@@ -980,6 +980,17 @@ class PostsController extends AppController
                     $this->request->params)
             ]);
 
+            // If specified circle_id
+            if (!empty($this->request->params['circle_id'])) {
+                $circleId = $this->request->params['circle_id'];
+                $urlCircleFeed = sprintf('/circles/%s/posts', $circleId);
+                if (ENV_NAME == 'local') {
+                    $urlCircleFeed = "http://local.goalous.com:5790".$urlCircleFeed;
+                }
+                $this->redirect($urlCircleFeed);
+                return;
+            }
+
             // If specified post_id, showing post detail.
             if (!empty($this->request->params['post_id'])) {
                 $postId = $this->request->params['post_id'];
