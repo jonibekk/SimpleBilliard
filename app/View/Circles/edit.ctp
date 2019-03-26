@@ -8,9 +8,9 @@
             </div>
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1" data-toggle="tab"><?= __("View info") ?></a></li>
-                <li><a href="#tab2" data-toggle="tab"><?= __("Members list") ?></a></li>
+                <li><a href="#tab2" data-toggle="tab" id="memberListTab"><?= __("Members list") ?></a></li>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
-                    <li><a href="#tab3" data-toggle="tab"><?= __("Add member(s)") ?></a></li>
+                    <li><a href="#tab3" data-toggle="tab" id="addMembersTab"><?= __("Add member(s)") ?></a></li>
                 <?php endif ?>
             </ul>
 
@@ -347,5 +347,15 @@
         </div>
     </div>
 </div>
-
+<?php
+// ↓ This is for temporary process because we gonna renewal circle create/edit feature in near future
+?>
+<script type="text/javascript">
+    $(function () {
+        var tab = "<?= $tab ?>";
+        if (tab) {
+            $('#' + tab + 'Tab').trigger('click');
+        }
+    });
+</script>
 <?= $this->App->viewEndComment()?>
