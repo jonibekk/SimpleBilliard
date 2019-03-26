@@ -20,8 +20,9 @@ export default class Detail extends Base {
 
   componentWillMount() {
     const mobile_app_footer_el = document.getElementById('MobileAppFooter');
-    mobile_app_footer_el.style.display = 'none';
-    document.documentElement.style.overflow = 'hidden';
+    mobile_app_footer_el.classList.add('hidden');
+    mobile_app_footer_el.dataset.isAlwaysHidden = true;
+    // document.documentElement.style.overflow = 'hidden';
 
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
@@ -71,6 +72,9 @@ export default class Detail extends Base {
       let channel = pusher.subscribe(`message-channel-${topic_id}`);
       channel.bind('new_message', self.fetchLatestMessages);
       self.props.setPusherInfo({pusher, channel})
+
+      window.removeEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
+      window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChangedForTopicDetail);
     });
   }
 
@@ -95,7 +99,10 @@ export default class Detail extends Base {
     let {channel} = this.props.detail.pusher_info;
     channel.unbind('new_message', self.fetchLatestMessages);
     const mobile_app_footer_el = document.getElementById('MobileAppFooter');
-    mobile_app_footer_el.style.display = 'block';
+    mobile_app_footer_el.classList.remove('hidden');
+    mobile_app_footer_el.dataset.isAlwaysHidden = false;
+    window.removeEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChangedForTopicDetail);
+    window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
   }
 
   // for SPA page route

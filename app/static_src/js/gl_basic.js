@@ -4,25 +4,11 @@ $(document).ready(function () {
   if(cake.jwt_token) {
     localStorage.setItem('token', cake.jwt_token);
   }
-  var mbFooter = document.getElementById('MobileAppFooter');
-  if (mbFooter) {
-    document.body.addEventListener('MobileKeyboardStatusChanged', function(e) {
-      // TODO:delete
-      console.log('MobileKeyboardStatusChanged');
-      console.log({detail: e.detail});
+  window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
 
-      var mbKeyboardStatus = e.detail.status;
-      if (!mbKeyboardStatus) {
-        return;
-      }
-      if (mbKeyboardStatus === 'displayed') {
-        mbFooter.style.display = 'none';
-      } else if (mbKeyboardStatus === 'closed') {
-        mbFooter.style.display = 'block';
-      }
-    });
-  }
-
+  $('#goalousNavigation').on('click', function() {
+    triggerMobileKeyboardStatusChanged('displayed', 400);
+  })
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
@@ -878,6 +864,49 @@ window.addEventListener('load', function () {
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
 
+function evtMobileKeyboardStatusChanged(e) {
+  var mbFooter = document.getElementById('MobileAppFooter');
+  if (!mbFooter) {
+    return;
+  }
+  // TODO:delete
+  console.log('MobileKeyboardStatusChanged');
+  console.log({detail: e.detail});
+
+  var mbKeyboardStatus = e.detail.status;
+  if (!mbKeyboardStatus) {
+    return;
+  }
+  if (mbFooter.dataset.isAlwaysHidden === 'true') {
+    return;
+  }
+  switch (mbKeyboardStatus) {
+    case 'displayed':
+      mbFooter.classList.add('hidden');
+      break;
+    case 'closed':
+      mbFooter.classList.remove('hidden');
+      break;
+  }
+}
+function evtMobileKeyboardStatusChangedForTopicDetail(e) {
+  // TODO:delete
+  console.log('MobileKeyboardStatusChanged.topicDetail');
+  console.log({detail: e.detail});
+
+
+  var mbKeyboardStatus = e.detail.status;
+  if (!mbKeyboardStatus) {
+    return;
+  }
+  switch (mbKeyboardStatus) {
+    case 'changed_height':
+      const scrollHeight = document.body.scrollHeight;
+      window.scrollTo(0, scrollHeight);
+      document.body.scrollTop = scrollHeight;
+      break;
+  }
+}
 function triggerMobileKeyboardStatusChanged(status, height) {
   // TODO:delete
   console.log('triggerMobileKeyboardStatusChanged');
@@ -886,5 +915,5 @@ function triggerMobileKeyboardStatusChanged(status, height) {
       status: status, // keyboard status 'displayed', 'closed', 'changed_height', 'started_closing'
       height: height // keyboard height
     }})
-  document.body.dispatchEvent(event);
+  window.dispatchEvent(event);
 }
