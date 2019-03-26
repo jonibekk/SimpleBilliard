@@ -16,13 +16,14 @@ export default class Detail extends Base {
     this.state = {
       back_url: '/topics',
     }
+    this.htmlStyleOverFlow = document.documentElement.style.overflow;
   }
 
   componentWillMount() {
     const mobile_app_footer_el = document.getElementById('MobileAppFooter');
     mobile_app_footer_el.classList.add('hidden');
     mobile_app_footer_el.dataset.isAlwaysHidden = true;
-    // document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
     // Set resource ID included in url.
     const topic_id = this.props.params.topic_id;
@@ -92,7 +93,7 @@ export default class Detail extends Base {
 
   componentWillUnmount() {
     super.componentWillUnmount.apply(this);
-    document.documentElement.style.overflow = 'visible';
+    document.documentElement.style.overflow = this.htmlStyleOverFlow;
 
     this.props.resetStates();
     // Unsubscribe
@@ -154,7 +155,6 @@ export default class Detail extends Base {
           fetching_read_count={detail.fetching_read_count}
           is_fetched_search={detail.is_fetched_search}
           is_old_direction={detail.is_old_direction}
-          focus_input_body={detail.focus_input_body}
         />
         <Footer
           body={detail.input_data.body}

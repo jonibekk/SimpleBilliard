@@ -901,6 +901,7 @@ function evtMobileKeyboardStatusChangedForTopicDetail(e) {
   }
   switch (mbKeyboardStatus) {
     case 'changed_height':
+    case 'closed':
       const scrollHeight = document.body.scrollHeight;
       window.scrollTo(0, scrollHeight);
       document.body.scrollTop = scrollHeight;

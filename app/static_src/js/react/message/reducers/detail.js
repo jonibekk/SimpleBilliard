@@ -51,7 +51,6 @@ const initialState = {
   is_old_direction: true,
   search_message_id: null,
   is_fetched_search: false,
-  focus_input_body: false
 }
 
 export default function detail(state = initialState, action) {
@@ -251,10 +250,6 @@ export default function detail(state = initialState, action) {
       return Object.assign({}, state, {
         mobile_app_layout
       })
-    case ActionTypes.FOCUS_INPUT_BODY:
-      return Object.assign({}, state, {
-        focus_input_body: action.focused
-      });
 
     // Leave topic
     case ActionTypes.LeaveTopic.SAVING:

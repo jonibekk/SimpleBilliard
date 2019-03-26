@@ -24,7 +24,6 @@ function mapDispatchToProps(dispatch) {
     initLayout: () => dispatch(actions.initLayout()),
     resetMessages: () => dispatch(actions.resetMessages()),
     setJumpToLatestStatus: (status) => dispatch(actions.setJumpToLatestStatus(status)),
-    focusInputBody: (focused) => dispatch(actions.focusInputBody(focused))
   }
 }
 

@@ -24,16 +24,10 @@ export function getErrMsg(response) {
 export function getLayout() {
   if (!cake.is_mb_app) return {};
   let layout = {
-    // header_top: PositionMobileApp.HEADER_TOP,
-    // body_top: PositionMobileApp.BODY_TOP,
-    // body_bottom: PositionMobileApp.BODY_BOTTOM,
-    // footer_bottom: PositionMobileApp.FOOTER_BOTTOM
-    // header_top: 0,
-    // body_top: 0,
-    // body_bottom: 0,
-    // footer_bottom: 0
+    header_top: PositionMobileApp.HEADER_TOP,
+    body_top: PositionMobileApp.BODY_TOP,
+    body_bottom: PositionMobileApp.BODY_BOTTOM,
+    footer_bottom: PositionMobileApp.FOOTER_BOTTOM
   };
-  // console.log(document.getElementById('TopicDetailFooter').style.marginBottom);
-  // layout.body_bottom -= document.getElementById('TopicDetailFooter').style.marginBottom;
   return layout;
 }

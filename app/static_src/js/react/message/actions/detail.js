@@ -225,12 +225,6 @@ export function setResourceId(topic_id) {
     topic_id
   }
 }
-export function focusInputBody(focused) {
-  return {
-    type: ActionTypes.FOCUS_INPUT_BODY,
-    focused
-  }
-}
 
 export function resetStates() {
   return (dispatch) => {
