@@ -881,10 +881,10 @@ function evtMobileKeyboardStatusChanged(e) {
     return;
   }
   switch (mbKeyboardStatus) {
-    case 'displayed':
+    case 'started_displaying':
       mbFooter.classList.add('hidden');
       break;
-    case 'closed':
+    case 'started_closing':
       mbFooter.classList.remove('hidden');
       break;
   }
