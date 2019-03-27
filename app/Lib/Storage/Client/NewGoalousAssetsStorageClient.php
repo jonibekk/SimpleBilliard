@@ -21,7 +21,7 @@ class NewGoalousAssetsStorageClient extends BaseStorageClient
         }
 
         try {
-            // At first, prefetch only heaviest file (main.***.ts) to load faster when old Goalous to new Goalous
+            // At first, prefetch only main js files to load faster when old Goalous to new Goalous
             foreach ($this->assetKeyPrefixList as $prefix) {
                 $commands[] = $this->getCommandForListObject($prefix);
             }
