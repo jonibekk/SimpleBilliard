@@ -50,7 +50,7 @@ const initialState = {
   },
   is_old_direction: true,
   search_message_id: null,
-  is_fetched_search: false,
+  is_fetched_search: false
 }
 
 export default function detail(state = initialState, action) {

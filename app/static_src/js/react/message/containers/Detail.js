@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch) {
     setUaInfo: () => dispatch(actions.setUaInfo()),
     initLayout: () => dispatch(actions.initLayout()),
     resetMessages: () => dispatch(actions.resetMessages()),
-    setJumpToLatestStatus: (status) => dispatch(actions.setJumpToLatestStatus(status)),
+    setJumpToLatestStatus: (status) => dispatch(actions.setJumpToLatestStatus(status))
   }
 }
 

@@ -429,15 +429,8 @@
 }
 
 .topicDetail {
-  //&.mod-sp {
-  //  display: flex;
-  //  height: ~"calc(100vh - 40px)";
-  //  flex-direction: column;
-  //}
-
   &-header {
     .topic-header();
-    //position:static !important;
   }
   &-jumpToLatest {
     display:none;
@@ -493,20 +486,6 @@
     &.mod-sp {
       position: fixed;
       bottom: 55px;
-      // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
-      //@supports (padding-bottom: constant(safe-area-inset-bottom)) {
-      //  & {
-      //    bottom: calc(constant(safe-area-inset-bottom) + 55px);
-      //  }
-      //}
-      //// Browsers which fully support CSS Environment variables (iOS 11.2+).
-      //@supports (padding-bottom: env(safe-area-inset-bottom)) {
-      //  & {
-      //    bottom: calc(env(safe-area-inset-bottom) + 55px);
-      //  }
-      //}
-      //bottom: ~"calc(constant(safe-area-inset-bottom) + 55px)";
-      //bottom: ~"calc(env(safe-area-inset-bottom) + 55px)";
       right: 0;
       left: 0;
       top: 90px;
@@ -662,18 +641,6 @@
       left: 0;
       right: 0;
       z-index: 1;
-      //// Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
-      //@supports (margin-bottom: constant(safe-area-inset-bottom)) {
-      //  & {
-      //    margin-bottom: constant(safe-area-inset-bottom);
-      //  }
-      //}
-      //// Browsers which fully support CSS Environment variables (iOS 11.2+).
-      //@supports (margin-bottom: env(safe-area-inset-bottom)) {
-      //  & {
-      //    margin-bottom: env(safe-area-inset-bottom);
-      //  }
-      //}
     }
     &-box {
       display: flex;

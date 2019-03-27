@@ -6,9 +6,6 @@ $(document).ready(function () {
   }
   window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
 
-  $('#goalousNavigation').on('click', function() {
-    triggerMobileKeyboardStatusChanged('displayed', 400);
-  })
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
     $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
@@ -869,9 +866,6 @@ function evtMobileKeyboardStatusChanged(e) {
   if (!mbFooter) {
     return;
   }
-  // TODO:delete
-  console.log('MobileKeyboardStatusChanged');
-  console.log({detail: e.detail});
 
   var mbKeyboardStatus = e.detail.status;
   if (!mbKeyboardStatus) {
@@ -890,11 +884,6 @@ function evtMobileKeyboardStatusChanged(e) {
   }
 }
 function evtMobileKeyboardStatusChangedForTopicDetail(e) {
-  // TODO:delete
-  console.log('MobileKeyboardStatusChanged.topicDetail');
-  console.log({detail: e.detail});
-
-
   var mbKeyboardStatus = e.detail.status;
   if (!mbKeyboardStatus) {
     return;
@@ -909,11 +898,9 @@ function evtMobileKeyboardStatusChangedForTopicDetail(e) {
   }
 }
 function triggerMobileKeyboardStatusChanged(status, height) {
-  // TODO:delete
-  console.log('triggerMobileKeyboardStatusChanged');
   // Native side
   var event = new CustomEvent('MobileKeyboardStatusChanged', {detail: {
-      status: status, // keyboard status 'displayed', 'closed', 'changed_height', 'started_closing'
+      status: status, // keyboard status 'started_displaying', 'displayed', 'changed_height', 'started_closing', 'closed'
       height: height // keyboard height
     }})
   window.dispatchEvent(event);

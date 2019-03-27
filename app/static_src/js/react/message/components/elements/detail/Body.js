@@ -41,13 +41,6 @@ class Body extends React.Component {
     if (this.props.jump_to_latest_status !== nextProps.jump_to_latest_status && nextProps.jump_to_latest_status === JumpToLatest.DONE) {
       this.scrollBottom(true);
     }
-    // if (this.props.focus_input_body !== nextProps.focus_input_body) {
-    //   if (nextProps.focus_input_body) {
-    //     ReactDOM.findDOMNode(this.refs.topic_detail_body).style.bottom = '55px';
-    //   } else {
-    //     ReactDOM.findDOMNode(this.refs.topic_detail_body).style.bottom = this.bodyBottomPosition;
-    //   }
-    // }
   }
 
   componentDidUpdate() {
@@ -225,10 +218,6 @@ class Body extends React.Component {
     this.detachScrollListener();
   }
 
-  // componentDidMount() {
-  //   this.bodyBottomPosition = ReactDOM.findDOMNode(this.refs.topic_detail_body).style.bottom;
-  // }
-
   onTouchMove(e) {
     if (!this.state.init_scrolled_bottom) {
       e.preventDefault()
@@ -299,7 +288,7 @@ Body.propTypes = {
   is_fetched_initial: React.PropTypes.bool,
   is_mobile_app: React.PropTypes.bool,
   fetching_read_count: React.PropTypes.bool,
-  is_fetched_search: React.PropTypes.bool,
+  is_fetched_search: React.PropTypes.bool
 };
 
 Body.defaultProps = {
@@ -313,6 +302,6 @@ Body.defaultProps = {
   is_fetched_initial: false,
   is_mobile_app: false,
   fetching_read_count: false,
-  is_fetched_search: false,
+  is_fetched_search: false
 };
 export default connect()(Body);
