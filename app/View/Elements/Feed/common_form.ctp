@@ -72,13 +72,6 @@ $hasPostResources = !empty($this->request->data['PostResources']);
                     </a>
                     <span class="switch-arrow"></span>
                 </li>
-                <li class="switch-post 
-                    <?= $only_tab_action ? 'none' : '';?>">
-                    <a href="#PostForm" role="tab" data-toggle="tab" class="switch-post-anchor click-target-focus" target-id="CommonPostBody">
-                        <i class="fa fa-comment-o"></i><?= __("Posts") ?>
-                    </a>
-                    <span class="switch-arrow"></span>
-                </li>
             </ul>
         </div>
         <!-- Tab panes -->

@@ -40,6 +40,7 @@ class PointerTree extends BinaryTree implements Tree
                 throw new RuntimeException("Invalid tree structure");
             }
             $result[] = $this->valueToString($tree->getValue());
+
             return $result;
         }
 
@@ -101,7 +102,14 @@ class PointerTree extends BinaryTree implements Tree
         if (count($value) != 3) {
             throw new RuntimeException("Wrong array size");
         }
-        return "$value[0] $value[1] $value[2]";
+
+        $string = "$value[0] $value[1] ";
+
+        if (is_bool($value[2])) {
+            return $string . (int)$value[2];
+        }
+
+        return $string . $value[2];
     }
 
     /**

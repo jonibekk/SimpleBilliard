@@ -144,9 +144,15 @@ class ErrorResponse extends BaseApiResponse
     {
         $validationExceptions = $exception->getIterator();
 
-        foreach ($validationExceptions as $exception) {
-            $this->withError(new ErrorTypeValidation($exception->getName(), $exception->getMessage()));
+        foreach ($validationExceptions as $key => $exception) {
+            $validationRuleError = new ErrorTypeValidation($exception->getName(), $exception->getMessage());
+            if ($key === 0) {
+                // Set first error as message
+                $this->withMessage($validationRuleError->toArray()['message']);
+            }
+            $this->withError($validationRuleError);
         }
+
 
         return $this;
     }

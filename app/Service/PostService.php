@@ -1013,7 +1013,7 @@ class PostService extends AppService
 
             $newData = [
                 'body'      => '"' . $newBody['body'] . '"',
-                'site_info' => !empty($newBody['site_info']) ? "'" . json_encode($newBody['site_info']) . "'"  : null,
+                'site_info' => !empty($newBody['site_info']) ? "'" . addslashes(json_encode($newBody['site_info'])) . "'"  : null,
                 'modified'  => REQUEST_TIMESTAMP
             ];
 

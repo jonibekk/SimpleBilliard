@@ -1,6 +1,10 @@
 $(document).ready(function() {
-    
-    /* ======= FAQ accordion ======= */
+  // Delete token to prevent access to new Goalous after logout
+  if(!cake.data.user_id && localStorage.getItem('token')) {
+    localStorage.removeItem('token');
+  }
+
+  /* ======= FAQ accordion ======= */
 
     function toggleIcon(e) {
         $(e.target)

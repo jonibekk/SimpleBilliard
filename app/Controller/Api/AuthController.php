@@ -48,6 +48,7 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
+                                ->withMessage(__('Email address or Password is incorrect.'))
                                 ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
                                 ->getResponse();
         } catch (\Throwable $e) {

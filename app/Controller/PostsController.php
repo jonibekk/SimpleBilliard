@@ -980,6 +980,17 @@ class PostsController extends AppController
                     $this->request->params)
             ]);
 
+            // If specified circle_id
+            if (!empty($this->request->params['circle_id'])) {
+                $circleId = $this->request->params['circle_id'];
+                $urlCircleFeed = sprintf('/circles/%s/posts', $circleId);
+                if (ENV_NAME == 'local') {
+                    $urlCircleFeed = "http://local.goalous.com:5790".$urlCircleFeed;
+                }
+                $this->redirect($urlCircleFeed);
+                return;
+            }
+
             // If specified post_id, showing post detail.
             if (!empty($this->request->params['post_id'])) {
                 $postId = $this->request->params['post_id'];
@@ -998,15 +1009,6 @@ class PostsController extends AppController
                         break;
                     }
 
-                    /** @var PostService $PostService */
-                    $PostService = ClassRegistry::init('PostService');
-                    if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
-                        // User can't access post
-                        // But redirecting to show new 404
-                        $this->redirect($url);
-                        break;
-                    }
-
                     $postType = (int)$post['Post']['type'];
                     $typesCanViewOnAngular = [
                         Enum\Model\Post\Type::NORMAL
@@ -1016,6 +1018,16 @@ class PostsController extends AppController
                         // Show post on old Goalous.
                         break;
                     }
+
+                    /** @var PostService $PostService */
+                    $PostService = ClassRegistry::init('PostService');
+                    if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
+                        // User can't access post
+                        // But redirecting to show new 404
+                        $this->redirect($url);
+                        break;
+                    }
+                    
                     // User can see this type of post on Angular
                     $this->redirect($url);
                     return;
