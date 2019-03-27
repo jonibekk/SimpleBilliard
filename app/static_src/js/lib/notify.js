@@ -12,7 +12,14 @@ window.addEventListener("online", function () {
 window.addEventListener("offline", function () {
     network_reachable = false;
 }, false);
-
+window.addEventListener('DOMContentLoaded', function() {
+    if (window.sessionStorage.getItem('loaded_badge')){
+        $('#nav-circle-badge').css('opacity', 0);
+        $('#nav-circle-badge-count').text('0');
+    } else {
+        window.sessionStorage.setItem('loaded_badge', 'true');
+    }
+}, false);
 window.addEventListener('load', function() {
 
     // Pusher
