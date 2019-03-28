@@ -261,4 +261,28 @@ class CircleMemberService extends AppService
             throw $exception;
         }
     }
+
+    /**
+     * Decreasing single circle unread count
+     * @param int $circleId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $decreasingCount
+     * @throws Exception
+     */
+    public function decreaseCircleUnreadCount(int $circleId, int $userId, int $teamId, int $decreasingCount)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $circleMember = $CircleMember->useEntity()->find('first', [
+            'circle_id' => $circleId,
+            'team_id'   => $teamId,
+            'user_id'   => $userId,
+        ]);
+
+        $unreadCountToBe = max(0, $circleMember['unread_count'] - $decreasingCount);
+        $circleMember['unread_count'] = $unreadCountToBe;
+        $CircleMember->save($circleMember->toArray());
+    }
 }

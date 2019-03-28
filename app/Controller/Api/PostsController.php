@@ -229,6 +229,7 @@ class PostsController extends BasePagingController
         }
 
         $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+        $postsIds = array_unique($postsIds);
 
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
@@ -322,6 +323,19 @@ class PostsController extends BasePagingController
         $PostExtender = ClassRegistry::init('PostExtender');
 
         $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_ALL]);
+
+        // Make user read this post
+        // Decreasing unread count if this post haven't read yet.
+        if (!$post['is_read']) {
+            /** @var PostReadService $PostReadService */
+            $PostReadService = ClassRegistry::init('PostReadService');
+            $PostReadService->multipleAdd([$postId], $this->getUserId(), $this->getTeamId());
+            /** @var CircleMemberService $CircleMemberService */
+            $CircleMemberService = ClassRegistry::init('CircleMemberService');
+            $firstSharedCircle = reset($post['shared_circles']);
+            $CircleMemberService->decreaseCircleUnreadCount($firstSharedCircle['id'], $this->getUserId(), $this->getTeamId(), 1);
+        }
+
 
         return ApiResponse::ok()->withData($post)->getResponse();
     }
