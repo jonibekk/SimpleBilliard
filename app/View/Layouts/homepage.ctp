@@ -40,6 +40,7 @@
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet'
           type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <?php
     echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('homepage/bootstrap.min');
