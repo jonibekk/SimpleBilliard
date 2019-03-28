@@ -809,6 +809,30 @@ class CircleMember extends AppModel
     }
 
     /**
+     * Get circle member information of an user in a circle
+     *
+     * @param int  $circleId
+     * @param bool $getNotificationFlg
+     *
+     * @return CircleMemberEntity[]
+     */
+    public function getMembersWithNotificationFlg(int $circleId, bool $getNotificationFlg): array
+    {
+
+        $options = [
+            'conditions' => [
+                'circle_id'            => $circleId,
+                'get_notification_flg' => $getNotificationFlg,
+                'del_flg'              => false
+            ],
+        ];
+
+        $result = $this->useType()->useEntity()->find('all', $options);
+
+        return $result;
+    }
+
+    /**
      * Count number of members in a circle
      *
      * @param int  $circleId

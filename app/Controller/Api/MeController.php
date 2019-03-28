@@ -10,7 +10,8 @@ App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
-
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -122,16 +123,29 @@ class MeController extends BasePagingController
     }
 
     /**
-     * Get boolean whether user has any unread post in any circle
+     * Get unread posts summary for this user in this team
      */
-    public function get_check_unread_post()
+    public function get_all_unread_posts()
     {
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
+        $unreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
+        $unreadPostsClient = new UnreadPostsClient();
 
-        $res = $CircleMember->getAllUnread($this->getUserId(), true);
+        $data = $unreadPostsClient->read($unreadPostsKey)->get();
 
-        return ApiResponse::ok()->withData($res)->getResponse();
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    /**
+     * Delete all unread posts summary for this user in this team
+     */
+    public function delete_all_unread_posts()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsClient->del($UnreadPostsKey);
+
+        return ApiResponse::ok()->getResponse();
     }
 
     /**

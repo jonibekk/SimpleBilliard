@@ -125,6 +125,8 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     Router::connect('/api/:controller/:id/:action',
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE']);
 
 }
 

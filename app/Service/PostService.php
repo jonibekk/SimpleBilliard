@@ -27,6 +27,9 @@ App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'PostResourceEntity');
 App::import('Lib/DataExtender', 'PostExtender');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Service/Redis', 'UnreadPostsRedisService');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
@@ -609,6 +612,10 @@ class PostService extends AppService
             throw $e;
         }
 
+        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
+        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
+        $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
+
         return $savedPost;
     }
 
@@ -1013,7 +1020,7 @@ class PostService extends AppService
 
             $newData = [
                 'body'      => '"' . $newBody['body'] . '"',
-                'site_info' => !empty($newBody['site_info']) ? "'" . addslashes(json_encode($newBody['site_info'])) . "'"  : null,
+                'site_info' => !empty($newBody['site_info']) ? "'" . addslashes(json_encode($newBody['site_info'])) . "'" : null,
                 'modified'  => REQUEST_TIMESTAMP
             ];
 
@@ -1106,7 +1113,7 @@ class PostService extends AppService
     /**
      * Find resources newly added during post edit
      *
-     * @param int $postId
+     * @param int   $postId
      * @param array $resources
      *
      * @return array
@@ -1163,4 +1170,5 @@ class PostService extends AppService
 
         return $PostResource->findDeletedPostResourcesInPost($postId, $groupedResource);
     }
+
 }

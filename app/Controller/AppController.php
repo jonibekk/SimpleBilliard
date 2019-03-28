@@ -23,6 +23,9 @@ App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
 
 use Goalous\Enum as Enum;
@@ -498,6 +501,7 @@ class AppController extends BaseController
             }
         }
     }
+
     public function _setMyTeam()
     {
         $my_teams = [];
@@ -859,12 +863,14 @@ class AppController extends BaseController
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_topic_ids'));
     }
 
-    public function _setCircleBadgeCount(){
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-        $unreadCircles = $CircleMember->getAllUnread($this->Auth->user('id'), true);
-        $circleBadgeCount = count($unreadCircles);
-        $this->set('circle_badge_cnt', $circleBadgeCount);
+    public function _setCircleBadgeCount()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsCount = count($UnreadPostsClient->read($UnreadPostsKey)->get());
+
+        $this->set('circle_badge_cnt', $UnreadPostsCount);
     }
 
     function _getRedirectUrl()
