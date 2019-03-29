@@ -261,4 +261,41 @@ class CircleMemberService extends AppService
             throw $exception;
         }
     }
+
+    /**
+     * Decreasing single circle unread count
+     * @param int $circleId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $decreasingCount
+     * @throws Exception
+     */
+    public function decreaseCircleUnreadCount(int $circleId, int $userId, int $teamId, int $decreasingCount)
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        try {
+            $this->TransactionManager->begin();
+            $circleMember = $CircleMember->getCircleMember($circleId, $userId);
+            if (empty($circleMember)) {
+                return;
+            }
+
+            $unreadCountToBe = max(0, $circleMember['unread_count'] - $decreasingCount);
+            $circleMember['unread_count'] = $unreadCountToBe;
+            $CircleMember->save($circleMember);
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed decreasing post unread count',
+                [
+                    'message'   => $exception->getMessage(),
+                    'circle.id' => $circleId,
+                    'user.id'   => $userId,
+                    'decrease'  => $decreasingCount,
+                ]);
+            throw $exception;
+        }
+    }
 }
