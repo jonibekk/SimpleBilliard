@@ -40,7 +40,7 @@
     ?>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <?php foreach ($newGoalousAssets as $assetKey):?>
+    <?php foreach ($newGoalousAssets ?? [] as $assetKey):?>
         <link rel="prefetch" href="//<?= ENV_NAME ?>.goalous.com/<?= $assetKey?>">
     <?php endforeach;?>
 
