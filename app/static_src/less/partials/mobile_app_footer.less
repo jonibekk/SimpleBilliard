@@ -20,7 +20,7 @@
   z-index: 999;
   background-color: @white;
   padding-bottom: 0;
-  box-shadow: 0 -2px 4px 0 @box-shadow-color;
+  border-top: 1px solid #e1e1e8;
   // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
   @supports (padding-bottom: constant(safe-area-inset-bottom)) {
     & {
@@ -39,8 +39,7 @@
     display: flex;
     align-items: center;
     background-color: inherit;
-    justify-content: space-between;
-    padding: 0 @content-half-padding;
+    justify-content: space-around;
     height: @mobile-footer-height;
     &-item {
       float: none;
@@ -49,6 +48,10 @@
       text-align: center;
       position: relative;
       &-link {
+        .mod-feed {
+          width: 24px !important;
+          height: 23px !important;
+        }
         .glNavMenuLink;
         &.active {
           color: @color-02-gray;
@@ -62,8 +65,7 @@
         right: 10px !important;
         font-size: 12px;
         border: 0;
-        background-color: #ff0a19;
-        background-color: #d9230f;
+        background-color: #e83b59;
         animation: show 0.3s linear 0s;
         &.mod-small {
           top: 6px !important;
