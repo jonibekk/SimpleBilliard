@@ -317,7 +317,7 @@ class PostsController extends BasePagingController
 
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
-        $post = $Post->getById($postId);
+        $post = $Post->useType()->getById($postId);
 
         /** @var PostExtender $PostExtender */
         $PostExtender = ClassRegistry::init('PostExtender');
