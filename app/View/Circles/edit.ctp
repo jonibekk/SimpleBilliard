@@ -351,7 +351,7 @@
 // ↓ This is for temporary process because we gonna renewal circle create/edit feature in near future
 ?>
 <script type="text/javascript">
-    $(function () {
+    $(window).on('load', function () {
         var tab = "<?= $tab ?>";
         if (tab) {
             $('#' + tab + 'Tab').trigger('click');
