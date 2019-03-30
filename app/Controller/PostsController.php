@@ -988,9 +988,7 @@ class PostsController extends AppController
             $postId = $this->request->params['post_id'];
             /** @var Post $Post */
             $Post = ClassRegistry::init('Post');
-            $post = $Post->find('first', [
-                'id' => $postId
-            ]);
+            $post = $Post->findById($postId);
             $url = sprintf('/posts/%s?%s', $postId, http_build_query($this->request->query));
             if (ENV_NAME == 'local') {
                 $url = "http://local.goalous.com:5790".$url;
