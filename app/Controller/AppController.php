@@ -21,6 +21,7 @@ App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
+App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
 
 use Goalous\Enum as Enum;
 
@@ -271,6 +272,7 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
                 $this->_setTimeZoneEnvironment();
+                $this->_setNewGoalousAssets();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -1163,6 +1165,21 @@ class AppController extends BaseController
         $browser = $this->_getBrowser();
         $this->is_tablet = $browser['istablet'];
         $this->set('isTablet', $this->is_tablet);
+    }
+
+    /**
+     * Set new Goalous assets to prefetch on old Goalous
+     */
+    public function _setNewGoalousAssets()
+    {
+        if (!$this->request->is('get')) {
+            $this->set('newGoalousAssets', []);
+            return;
+        }
+        /** @var NewGoalousAssetsStorageClient $NewGoalousAssetsStorageClient */
+        $NewGoalousAssetsStorageClient = ClassRegistry::init('NewGoalousAssetsStorageClient');
+        $newGoalousAssets = $NewGoalousAssetsStorageClient->getKeys();
+        $this->set('newGoalousAssets', $newGoalousAssets);
     }
 
 }

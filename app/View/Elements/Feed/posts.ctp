@@ -248,34 +248,35 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                     <?php if (!empty($post['PostResources'])): ?>
                         <?php foreach ($post['PostResources'] as $resource): ?>
-                            <div class="col pt_10px feed_img_only_one mb_12px">
-                                <?php
-                                // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
-                                // TODO: check if this is the video resource
-                                // TODO: move to another .ctp files
-                                $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'],
-                                    time());
-                                if ($resource['aspect_ratio'] > 0) {
-                                    $paddingTop = 100 / $resource['aspect_ratio'];
-                                } else {
-                                    $paddingTop = 100;
-                                }
-                                $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
-                                ?>
-                                <div id="div<?= $videoStreamId ?>" class="video-responsive-container"
-                                     style="padding-top: <?= $paddingTop ?>%">
-                                    <video id="<?= $videoStreamId ?>"
-                                           class="video-js vjs-default-skin vjs-big-play-centered video-responsive"
-                                           controls playsinline preload="none" poster="<?= $resource["thumbnail"] ?>">
-                                        <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
-                                            <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()
-                                                                                                                                  ->getValue() ?>"
-                                                    type="<?= $videoSource->getType()->getValue() ?>">
-                                        <?php endforeach; ?>
-                                    </video>
+                            <?php if ($resource['resource_type'] === 1): ?>
+                                <div class="col pt_10px feed_img_only_one mb_12px">
+                                    <?php
+                                    // TODO: currently, we have only video resource https://jira.goalous.com/browse/GL-6601
+                                    $videoStreamId = sprintf('video_stream_%d_%d_%d', $resource['id'], $post['Post']['id'],
+                                        time());
+                                    if ($resource['aspect_ratio'] > 0) {
+                                        $paddingTop = 100 / $resource['aspect_ratio'];
+                                    } else {
+                                        $paddingTop = 100;
+                                    }
+                                    $paddingTop = ($paddingTop > 100) ? 100 : $paddingTop;
+                                    ?>
+                                    <div id="div<?= $videoStreamId ?>" class="video-responsive-container"
+                                         style="padding-top: <?= $paddingTop ?>%">
+                                        <video id="<?= $videoStreamId ?>"
+                                               class="video-js vjs-default-skin vjs-big-play-centered video-responsive"
+                                               controls playsinline preload="none"
+                                               poster="<?= $resource["thumbnail"] ?>">
+                                            <?php foreach ($resource['video_sources'] as $videoSource/** @var VideoSource $videoSource */): ?>
+                                                <source src="/api/v1/video_streams/<?= $resource['id'] ?>/source?type=<?= $videoSource->getType()
+                                                    ->getValue() ?>"
+                                                        type="<?= $videoSource->getType()->getValue() ?>">
+                                            <?php endforeach; ?>
+                                        </video>
+                                    </div>
+                                    <script>feedVideoJs('<?= $videoStreamId ?>')</script>
                                 </div>
-                                <script>feedVideoJs('<?= $videoStreamId ?>')</script>
-                            </div>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
 
@@ -294,11 +295,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
                     <div class="col pt_10px">
-                        <a href="<?= $this->Html->url([
-                            'controller' => 'posts',
-                            'action'     => 'feed',
-                            'circle_id'  => $post['Circle']['id']
-                        ]) ?>"
+                        <a href="<?= "/circles/" . $post['Circle']['id'] ."/posts"
+                        ?>"
                            class="no-line font_verydark">
                             <div class="site-info bd-radius_4px">
                                 <div class="media">
@@ -460,7 +458,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     </div>
                     <?php if (!$without_add_comment): ?>
                         <?= $this->element('Feed/comment_form', [
-                                'post'  => $post
+                            'post' => $post
                         ]) ?>
                     <?php endif; ?>
                 </div>

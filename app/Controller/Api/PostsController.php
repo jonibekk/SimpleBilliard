@@ -4,6 +4,8 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostLikeService');
 App::import('Service', 'PostReadService');
 App::import('Service', 'SavedPostService');
+App::import('Service', 'PostDraftService');
+App::import('Service', 'PusherService');
 App::import('Lib/Paging', 'PagingRequest');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service/Paging', 'PostLikesPagingService');
@@ -15,13 +17,9 @@ App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
-
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/18
- * Time: 15:00
- */
+App::import('Lib/DataExtender', 'PostExtender');
+App::import('Lib/Pusher', 'NewPostNotifiable');
+App::import('Lib/Pusher', 'NewCommentNotifiable');
 
 use Goalous\Exception as GlException;
 
@@ -30,6 +28,7 @@ class PostsController extends BasePagingController
     public $components = [
         'NotifyBiz',
         'GlEmail',
+        'Mention'
     ];
 
     /**
@@ -47,6 +46,8 @@ class PostsController extends BasePagingController
 
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init("VideoStreamService");
 
         $requestData = $this->getRequestJsonBody();
         $post['body'] = Hash::get($requestData, 'body');
@@ -54,11 +55,35 @@ class PostsController extends BasePagingController
         $post['site_info'] = Hash::get($requestData, 'site_info');
 
         $circleId = (int)Hash::get($requestData, 'circle_id');
-        $fileIds = Hash::get($requestData, 'file_ids', []);
+        $files = Hash::get($requestData, 'files', []);
 
         try {
-            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $fileIds);
-            $this->_notifyNewPost($res);
+            // Checking if needs to create a draft post
+            $videoStreamIds = [];
+            foreach ($files as $file) {
+                if (isset($file['is_video']) && $file['is_video']) {
+                    $videoStreamIds[] = $file['video_stream_id'];
+                }
+            }
+            if (1 < count($videoStreamIds)) {
+                return ErrorResponse::badRequest()->withMessage(__('You can only post one video file.'))->getResponse();
+            }
+            if (1 === count($videoStreamIds)) {
+                if (!$VideoStreamService->isAllCompletedTrancode($videoStreamIds)) {
+                    // Transcode not completed, creating draft post
+                    $postDraft = $this->createDraftPost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+                    $draftData = json_decode($postDraft['draft_data'], true);
+                    $data = am($postDraft, [
+                        'is_draft' => true,
+                        'body'     => $draftData['body'],
+                    ]);
+                    unset($data['draft_data']);
+                    return ApiResponse::ok()->withData($data)->getResponse();
+                }
+            }
+
+            $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+            $this->_notifyNewPost($res, $circleId);
 
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -69,13 +94,38 @@ class PostsController extends BasePagingController
         return ApiResponse::ok()->withData($res->toArray())->getResponse();
     }
 
+    private function createDraftPost(array $postBody, $circleId, $userId, $teamId, array $files)
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+
+        /** @var PostDraftService $PostDraftService */
+        $PostDraftService = ClassRegistry::init("PostDraftService");
+        $postDraft = $PostDraftService->createPostDraftWithResources(
+            am($postBody, [
+                'is_api_v2' => true,
+                'circle_id' => $circleId,
+                'files'     => $files,
+                'share'     => 'circle_' . $circleId,
+            ]),
+            $userId,
+            $teamId,
+            $files
+        );
+        return $postDraft;
+    }
+
     /**
      * Notify new post to other members
      *
-     * @param array $newPost
+     * @param PostEntity $newPost
+     * @param int $circleId
      */
-    private function _notifyNewPost(PostEntity $newPost)
+    private function _notifyNewPost(PostEntity $newPost, int $circleId)
     {
+        $socketId = $this->getSocketId();
         // Notify to other members
         $postedPostId = $newPost['id'];
         $notifyType = NotifySetting::TYPE_FEED_POST;
@@ -83,9 +133,12 @@ class PostsController extends BasePagingController
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
 
-        // TODO: Realtime notification with WebSocket.
-        // But to implement, we have to decide how realize WebSocket at first
-        // e.g. use Pusher like old Goalous, or scratch implementing, etc
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        /** @var NewPostNotifiable $NewPostNotifiable */
+        $NewPostNotifiable = ClassRegistry::init("NewPostNotifiable");
+        $NewPostNotifiable->build($newPost, $circleId);
+        $PusherService->notify($socketId, $NewPostNotifiable);
     }
 
 
@@ -133,6 +186,7 @@ class PostsController extends BasePagingController
     public function get_reads(int $postId)
     {
         $error = $this->validatePostAccess($postId);
+        
         if (!empty($error)) {
             return $error;
         }
@@ -175,6 +229,7 @@ class PostsController extends BasePagingController
         }
 
         $postsIds = Hash::get($this->getRequestJsonBody(), 'posts_ids', []);
+        $postsIds = array_unique($postsIds);
 
         /** @var PostReadService $PostReadService */
         $PostReadService = ClassRegistry::init('PostReadService');
@@ -233,16 +288,56 @@ class PostsController extends BasePagingController
         /** @var PostService $PostService */
         $PostService = ClassRegistry::init('PostService');
 
-        $newBody = Hash::get($this->getRequestJsonBody(), 'body');
+        $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $resources = Hash::get($this->getRequestJsonBody(), 'resources');
 
         try {
             /** @var PostEntity $newPost */
-            $newPost = $PostService->editPost($newBody, $postId);
+            $newPost = $PostService->editPost($newBody, $postId, $this->getUserId(), $this->getTeamId(), $resources);
+        } catch (GlException\GoalousNotFoundException $exception) {
+            return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
 
-        return ApiResponse::ok()->withData($newPost->toArray())->getResponse();
+        $newPost = $PostExtender->extend($newPost->toArray(), $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withData($newPost)->getResponse();
+    }
+
+    public function get_detail(int $postId): CakeResponse
+    {
+        $error = $this->validatePostAccess($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        $post = $Post->useType()->getById($postId);
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
+        $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_ALL]);
+
+        // Make user read this post
+        // Decreasing unread count if this post haven't read yet.
+        if (!$post['is_read']) {
+            /** @var PostReadService $PostReadService */
+            $PostReadService = ClassRegistry::init('PostReadService');
+            $PostReadService->multipleAdd([$postId], $this->getUserId(), $this->getTeamId());
+            /** @var CircleMemberService $CircleMemberService */
+            $CircleMemberService = ClassRegistry::init('CircleMemberService');
+            $firstSharedCircle = reset($post['shared_circles']);
+            $CircleMemberService->decreaseCircleUnreadCount($firstSharedCircle['id'], $this->getUserId(), $this->getTeamId(), 1);
+        }
+
+
+        return ApiResponse::ok()->withData($post)->getResponse();
     }
 
     public function post_likes(int $postId): CakeResponse
@@ -426,15 +521,16 @@ class PostsController extends BasePagingController
         $CommentService = ClassRegistry::init('CommentService');
 
         $requestBody = $this->getRequestJsonBody();
-        $commentBody['body'] = Hash::get($requestBody, 'body');
-        $commentBody['site_info'] = Hash::get($requestBody, 'site_info');
+        $commentData['body'] = Hash::get($requestBody, 'body');
+        $commentData['site_info'] = Hash::get($requestBody, 'site_info');
         $fileIDs = Hash::get($requestBody, 'file_ids', []);
 
         $userId = $this->getUserId();
         $teamId = $this->getTeamId();
         try {
-            $res = $CommentService->add($commentBody, $postId, $userId, $teamId, $fileIDs);
-            $this->notifyNewComment($res['id'], $postId, $this->getUserId());
+            $res = $CommentService->add($commentData, $postId, $userId, $teamId, $fileIDs);
+            $mentionedUserIds = $this->Mention->getUserList($commentData['body'], $this->getTeamId(), $this->getUserId());
+            $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId(), $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
@@ -631,7 +727,11 @@ class PostsController extends BasePagingController
         try {
 
             PostRequestValidator::createPostEditValidator()->validate($body);
-
+            /**
+             * FixMe For now, post edit doesn't allow new videos.
+             * JIRA task: GL-7826
+             */
+            PostRequestValidator::createPostEditFileValidator()->validate($body);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
@@ -726,12 +826,13 @@ class PostsController extends BasePagingController
      * Send notification about new comment on a post.
      * Will notify post's author & other users who've commented on the post
      *
-     * @param int   $commentId      Comment ID of the new comment
-     * @param int   $postId         Post ID where the comment belongs to
-     * @param int   $userId         User ID of the author of the new comment
-     * @param int[] $mentionedUsers List of user IDs of mentioned users
+     * @param int $commentId Comment ID of the new comment
+     * @param int $postId Post ID where the comment belongs to
+     * @param int $userId User ID of the author of the new comment
+     * @param int $teamId
+     * @param int[] $mentionedUserIds List of user IDs of mentioned users
      */
-    private function notifyNewComment(int $commentId, int $postId, int $userId, array $mentionedUsers = [])
+    private function notifyNewComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUserIds = [])
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -742,28 +843,71 @@ class PostsController extends BasePagingController
             case Post::TYPE_NORMAL:
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $postId,
-                    $commentId);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                    $postId, $commentId);
-                //TODO Enable mention notification
-//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
             case Post::TYPE_ACTION:
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
                     $postId,
-                    $commentId);
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
-                    $postId, $commentId);
-                //TODO Enable mention notification
-//                $NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $commentId, $mentionedUsers);
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
             case Post::TYPE_CREATE_GOAL:
                 $this->notifyUserOfGoalComment($userId, $postId);
                 break;
         }
+
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        /** @var NewCommentNotifiable $NewCommentNotifiable */
+        $socketId = $this->getSocketId();
+        $NewCommentNotifiable = ClassRegistry::init("NewCommentNotifiable");
+        $NewCommentNotifiable->build($commentId, $postId, $teamId);
+        $PusherService->notify($socketId, $NewCommentNotifiable);
     }
 
     /**

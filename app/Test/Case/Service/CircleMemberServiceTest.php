@@ -65,6 +65,7 @@ class CircleMemberServiceTest extends GoalousTestCase
         $this->assertEquals($newCircleId, $result['circle_id']);
         $this->assertEquals($newUserId, $result['user_id']);
         $this->assertEquals($newTeamId, $result['team_id']);
+        $this->assertEquals(0, $result['admin_flg']);
         $this->assertEquals($initialMemberCount + 1, $newMemberCount);
     }
 
@@ -156,5 +157,37 @@ class CircleMemberServiceTest extends GoalousTestCase
 
         $CircleMemberService->delete($userId, $teamId, $circleId);
         $CircleMemberService->delete($userId, $teamId, $circleId);
+    }
+
+    public function test_setNotificationFlg_success()
+    {
+        $circleId = 1;
+        $userId = 1;
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $CircleMemberService->setNotificationSetting($circleId, $userId, false);
+        $this->assertFalse($CircleMember->getNotificationFlg($circleId, $userId));
+        $CircleMemberService->setNotificationSetting($circleId, $userId, false);
+        $this->assertFalse($CircleMember->getNotificationFlg($circleId, $userId));
+        $CircleMemberService->setNotificationSetting($circleId, $userId, true);
+        $this->assertTrue($CircleMember->getNotificationFlg($circleId, $userId));
+        $CircleMemberService->setNotificationSetting($circleId, $userId, false);
+        $this->assertFalse($CircleMember->getNotificationFlg($circleId, $userId));
+
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_setNotificationFlgNotFound_failed()
+    {
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $CircleMemberService->setNotificationSetting(123293, 1, false);
     }
 }

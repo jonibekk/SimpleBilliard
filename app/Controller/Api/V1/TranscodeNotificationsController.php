@@ -12,6 +12,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostDraftService');
 App::import('Service', 'VideoStreamService');
+App::import('Service', 'PostResourceService');
 
 use Goalous\Enum as Enum;
 
@@ -114,6 +115,15 @@ class TranscodeNotificationsController extends ApiController
             // $videoId = $transcodeNotificationAwsSns->getMetaData('videos.id');
 
             $videoStreamId = $transcodeNotificationAwsSns->getMetaData('video_streams.id');
+
+            $envVideoUploaded = $transcodeNotificationAwsSns->getMetaData('env');
+            if (!is_null($envVideoUploaded) && ENV_NAME !== $envVideoUploaded) {
+                GoalousLog::error('env does not match', [
+                    'envVideoUploaded' => $envVideoUploaded,
+                    'video_streams.id' => $videoStreamId,
+                ]);
+                return $this->_getResponseNotFound();
+            }
             if (is_null($videoStreamId)) {
                 GoalousLog::error('transcode callback error', [
                     'message' => 'video_streams.id not found',
@@ -180,7 +190,25 @@ class TranscodeNotificationsController extends ApiController
                         ]);
                         continue;
                     }
-                    $post = $PostService->addNormalFromPostDraft($postDraft);
+                    if ($postDraft['data']['is_api_v2']) {
+                        $post = $PostService->addCirclePost(
+                            $postDraft['data'],
+                            $postDraft['data']['circle_id'],
+                            $postDraft['user_id'],
+                            $postDraft['team_id']);
+
+                        /** @var PostResourceService $PostResourceService */
+                        $PostResourceService = ClassRegistry::init('PostResourceService');
+                        $PostResourceService->updatePostIdByPostDraftId($post['id'], $postDraft['id']);
+                        $PostDraft->delete($postDraft['id']);
+
+                        // Copy data to post_files
+                        // When the draft_data is created, post_resources is already saved.
+                        // But post_files is not created yet.
+                        $PostResourceService->copyResourceToPostFiles($post['id']);
+                    } else {
+                        $post = $PostService->addNormalFromPostDraft($postDraft);
+                    }
                     if (false === $post) {
                         // failed post from draft post
                         GoalousLog::error('Failed posting from draft post', [

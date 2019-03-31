@@ -12,19 +12,32 @@ use Respect\Validation\Validator as validator;
 
 class PostRequestValidator extends BaseValidator
 {
+    private function getResourceValidator() {
+        return [
+            // Could not use max(10) on array
+            validator::arrayType()->length(null, 10),
+            "optional"
+        ];
+    }
+    private function getBodyValidator() {
+        return [
+            validator::stringType()->length(1, 10000)->notEmpty()
+        ];
+    }
+    private function getOgpValidator() {
+        return [
+            validator::optional(validator::arrayType()),
+            "optional"
+        ];
+    }
+
     public function getDefaultValidationRule(): array
     {
         $rules = [
-            "body"     => [validator::stringType()::length(1, 10000)::notEmpty()],
-            "type"     => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
-            "site_info"     => [
-                validator::optional(validator::arrayType()),
-                "optional"
-            ],
-            "file_ids" => [
-                validator::arrayType()::length(null, 10),
-                "optional"
-            ]
+            "body"      => $this->getBodyValidator(),
+            "type"      => [validator::digit()::between(Post::TYPE_NORMAL, Post::TYPE_MESSAGE)],
+            "site_info" => $this->getOgpValidator(),
+            "file_ids"  => $this->getResourceValidator(),
         ];
         return $rules;
     }
@@ -32,7 +45,7 @@ class PostRequestValidator extends BaseValidator
     public function getPostEditValidationRule(): array
     {
         $rules = [
-            "body" => [validator::notEmpty()::length(1, 10000)],
+            "body" => $this->getBodyValidator(),
         ];
         return $rules;
     }
@@ -49,7 +62,7 @@ class PostRequestValidator extends BaseValidator
     public function getPostReadValidationRule(): array
     {
         $rules = [
-            "posts_ids" => [validator::arrayType()::length(null, 1000)]
+            "posts_ids" => [validator::arrayType()->length(null, 1000)]
         ];
         return $rules;
     }
@@ -77,10 +90,21 @@ class PostRequestValidator extends BaseValidator
     public function getFileUploadValidationRule(): array
     {
         $rules = [
-            "file_ids" => [
-                validator::arrayVal()::each(validator::regex(UploadedFile::UUID_REGEXP)),
-                "optional"
-            ]
+            "files" => $this->getResourceValidator(),
+        ];
+
+        return $rules;
+    }
+
+    /**
+     * Validation rules for uploading file during post edit
+     *
+     * @return array
+     */
+    public function getPostEditFileValidationRule(): array
+    {
+        $rules = [
+            "resources" => $this->getResourceValidator(),
         ];
 
         return $rules;
@@ -94,15 +118,9 @@ class PostRequestValidator extends BaseValidator
     public function getPostCommentValidationRule(): array
     {
         $rules = [
-            "body"      => [validator::stringType()::length(1, 10000)::notEmpty()],
-            "file_ids"  => [
-                validator::arrayType()::length(null, 10),
-                "optional"
-            ],
-            "site_info"     => [
-                validator::optional(validator::arrayType()),
-                "optional"
-            ]
+            "body"      => $this->getBodyValidator(),
+            "file_ids"  => $this->getResourceValidator(),
+            "site_info" => $this->getOgpValidator(),
         ];
 
         return $rules;
@@ -149,11 +167,18 @@ class PostRequestValidator extends BaseValidator
         $self->addRule($self->getFileUploadValidationRule(), true);
         return $self;
     }
-  
+
     public static function createPostCommentValidator(): self
     {
         $self = new self();
         $self->addRule($self->getPostCommentValidationRule(), true);
+        return $self;
+    }
+
+    public static function createPostEditFileValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getPostEditFileValidationRule(), true);
         return $self;
     }
 }

@@ -311,7 +311,13 @@
   align-items: center;
   /*background-color:@white;*/
   @media @large{
-      max-width:1008px;
+      max-width:976px;
+  }
+}
+#goalousNavigation > .nav-container {
+  height: 40px;
+  @media screen and (min-width: @tablet-min-width) {
+    height: 48px;
   }
 }
 
@@ -321,13 +327,16 @@
     background: #fff;
     margin: 0;
     max-height: 50px;
+    @media (max-width:499px) {
+        overflow: hidden;
+    }
     position: fixed;
     top: 0;
     z-index: 7777;
     transition: box-shadow 1s;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0);
     &.mod-box-shadow {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+      border-bottom: 1px solid @color-05-gray;
     }
     &.mb-app-nav {
         background-color: @backgroundColor1;
@@ -756,7 +765,7 @@
     }   
 }
 
-@media (max-width: 479px) {
+@media (max-width: 499px) {
     .visible-inline-xxs {
         display: inline-block !important;
     }
@@ -939,12 +948,12 @@ span.deleteicon input {
     z-index: 3;
     top: 0;
 }
-@media (max-width: 479px) {
+@media (max-width: 499px) {
   .visible-xxs-flex {
     display: flex !important;
   }
 }
-@media (min-width: 480px) and (max-width: 767px) {
+@media (min-width: 500px) and (max-width: 767px) {
   .visible-xs-flex {
     display: flex !important;
   }
@@ -977,12 +986,12 @@ span.deleteicon input {
     position: relative;
     z-index: 3;
 }
-@media (max-width: 479px) {
+@media (max-width: 499px) {
   .visible-xxs-inline-block {
     display: inline-block !important;
   }
 }
-@media (min-width: 480px) and (max-width: 767px) {
+@media (min-width: 500px) and (max-width: 767px) {
   .visible-xs-inline-block {
     display: inline-block !important;
   }
@@ -1011,7 +1020,7 @@ span.deleteicon input {
     display: none !important;
 }
 
-@media (max-width: 479px) {
+@media (max-width: 499px) {
     .visible-xxs {
         display: block !important;
     }
@@ -1029,7 +1038,7 @@ span.deleteicon input {
     }
 }
 
-@media (min-width: 480px) and (max-width: 767px) {
+@media (min-width: 500px) and (max-width: 767px) {
     .visible-xs {
         display: block !important;
     }

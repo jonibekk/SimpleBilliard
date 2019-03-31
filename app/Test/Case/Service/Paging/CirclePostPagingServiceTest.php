@@ -30,6 +30,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
+        'app.post_resource',
     ];
 
     public function test_getCirclePost_success()
@@ -169,11 +170,11 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor->addResource('res_id', 1);
         $cursor->addResource('current_user_id', 1);
         $cursor->addResource('current_team_id', 1);
-        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_POST_FILE);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_RESOURCES);
 
         $this->assertCount(1, $result['data']);
 
         $postData = $result['data'][0];
-        $this->assertArrayHasKey('attached_files', $postData);
+        $this->assertArrayHasKey('resources', $postData);
     }
 }

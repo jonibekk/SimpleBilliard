@@ -25,20 +25,11 @@
 <?= $this->App->viewStartComment() ?>
 <header class="header">
     <div id="goalousNavigation"
-         class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
+         class="navbar navbar-fixed-top navbar-default mod-box-shadow gl-navbar <?= $is_mb_app_ios_high_header ? "mb-app-nav" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <?php
-            // Condition that returns true if user is on a sub-page and is viewing on mobile app
-
-            if ($userHasNoTeam) { ?>
-                <?= $this->element('Header/navigation'); ?>
-            <?php } elseif ($this->BackBtn->checkPage() && $is_mb_app) { ?>
-                <?= $this->element('Header/back_btn') ?>
-            <?php } else { ?>
-                <?= $this->element('Header/navigation'); ?>
-                <?= $this->element('Header/search'); ?>
-            <?php } ?>
+            <?= $this->element('Header/nav_pc'); ?>
+            <?= $this->element('Header/nav_mobile'); ?>
         </div>
     </div>
     <?php // Show header alert only team admin temporarily. [GL-6387]  ?>

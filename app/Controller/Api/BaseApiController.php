@@ -7,6 +7,7 @@ App::uses('LangComponent', 'Controller/Component');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
+App::import('Service/Request/Resource', 'UserResourceRequest');
 
 /**
  * Parent controller for API v2
@@ -211,7 +212,7 @@ abstract class BaseApiController extends Controller
 
         $classPath = '';
 
-        $classPath .= ucfirst($controllerName) . "Controller";
+        $classPath .= $this->pascalize($controllerName) . "Controller";
 
         try {
             $class = new ReflectionClass($classPath);
@@ -241,6 +242,15 @@ abstract class BaseApiController extends Controller
         }
 
         return $resultArray;
+    }
+
+    function pascalize($string)
+    {
+        $string = strtolower($string);
+        $string = str_replace('_', ' ', $string);
+        $string = ucwords($string);
+        $string = str_replace(' ', '', $string);
+        return $string;
     }
 
     /**
@@ -372,7 +382,6 @@ abstract class BaseApiController extends Controller
                 'trace' => $throwable->getTraceAsString(),
             ]);
             return ErrorResponse::internalServerError()
-                ->withMessage()
                 ->withException($throwable)
                 ->getResponse();
         }
@@ -405,6 +414,17 @@ abstract class BaseApiController extends Controller
 
         return ApiVer::isAvailable($requestedVersion) ?
             $requestedVersion : ApiVer::getLatestApiVersion();
+    }
+
+    /**
+     * Get requested Socket id for pusher
+     *
+     * @return string
+     */
+    protected function getSocketId(): string
+    {
+        $socketId = $this->request::header('X-Socket-Id');
+        return $socketId;
     }
 
     private function hasAcceptLanguage(): bool
@@ -457,6 +477,13 @@ abstract class BaseApiController extends Controller
     protected function getUserId()
     {
         return $this->_currentUserId;
+    }
+
+    /**
+     * @return UserResourceRequest Current user's resource request
+     */
+    protected function getUserResourceRequest(){
+        return new UserResourceRequest($this->_currentUserId, $this->_currentTeamId, true);
     }
 
     /**

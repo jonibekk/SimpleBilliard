@@ -271,7 +271,8 @@ function initCircleSelect2() {
     });
 
     // サークル追加用モーダルの select2 を設定
-    bindSelect2Members($('#modal_add_circle'));
+    bindSelect2Members($('#CircleAdd'));
+    bindSelect2Members($('#CircleEdit'));
 
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');

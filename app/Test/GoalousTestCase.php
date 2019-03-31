@@ -31,8 +31,14 @@ App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
+App::import('Service', 'AttachedFileService');
+App::import('Service', 'PostFileService');
+App::import('Service', 'PostResourceService');
+App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
+
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
 /**
  * CakeTestCase class
@@ -442,7 +448,8 @@ class GoalousTestCase extends CakeTestCase
         $targetValue = 100,
         $priority = 3,
         $termType = Term::TYPE_CURRENT
-    ) {
+    )
+    {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
@@ -526,7 +533,7 @@ class GoalousTestCase extends CakeTestCase
         return $userId;
     }
 
-    function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
+    protected function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
     {
         $this->Team->TeamMember->create();
         $this->Team->TeamMember->save([
@@ -700,7 +707,8 @@ class GoalousTestCase extends CakeTestCase
         array $creditCard = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    ) {
+    )
+    {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -718,7 +726,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => ($skipPayment) ? 1 : 0,
+                'payment_skip_flg' => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
                 'company_country'  => 'JP',
@@ -754,7 +762,8 @@ class GoalousTestCase extends CakeTestCase
         array $invoice = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    ) {
+    )
+    {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->Invoice = $this->Invoice ?? ClassRegistry::init('Invoice');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -771,7 +780,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => ($skipPayment) ? 1 : 0,
+                'payment_skip_flg' => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => 1980,
                 'company_country'  => 'JP',
@@ -826,7 +835,8 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistories = []
-    ): array {
+    ): array
+    {
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $chargeHistoryIds = [];
@@ -860,7 +870,8 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistory = []
-    ): array {
+    ): array
+    {
 
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
@@ -1093,7 +1104,8 @@ class GoalousTestCase extends CakeTestCase
         string $pricePlanCode,
         $team = [],
         $paymentSetting = []
-    ): array {
+    ): array
+    {
         $team = am([
             'country'  => 'JP',
             'timezone' => 9
@@ -1165,5 +1177,213 @@ class GoalousTestCase extends CakeTestCase
     protected function getTestFileName(): string
     {
         return "test.png";
+    }
+
+    /**
+     * Create a new post with attachment
+     *
+     * @param int $circleId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $fileCount
+     * @param int $videoCount
+     *
+     * @return array
+     *              [post_id, [post_file,...], [video_stream,...]]
+     * @throws Exception
+     */
+    protected final function createNewCirclePost(int $circleId, int $userId, int $teamId, int $fileCount = 0, int $videoCount = 0): array
+    {
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init('TransactionManager');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+
+        try {
+            $TransactionManager->begin();
+            $postBody = "New post in circle $circleId by user $userId in team $teamId";
+
+            if ($videoCount > 1) throw new InvalidArgumentException('Too many videos');
+            if ($fileCount + $videoCount > 10) throw new InvalidArgumentException("Too many files");
+
+            if ($fileCount > 0) {
+                $postBody .= " with $fileCount files";
+            }
+            if ($videoCount > 0) {
+                $postBody .= " with $videoCount videos";
+            }
+
+            $Post->create();
+            $postData = [
+                'body'    => $postBody,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'type'    => Post::TYPE_NORMAL
+            ];
+            $savedPost = $Post->save($postData, false);
+            $postId = $savedPost['Post']['id'];
+            $postCreated = $savedPost['Post']['created'];
+            $updateCondition = [
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.circle_id' => $circleId
+            ];
+            $CircleMember->updateAll(['last_posted' => $postCreated], $updateCondition);
+            $PostShareCircle->add($postId, [$circleId], $teamId);
+            $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId);
+            $Circle->updateLatestPosted($circleId);
+
+            //Save files
+
+            $addedFiles = [];
+            $addedVideos = [];
+            $postFileIndex = 0;
+
+            for ($i = 0; $i < $fileCount; $i++) {
+
+                $UploadedFile = new UploadedFile($this->getTestFileDataBase64WithHeader(), 'test.jpg', false);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $UploadedFile,
+                    AttachedModelType::TYPE_MODEL_POST());
+
+                $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
+
+                $PostResourceService->addResourcePost(
+                    $postId,
+                    $postResourceType,
+                    $attachedFile['id'],
+                    $postFileIndex);
+                $addedPostFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+
+                $addedFiles[] = $addedPostFile->toArray();
+                $postFileIndex++;
+            }
+
+            for ($i = 0; $i < $videoCount; $i++) {
+                $newVideo = [
+                    'user_id'   => $userId,
+                    'team_id'   => $teamId,
+                    'file_name' => "video $i"
+                ];
+                $Video->create();
+                $video = $Video->save($newVideo, false);
+
+                $newVideoStream = [
+                    'video_id'         => $video['Video']['id'],
+                    'output_version'   => 1,
+                    'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE,
+                ];
+                $VideoStream->create();
+                $videoStream = $VideoStream->save($newVideoStream, false);
+                $addedVideos[] = $videoStream['VideoStream'];
+                $PostResourceService->addResourcePost(
+                    $postId,
+                    Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                    $videoStream['VideoStream']['id'],
+                    $postFileIndex);
+                $postFileIndex++;
+            }
+            $TransactionManager->commit();
+        } catch (Exception $e) {
+            $TransactionManager->rollback();
+            throw $e;
+        }
+
+        return [$postId, $addedFiles, $addedVideos];
+    }
+
+    protected function createAttachedFile(int $userId, int $teamId, Enum\Model\AttachedFile\AttachedFileType $type, Enum\Model\AttachedFile\AttachedModelType $modelType): AttachedFileEntity
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $fileName = "user_" . $userId . "_team_" . $teamId . ".test";
+
+        $newData = [
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $fileName,
+            'file_type'             => $type->getValue(),
+            'file_ext'              => 'test',
+            'file_size'             => 123,
+            'model_type'            => $modelType->getValue(),
+            'display_file_list_flg' => true,
+            'removable_flg'         => true,
+        ];
+
+        $AttachedFile->create();
+        /** @var AttachedFileEntity $newAttachedFile */
+        $newAttachedFile = $AttachedFile->useType()->useEntity()->save($newData, false);
+
+        return $newAttachedFile;
+    }
+
+    /**
+     * Create new comment file
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $count Number of files to create
+     *
+     * @return CommentFileEntity[]
+     */
+    protected function createCommentFile(int $commentId, int $userId, int $teamId, int $count = 1): array
+    {
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        $result = [];
+
+        for ($indexNum = 0; $indexNum < $count; $indexNum++) {
+
+            $newAttachedFile = $this->createAttachedFile($userId, $teamId, Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_DOC(), Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_COMMENT());
+
+            $newCommentFile = [
+                'comment_id'       => $commentId,
+                'attached_file_id' => $newAttachedFile['id'],
+                'team_id'          => $teamId,
+                'index_num'        => $indexNum
+            ];
+
+            $CommentFile->create();
+            $result[] = $CommentFile->useType()->useEntity()->save($newCommentFile, false);
+        }
+
+        return $result;
+    }
+
+    protected function createCircleMember(int $circleId, int $teamId, int $userId, array $options = []): array
+    {
+        $mainData = [
+            'circle_id' => $circleId,
+            'team_id'   => $teamId,
+            'user_id'   => $userId
+        ];
+
+        $newData = array_merge($mainData, $options);
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $CircleMember->create();
+        $insertedData = $CircleMember->save($newData, false);
+
+        return $insertedData['CircleMember'];
     }
 }

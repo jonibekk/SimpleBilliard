@@ -2,6 +2,8 @@
 App::uses('AppModel', 'Model');
 App::uses('Post', 'Model');
 
+use Goalous\Enum\DataType\DataType as DataType;
+
 /**
  * NotifySetting Model
  *
@@ -52,7 +54,7 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
-    const TYPE_EVALUATOR_SET_TO_COACH = 41;  
+    const TYPE_EVALUATOR_SET_TO_COACH = 41;
     const TYPE_FEED_COMMENTED_ON_GOAL = 42;
     const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
     const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
@@ -87,210 +89,210 @@ class NotifySetting extends AppModel
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_post',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'chat_bubble',
             'groups'          => ['all'],
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_POST                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_post',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'forum',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_commented_post',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'forum',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_FEED_MENTIONED_IN_COMMENT                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in',
-            'icon_class'      => 'fa-circle-o',
+            'icon_class'      => 'group_work',
             'groups'          => ['all']
         ],
         self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in',
-            'icon_class'      => 'fa-key',
+            'icon_class'      => 'forum',
             'groups'          => ['all']
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_user_join',
-            'icon_class'      => 'fa-circle-o',
+            'icon_class'      => 'group_work',
             'groups'          => ['all'],
         ],
         self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING            => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_changed_privacy_setting',
-            'icon_class'      => 'fa-circle-o',
+            'icon_class'      => 'group_work',
             'groups'          => ['all'],
         ],
         self::TYPE_CIRCLE_ADD_USER                           => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'circle_add_user',
-            'icon_class'      => 'fa-circle-o',
+            'icon_class'      => 'group_work',
             'groups'          => ['all'],
         ],
         self::TYPE_MY_GOAL_FOLLOW                            => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_follow',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all'],
         ],
         self::TYPE_MY_GOAL_COLLABORATE                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_collaborate',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MEMBER_CHANGE_KR                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_changed_by_leader',
-            'icon_class'      => 'fa-key',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_CHANGED_BY_LEADER                 => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_changed_by_leader',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION             => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_target_for_evaluation',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_as_leader_request_to_change',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_goal_not_target_for_evaluation',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_COACHEE_CREATE_GOAL                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all'],
         ],
         self::TYPE_COACHEE_COLLABORATE_GOAL                  => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all'],
         ],
         self::TYPE_COACHEE_CHANGE_ROLE                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_collaborate_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all'],
         ],
         self::TYPE_COACHEE_CHANGE_GOAL                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_change_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EVALUATION_START                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_evaluation',
-            'icon_class'      => 'fa-paw',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EVALUATION_FREEZE                         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'fleeze_evaluation',
-            'icon_class'      => 'fa-paw',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EVALUATION_START_CAN_ONESELF              => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_oneself_evaluation',
-            'icon_class'      => 'fa-paw',
+            'icon_class'      => 'gavel',
             'groups'          => ['all'],
         ],
         self::TYPE_EVALUATION_CAN_AS_EVALUATOR               => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'start_can_evaluate_as_evaluator',
-            'icon_class'      => 'fa-paw',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EVALUATION_DONE_FINAL                     => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'final_evaluation_is_done',
-            'icon_class'      => 'fa-paw',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_ACTION               => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_action',
-            'icon_class'      => 'fa-check-circle',
+            'icon_class'      => 'forum',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION     => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_commented_on_my_commented_action',
-            'icon_class'      => 'fa-check-circle',
+            'icon_class'      => 'forum',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_FEED_CAN_SEE_ACTION                       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_action',
-            'icon_class'      => 'fa-check-circle',
+            'icon_class'      => 'forum',
             'groups'          => ['all'],
         ],
         self::TYPE_USER_JOINED_TO_INVITED_TEAM               => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'user_joined_to_invited_team',
-            'icon_class'      => 'fa-users',
+            'icon_class'      => 'person',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MESSAGE                                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_message',
-            'icon_class'      => 'fa-paper-plane-o',
+            'icon_class'      => 'send',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_SETUP_GUIDE                               => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'setup_guide',
-            'icon_class'      => 'fa-book',
+            'icon_class'      => '',
             'groups'          => ['all'],
         ],
         self::TYPE_COACHEE_WITHDRAW_APPROVAL                 => [
@@ -298,49 +300,49 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             //TODO 現在、この通知用のカラムが存在しないため、ゴール作成の通知と同じカラム名にしておく。通知設定を細分化しなければ新たに用意する必要なし
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_APPROVAL_COMMENT                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-comment-o',
+            'icon_class'      => 'forum',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_COACHEE_EXCHANGE_TKR                      => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_TKR_EXCHANGED_BY_LEADER                   => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_EXCHANGED_LEADER                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_MY_GOAL_CHANGED_NEXT_TO_CURRENT_BY_LEADER => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_COACHEE_CHANGE_GOAL_NEXT_TO_CURRENT       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'my_member_create_goal',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_CHANGED_TEAM_BASIC_SETTING                => [
@@ -349,7 +351,7 @@ class NotifySetting extends AppModel
             // TODO: using start_evaluation notify setting because same as what to do.
             //       but it's not good. Should improve it's architecture.
             'field_prefix'    => 'start_evaluation',
-            'icon_class'      => 'fa-users',
+            'icon_class'      => 'person',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_CHANGED_TERM_SETTING                      => [
@@ -358,14 +360,14 @@ class NotifySetting extends AppModel
             // TODO: using start_evaluation notify setting because same as what to do.
             //       but it's not good. Should improve it's architecture.
             'field_prefix'    => 'start_evaluation',
-            'icon_class'      => 'fa-users',
+            'icon_class'      => 'person',
             'groups'          => ['all', 'primary'],
         ],
         self::TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED         => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-video-camera',
+            'icon_class'      => 'videocam',
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
@@ -373,39 +375,39 @@ class NotifySetting extends AppModel
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-video-camera',
+            'icon_class'      => 'videocam',
             'groups'          => ['all'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                  => [
+        self::TYPE_EVALUATOR_SET_TO_EVALUATEE                => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'evaluator_set',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_EVALUATOR_SET_TO_COACH           => [
+        self::TYPE_EVALUATOR_SET_TO_COACH                    => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-evaluator_set-camera',
+            'icon_class'      => 'gavel',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_GOAL           => [
+        self::TYPE_FEED_COMMENTED_ON_GOAL                    => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
-        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL => [
+        self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ]
@@ -515,6 +517,94 @@ class NotifySetting extends AppModel
     public $belongsTo = [
         'User'
     ];
+
+    public $modelConversionTable = [
+        "feed_post_app_flg"                                => DataType::BOOL,
+        "feed_post_email_flg"                              => DataType::BOOL,
+        "feed_post_mobile_flg"                             => DataType::BOOL,
+        "feed_commented_on_my_post_app_flg"                => DataType::BOOL,
+        "feed_commented_on_my_post_email_flg"              => DataType::BOOL,
+        "feed_commented_on_my_post_mobile_flg"             => DataType::BOOL,
+        "feed_commented_on_my_commented_post_app_flg"      => DataType::BOOL,
+        "feed_commented_on_my_commented_post_email_flg"    => DataType::BOOL,
+        "feed_commented_on_my_commented_post_mobile_flg"   => DataType::BOOL,
+        "circle_user_join_app_flg"                         => DataType::BOOL,
+        "circle_user_join_email_flg"                       => DataType::BOOL,
+        "circle_user_join_mobile_flg"                      => DataType::BOOL,
+        "circle_changed_privacy_setting_app_flg"           => DataType::BOOL,
+        "circle_changed_privacy_setting_email_flg"         => DataType::BOOL,
+        "circle_changed_privacy_setting_mobile_flg"        => DataType::BOOL,
+        "circle_add_user_app_flg"                          => DataType::BOOL,
+        "circle_add_user_email_flg"                        => DataType::BOOL,
+        "circle_add_user_mobile_flg"                       => DataType::BOOL,
+        "my_goal_follow_app_flg"                           => DataType::BOOL,
+        "my_goal_follow_email_flg"                         => DataType::BOOL,
+        "my_goal_follow_mobile_flg"                        => DataType::BOOL,
+        "my_goal_collaborate_app_flg"                      => DataType::BOOL,
+        "my_goal_collaborate_email_flg"                    => DataType::BOOL,
+        "my_goal_collaborate_mobile_flg"                   => DataType::BOOL,
+        "my_goal_changed_by_leader_app_flg"                => DataType::BOOL,
+        "my_goal_changed_by_leader_email_flg"              => DataType::BOOL,
+        "my_goal_changed_by_leader_mobile_flg"             => DataType::BOOL,
+        "my_goal_target_for_evaluation_app_flg"            => DataType::BOOL,
+        "my_goal_target_for_evaluation_email_flg"          => DataType::BOOL,
+        "my_goal_target_for_evaluation_mobile_flg"         => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_app_flg"      => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_email_flg"    => DataType::BOOL,
+        "my_goal_as_leader_request_to_change_mobile_flg"   => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_app_flg"        => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_email_flg"      => DataType::BOOL,
+        "my_goal_not_target_for_evaluation_mobile_flg"     => DataType::BOOL,
+        "my_member_create_goal_app_flg"                    => DataType::BOOL,
+        "my_member_create_goal_email_flg"                  => DataType::BOOL,
+        "my_member_create_goal_mobile_flg"                 => DataType::BOOL,
+        "my_member_collaborate_goal_app_flg"               => DataType::BOOL,
+        "my_member_collaborate_goal_email_flg"             => DataType::BOOL,
+        "my_member_collaborate_goal_mobile_flg"            => DataType::BOOL,
+        "my_member_change_goal_app_flg"                    => DataType::BOOL,
+        "my_member_change_goal_email_flg"                  => DataType::BOOL,
+        "my_member_change_goal_mobile_flg"                 => DataType::BOOL,
+        "start_evaluation_app_flg"                         => DataType::BOOL,
+        "start_evaluation_email_flg"                       => DataType::BOOL,
+        "start_evaluation_mobile_flg"                      => DataType::BOOL,
+        "fleeze_evaluation_app_flg"                        => DataType::BOOL,
+        "fleeze_evaluation_email_flg"                      => DataType::BOOL,
+        "fleeze_evaluation_mobile_flg"                     => DataType::BOOL,
+        "start_can_oneself_evaluation_app_flg"             => DataType::BOOL,
+        "start_can_oneself_evaluation_email_flg"           => DataType::BOOL,
+        "start_can_oneself_evaluation_mobile_flg"          => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_app_flg"          => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_email_flg"        => DataType::BOOL,
+        "start_can_evaluate_as_evaluator_mobile_flg"       => DataType::BOOL,
+        "my_evaluator_evaluated_app_flg"                   => DataType::BOOL,
+        "my_evaluator_evaluated_email_flg"                 => DataType::BOOL,
+        "my_evaluator_evaluated_mobile_flg"                => DataType::BOOL,
+        "final_evaluation_is_done_app_flg"                 => DataType::BOOL,
+        "final_evaluation_is_done_email_flg"               => DataType::BOOL,
+        "final_evaluation_is_done_mobile_flg"              => DataType::BOOL,
+        "feed_commented_on_my_action_app_flg"              => DataType::BOOL,
+        "feed_commented_on_my_action_email_flg"            => DataType::BOOL,
+        "feed_commented_on_my_action_mobile_flg"           => DataType::BOOL,
+        "feed_commented_on_my_commented_action_app_flg"    => DataType::BOOL,
+        "feed_commented_on_my_commented_action_email_flg"  => DataType::BOOL,
+        "feed_commented_on_my_commented_action_mobile_flg" => DataType::BOOL,
+        "feed_action_app_flg"                              => DataType::BOOL,
+        "feed_action_email_flg"                            => DataType::BOOL,
+        "feed_action_mobile_flg"                           => DataType::BOOL,
+        "user_joined_to_invited_team_app_flg"              => DataType::BOOL,
+        "user_joined_to_invited_team_email_flg"            => DataType::BOOL,
+        "user_joined_to_invited_team_mobile_flg"           => DataType::BOOL,
+        "feed_message_app_flg"                             => DataType::BOOL,
+        "feed_message_email_flg"                           => DataType::BOOL,
+        "feed_message_mobile_flg"                          => DataType::BOOL,
+        "setup_guide_app_flg"                              => DataType::BOOL,
+        "setup_guide_email_flg"                            => DataType::BOOL,
+        "setup_guide_mobile_flg"                           => DataType::BOOL,
+        "feed_mentioned_in_app_flg"                        => DataType::BOOL,
+        "feed_mentioned_in_email_flg"                      => DataType::BOOL,
+        "feed_mentioned_in_mobile_flg"                     => DataType::BOOL,
+    ];
+
 
     /**
      * 指定タイプのアプリ、メール、モバイルの通知設定を返却
@@ -1261,7 +1351,7 @@ class NotifySetting extends AppModel
      * 通知先とグループに応じて DB 登録用の キー/値 の配列を作成して返す
      *
      * @param string $notify_target 通知先 ('app' or 'email' or 'mobile')
-     * @param string $type_group    通知タイプのグループ ('all' or 'primary' or 'none')
+     * @param string $type_group 通知タイプのグループ ('all' or 'primary' or 'none')
      *
      * @return array
      */
@@ -1274,13 +1364,14 @@ class NotifySetting extends AppModel
         return $values;
     }
 
-    public function getMySettings()
+    public function getMySettings($userId = null)
     {
+        $userId = $userId ?: $this->my_uid;
         $model = $this;
         $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false),
-            function () use ($model) {
+            function () use ($model, $userId) {
                 /** @noinspection PhpMethodParametersCountMismatchInspection */
-                $res = $model->findByUserId($model->my_uid);
+                $res = $model->useType()->findByUserId($userId);
                 $res = Hash::extract($res, 'NotifySetting');
                 if (!empty($res)) {
                     $res['force_notify'] = true;
@@ -1292,6 +1383,7 @@ class NotifySetting extends AppModel
                 foreach ($schema as $k => $v) {
                     $res[$k] = $v['default'];
                 }
+                $res = $this->convertType($res);
                 if (!empty($res)) {
                     $res['force_notify'] = true;
                 }

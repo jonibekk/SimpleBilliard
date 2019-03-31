@@ -222,4 +222,63 @@ class PostShareCircleTest extends GoalousTestCase
         ]);
         $this->assertEquals(12, $count);
     }
+
+    public function test_getPostInCircles_success()
+    {
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        $circleIds = [1, 2, 3];
+
+        $result = $PostShareCircle->getListOfPost($circleIds);
+
+        $this->assertCount(2, $result);
+        $this->assertContains(1, $result[1]);
+        $this->assertContains(101, $result[1]);
+        $this->assertContains(5, $result[3]);
+        $this->assertContains(6, $result[3]);
+        $this->assertContains(24, $result[3]);
+
+        $this->insertNewData(999, 1, 1);
+        $this->insertNewData(999, 2, 1);
+
+        $result = $PostShareCircle->getListOfPost($circleIds);
+        $this->assertCount(3, $result);
+        $this->assertContains(999, $result[1]);
+        $this->assertContains(999, $result[2]);
+    }
+
+    public function test_getPostInCirclesByPostId_success()
+    {
+        $this->insertNewData(999, 1, 1);
+        $this->insertNewData(999, 2, 1);
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        $postIds = [999, 1];
+
+        $result = $PostShareCircle->getListOfPostByPostId($postIds);
+
+        $this->assertCount(2, $result);
+        $this->assertContains(1, $result[1]);
+        $this->assertContains(101, $result[1]);
+        $this->assertContains(999, $result[1]);
+        $this->assertContains(999, $result[2]);
+    }
+
+    private function insertNewData(int $postId, int $circleId, int $teamId)
+    {
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+
+        $newData = [
+            'post_id'   => $postId,
+            'circle_id' => $circleId,
+            'team_id'   => $teamId
+        ];
+
+        $PostShareCircle->create();
+        $PostShareCircle->save($newData, false);
+    }
 }

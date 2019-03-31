@@ -6,11 +6,15 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
+App::uses('CommentFile', 'Model');
+App::uses('CommentLike', 'Model');
+App::uses('CommentRead', 'Model');
+App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
-App::import('Model/Entity', 'POstEntity');
+
 
 
 /**
@@ -183,6 +187,122 @@ class CommentService extends AppService
         }
 
         return $savedComment;
+    }
+
+    /**
+     * Delete comment 
+     *
+     * @param commentId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function delete(int $commentId): bool
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        /** @var CommentFileService $CommentFileService */
+        $CommentFileService = ClassRegistry::init('CommentFileService');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        //Check if comment exists & not deleted
+        $commentCondition = [
+            'conditions' => [
+                'id'      => $commentId,
+                'del_flg' => false
+            ],'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $postId = $Comment->useType()->find('first', $commentCondition);
+        $postId = Hash::get($postId,"Comment.post_id");
+
+        if (!$postId) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        $modelsToDelete = [
+            'CommentLike'        => 'comment_id',
+            'CommentRead'        => 'comment_id',
+            'CommentMention'     => 'post_id',
+            'Comment'            => 'Comment.id'
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            foreach ($modelsToDelete as $model => $column) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                $condition = [$column => $commentId];
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
+                }                
+            }
+            $CommentFileService->softDeleteAllFiles($commentId);
+
+            //Countdown the post comments number
+            $newCommentCount = $Comment->getCommentCount($postId);
+            if (!$Post->updateCommentCount($postId, $newCommentCount)) {
+                GoalousLog::error('Error on deleting comment: failed updating posts.comment_count');
+                throw new RuntimeException('Error on deleting post: failed updating post comment_count');
+            }
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Error on deleting comment $commentId: failed comment soft delete", $e->getTrace());
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Edit a comment body
+     *
+     * @param string $newBody
+     * @param int    $commentId
+     *
+     * @return CommentEntity Updated comment
+     * @throws Exception
+     */
+    public function editComment(array $newBody, int $commentId): CommentEntity
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        if (!$Comment->exists($commentId)) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        try {
+            $this->TransactionManager->begin();
+
+            $newData = [
+                'body'      => '"' . $newBody['body'] . '"',
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']): null,
+                'modified'  => REQUEST_TIMESTAMP
+            ];
+            if (!$Comment->updateAll($newData, ['Comment.id' => $commentId])) {
+                throw new RuntimeException("Failed to update comment");
+            }
+
+            //TODO: edit attached files after implemented video post
+            
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+        /** @var CommentEntity $result */
+        $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $commentId]]);
+        return $result;
     }
 
     /**

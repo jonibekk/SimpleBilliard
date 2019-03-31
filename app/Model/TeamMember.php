@@ -120,7 +120,7 @@ class TeamMember extends AppModel
      */
     function getActiveTeamList($uid)
     {
-        $teamListCache = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
+        $teamListCache = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         if (empty($this->myTeams) || empty($teamListCache)) {
             $this->setActiveTeamList($uid);
         }
@@ -130,7 +130,7 @@ class TeamMember extends AppModel
     function setActiveTeamList($uid)
     {
         $model = $this;
-        $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false),
+        $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false),
             function () use ($model, $uid) {
                 $options = [
                     'conditions' => [
@@ -1274,6 +1274,9 @@ class TeamMember extends AppModel
     }
 
     /**
+     * @deprecated
+     * Don't use AppMode.current_team_id/my_uid
+     *
      * $user_id をキーにしてチームメンバー情報を取得
      *
      * @param      $user_id
@@ -1297,6 +1300,26 @@ class TeamMember extends AppModel
         ];
         $res = $this->find('first', $options);
         return $res;
+    }
+
+    /**
+     * Instead of getByUserId method
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return array|null
+     */
+    function getUnique(int $userId, int $teamId): array
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId,
+            ],
+        ];
+        $res = $this->useType()->find('first', $options);
+        return Hash::get($res, 'TeamMember') ?? [];
     }
 
     function getAllMembersCsvData($team_id = null)

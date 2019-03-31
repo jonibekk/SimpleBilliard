@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDom from "react-dom";
+import ReactDOM from "react-dom";
 import {connect} from "react-redux";
 import * as detail from "~/message/actions/detail";
 import * as file_upload from "~/message/modules/file_upload";
@@ -34,15 +34,15 @@ class Footer extends React.Component {
 
     var threadBody = document.getElementsByClassName('topicDetail-body')[0];
     ta.oninput = function() {
-        ta.style.height = ""; /* Reset the height*/
-        ta.style.height = Math.min(ta.scrollHeight, threadBody.scrollHeight) + "px";
-        threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
-        threadBody.scrollTo(0,threadBody.scrollHeight);
+      ta.style.height = ""; /* Reset the height*/
+      ta.style.height = Math.min(ta.scrollHeight, threadBody.scrollHeight) + "px";
+      threadBody.style.paddingBottom = (ta.clientHeight-35)+'px';
+      threadBody.scrollTo(0,threadBody.scrollHeight);
     };
 
     // This doesn't work well after replace mobile app footer from native to web
     // Delete after just wait and see a little.
-    // const body_bottom = ReactDom.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
+    // const body_bottom = ReactDOM.findDOMNode(this.refs.topic_detail_footer).offsetHeight;
     // this.props.dispatch(
     //   detail.changeLayout({body_bottom})
     // );
@@ -64,12 +64,10 @@ class Footer extends React.Component {
   }
 
   inputMessage(e) {
-
     this.props.dispatch(
       detail.inputMessage(e.target.value)
     );
   }
-
   uploadFiles(files) {
     if (!files || !files.length) {
       return;
@@ -121,7 +119,7 @@ class Footer extends React.Component {
       this.props.dispatch(file_upload.setUploadingStatus(false))
       document.body.onfocus = originalEvent
     }
-    ReactDom.findDOMNode(this.refs.file).click();
+    ReactDOM.findDOMNode(this.refs.file).click();
   }
 
   changeFile(e) {
@@ -129,11 +127,9 @@ class Footer extends React.Component {
     this.uploadFiles(files);
   }
 
-  focusInputBody(e) {
-  }
+  focusInputBody(e) {}
 
-  blurInputBody(e) {
-  }
+  blurInputBody(e) {}
 
   render() {
     const sp_class = this.props.is_mobile_app ? "mod-sp not-autosize" : "";
@@ -155,7 +151,6 @@ class Footer extends React.Component {
         onDragEnter={this.dragEnter.bind(this)}
         onDragOver={this.dragOver.bind(this)}
         onDragLeave={this.dragLeave.bind(this)}
-        style={footer_style}
         ref="topic_detail_footer"
       >
         {this.state.is_drag_over && <UploadDropZone/>}

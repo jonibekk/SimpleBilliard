@@ -8,6 +8,8 @@ App::import('Lib/DataExtender', 'CommentExtender');
 class CommentPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Comment';
+    const DIRECTION_NEW = 'new';
+    const DIRECTION_OLD = 'old';
 
     /**
      * @param PagingRequest $pagingRequest
@@ -67,6 +69,15 @@ class CommentPagingService extends BasePagingService
             'table'      => 'comments',
             'alias'      => 'Comment'
         ];
+        $conditions = $request->getConditions();
+        $cursorCommentId = Hash::get($conditions, 'cursor_comment_id');
+        $direction = Hash::get($conditions, 'direction');
+
+        if (!empty($cursorCommentId)) {
+            $inequality =  $direction === self::DIRECTION_NEW ? '>' : '<';
+            $options['conditions']['Comment.id '.$inequality] = $cursorCommentId;
+        }
+
 
         return $options;
     }
@@ -82,6 +93,15 @@ class CommentPagingService extends BasePagingService
         array $headNextElement = [],
         PagingRequest $pagingRequest = null
     ): PointerTree {
-        return new PointerTree([static::MAIN_MODEL . '.id', "<", $lastElement['id']]);
+        $direction = Hash::get($pagingRequest->getConditions(), 'direction');
+        $inequality =  $direction === self::DIRECTION_NEW ? ">" : "<";
+        return new PointerTree([static::MAIN_MODEL . '.id', $inequality, $lastElement['id']]);
+    }
+
+    protected function beforeRead(PagingRequest $pagingRequest)
+    {
+        $pagingRequest->addCondition(['direction' => self::DIRECTION_OLD]);
+        $pagingRequest->addQueriesToCondition(['cursor_comment_id', 'direction']);
+        return $pagingRequest;
     }
 }

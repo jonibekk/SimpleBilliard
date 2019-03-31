@@ -23,6 +23,7 @@ class VideoFixture extends CakeTestFixtureEx {
         'file_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'filename of original uploaded file', 'charset' => 'utf8mb4'),
         'resource_path' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 1024, 'collate' => 'utf8mb4_general_ci', 'comment' => 'cloud storage stored key', 'charset' => 'utf8mb4'),
         'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'indexes' => array(

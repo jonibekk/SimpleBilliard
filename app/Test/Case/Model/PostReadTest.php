@@ -1,5 +1,8 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
+App::uses('CircleMember', 'Model');
 App::uses('PostRead', 'Model');
+App::import('Model/Entity', 'PostReadEntity');
 
 /**
  * PostRead Test Case
@@ -18,8 +21,11 @@ class PostReadTest extends GoalousTestCase
         'app.comment',
         'app.comment_read',
         'app.post_read',
+        'app.post_share_circle',
         'app.post',
         'app.user',
+        'app.circle',
+        'app.circle_member',
         'app.team',
     );
 
@@ -106,8 +112,8 @@ class PostReadTest extends GoalousTestCase
         $PostReadMock = $this->getMockForModel('PostRead', array('pickUnMyPosts'));
         /** @noinspection PhpUndefinedMethodInspection */
         $PostReadMock->expects($this->any())
-                     ->method('pickUnMyPosts')
-                     ->will($this->returnValue([$last_id, $last_id2]));
+            ->method('pickUnMyPosts')
+            ->will($this->returnValue([$last_id, $last_id2]));
         $PostReadMock->my_uid = $uid;
         $PostReadMock->current_team_id = $team_id;
         $this->PostRead = $PostReadMock;
@@ -190,6 +196,99 @@ class PostReadTest extends GoalousTestCase
         $this->PostRead->bulkInsert($data);
         $after_count = $this->PostRead->find('count');
         $this->assertEquals($before_count, $after_count);
+    }
+
+    public function test_countMultiplePostReader_success()
+    {
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        $this->insertNewPostRead(3111, 2, 1);
+        $this->insertNewPostRead(3111, 3, 1);
+        $this->insertNewPostRead(3111, 4, 1);
+        $this->insertNewPostRead(3222, 4, 1);
+        $this->insertNewPostRead(3222, 5, 1);
+
+        $result = $PostRead->countPostReadersMultiplePost([3111, 3222]);
+
+        $this->assertCount(2, $result);
+        $this->assertEquals(3, $result[3111]);
+        $this->assertEquals(2, $result[3222]);
+    }
+
+    public function test_updateCountMultiplePostReader_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        $PostRead->updateReadersCountMultiplePost([1, 2]);
+
+        $post = $Post->getEntity(1);
+        $this->assertEquals(2, $post['post_read_count']);
+        $post = $Post->getEntity(2);
+        $this->assertEquals(0, $post['post_read_count']);
+
+        $this->insertNewPostRead(1, 3, 1);
+        $this->insertNewPostRead(1, 4, 1);
+        $this->insertNewPostRead(2, 4, 1);
+        $this->insertNewPostRead(2, 5, 1);
+
+        $PostRead->updateReadersCountMultiplePost([1, 2]);
+
+        $post = $Post->getEntity(1);
+        $this->assertEquals(4, $post['post_read_count']);
+        $post = $Post->getEntity(2);
+        $this->assertEquals(2, $post['post_read_count']);
+    }
+
+    public function test_filterUnreadPost_success()
+    {
+        $postIds = [5, 6];
+        $userId = 3;
+        $circleId = 3;
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $CircleMember->create();
+        $CircleMember->save(['circle_id' => $circleId, 'user_id' => $userId], false);
+
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId);
+        $this->assertCount(2, $result);
+
+        $this->insertNewPostRead(5, $userId, 1);
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId);
+        $this->assertCount(1, $result);
+
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
+        $this->assertCount(0, $result);
+
+        $CircleMember->updateAll(['created' => 1388603000], ['circle_id' => $circleId, 'user_id' => $userId]);
+        $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
+        $this->assertCount(1, $result);
+        $this->assertEquals([6], $result);
+
+    }
+
+
+    private function insertNewPostRead(int $postId, int $userId, int $teamId)
+    {
+        /** @var PostRead $PostRead */
+        $PostRead = ClassRegistry::init('PostRead');
+
+        $newData = [
+            'post_id' => $postId,
+            'user_id' => $userId,
+            'team_id' => $teamId
+        ];
+
+        $PostRead->create();
+        $PostRead->save($newData, false);
     }
 
 }

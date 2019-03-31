@@ -743,6 +743,10 @@ class GlRedis extends AppModel
      */
     function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
+        if ($from_date === 0) {
+            $from_date = null;
+        }
+        
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
         $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
@@ -1573,13 +1577,27 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3)
+    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3): JwtAuthentication
     {
         App::uses('AccessAuthenticator', 'Lib/Auth');
-        $jwt = AccessAuthenticator::publish($userId, $teamId);
+        $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->set($key, $jwt->token());
-        return $this->Db->setTimeout($key, $expire);
+        $this->Db->setTimeout($key, $expire);
+        return $jwt;
+    }
+
+    /**
+     * Delete mapping between session id and jwt
+     *
+     * @param int       $teamId
+     * @param int       $userId
+     * @param string    $sessionId
+     */
+    function delMapSesAndJwt(int $teamId, int $userId, string $sessionId)
+    {
+        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
+        $this->Db->del($key);
     }
 
     /**

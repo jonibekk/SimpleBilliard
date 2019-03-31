@@ -1,55 +1,61 @@
 <?php
 $footerMenuList = [
     [
-        'name' => 'feed',
+        'name' => 'home',
         'url'  => '/',
-        'icon' => 'fa-newspaper-o',
-        'label' => 'Feed'
+        'icon' => '',
+        'label' => __('Home')
 
     ],
     [
         'name' => 'messages',
         'url'  => '/topics',
-        'icon' => 'fa-paper-plane',
-        'label' => 'Message'
+        'icon' => 'send',
+        'label' => __('Message')
     ],
     [
-        'name' => 'kr_progress',
-        'url'  => '/goals/kr_progress',
-        'icon' => 'fa-flag',
-        'label' => 'My Goal'
+        'name' => 'circles',
+        'url'  => '/circles',
+        'icon' => 'group_work',
+        'label' => __('Circle')
     ],
     [
         'name' => 'notifications',
         'url'  => '/notifications',
-        'icon' => 'fa-bell',
-        'label' => 'Notifications'
+        'icon' => 'notifications',
+        'label' => __('Notification')
     ],
     [
-        'name' => 'mypage',
-        'url'  => '/users/view_goals/user_id:' . $this->Session->read('Auth.User.id'),
-        'icon' => 'fa-user',
-        'label' => 'My Page'
+        'name' => 'more',
+        'url'  => '/others',
+        'icon' => 'dehaze',
+        'label' => __('More')
     ],
 ];
 
 $badgeCounts = [
     'messages' => $new_notify_message_cnt,
     'notifications' => Router::url() === '/notifications' ? 0 : $new_notify_cnt,
+    'circles' => 0, // TODO.Renewal: set
+    'more' => $all_alert_cnt
 ]
 ?>
 
-<footer class="mobile-app-footer">
+<footer class="mobile-app-footer" id="MobileAppFooter" data-is-always-hidden="false">
     <ul class="mobile-app-footer-list">
         <?php foreach ($footerMenuList as $menu): ?>
             <li class="mobile-app-footer-list-item">
                 <a href="<?= $menu['url']?>" class="mobile-app-footer-list-item-link <?= Router::url() === $menu['url'] ? 'active' : '' ?>">
-                    <i class="fa <?= $menu['icon']?> mobile-app-footer-list-item-icon"></i>
-                    <span class="mobile-app-footer-list-item-name"><?= $menu['label']?></span>
+                    <?php if($menu['name'] === 'home') :?>
+                        <div class="material-icons mod-feed"></div>
+                    <?php else: ?>
+                        <i class="material-icons"><?= $menu['icon']?></i>
+                    <?php endif;?>
+                    <span class=""><?= $menu['label']?></span>
                 </a>
-                <?php if(in_array($menu['name'], ['messages', 'notifications'], false)) :?>
-                    <div class="btn btn-xs notify-function-numbers js-mbAppFooter-setBadgeCnt-<?=$menu['name']?> <?= empty($badgeCounts[$menu['name']]) ? 'hidden' : '' ?>">
-                         <span>
+                <?php if(in_array($menu['name'], ['messages', 'notifications', 'circles', 'more'], false)) :?>
+                    <div class="btn btn-xs notify-function-numbers <?= $menu['name'] === 'circles'? 'mod-small' : ''?> js-mbAppFooter-setBadgeCnt-<?=$menu['name']?> <?= empty($badgeCounts[$menu['name']]) ? 'hidden' : '' ?>">
+                         <span class="<?= $badgeCounts[$menu['name']] > 99 ? 'oval' : ''?>">
                            <?= $badgeCounts[$menu['name']] ?>
                          </span>
                     </div>

@@ -4,15 +4,16 @@ App::import('Service', 'CircleService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('GlRedis', 'Model');
+App::import('Service/Request/Resource', 'CircleResourceRequest');
 
 /**
  * CircleService Test Case
  *
  * @property ActionService $ActionService
  * @property CircleService $CircleService
- * @property Circle $Circle
- * @property CircleMember $CircleMember
- * @property User $User
+ * @property Circle        $Circle
+ * @property CircleMember  $CircleMember
+ * @property User          $User
  */
 class CircleServiceTest extends GoalousTestCase
 {
@@ -276,7 +277,7 @@ class CircleServiceTest extends GoalousTestCase
 
     function test_getMemberCountEachCircle()
     {
-        $this->GlRedis->deleteMultiCircleMemberCount([1,2,3,4]);
+        $this->GlRedis->deleteMultiCircleMemberCount([1, 2, 3, 4]);
 
         /* all cache doesn't exist */
         $expect = [1 => 3];
@@ -300,5 +301,23 @@ class CircleServiceTest extends GoalousTestCase
         $res = $this->CircleService->getMemberCountEachCircle($circleIds);
         $this->assertEquals($res, $expect);
     }
+
+    public function test_getCircle_success()
+    {
+        $circleId = 1;
+
+        /** @var CircleService $CircleService */
+        $CircleService = ClassRegistry::init('CircleService');
+
+        $circleRequestResource = new CircleResourceRequest($circleId, 1, 1);
+        $circle = $CircleService->get($circleRequestResource);
+
+        $this->assertEquals($circleId, $circle['id']);
+        $this->assertNotEmpty($circle['img_url']);
+        $this->assertNotEmpty($circle['is_member']);
+        $this->assertArrayHasKey('get_notification_flg', $circle);
+        $this->assertArrayHasKey('admin_flg', $circle);
+    }
+
 
 }
