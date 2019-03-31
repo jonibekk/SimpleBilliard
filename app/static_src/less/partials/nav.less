@@ -327,7 +327,9 @@
     background: #fff;
     margin: 0;
     max-height: 50px;
-    overflow:hidden;
+    @media (max-width:499px) {
+        overflow: hidden;
+    }
     position: fixed;
     top: 0;
     z-index: 7777;
