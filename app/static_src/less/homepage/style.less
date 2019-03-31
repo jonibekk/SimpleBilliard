@@ -354,6 +354,30 @@ select {
     top: -10px;
 }
 
+.nav-back-btn {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+    > i {
+        font-size: 28px;
+    }
+
+    float: left;
+    color: @color-04-gray;
+    width: 40px;
+    height: 40px;
+
+    &:hover, &:visited, &:target {
+        text-decoration: none;
+        color: @color-04-gray;
+    }
+}
+
 /* ======= Footer ======= */
 
 .footer {

@@ -8,9 +8,9 @@
             </div>
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1" data-toggle="tab"><?= __("View info") ?></a></li>
-                <li><a href="#tab2" data-toggle="tab"><?= __("Members list") ?></a></li>
+                <li><a href="#tab2" data-toggle="tab" id="memberListTab"><?= __("Members list") ?></a></li>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
-                    <li><a href="#tab3" data-toggle="tab"><?= __("Add member(s)") ?></a></li>
+                    <li><a href="#tab3" data-toggle="tab" id="addMembersTab"><?= __("Add member(s)") ?></a></li>
                 <?php endif ?>
             </ul>
 
@@ -313,7 +313,7 @@
                         'onclick' => "document.getElementById('EditCircleFormSubmit').click();",
                         'div'     => false,
                     ]) ?>
-                <a href="/circle/<?= $circleId?>/about" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px">
+                <a href="/circles/<?= $circleId?>/about" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px">
                     <?= __("Cancel") ?>
                 </a>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
@@ -337,6 +337,7 @@
                     <?=
                     $this->Form->button(__("Add member(s)"),
                         [
+                            'id' => 'AddCircleMemberFormSubmit',
                             'class'   => 'btn btn-primary pull-right',
                             'onclick' => "document.getElementById('AddCircleMemberForm').submit();",
                             'div'     => false,
@@ -346,5 +347,15 @@
         </div>
     </div>
 </div>
-
+<?php
+// ↓ This is for temporary process because we gonna renewal circle create/edit feature in near future
+?>
+<script type="text/javascript">
+    $(window).on('load', function () {
+        var tab = "<?= $tab ?>";
+        if (tab) {
+            $('#' + tab + 'Tab').trigger('click');
+        }
+    });
+</script>
 <?= $this->App->viewEndComment()?>

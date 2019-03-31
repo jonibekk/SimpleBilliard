@@ -235,10 +235,10 @@ class Body extends React.Component {
     const {topic, messages, fetch_more_messages_status, is_mobile_app, fetching_read_count, search_message_id, is_old_direction} = this.props;
     const sp_class = this.props.is_mobile_app ? "mod-sp" : "";
 
-    const body_styles = {
-      top: this.props.mobile_app_layout.body_top,
-      bottom: this.props.mobile_app_layout.body_bottom
-    };
+    let body_styles = {};
+    if (this.props.save_message_status == SaveMessageStatus.SUCCESS) {
+      body_styles = { 'paddingBottom' : 0};
+    }
 
     // Render messages
     const renderMessages = () => {
@@ -259,10 +259,8 @@ class Body extends React.Component {
         )
       });
     };
-
-
     return (
-      <div className={`topicDetail-body ${sp_class} ${isIOSApp() ? 'mod-ios-app' : ''}`}  style={body_styles}>
+      <div className={`topicDetail-body ${sp_class} ${isIOSApp() ? 'mod-ios-app' : ''}`} ref="topic_detail_body" style={body_styles} >
         <div className={`topicDetail-body-inner ${sp_class}`}  ref="messages"
              onTouchMove={this.onTouchMove}>
           {(fetch_more_messages_status == FetchMoreMessages.LOADING && is_old_direction) && <Loading/>}

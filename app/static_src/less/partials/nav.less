@@ -327,6 +327,12 @@
     background: #fff;
     margin: 0;
     max-height: 50px;
+    @media (max-width:499px) {
+        overflow: hidden;
+    }
+    &.force-display-dropdown {
+      overflow: visible !important;
+    }
     position: fixed;
     top: 0;
     z-index: 7777;

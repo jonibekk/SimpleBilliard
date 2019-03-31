@@ -82,9 +82,10 @@
 }
 
 .mb-app-body {
-  padding: 45px 0 0;
+  padding: 40px 0 0;
   min-height: 100vh;
-
+  margin-top: 0px;
+  overflow: hidden;
   &.mod-fixed {
     background: #fff;
   }
@@ -837,6 +838,8 @@ header-nav-add.open ul {
 
 // ↓ renewal header version
 .glHeaderMobile {
+  //For fixing Android's header & footer scrolling issue
+  transform: translate3d(0, 0, 0);
   display: flex;
   align-items: center;
   background-color: @white;

@@ -1,8 +1,8 @@
-@keyframes show{
-  from{
+@keyframes show {
+  from {
     opacity: 0;
   }
-  to{
+  to {
     opacity: 1;
   }
 }
@@ -12,7 +12,8 @@
   @media screen and (min-width: @tablet-min-width) {
     display: none;
   }
-
+  //For fixing Android's header & footer scrolling issue
+  transform: translate3d(0, 0, 0);
   position: fixed;
   bottom: 0;
   margin: 0;
@@ -20,7 +21,7 @@
   z-index: 999;
   background-color: @white;
   padding-bottom: 0;
-  box-shadow: 0 -2px 4px 0 @box-shadow-color;
+  border-top: 1px solid #e1e1e8;
   // Browsers which partially support CSS Environment variables (iOS 11.0-11.2).
   @supports (padding-bottom: constant(safe-area-inset-bottom)) {
     & {
@@ -39,32 +40,45 @@
     display: flex;
     align-items: center;
     background-color: inherit;
-    justify-content: space-between;
-    padding: 0 @content-half-padding;
+    justify-content: space-around;
+    height: @mobile-footer-height;
+
     &-item {
       float: none;
-      margin:0;
+      margin: 0;
       display: block;
       text-align: center;
       position: relative;
+
       &-link {
+        .mod-feed {
+          width: 24px !important;
+          height: 26px !important;
+          background-size: 100% 200% !important;
+          margin: 6px auto 1px;
+        }
         .glNavMenuLink;
+
         &.active {
           color: @color-02-gray;
+
           .mod-feed {
-            // TODO: ON/OFFで画像を変えるとちらつきがあるので、svgスプライトにするか要素をON/OFFどちらとも要素を生成しておいて表示を出し分ける。
-            background: url("../img/svg/logomark_gray02.svg") center center no-repeat;
+            background-position: 50% 0%;
+            background-size: 100% 200% !important;
+            height: 26px !important;
+            margin: 4px auto 3px;
           }
         }
       }
+
       .btn.notify-function-numbers {
         top: 2px !important;
         right: 10px !important;
         font-size: 12px;
         border: 0;
-        background-color: #ff0a19;
-        background-color: #d9230f;
+        background-color: #e83b59;
         animation: show 0.3s linear 0s;
+
         &.mod-small {
           top: 6px !important;
           right: 18px !important;
@@ -74,13 +88,17 @@
       &-icon {
         font-size: 28px !important;
         height: 28px !important;
+
         &.mod-feed {
-          background: url("../img/svg/logomark_gray04.svg") center center no-repeat;
+          background: url('../img/svg/logomark.svg') no-repeat;
+          background-position: 50% 100%;
+          background-size: 200% 200%;
         }
       }
+
       &-name {
         margin-top: 2px;
-        font-size: 10px;
+        font-size: 10.5px;
       }
     }
   }

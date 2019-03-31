@@ -44,7 +44,6 @@ class GoalApprovalService extends AppService
         if (!empty($teamId)) {
             $GoalMember->current_team_id = $teamId;
         }
-        $GoalMember->current_team_id = $teamId;
         // Redisのキャッシュデータ取得
         $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $userId), 'user_data');
         // Redisから無ければDBから取得してRedisに保存

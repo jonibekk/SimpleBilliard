@@ -106,6 +106,7 @@ $defines = [
     'AWS_S3_BUCKET_USERNAME'                        => null,
     //For temporary files, such as upload buffering
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp',
+    'AWS_S3_BUCKET_NEW_GOALOUS'                     => '',
     'ES_API_BASE_URL'                               => 'dev-search.goalous.com'
 ];
 // for local

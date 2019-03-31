@@ -4,6 +4,12 @@ $(document).ready(function () {
   if(cake.jwt_token) {
     localStorage.setItem('token', cake.jwt_token);
   }
+  // Delete token to prevent access to new Goalous after logout
+  if(!cake.data.user_id && localStorage.getItem('token')) {
+    localStorage.removeItem('token');
+  }
+
+  window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
@@ -859,3 +865,48 @@ function getModalFormFromUrl(e) {
 window.addEventListener('load', function () {
   $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
 });
+
+function evtMobileKeyboardStatusChanged(e) {
+  var mbFooter = document.getElementById('MobileAppFooter');
+  if (!mbFooter) {
+    return;
+  }
+
+  var mbKeyboardStatus = e.detail.status;
+  if (!mbKeyboardStatus) {
+    return;
+  }
+  if (mbFooter.dataset.isAlwaysHidden === 'true') {
+    return;
+  }
+  switch (mbKeyboardStatus) {
+    case 'started_displaying':
+      mbFooter.classList.add('hidden');
+      break;
+    case 'started_closing':
+      mbFooter.classList.remove('hidden');
+      break;
+  }
+}
+function evtMobileKeyboardStatusChangedForTopicDetail(e) {
+  var mbKeyboardStatus = e.detail.status;
+  if (!mbKeyboardStatus) {
+    return;
+  }
+  switch (mbKeyboardStatus) {
+    case 'changed_height':
+    case 'closed':
+      const scrollHeight = document.body.scrollHeight;
+      window.scrollTo(0, scrollHeight);
+      document.body.scrollTop = scrollHeight;
+      break;
+  }
+}
+function triggerMobileKeyboardStatusChanged(status, height) {
+  // Native side
+  var event = new CustomEvent('MobileKeyboardStatusChanged', {detail: {
+      status: status, // keyboard status 'started_displaying', 'displayed', 'changed_height', 'started_closing', 'closed'
+      height: height // keyboard height
+    }})
+  window.dispatchEvent(event);
+}

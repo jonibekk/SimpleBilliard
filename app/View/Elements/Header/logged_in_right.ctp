@@ -68,7 +68,9 @@
 
         </li>
         <li class="glHeaderPc-nav-menu has-notify-dropdown">
-            <a href="#" class="glHeaderPc-nav-menu-link click-header-message" data-toggle="dropdown">
+<!--            TODO.Renewal: Fix to add dropdown bosh new/old Goalous -->
+<!--            <a href="#" class="glHeaderPc-nav-menu-link click-header-message" data-toggle="dropdown">-->
+            <a href="/topics" class="glHeaderPc-nav-menu-link">
                 <i class="material-icons">send</i>
                 <span><?= __('Message')?></span>
                 <div class="btn btn-xs notify-bell-numbers messageNum" style="opacity: 0;">

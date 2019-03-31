@@ -99,6 +99,12 @@ class CirclesController extends AppController
         $this->request->data = $this->Circle->findById($circleId);
         $this->request->data['Circle']['members'] = null;
 
+        $tab = $this->request->query('type') ?? "";
+        if (!in_array($tab,  ['memberList', 'addMembers'], true)) {
+            $tab = '';
+        }
+        $this->set('tab', $tab);
+
         $circle_members = $this->Circle->CircleMember->getMembers($circleId, true);
         $this->set('circle_members', $circle_members);
 

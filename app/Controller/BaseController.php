@@ -576,7 +576,9 @@ class BaseController extends Controller
 
         // Delete mapping jwt and session id
         $sesId = $this->Session->id();
-        $this->GlRedis->delMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+        if ($this->current_team_id && $this->my_uid) {
+            $this->GlRedis->delMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+        }
 
         foreach ($this->Session->read() as $key => $val) {
             if (in_array($key, ['Config', '_Token', 'Auth'])) {
