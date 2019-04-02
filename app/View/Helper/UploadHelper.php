@@ -116,7 +116,7 @@ class UploadHelper extends AppHelper
         }
         // 日本語ファイル名に対応するためロケールを一時的に変更する
         $orig_locale = setlocale(LC_CTYPE, 0);
-        setlocale(LC_CTYPE, 'C.UTF-8');
+        setlocale(LC_CTYPE, 'C');
         $file_name = pathinfo($data['attached_file_name']);
         setlocale(LC_CTYPE, $orig_locale);
         return h($file_name['filename']);
