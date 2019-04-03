@@ -181,7 +181,7 @@ class UploadedFile
         //Remove file extension
         if ($omitExtension) {
             $originalLocale = setlocale(LC_CTYPE, 0);
-            setlocale(LC_CTYPE, 'C.UTF-8');
+            setlocale(LC_CTYPE, 'C');
             $fileName = pathinfo($this->fileName, PATHINFO_FILENAME);
             setlocale(LC_CTYPE, $originalLocale);
             return $fileName;
