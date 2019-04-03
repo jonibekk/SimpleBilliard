@@ -392,14 +392,16 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            //自分の投稿
-            $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
-            //自分が共有範囲指定された投稿
-            $post_filter_conditions['OR'][] =
-                $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
-            //自分のサークルが共有範囲指定された投稿
-            $post_filter_conditions['OR'][] =
-                $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
+            if (empty($params['no_circle_posts'])) {
+                //自分の投稿
+                $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
+                //自分が共有範囲指定された投稿
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
+                //自分のサークルが共有範囲指定された投稿
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
+            }
 
             //関連ゴール
             $post_filter_conditions['OR'][] =
