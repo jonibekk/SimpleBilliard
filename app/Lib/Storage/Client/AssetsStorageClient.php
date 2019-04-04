@@ -166,14 +166,9 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
      */
     protected final function createFileKey(string $fileName, string $suffix = "", string $fileExt = ""): string
     {
-        $fileName = $this->removeExtension($fileName);
+        $fileInfo = UploadBehavior::_pathinfo($fileName);
 
-        if (!empty($fileName)) {
-            $hashedFileName = md5($fileName . Configure::read('Security.salt'));
-        } else {
-            GoalousLog::error("Empty file name");
-            throw new RuntimeException("Empty file name");
-        }
+        $hashedFileName = md5(($fileInfo['filename'] ?: "") . Configure::read('Security.salt'));
 
         if (empty($hashedFileName)) {
             $message = "Empty hashed file name";
@@ -191,22 +186,6 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         }
 
         return $key;
-    }
-
-    /**
-     * Remove file extension from file name
-     *
-     * @param string $fullFileName
-     *
-     * @return string
-     */
-    protected function removeExtension(string $fullFileName): string
-    {
-        $originalLocale = setlocale(LC_CTYPE, 0);
-        setlocale(LC_CTYPE, 'C.UTF-8');
-        $fileName = pathinfo($fullFileName, PATHINFO_FILENAME);
-        setlocale(LC_CTYPE, $originalLocale);
-        return $fileName;
     }
 
     /**
