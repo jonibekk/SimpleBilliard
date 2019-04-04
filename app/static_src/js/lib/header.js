@@ -4,6 +4,17 @@
 "use strict";
 
 $(function () {
+  $(document).on("click", ".glHeaderMobile-nav-menu-link", function (e) {
+    if (!$(this).data('toggle')) {
+      return;
+    }
+    if ($(this).parent().hasClass('open')) {
+      $('#goalousNavigation').addClass('force-display-dropdown');
+    } else {
+      $('#goalousNavigation').removeClass('force-display-dropdown');
+    }
+  });
+
   // Click at Message Icon
   $(document).on("click", ".click-header-message", function (e) {
     // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる

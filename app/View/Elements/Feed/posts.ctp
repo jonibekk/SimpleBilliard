@@ -132,11 +132,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
-                                            <a href="<?= $this->Html->url([
-                                                'controller' => 'posts',
-                                                'action'     => 'post_edit',
-                                                'post_id'    => $post['Post']['id']
-                                            ]) ?>"
+                                            <a href="<?= UrlUtil::fqdnFrontEnd() ?>/posts/<?= $post['Post']['id'] ?>?edit=1"
                                             ><?= __("Edit post") ?></a>
                                         </li>
                                     <?php endif; ?>
