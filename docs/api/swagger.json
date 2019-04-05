@@ -1873,6 +1873,46 @@
         }
       }
     },
+    "/api/notifications/read" : {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Read logged in user's specified notification.",
+        "description": "Read logged in user's specified notification.",
+        "operationId": "/api/notifications/read",
+        "requestBody" : {
+          "description" : "Specify notification id",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "notify_id" : {
+                    "type" : "string"
+                  },
+                },
+                "example" : {
+                  "notify_id" : "5ca6fb3a-5540-4a9a-bd49-5538ac150005"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
     "/api/posts" : {
       "post" : {
         "tags" : [ "Posts" ],
