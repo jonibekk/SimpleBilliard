@@ -7,9 +7,9 @@ App::import('Service', 'EvaluationService');
 /**
  * Evaluations Controller
  *
- * @property Evaluation $Evaluation
+ * @property Evaluation        $Evaluation
  * @property EvaluationSetting $EvaluationSetting
- * @var                 $selectedTabTermId
+ * @var                        $selectedTabTermId
  */
 class EvaluationsController extends AppController
 {
@@ -59,7 +59,7 @@ class EvaluationsController extends AppController
                 $termId = $this->Team->Term->getCurrentTermId();
                 // if previous my turn count, previous term is default. otherwise, current term is default
                 $prevTermId = $this->Team->Term->getPreviousTermId();
-                if($prevTermId){
+                if ($prevTermId) {
                     $prevMyTurnCount = $this->Evaluation->getMyTurnCount(null, $prevTermId);
                     if ($prevMyTurnCount > 0) {
                         $termId = $prevTermId;
@@ -238,8 +238,10 @@ class EvaluationsController extends AppController
 
         // Set saved message
         $savedMsg = "";
+        $redirectDestination = "";
         if ($status == Evaluation::TYPE_STATUS_DRAFT) {
             $savedMsg = $successMsg = __("Saved the draft.");
+            $redirectDestination = "/evaluations/view/evaluate_term_id:$evaluateTermId/user_id:$evaluateeId";
         } elseif ($status == Evaluation::TYPE_STATUS_DONE) {
             $this->notifyAndDelCache($evaluateeId, $evaluateTermId);
             if ($evalType == Evaluation::TYPE_ONESELF) {
@@ -247,9 +249,10 @@ class EvaluationsController extends AppController
             } elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
                 $savedMsg = __("Submitted the evaluation by evaluator.");
             }
+            $redirectDestination = "/evaluations?term_id=$evaluateTermId";
         }
         $this->Notification->outSuccess($savedMsg);
-        return $this->redirect($this->referer());
+        return $this->redirect($redirectDestination ?: $this->referer());
     }
 
     /**
