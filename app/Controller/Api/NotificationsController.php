@@ -34,6 +34,25 @@ class NotificationsController extends BaseApiController
     }
 
     /**
+     * Read all notifications
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function put_read()
+    {
+        $requestBody = $this->getRequestJsonBody();
+        $notifyId = Hash::get($requestBody, 'notify_id');
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        $GlRedis->changeReadStatusOfNotification(
+            $this->getTeamId(),
+            $this->getUserId(),
+            $notifyId
+        );
+        return ApiResponse::ok()->getResponse();
+    }
+
+    /**
      * Reset new notification count
      * @return ApiResponse|BaseApiResponse
      */

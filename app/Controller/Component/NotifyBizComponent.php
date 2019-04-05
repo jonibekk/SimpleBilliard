@@ -37,6 +37,7 @@ class NotifyBizComponent extends Component
     ];
 
     public $notify_option = [
+        'old_gl'      => true,
         'url_data'    => null,
         'count_num'   => 1,
         'notify_type' => null,
@@ -560,11 +561,21 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_POST);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
+
+        if ($post['Post']['type'] == Post::TYPE_NORMAL) {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => $post_id,
+            ];
+            $this->notify_option['old_gl'] = false;
+        } else {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
+            ];
+        }
+
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
@@ -1426,11 +1437,21 @@ class NotifyBizComponent extends Component
 
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($commented_user_list);
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
+
+        if ($post['Post']['type'] == Post::TYPE_NORMAL) {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => $post_id,
+            ];
+            $this->notify_option['old_gl'] = false;
+        } else {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
+            ];
+        }
+
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([$this->Mention->replaceMention(trim($comment['Comment']['body']), [], true)]) : null;
@@ -1472,11 +1493,21 @@ class NotifyBizComponent extends Component
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
             [$post['Post']['user_id']]);
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
+
+        if ($post['Post']['type'] == Post::TYPE_NORMAL) {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => $post_id,
+            ];
+            $this->notify_option['old_gl'] = false;
+        } else {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
+            ];
+        }
+
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([$this->Mention->replaceMention(trim($comment['Comment']['body']), [], true)]) : null;
@@ -1509,11 +1540,19 @@ class NotifyBizComponent extends Component
         }
 
         $this->notify_option['count_num'] = count($to_user_ids);
-        $this->notify_option['url_data'] = [
-            'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
-        ];
+        if ($post['Post']['type'] == Post::TYPE_NORMAL) {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => $post_id,
+            ];
+            $this->notify_option['old_gl'] = false;
+        } else {
+            $this->notify_option['url_data'] = [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
+            ];
+        }
         $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
         $this->notify_option['model_id'] = $post_id;
@@ -1571,7 +1610,8 @@ class NotifyBizComponent extends Component
             $this->notify_option['url_data'],
             microtime(true),
             $this->notify_option['topic_id'] ?? null,
-            json_encode($this->notify_option['options'])
+            json_encode($this->notify_option['options']),
+            $this->notify_option['old_gl']
         );
         $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
         if ($this->notify_option['notify_type'] == NotifySetting::TYPE_MESSAGE) {
