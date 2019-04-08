@@ -44,6 +44,7 @@ class NotificationPagingService extends BasePagingService
             $noti['body'] = is_array($body) ? reset($body): $body;
             $noti['is_read'] = !$noti['unread_flg'];
             $noti['options'] = json_decode($noti['options'], true) ?? [];
+            $noti['old_gl'] = !isset($noti['old_gl']) || $noti['old_gl'] ;
             unset($noti['unread_flg']);
         }
 
