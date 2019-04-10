@@ -118,7 +118,7 @@ class PostRequestValidator extends BaseValidator
     public function getPostCommentValidationRule(): array
     {
         $rules = [
-            "body"      => $this->getBodyValidator(),
+            "body"      => [validator::notEmpty()::length(1, 5000)],
             "file_ids"  => $this->getResourceValidator(),
             "site_info" => $this->getOgpValidator(),
         ];
