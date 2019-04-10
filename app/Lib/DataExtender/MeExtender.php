@@ -4,8 +4,10 @@ App::import('Service', 'ImageStorageService');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'TeamService');
 App::uses('LangUtil', 'Util');
 App::uses('GlRedis', 'Model');
+
 use Goalous\Enum as Enum;
 
 class MeExtender extends BaseExtender
@@ -44,9 +46,13 @@ class MeExtender extends BaseExtender
             $activeTeams = $TeamMember->getActiveTeamList($userId);
             $data['my_active_teams'] = [];
             foreach ($activeTeams as $activeTeamId => $name) {
+                /** @var TeamService $TeamService */
+                $TeamService = ClassRegistry::init('TeamService');
+                $team = $TeamService->get(new TeamResourceRequest($activeTeamId, $userId, $currentTeamId));
                 $data['my_active_teams'][] = [
-                    'id' => $activeTeamId,
-                    'name' => $name
+                    'id'      => $team['id'],
+                    'name'    => $team['name'],
+                    'img_url' => $team['img_url']
                 ];
             }
         }

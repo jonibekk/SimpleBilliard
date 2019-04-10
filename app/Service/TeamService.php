@@ -3,6 +3,8 @@ App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 App::uses('NotifyBizComponent', 'Controller/Component');
+App::import('Lib/DataExtender', 'TeamExtender');
+App::import('Service/Request/Resource', 'TeamResourceRequest');
 
 // FIXME: to use GlEmailComponent
 App::uses('ComponentCollection', 'Controller');
@@ -481,5 +483,24 @@ class TeamService extends AppService
             ]);
         }
 
+    }
+
+    /**
+     * Get a team information
+     *
+     * @param TeamResourceRequest $request
+     *
+     * @return array
+     */
+    public function get(TeamResourceRequest $request):array
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamExtender $TeamExtender */
+        $TeamExtender = ClassRegistry::init('TeamExtender');
+
+        $team = $Team->getEntity($request->getId());
+
+        return $TeamExtender->extend($team->toArray(), $request->getUserId(), $request->getTeamId(), [TeamExtender::EXTEND_ALL]);
     }
 }
