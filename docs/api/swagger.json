@@ -4174,6 +4174,9 @@
             "current_team_id": {
               "type": "string"
             },
+            "current_team_img_url": {
+              "$ref" : "#/components/schemas/Model.ImgUrls"
+            },
             "unapproved_goal_count": {
               "type": "integer",
               "format" : "int32",
@@ -4259,6 +4262,14 @@
             "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D"
           },
           "current_team_id": "66",
+          "current_team_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D"
+          },
           "unapproved_goal_count": 3,
           "evaluable_count": 2,
           "is_evaluation_available": true,

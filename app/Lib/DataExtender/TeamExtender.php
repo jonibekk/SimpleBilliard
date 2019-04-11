@@ -1,12 +1,6 @@
 <?php
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
-/**
- * Created by PhpStorm.
- * User: stephen
- * Date: 19/04/10
- * Time: 17:47
- */
 
 class TeamExtender extends BaseExtender
 {

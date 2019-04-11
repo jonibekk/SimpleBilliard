@@ -30,6 +30,8 @@ class MeExtender extends BaseExtender
         $NotifySetting = ClassRegistry::init('NotifySetting');
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
@@ -37,6 +39,8 @@ class MeExtender extends BaseExtender
         $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
 
         $data['current_team_id'] = $currentTeamId;
+        $currentTeam = $TeamService->get(new TeamResourceRequest($currentTeamId, $userId, $currentTeamId));
+        $data['current_team_img_url'] = $currentTeam['img_url'];
         $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
 
         if ($this->includeExt($extensions, self::EXTEND_CURRENT_TEAM_MEMBER_OWN)) {
@@ -46,13 +50,9 @@ class MeExtender extends BaseExtender
             $activeTeams = $TeamMember->getActiveTeamList($userId);
             $data['my_active_teams'] = [];
             foreach ($activeTeams as $activeTeamId => $name) {
-                /** @var TeamService $TeamService */
-                $TeamService = ClassRegistry::init('TeamService');
-                $team = $TeamService->get(new TeamResourceRequest($activeTeamId, $userId, $currentTeamId));
                 $data['my_active_teams'][] = [
-                    'id'      => $team['id'],
-                    'name'    => $team['name'],
-                    'img_url' => $team['img_url']
+                    'id'      => $activeTeamId,
+                    'name'    => $name
                 ];
             }
         }
