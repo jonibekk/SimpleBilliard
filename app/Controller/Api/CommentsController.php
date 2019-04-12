@@ -10,6 +10,8 @@ App::import('Service/Paging', 'CommentLikesPagingService');
 App::uses('CommentRequestValidator', 'Validator/Request/Api/V2');
 App::uses('Comment', 'Model');
 App::uses('TeamMember', 'Model');
+App::import('Lib/DataExtender', 'CommentExtender');
+
 
 /**
  * Created by PhpStorm.
@@ -22,6 +24,12 @@ use Goalous\Exception as GlException;
 
 class CommentsController extends BasePagingController
 {
+    public $components = [
+        'NotifyBiz',
+        'GlEmail',
+        'Mention'
+    ];
+
     /**
      * Endpoint for adding a like to a post
      *
@@ -196,17 +204,67 @@ class CommentsController extends BasePagingController
 
         $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
         $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
-
+        $resources = Hash::get($this->getRequestJsonBody(), 'resources');
         try {
-            /** @var CommentEntity $newComment */
-            $newComment = $CommentService->editComment($newBody, $commentId);
+            /** @var CommentEntity $updatedComment */
+            $userId = $this->getUserId();
+            $teamId = $this->getTeamId();
+            $updatedComment = $CommentService->edit($newBody, $userId, $teamId, $commentId, $resources);
+            $mentionedUserIds = $this->Mention->getUserList($updatedComment['body'], $teamId, $userId);
+            $this->notifyUpdateComment($updatedComment['id'], $updatedComment['post_id'],$userId, $teamId, $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
-        return ApiResponse::ok()->withData($newComment->toArray())->getResponse();
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+        $res = $CommentExtender->extend($updatedComment->toArray(), $userId, $teamId, [$CommentExtender::EXTEND_ALL]);
+        return ApiResponse::ok()->withData($res)->getResponse();
     }
+
+
+    /**
+     * Send notification about updated comment on a post.
+     * Will notify only if mention
+     *
+     * @param int $commentId Comment ID of the new comment
+     * @param int $postId Post ID where the comment belongs to
+     * @param int $userId User ID of the author of the updated comment
+     * @param int $teamId
+     * @param int[] $mentionedUserIds List of user IDs of mentioned users
+     */
+    private function notifyUpdateComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUserIds = [])
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $type = $Post->getPostType($postId);
+
+        switch ($type) {
+            case Post::TYPE_NORMAL:
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
+                break;
+            case Post::TYPE_ACTION:
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
+                break;
+        }
+    }
+
 
     /**
      * Get list of the user who likes the comment

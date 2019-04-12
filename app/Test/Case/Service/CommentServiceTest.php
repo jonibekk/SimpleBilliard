@@ -218,7 +218,7 @@ class CommentServiceTest extends GoalousTestCase
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $CommentService->editComment($updateComment, 183281390);
+        $CommentService->edit($updateComment, 183281390);
     }
     
     public function test_editComment_success()
@@ -227,7 +227,7 @@ class CommentServiceTest extends GoalousTestCase
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $res = $CommentService->editComment($updateComment, 1);
+        $res = $CommentService->edit($updateComment, 1);
         $this->assertTrue($res instanceof CommentEntity);
         $this->assertEquals($updateComment['body'], $res['body']);
     }

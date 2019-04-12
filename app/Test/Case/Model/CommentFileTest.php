@@ -71,4 +71,39 @@ class CommentFileTest extends GoalousTestCase
 
     }
 
+    public function test_findMaxOrderOfComment()
+    {
+        // No exist comment file
+        $res = $this->CommentFile->findMaxOrderOfComment(999);
+        $this->assertEquals($res, -1);
+
+        // Exist one
+        $res = $this->CommentFile->findMaxOrderOfComment(1);
+        $this->assertEquals($res, 0);
+
+        // Exist multiple
+        $this->CommentFile->saveAll([
+            [
+                'comment_id'       => 3,
+                'attached_file_id' => 100,
+                'team_id'          => 1,
+                'index_num'        => 0,
+            ],
+            [
+                'comment_id'       => 3,
+                'attached_file_id' => 101,
+                'team_id'          => 1,
+                'index_num'        => 1,
+            ],
+            [
+                'comment_id'       => 3,
+                'attached_file_id' => 102,
+                'team_id'          => 1,
+                'index_num'        => 2,
+            ]
+        ], ['validate' => false]);
+        $res = $this->CommentFile->findMaxOrderOfComment(3);
+        $this->assertEquals($res, 2);
+    }
+
 }
