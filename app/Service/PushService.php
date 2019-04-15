@@ -252,6 +252,21 @@ class PushService extends AppService
         /** @var Device $Device */
         $Device = ClassRegistry::init('Device');
 
+        // TODO: Delete this logging after solved problem below
+        // https://jira.goalous.com/browse/GL-8139
+        // Logging Kanko-san's device register on isao env
+        if ($userId === 81) {
+            GoalousLog::info(
+                'Mobile push token register',
+                [
+                    'user_id'      => $userId,
+                    'device_token' => $deviceToken,
+                    'os_type'      => $deviceType->getValue(),
+                    'version'      => $version,
+                ]
+            );
+        }
+
         // Check if the device already exists
         $data = $Device->getDeviceByToken($deviceToken);
         if (!empty($data['Device'])) {
