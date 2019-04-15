@@ -1890,7 +1890,7 @@
                 "properties" : {
                   "notify_id" : {
                     "type" : "string"
-                  },
+                  }
                 },
                 "example" : {
                   "notify_id" : "5ca6fb3a-5540-4a9a-bd49-5538ac150005"
@@ -1940,11 +1940,14 @@
                   "circle_id" : {
                     "type" : "number"
                   },
-                  "file_ids" : {
+                  "resources" : {
                     "type" : "array",
                     "items" : {
-                      "$ref" : "#/components/schemas/Object.String.FileID"
+                      "$ref" : "#/components/schemas/Object.FileResources"
                     }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
                   }
                 }
               },
@@ -2235,6 +2238,15 @@
                     "type" : "string",
                     "minLength" : 1,
                     "maxLength" : 10000
+                  },
+                  "resources" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.FileResources"
+                    }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
                   }
                 }
               },
@@ -3309,6 +3321,125 @@
         }
       }
     },
+    "/api/comments/{comment.id}" : {
+      "put" : {
+        "tags" : [ "Comments" ],
+        "summary" : "Update single comment",
+        "description" : "For editing comment content",
+        "operationId" : "/api/comments/{comment.id}",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Post.Id"
+        } ],
+        "requestBody" : {
+          "description" : "Edit comment body",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "body" : {
+                    "type" : "string",
+                    "minLength" : 1,
+                    "maxLength" : 5000
+                  },
+                  "resources" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.FileResources"
+                    }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
+                  }
+                }
+              },
+              "example" : {
+                "body" : "The quick brown fox jumps over the lazily build PHP code ver 3",
+                "resources" : []
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Updated comment",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Comment"
+                    }
+                  }
+                },
+                "example" : {
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "post_id": "1",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "key_result_id": "",
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/comments/{comment.id}/likes" : {
       "get" : {
         "tags" : [ "Comments" ],
@@ -4138,6 +4269,65 @@
         "type" : "string",
         "pattern" : "^[1-9]+[0-9]*$",
         "example" : "900"
+      },
+      "Object.FileResources" : {
+        "type" : "object",
+        "properties" : {
+          "id": {
+            "$ref": "#/components/schemas/Object.String.ID"
+          },
+          "resource_type": {
+            "type": "number",
+            "enum": [
+              "0",
+              "1",
+              "2"
+            ]
+          },
+          "file_uuid": {
+            "type": "string"
+          },
+          "is_video": {
+            "type": "boolean"
+          },
+          "video_stream_id": {
+            "id": {
+              "$ref": "#/components/schemas/Object.String.ID"
+            }
+          }
+        },
+        "example" : {}
+      },
+      "Object.SiteInfo" : {
+        "type" : "object",
+        "properties" : {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "site_name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        },
+        "example" : {
+          "title": "プログラマの技術情報共有サービス - Qiita",
+          "type": "external",
+          "site_name": "Qiita",
+          "url": "https://qiita.com/",
+          "description": "Qiitaは、プログラマのための技術情報共有サービスです。 プログラミングに関するTips、ノウハウ、メモを簡単に記録 &amp; 公開することができます。",
+          "image": "https://cdn.qiita.com/assets/qiita-fb-2887e7b4aad86fd8c25cea84846f2236.png"
+        }
       },
       "Model" : {
         "type" : "object",
