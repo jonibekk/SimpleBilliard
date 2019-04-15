@@ -70,7 +70,10 @@ class CommentFileService extends AppService
 
         if (empty($commentFiles)) return;
 
-        $attachedFileIds = Hash::extract($commentFiles, '{n}.attached_file_id');
+        $attachedFileIds = [];
+        foreach($commentFiles as $commentFile) {
+            $attachedFileIds[] = $commentFile['attached_file_id'];
+        }
         $this->deleteAllByAttachedFileIds($attachedFileIds);
     }
 
