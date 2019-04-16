@@ -4,8 +4,10 @@ App::import('Service', 'ImageStorageService');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalApprovalService');
+App::import('Service', 'TeamService');
 App::uses('LangUtil', 'Util');
 App::uses('GlRedis', 'Model');
+
 use Goalous\Enum as Enum;
 
 class MeExtender extends BaseExtender
@@ -28,6 +30,8 @@ class MeExtender extends BaseExtender
         $NotifySetting = ClassRegistry::init('NotifySetting');
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
 
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
@@ -35,6 +39,8 @@ class MeExtender extends BaseExtender
         $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
 
         $data['current_team_id'] = $currentTeamId;
+        $currentTeam = $TeamService->get(new TeamResourceRequest($currentTeamId, $userId, $currentTeamId));
+        $data['current_team_img_url'] = $currentTeam['img_url'];
         $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
 
         if ($this->includeExt($extensions, self::EXTEND_CURRENT_TEAM_MEMBER_OWN)) {
@@ -45,8 +51,8 @@ class MeExtender extends BaseExtender
             $data['my_active_teams'] = [];
             foreach ($activeTeams as $activeTeamId => $name) {
                 $data['my_active_teams'][] = [
-                    'id' => $activeTeamId,
-                    'name' => $name
+                    'id'      => $activeTeamId,
+                    'name'    => $name
                 ];
             }
         }
