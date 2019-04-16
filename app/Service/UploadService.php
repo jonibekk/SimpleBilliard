@@ -173,6 +173,7 @@ class UploadService extends AppService
     {
         /** @var AppModel $Model */
         $Model = ClassRegistry::init($modelName);
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
 
         $uploadConfig = $Model->actsAs['Upload'][$uploadCategory];
 
@@ -186,7 +187,7 @@ class UploadService extends AppService
         $file->setSuffix('_original');
         $fileGroups[] = $file;
 
-        if ($file->getFileType() == 'image') {
+        if ($AttachedFileService->isImg($file)) {
             $ImageRotateProcessor = new ImageRotateProcessor();
             $ImageResizeProcessor = new ImageResizeProcessor();
 

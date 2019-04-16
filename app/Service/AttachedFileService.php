@@ -247,21 +247,8 @@ class AttachedFileService extends AppService
         bool $removable = true
     ): AttachedFileEntity
     {
-        /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
-
-        switch ($file->getFileType()) {
-            case "image" :
-                $fileType = AttachedFileType::TYPE_FILE_IMG;
-                break;
-            case "video" :
-                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
-                break;
-            default:
-                $fileType = AttachedFileType::TYPE_FILE_DOC;
-                break;
-        }
-
+        $fileType = $this->getFileMimeType($file);
         $newData = [
             'user_id'               => $userId,
             'team_id'               => $teamId,
@@ -292,7 +279,35 @@ class AttachedFileService extends AppService
 
         return $result;
     }
+    public function getFileMimeType($file)
+    {
+        switch ($file->getFileType()) {
+            case "image" :
+                if($file->getFileExt() == 'psd'){
+                    $fileType = AttachedFileType::TYPE_FILE_DOC;
+                }else{
+                    $fileType = AttachedFileType::TYPE_FILE_IMG;
+                }
+                break;
+            case "video" :
+                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
+                break;
+            default:
+                $fileType = AttachedFileType::TYPE_FILE_DOC;
+                break;
+        }
+        return $fileType;
+    }
 
+    public function isImg($file)
+    {
+        if($this->getFileMimeType($file) == AttachedFileType::TYPE_FILE_IMG){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 
     /**
      * Get file url
