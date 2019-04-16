@@ -101,7 +101,7 @@ class CommentFileService extends AppService
                 $AttachedFile->softDeleteAll(['AttachedFile.id' => $attachedFileIds], false);
 
             if (!$result) {
-                throw new RuntimeException("Failed to delete post files & their attached files.");
+                throw new RuntimeException("Failed to delete comment files & their attached files.");
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {

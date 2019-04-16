@@ -17,6 +17,7 @@ App::uses('User', 'Model');
 App::import('Service', 'UploadService');
 App::import('Service', 'CommentService');
 App::import('Model/Entity', 'CommentEntity');
+App::import('Service/Request/Form', 'CommentUpdateRequest');
 
 use Mockery as mock;
 use Goalous\Exception as GlException;
@@ -218,17 +219,17 @@ class CommentServiceTest extends GoalousTestCase
 
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $CommentService->edit($updateComment, 1, 1, 999999999, []);
+        $commentUpdateRequest = new CommentUpdateRequest(99999999, 1, 1, 'test');
+        $CommentService->edit($commentUpdateRequest);
     }
     
     public function test_editComment_success()
     {
-        $updateComment['body'] = 'EDITED';
-
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
-        $res = $CommentService->edit($updateComment, 1, 1, 1, []);
+        $commentUpdateRequest = new CommentUpdateRequest(1, 1, 1, 'EDITED');
+        $res = $CommentService->edit($commentUpdateRequest);
         $this->assertTrue($res instanceof CommentEntity);
-        $this->assertEquals($updateComment['body'], $res['body']);
+        $this->assertEquals('EDITED', $res['body']);
     }
 }

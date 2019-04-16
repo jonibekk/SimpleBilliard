@@ -11,7 +11,7 @@ App::uses('CommentRequestValidator', 'Validator/Request/Api/V2');
 App::uses('Comment', 'Model');
 App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
-
+App::import('Service/Request/Form', 'CommentUpdateRequest');
 
 /**
  * Created by PhpStorm.
@@ -202,14 +202,15 @@ class CommentsController extends BasePagingController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $newBody['site_info'] = Hash::get($this->getRequestJsonBody(), 'site_info');
-        $newBody['body'] = Hash::get($this->getRequestJsonBody(), 'body');
+        $siteInfo = Hash::get($this->getRequestJsonBody(), 'site_info');
+        $body = Hash::get($this->getRequestJsonBody(), 'body');
         $resources = Hash::get($this->getRequestJsonBody(), 'resources');
         try {
-            /** @var CommentEntity $updatedComment */
             $userId = $this->getUserId();
             $teamId = $this->getTeamId();
-            $updatedComment = $CommentService->edit($newBody, $userId, $teamId, $commentId, $resources);
+            $commentUpdateRequest = new CommentUpdateRequest($commentId, $userId, $teamId, $body, $siteInfo, $resources);
+            /** @var CommentEntity $updatedComment */
+            $updatedComment = $CommentService->edit($commentUpdateRequest);
             $mentionedUserIds = $this->Mention->getUserList($updatedComment['body'], $teamId, $userId);
             $this->notifyUpdateComment($updatedComment['id'], $updatedComment['post_id'],$userId, $teamId, $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {

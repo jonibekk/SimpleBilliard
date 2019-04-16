@@ -266,21 +266,16 @@ class CommentService extends AppService
     /**
      * Edit a comment body
      *
-     * @param array $newBody
-     * @param int $userId
-     * @param int $teamId
-     * @param int $commentId
-     *
-     * @param array $resources
+     * @param CommentUpdateRequest $data
      * @return CommentEntity Updated comment
      * @throws Exception
      */
-    public function edit(array $newBody, int $userId, int $teamId, int $commentId, array $resources): CommentEntity
+    public function edit(CommentUpdateRequest $data): CommentEntity
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
 
-        if (!$Comment->exists($commentId)) {
+        if (!$Comment->exists($data->getId())) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
@@ -288,26 +283,26 @@ class CommentService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'      => '"' . $newBody['body'] . '"',
-                'site_info' => !empty($newBody['site_info']) ? "'" . addslashes(json_encode($newBody['site_info'])) . "'"  : null,
+                'body'      => '"' . $data->getBody() . '"',
+                'site_info' => !empty($data->getSiteInfo()) ? "'" . addslashes(json_encode($data->getSiteInfo())) . "'"  : null,
                 'modified'  => REQUEST_TIMESTAMP
             ];
-            if (!$Comment->updateAll($newData, ['Comment.id' => $commentId])) {
+            if (!$Comment->updateAll($newData, ['Comment.id' => $data->getId()])) {
                 throw new RuntimeException("Failed to update comment");
             }
-            $this->updateAttachedFiles($commentId, $userId, $teamId, $resources);
+            $this->updateAttachedFiles($data->getId(), $data->getUserId(), $data->getTeamId(), $data->getResources());
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error("Failed to update comment", [
                 'message' => $e->getMessage(),
-                'data' => compact('commentId', 'newData', 'userId', 'teamId', 'resources')
+                'data' => $data
             ]);
             throw $e;
         }
         /** @var CommentEntity $result */
-        $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $commentId]]);
+        $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $data->getId()]]);
         return $result;
     }
 
