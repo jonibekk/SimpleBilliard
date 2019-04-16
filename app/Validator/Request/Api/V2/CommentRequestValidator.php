@@ -26,6 +26,11 @@ class CommentRequestValidator extends BaseValidator
     {
         $rules = [
             "body" => [validator::notEmpty()::length(1, 10000)],
+            "resources" => [
+                // Could not use max(10) on array
+                validator::arrayType()->length(null, 10),
+                "optional"
+            ],
         ];
         return $rules;
     }
