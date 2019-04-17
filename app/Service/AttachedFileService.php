@@ -247,8 +247,11 @@ class AttachedFileService extends AppService
         bool $removable = true
     ): AttachedFileEntity
     {
+        /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
+
         $fileType = $this->getFileMimeType($file);
+
         $newData = [
             'user_id'               => $userId,
             'team_id'               => $teamId,
@@ -279,15 +282,26 @@ class AttachedFileService extends AppService
 
         return $result;
     }
-    public function getFileMimeType($file)
+
+    /**
+     * get file's Mime-type
+     *
+     * @param UploadedFile      $file
+     *
+     * @return int
+     */
+    public function getFileMimeType(UploadedFile $file):int
     {
+        /** add here if there is aother exceptional file Extension*/
+        $exceptionExt = [
+            'psd'
+        ];
+        if(in_array($file->getFileExt(),$exceptionExt)){
+            return AttachedFileType::TYPE_FILE_DOC;
+        }
         switch ($file->getFileType()) {
             case "image" :
-                if($file->getFileExt() == 'psd'){
-                    $fileType = AttachedFileType::TYPE_FILE_DOC;
-                }else{
-                    $fileType = AttachedFileType::TYPE_FILE_IMG;
-                }
+                $fileType = AttachedFileType::TYPE_FILE_IMG;
                 break;
             case "video" :
                 $fileType = AttachedFileType::TYPE_FILE_VIDEO;
@@ -298,15 +312,16 @@ class AttachedFileService extends AppService
         }
         return $fileType;
     }
-
-    public function isImg($file)
+    /**
+     * check file is an image or not
+     *
+     * @param UploadedFile      $file
+     *
+     * @return boolean
+     */
+    public function isImg(UploadedFile $file):bool
     {
-        if($this->getFileMimeType($file) == AttachedFileType::TYPE_FILE_IMG){
-            return true;
-        }else{
-            return false;
-        }
-
+        return $this->getFileMimeType($file) == AttachedFileType::TYPE_FILE_IMG;
     }
 
     /**
