@@ -3,6 +3,7 @@ App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service/Request/Resource', 'TeamResourceRequest');
 App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');

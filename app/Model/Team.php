@@ -102,16 +102,17 @@ class Team extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles'      => [
+                'styles'         => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
                     'medium_large' => '96x96',
                     'large'        => '128x128',
                     'x_large'      => '256x256',
                 ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-team.jpg',
-                'quality'     => 100,
+                'path'           => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url'    => 'no-image-team.jpg',
+                's3_default_url' => 'sys/defaults/no-image-team.svg',
+                'quality'        => 100,
             ]
         ]
     ];
