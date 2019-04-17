@@ -90,7 +90,7 @@ class PostRequestValidator extends BaseValidator
     public function getFileUploadValidationRule(): array
     {
         $rules = [
-            "files" => $this->getResourceValidator(),
+            "resources" => $this->getResourceValidator(),
         ];
 
         return $rules;
