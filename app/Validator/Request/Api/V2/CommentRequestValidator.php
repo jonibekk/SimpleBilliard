@@ -25,7 +25,7 @@ class CommentRequestValidator extends BaseValidator
     public function getCommentEditValidationRule(): array
     {
         $rules = [
-            "body" => [validator::notEmpty()::length(1, 10000)],
+            "body" => [validator::notEmpty()::length(1, 5000)],
             "resources" => [
                 // Could not use max(10) on array
                 validator::arrayType()->length(null, 10),
