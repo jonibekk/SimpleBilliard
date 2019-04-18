@@ -64,4 +64,29 @@ class CommentFile extends AppModel
 
         return $this->useType()->useEntity()->find('all', $condition);
     }
+
+
+    /**
+     * Find the highest order of a given comment id
+     *
+     * @param int $commentId
+     *
+     * @return int Highest order of a comment. -1 for not existing
+     */
+    public function findMaxOrderOfComment(int $commentId): int
+    {
+        $condition = [
+            'conditions' => [
+                'comment_id' => $commentId,
+                'del_flg' => false
+            ],
+            'fields'     => [
+                'MAX(index_num) as max_order'
+            ]
+        ];
+
+        $res = $this->find('first', $condition);
+        $maxOrder = Hash::get($res, '0.max_order');
+        return is_null($maxOrder) ? -1 : $maxOrder;
+    }
 }
