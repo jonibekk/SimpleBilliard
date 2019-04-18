@@ -202,9 +202,9 @@ class CommentsController extends BasePagingController
         /** @var CommentService $CommentService */
         $CommentService = ClassRegistry::init('CommentService');
 
-        $siteInfo = Hash::get($this->getRequestJsonBody(), 'site_info');
-        $body = Hash::get($this->getRequestJsonBody(), 'body');
-        $resources = Hash::get($this->getRequestJsonBody(), 'resources');
+        $siteInfo = Hash::get($this->getRequestJsonBody(), 'site_info', []);
+        $body = Hash::get($this->getRequestJsonBody(), 'body', '');
+        $resources = Hash::get($this->getRequestJsonBody(), 'resources', []);
         try {
             $userId = $this->getUserId();
             $teamId = $this->getTeamId();
