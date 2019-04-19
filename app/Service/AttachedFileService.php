@@ -32,6 +32,11 @@ class AttachedFileService extends AppService
         IMAGETYPE_JPEG2000,
     ];
 
+     /** add here if there is aother file Extension you want to treat as DOC */
+    public $nonMediaExt = [
+            'psd'
+    ];
+
     /**
      * Get single file
      *
@@ -256,7 +261,7 @@ class AttachedFileService extends AppService
             'user_id'               => $userId,
             'team_id'               => $teamId,
             'attached_file_name'    => $file->getFileName(),
-            'file_type'             => $fileType,
+            'file_type'             => $fileType->getValue(),
             'file_ext'              => $file->getFileExt(),
             'file_size'             => $file->getFileSize(),
             'model_type'            => $modelType->getValue(),
@@ -290,27 +295,20 @@ class AttachedFileService extends AppService
      *
      * @return int
      */
-    public function getFileMimeType(UploadedFile $file):int
+    public function getFileMimeType(UploadedFile $file): AttachedFileType
     {
-        /** add here if there is aother exceptional file Extension*/
-        $exceptionExt = [
-            'psd'
-        ];
-        if(in_array($file->getFileExt(),$exceptionExt)){
-            return AttachedFileType::TYPE_FILE_DOC;
+        if(in_array($file->getFileExt(), $this->nonMediaExt, true)){
+            return AttachedFileType::TYPE_FILE_DOC();
         }
         switch ($file->getFileType()) {
             case "image" :
-                $fileType = AttachedFileType::TYPE_FILE_IMG;
-                break;
+                return AttachedFileType::TYPE_FILE_IMG();
             case "video" :
-                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
-                break;
+                return AttachedFileType::TYPE_FILE_VIDEO();
             default:
-                $fileType = AttachedFileType::TYPE_FILE_DOC;
-                break;
+                return AttachedFileType::TYPE_FILE_DOC();
         }
-        return $fileType;
+
     }
     /**
      * check file is an image or not
@@ -319,9 +317,9 @@ class AttachedFileService extends AppService
      *
      * @return boolean
      */
-    public function isImg(UploadedFile $file):bool
+    public function isImg(UploadedFile $file): bool
     {
-        return $this->getFileMimeType($file) == AttachedFileType::TYPE_FILE_IMG;
+        return $this->getFileMimeType($file)->getValue() == AttachedFileType::TYPE_FILE_IMG()->getValue();
     }
 
     /**

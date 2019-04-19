@@ -191,7 +191,7 @@ class UploadService extends AppService
         /*resizing & rotating if files are image-type*/
         if($AttachedFileService->isImg($file))
         {
-           $fileGroups = $this-> imageReworkProcess($file, $uploadConfig, $fileGroups);
+           $fileGroups = $this->imageReworkProcess($file, $uploadConfig, $fileGroups);
         }
 
         // Bulk upload original file and file each size to s3
