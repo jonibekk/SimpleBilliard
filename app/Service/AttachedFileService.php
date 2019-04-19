@@ -32,9 +32,9 @@ class AttachedFileService extends AppService
         IMAGETYPE_JPEG2000,
     ];
 
-     /** add here if there is aother file Extension you want to treat as DOC */
-    public $nonMediaExt = [
-            'psd'
+     /** add here if there is aother Media file Extension you want to treat as DOC */
+    const nonMediaExt = [
+        'psd'
     ];
 
     /**
@@ -297,7 +297,7 @@ class AttachedFileService extends AppService
      */
     public function getFileMimeType(UploadedFile $file): AttachedFileType
     {
-        if(in_array($file->getFileExt(), $this->nonMediaExt, true)){
+        if(in_array($file->getFileExt(), self::nonMediaExt, true)){
             return AttachedFileType::TYPE_FILE_DOC();
         }
         switch ($file->getFileType()) {
@@ -319,7 +319,7 @@ class AttachedFileService extends AppService
      */
     public function isImg(UploadedFile $file): bool
     {
-        return $this->getFileMimeType($file)->getValue() == AttachedFileType::TYPE_FILE_IMG()->getValue();
+        return $this->getFileMimeType($file)->getValue() === AttachedFileType::TYPE_FILE_IMG;
     }
 
     /**
