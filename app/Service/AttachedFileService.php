@@ -24,17 +24,17 @@ class AttachedFileService extends AppService
     const UPLOAD_TYPE_ALL = 1;
     const UPLOAD_TYPE_IMG = 2;
 
+    /** add here if there is aother Media file Extension you want to treat as DOC */
+    const NON_MEDIA_EXT = [
+        'psd'
+    ];
+
     // アップロード可能な画像種類
     public $supportedImgTypes = [
         IMAGETYPE_PNG,
         IMAGETYPE_GIF,
         IMAGETYPE_JPEG,
         IMAGETYPE_JPEG2000,
-    ];
-
-     /** add here if there is aother Media file Extension you want to treat as DOC */
-    const nonMediaExt = [
-        'psd'
     ];
 
     /**
@@ -297,7 +297,7 @@ class AttachedFileService extends AppService
      */
     public function getFileMimeType(UploadedFile $file): AttachedFileType
     {
-        if(in_array($file->getFileExt(), self::nonMediaExt, true)){
+        if(in_array($file->getFileExt(), self::NONMEDIAEXT, true)){
             return AttachedFileType::TYPE_FILE_DOC();
         }
         switch ($file->getFileType()) {
