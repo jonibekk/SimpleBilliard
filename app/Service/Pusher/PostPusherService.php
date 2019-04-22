@@ -22,18 +22,25 @@ class PostPusherService extends BasePusherService
         $PusherService->notify($this->socketId, $NewPostNotifiable);
     }
 
-    public function sendCircleBadgeNotification(int $circleId, int $userId, PostEntity $newPost)
+    public function sendCircleBadgeNotification(int $circleId, int $currentUserId, PostEntity $newPost)
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
-        if ($CircleMember->getNotificationFlg($circleId, $userId)) {
-            /** @var PusherService $PusherService */
-            $PusherService = ClassRegistry::init("PusherService");
-            /** @var NavCircleBadgeNotifiable $NavCircleBadgeNotifiable */
-            $NavCircleBadgeNotifiable = ClassRegistry::init("NavCircleBadgeNotifiable");
-            $NavCircleBadgeNotifiable->build($newPost, $circleId);
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        /** @var NavCircleBadgeNotifiable $NavCircleBadgeNotifiable */
+        $NavCircleBadgeNotifiable = ClassRegistry::init("NavCircleBadgeNotifiable");
+
+        $members = $CircleMember->getMembersWithNotificationFlg($circleId, true);
+
+        foreach ($members as $member) {
+            if ($member['id'] === $currentUserId) {
+                continue;
+            }
+            $NavCircleBadgeNotifiable->build($newPost, $circleId, $member['id']);
             $PusherService->notify($this->socketId, $NavCircleBadgeNotifiable);
         }
     }
+
 
 }
