@@ -21,7 +21,7 @@ class PostRequestValidator extends BaseValidator
     }
     private function getBodyValidator() {
         return [
-            validator::stringType()->length(1, 10000)->notEmpty()
+            validator::stringType()->length(1, 20000)->notEmpty()
         ];
     }
     private function getOgpValidator() {
@@ -90,7 +90,7 @@ class PostRequestValidator extends BaseValidator
     public function getFileUploadValidationRule(): array
     {
         $rules = [
-            "files" => $this->getResourceValidator(),
+            "resources" => $this->getResourceValidator(),
         ];
 
         return $rules;

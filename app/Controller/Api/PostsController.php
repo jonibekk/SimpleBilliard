@@ -55,7 +55,7 @@ class PostsController extends BasePagingController
         $post['site_info'] = Hash::get($requestData, 'site_info');
 
         $circleId = (int)Hash::get($requestData, 'circle_id');
-        $files = Hash::get($requestData, 'files', []);
+        $files = Hash::get($requestData, 'resources', []);
 
         try {
             // Checking if needs to create a draft post
@@ -523,8 +523,8 @@ class PostsController extends BasePagingController
         $requestBody = $this->getRequestJsonBody();
         $commentData['body'] = Hash::get($requestBody, 'body');
         $commentData['site_info'] = Hash::get($requestBody, 'site_info');
-        $fileIDs = Hash::get($requestBody, 'file_ids', []);
-
+        $resources = Hash::get($requestBody, 'resources', []);
+        $fileIDs = Hash::extract($resources, '{n}.file_uuid') ?? [];
         $userId = $this->getUserId();
         $teamId = $this->getTeamId();
         try {
