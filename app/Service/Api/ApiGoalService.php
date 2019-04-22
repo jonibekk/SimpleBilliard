@@ -1,5 +1,6 @@
 <?php
 App::import('Service/Api', 'ApiService');
+App::import('Service', 'GoalService');
 App::uses('TimeExHelper', 'View/Helper');
 
 /**
@@ -26,6 +27,8 @@ class ApiGoalService extends ApiService
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
 
         // デフォルト値定義
         $ret = [
@@ -35,7 +38,7 @@ class ApiGoalService extends ApiService
         ];
 
         // 検索条件抽出(余分な条件が入り込まないようにする)
-        $conditions = $this->extractConditions($conditions);
+        $conditions = $GoalService->extractConditions($conditions);
 
         // ゴール件数取得
         $count = $Goal->countSearch($conditions);
@@ -162,26 +165,6 @@ class ApiGoalService extends ApiService
     }
 
     /**
-     * 検索条件抽出
-     * 余分な条件が入り込まないようにする
-     *
-     * @param $params
-     *
-     * @return array
-     */
-    private function extractConditions($params)
-    {
-        $conditions = [];
-        $conditionFields = ['keyword', 'term', 'category', 'progress', 'labels'];
-        foreach ($conditionFields as $field) {
-            if (!empty($params[$field])) {
-                $conditions[$field] = $params[$field];
-            }
-        }
-        return $conditions;
-    }
-
-    /**
      * ページング情報設定
      *
      * @param $data
@@ -296,6 +279,40 @@ class ApiGoalService extends ApiService
         ];
 
         return $ret;
+    }
+
+    /**
+     * Create a CSV file for downloading, based on set filters
+     *
+     * @param int   $teamId
+     * @param array $conditions
+     *
+     * @return string
+     */
+    public function createCsvFile(int $teamId, array $conditions): string {
+
+        // Threshold of 100 MB (100 * 1024 * 1024)
+        $fd = fopen('php://temp/maxmemory:104857600', 'w');
+        if($fd === false) {
+            throw new RuntimeException('Failed to open temporary file');
+        }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+
+        $headers = $GoalService->createCsvHeader();
+        $records = $GoalService->createCsvContent($teamId,  $conditions);
+
+        fputcsv($fd, $headers);
+        foreach($records as $record) {
+            fputcsv($fd, $record);
+        }
+
+        rewind($fd);
+        $csv = stream_get_contents($fd);
+        fclose($fd);
+
+        return $csv;
     }
 
 }

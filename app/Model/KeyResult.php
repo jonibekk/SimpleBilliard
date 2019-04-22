@@ -10,6 +10,9 @@ App::uses('AppModel', 'Model');
  * @property Post         $Post
  * @method findByGoalId($goalId)
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class KeyResult extends AppModel
 {
     /**
@@ -207,6 +210,15 @@ class KeyResult extends AppModel
                 'allowEmpty' => true
             ],
         ],
+    ];
+
+    public $modelConversionTable = [
+        'team_id'             => DataType::INT,
+        'user_id'             => DataType::INT,
+        'goal_id'             => DataType::INT,
+        'priority'            => DataType::INT,
+        'action_result_count' => DataType::INT,
+        'tkr_flg'             => DataType::BOOL,
     ];
 
     /**
@@ -529,7 +541,8 @@ class KeyResult extends AppModel
         array $params = [],
         $with_action = false,
         $action_limit = MY_PAGE_ACTION_NUMBER
-    ) {
+    )
+    {
         // パラメータデフォルト
         $params = array_merge([
             'limit' => null,
@@ -913,7 +926,7 @@ class KeyResult extends AppModel
         $now = time();
         $weekAgoTimestamp = AppUtil::getTimestampByTimezone('-1 week midnight', $currentTerm['timezone']);
         $team = $this->Team->getCurrentTeam();
-        $timezone = (int)Hash::get($team,'Team.timezone');
+        $timezone = (int)Hash::get($team, 'Team.timezone');
         $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
@@ -922,7 +935,7 @@ class KeyResult extends AppModel
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
                 'KeyResult.completed'   => null,
                 'GoalMember.del_flg'    => false,
-                'Goal.end_date >=' => $today
+                'Goal.end_date >='      => $today
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -995,7 +1008,7 @@ class KeyResult extends AppModel
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
         $team = $this->Team->getCurrentTeam();
-        $timezone = (int)Hash::get($team,'Team.timezone');
+        $timezone = (int)Hash::get($team, 'Team.timezone');
         $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
@@ -1234,5 +1247,36 @@ WHERE
 SQL;
         $res = $this->query($query);
         return $res !== false;
+    }
+
+    /**
+     * Get all KRs of a goal
+     *
+     * @param int  $goalId
+     * @param bool $includeTkr
+     *
+     * @return array
+     */
+    public function getAllByGoalId(int $goalId, bool $includeTkr = false): array
+    {
+        $conditions = [
+            'conditions' => [
+                'goal_id' => $goalId
+            ],
+            'order'      => [
+                'priority' => "DESC",
+                'id'       => "ASC"
+            ]
+        ];
+
+        if ($includeTkr) {
+            array_unshift($conditions['order'], ['tkr_flg' => "DESC"]);
+        } else {
+            $conditions['conditions']['tkr_flg'] = false;
+        }
+
+        $result = $this->useType()->useEntity()->find('all', $conditions);
+
+        return $result;
     }
 }

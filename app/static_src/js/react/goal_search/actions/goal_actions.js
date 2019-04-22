@@ -2,6 +2,7 @@ import * as ActionTypes from "~/goal_search/constants/ActionTypes";
 import {post, del} from "~/util/api";
 import axios from "axios";
 import querystring from "querystring";
+import { saveAs } from 'file-saver';
 
 export function updateInputData(data, key) {
   return {
@@ -79,6 +80,43 @@ export function updateFilter(data) {
           search_conditions,
           search_result
         })
+      })
+      .catch((response) => {
+      })
+  }
+}
+
+export function downloadCsv(data) {
+  return (dispatch, getState) => {
+
+    // 更新した検索条件によってゴール検索を実行
+    let search_conditions = Object.assign(
+      getState().goal_search.search_conditions,
+      data
+    )
+
+    let queries = Object.assign({}, search_conditions)
+    //querystring.stringifyすると配列がqueryのkeyダブってセットされてしまう(hoge=aaa&hoge=bbb)ので、hoge[]にキーを事前に書き換える
+    if ('labels' in queries) {
+      queries["labels[]"] = queries.labels
+      delete queries.labels
+    }
+    queries = querystring.stringify(queries)
+    history.pushState(null, "", '?' + queries);
+
+    return axios.get(`/api/v1/goals/download_csv?${queries}`, {responseType: 'arraybuffer'})
+      .then((response) => {
+        var filename = "";
+        var headers = response.headers
+        var disposition = headers.getResponseHeader('Content-Disposition');
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+          }
+        }
+        saveAs(response.data, filename);
       })
       .catch((response) => {
       })

@@ -40,6 +40,11 @@ export default class Goals extends React.Component {
     this.props.updateKeyword({keyword: e.target.value})
   }
 
+  downloadCsv(e) {
+    e.preventDefault();
+    this.props.downloadCsv(e);
+  }
+
   fetchMoreGoals() {
     const {search_result} = this.props.goal_search
     const url = search_result.paging.next
@@ -122,6 +127,7 @@ export default class Goals extends React.Component {
             </div>
           </form>
           <div className="text-align_r">
+            <a href="#" onClick={this.downloadCsv()}>{__("Download CSV")}</a>
             <a href="#" onClick={this.showFilter.bind(this)}>{__("Filter")}</a>
           </div>
         </div>

@@ -10,6 +10,7 @@ App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('Team', 'Model');
 App::uses('Term', 'Model');
 App::uses('GoalLabel', 'Model');
 App::uses('ApprovalHistory', 'Model');
@@ -17,6 +18,7 @@ App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
+App::uses('Follower', 'Model');
 App::uses('KrValuesDailyLog', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
@@ -786,7 +788,8 @@ class GoalService extends AppService
         string $targetEndDate,
         int $targetDays = self::GRAPH_TARGET_DAYS,
         int $maxBufferDays = 0
-    ): array {
+    ): array
+    {
         //initialize variables
         $ret = [
             'graphStartDate'  => null,
@@ -863,7 +866,8 @@ class GoalService extends AppService
         int $maxBufferDays,
         string $termStartDate,
         string $termEndDate
-    ) {
+    )
+    {
         //対象日数が1未満はありえない
         if ($targetDays < 1) {
             $this->log(sprintf("%s%s [method:%s] wrong target days. targetDays:%s",
@@ -918,7 +922,8 @@ class GoalService extends AppService
         string $graphStartDate,
         string $graphEndDate,
         string $plotDataEndDate
-    ) {
+    )
+    {
         //不正な範囲指定か判定
         if ($graphStartDate >= $graphEndDate
             || $graphStartDate > $plotDataEndDate
@@ -956,7 +961,8 @@ class GoalService extends AppService
         string $graphEndDate,
         string $plotDataEndDate,
         bool $withSweetSpot = false
-    ): array {
+    ): array
+    {
         //パラメータバリデーション
         $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
         if ($validOrErrorMsg !== true) {
@@ -1055,7 +1061,8 @@ class GoalService extends AppService
         string $graphEndDate,
         string $plotDataEndDate,
         bool $withSweetSpot = false
-    ): array {
+    ): array
+    {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
         if (!$Goal->exists($goalId)) {
@@ -1130,10 +1137,11 @@ class GoalService extends AppService
         array $sweetSpot,
         string $graphStartDate,
         string $graphEndDate
-    ): array {
+    ): array
+    {
         /** @noinspection PhpUndefinedVariableInspection */
-        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
-        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top'] ?? []);
+        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom'] ?? []);
         $ret[2] = array_merge(['data'], $progressLogs);
         $ret[3] = array_merge(['x'], $this->getFormatDatesEachGraphPoint($graphStartDate, $graphEndDate));
         return $ret;
@@ -1203,7 +1211,8 @@ class GoalService extends AppService
         array $latestKrValues,
         string $startDate,
         string $endDate
-    ): array {
+    ): array
+    {
         $goalIds = array_keys($goalPriorities);
         $today = date('Y-m-d');
         ///ログDBからユーザの各ゴールのKR現在値のログを取得
@@ -1431,7 +1440,8 @@ class GoalService extends AppService
         string $endDate,
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
-    ): array {
+    ): array
+    {
         /** @var Term $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('Term');
         $term = $EvaluateTerm->getCurrentTermData();
@@ -1690,4 +1700,178 @@ class GoalService extends AppService
         return $goalIds;
     }
 
+    /**
+     * Create headers for csv file
+     *
+     * @return array
+     */
+    public function createCsvHeader(): array
+    {
+        $csvHeader[0] = __("GOAL ID");
+        $csvHeader[1] = __("GOAL NAME");
+        $csvHeader[2] = __("GOAL DESCRIPTION");
+        $csvHeader[3] = __("GOAL CATEGORY");
+        $csvHeader[4] = __("LABELS");
+        $csvHeader[5] = __("GOAL MEMBERS COUNT");
+        $csvHeader[6] = __("FOLLOWERS COUNT");
+        $csvHeader[7] = __("KRS COUNT");
+        $csvHeader[8] = __("TERM");
+        $csvHeader[9] = __("NEED APPROVAL");
+        $csvHeader[10] = __("APPROVAL STATUS");
+        $csvHeader[11] = __("GOAL START DATE");
+        $csvHeader[12] = __("GOAL END DATE");
+        $csvHeader[13] = __("LEADER USER ID");
+        $csvHeader[14] = __("LEADER NAME");
+        $csvHeader[15] = __("GOAL PROGRESS(%)");
+        $csvHeader[16] = __("GOAL CREATED");
+        $csvHeader[17] = __("GOAL EDITED");
+        $csvHeader[18] = __("KR ID");
+        $csvHeader[19] = __("KR NAME");
+        $csvHeader[20] = __("KR DESCRIPTION");
+        $csvHeader[21] = __("KR TYPE");
+        $csvHeader[22] = __("KR WEIGHT");
+        $csvHeader[23] = __("KR START DATE");
+        $csvHeader[24] = __("KR END DATE");
+        $csvHeader[25] = __("KR PROGRESS(%)");
+        $csvHeader[26] = __("KR UNIT");
+        $csvHeader[27] = __("KR INITIAL");
+        $csvHeader[28] = __("KR TARGET");
+        $csvHeader[29] = __("KR CURRENT");
+        $csvHeader[30] = __("KR CREATED");
+        $csvHeader[31] = __("KR EDITED");
+
+        return $csvHeader;
+    }
+
+    /**
+     * Create content of CSV file to be downloaded
+     *
+     * @param int   $teamId
+     * @param array $conditions
+     *
+     * @return array
+     */
+    public function createCsvContent(int $teamId, array $conditions): array
+    {
+        /** @var Follower $Follower */
+        $Follower = ClassRegistry::init('Follower');
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        /** @var GoalCategory $GoalCategory */
+        $GoalCategory = ClassRegistry::init('GoalCategory');
+        /** @var GoalLabel $GoalLabel */
+        $GoalLabel = ClassRegistry::init('GoalLabel');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $conditions = $this->extractConditions($conditions);
+
+        $timezone = $Team->getEntity($teamId)['timezone'];
+
+        // Search goals
+        $goals = $Goal->searchForDownload($teamId, $conditions);
+
+        $result = [];
+
+        foreach ($goals as $goal) {
+
+            $krs = $KeyResult->getAllByGoalId($goal['id'], true);
+
+            $goalCategoryName = $GoalCategory->getEntity($goal['goal_category_id'], ["GoalCategory.name"]);
+            $goalLabels = implode(", ", array_values($GoalLabel->getLabelList($goal['id'])));
+            $goalMemberCount = count($GoalMember->getActiveCollaboratorList($goal['id']));
+            $goalFollowerCount = $Follower->countEachGoalId([$goal['id']])[$goal['id']];
+            $goalTerm = $Term->getTermByDate($teamId, $goal['start_date']);
+            $goalCreated = GoalousDateTime::createFromTimestamp($goal['created'], $timezone)->format('Y/m/d');
+            $goalEdited = empty($goal['edited']) ? '-' : GoalousDateTime::createFromTimestamp($goal['edited'], $timezone)->format('Y/m/d');
+
+            $goalLeader = $User->getById($goal['user_id']);
+
+            foreach ($krs as $kr) {
+                $row = [];
+
+                $krCreated = GoalousDateTime::createFromTimestamp($kr['created'], $timezone)->format('Y/m/d');
+                $krEdited = empty($goal['edited']) ? '-' : GoalousDateTime::createFromTimestamp($kr['edited'], $timezone)->format('Y/m/d');
+
+                // Set goal information
+                $row[0] = $goal['id'];
+                $row[1] = $goal['name'];
+                $row[2] = $goal['description'];
+                $row[3] = $goalCategoryName;
+                $row[4] = $goalLabels;
+                $row[5] = $goalMemberCount;
+                $row[6] = $goalFollowerCount;
+                $row[7] = count($krs);
+                $row[8] = $goalTerm['start_date'] . " - " . $goalTerm['end_date'];
+                $row[9] = __("NEED APPROVAL");
+                $row[10] = __("APPROVAL STATUS");
+                $row[11] = $goal['start_date'];
+                $row[12] = $goal['end_date'];
+                $row[13] = $goal['user_id'];
+                $row[14] = $goalLeader['local_name'];
+                $row[15] = $goal['progress'];
+                $row[16] = $goalCreated;
+                $row[17] = $goalEdited;
+
+                // Set KR information
+                $row[18] = $kr['id'];
+                $row[19] = $kr['name'];
+                $row[20] = $kr['description'];
+                $row[21] = ($kr['tkr_flg']) ? 'TKR' : 'KR';
+                $row[22] = $kr['priority'];
+                $row[23] = $kr['start_date'];
+                $row[24] = $kr['end_date'];
+                $row[25] = $kr['progress'];
+                if ($kr['value_unit'] === KeyResult::UNIT_BINARY) {
+                    $row[26] = '-';
+                    $row[27] = '-';
+                    $row[28] = '-';
+                    $row[29] = ($kr['current_value'] == 1) ? __('Complete') : __('Incompleted');
+                } elseif ($kr['value_unit'] === KeyResult::UNIT_NUMBER) {
+                    $row[26] = '#';
+                    $row[27] = $kr['start_value'];
+                    $row[28] = $kr['target_value'];
+                    $row[29] = $kr['current_value'];
+                } else {
+                    $row[26] = KeyResult::$UNIT[$kr['value_unit']];
+                    $row[27] = $kr['start_value'];
+                    $row[28] = $kr['target_value'];
+                    $row[29] = $kr['current_value'];
+                }
+                $row[30] = $krCreated;
+                $row[31] = $krEdited;
+            }
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * 検索条件抽出
+     * 余分な条件が入り込まないようにする
+     *
+     * @param $params
+     *
+     * @return array
+     */
+    public function extractConditions($params)
+    {
+        $conditions = [];
+        $conditionFields = ['keyword', 'term', 'category', 'progress', 'labels'];
+        foreach ($conditionFields as $field) {
+            if (!empty($params[$field])) {
+                $conditions[$field] = $params[$field];
+            }
+        }
+        return $conditions;
+    }
 }

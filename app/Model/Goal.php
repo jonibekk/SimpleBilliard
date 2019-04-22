@@ -691,7 +691,8 @@ class Goal extends AppModel
         $start_date = null,
         $end_date = null,
         $kr_limit = null
-    ) {
+    )
+    {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->Term->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->Term->getCurrentTermData()['end_date'] : $end_date;
@@ -1043,7 +1044,8 @@ class Goal extends AppModel
         $start_date = null,
         $end_date = null,
         $kr_limit = null
-    ) {
+    )
+    {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->Term->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->Term->getCurrentTermData()['end_date'] : $end_date;
@@ -1181,7 +1183,7 @@ class Goal extends AppModel
                     'conditions' => ['TargetCollabo.user_id' => $user_id],
                 ],
             ],
-            'joins'    => [
+            'joins'      => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'goal_members',
@@ -1201,7 +1203,8 @@ class Goal extends AppModel
         $user_id = null,
         $start_date = null,
         $end_date = null
-    ) {
+    )
+    {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->Term->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->Term->getCurrentTermData()['end_date'] : $end_date;
@@ -1311,7 +1314,8 @@ class Goal extends AppModel
         $start_date = null,
         $end_date = null,
         $kr_limit = null
-    ) {
+    )
+    {
         $start_date = !$start_date ? $this->Team->Term->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->Term->getCurrentTermData()['end_date'] : $end_date;
         $options = [
@@ -1415,7 +1419,8 @@ class Goal extends AppModel
         $start_date = null,
         $end_date = null,
         $kr_limit = null
-    ) {
+    )
+    {
         $start_date = !$start_date ? $this->Team->Term->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->Term->getCurrentTermData()['end_date'] : $end_date;
         $options = [
@@ -2153,11 +2158,13 @@ class Goal extends AppModel
 
     /**
      * Tell if the goal is already completed.
+     *
      * @param $goalId
      *
      * @return bool
      */
-    public function isCompleted($goalId) {
+    public function isCompleted($goalId)
+    {
         if (empty($goalId)) {
             return false;
         }
@@ -2392,7 +2399,8 @@ class Goal extends AppModel
         $startDate = null,
         $endDate = null,
         array $fields = ['id', 'name']
-    ): array {
+    ): array
+    {
         // add prefix
         foreach ($fields as $i => $v) {
             $fields[$i] = 'Goal.' . $v;
@@ -2762,5 +2770,38 @@ class Goal extends AppModel
         }
 
         return true;
+    }
+
+    /**
+     * Search Goals for download
+     *
+     * @param        array $conditions
+     *
+     * @return array
+     */
+    public function searchForDownload(int $teamId, array $conditions)
+    {
+        $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
+
+        $options = [
+            'conditions' => [
+                'Goal.team_id'     => $teamId,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'Goal.user_id',
+                'Goal.name',
+                'Goal.completed',
+            ],
+            'order'      => ['Goal.created' => 'DESC'],
+        ];
+        //
+        $options = $this->setFilter($options, $conditions);
+
+        $goals = $this->find('all', $options);
+        return Hash::extract($goals, '{n}.Goal');
     }
 }

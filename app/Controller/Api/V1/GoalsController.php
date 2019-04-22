@@ -83,6 +83,31 @@ class GoalsController extends ApiController
     }
 
     /**
+     * Download goals based on filter
+     */
+    public function get_download_csv()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        // Check permission
+        if (!$TeamMember->getLoginUserAdminFlag($this->current_team_id, $this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
+        $conditions = $this->_fetchSearchConditions();
+
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        $currentDate = date("Y_m_d_H_i");
+
+        $fileName = "goalous_goals_export_$this->current_team_id\_$currentDate.csv";
+        $csvFile = $ApiGoalService->createCsvFile($this->current_team_id, $conditions);
+
+        return ApiResponse::ok()->getResponseForDL($csvFile, $fileName);
+    }
+
+    /**
      * ゴール検索の共通処理
      * ゴール初期データと検索用API両方で利用する
      *
@@ -193,7 +218,8 @@ class GoalsController extends ApiController
      * Goal作成&編集においての初期化処理API
      * formで利用する値を取得する
      *
-     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g.
+     *               `categories,labels`)
      *
      * @param integer|null $id
      *

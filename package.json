@@ -18,6 +18,7 @@
     "dropzone": "^4.3.0",
     "exif-js": "^2.2.1",
     "fastclick": "^1.0.6",
+    "file-saver": "^2.0.0-rc.4",
     "font-awesome": "^4.7.0",
     "form-data": "^1.0.1",
     "imagesloaded": "^4.1.2",
