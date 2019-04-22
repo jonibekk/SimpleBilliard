@@ -297,7 +297,7 @@ class AttachedFileService extends AppService
      */
     public function getFileMimeType(UploadedFile $file): AttachedFileType
     {
-        if(in_array($file->getFileExt(), self::NONMEDIAEXT, true)){
+        if(in_array($file->getFileExt(), self::NON_MEDIA_EXT, true)){
             return AttachedFileType::TYPE_FILE_DOC();
         }
         switch ($file->getFileType()) {
