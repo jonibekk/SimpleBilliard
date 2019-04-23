@@ -293,7 +293,7 @@ class AttachedFileService extends AppService
      *
      * @param UploadedFile      $file
      *
-     * @return int
+     * @return AttachedFileType
      */
     public function getFileMimeType(UploadedFile $file): AttachedFileType
     {
@@ -315,7 +315,7 @@ class AttachedFileService extends AppService
      *
      * @param UploadedFile      $file
      *
-     * @return boolean
+     * @return bool
      */
     public function isImg(UploadedFile $file): bool
     {
