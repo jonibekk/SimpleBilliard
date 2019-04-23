@@ -10,6 +10,10 @@ App::uses('AppController', 'Controller');
  */
 class EmailsController extends AppController
 {
+    public $uses = [
+        'Email',
+    ];
+
     /**
      * delete method
      *
