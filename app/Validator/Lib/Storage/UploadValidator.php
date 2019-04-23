@@ -173,6 +173,7 @@ class UploadValidator
         'xbm'     => 'image/x-xbitmap',
         'xpm'     => 'image/x-xpixmap',
         'xwd'     => 'image/x-xwindowdump',
+        'psd'     => 'image/vnd.adobe.photoshop',
         'ice'     => 'x-conference/x-cooltalk',
         'iges'    => 'model/iges',
         'igs'     => 'model/iges',
