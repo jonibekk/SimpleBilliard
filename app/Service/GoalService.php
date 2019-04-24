@@ -1791,6 +1791,9 @@ class GoalService extends AppService
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+
         $result = [];
         $csvDateFormat = self::CSV_DATE_FORMAT;
         foreach ($goals as $goal) {
@@ -1809,8 +1812,8 @@ class GoalService extends AppService
             $termStartDate = GoalousDateTime::createFromFormat('Y-m-d', $goalTerm['start_date'] )->format($csvDateFormat);
             $termEndDate = GoalousDateTime::createFromFormat('Y-m-d', $goalTerm['end_date'] )->format($csvDateFormat);
 
-            $goalCreated = GoalousDateTime::createFromTimestamp($goal['created'])->format('Y/m/d');
-            $goalEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($goal['modified'])->format($csvDateFormat);
+            $goalCreated = GoalousDateTime::createFromTimestamp($goal['created'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d');
+            $goalEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($goal['modified'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
             $goalLeader = $User->getById($goal['user_id']);
             $goalProgress = AppUtil::formatBigFloat($this->calcProgressByOwnedPriorities($krs));
 
@@ -1837,8 +1840,8 @@ class GoalService extends AppService
             foreach ($krs as $kr) {
                 $row = $baseRow;
 
-                $krCreated = GoalousDateTime::createFromTimestamp($kr['created'])->format($csvDateFormat);
-                $krEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($kr['modified'])->format($csvDateFormat);
+                $krCreated = GoalousDateTime::createFromTimestamp($kr['created'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
+                $krEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($kr['modified'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
 
                 // Set KR information
                 $row[GoalAndKrs::KR_ID] = $kr['id'];

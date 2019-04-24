@@ -1222,10 +1222,18 @@ class GoalServiceTest extends GoalousTestCase
                 "description"  => "TKR詳細\nです",
             ],
         ];
+        $team = $this->Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+
         $userId = 2;
         $goalId = $this->createGoal($userId, $data);
+        $this->Goal->updateAll(['created' => strtotime('2019-04-01 15:00:00'), 'modified' => strtotime('2019-12-31 15:00:00')], ['id' => $goalId]);
         $goal = $this->Goal->getById($goalId);
+
+        $tkrId = $this->KeyResult->getLastInsertID();
+        $this->KeyResult->updateAll(['created' => strtotime('2019-04-02 15:00:00'), 'modified' => strtotime('2019-05-31 15:00:00')], ['id' => $tkrId]);
         $tkr = Hash::get($this->KeyResult->findByGoalId($goal['id']), 'KeyResult');
+
         $term = $this->Term->getCurrentTermData();
 
         $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
@@ -1249,8 +1257,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($res[0][GoalAndKrs::LEADER_NAME], 'firstname lastname');
         $this->assertEquals($res[0][GoalAndKrs::GOAL_PROGRESS], 0);
         GoalousDateTime::setDefaultTimeZoneTeamByHour(9);
-        $this->assertEquals($res[0][GoalAndKrs::GOAL_CREATED], GoalousDateTime::createFromTimestamp($goal['created'])->format('Y/m/d'));
-        $this->assertEquals($res[0][GoalAndKrs::GOAL_EDITED], GoalousDateTime::createFromTimestamp($goal['modified'])->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CREATED], GoalousDateTime::createFromTimestamp($goal['created'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_EDITED], GoalousDateTime::createFromTimestamp($goal['modified'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d'));
         $this->assertEquals($res[0][GoalAndKrs::KR_ID], $tkr['id']);
         $this->assertEquals($res[0][GoalAndKrs::KR_NAME], $tkr['name']);
         $this->assertEquals($res[0][GoalAndKrs::KR_DESCRIPTION], $tkr['description']);
@@ -1263,8 +1271,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($res[0][GoalAndKrs::KR_INITIAL], 0);
         $this->assertEquals($res[0][GoalAndKrs::KR_TARGET], 100);
         $this->assertEquals($res[0][GoalAndKrs::KR_CURRENT], 0);
-        $this->assertEquals($res[0][GoalAndKrs::KR_CREATED], GoalousDateTime::createFromTimestamp($tkr['created'])->format('Y/m/d'));
-        $this->assertEquals($res[0][GoalAndKrs::KR_EDITED], GoalousDateTime::createFromTimestamp($tkr['modified'])->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::KR_CREATED], GoalousDateTime::createFromTimestamp($tkr['created'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::KR_EDITED], GoalousDateTime::createFromTimestamp($tkr['modified'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d'));
 
 
         /* Column value pattern by condition */
@@ -1344,6 +1352,12 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertEquals($res[0][GoalAndKrs::GOAL_END_DATE], '2019/04/03');
 
 
+        // GOAL_CREATED / GOAL_EDITED
+        $goal['created'] = strtotime('2019-04-01 14:59:59');
+        $goal['modified'] = strtotime('2019-04-30 14:59:59');
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CREATED], '2019/04/01');
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_EDITED], '2019/04/30');
     }
 
     function test_processCsvContentFromGoals_progress()
@@ -1525,5 +1539,11 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], '-0.12');
         $this->assertSame($res[0][GoalAndKrs::KR_TARGET], '-999.99');
         $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], '-12.34');
+
+        // KR_CREATED / KR_EDITED
+        $this->KeyResult->updateAll(['created' => strtotime('2019-04-01 14:59:59'), 'modified' => strtotime('2019-04-30 14:59:59')], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::KR_CREATED], '2019/04/01');
+        $this->assertEquals($res[0][GoalAndKrs::KR_EDITED], '2019/04/30');
     }
 }

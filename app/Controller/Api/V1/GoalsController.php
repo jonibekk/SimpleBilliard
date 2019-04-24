@@ -93,6 +93,8 @@ class GoalsController extends ApiController
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
 
         // Check permission
         if (!$TeamMember->getLoginUserAdminFlag($this->current_team_id, $this->Auth->user('id'))) {
@@ -103,9 +105,11 @@ class GoalsController extends ApiController
         /** @var ApiGoalService $ApiGoalService */
         $ApiGoalService = ClassRegistry::init("ApiGoalService");
 
-        $currentDate = date("Y_m_d_H_i");
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+        $currentDateTime = GoalousDateTime::now()->setTimeZoneByHour($timezoneTeam)->format("YmdHi");
 
-        $fileName = "goalous_goals_export_$this->current_team_id\_$currentDate.csv";
+        $fileName = "goalous_goals_export_$currentDateTime.csv";
         $csvFile = $ApiGoalService->createCsvFile($this->current_team_id, $conditions);
 
         return ApiResponse::ok()->getResponseForDL($csvFile, $fileName);
