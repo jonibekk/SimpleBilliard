@@ -2775,12 +2775,14 @@ class Goal extends AppModel
     /**
      * Search Goals for download
      *
-     * @param        array $conditions
+     * @param int $teamId
+     * @param array $conditions
      *
      * @return array
      */
-    public function searchForDownload(int $teamId, array $conditions)
+    public function searchForDownload(int $teamId, array $conditions): array
     {
+        // Set default condition (current term)
         $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
         $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
 
@@ -2791,12 +2793,9 @@ class Goal extends AppModel
                 'Goal.end_date <=' => $end_date,
             ],
             'fields'     => [
-                'Goal.id',
-                'Goal.user_id',
-                'Goal.name',
-                'Goal.completed',
+                'Goal.*'
             ],
-            'order'      => ['Goal.created' => 'DESC'],
+            'order'      => ['Goal.id' => 'DESC'],
         ];
         //
         $options = $this->setFilter($options, $conditions);

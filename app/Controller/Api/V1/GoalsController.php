@@ -7,6 +7,10 @@ App::import('Service', 'FollowService');
 App::import('Service/Api', 'ApiGoalService');
 App::import('Service/Api', 'ApiKeyResultService');
 
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::uses('ErrorResponse', 'Lib/Network/Response');
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**

@@ -511,6 +511,7 @@ class AppController extends BaseController
     {
         $team_member_info = $this->User->TeamMember->getWithTeam();
         $this->set('my_member_status', $team_member_info);
+        $this->set('is_current_team_admin', !empty(Hash::get($team_member_info, 'TeamMember.admin_flg')));
     }
 
     public function _setMyCircle()

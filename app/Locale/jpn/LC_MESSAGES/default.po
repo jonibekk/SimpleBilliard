@@ -5613,3 +5613,9 @@ msgstr "%d人のメンバーが一致"
 
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"
+
+msgid "Download CSV"
+msgstr "CSVダウンロード"
+
+msgid "Downloading CSV..."
+msgstr "CSVダウンロード中..."

@@ -42,7 +42,7 @@ export default class Goals extends React.Component {
 
   downloadCsv(e) {
     e.preventDefault();
-    this.props.downloadCsv(e);
+    this.props.downloadCsv();
   }
 
   fetchMoreGoals() {
@@ -111,6 +111,15 @@ export default class Goals extends React.Component {
       search_result_el = <NoGoal />
     }
 
+    let csvDownloadLink = <div></div>;
+    if (cake.is_current_team_admin) {
+      if (props.downloading_csv) {
+        csvDownloadLink  = <div><img src="/img/lightbox/loading.gif" width="16" height="16"/><span className="ml_2px"> {__("Downloading CSV...")}</span></div>;
+      } else {
+        csvDownloadLink  = <a href="#" onClick={(e) => this.downloadCsv(e)}>{__("Download CSV")}</a>;
+      }
+    }
+
     return (
       <div className="panel panel-default">
         {/* search by keyword */}
@@ -126,8 +135,8 @@ export default class Goals extends React.Component {
               <span onClick={this.searchByKeyword.bind(this)} className="goal-search-keyword-submit fa fa-search"/>
             </div>
           </form>
-          <div className="text-align_r">
-            <a href="#" onClick={this.downloadCsv()}>{__("Download CSV")}</a>
+          <div className="goal-search-header-links">
+            {csvDownloadLink}
             <a href="#" onClick={this.showFilter.bind(this)}>{__("Filter")}</a>
           </div>
         </div>

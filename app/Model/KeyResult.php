@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'KeyResultEntity');
 
 /**
  * KeyResult Model
@@ -1275,8 +1276,11 @@ SQL;
             $conditions['conditions']['tkr_flg'] = false;
         }
 
-        $result = $this->useType()->useEntity()->find('all', $conditions);
+        $result = $this->useType()->find('all', $conditions);
+        if (empty($result)) {
+            return [];
+        }
 
-        return $result;
+        return Hash::extract($result, '{n}.KeyResult');
     }
 }

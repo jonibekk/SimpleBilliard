@@ -3,6 +3,10 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
 App::import('Service', 'KrValuesDailyLogService');
+App::uses('Follower', 'Model');
+
+use Goalous\Enum\Csv\GoalAndKrs as GoalAndKrs;
+use Goalous\Enum\Model\KeyResult\ValueUnit as ValueUnit;
 
 /**
  * GoalServiceTest Class
@@ -15,9 +19,11 @@ App::import('Service', 'KrValuesDailyLogService');
  * @property Team                    $Team
  * @property Term                    $EvaluateTerm
  * @property Goal                    $Goal
+ * @property GoalCategory            $GoalCategory
  * @property KrValuesDailyLogService $KrValuesDailyLogService
  * @property KeyResult               $KeyResult
  * @property KrValuesDailyLog        $KrValuesDailyLog
+ * @property Follower                $Follower
  */
 class GoalServiceTest extends GoalousTestCase
 {
@@ -30,6 +36,7 @@ class GoalServiceTest extends GoalousTestCase
         'app.term',
         'app.team',
         'app.goal',
+        'app.goal_category',
         'app.goal_member',
         'app.goal_label',
         'app.label',
@@ -65,6 +72,8 @@ class GoalServiceTest extends GoalousTestCase
         $this->EvaluateTerm = ClassRegistry::init('Term');
         $this->Goal = ClassRegistry::init('Goal');
         $this->GoalLabel = ClassRegistry::init('GoalLabel');
+        $this->GoalCategory = ClassRegistry::init('GoalCategory');
+        $this->Follower = ClassRegistry::init('Follower');
         $this->ActionResult = ClassRegistry::init('ActionResult');
         $this->ActionService = ClassRegistry::init('ActionService');
         $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
@@ -1187,4 +1196,334 @@ class GoalServiceTest extends GoalousTestCase
         $this->Term->addTermData(Term::TYPE_CURRENT);
     }
 
+    function test_processCsvContentFromGoals_goal()
+    {
+        $csvDateFormat = GoalService::CSV_DATE_FORMAT;
+        $teamId = 1;
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+
+        // Empty
+        $res = $this->GoalService->processCsvContentFromGoals(1, []);
+        $this->assertEquals($res, []);
+
+        // General goal
+        $data = [
+            "name"             => "ゴールああああああああいいいいいいいいいいいいいいいいいいいいいいいいいい",
+            "description"             => "説明",
+            "labels"           => [
+                "Goalous"
+            ],
+            "key_result"       => [
+                "value_unit"   => ValueUnit::UNIT_PERCENT,
+                "start_value"  => 0,
+                "target_value" => 100,
+                "name"         => "TKR1",
+                "description"  => "TKR詳細\nです",
+            ],
+        ];
+        $userId = 2;
+        $goalId = $this->createGoal($userId, $data);
+        $goal = $this->Goal->getById($goalId);
+        $tkr = Hash::get($this->KeyResult->findByGoalId($goal['id']), 'KeyResult');
+        $term = $this->Term->getCurrentTermData();
+
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_ID], $goal['id']);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_NAME], $data['name']);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_DESCRIPTION], $data['description']);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CATEGORY], '成長');
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_LABELS], 'Goalous');
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_MEMBERS_COUNT], 1);
+        $this->assertEquals($res[0][GoalAndKrs::FOLLOWERS_COUNT], 0);
+        $this->assertEquals($res[0][GoalAndKrs::KRS_COUNT], 1);
+        $termStartDate = GoalousDateTime::createFromFormat('Y-m-d', $term['start_date'])->format($csvDateFormat);
+        $termEndDate = GoalousDateTime::createFromFormat('Y-m-d', $term['end_date'])->format($csvDateFormat);
+
+        $this->assertEquals($res[0][GoalAndKrs::TERM], $termStartDate.' - '.$termEndDate);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_START_DATE], GoalousDateTime::createFromFormat('Y-m-d', $goal['start_date'])->format($csvDateFormat));
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_END_DATE], GoalousDateTime::createFromFormat('Y-m-d', $goal['end_date'])->format($csvDateFormat));
+        $this->assertEquals($res[0][GoalAndKrs::LEADER_USER_ID], $userId);
+        $this->assertEquals($res[0][GoalAndKrs::LEADER_NAME], 'firstname lastname');
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_PROGRESS], 0);
+        GoalousDateTime::setDefaultTimeZoneTeamByHour(9);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CREATED], GoalousDateTime::createFromTimestamp($goal['created'])->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_EDITED], GoalousDateTime::createFromTimestamp($goal['modified'])->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::KR_ID], $tkr['id']);
+        $this->assertEquals($res[0][GoalAndKrs::KR_NAME], $tkr['name']);
+        $this->assertEquals($res[0][GoalAndKrs::KR_DESCRIPTION], $tkr['description']);
+        $this->assertEquals($res[0][GoalAndKrs::KR_TYPE], 'TKR');
+        $this->assertEquals($res[0][GoalAndKrs::KR_WEIGHT], '5');
+        $this->assertEquals($res[0][GoalAndKrs::KR_START_DATE], GoalousDateTime::createFromFormat('Y-m-d', $tkr['start_date'])->format($csvDateFormat));
+        $this->assertEquals($res[0][GoalAndKrs::KR_END_DATE], GoalousDateTime::createFromFormat('Y-m-d', $tkr['end_date'])->format($csvDateFormat));
+        $this->assertEquals($res[0][GoalAndKrs::KR_PROGRESS], 0);
+        $this->assertEquals($res[0][GoalAndKrs::KR_UNIT], KeyResult::$UNIT[$tkr['value_unit']]);
+        $this->assertEquals($res[0][GoalAndKrs::KR_INITIAL], 0);
+        $this->assertEquals($res[0][GoalAndKrs::KR_TARGET], 100);
+        $this->assertEquals($res[0][GoalAndKrs::KR_CURRENT], 0);
+        $this->assertEquals($res[0][GoalAndKrs::KR_CREATED], GoalousDateTime::createFromTimestamp($tkr['created'])->format('Y/m/d'));
+        $this->assertEquals($res[0][GoalAndKrs::KR_EDITED], GoalousDateTime::createFromTimestamp($tkr['modified'])->format('Y/m/d'));
+
+
+        /* Column value pattern by condition */
+        // GOAL_DESCRIPTION
+        $goal['description'] = '';
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_DESCRIPTION], '-');
+
+        // GOAL_CATEGORY
+        $goal['goal_category_id'] = 2;
+        $goalCategory = $this->GoalCategory->getById(2);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CATEGORY], $goalCategory['name']);
+
+        $goal['goal_category_id'] = 999;
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_CATEGORY], '-');
+
+        // GOAL_LABELS
+        $data = [
+            "labels"           => [
+                "Goalous",
+                "成長",
+                "ISAO"
+            ],
+        ];
+        $userId = 2;
+        $goalId = $this->createGoal($userId, $data);
+        $goal = $this->Goal->getById($goalId);
+
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_LABELS], implode(', ', $data['labels']));
+
+        // GOAL_MEMBERS_COUNT
+        $this->createGoalMember([
+            'goal_id' => $goal['id'],
+            'user_id' => 99
+        ]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_MEMBERS_COUNT], 2);
+
+        // FOLLOWERS_COUNT
+        $this->Follower->create();
+        $this->Follower->save([
+            'goal_id' => $goal['id'],
+            'user_id' => 3,
+            'team_id' => $teamId
+        ], false);
+
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::FOLLOWERS_COUNT], 1);
+
+        $this->Follower->create();
+        $this->Follower->save([
+            'goal_id' => $goalId,
+            'user_id' => 4,
+            'team_id' => $teamId
+        ], false);
+
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::FOLLOWERS_COUNT], 2);
+
+        // KRS_COUNT
+        $krId = $this->createKr($goalId, $teamId, $userId, 50, 0, 100, 5, Term::TYPE_CURRENT, false);
+        $kr = $this->KeyResult->getById($krId);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::KRS_COUNT], 2);
+
+        // TERM
+        // Operation guarantee by TermTest.test_getTermByDate
+
+        // GOAL_START_DATE / GOAL_END_DATE
+        $goal['start_date'] = '2019-04-02';
+        $goal['end_date'] = '2019-04-03';
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_START_DATE], '2019/04/02');
+        $this->assertEquals($res[0][GoalAndKrs::GOAL_END_DATE], '2019/04/03');
+
+
+    }
+
+    function test_processCsvContentFromGoals_progress()
+    {
+        $teamId = 1;
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+
+        $data = [
+            "key_result"       => [
+                "value_unit"   => ValueUnit::UNIT_PERCENT,
+                "start_value"  => 0,
+                "target_value" => 100,
+                "name"         => "TKR1",
+                "description"  => "TKR詳細\nです",
+            ],
+        ];
+        $userId = 2;
+        $goalId = $this->createGoal($userId, $data);
+        $goal = $this->Goal->getById($goalId);
+
+
+        // Only TKR
+        $tkr = Hash::get($this->KeyResult->findByGoalId($goal['id']), 'KeyResult');
+        $this->KeyResult->updateAll(['current_value' => 50], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '50');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '50');
+
+        $this->KeyResult->updateAll(['current_value' => 0.1], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '1');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '0.1');
+
+        $this->KeyResult->updateAll(['current_value' => 99.99], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '99');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '99.99');
+
+        // Multiple KRs
+        $this->KeyResult->updateAll(['current_value' => 0], ['id' => $tkr['id']]);
+        $krId = $this->createKr($goalId, $teamId, $userId, 0, 0, 100, 5, Term::TYPE_CURRENT, false);
+        $kr = $this->KeyResult->getById($krId);
+
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '0');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '0');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '0');
+
+        $this->KeyResult->updateAll(['current_value' => 50], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '25');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '50');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '0');
+
+        $this->KeyResult->updateAll(['current_value' => 100], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '50');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '100');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '0');
+
+        $this->KeyResult->updateAll(['current_value' => 100], ['id' => $krId]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '100');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '100');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '100');
+
+        $this->KeyResult->updateAll(['current_value' => 99], ['id' => $tkr['id']]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '99.5');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '99');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '100');
+
+        $this->KeyResult->updateAll(['current_value' => 61.23424], ['id' => $tkr['id']]);
+        $this->KeyResult->updateAll(['current_value' => 1.23], ['id' => $krId]);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::GOAL_PROGRESS], '31');
+        $this->assertSame($res[0][GoalAndKrs::KR_PROGRESS], '61.23');
+        $this->assertSame($res[1][GoalAndKrs::KR_PROGRESS], '1.23');
+    }
+
+
+    function test_processCsvContentFromGoals_krPatterns()
+    {
+        $teamId = 1;
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+
+        $data = [
+            "key_result"       => [
+                "value_unit"   => ValueUnit::UNIT_PERCENT,
+                "start_value"  => 0,
+                "target_value" => 100,
+                "name"         => "TKR1",
+                "description"  => "",
+            ],
+        ];
+        $userId = 2;
+        $goalId = $this->createGoal($userId, $data);
+        $goal = $this->Goal->getById($goalId);
+
+
+        // KR_DESCRIPTION
+        $tkr = Hash::get($this->KeyResult->findByGoalId($goal['id']), 'KeyResult');
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_DESCRIPTION], '-');
+
+        // KR_TYPE
+        $krId = $this->createKr($goalId, $teamId, $userId, 0, 0, 100, 1, Term::TYPE_CURRENT, false, ValueUnit::UNIT_NUMBER);
+        $kr = $this->KeyResult->getById($krId);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_TYPE], 'TKR');
+        $this->assertSame($res[1][GoalAndKrs::KR_TYPE], 'KR');
+
+        // KR_WEIGHT
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_WEIGHT], 5);
+        $this->assertSame($res[1][GoalAndKrs::KR_WEIGHT], 1);
+
+        // KR_START_DATE / KR_END_DATE
+        $this->KeyResult->clear();
+        $this->KeyResult->id = $tkr['id'];
+        $this->KeyResult->save(['start_date' => '2019-04-01', 'end_date' => '2019-09-30'], false);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_START_DATE], '2019/04/01');
+        $this->assertSame($res[0][GoalAndKrs::KR_END_DATE], '2019/09/30');
+
+        // Related KR value/unit
+        $this->assertSame($res[0][GoalAndKrs::KR_UNIT], '%');
+        $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], $tkr['start_value']);
+        $this->assertSame($res[0][GoalAndKrs::KR_TARGET], $tkr['target_value']);
+        $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], $tkr['current_value']);
+        $this->assertSame($res[1][GoalAndKrs::KR_UNIT], '#');
+        $this->assertSame($res[1][GoalAndKrs::KR_INITIAL], $kr['start_value']);
+        $this->assertSame($res[1][GoalAndKrs::KR_TARGET], $kr['target_value']);
+        $this->assertSame($res[1][GoalAndKrs::KR_CURRENT], $kr['current_value']);
+
+        $this->KeyResult->save([
+            'value_unit' => ValueUnit::UNIT_BINARY,
+            'start_value' => 0,
+            'target_value' => 1,
+            'current_value' => 0,
+        ], false);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_UNIT], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_TARGET], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], __('Incomplete'));
+
+        $this->KeyResult->save([
+            'current_value' => 1,
+        ], false);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_UNIT], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_TARGET], '-');
+        $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], __('Completed'));
+
+        $this->KeyResult->save([
+            'value_unit' => ValueUnit::UNIT_YEN,
+            'start_value' => -1,
+            'target_value' => -1111,
+            'current_value' => -111,
+        ], false);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_UNIT], '¥');
+        $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], '-1');
+        $this->assertSame($res[0][GoalAndKrs::KR_TARGET], '-1111');
+        $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], '-111');
+
+        $this->KeyResult->save([
+            'value_unit' => ValueUnit::UNIT_DOLLAR,
+            'start_value' => -0.12,
+            'target_value' => -999.99,
+            'current_value' => -12.34,
+        ], false);
+        $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
+        $this->assertSame($res[0][GoalAndKrs::KR_UNIT], '$');
+        $this->assertSame($res[0][GoalAndKrs::KR_INITIAL], '-0.12');
+        $this->assertSame($res[0][GoalAndKrs::KR_TARGET], '-999.99');
+        $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], '-12.34');
+    }
 }

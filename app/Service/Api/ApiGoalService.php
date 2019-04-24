@@ -309,7 +309,9 @@ class ApiGoalService extends ApiService
         }
 
         rewind($fd);
-        $csv = stream_get_contents($fd);
+
+        $str = str_replace(PHP_EOL, "\r\n", stream_get_contents($fd));
+        $csv = mb_convert_encoding($str, 'SJIS-win', 'UTF-8');
         fclose($fd);
 
         return $csv;
