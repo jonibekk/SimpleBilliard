@@ -15,7 +15,7 @@ $footerMenuList = [
     ],
     [
         'name'  => 'circles',
-        'url'   => '/circles',
+        'url'   => $this->Html->url(['controller' => 'circles', 'action' => 'navigate_new_circle']),
         'icon'  => 'group_work',
         'label' => __('Circle')
     ],
@@ -56,7 +56,7 @@ $badgeCounts = [
                 </a>
                 <?php if (in_array($menu['name'], ['messages', 'notifications', 'circles', 'more'], false)) : ?>
                     <div class="btn btn-xs notify-function-numbers <?= $menu['name'] === 'circles' ? 'mod-small' : '' ?> js-mbAppFooter-setBadgeCnt-<?= $menu['name'] ?> <?= empty($badgeCounts[$menu['name']]) ? 'hidden' : '' ?>">
-                        <span class="<?= $badgeCounts[$menu['name']] > 99 || $menu['name'] !== 'circles' ? 'oval' : '' ?>" id="<?= $menu['name'] === 'circles' ? 'nav-circle-badge-count' : '' ?>">
+                        <span class="<?= $badgeCounts[$menu['name']] > 99 && $menu['name'] !== 'circles' ? 'oval' : '' ?>" id="<?= $menu['name'] === 'circles' ? 'nav-circle-badge-count' : '' ?>">
                            <?= $badgeCounts[$menu['name']] ?>
                          </span>
                     </div>

@@ -4407,9 +4407,16 @@
             },
             "notify_setting": {
               "$ref": "#/components/schemas/Model.NotifySetting"
+            },
+            "my_notifying_circles": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Object.String.ID"
+                }
+              }
             }
           }
-        }],
+        ],
         "example" : {
           "id": "614",
           "photo_file_name": null,
@@ -4584,7 +4591,8 @@
             "feed_mentioned_in_email_flg": true,
             "feed_mentioned_in_mobile_flg": true,
             "force_notify": true
-          }
+          },
+          "my_notifying_circles": [ "65", "93", "202" ]
         }
       },
       "Model.TeamMember" : {

@@ -130,7 +130,7 @@ class MeController extends BasePagingController
         $unreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
         $unreadPostsClient = new UnreadPostsClient();
 
-        $data = $unreadPostsClient->read($unreadPostsKey)->get();
+        $data = $unreadPostsClient->read($unreadPostsKey)->get(true);
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }

@@ -1,11 +1,13 @@
 <?php
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
+App::uses('CircleMember', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
 App::uses('LangUtil', 'Util');
+
 App::uses('GlRedis', 'Model');
 
 use Goalous\Enum as Enum;
@@ -19,6 +21,7 @@ class MeExtender extends BaseExtender
     const EXTEND_UNAPPROVED_GOAL_COUNT = "ext:user:unapproved_goal_count";
     const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
     const EXTEND_IS_EVALUATION_AVAILABLE = "ext:user:is_evaluation_available";
+    const EXTEND_JOINED_NOTIFYING_CIRCLES = "ext:user:joined_notifying_circles";
     const EXTEND_NEW_NOTIFICATION_COUNT = "ext:user:new_notification_count";
     const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
 
@@ -51,8 +54,8 @@ class MeExtender extends BaseExtender
             $data['my_active_teams'] = [];
             foreach ($activeTeams as $activeTeamId => $name) {
                 $data['my_active_teams'][] = [
-                    'id'      => $activeTeamId,
-                    'name'    => $name
+                    'id'   => $activeTeamId,
+                    'name' => $name
                 ];
             }
         }
@@ -84,6 +87,17 @@ class MeExtender extends BaseExtender
         }
         if ($this->includeExt($extensions, self::EXTEND_NEW_NOTIFICATION_COUNT)) {
             $data['new_notification_count'] = $GlRedis->getCountOfNewNotification($currentTeamId, $userId);
+        }
+        if ($this->includeExt($extensions, self::EXTEND_JOINED_NOTIFYING_CIRCLES)) {
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+            $circleIds = [];
+
+            $circles = $CircleMember->getCirclesWithNotificationFlg($userId, true);
+            foreach ($circles as $circle) {
+                $circleIds[] = (string)$circle['circle_id'];
+            }
+            $data['my_notifying_circles'] = $circleIds;
         }
 
         return $data;

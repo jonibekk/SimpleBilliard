@@ -117,10 +117,13 @@ window.addEventListener('load', function() {
         setNotifyCntToMessageForMobileApp(1, true);
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
-    pusher.subscribe('team_' + cake.data.team_id).bind('nav.circle_badge', function(data) {
+    pusher.subscribe('team_' + cake.data.team_id).bind('circle_feed.new_post', function(data) {
+      if (!!cake.my_notifying_circles && cake.my_notifying_circles.includes(data.circle_id) && cake.data.user_id !== data.user_id){
         $('#nav-circle-badge').css('opacity', 1);
         // Since we only need to show badge new unread in old Goalous
         $('#nav-circle-badge-count').text('1');
+        $('.js-mbAppFooter-setBadgeCnt-circles').removeClass('hidden');
+      }
     });
 });
 

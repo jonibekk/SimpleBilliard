@@ -277,6 +277,7 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
                 $this->_setTimeZoneEnvironment();
+                $this->_setNotifyingCircleList();
                 $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
@@ -1198,6 +1199,24 @@ class AppController extends BaseController
         $NewGoalousAssetsStorageClient = ClassRegistry::init('NewGoalousAssetsStorageClient');
         $newGoalousAssets = $NewGoalousAssetsStorageClient->getKeys();
         $this->set('newGoalousAssets', $newGoalousAssets);
+    }
+
+    /**
+     * Set list of joined circles with enabled notification for this user
+     */
+    protected function _setNotifyingCircleList(){
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $circleIds = [];
+
+        $circles = $CircleMember->getCirclesWithNotificationFlg($this->Auth->user('id'), true);
+        /** @var CircleMemberEntity $circle */
+        foreach ($circles as $circle) {
+            $circleIds[] = strval($circle['circle_id']);
+        }
+
+        $this->set('my_notifying_circles', $circleIds);
     }
 
 }

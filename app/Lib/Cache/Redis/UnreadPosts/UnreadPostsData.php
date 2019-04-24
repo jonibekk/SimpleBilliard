@@ -79,10 +79,25 @@ class UnreadPostsData
     /**
      * Get data
      *
+     * @param bool $castContentToStringFlg Cast data content to string
+     *
      * @return array
      */
-    public function get(): array
+    public function get(bool $castContentToStringFlg = false): array
     {
-        return $this->data ?: [];
+        if (empty($this->data)) return [];
+        if (!$castContentToStringFlg) {
+            return $this->data;
+        }
+
+        $keys = array_keys($this->data);
+        $result = [];
+        foreach ($keys as $circleId) {
+            foreach ($this->data[$circleId] as $postId) {
+                $result[strval($circleId)][] = strval($postId);
+            }
+        }
+
+        return $result;
     }
 }

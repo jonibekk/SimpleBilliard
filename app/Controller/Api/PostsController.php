@@ -136,7 +136,6 @@ class PostsController extends BasePagingController
         $PostPusherService = ClassRegistry::init('PostPusherService');
         $PostPusherService->setSocketId($this->getSocketId());
         $PostPusherService->sendFeedNotification($circleId, $newPost);
-        $PostPusherService->sendCircleBadgeNotification($circleId, $this->getUserId(), $newPost);
     }
 
 
