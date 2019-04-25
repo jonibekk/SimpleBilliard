@@ -8,4 +8,6 @@ export const FOLLOW = 'FOLLOW'
 export const UNFOLLOW = 'UNFOLLOW'
 export const LOADING = 'LOADING'
 export const LOADING_MORE = 'LOADING_MORE'
+export const DOWNLOADING_CSV = 'DOWNLOADING_CSV'
+export const DOWNLOADED_CSV = 'DOWNLOADED_CSV'
 

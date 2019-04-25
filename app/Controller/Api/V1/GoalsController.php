@@ -7,6 +7,10 @@ App::import('Service', 'FollowService');
 App::import('Service/Api', 'ApiGoalService');
 App::import('Service/Api', 'ApiKeyResultService');
 
+App::import('Lib/Network/Response', 'ApiResponse');
+App::import('Lib/Network/Response', 'ErrorResponse');
+App::uses('ErrorResponse', 'Lib/Network/Response');
+
 /** @noinspection PhpUndefinedClassInspection */
 
 /**
@@ -80,6 +84,35 @@ class GoalsController extends ApiController
         }
         $searchResult = $this->_findSearchResults();
         return $this->_getResponsePagingSuccess($searchResult);
+    }
+
+    /**
+     * Download goals based on filter
+     */
+    public function get_download_csv()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        // Check permission
+        if (!$TeamMember->getLoginUserAdminFlag($this->current_team_id, $this->Auth->user('id'))) {
+            return $this->_getResponseForbidden();
+        }
+        $conditions = $this->_fetchSearchConditions();
+
+        /** @var ApiGoalService $ApiGoalService */
+        $ApiGoalService = ClassRegistry::init("ApiGoalService");
+
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+        $currentDateTime = GoalousDateTime::now()->setTimeZoneByHour($timezoneTeam)->format("YmdHi");
+
+        $fileName = "goalous_goals_export_$currentDateTime.csv";
+        $csvFile = $ApiGoalService->createCsvFile($this->current_team_id, $conditions);
+
+        return ApiResponse::ok()->getResponseForDL($csvFile, $fileName);
     }
 
     /**
@@ -193,7 +226,8 @@ class GoalsController extends ApiController
      * Goal作成&編集においての初期化処理API
      * formで利用する値を取得する
      *
-     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g. `categories,labels`)
+     * @query_params bool data_types `all` is returning all data_types, it can be selected individually(e.g.
+     *               `categories,labels`)
      *
      * @param integer|null $id
      *

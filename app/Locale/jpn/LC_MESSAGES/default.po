@@ -5613,3 +5613,99 @@ msgstr "%d人のメンバーが一致"
 
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"
+
+msgid "Download CSV"
+msgstr "CSVダウンロード"
+
+msgid "Downloading CSV..."
+msgstr "CSVダウンロード中..."
+
+msgid "GOAL ID"
+msgstr "ゴールID"
+
+msgid "GOAL NAME"
+msgstr "ゴール名"
+
+msgid "GOAL DESCRIPTION"
+msgstr "ゴール説明"
+
+msgid "GOAL CATEGORY"
+msgstr "ゴールカテゴリー"
+
+msgid "GOAL_LABELS"
+msgstr "ラベル"
+
+msgid "GOAL MEMBERS COUNT"
+msgstr "ゴールメンバー数"
+
+msgid "FOLLOWERS COUNT"
+msgstr "フォロワー数"
+
+msgid "KRS COUNT"
+msgstr "KR数"
+
+msgid "TERM"
+msgstr "期"
+
+msgid "GOAL START DATE"
+msgstr "ゴール開始日"
+
+msgid "GOAL END DATE"
+msgstr "ゴール終了日"
+
+msgid "LEADER USER ID"
+msgstr "リーダーのユーザーID"
+
+msgid "LEADER NAME"
+msgstr "リーダー名"
+
+msgid "GOAL PROGRESS(%)"
+msgstr "ゴール進捗率(%)"
+
+msgid "GOAL CREATED"
+msgstr "ゴール作成日"
+
+msgid "GOAL EDITED"
+msgstr "ゴール編集日"
+
+msgid "KR ID"
+msgstr "KR ID"
+
+msgid "KR NAME"
+msgstr "KR名"
+
+msgid "KR DESCRIPTION"
+msgstr "KR説明"
+
+msgid "KR TYPE"
+msgstr "KRタイプ"
+
+msgid "KR WEIGHT"
+msgstr "KR重要度"
+
+msgid "KR START DATE"
+msgstr "KR開始日"
+
+msgid "KR END DATE"
+msgstr "KR終了日"
+
+msgid "KR PROGRESS(%)"
+msgstr "KR進捗率(%)"
+
+msgid "KR UNIT"
+msgstr "KR単位"
+
+msgid "KR INITIAL"
+msgstr "KR初期値"
+
+msgid "KR TARGET"
+msgstr "KR目標値"
+
+msgid "KR CURRENT"
+msgstr "KR現在値"
+
+msgid "KR CREATED"
+msgstr "KR作成日"
+
+msgid "KR EDITED"
+msgstr "KR編集日"
