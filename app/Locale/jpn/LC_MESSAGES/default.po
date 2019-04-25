@@ -5633,7 +5633,7 @@ msgid "GOAL CATEGORY"
 msgstr "ゴールカテゴリー"
 
 msgid "GOAL_LABELS"
-msgstr "ゴールラベル"
+msgstr "ラベル"
 
 msgid "GOAL MEMBERS COUNT"
 msgstr "ゴールメンバー数"
