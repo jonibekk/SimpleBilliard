@@ -749,6 +749,7 @@ class AppModel extends Model
 
         $this->postProcessFunctions = $functions;
 
+        if (is_array($result)) {
             $result = $this->postProcess($result);
         }
 
