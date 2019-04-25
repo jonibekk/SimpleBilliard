@@ -12,6 +12,7 @@ App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
+App::import('Validator/Request/Api/V2', 'CircleRequestValidator');
 
 /**
  * Created by PhpStorm.
@@ -151,26 +152,26 @@ class CirclesController extends BasePagingController
         if (!empty($error)) {
             return $error;
         }
-
-        $newMemberId = Hash::get($this->getRequestJsonBody(), 'user_id');
+        $newMemberIds = Hash::extract($this->getRequestJsonBody(), 'user_ids');
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
         try {
-            $return = $CircleMemberService->add($newMemberId, $this->getTeamId(), $circleId);
-            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
-                $this->getTeamId());
+            $return = $CircleMemberService->multipleAdd($newMemberIds, $this->getTeamId(), $circleId);
+            foreach($return['newMemberIds'] as $newMemberId){
+                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
+                    $this->getTeamId());
+            }
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (GlException\GoalousConflictException $exception) {
-            return ErrorResponse::resourceConflict()->withException($exception)
-                ->withMessage(__("This team member already joined this circle."))->getResponse();
+            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
-        return ApiResponse::ok()->withData($return->toArray())->getResponse();
+        return ApiResponse::ok()->withData($return)->getResponse();
     }
 
     /**
@@ -452,7 +453,7 @@ class CirclesController extends BasePagingController
             ],
             'fields'     => [
                 'id',
-                'public_flg'
+                'public_flg',
             ]
         ];
 
@@ -469,7 +470,7 @@ class CirclesController extends BasePagingController
             return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
         }
 
-        if (!$circle['public_flg']) {
+        if (!$circle['properties']['public_flg']) {
             if (!$CircleMember->isAdmin($this->getUserId(), $circleId)) {
                 return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
             }

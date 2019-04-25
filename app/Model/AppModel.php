@@ -733,6 +733,28 @@ class AppModel extends Model
     }
 
     /**
+     * Override saveAll() function. Do post-processing
+     *
+     * @param array  $data
+     * @param array  $opotions
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function saveAll($data = array(), $options = array())
+    {
+        $functions = $this->postProcessFunctions;
+
+        $result = parent::saveAll($data, $options);
+
+        $this->postProcessFunctions = $functions;
+
+            $result = $this->postProcess($result);
+        }
+
+        return $result;
+    }
+    /**
      * Override afterFind(). Will process find() result
      *
      * @param mixed $results
