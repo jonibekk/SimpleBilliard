@@ -730,6 +730,8 @@ App::uses('AttachedFile', 'Model');
             "Information matching the search could not be found": "<?= __("Information matching the search could not be found") ?>",
             "Search post and comment": "<?= __("Search post and comment") ?>",
             "Comments": "<?= __("Comments") ?>",
+            "Download CSV": "<?= __("Download CSV") ?>",
+            "Downloading CSV...": "<?= __("Downloading CSV...") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
@@ -757,6 +759,7 @@ App::uses('AttachedFile', 'Model');
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
+        is_current_team_admin: "<?= viaIsSet($is_current_team_admin) ?>",
         attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>"
     };
 

@@ -2,6 +2,7 @@ import * as ActionTypes from "~/goal_search/constants/ActionTypes";
 import {post, del} from "~/util/api";
 import axios from "axios";
 import querystring from "querystring";
+import { saveAs } from 'file-saver';
 
 export function updateInputData(data, key) {
   return {
@@ -82,6 +83,41 @@ export function updateFilter(data) {
       })
       .catch((response) => {
       })
+  }
+}
+
+export function downloadCsv() {
+
+  return (dispatch, getState) => {
+    dispatch({type: ActionTypes.DOWNLOADING_CSV})
+    // 更新した検索条件によってゴール検索を実行
+    let queries = Object.assign({}, getState().goal_search.search_conditions);
+    //querystring.stringifyすると配列がqueryのkeyダブってセットされてしまう(hoge=aaa&hoge=bbb)ので、hoge[]にキーを事前に書き換える
+    if ('labels' in queries) {
+      queries["labels[]"] = queries.labels
+      delete queries.labels
+    }
+    queries = querystring.stringify(queries)
+
+    return axios.get(`/api/v1/goals/download_csv?${queries}`, {responseType: 'arraybuffer'})
+      .then((response) => {
+        var filename = "";
+        var disposition = response.headers['content-disposition'];
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+          }
+        }
+        var blob = new Blob([response.data], {type: 'application/octet-stream'});
+        saveAs(blob, filename);
+      })
+      .catch((response) => {
+      })
+      .then(function () {
+        dispatch({type: ActionTypes.DOWNLOADED_CSV})
+      });
   }
 }
 

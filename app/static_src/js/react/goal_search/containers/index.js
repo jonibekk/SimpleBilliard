@@ -13,7 +13,8 @@ function mapDispatchToProps(dispatch) {
     updateData: (data, key = "") => dispatch(actions.updateData(data, key = "")),
     updateFilter: (data) => dispatch(actions.updateFilter(data)),
     updateKeyword: (data) => dispatch(actions.updateKeyword(data)),
-    fetchMoreGoals: (url) => dispatch(actions.fetchMoreGoals(url))
+    fetchMoreGoals: (url) => dispatch(actions.fetchMoreGoals(url)),
+    downloadCsv: () => dispatch(actions.downloadCsv()),
   }
 }
 

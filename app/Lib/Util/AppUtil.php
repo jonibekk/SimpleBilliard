@@ -859,4 +859,36 @@ class AppUtil
         }
         return $ret;
     }
+
+    /**
+     * TODO: unify calculation about goal/kr progress
+     * Calc progress rate
+     * @param string $start
+     * @param string $end
+     * @param string $current
+     * @param int $decimalPoint
+     * @return string
+     */
+    static function calcProgressRate(string $start, string $end, string $current, $decimalPoint = 2): string {
+        if ($current === $end) {
+            return 100;
+        }
+        if ($current === $start) {
+            return 0;
+        }
+
+        // 分母
+        $denominator = $end - $start;
+        // 分子
+        $numerator = $current - $start;
+        // 小数点は切り捨て
+        $rate = bcmul(bcdiv($numerator, $denominator, $decimalPoint + 2), 100, $decimalPoint);
+
+        $isPositiveDestination = $denominator > 0;
+        if ($rate == 0 && (($isPositiveDestination && $numerator > 0) || (!$isPositiveDestination && $numerator < 0))) {
+            return 1 / bcpow(10, $decimalPoint);
+        }
+
+        return AppUtil::formatBigFloat($rate);
+    }
 }

@@ -10,13 +10,16 @@ App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('Team', 'Model');
 App::uses('Term', 'Model');
 App::uses('GoalLabel', 'Model');
+App::uses('GoalCategory', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
+App::uses('Follower', 'Model');
 App::uses('KrValuesDailyLog', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
@@ -27,6 +30,7 @@ App::import('Service', 'KrValuesDailyLogService');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 
+use Goalous\Enum\Csv\GoalAndKrs as GoalAndKrs;
 /**
  * Class GoalService
  */
@@ -35,6 +39,8 @@ class GoalService extends AppService
     const TERM_TYPE_CURRENT = 'current';
     const TERM_TYPE_PREVIOUS = 'previous';
     const TERM_TYPE_NEXT = 'next';
+
+    const CSV_DATE_FORMAT = 'Y/m/d';
 
     public $goalValidateFields = [
         "name",
@@ -786,7 +792,8 @@ class GoalService extends AppService
         string $targetEndDate,
         int $targetDays = self::GRAPH_TARGET_DAYS,
         int $maxBufferDays = 0
-    ): array {
+    ): array
+    {
         //initialize variables
         $ret = [
             'graphStartDate'  => null,
@@ -863,7 +870,8 @@ class GoalService extends AppService
         int $maxBufferDays,
         string $termStartDate,
         string $termEndDate
-    ) {
+    )
+    {
         //対象日数が1未満はありえない
         if ($targetDays < 1) {
             $this->log(sprintf("%s%s [method:%s] wrong target days. targetDays:%s",
@@ -918,7 +926,8 @@ class GoalService extends AppService
         string $graphStartDate,
         string $graphEndDate,
         string $plotDataEndDate
-    ) {
+    )
+    {
         //不正な範囲指定か判定
         if ($graphStartDate >= $graphEndDate
             || $graphStartDate > $plotDataEndDate
@@ -956,7 +965,8 @@ class GoalService extends AppService
         string $graphEndDate,
         string $plotDataEndDate,
         bool $withSweetSpot = false
-    ): array {
+    ): array
+    {
         //パラメータバリデーション
         $validOrErrorMsg = $this->validateGetProgressDrawingGraph($graphStartDate, $graphEndDate, $plotDataEndDate);
         if ($validOrErrorMsg !== true) {
@@ -1055,7 +1065,8 @@ class GoalService extends AppService
         string $graphEndDate,
         string $plotDataEndDate,
         bool $withSweetSpot = false
-    ): array {
+    ): array
+    {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
         if (!$Goal->exists($goalId)) {
@@ -1130,10 +1141,11 @@ class GoalService extends AppService
         array $sweetSpot,
         string $graphStartDate,
         string $graphEndDate
-    ): array {
+    ): array
+    {
         /** @noinspection PhpUndefinedVariableInspection */
-        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top']??[]);
-        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom']??[]);
+        $ret[0] = array_merge(['sweet_spot_top'], $sweetSpot['top'] ?? []);
+        $ret[1] = array_merge(['sweet_spot_bottom'], $sweetSpot['bottom'] ?? []);
         $ret[2] = array_merge(['data'], $progressLogs);
         $ret[3] = array_merge(['x'], $this->getFormatDatesEachGraphPoint($graphStartDate, $graphEndDate));
         return $ret;
@@ -1203,7 +1215,8 @@ class GoalService extends AppService
         array $latestKrValues,
         string $startDate,
         string $endDate
-    ): array {
+    ): array
+    {
         $goalIds = array_keys($goalPriorities);
         $today = date('Y-m-d');
         ///ログDBからユーザの各ゴールのKR現在値のログを取得
@@ -1431,7 +1444,8 @@ class GoalService extends AppService
         string $endDate,
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
         int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
-    ): array {
+    ): array
+    {
         /** @var Term $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('Term');
         $term = $EvaluateTerm->getCurrentTermData();
@@ -1690,4 +1704,198 @@ class GoalService extends AppService
         return $goalIds;
     }
 
+    /**
+     * Create headers for csv file
+     *
+     * @return array
+     */
+    public function createCsvHeader(): array
+    {
+        $csvHeader[GoalAndKrs::GOAL_ID] = __("GOAL ID");
+        $csvHeader[GoalAndKrs::GOAL_NAME] = __("GOAL NAME");
+        $csvHeader[GoalAndKrs::GOAL_DESCRIPTION] = __("GOAL DESCRIPTION");
+        $csvHeader[GoalAndKrs::GOAL_CATEGORY] = __("GOAL CATEGORY");
+        $csvHeader[GoalAndKrs::GOAL_LABELS] = __("GOAL_LABELS");
+        $csvHeader[GoalAndKrs::GOAL_MEMBERS_COUNT] = __("GOAL MEMBERS COUNT");
+        $csvHeader[GoalAndKrs::FOLLOWERS_COUNT] = __("FOLLOWERS COUNT");
+        $csvHeader[GoalAndKrs::KRS_COUNT] = __("KRS COUNT");
+        $csvHeader[GoalAndKrs::TERM] = __("TERM");
+        $csvHeader[GoalAndKrs::GOAL_START_DATE] = __("GOAL START DATE");
+        $csvHeader[GoalAndKrs::GOAL_END_DATE] = __("GOAL END DATE");
+        $csvHeader[GoalAndKrs::LEADER_USER_ID] = __("LEADER USER ID");
+        $csvHeader[GoalAndKrs::LEADER_NAME] = __("LEADER NAME");
+        $csvHeader[GoalAndKrs::GOAL_PROGRESS] = __("GOAL PROGRESS(%)");
+        $csvHeader[GoalAndKrs::GOAL_CREATED] = __("GOAL CREATED");
+        $csvHeader[GoalAndKrs::GOAL_EDITED] = __("GOAL EDITED");
+        $csvHeader[GoalAndKrs::KR_ID] = __("KR ID");
+        $csvHeader[GoalAndKrs::KR_NAME] = __("KR NAME");
+        $csvHeader[GoalAndKrs::KR_DESCRIPTION] = __("KR DESCRIPTION");
+        $csvHeader[GoalAndKrs::KR_TYPE] = __("KR TYPE");
+        $csvHeader[GoalAndKrs::KR_WEIGHT] = __("KR WEIGHT");
+        $csvHeader[GoalAndKrs::KR_START_DATE] = __("KR START DATE");
+        $csvHeader[GoalAndKrs::KR_END_DATE] = __("KR END DATE");
+        $csvHeader[GoalAndKrs::KR_PROGRESS] = __("KR PROGRESS(%)");
+        $csvHeader[GoalAndKrs::KR_UNIT] = __("KR UNIT");
+        $csvHeader[GoalAndKrs::KR_INITIAL] = __("KR INITIAL");
+        $csvHeader[GoalAndKrs::KR_TARGET] = __("KR TARGET");
+        $csvHeader[GoalAndKrs::KR_CURRENT] = __("KR CURRENT");
+        $csvHeader[GoalAndKrs::KR_CREATED] = __("KR CREATED");
+        $csvHeader[GoalAndKrs::KR_EDITED] = __("KR EDITED");
+
+        return $csvHeader;
+    }
+
+    /**
+     * Create content of CSV file to be downloaded
+     *
+     * @param int   $teamId
+     * @param array $conditions
+     *
+     * @return array
+     */
+    public function createCsvContent(int $teamId, array $conditions): array
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $conditions = $this->extractConditions($conditions);
+
+        // Search goals
+        $goals = $Goal->searchForDownload($teamId, $conditions);
+
+        return $this->processCsvContentFromGoals($teamId, $goals);
+    }
+
+    /**
+     * process csv content from goals
+     * @param int $teamId
+     * @param array $goals
+     * @return array
+     */
+    public function processCsvContentFromGoals(int $teamId, array $goals): array
+    {
+        /** @var Follower $Follower */
+        $Follower = ClassRegistry::init('Follower');
+        /** @var GoalCategory $GoalCategory */
+        $GoalCategory = ClassRegistry::init('GoalCategory');
+        /** @var GoalLabel $GoalLabel */
+        $GoalLabel = ClassRegistry::init('GoalLabel');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $team = $Team->getCurrentTeam();
+        $timezoneTeam = floatval($team['Team']['timezone']);
+
+        $result = [];
+        $csvDateFormat = self::CSV_DATE_FORMAT;
+        foreach ($goals as $goal) {
+
+            $krs = $KeyResult->getAllByGoalId($goal['id'], true);
+
+            $goalCategoryName = '-';
+            if (!empty($goal['goal_category_id'])) {
+                $goalCategory = $GoalCategory->getById($goal['goal_category_id'], ["name"]);
+                $goalCategoryName = empty($goalCategory['name']) ? '-' : $goalCategory['name'];
+            }
+            $goalLabels = implode(", ", array_values($GoalLabel->getLabelList($goal['id'])));
+            $goalMemberCount = $GoalMember->countEachGoalId([$goal['id']])[$goal['id']];
+            $goalFollowerCount = $Follower->countEachGoalId([$goal['id']])[$goal['id']];
+            $goalTerm = $Term->getTermByDate($teamId, $goal['start_date']);
+            $termStartDate = GoalousDateTime::createFromFormat('Y-m-d', $goalTerm['start_date'] )->format($csvDateFormat);
+            $termEndDate = GoalousDateTime::createFromFormat('Y-m-d', $goalTerm['end_date'] )->format($csvDateFormat);
+
+            $goalCreated = GoalousDateTime::createFromTimestamp($goal['created'])->setTimeZoneByHour($timezoneTeam)->format('Y/m/d');
+            $goalEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($goal['modified'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
+            $goalLeader = $User->getById($goal['user_id']);
+            $goalProgress = AppUtil::formatBigFloat($this->calcProgressByOwnedPriorities($krs));
+
+            // Set goal information
+            $baseRow = [];
+            $baseRow[GoalAndKrs::GOAL_ID] = $goal['id'];
+            $baseRow[GoalAndKrs::GOAL_NAME] = $goal['name'];
+            $baseRow[GoalAndKrs::GOAL_DESCRIPTION] = empty($goal['description']) ? '-' : $goal['description'];
+            $baseRow[GoalAndKrs::GOAL_CATEGORY] = $goalCategoryName;
+            $baseRow[GoalAndKrs::GOAL_LABELS] = $goalLabels;
+            $baseRow[GoalAndKrs::GOAL_MEMBERS_COUNT] = $goalMemberCount;
+            $baseRow[GoalAndKrs::FOLLOWERS_COUNT] = $goalFollowerCount;
+            $baseRow[GoalAndKrs::KRS_COUNT] = count($krs);
+
+            $baseRow[GoalAndKrs::TERM] = $termStartDate . " - " . $termEndDate;
+            $baseRow[GoalAndKrs::GOAL_START_DATE] = GoalousDateTime::createFromFormat('Y-m-d', $goal['start_date'])->format($csvDateFormat);
+            $baseRow[GoalAndKrs::GOAL_END_DATE] = GoalousDateTime::createFromFormat('Y-m-d', $goal['end_date'])->format($csvDateFormat);
+            $baseRow[GoalAndKrs::LEADER_USER_ID] = $goal['user_id'];
+            $baseRow[GoalAndKrs::LEADER_NAME] = $goalLeader['display_username'];
+            $baseRow[GoalAndKrs::GOAL_PROGRESS] = $goalProgress;
+            $baseRow[GoalAndKrs::GOAL_CREATED] = $goalCreated;
+            $baseRow[GoalAndKrs::GOAL_EDITED] = $goalEdited;
+
+            foreach ($krs as $kr) {
+                $row = $baseRow;
+
+                $krCreated = GoalousDateTime::createFromTimestamp($kr['created'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
+                $krEdited = empty($goal['modified']) ? '-' : GoalousDateTime::createFromTimestamp($kr['modified'])->setTimeZoneByHour($timezoneTeam)->format($csvDateFormat);
+
+                // Set KR information
+                $row[GoalAndKrs::KR_ID] = $kr['id'];
+                $row[GoalAndKrs::KR_NAME] = $kr['name'];
+                $row[GoalAndKrs::KR_DESCRIPTION] = empty($kr['description']) ? '-' : $kr['description'];
+                $row[GoalAndKrs::KR_TYPE] = ($kr['tkr_flg']) ? 'TKR' : 'KR';
+                $row[GoalAndKrs::KR_WEIGHT] = $kr['priority'];
+
+                $row[GoalAndKrs::KR_START_DATE] = GoalousDateTime::createFromFormat('Y-m-d', $kr['start_date'])->format($csvDateFormat);
+                $row[GoalAndKrs::KR_END_DATE] = GoalousDateTime::createFromFormat('Y-m-d', $kr['end_date'])->format($csvDateFormat);
+                $row[GoalAndKrs::KR_PROGRESS] = AppUtil::calcProgressRate($kr['start_value'], $kr['target_value'], $kr['current_value']);
+                $kr['value_unit'] = (int)$kr['value_unit'];
+                if ($kr['value_unit'] === KeyResult::UNIT_BINARY) {
+                    $row[GoalAndKrs::KR_UNIT] = '-';
+                    $row[GoalAndKrs::KR_INITIAL] = '-';
+                    $row[GoalAndKrs::KR_TARGET] = '-';
+                    $row[GoalAndKrs::KR_CURRENT] = ($kr['current_value'] == 1) ? __('Completed') : __('Incomplete');
+                } elseif ($kr['value_unit'] === KeyResult::UNIT_NUMBER) {
+                    $row[GoalAndKrs::KR_UNIT] = '#';
+                    $row[GoalAndKrs::KR_INITIAL] = $kr['start_value'];
+                    $row[GoalAndKrs::KR_TARGET] = $kr['target_value'];
+                    $row[GoalAndKrs::KR_CURRENT] = $kr['current_value'];
+                } else {
+                    $row[GoalAndKrs::KR_UNIT] = KeyResult::$UNIT[$kr['value_unit']];
+                    $row[GoalAndKrs::KR_INITIAL] = $kr['start_value'];
+                    $row[GoalAndKrs::KR_TARGET] = $kr['target_value'];
+                    $row[GoalAndKrs::KR_CURRENT] = $kr['current_value'];
+                }
+                $row[GoalAndKrs::KR_CREATED] = $krCreated;
+                $row[GoalAndKrs::KR_EDITED] = $krEdited;
+                $result[] = $row;
+            }
+        }
+        return $result;
+    }
+
+
+    /**
+     * 検索条件抽出
+     * 余分な条件が入り込まないようにする
+     *
+     * @param $params
+     *
+     * @return array
+     */
+    public function extractConditions($params)
+    {
+        $conditions = [];
+        $conditionFields = ['keyword', 'term', 'category', 'progress', 'labels'];
+        foreach ($conditionFields as $field) {
+            if (!empty($params[$field])) {
+                $conditions[$field] = $params[$field];
+            }
+        }
+        return $conditions;
+    }
 }
