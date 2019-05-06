@@ -322,7 +322,10 @@ class PostsController extends BasePagingController
         /** @var PostExtender $PostExtender */
         $PostExtender = ClassRegistry::init('PostExtender');
 
-        $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [PostExtender::EXTEND_ALL]);
+        $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [
+            PostExtender::EXTEND_ALL,
+            PostExtender::EXTEND_COMMENTS_ALL
+        ]);
 
         // Make user read this post
         // Decreasing unread count if this post haven't read yet.
