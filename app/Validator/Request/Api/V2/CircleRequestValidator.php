@@ -17,7 +17,7 @@ class CircleRequestValidator extends BaseValidator
         return [];
     }
 
-    public function getPostMemberValidationRule(): array
+    public function getPostMembersValidationRule(): array
     {
         $rules = [
             'user_ids' => [validator::arrayVal()->each(validator::notEmpty()::numeric())]
@@ -25,10 +25,10 @@ class CircleRequestValidator extends BaseValidator
         return $rules;
     }
 
-    public static function createPostMemberValidator(): self
+    public static function createPostMembersValidator(): self
     {
         $self = new self();
-        $self->addRule($self->getPostMemberValidationRule(), true);
+        $self->addRule($self->getPostMembersValidationRule(), true);
         return $self;
     }
 }

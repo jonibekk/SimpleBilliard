@@ -145,7 +145,7 @@
         }
       }
     },
-    "/api/circles/{circle.id}/members" : {
+    "/api/circles/{circle.id}/get_members" : {
       "get" : {
         "tags" : [ "Circles" ],
         "summary" : "Get circle members",
@@ -196,7 +196,7 @@
         }
       }
     },
-    "/api/circles/{circle.id}/invite_members" : {
+    "/api/circles/{circle.id}/members" : {
       "post" : {
         "tags" : [ "Circles" ],
         "summary" : "Invite member to a circle",
@@ -204,9 +204,9 @@
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
-        }, {
-          "$ref" : "#/components/parameters/ApiVersion"
-        } ],
+        },{
+          "$ref" : "#/components/parameters/User.Id"
+        }],
         "responses" : {
           "200" : {
             "description" : "[Success] Invited a member",

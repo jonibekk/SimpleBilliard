@@ -158,7 +158,7 @@ class CircleMemberService extends AppService
             ]
         ];
 
-        $circle = $Circle->find('first', $condition);
+        $circle = $Circle->getById($circleId);
 
         if (empty($circle)) {
             throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
@@ -167,39 +167,44 @@ class CircleMemberService extends AppService
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
+        $db = $CircleMember->getDataSource();
+
         $condition = [
-            'conditions' => [
-                'team_id' => $teamId,
-                'user_id' => $userIds,
-                'del_flg' => false
+            'fields' =>[
+                'user_id'
             ],
-            'fields' => [
-                'user_id',
-                'team_id'
-        ],
-            'group' => 'user_id'
+            'table'      => $db->fullTableName($CircleMember),
+            'alias'      => 'test',
+            'limit'      => null,
+            'offset'     => null,
+            'joins'      => array(),
+            'order'      => null,
+            'group'      => null,
+            'conditions' => [
+                'test.circle_id' => $circleId,
+                'test.del_flg'   => false
+            ]
         ];
 
-        $teamMemberIds = array_keys($CircleMember->find('list',$condition));
+        $subQuery = $db->buildStatement($condition, $CircleMember);
+
+        $subQuery = 'CircleMember.user_id NOT IN (' . $subQuery . ') ';
 
         $condition = [
             'conditions' => [
-                'circle_id' => $circleId,
-                'user_id'   => $teamMemberIds,
-                'del_flg'   => false
+                $subQuery,
+                'team_id' => $teamId,
+                'user_id' => $userIds
             ],
             'fields' => [
                 'user_id',
                 'circle_id'
             ],
-             'group' => 'user_id'
+            'group' => 'user_id'
         ];
 
-        $circleMemberIds = array_keys($CircleMember->find('list', $condition));
-
-        $nonTeamMemberIds = array_values(array_diff($userIds, $teamMemberIds));
-
-        $newMemberIds = array_diff($teamMemberIds, $circleMemberIds);
+        $newMemberIds = array_keys($CircleMember->find('list',$condition));
+        $notApplicableIds = array_diff($userIds, $newMemberIds);
 
         $newData = [];
 
@@ -208,37 +213,37 @@ class CircleMemberService extends AppService
                 'circle_id' => $circleId,
                 'user_id'   => $newMemberId,
                 'team_id'   => $teamId,
-                'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN,
-                'created'   => GoalousDateTime::now()->getTimestamp(),
-                'modified'  => GoalousDateTime::now()->getTimestamp()
+                'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN
             ];
         }
 
         try {
-                $this->TransactionManager->begin();
-                $CircleMember->create();
-                /** @var CircleMemberEntity*/
-                $result = $CircleMember->useType()->useEntity()->saveAll($newData);
-                $Circle->updateMemberCount($circleId);
+            $this->TransactionManager->begin();
+            $CircleMember->create();
+            /** @var CircleMemberEntity*/
+            $result = $CircleMember->useType()->useEntity()->bulkInsert($newData);
+            $Circle->updateMemberCount($circleId);
 
-                /** @var GlRedis $GlRedis */
-                $GlRedis = ClassRegistry::init("GlRedis");
-                $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
 
-                $this->TransactionManager->commit();
-            } catch (Exception $exception) {
-                $this->TransactionManager->rollback();
-                GoalousLog::error("Failed to add new member $userId to circle $circleId", $exception->getTrace());
-                throw $exception;
-            }
-
-        return $return = [
-                          'circleMemberIds'    => $circleMemberIds,
-                          'nonTeamMemberIds' => $nonTeamMemberIds,
-                          'newMemberIds'    => $newMemberIds
-                         ];
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to add new member to circle $circleId", [
+                'message' => $exception->getMessage(),
+                'newMemberIds' => $newMemberIds,
+            ]);
+            GoalousLog::error($exception->getTrace());
+            throw $exception;
         }
 
+        return $return = [
+                        'notApplicableIds' => $notApplicableIds,
+                        'newMemberIds'    => $newMemberIds
+               ];
+    }
 
     /**
      * Remove a member from a circle

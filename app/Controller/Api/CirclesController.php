@@ -102,7 +102,7 @@ class CirclesController extends BasePagingController
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
         try {
             $return = $CircleMemberService->add($this->getUserId(), $this->getTeamId(), $circleId);
-            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
+            $this->notifyMember(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
                 $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
@@ -159,9 +159,8 @@ class CirclesController extends BasePagingController
 
         try {
             $return = $CircleMemberService->multipleAdd($newMemberIds, $this->getTeamId(), $circleId);
-            foreach($return['newMemberIds'] as $newMemberId){
-                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
-                    $this->getTeamId());
+            if(!empty($return['newMemberIds'])){
+                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_ADD_USER,$circleId,$return['newMemberIds']);
             }
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
@@ -430,7 +429,7 @@ class CirclesController extends BasePagingController
     private function validatePostMembers(int $circleId)
     {
         try {
-            CircleRequestValidator::createPostMemberValidator()->validate($this->getRequestJsonBody());
+            CircleRequestValidator::createPostMembersValidator()->validate($this->getRequestJsonBody());
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
@@ -541,7 +540,7 @@ class CirclesController extends BasePagingController
      * @param int $userId User who sent the notification
      * @param int $teamId
      */
-    private function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
+    private function notifyMember(int $notificationType, int $circleId, int $userId, int $teamId)
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -550,6 +549,19 @@ class CirclesController extends BasePagingController
 
         // Notify to circle member
         $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+    }
+
+    /**
+     * Send notification to all members in a circle
+     *
+     * @param int $notificationType
+     * @param int $circleId
+     * @param int $userId User who sent the notification
+     */
+    private function notifyMembers(int $notificationType, int $circleId, array $memberIds)
+    {
+        // Notify to circle member
+        $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberIds);
     }
 
     private function getDefaultPostDraftExtension()
