@@ -18,6 +18,7 @@ const initialState = {
   search_conditions: {},
   show_filter: false,
   loading: false,
+  downloading_csv: false,
   loading_more: false
 }
 
@@ -87,6 +88,16 @@ export default function goal_search(state = initialState, action) {
     case ActionTypes.LOADING_MORE:
       return Object.assign({}, state, {
         loading_more: true
+      })
+
+    case ActionTypes.DOWNLOADING_CSV:
+      return Object.assign({}, state, {
+        downloading_csv: true
+      })
+
+    case ActionTypes.DOWNLOADED_CSV:
+      return Object.assign({}, state, {
+        downloading_csv: false
       })
 
     /* LabelInput */

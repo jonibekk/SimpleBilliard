@@ -823,4 +823,60 @@ class KeyResultTest extends GoalousTestCase
             }
         }
     }
+
+
+    function test_getAllByGoalId()
+    {
+        $teamId = 1;
+        $userId = 1;
+        $this->setDefault();
+
+        // Not include TKR
+        $goalId = $this->createGoal(1);
+        $res = $this->KeyResult->getAllByGoalId($goalId);
+        $this->assertEmpty($res);
+
+        // Include TKR
+        $res = $this->KeyResult->getAllByGoalId($goalId, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res[0]['goal_id'], $goalId);
+        $this->assertEquals($res[0]['user_id'], $userId);
+        $this->assertEquals($res[0]['priority'], 5);
+        $this->assertEquals($res[0]['start_value'], 0);
+        $this->assertEquals($res[0]['target_value'], 100);
+        $this->assertEquals($res[0]['current_value'], 0);
+        $this->assertEquals($res[0]['tkr_flg'], 1);
+        $krIds[] = $res[0]['id'];
+
+        // ORDER
+        $krIds[] = $this->createKr($goalId, $teamId, $userId, 50, 0, 100, 5, Term::TYPE_CURRENT, false);
+        $res = $this->KeyResult->getAllByGoalId($goalId, true);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], $krIds[0]);
+        $this->assertEquals($res[1]['id'], $krIds[1]);
+
+        $krIds[] = $this->createKr($goalId, $teamId, $userId, 50, 0, 100, 4, Term::TYPE_CURRENT, false);
+        $res = $this->KeyResult->getAllByGoalId($goalId, true);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals($res[0]['id'], $krIds[0]);
+        $this->assertEquals($res[1]['id'], $krIds[1]);
+        $this->assertEquals($res[2]['id'], $krIds[2]);
+
+        $krIds[] = $this->createKr($goalId, $teamId, $userId, 50, 0, 100, 4, Term::TYPE_CURRENT, false);
+        $res = $this->KeyResult->getAllByGoalId($goalId, true);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res[0]['id'], $krIds[0]);
+        $this->assertEquals($res[1]['id'], $krIds[1]);
+        $this->assertEquals($res[2]['id'], $krIds[2]);
+        $this->assertEquals($res[3]['id'], $krIds[3]);
+
+        // Exclude deleted krs
+        $this->KeyResult->delete($res[1]['id']);
+        $res = $this->KeyResult->getAllByGoalId($goalId, true);
+        $this->assertEquals(count($res), 3);
+        $this->assertEquals($res[0]['id'], $krIds[0]);
+        $this->assertEquals($res[1]['id'], $krIds[2]);
+        $this->assertEquals($res[2]['id'], $krIds[3]);
+
+    }
 }

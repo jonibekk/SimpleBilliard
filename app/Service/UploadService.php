@@ -173,6 +173,8 @@ class UploadService extends AppService
     {
         /** @var AppModel $Model */
         $Model = ClassRegistry::init($modelName);
+        /**@var AttachedFileService $AttachedFileservice */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
 
         $uploadConfig = $Model->actsAs['Upload'][$uploadCategory];
 
@@ -186,26 +188,45 @@ class UploadService extends AppService
         $file->setSuffix('_original');
         $fileGroups[] = $file;
 
-        if ($file->getFileType() == 'image') {
-            $ImageRotateProcessor = new ImageRotateProcessor();
-            $ImageResizeProcessor = new ImageResizeProcessor();
-
-            $styles = Hash::get($uploadConfig, 'styles', []);
-            $quality = Hash::get($uploadConfig, 'quality');
-
-            foreach ($styles as $style => $geometry) {
-                $currentFile = $ImageRotateProcessor->process($file);
-                $currentFile = $ImageResizeProcessor->process($currentFile, $geometry, $quality);
-                $currentFile->setSuffix('_' . $style);
-                $fileGroups[] = $currentFile;
-                unset($currentFile);
-            }
+        /*resizing & rotating if files are image-type*/
+        if($AttachedFileService->isImg($file))
+        {
+           $fileGroups = $this->imageReworkProcess($file, $uploadConfig, $fileGroups);
         }
 
         // Bulk upload original file and file each size to s3
         $this->bulkSave($modelName, $modelId, $fileGroups);
 
         return true;
+    }
+
+    /**
+     * image resizing & rotating
+     *
+     * @param UploadedFile $file
+     * @param array $uploadConfig
+     * @param array $fileGroups
+     *
+     * @return array
+     */
+    public function imageReworkProcess(UploadedFile $file, array $uploadConfig, array $fileGroups):array
+    {
+
+        $ImageRotateProcessor = new ImageRotateProcessor();
+        $ImageResizeProcessor = new ImageResizeProcessor();
+
+        $styles = Hash::get($uploadConfig, 'styles', []);
+        $quality = Hash::get($uploadConfig, 'quality');
+
+        foreach ($styles as $style => $geometry) {
+            $currentFile = $ImageRotateProcessor->process($file);
+            $currentFile = $ImageResizeProcessor->process($currentFile, $geometry, $quality);
+            $currentFile->setSuffix('_' . $style);
+            $fileGroups[] = $currentFile;
+            unset($currentFile);
+        }
+
+        return $fileGroups;
     }
 
     /**

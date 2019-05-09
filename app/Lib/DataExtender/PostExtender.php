@@ -11,6 +11,7 @@ App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Lib/DataExtender/Extension', 'PostShareCircleExtension');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'CommentAllService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::import('Service', 'PostService');
@@ -24,6 +25,7 @@ class PostExtender extends BaseExtender
     const EXTEND_USER = "ext:post:user";
     const EXTEND_RELATED_TYPE = "ext:post:related_type";
     const EXTEND_COMMENTS = "ext:post:comments";
+    const EXTEND_COMMENTS_ALL = "ext:post:comments:all";
     const EXTEND_POST_SHARE_CIRCLE = "ext:post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:post:share_user";
     const EXTEND_POST_RESOURCES = "ext:post:resources";
@@ -69,20 +71,37 @@ class PostExtender extends BaseExtender
                     break;
             }
         }
-        if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
-            /** @var CommentPagingService $CommentPagingService */
-            $CommentPagingService = ClassRegistry::init('CommentPagingService');
+        $isExtendingAllComment = in_array(self::EXTEND_COMMENTS_ALL, $extensions);
+        if ($isExtendingAllComment) {
+            /** @var CommentAllService $CommentAllService */
+            $CommentAllService = ClassRegistry::init('CommentAllService');
 
             $commentPagingRequest = new PagingRequest();
             $commentPagingRequest->setResourceId(Hash::get($data, 'id'));
             $commentPagingRequest->setCurrentUserId($userId);
             $commentPagingRequest->setCurrentTeamId($teamId);
 
-            $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
+            $comments = $CommentAllService->getAllData(
+                $commentPagingRequest,
                 CommentExtender::EXTEND_ALL);
 
             $data['comments'] = $comments;
-        }
+        } elseif ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
+            /** @var CommentPagingService $CommentPagingService */
+        $CommentPagingService = ClassRegistry::init('CommentPagingService');
+
+        $commentPagingRequest = new PagingRequest();
+        $commentPagingRequest->setResourceId(Hash::get($data, 'id'));
+        $commentPagingRequest->setCurrentUserId($userId);
+        $commentPagingRequest->setCurrentTeamId($teamId);
+
+        $comments = $CommentPagingService->getDataWithPaging(
+            $commentPagingRequest,
+            self::DEFAULT_COMMENT_COUNT,
+            CommentExtender::EXTEND_ALL);
+
+        $data['comments'] = $comments;
+    }
         if ($this->includeExt($extensions, self::EXTEND_POST_FILE)) {
             // Set image url each post photo
             /** @var ImageStorageService $ImageStorageService */

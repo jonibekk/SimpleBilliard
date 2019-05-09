@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'GoalCategoryEntity');
 
 /**
  * GoalCategory Model
@@ -7,6 +8,9 @@ App::uses('AppModel', 'Model');
  * @property Team $Team
  * @property Goal $Goal
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class GoalCategory extends AppModel
 {
 
@@ -63,6 +67,12 @@ class GoalCategory extends AppModel
      */
     public $hasMany = [
         'Goal',
+    ];
+
+
+    public $modelConversionTable = [
+        'team_id'    => DataType::INT,
+        'active_flg' => DataType::BOOL
     ];
 
     function getCategoryList()
