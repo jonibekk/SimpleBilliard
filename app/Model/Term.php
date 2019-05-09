@@ -1,6 +1,10 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('AppUtil', 'Util');
+App::uses('Team', 'Model');
+App::import('Model/Entity', 'TermEntity');
+
+use Goalous\Enum\DataType\DataType as DataType;
 
 /**
  * Term Model
@@ -89,6 +93,11 @@ class Term extends AppModel
                 'rule' => ['range', 0, 13]
             ]
         ]
+    ];
+
+    protected $modelConversionTable = [
+        'team_id'         => DataType::INT,
+        'evaluate_status' => DataType::INT
     ];
 
     /**
@@ -658,7 +667,8 @@ class Term extends AppModel
         string $targetDate,
         $startTermMonth = null,
         $borderMonths = null
-    ) {
+    )
+    {
         $team = $this->Team->getCurrentTeam();
         if (empty($team) && (!$startTermMonth || !$borderMonths)) {
             return null;
@@ -825,7 +835,8 @@ class Term extends AppModel
         string $nextStartDate,
         int $termRange,
         int $teamId
-    ): bool {
+    ): bool
+    {
         $currentEndDate = date('Y-m-d', strtotime($nextStartDate) - DAY);
         $nextEndDate = AppUtil::getEndDate($nextStartDate, $termRange);
         $nextNextStartDate = date('Y-m-01', strtotime($nextEndDate) + DAY);
@@ -865,6 +876,29 @@ class Term extends AppModel
         // convert from local datetime of end of day to UTC timestamp.
         $duration = strtotime($termEndDate . ' 23:59:59') - ($timezone * HOUR) - REQUEST_TIMESTAMP;
         return $duration;
+    }
+
+    /**
+     * Get term information by date and team
+     *
+     * @param int    $teamId
+     * @param string $date
+     *
+     * @return TermEntity | null
+     */
+    public function getTermByDate(int $teamId, string $date)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'       => $teamId,
+                'start_date <=' => $date,
+                'end_date >='   => $date,
+            ]
+        ];
+        /** @var TermEntity $res */
+        $res = $this->useType()->useEntity()->find('first', $options);
+
+        return $res;
     }
 
 }

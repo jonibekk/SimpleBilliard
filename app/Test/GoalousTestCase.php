@@ -447,9 +447,10 @@ class GoalousTestCase extends CakeTestCase
         $startValue = 0,
         $targetValue = 100,
         $priority = 3,
-        $termType = Term::TYPE_CURRENT
-    )
-    {
+        $termType = Term::TYPE_CURRENT,
+        $tkrFlg = false,
+        $valueUnit = 0
+    ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
@@ -462,14 +463,15 @@ class GoalousTestCase extends CakeTestCase
             'name'          => 'テストKR',
             'start_value'   => $startValue,
             'target_value'  => $targetValue,
-            'value_unit'    => 0,
+            'value_unit'    => $valueUnit,
             'current_value' => $currentValue,
             'start_date'    => $startDate,
             'end_date'      => $endDate,
             'priority'      => $priority,
+            'tkr_flg'      => $tkrFlg,
         ];
         $KeyResult->create();
-        $KeyResult->save($kr);
+        $KeyResult->save($kr, false);
         return $KeyResult->getLastInsertID();
     }
 

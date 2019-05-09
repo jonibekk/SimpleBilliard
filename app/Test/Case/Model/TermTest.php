@@ -576,4 +576,40 @@ class TermTest extends GoalousTestCase
         $this->assertTrue(!empty($nextNextTerm));
     }
 
+    function test_getTermByDate()
+    {
+        $teamId = 1;
+        $this->Term->saveAll([
+            [
+                'team_id'    => $teamId,
+                'start_date' => '2019-04-01',
+                'end_date'   => '2019-09-31'
+            ],
+            [
+                'team_id'    => $teamId,
+                'start_date' => '2019-10-01',
+                'end_date'   => '2020-03-31'
+            ],
+        ]);
+        $res = $this->Term->getTermByDate($teamId, '2019-04-01');
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['start_date'], '2019-04-01');
+        $this->assertEquals($res['end_date'], '2019-09-31');
+
+        $res = $this->Term->getTermByDate($teamId, '2019-09-31');
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['start_date'], '2019-04-01');
+        $this->assertEquals($res['end_date'], '2019-09-31');
+
+        $res = $this->Term->getTermByDate($teamId, '2019-10-01');
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['start_date'], '2019-10-01');
+        $this->assertEquals($res['end_date'], '2020-03-31');
+
+        $res = $this->Term->getTermByDate($teamId, '2020-03-31');
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res['start_date'], '2019-10-01');
+        $this->assertEquals($res['end_date'], '2020-03-31');
+    }
+
 }

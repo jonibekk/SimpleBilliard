@@ -264,7 +264,7 @@ class AppUtilTest extends GoalousTestCase
         $nowHour = (int)date("H");
         $utcTimezone = 0;
         $overTimezone = 24 - $nowHour;
-        $underTimezone = - $nowHour - 1;
+        $underTimezone = -$nowHour - 1;
         $this->assertEquals(AppUtil::todayDateYmdLocal($utcTimezone), date("Y-m-d"));
         // These are wrong test cases, comment out temporarily
 //        $this->assertEquals(AppUtil::todayDateYmdLocal($overTimezone), date("Y-m-d", strtotime("+1 day")));
@@ -281,9 +281,9 @@ class AppUtilTest extends GoalousTestCase
 
     function test_sizeStringToByte()
     {
-        $this->assertEquals(  2 * 1024 * 1024 * 1024, AppUtil::sizeStringToByte('2G'));
+        $this->assertEquals(2 * 1024 * 1024 * 1024, AppUtil::sizeStringToByte('2G'));
         $this->assertEquals(128 * 1024 * 1024, AppUtil::sizeStringToByte('128M'));
-        $this->assertEquals( 10 * 1024, AppUtil::sizeStringToByte('10K'));
+        $this->assertEquals(10 * 1024, AppUtil::sizeStringToByte('10K'));
         $this->assertEquals(0, AppUtil::sizeStringToByte('ABC'));
     }
 
@@ -299,32 +299,116 @@ class AppUtilTest extends GoalousTestCase
     {
         $a = [
             'ActionResult' => [
-                'id' => 1,
+                'id'      => 1,
                 'user_id' => 1
             ],
-            'Circle' => [
-                'id' => 1,
+            'Circle'       => [
+                'id'      => 1,
                 'user_id' => 1
             ],
             'testTestTest' => [
-                'id' => 1,
+                'id'      => 1,
                 'user_id' => 1
             ],
         ];
         $ret = AppUtil::arrayChangeKeySnakeCase($a);
         $this->assertEquals($ret, [
-            'action_result' => [
-                'id' => 1,
+            'action_result'  => [
+                'id'      => 1,
                 'user_id' => 1
             ],
-            'circle' => [
-                'id' => 1,
+            'circle'         => [
+                'id'      => 1,
                 'user_id' => 1
             ],
             'test_test_test' => [
-                'id' => 1,
+                'id'      => 1,
                 'user_id' => 1
             ],
         ]);
+    }
+
+    function test_calcProgressRate_defaultDecimal()
+    {
+        $res = AppUtil::calcProgressRate(0, 0, 0);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 1, 0);
+        $this->assertTrue($res === '0');
+
+        $res = AppUtil::calcProgressRate(0, 1, 1);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 100, 1);
+echo $res;
+        $this->assertTrue($res === '1');
+        $res = AppUtil::calcProgressRate(0, 100, 100);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 100, 1.23);
+        $this->assertTrue($res === '1.23');
+
+        $res = AppUtil::calcProgressRate(99.11, 1.23, 1.231);
+        $this->assertTrue($res === '99.99');
+
+        $res = AppUtil::calcProgressRate(99.11, 1.23, 99.10999);
+        $this->assertTrue($res === '0.01');
+
+        $res = AppUtil::calcProgressRate(1234, -99999, -100);
+        $this->assertTrue($res === '1.31');
+
+        $res = AppUtil::calcProgressRate(1234, -999, -100);
+        $this->assertTrue($res === '59.74');
+
+        $res = AppUtil::calcProgressRate(1234, -99999, -99998);
+        $this->assertTrue($res === '99.99');
+
+        $res = AppUtil::calcProgressRate(0, -99999.999999999999, -99999.999999999999);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(-99999.999999999999, 0, -99999.999999999999);
+        $this->assertTrue($res === '0');
+    }
+
+    function test_calcProgressRate_integer()
+    {
+        $res = AppUtil::calcProgressRate(0, 0, 0, 0);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 1, 0, 0);
+        $this->assertTrue($res === '0');
+
+        $res = AppUtil::calcProgressRate(0, 1, 1, 0);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 100, 1, 0);
+        $this->assertTrue($res === '1');
+
+        $res = AppUtil::calcProgressRate(0, 100, 100, 0);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(0, 100, 1.23, 0);
+        $this->assertTrue($res === '1');
+
+        $res = AppUtil::calcProgressRate(99.11, 1.23, 1.231, 0);
+        $this->assertTrue($res === '99');
+
+        $res = AppUtil::calcProgressRate(99.11, 1.23, 99.10999, 0);
+        $this->assertTrue($res === '1');
+
+        $res = AppUtil::calcProgressRate(1234, -99999, -100, 0);
+        $this->assertTrue($res === '1');
+
+        $res = AppUtil::calcProgressRate(1234, -999, -100, 0);
+        $this->assertTrue($res === '59');
+
+        $res = AppUtil::calcProgressRate(1234, -99999, -99998, 0);
+        $this->assertTrue($res === '99');
+
+        $res = AppUtil::calcProgressRate(0, -99999.999999999999, -99999.999999999999, 0);
+        $this->assertTrue($res === '100');
+
+        $res = AppUtil::calcProgressRate(-99999.999999999999, 0, -99999.999999999999, 0);
+        $this->assertTrue($res === '0');
     }
 }

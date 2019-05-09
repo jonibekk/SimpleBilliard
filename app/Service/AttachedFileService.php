@@ -24,6 +24,11 @@ class AttachedFileService extends AppService
     const UPLOAD_TYPE_ALL = 1;
     const UPLOAD_TYPE_IMG = 2;
 
+    /** add here if there is aother Media file Extension you want to treat as DOC */
+    const NON_MEDIA_EXT = [
+        'psd'
+    ];
+
     // アップロード可能な画像種類
     public $supportedImgTypes = [
         IMAGETYPE_PNG,
@@ -250,23 +255,13 @@ class AttachedFileService extends AppService
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
 
-        switch ($file->getFileType()) {
-            case "image" :
-                $fileType = AttachedFileType::TYPE_FILE_IMG;
-                break;
-            case "video" :
-                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
-                break;
-            default:
-                $fileType = AttachedFileType::TYPE_FILE_DOC;
-                break;
-        }
+        $fileType = $this->getFileMimeType($file);
 
         $newData = [
             'user_id'               => $userId,
             'team_id'               => $teamId,
             'attached_file_name'    => $file->getFileName(),
-            'file_type'             => $fileType,
+            'file_type'             => $fileType->getValue(),
             'file_ext'              => $file->getFileExt(),
             'file_size'             => $file->getFileSize(),
             'model_type'            => $modelType->getValue(),
@@ -293,6 +288,39 @@ class AttachedFileService extends AppService
         return $result;
     }
 
+    /**
+     * get file's Mime-type
+     *
+     * @param UploadedFile      $file
+     *
+     * @return AttachedFileType
+     */
+    public function getFileMimeType(UploadedFile $file): AttachedFileType
+    {
+        if(in_array($file->getFileExt(), self::NON_MEDIA_EXT, true)){
+            return AttachedFileType::TYPE_FILE_DOC();
+        }
+        switch ($file->getFileType()) {
+            case "image" :
+                return AttachedFileType::TYPE_FILE_IMG();
+            case "video" :
+                return AttachedFileType::TYPE_FILE_VIDEO();
+            default:
+                return AttachedFileType::TYPE_FILE_DOC();
+        }
+
+    }
+    /**
+     * check file is an image or not
+     *
+     * @param UploadedFile      $file
+     *
+     * @return bool
+     */
+    public function isImg(UploadedFile $file): bool
+    {
+        return $this->getFileMimeType($file)->getValue() === AttachedFileType::TYPE_FILE_IMG;
+    }
 
     /**
      * Get file url

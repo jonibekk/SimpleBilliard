@@ -21,6 +21,7 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 | name | mail addless | pass |
 |:---|:---|:---|
 | Sentry | bot@isao.co.jp | bAt2AFar |
+| Zapier | bot@isao.co.jp | Goalousno1 |
 
 ### Sentry
 Make sure to keep a copy of these codes to recover your account if you lose your authenticator.
