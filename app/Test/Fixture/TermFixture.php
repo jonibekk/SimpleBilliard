@@ -98,7 +98,7 @@ class TermFixture extends CakeTestFixtureEx
         ],
         [
             'id'              => 2,
-            'team_id'         => 1,
+            'team_id'         => 2,
             'start_date'      => 20000,
             'end_date'        => 29999,
             'evaluate_status' => true,

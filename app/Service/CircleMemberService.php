@@ -174,15 +174,15 @@ class CircleMemberService extends AppService
                 'user_id'
             ],
             'table'      => $db->fullTableName($CircleMember),
-            'alias'      => 'test',
+            'alias'      => 'CircleMember2',
             'limit'      => null,
             'offset'     => null,
             'joins'      => array(),
             'order'      => null,
             'group'      => null,
             'conditions' => [
-                'test.circle_id' => $circleId,
-                'test.del_flg'   => false
+                'CircleMember2.circle_id' => $circleId,
+                'CircleMember2.del_flg'   => false
             ]
         ];
 
@@ -197,13 +197,12 @@ class CircleMemberService extends AppService
                 'user_id' => $userIds
             ],
             'fields' => [
-                'user_id',
-                'circle_id'
+                'user_id'
             ],
             'group' => 'user_id'
         ];
 
-        $newMemberIds = array_keys($CircleMember->find('list',$condition));
+        $newMemberIds = array_values($CircleMember->find('list',$condition));
         $notApplicableIds = array_diff($userIds, $newMemberIds);
 
         $newData = [];
@@ -239,9 +238,9 @@ class CircleMemberService extends AppService
             throw $exception;
         }
 
-        return $return = [
-                        'notApplicableIds' => $notApplicableIds,
-                        'newMemberIds'    => $newMemberIds
+        return [
+                    'newMemberIds' => $newMemberIds,
+                    'notApplicableIds' => $notApplicableIds
                ];
     }
 

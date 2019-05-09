@@ -145,14 +145,14 @@ class CirclesController extends BasePagingController
      *
      * @return BaseApiResponse
      */
-    public function post_members(int $circleId)
+    public function post_invite_members(int $circleId)
     {
         $error = $this->validatePostMembers($circleId);
 
         if (!empty($error)) {
             return $error;
         }
-        $newMemberIds = Hash::extract($this->getRequestJsonBody(), 'user_ids');
+        $newMemberIds = Hash::extract($this->getRequestJsonBody(), 'user_id');
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
@@ -160,12 +160,10 @@ class CirclesController extends BasePagingController
         try {
             $return = $CircleMemberService->multipleAdd($newMemberIds, $this->getTeamId(), $circleId);
             if(!empty($return['newMemberIds'])){
-                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_ADD_USER,$circleId,$return['newMemberIds']);
+                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_ADD_USER,$circleId, $this->getUserId(),$this->getTeamId(),$return['newMemberIds']);
             }
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
-        } catch (GlException\GoalousConflictException $exception) {
-            return ErrorResponse::resourceConflict()->withException($exception)->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
@@ -552,16 +550,18 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Send notification to all members in a circle
+     * Send notification to each members who invited
      *
      * @param int $notificationType
      * @param int $circleId
-     * @param int $userId User who sent the notification
+     * @param int userId
+     * @param int teamId
+     * @param int $memberIds User who got the notification
      */
-    private function notifyMembers(int $notificationType, int $circleId, array $memberIds)
+    private function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId, array $memberIds)
     {
         // Notify to circle member
-        $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberIds);
+        $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberIds, $teamId, $userId);
     }
 
     private function getDefaultPostDraftExtension()
