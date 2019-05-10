@@ -149,6 +149,10 @@ class CircleMemberService extends AppService
      */
     public function multipleAdd(array $userIds, int $teamId, int $circleId): array
     {
+        if (empty($userIds)) {
+            throw new GlException\GoalousNotFoundException(__("User list is empty"));
+        }
+
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init("Circle");
 
@@ -164,80 +168,82 @@ class CircleMemberService extends AppService
             throw new GlException\GoalousNotFoundException(__("This circle does not exist."));
         }
 
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $db = $CircleMember->getDataSource();
-
-        $condition = [
-            'fields' =>[
-                'user_id'
-            ],
-            'table'      => $db->fullTableName($CircleMember),
-            'alias'      => 'CircleMember2',
-            'limit'      => null,
-            'offset'     => null,
-            'joins'      => array(),
-            'order'      => null,
-            'group'      => null,
-            'conditions' => [
-                'CircleMember2.circle_id' => $circleId,
-                'CircleMember2.del_flg'   => false
-            ]
-        ];
-
-        $subQuery = $db->buildStatement($condition, $CircleMember);
-
-        $subQuery = 'CircleMember.user_id NOT IN (' . $subQuery . ') ';
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
 
         $condition = [
             'conditions' => [
-                $subQuery,
-                'team_id' => $teamId,
-                'user_id' => $userIds
+                'User.id' => $userIds,
+                'CircleMember.circle_id' => null
             ],
-            'fields' => [
-                'user_id'
+            'fields'     => [
+                'User.id'
             ],
-            'group' => 'user_id'
+            'joins'      => [
+                [
+                    'type'       => 'LEFT OUTER',
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
+                    'conditions' => [
+                        'CircleMember.user_id = User.id',
+                        'CircleMember.circle_id' => $circleId
+                    ]
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.del_flg' => 0
+                    ]
+                ]
+            ],
+
         ];
 
-        $newMemberIds = array_values($CircleMember->find('list',$condition));
+        $newMemberIds = array_values($User->find('list',$condition));
         $notApplicableIds = array_diff($userIds, $newMemberIds);
 
-        $newData = [];
+        if(!empty($newMemberIds)){
 
-        foreach($newMemberIds as $newMemberId){
-            $newData[] = [
-                'circle_id' => $circleId,
-                'user_id'   => $newMemberId,
-                'team_id'   => $teamId,
-                'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN
-            ];
+            $newData = [];
+
+            foreach($newMemberIds as $newMemberId){
+                $newData[] = [
+                    'circle_id' => $circleId,
+                    'user_id'   => $newMemberId,
+                    'team_id'   => $teamId,
+                    'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN
+                ];
+            }
+
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+
+            try {
+                $this->TransactionManager->begin();
+                $CircleMember->create();
+                /** @var CircleMemberEntity*/
+                $CircleMember->useType()->useEntity()->bulkInsert($newData);
+                $Circle->updateMemberCount($circleId);
+
+                /** @var GlRedis $GlRedis */
+                $GlRedis = ClassRegistry::init("GlRedis");
+                $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
+                $this->TransactionManager->commit();
+            } catch (Exception $exception) {
+                $this->TransactionManager->rollback();
+                GoalousLog::error("Failed to add new member to circle $circleId", [
+                    'message' => $exception->getMessage(),
+                    'newMemberIds' => $newMemberIds,
+                ]);
+                GoalousLog::error($exception->getTrace());
+                throw $exception;
+            }
         }
-
-        try {
-            $this->TransactionManager->begin();
-            $CircleMember->create();
-            /** @var CircleMemberEntity*/
-            $result = $CircleMember->useType()->useEntity()->bulkInsert($newData);
-            $Circle->updateMemberCount($circleId);
-
-            /** @var GlRedis $GlRedis */
-            $GlRedis = ClassRegistry::init("GlRedis");
-            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
-
-            $this->TransactionManager->commit();
-        } catch (Exception $exception) {
-            $this->TransactionManager->rollback();
-            GoalousLog::error("Failed to add new member to circle $circleId", [
-                'message' => $exception->getMessage(),
-                'newMemberIds' => $newMemberIds,
-            ]);
-            GoalousLog::error($exception->getTrace());
-            throw $exception;
-        }
-
         return [
                     'newMemberIds' => $newMemberIds,
                     'notApplicableIds' => $notApplicableIds

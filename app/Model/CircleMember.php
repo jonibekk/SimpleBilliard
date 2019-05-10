@@ -838,9 +838,8 @@ class CircleMember extends AppModel
             $conditions['conditions']['CircleMember.user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
         }
 
-        $count = (int)$this->find('count', $conditions);
-
-        return $count;
+        $count = array_keys($this->find('all', $conditions));
+        return count($count);
     }
 
     /**
@@ -901,5 +900,34 @@ class CircleMember extends AppModel
         }
 
         return $res['CircleMember']['get_notification_flg'];
+    }
+    /**
+     * Get specific user_id in a circle
+     *
+     * @param int $circle_id
+     * @param array $user_id
+     *
+     * @return array
+     */
+    public function getSpecificMember(
+        $circle_id,
+        $user_id,
+        $team_id
+    ): array
+    {
+        $options = [
+            'conditions' => [
+                'CircleMember.circle_id' => $circle_id,
+                'CircleMember.team_id'   => $team_id,
+                'CircleMember.user_id'   => $user_id
+            ],
+            'fields' => [
+                'CircleMember.user_id'
+            ]
+        ];
+
+        $users = $this->find('list', $options);
+
+        return array_values($users);
     }
 }

@@ -3,6 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
 App::import('Service', 'CircleMemberService');
 App::uses('CircleMember', 'Model');
+App::import('Model/Entity', 'CircleMemberEntity');
 
 /**
  * Created by PhpStorm.
@@ -191,106 +192,133 @@ class CircleMemberServiceTest extends GoalousTestCase
         $CircleMemberService->setNotificationSetting(123293, 1, false);
     }
 
-    public function test_multipleAdd_success()
+    public function test_multipleAdd_addUsers()
     {
-        $newCircleId = 2;
+        $circleId = 2;
         $newUserId = [2,12];
-        $newTeamId = 1;
+        $teamId = 1;
+        $circleMemberCount = [1,2];
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $initialMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $initialMemberCount = $CircleMember->getMemberCount($circleId);
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
 
-        $newMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $newMemberCount = $CircleMember->getMemberCount($circleId);
+        $newAddedMember = $CircleMember->getSpecificMember($circleId,$newUserId,$teamId);
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals($newUserId, $result['newMemberIds']);
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init("GlRedis");
+        $GlRedis->deleteMultiCircleMemberCount(array_keys($circleMemberCount));
+        $redisRes = $GlRedis->getMultiCircleMemberCount(array_keys($circleMemberCount));
+
+
+        $this->assertNotEmpty($res);
+        $this->assertEquals($newUserId, $res['newMemberIds']);
+        $this->assertEquals($res['newMemberIds'],$newAddedMember);
         $this->assertEquals($initialMemberCount + count($newUserId), $newMemberCount);
+        $this->assertEquals($redisRes, []);
     }
 
-    public function test_multipleAddSingle_success()
+    public function test_multipleAdd_singleUser()
     {
-        $newCircleId = 2;
+        $circleId = 2;
         $newUserId = [2];
-        $newTeamId = 1;
+        $teamId = 1;
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $initialMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $initialMemberCount = $CircleMember->getMemberCount($circleId);
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
 
-        $newMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $newMemberCount = $CircleMember->getMemberCount($circleId);
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals($newUserId, $result['newMemberIds']);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($newUserId, $res['newMemberIds']);
         $this->assertEquals($initialMemberCount + count($newUserId), $newMemberCount);
     }
 
-    public function test_multipleAddUserAlreadyExist_success()
+    public function test_multipleAdd_UserAlreadyExist()
     {
-        $newCircleId = 2;
+        $circleId = 2;
         $newUserId = [2];
-        $newTeamId = 1;
+        $teamId = 1;
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals($newUserId, array_values($result['notApplicableIds']));
+        $this->assertNotEmpty($res);
+        $this->assertEquals($newUserId, array_values($res['notApplicableIds']));
 
     }
 
-    public function test_multipleAddComplex_success()
+    public function test_multipleAdd_ComplexUser()
     {
-        $newCircleId = 2;
+        $circleId = 2;
         $newUserId = [1,2,12];
-        $newTeamId = 1;
+        $teamId = 1;
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
-        $initialMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $initialMemberCount = $CircleMember->getMemberCount($circleId);
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
 
-        $newMemberCount = $CircleMember->getMemberCount($newCircleId);
+        $newMemberCount = $CircleMember->getMemberCount($circleId);
 
-        $this->assertNotEmpty($result);
-        $this->assertEquals([1], array_values($result['notApplicableIds']));
-        $this->assertEquals([2,12], $result['newMemberIds']);
-        $this->assertEquals($initialMemberCount + count($result['newMemberIds']), $newMemberCount);
+        $this->assertNotEmpty($res);
+        $this->assertEquals([1], array_values($res['notApplicableIds']));
+        $this->assertEquals([2,12], $res['newMemberIds']);
+        $this->assertEquals($initialMemberCount + count($res['newMemberIds']), $newMemberCount);
     }
 
     /**
      * @expectedException  \Goalous\Exception\GoalousNotFoundException
      */
-    public function test_mutipleAddCircleNotExist_failed()
+    public function test_mutipleAdd_userIdEmpty()
     {
-        $newCircleId = 123123;
-        $newUserId = [2];
-        $newTeamId = 1;
+        $circleId = 2;
+        $newUserId = [];
+        $teamId = 1;
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $result = $CircleMemberService->multipleAdd($newUserId, $newTeamId, $newCircleId);
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
+
+    }
+
+    /**
+     * @expectedException  \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_mutipleAdd_CircleNotExist()
+    {
+        $circleId = 123123;
+        $newUserId = [2];
+        $teamId = 1;
+
+        /** @var CircleMemberService $CircleMemberService */
+        $CircleMemberService = ClassRegistry::init('CircleMemberService');
+
+        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
+
     }
 
 }
