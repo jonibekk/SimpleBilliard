@@ -3,7 +3,6 @@ App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
 App::import('Service', 'CircleMemberService');
 App::uses('CircleMember', 'Model');
-App::import('Model/Entity', 'CircleMemberEntity');
 
 /**
  * Created by PhpStorm.
