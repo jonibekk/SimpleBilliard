@@ -212,9 +212,6 @@ class CircleMemberServiceTest extends GoalousTestCase
         $newMemberCount = $CircleMember->getMemberCount($circleId);
         $newAddedMember = $CircleMember->getSpecificMember($circleId,$newUserId,$teamId);
 
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init("GlRedis");
-        $GlRedis->deleteMultiCircleMemberCount(array_keys($circleMemberCount));
         $redisRes = $GlRedis->getMultiCircleMemberCount(array_keys($circleMemberCount));
 
 
