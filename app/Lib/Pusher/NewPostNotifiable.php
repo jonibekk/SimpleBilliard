@@ -5,9 +5,9 @@ use Goalous\Enum as Enum;
 
 class NewPostNotifiable extends BaseNotifiable
 {
-    protected function setChannelName(int $teamId = 0)
+    protected function setChannelNames(int $teamId = 0)
     {
-        $this->channelName =  "team_" . $teamId;
+        $this->channelNames =  ["team_" . $teamId];
     }
 
     protected function setEventName(PostEntity $post = null)
@@ -25,13 +25,14 @@ class NewPostNotifiable extends BaseNotifiable
     {
         $this->data = [
             'circle_id' => (string)$circleId,
-            'post_id' => (string)$post['id']
+            'post_id' => (string)$post['id'],
+            'user_id' => strval($post['user_id'])
         ];
     }
 
     public function build(PostEntity $post = null, int $circleId = 0)
     {
-        $this->setChannelName($post['team_id']);
+        $this->setChannelNames($post['team_id']);
         $this->setEventName($post);
         $this->setData($circleId, $post);
     }

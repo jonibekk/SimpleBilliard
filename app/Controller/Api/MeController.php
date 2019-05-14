@@ -8,8 +8,10 @@ App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('CircleMember', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
-
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -19,6 +21,7 @@ App::import('Controller/Traits', 'AuthTrait');
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
     /**
      * Get list of circles that an user is joined in
      *
@@ -120,6 +123,32 @@ class MeController extends BasePagingController
     }
 
     /**
+     * Get unread posts summary for this user in this team
+     */
+    public function get_all_unread_posts()
+    {
+        $unreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
+        $unreadPostsClient = new UnreadPostsClient();
+
+        $data = $unreadPostsClient->read($unreadPostsKey)->get(true);
+
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    /**
+     * Delete all unread posts summary for this user in this team
+     */
+    public function delete_all_unread_posts()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsClient->del($UnreadPostsKey);
+
+        return ApiResponse::ok()->getResponse();
+    }
+
+    /**
      * Validate parameters for getting notifications
      *
      * @return ErrorResponse | null
@@ -159,6 +188,7 @@ class MeController extends BasePagingController
 
     /**
      * Switch team
+     *
      * @return ApiResponse|BaseApiResponse
      */
     public function put_switch_team()
@@ -178,7 +208,7 @@ class MeController extends BasePagingController
             $jwt = $this->resetAuth($userId, $teamId, $this->getJwtAuth());
         } catch (Exception $e) {
             GoalousLog::error('failed to switch team', [
-                'user_id' => $userId,
+                'user_id'        => $userId,
                 'switch_team_id' => $teamId,
             ]);
             return ErrorResponse::internalServerError()

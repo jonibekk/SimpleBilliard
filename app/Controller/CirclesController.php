@@ -16,6 +16,7 @@ class CirclesController extends AppController
     public $components = [
         'Mention'
     ];
+
     /**
      * beforeFilter callback
      *
@@ -29,6 +30,7 @@ class CirclesController extends AppController
 
     /**
      * Display circle creation form
+     *
      * @return CakeResponse
      */
     public function create()
@@ -85,11 +87,12 @@ class CirclesController extends AppController
 
     /**
      * Display circle edit form
+     *
      * @return CakeResponse
      */
     public function edit(int $circleId)
     {
-        if(!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circleId)) {
+        if (!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circleId)) {
             $this->Notification->outError(__("You have no right to operate it."));
             return $this->redirect($this->referer());
         }
@@ -181,7 +184,7 @@ class CirclesController extends AppController
             $this->redirect($this->referer());
             return;
         }
-        return $this->redirect("/circles/".$this->Circle->id."/about");
+        return $this->redirect("/circles/" . $this->Circle->id . "/about");
     }
 
     /**
@@ -428,7 +431,7 @@ class CirclesController extends AppController
         // サークルから外す処理
         $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
         // Remove and update circle pin information
-        if($res){
+        if ($res) {
             $res = $CirclePinService->deleteCircleId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
         }
         // 処理失敗
@@ -500,6 +503,16 @@ class CirclesController extends AppController
         $msg = $error ? __("An error has occurred.") : __("Update setting.");
 
         return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
+    }
+
+    public function navigate_new_circle()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsClient->del($UnreadPostsKey);
+
+        return $this->redirect('/circles');
     }
 
     /**

@@ -4,6 +4,7 @@ App::uses('PostRead', 'Model');
 App::uses('Post', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('CircleMember', 'Model');
+App::import('Service/Redis', 'UnreadPostsRedisService');
 
 /**
  * User: Marti Floriach
@@ -127,6 +128,10 @@ class PostReadService extends AppService
                 GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
                 throw $e;
             }
+
+            /** @var UnreadPostsRedisService $UnreadPostsRedisService */
+            $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
+            $UnreadPostsRedisService->removeManyByPostIds($userId, $teamId, $unreadPostIds);
         }
 
         return $unreadPostIds;
