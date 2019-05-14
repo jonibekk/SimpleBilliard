@@ -23,9 +23,9 @@ App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsData');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
 
 use Goalous\Enum as Enum;

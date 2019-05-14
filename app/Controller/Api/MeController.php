@@ -10,8 +10,8 @@ App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 /**
  * Created by PhpStorm.
  * User: StephenRaharja

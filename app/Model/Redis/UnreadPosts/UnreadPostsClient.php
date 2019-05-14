@@ -1,8 +1,8 @@
 <?php
 App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
-App::uses('UnreadPostsKey', 'Lib/Cache/Redis/UnreadPosts');
-App::uses('UnreadPostsData', 'Lib/Cache/Redis/UnreadPosts');
+App::uses('UnreadPostsKey', 'Model/Redis/UnreadPosts');
+App::uses('UnreadPostsData', 'Model/Redis/UnreadPosts');
 
 class UnreadPostsClient extends BaseRedisClient implements InterfaceRedisClient
 {

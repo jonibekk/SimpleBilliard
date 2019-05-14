@@ -27,8 +27,8 @@ App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'PostResourceEntity');
 App::import('Lib/DataExtender', 'PostExtender');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Service/Redis', 'UnreadPostsRedisService');
 
 use Goalous\Enum as Enum;

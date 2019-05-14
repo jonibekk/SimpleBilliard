@@ -1,7 +1,7 @@
 <?php
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsClient');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsKey');
-App::import('Lib/Cache/Redis/UnreadPosts', 'UnreadPostsData');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::uses('CircleMember', 'Model');
 
 class UnreadPostsRedisService
