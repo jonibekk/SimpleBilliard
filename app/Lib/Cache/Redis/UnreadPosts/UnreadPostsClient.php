@@ -4,12 +4,6 @@ App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
 App::uses('UnreadPostsKey', 'Lib/Cache/Redis/UnreadPosts');
 App::uses('UnreadPostsData', 'Lib/Cache/Redis/UnreadPosts');
 
-/**
- * Created by PhpStorm.
- * User: stephen
- * Date: 19/03/28
- * Time: 10:36
- */
 class UnreadPostsClient extends BaseRedisClient implements InterfaceRedisClient
 {
     /**

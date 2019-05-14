@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: stephen
- * Date: 19/03/28
- * Time: 10:37
- */
 
 class UnreadPostsKey
 {
