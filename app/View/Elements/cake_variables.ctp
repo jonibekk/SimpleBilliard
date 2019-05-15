@@ -760,7 +760,6 @@ App::uses('AttachedFile', 'Model');
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
         is_current_team_admin: "<?= viaIsSet($is_current_team_admin) ?>",
-        attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>"
         attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>",
         my_notifying_circles: <?= json_encode($my_notifying_circles ?: [] ) ?>
     };
