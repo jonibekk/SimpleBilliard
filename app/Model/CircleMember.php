@@ -809,54 +809,6 @@ class CircleMember extends AppModel
     }
 
     /**
-     * Get circle member information of users in a circle
-     *
-     * @param int  $circleId
-     * @param bool $getNotificationFlg
-     *
-     * @return CircleMemberEntity[]
-     */
-    public function getMembersWithNotificationFlg(int $circleId, bool $getNotificationFlg): array
-    {
-
-        $options = [
-            'conditions' => [
-                'circle_id'            => $circleId,
-                'get_notification_flg' => $getNotificationFlg,
-                'del_flg'              => false
-            ],
-        ];
-
-        $result = $this->useType()->useEntity()->find('all', $options);
-
-        return $result;
-    }
-
-    /**
-     * Get circle members information of an user
-     *
-     * @param int  $userId
-     * @param bool $getNotificationFlg
-     *
-     * @return CircleMemberEntity[]
-     */
-    public function getCirclesWithNotificationFlg(int $userId, bool $getNotificationFlg): array
-    {
-
-        $options = [
-            'conditions' => [
-                'user_id'              => $userId,
-                'get_notification_flg' => $getNotificationFlg,
-                'del_flg'              => false
-            ],
-        ];
-
-        $result = $this->useType()->useEntity()->find('all', $options);
-
-        return $result;
-    }
-
-    /**
      * Count number of members in a circle
      *
      * @param int  $circleId
@@ -886,9 +838,8 @@ class CircleMember extends AppModel
             $conditions['conditions']['CircleMember.user_id'] = Hash::extract($userList, '{n}.{*}.user_id');
         }
 
-        $count = (int)$this->find('count', $conditions);
-
-        return $count;
+        $count = array_keys($this->find('all', $conditions));
+        return count($count);
     }
 
     /**
@@ -950,36 +901,33 @@ class CircleMember extends AppModel
 
         return $res['CircleMember']['get_notification_flg'];
     }
-
     /**
-     * Get all unread count
+     * Get specific user_id in a circle
      *
-     * @param int  $userId
-     * @param bool $checkNotifSetting
+     * @param int $circle_id
+     * @param array $user_id
      *
      * @return array
      */
-    public function getAllUnread(int $userId, bool $checkNotifSetting = false): array
+    public function getSpecificMember(
+        $circle_id,
+        $user_id,
+        $team_id
+    ): array
     {
-        $condition = [
+        $options = [
             'conditions' => [
-                'user_id'        => $userId,
-                'unread_count >' => 0,
-                'del_flg'        => false,
-            ]
-            ,
-            'fields'     => [
-                'circle_id',
-                'unread_count'
+                'CircleMember.circle_id' => $circle_id,
+                'CircleMember.team_id'   => $team_id,
+                'CircleMember.user_id'   => $user_id
+            ],
+            'fields' => [
+                'CircleMember.user_id'
             ]
         ];
 
-        if ($checkNotifSetting) {
-            $condition ['conditions']['get_notification_flg'] = true;
-        }
+        $users = $this->find('list', $options);
 
-        $res = $this->useType()->find('all', $condition);
-
-        return Hash::extract($res, '{n}.CircleMember', []);
+        return array_values($users);
     }
 }

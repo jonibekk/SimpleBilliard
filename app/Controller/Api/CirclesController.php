@@ -12,7 +12,7 @@ App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
-App::import('Service/Redis', 'UnreadPostsRedisService');
+App::import('Validator/Request/Api/V2', 'CircleRequestValidator');
 
 /**
  * Created by PhpStorm.
@@ -102,7 +102,7 @@ class CirclesController extends BasePagingController
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
         try {
             $return = $CircleMemberService->add($this->getUserId(), $this->getTeamId(), $circleId);
-            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
+            $this->notifyMember(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $this->getUserId(),
                 $this->getTeamId());
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
@@ -145,33 +145,30 @@ class CirclesController extends BasePagingController
      *
      * @return BaseApiResponse
      */
-    public function post_members(int $circleId)
+    public function post_invite_members(int $circleId)
     {
         $error = $this->validatePostMembers($circleId);
 
         if (!empty($error)) {
             return $error;
         }
-
-        $newMemberId = Hash::get($this->getRequestJsonBody(), 'user_id');
+        $newMemberIds = Hash::extract($this->getRequestJsonBody(), 'user_id');
 
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
         try {
-            $return = $CircleMemberService->add($newMemberId, $this->getTeamId(), $circleId);
-            $this->notifyMembers(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circleId, $newMemberId,
-                $this->getTeamId());
+            $return = $CircleMemberService->multipleAdd($newMemberIds, $this->getTeamId(), $circleId);
+            if(!empty($return['newMemberIds'])){
+                $this->notifyMembers(NotifySetting::TYPE_CIRCLE_ADD_USER,$circleId, $this->getUserId(),$this->getTeamId(),$return['newMemberIds']);
+            }
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
-        } catch (GlException\GoalousConflictException $exception) {
-            return ErrorResponse::resourceConflict()->withException($exception)
-                ->withMessage(__("This team member already joined this circle."))->getResponse();
         } catch (Exception $exception) {
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
-        return ApiResponse::ok()->withData($return->toArray())->getResponse();
+        return ApiResponse::ok()->withData($return)->getResponse();
     }
 
     /**
@@ -263,14 +260,6 @@ class CirclesController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
-        return ApiResponse::ok()->getResponse();
-    }
-
-    public function put_reset_unread_posts(int $circleId)
-    {
-        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
-        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
-        $UnreadPostsRedisService->removeManyByCircleId($this->getUserId(), $this->getTeamId(), $circleId);
         return ApiResponse::ok()->getResponse();
     }
 
@@ -438,7 +427,7 @@ class CirclesController extends BasePagingController
     private function validatePostMembers(int $circleId)
     {
         try {
-            CircleRequestValidator::createPostMemberValidator()->validate($this->getRequestJsonBody());
+            CircleRequestValidator::createPostMembersValidator()->validate($this->getRequestJsonBody());
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
                 ->addErrorsFromValidationException($e)
@@ -461,7 +450,7 @@ class CirclesController extends BasePagingController
             ],
             'fields'     => [
                 'id',
-                'public_flg'
+                'public_flg',
             ]
         ];
 
@@ -478,7 +467,7 @@ class CirclesController extends BasePagingController
             return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
         }
 
-        if (!$circle['public_flg']) {
+        if (!$circle['properties']['public_flg']) {
             if (!$CircleMember->isAdmin($this->getUserId(), $circleId)) {
                 return ErrorResponse::forbidden()->withMessage(__("You can not invite."))->getResponse();
             }
@@ -549,7 +538,7 @@ class CirclesController extends BasePagingController
      * @param int $userId User who sent the notification
      * @param int $teamId
      */
-    private function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId)
+    private function notifyMember(int $notificationType, int $circleId, int $userId, int $teamId)
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -558,6 +547,21 @@ class CirclesController extends BasePagingController
 
         // Notify to circle member
         $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberList, $teamId, $userId);
+    }
+
+    /**
+     * Send notification to each members who invited
+     *
+     * @param int $notificationType
+     * @param int $circleId
+     * @param int userId
+     * @param int teamId
+     * @param int $memberIds User who got the notification
+     */
+    private function notifyMembers(int $notificationType, int $circleId, int $userId, int $teamId, array $memberIds)
+    {
+        // Notify to circle member
+        $this->NotifyBiz->execSendNotify($notificationType, $circleId, null, $memberIds, $teamId, $userId);
     }
 
     private function getDefaultPostDraftExtension()
