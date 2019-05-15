@@ -283,12 +283,18 @@ class CommentService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'      => '"' . $data->getBody() . '"',
-                'site_info' => !empty($data->getSiteInfo()) ? "'" . addslashes(json_encode($data->getSiteInfo())) . "'"  : null,
-                'modified'  => REQUEST_TIMESTAMP
+                'body'      => $data->getBody(),
+                'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo())  : null,
+                'created' => false // Prevent updating this field
             ];
-            if (!$Comment->updateAll($newData, ['Comment.id' => $data->getId()])) {
-                throw new RuntimeException("Failed to update comment");
+
+            $Comment->clear();
+            $commentId = $data->getId();
+            $Comment->id = $commentId;
+            if (!$Comment->save($newData, false)) {
+                throw new RuntimeException(sprintf("Failed to update comments table record. data: %s",
+                    AppUtil::jsonOneLine(compact('newData', 'commentId'))
+                ));
             }
             $this->updateAttachedFiles($data->getId(), $data->getUserId(), $data->getTeamId(), $data->getResources());
 
@@ -299,6 +305,7 @@ class CommentService extends AppService
                 'message' => $e->getMessage(),
                 'data' => $data
             ]);
+            GoalousLog::error($e->getTraceAsString());
             throw $e;
         }
         /** @var CommentEntity $result */
