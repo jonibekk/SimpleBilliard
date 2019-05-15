@@ -12,6 +12,7 @@ App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::uses('User', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
@@ -22,6 +23,9 @@ App::import('Service', 'TeamService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
 
 use Goalous\Enum as Enum;
@@ -273,6 +277,8 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
                 $this->_setTimeZoneEnvironment();
+                $this->_setNotifyingCircleList();
+                $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
@@ -496,6 +502,7 @@ class AppController extends BaseController
             }
         }
     }
+
     public function _setMyTeam()
     {
         $my_teams = [];
@@ -857,6 +864,16 @@ class AppController extends BaseController
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_topic_ids'));
     }
 
+    public function _setCircleBadgeCount()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsCount = count($UnreadPostsClient->read($UnreadPostsKey)->get());
+
+        $this->set('circle_badge_cnt', $UnreadPostsCount);
+    }
+
     function _getRedirectUrl()
     {
         $redirect_url = $this->request->data('Post.redirect_url');
@@ -1182,6 +1199,24 @@ class AppController extends BaseController
         $NewGoalousAssetsStorageClient = ClassRegistry::init('NewGoalousAssetsStorageClient');
         $newGoalousAssets = $NewGoalousAssetsStorageClient->getKeys();
         $this->set('newGoalousAssets', $newGoalousAssets);
+    }
+
+    /**
+     * Set list of joined circles with enabled notification for this user
+     */
+    protected function _setNotifyingCircleList(){
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $circleIds = [];
+
+        $circles = $CircleMember->getCirclesWithNotificationFlg($this->Auth->user('id'), true);
+        /** @var CircleMemberEntity $circle */
+        foreach ($circles as $circle) {
+            $circleIds[] = strval($circle['circle_id']);
+        }
+
+        $this->set('my_notifying_circles', $circleIds);
     }
 
 }

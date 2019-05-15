@@ -27,16 +27,16 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 Make sure to keep a copy of these codes to recover your account if you lose your authenticator.
 Unused Codes
 ```
-4NS7-E5LQ
-VLS4-LAVB
-7RBL-2UVL
-MALQ-2JDC
-UQ6W-IEXM
-MZV5-ANP5
-D5KQ-XUAC
-R4JN-33C2
-UB5M-WZO6
-V7BV-RSAZ
+3V2X-OGPJ
+ZGJP-5RVY
+S4MA-D55R
+KOTZ-6ESP
+3TT7-RVVN
+ZSP7-ANFV
+OIH6-HQBP
+NQJL-QGTJ
+JJF2-CDDA
+M5AQ-OZSZ
 ```
 
 # Cloud Tools For Project

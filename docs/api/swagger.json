@@ -204,9 +204,25 @@
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
-        }, {
-          "$ref" : "#/components/parameters/ApiVersion"
-        } ],
+        }],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_id" : {
+                    "type" : "int"
+                  }
+                },
+                "example" : {
+                  "user_id" : []
+                }
+              }
+            }
+          },
+          "required" : true
+        },
         "responses" : {
           "200" : {
             "description" : "[Success] Invited a member",
@@ -4407,9 +4423,16 @@
             },
             "notify_setting": {
               "$ref": "#/components/schemas/Model.NotifySetting"
+            },
+            "my_notifying_circles": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Object.String.ID"
+                }
+              }
             }
           }
-        }],
+        ],
         "example" : {
           "id": "614",
           "photo_file_name": null,
@@ -4584,7 +4607,8 @@
             "feed_mentioned_in_email_flg": true,
             "feed_mentioned_in_mobile_flg": true,
             "force_notify": true
-          }
+          },
+          "my_notifying_circles": [ "65", "93", "202" ]
         }
       },
       "Model.TeamMember" : {

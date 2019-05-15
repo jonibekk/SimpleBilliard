@@ -2,16 +2,21 @@
 
 abstract class BaseNotifiable
 {
-    protected $channelName = '';
+    protected $channelNames = [];
     protected $eventName = '';
     protected $data = [];
 
-    final public function getChannelName(): string
+    final public function getChannelNames(): array
     {
-        return $this->channelName;
+        return $this->channelNames;
     }
 
-    abstract protected function setChannelName();
+    final public function resetChannelNames()
+    {
+        $this->channelNames = [];
+    }
+
+    abstract protected function setChannelNames();
 
 
     final public function getEventName(): string

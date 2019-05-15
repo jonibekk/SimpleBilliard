@@ -18,8 +18,8 @@ App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
-App::import('Lib/Pusher', 'NewPostNotifiable');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
+App::import('Service/Pusher', 'PostPusherService');
 
 use Goalous\Exception as GlException;
 
@@ -83,7 +83,7 @@ class PostsController extends BasePagingController
             }
 
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
-            $this->_notifyNewPost($res, $circleId);
+            $this->notifyNewPost($res, $circleId);
 
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -123,9 +123,8 @@ class PostsController extends BasePagingController
      * @param PostEntity $newPost
      * @param int $circleId
      */
-    private function _notifyNewPost(PostEntity $newPost, int $circleId)
+    private function notifyNewPost(PostEntity $newPost, int $circleId)
     {
-        $socketId = $this->getSocketId();
         // Notify to other members
         $postedPostId = $newPost['id'];
         $notifyType = NotifySetting::TYPE_FEED_POST;
@@ -133,12 +132,10 @@ class PostsController extends BasePagingController
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
 
-        /** @var PusherService $PusherService */
-        $PusherService = ClassRegistry::init("PusherService");
-        /** @var NewPostNotifiable $NewPostNotifiable */
-        $NewPostNotifiable = ClassRegistry::init("NewPostNotifiable");
-        $NewPostNotifiable->build($newPost, $circleId);
-        $PusherService->notify($socketId, $NewPostNotifiable);
+        /** @var PostPusherService $PostPusherService */
+        $PostPusherService = ClassRegistry::init('PostPusherService');
+        $PostPusherService->setSocketId($this->getSocketId());
+        $PostPusherService->sendFeedNotification($circleId, $newPost);
     }
 
 
@@ -617,61 +614,6 @@ class PostsController extends BasePagingController
 
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                ->getResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Validation function for adding / removing save from a post
-     *
-     * @param int $postId
-     *
-     * @return CakeResponse|null
-     */
-    private function validateSave(int $postId)
-    {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        try {
-            $access = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
-        } catch (GlException\GoalousNotFoundException $notFoundException) {
-            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
-        } catch (Exception $exception) {
-            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
-        }
-
-        //Check if user belongs to a circle where the post is shared to
-        if (!$access) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
-                ->getResponse();
-        }
-
-        return null;
-    }
-
-    /*
-     * Validate get comments and readers endpoint
-     *
-     * @param int $postId
-     *
-     * @return ErrorResponse|null
-     */
-    private function validateAccessToPost(int $postId)
-    {
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
-        try {
-            $hasAccess = $PostService->checkUserAccessToCirclePost($this->getUserId(), $postId);
-        } catch (GlException\GoalousNotFoundException $exception) {
-            return ErrorResponse::notFound()->withException($exception)->getResponse();
-        }
-
-        if (!$hasAccess) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                 ->getResponse();
         }

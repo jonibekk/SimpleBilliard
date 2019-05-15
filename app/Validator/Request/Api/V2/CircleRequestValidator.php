@@ -17,18 +17,18 @@ class CircleRequestValidator extends BaseValidator
         return [];
     }
 
-    public function getPostMemberValidationRule(): array
+    public function getPostMembersValidationRule(): array
     {
         $rules = [
-            'user_id' => [validator::notEmpty()::numeric()]
+            'user_id' => [validator::arrayVal()->each(validator::notEmpty()::numeric())]
         ];
         return $rules;
     }
 
-    public static function createPostMemberValidator(): self
+    public static function createPostMembersValidator(): self
     {
         $self = new self();
-        $self->addRule($self->getPostMemberValidationRule(), true);
+        $self->addRule($self->getPostMembersValidationRule(), true);
         return $self;
     }
 }
