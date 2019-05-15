@@ -204,9 +204,25 @@
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
-        }, {
-          "$ref" : "#/components/parameters/ApiVersion"
-        } ],
+        }],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_id" : {
+                    "type" : "int"
+                  }
+                },
+                "example" : {
+                  "user_id" : []
+                }
+              }
+            }
+          },
+          "required" : true
+        },
         "responses" : {
           "200" : {
             "description" : "[Success] Invited a member",
