@@ -13,6 +13,7 @@ App::uses('Circle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Validator/Request/Api/V2', 'CircleRequestValidator');
+App::import('Service/Redis', 'UnreadPostsRedisService');
 
 /**
  * Created by PhpStorm.
