@@ -15,7 +15,7 @@ $footerMenuList = [
     ],
     [
         'name'  => 'circles',
-        'url'   => $this->Html->url(['controller' => 'circles', 'action' => 'navigate_new_circle']),
+        'url'   => '/circles',
         'icon'  => 'group_work',
         'label' => __('Circle')
     ],
