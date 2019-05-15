@@ -196,7 +196,8 @@ class CircleMemberService extends AppService
                     'conditions' => [
                         'TeamMember.user_id = User.id',
                         'TeamMember.team_id' => $teamId,
-                        'TeamMember.del_flg' => 0
+                        'TeamMember.del_flg' => 0,
+                        'TeamMember.active_flg' = > 1
                     ]
                 ]
             ],
