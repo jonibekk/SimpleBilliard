@@ -24,6 +24,6 @@ class PusherService extends AppService
             ]);
             return;
         }
-        $this->pusher->trigger($notifiable->getChannelName(), $notifiable->getEventName(), $notifiable->getData(), $socketId);
+        $this->pusher->trigger($notifiable->getChannelNames(), $notifiable->getEventName(), $notifiable->getData(), $socketId);
     }
 }

@@ -484,10 +484,18 @@ class CircleService extends AppService
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
+
         /** @var CircleExtender $CircleExtender */
         $CircleExtender = ClassRegistry::init('CircleExtender');
 
-        $circle = $Circle->getEntity($request->getId())->toArray();
+        $condition = [
+            'conditions' => [
+                'Circle.id'      => $request->getId(),
+                'Circle.del_flg' => false
+            ]
+        ];
+
+        $circle = Hash::get($Circle->useType()->find('first', $condition),'Circle');
 
         if (empty($circle)) {
             return [];
@@ -499,7 +507,7 @@ class CircleService extends AppService
     }
 
 
-    /*
+    /**
      * Get circle member count each circle
      *
      * @param array $circleIds

@@ -12,6 +12,7 @@ App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
+App::import('Service/Redis', 'UnreadPostsRedisService');
 
 /**
  * Created by PhpStorm.
@@ -262,6 +263,14 @@ class CirclesController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($exception)->getResponse();
         }
 
+        return ApiResponse::ok()->getResponse();
+    }
+
+    public function put_reset_unread_posts(int $circleId)
+    {
+        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
+        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
+        $UnreadPostsRedisService->removeManyByCircleId($this->getUserId(), $this->getTeamId(), $circleId);
         return ApiResponse::ok()->getResponse();
     }
 
