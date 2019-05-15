@@ -1012,14 +1012,19 @@ class PostService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'      => '"' . $newBody['body'] . '"',
-                'site_info' => !empty($newBody['site_info']) ? "'" . addslashes(json_encode($newBody['site_info'])) . "'"  : null,
-                'modified'  => REQUEST_TIMESTAMP
+                'body'      => $newBody['body'],
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info'])  : null,
+                'created' => false // Prevent updating this field
             ];
 
-            if (!$Post->updateAll($newData, ['Post.id' => $postId])) {
-                throw new RuntimeException("Failed to update post");
+            $Post->clear();
+            $Post->id = $postId;
+            if (!$Post->save($newData, false)) {
+                throw new RuntimeException(sprintf("Failed to update posts table record. data: %s",
+                    AppUtil::jsonOneLine(compact('newData', 'postId'))
+                ));
             }
+
             $deletedPosts = $this->findDeletedResourcesInPost($postId, $resources);
 
             if (!empty($deletedPosts)) {
@@ -1037,7 +1042,10 @@ class PostService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error("Failed to edit post $postId");
+            GoalousLog::error('Failed to update post', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             throw $e;
         }
         /** @var PostEntity $result */
