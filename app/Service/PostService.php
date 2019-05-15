@@ -1044,8 +1044,8 @@ class PostService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update post', [
                 'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-            GoalousLog::error($e->getTraceAsString());
             throw $e;
         }
         /** @var PostEntity $result */

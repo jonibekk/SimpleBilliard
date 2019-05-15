@@ -303,9 +303,9 @@ class CommentService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error("Failed to update comment", [
                 'message' => $e->getMessage(),
-                'data' => $data
+                'data' => $data,
+                'trace' => $e->getTraceAsString()
             ]);
-            GoalousLog::error($e->getTraceAsString());
             throw $e;
         }
         /** @var CommentEntity $result */
