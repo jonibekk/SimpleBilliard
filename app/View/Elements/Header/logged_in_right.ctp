@@ -91,7 +91,7 @@
 
         </li>
         <li class="glHeaderPc-nav-menu">
-            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'navigate_new_circle']) ?>" class="glHeaderPc-nav-menu-link">
+            <a href="/circles" class="glHeaderPc-nav-menu-link">
                 <i class="material-icons">group_work</i>
                 <span><?= __('Circle')?></span>
                     <div class="btn btn-xs notify-function-numbers mod-small" id="nav-circle-badge" style="opacity: <?= !empty($circle_badge_cnt) ? 1: 0 ?>;">
