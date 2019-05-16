@@ -980,11 +980,12 @@ class CircleMember extends AppModel
         $res = $this->useType()->find('all', $condition);
 
         return Hash::extract($res, '{n}.CircleMember', []);
+    }
 
     /**
      * Get specific user_id in a circle
      *
-     * @param int $circle_id
+     * @param int   $circle_id
      * @param array $user_id
      *
      * @return array
@@ -1001,7 +1002,7 @@ class CircleMember extends AppModel
                 'CircleMember.team_id'   => $team_id,
                 'CircleMember.user_id'   => $user_id
             ],
-            'fields' => [
+            'fields'     => [
                 'CircleMember.user_id'
             ]
         ];
@@ -1009,6 +1010,5 @@ class CircleMember extends AppModel
         $users = $this->find('list', $options);
 
         return array_values($users);
-
     }
 }
