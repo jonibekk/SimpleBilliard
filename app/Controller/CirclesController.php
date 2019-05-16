@@ -505,16 +505,6 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
 
-    public function navigate_new_circle()
-    {
-        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
-        $UnreadPostsClient = new UnreadPostsClient();
-
-        $UnreadPostsClient->del($UnreadPostsKey);
-
-        return $this->redirect('/circles');
-    }
-
     /**
      * ajax エラー用レスポンスデータを返す
      *
