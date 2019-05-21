@@ -26,6 +26,11 @@ class CircleExtension extends DataExtension
 
         $fetchedData = $Circle->useType()->find('all', $conditions);
 
+        if (count($fetchedData) != count($uniqueKeys)) {
+            GoalousLog::error("Missing data for data extension. Circle ID: " . implode(',',
+                    array_diff($uniqueKeys, Hash::extract($fetchedData, '{n}.Circle.id'))));
+        }
+
         return $fetchedData;
     }
 }
