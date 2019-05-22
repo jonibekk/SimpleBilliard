@@ -250,7 +250,8 @@ class PostSearchPagingService extends BaseSearchPagingService
                 // Attached image with post
                 $attachedImg = Hash::get($attachedImgEachPost, $postId);
 
-                $resources = $postResources[$postId];
+                $resources = Hash::get($postResources, $postId, []);
+
                 // check if post_resource have a video or not
                 $hasVideo = (0 < count($resources));
 
