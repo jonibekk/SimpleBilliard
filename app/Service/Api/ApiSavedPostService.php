@@ -162,7 +162,8 @@ class ApiSavedPostService extends ApiService
                 // Attached image with post
                 $attachedImg = Hash::get($attachedImgEachPost, $postId);
 
-                $resources = $postResources[$postId];
+                $resources = Hash::get($postResources, $postId, []);
+
                 // check if post_resource have a video or not
                 // TODO: https://jira.goalous.com/browse/GL-6601
                 $hasVideo = (0 < count($resources));

@@ -654,8 +654,9 @@ class Circle extends AppModel
                 'team_id'
             ]
         ];
+        $teamId = Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
+        return $teamId[0];
 
-        return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
     }
 
     /**
