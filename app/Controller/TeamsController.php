@@ -765,6 +765,8 @@ class TeamsController extends AppController
         $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
         $this->Team->TeamMember->begin();
         $save_res = $this->Team->TeamMember->updateMembersFromCsv($csv);
+
+        $this->GlRedis->dellKeys("cache_user_data:unapproved_count:team:".$this->current_team_id.":user:*");
         if ($save_res['error']) {
             $this->Team->TeamMember->rollback();
             $result['error'] = true;
