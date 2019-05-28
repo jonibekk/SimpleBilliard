@@ -2,25 +2,27 @@
 
 App::import('Lib/Translation', 'TranslationResult');
 
+use Goalous\Enum\Language as LangEnum;
+
 interface TranslatorClientInterface
 {
     /**
      * Translate a single string using external API
      *
      * @param string $body
-     * @param string $targetLanguage
+     * @param LangEnum $targetLanguage
      *
      * @return TranslationResult
      */
-    public function translate(string $body, string $targetLanguage): TranslationResult;
+    public function translate(string $body, LangEnum $targetLanguage): TranslationResult;
 
     /**
      * Translate multiple strings using external API
      *
      * @param array  $body
-     * @param string $targetLanguage
+     * @param LangEnum $targetLanguage
      *
      * @return TranslationResult[]
      */
-    public function translateMany(array $body, string $targetLanguage): array;
+    public function translateBatch(array $body, LangEnum $targetLanguage): array;
 }

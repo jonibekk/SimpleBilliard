@@ -35,28 +35,10 @@ class TranslationResult
     }
 
     /**
-     * @param string $sourceLanguage
-     */
-    public function setSourceLanguage(string $sourceLanguage)
-    {
-        $this->sourceLanguage = $sourceLanguage;
-    }
-
-    /**
      * @return string
      */
     public function getTranslation(): string
     {
         return $this->translation;
     }
-
-    /**
-     * @param string $translation
-     */
-    public function setTranslation(string $translation)
-    {
-        $this->translation = $translation;
-    }
-
-
 }
