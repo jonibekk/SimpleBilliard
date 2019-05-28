@@ -124,7 +124,7 @@ $backBtn = isset($_GET['backBtn']);
                                     '?' => ['type' => 'header']),
                                     array(
                                         'escape' => false,
-                                        'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                        'class' => 'header-signup btn btn-cta btn-cta-primary header-contact-button',
                                         'id'    => 'RegisterLinkHeader'
                                     )); ?>
                             </li>
