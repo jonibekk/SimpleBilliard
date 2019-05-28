@@ -82,33 +82,53 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <?php $this->end() ?>
 
 <!-- ******PROMO****** -->
-<section id="promo" class="promo section">
+<section id="promo" class="promo section pcscreen">
+  <div class="bg-mask-casestudy"></div>
     <div class="section-container">
-        <h1><?= __("Enjoy your work. Achieve your goals.") ?></h1>
-        <div class="create-team">
-            <p class="create-team-guide"><strong><?= __("Easy set-up ･ Free 15 day Trial") ?></strong></p>
-            <a href="/signup/email?type=header" class="btn btn-cta-primary btn-lg"><?= __('Create New Team');?></a>
-            <ul>
-                <li>
-                    <a href="/users/login"><?=__('Login')?></a>
-                </li>
-                <li>
-                    <a href="/contact"><?=__('Contact&nbsp;us')?></a>
-                </li>
-            </ul>
+        <h1>みえる、わかる、すすむ。<br>きょうの一歩を<br>写真でシェアして。</h1>
+        <div class="inq_btn_cnt">
+          <?= $this->Html->image('homepage/top/easier_input_icon.svg',
+              array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
+              <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+                <?= $this->Html->image('homepage/top/mail_icon.svg',
+                    array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
+                    お問い合わせ</a>
         </div>
     </div>
+</section>
+
+<section id="promo" class="promo section spscreen">
+    <div class="section-container">
+        <h1>みえる、わかる、<br>すすむ。<br>きょうの一歩を<br>写真でシェアして。</h1>
+    </div>
+    <div class="inq_btn_cnt">
+      <?= $this->Html->image('homepage/top/easier_input_icon.svg',
+          array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
+      <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+        <?= $this->Html->image('homepage/top/mail_icon.svg',
+            array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
+            お問い合わせ</a>
+    </div>
+    <ul class="submenu">
+      <li><a href="#faq">よくある質問</a></li>
+      <li><a href="https://www.goalous.com/users/login">ログイン</a></li>
+    </ul>
+      <a href="https://peatix.com/group/66244" target="_blank">
+        <?= $this->Html->image('homepage/top/banner_seminor_sp.jpg',
+            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner')) ?>
+      </a>
 </section><!--//promo-->
 
-<div class="seminar">
-    <div class="container">
-        <div class="row text-left">
-            <h2 class="title"><strong><?= __('New Event');?>:</strong> <?= __('Free Goalous Seminar');?></h2>
-            <p><?= __('Learn all of the ways you can improve your organization using Goalous.');?></p>
-        </div>
-        <a href="https://peatix.com/group/66244" target="_blank" class="btn btn-cta-primary btn-lg"><?= __('Get Ticket');?></a>
+
+<!-- ******SEMINAR****** -->
+<div class="seminar pcscreen">
+    <div class="seminorbanner">
+      <a href="https://peatix.com/group/66244" target="_blank">
+        <?= $this->Html->image('homepage/top/banner_seminor_pc.jpg',
+            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => '')) ?>
+      </a>
     </div>
-</div>
+</div><!--//seminar-->
 
 <!-- ******WHY****** -->
 <section id="why" class="why section">

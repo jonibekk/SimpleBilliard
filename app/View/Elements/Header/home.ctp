@@ -41,6 +41,15 @@ $backBtn = isset($_GET['backBtn']);
                 </div><!-- //navbar-header -->
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                     <ul id="navigationWrapperHome" class="nav navbar-nav">
+                      <li class="nav-item" id="h-nav-features">
+                          <?= $this->Html->link(__('Features'), [
+                              'controller' => 'pages',
+                              'action'     => 'lp',
+                              'pagename'   => 'features',
+                              'lang'       => $top_lang,
+                          ]); ?>
+                      </li>
+
                         <li class="nav-item" id="h-nav-features">
                             <?= $this->Html->link(__('Features'), [
                                 'controller' => 'pages',
@@ -49,6 +58,7 @@ $backBtn = isset($_GET['backBtn']);
                                 'lang'       => $top_lang,
                             ]); ?>
                         </li>
+                        
                         <li class="nav-item" id="h-nav-pricing">
                             <?= $this->Html->link(__('Pricing'), [
                                 'controller' => 'pages',
