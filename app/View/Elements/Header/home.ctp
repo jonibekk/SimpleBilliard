@@ -44,11 +44,11 @@ $backBtn = isset($_GET['backBtn']);
                   <div class="header_top">
                   <ul id="navigationWrapperHome" class="nav navbar-nav">
                     <li class="nav-item" id="h-nav-case_study">
-                      <a href="#app"><?=__('アプリダウンロード')?></a>
+                      <a href="/#app"><?=__('アプリダウンロード')?></a>
                     </li>
 
                     <li class="nav-item" id="h-nav-case_study">
-                      <a href="#faq"><?=__('よくある質問')?></a>
+                      <a href="/#faq"><?=__('よくある質問')?></a>
                     </li>
 
                     <?php if($isLoggedIn): ?>
@@ -119,8 +119,8 @@ $backBtn = isset($_GET['backBtn']);
 
                                 <li class="nav-item" id="h-nav-contact">
                                     <?= $this->Html->link('<img src="/img/homepage/top/mail_icon_w.svg" class="header_icon_mail">'.__('Contact us'),
-                                    array('controller' => 'signup',
-                                    'action' => 'email',
+                                    array('controller' => 'pages',
+                                    'action' => 'contact',
                                     '?' => ['type' => 'header']),
                                     array(
                                         'escape' => false,

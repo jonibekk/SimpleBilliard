@@ -110,7 +110,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             お問い合わせ</a>
     </div>
     <ul class="submenu">
-      <li><a href="#faq">よくある質問</a></li>
+      <li><a href="/#faq">よくある質問</a></li>
       <li><a href="https://www.goalous.com/users/login">ログイン</a></li>
     </ul>
       <a href="https://peatix.com/group/66244" target="_blank">
@@ -233,12 +233,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div><!--//control-->
     </div>
 </section><!--//video-->
-
+<a name="app"></a>
 <div class="store section">
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><a href="#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
+                <h3><a href="/#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
                 <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),

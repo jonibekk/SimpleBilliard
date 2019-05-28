@@ -24,6 +24,9 @@ Page毎に要素が変わるもの
 - og:url
 - title
 */
+if (!isset($top_lang)) {
+    $top_lang = null;
+}
 $meta_features = [
     [
         "name"    => "description",
@@ -70,9 +73,9 @@ $meta_features = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($meta_casestudy);
+$num_ogp = count($meta_features);
 for ($i = 0; $i < $num_ogp; $i++) {
-    echo $this->Html->meta($meta_casestudy[$i]);
+    echo $this->Html->meta($meta_features[$i]);
 }
 ?>
 <title><?= __('Casestudy | Goalous') ?></title>
@@ -238,6 +241,11 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
             <?=
             $this->Form->create('Email', [
+                'url'          => [
+                    'controller' => 'pages',
+                    'action'     => 'contact',
+                    'lang'       => $top_lang
+                ],
                 'id'            => 'contact-form',
                 'class'         => 'form',
                 'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false]
