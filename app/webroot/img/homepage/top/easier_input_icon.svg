@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="91" height="91" viewBox="0 0 91 91">
+  <defs>
+    <clipPath id="clip-easier_input_icon">
+      <rect width="91" height="91"/>
+    </clipPath>
+  </defs>
+  <g id="easier_input_icon" clip-path="url(#clip-easier_input_icon)">
+    <path id="合体_12" data-name="合体 12" d="M0,45.5A45.5,45.5,0,1,0,71.179,7.934L73.867.74l-9.386,3.4A45.521,45.521,0,0,0,0,45.5Z" transform="translate(91 91) rotate(180)" fill="#ffd800"/>
+    <text id="かんたん_1分で入力" data-name="かんたん!
+1分で入力" transform="translate(46 42)" font-size="14" font-family="YuGo-Bold, YuGothic" font-weight="700"><tspan x="-30.17" y="0">かんたん!</tspan><tspan x="-32.011" y="18">1分で入力</tspan></text>
+  </g>
+</svg>
