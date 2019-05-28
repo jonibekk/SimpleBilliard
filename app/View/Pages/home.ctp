@@ -115,7 +115,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     </ul>
       <a href="https://peatix.com/group/66244" target="_blank">
         <?= $this->Html->image('homepage/top/banner_seminor_sp.jpg',
-            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner')) ?>
+            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner_sp')) ?>
       </a>
 </section><!--//promo-->
 
@@ -125,7 +125,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="seminorbanner">
       <a href="https://peatix.com/group/66244" target="_blank">
         <?= $this->Html->image('homepage/top/banner_seminor_pc.jpg',
-            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => '')) ?>
+            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner_pc')) ?>
       </a>
     </div>
 </div><!--//seminar-->
@@ -238,7 +238,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><?= __('Wherever, Whenever, from your smartphone.') ?></h3>
+                <h3><a href="#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
                 <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
