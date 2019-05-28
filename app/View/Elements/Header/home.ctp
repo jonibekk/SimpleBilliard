@@ -32,7 +32,7 @@ $backBtn = isset($_GET['backBtn']);
             <nav id="main-nav" class="main-nav navbar-right" role="navigation">
                 <div class="navbar-header">
                     <!-- モバイルサイズのハンバーガーメニュー -->
-                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                    <button class="navbar-toggle mobile-hamburger-button" type="button" data-toggle="collapse" data-target="#navbar-collapse">
                         <span class="sr-only"><?= __('Toggle navigation') ?></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -47,7 +47,7 @@ $backBtn = isset($_GET['backBtn']);
                       <a href="/#app"><?=__('アプリダウンロード')?></a>
                     </li>
 
-                    <li class="nav-item" id="h-nav-case_study">
+                    <li class="nav-item hide-on-mobile" id="h-nav-case_study">
                       <a href="/#faq"><?=__('よくある質問')?></a>
                     </li>
 
@@ -66,7 +66,7 @@ $backBtn = isset($_GET['backBtn']);
                                 )); ?>
                         </li>
                     <?php else: ?>
-                        <li class="nav-item" id="h-nav-login">
+                        <li class="nav-item hide-on-mobile" id="h-nav-login">
                             <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?>
                         </li>
                       </ul>
