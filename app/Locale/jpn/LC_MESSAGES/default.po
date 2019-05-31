@@ -3579,7 +3579,7 @@ msgid "How can we receive support?"
 msgstr "使い方がわからない場合、サポートはありますか？"
 
 msgid "After you login, please contact us using the support tool. We will help you as soon as possible."
-msgstr "2017年9月30日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
+msgstr "ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
 
 msgid "What company manages Goalous?"
 msgstr "Goalousの運営会社はどこですか？"

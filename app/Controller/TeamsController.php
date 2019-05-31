@@ -765,6 +765,8 @@ class TeamsController extends AppController
         $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
         $this->Team->TeamMember->begin();
         $save_res = $this->Team->TeamMember->updateMembersFromCsv($csv);
+
+        $this->GlRedis->dellKeys("cache_user_data:unapproved_count:team:".$this->current_team_id.":user:*");
         if ($save_res['error']) {
             $this->Team->TeamMember->rollback();
             $result['error'] = true;
@@ -1535,7 +1537,7 @@ class TeamsController extends AppController
 
         // １つ前の期間との比較
         foreach ($insights[0] as $k => $v) {
-            if (!empty($insights[1][$k])) {
+            if (!empty($insights[1][$k]) && is_numeric($insights[1][$k])) {
                 $cmp_key = $k . "_cmp";
                 if (strpos($k, '_percent') !== false) {
                     $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
