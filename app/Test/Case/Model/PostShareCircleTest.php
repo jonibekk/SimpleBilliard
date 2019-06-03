@@ -17,6 +17,7 @@ class PostShareCircleTest extends GoalousTestCase
     public $fixtures = array(
         'app.post_share_circle',
         'app.team',
+        'app.team_member',
         'app.post',
         'app.user',
         'app.circle_member',
@@ -266,6 +267,26 @@ class PostShareCircleTest extends GoalousTestCase
         $this->assertContains(999, $result[1]);
         $this->assertContains(999, $result[2]);
     }
+
+    public function test_getShareCirclesAndMembers_success()
+    {
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        $PostShareCircle->current_team_id = 1;
+        $PostShareCircle->Circle->current_team_id = 1;
+        $PostShareCircle->Circle->Team->TeamMember->current_team_id = 1;
+
+        $postId = 1;
+
+        $result = $PostShareCircle->getShareCirclesAndMembers($postId);
+
+        $this->assertNotEmpty($result);
+        $this->assertNotEmpty($result[0]['Circle']);
+        $this->assertNotEmpty($result[0]['CircleMember']);
+        $this->assertCount(3, $result[0]['CircleMember']);
+        $this->assertNotEmpty($result[0]['CircleMember'][0]['User']);
+    }
+
 
     private function insertNewData(int $postId, int $circleId, int $teamId)
     {

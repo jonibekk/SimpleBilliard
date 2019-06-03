@@ -145,6 +145,20 @@ class PostShareCircle extends AppModel
         return Hash::extract($res, '{n}.{s}.circle_id') ?: [];
     }
 
+    /**
+     * Get list of circles and their members where the post is shared to
+     *
+     * @param $post_id
+     *
+     * @return mixed
+     */
+    public function getShareCirclesAndMembers($post_id)
+    {
+        $circle_list = $this->getShareCircleList($post_id);
+        $res = $this->Circle->getCirclesAndMemberById($circle_list);
+        return $res;
+    }
+
     public function getShareCircleMemberList($post_id)
     {
         $circle_list = $this->getShareCircleList($post_id);

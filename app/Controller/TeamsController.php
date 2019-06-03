@@ -1537,7 +1537,7 @@ class TeamsController extends AppController
 
         // １つ前の期間との比較
         foreach ($insights[0] as $k => $v) {
-            if (!empty($insights[1][$k])) {
+            if (!empty($insights[1][$k]) && is_numeric($insights[1][$k])) {
                 $cmp_key = $k . "_cmp";
                 if (strpos($k, '_percent') !== false) {
                     $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
