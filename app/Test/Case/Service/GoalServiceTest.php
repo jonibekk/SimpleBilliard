@@ -1209,12 +1209,12 @@ class GoalServiceTest extends GoalousTestCase
 
         // General goal
         $data = [
-            "name"             => "ゴールああああああああいいいいいいいいいいいいいいいいいいいいいいいいいい",
-            "description"             => "説明",
-            "labels"           => [
+            "name"        => "ゴールああああああああいいいいいいいいいいいいいいいいいいいいいいいいいい",
+            "description" => "説明",
+            "labels"      => [
                 "Goalous"
             ],
-            "key_result"       => [
+            "key_result"  => [
                 "value_unit"   => ValueUnit::UNIT_PERCENT,
                 "start_value"  => 0,
                 "target_value" => 100,
@@ -1250,7 +1250,7 @@ class GoalServiceTest extends GoalousTestCase
         $termStartDate = GoalousDateTime::createFromFormat('Y-m-d', $term['start_date'])->format($csvDateFormat);
         $termEndDate = GoalousDateTime::createFromFormat('Y-m-d', $term['end_date'])->format($csvDateFormat);
 
-        $this->assertEquals($res[0][GoalAndKrs::TERM], $termStartDate.' - '.$termEndDate);
+        $this->assertEquals($res[0][GoalAndKrs::TERM], $termStartDate . ' - ' . $termEndDate);
         $this->assertEquals($res[0][GoalAndKrs::GOAL_START_DATE], GoalousDateTime::createFromFormat('Y-m-d', $goal['start_date'])->format($csvDateFormat));
         $this->assertEquals($res[0][GoalAndKrs::GOAL_END_DATE], GoalousDateTime::createFromFormat('Y-m-d', $goal['end_date'])->format($csvDateFormat));
         $this->assertEquals($res[0][GoalAndKrs::LEADER_USER_ID], $userId);
@@ -1293,7 +1293,7 @@ class GoalServiceTest extends GoalousTestCase
 
         // GOAL_LABELS
         $data = [
-            "labels"           => [
+            "labels" => [
                 "Goalous",
                 "成長",
                 "ISAO"
@@ -1344,6 +1344,13 @@ class GoalServiceTest extends GoalousTestCase
         // TERM
         // Operation guarantee by TermTest.test_getTermByDate
 
+        $this->Term->create();
+        $this->Term->save([
+            'team_id'    => 1,
+            'start_date' => '2019-04-01',
+            'end_date'   => '2019-04-30'
+        ], false);
+
         // GOAL_START_DATE / GOAL_END_DATE
         $goal['start_date'] = '2019-04-02';
         $goal['end_date'] = '2019-04-03';
@@ -1367,7 +1374,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->setupTerm();
 
         $data = [
-            "key_result"       => [
+            "key_result" => [
                 "value_unit"   => ValueUnit::UNIT_PERCENT,
                 "start_value"  => 0,
                 "target_value" => 100,
@@ -1447,7 +1454,7 @@ class GoalServiceTest extends GoalousTestCase
         $this->setupTerm();
 
         $data = [
-            "key_result"       => [
+            "key_result" => [
                 "value_unit"   => ValueUnit::UNIT_PERCENT,
                 "start_value"  => 0,
                 "target_value" => 100,
@@ -1496,9 +1503,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertSame($res[1][GoalAndKrs::KR_CURRENT], $kr['current_value']);
 
         $this->KeyResult->save([
-            'value_unit' => ValueUnit::UNIT_BINARY,
-            'start_value' => 0,
-            'target_value' => 1,
+            'value_unit'    => ValueUnit::UNIT_BINARY,
+            'start_value'   => 0,
+            'target_value'  => 1,
             'current_value' => 0,
         ], false);
         $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
@@ -1517,9 +1524,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], __('Completed'));
 
         $this->KeyResult->save([
-            'value_unit' => ValueUnit::UNIT_YEN,
-            'start_value' => -1,
-            'target_value' => -1111,
+            'value_unit'    => ValueUnit::UNIT_YEN,
+            'start_value'   => -1,
+            'target_value'  => -1111,
             'current_value' => -111,
         ], false);
         $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
@@ -1529,9 +1536,9 @@ class GoalServiceTest extends GoalousTestCase
         $this->assertSame($res[0][GoalAndKrs::KR_CURRENT], '-111');
 
         $this->KeyResult->save([
-            'value_unit' => ValueUnit::UNIT_DOLLAR,
-            'start_value' => -0.12,
-            'target_value' => -999.99,
+            'value_unit'    => ValueUnit::UNIT_DOLLAR,
+            'start_value'   => -0.12,
+            'target_value'  => -999.99,
             'current_value' => -12.34,
         ], false);
         $res = $this->GoalService->processCsvContentFromGoals(1, [$goal]);
