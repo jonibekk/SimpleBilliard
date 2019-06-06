@@ -5614,6 +5614,27 @@ msgstr "%d人のメンバーが一致"
 msgid "%d matched messages"
 msgstr "%d件のメッセージが一致"
 
+msgid "{{field}} is a required field."
+msgstr "{{field}}は必須です"
+
+msgid "{{field}} must have a length between {{minValue}} and {{maxValue}}"
+msgstr "{{field}}の文字数は {{minValue}} 文字以上 {{maxValue}} 文字以下です"
+
+msgid "{{field}} max limit is {{maxValue}}"
+msgstr "{{field}}の上限数は {{maxValue}} です"
+
+msgid "Search"
+msgstr "検索"
+
+msgid "Goals"
+msgstr "ゴール一覧"
+
+msgid "No notifications"
+msgstr "通知がありません"
+
+msgid "View All Notifications"
+msgstr "すべての通知を見る"
+
 msgid "Download CSV"
 msgstr "CSVダウンロード"
 
@@ -5709,3 +5730,30 @@ msgstr "KR作成日"
 
 msgid "KR EDITED"
 msgstr "KR編集日"
+
+msgid "DOWNROAD APP"
+msgstr "アプリダウンロード"
+
+msgid "CONTACT US"
+msgstr "お問い合わせ"
+
+msgid "See,"
+msgstr "みえる、"
+
+msgid "Recognize,"
+msgstr "わかる、"
+
+msgid "Share today’s step\nwith photos."
+msgstr "きょうの一歩を\n写真でシェアして。"
+
+msgid "Move Forward."
+msgstr "すすむ。"
+
+msgid "OKR and Communication Software | Goalous"
+msgstr "OKR・コミュニケーションツール | Goalous(ゴーラス)"
+
+msgid "Case Studies | Goalous"
+msgstr "導入事例 | Goalous(ゴーラス)"
+
+msgid "CASE STUDIES"
+msgstr "導入事例"
