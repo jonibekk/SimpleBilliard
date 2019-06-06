@@ -51,7 +51,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",
@@ -100,7 +100,7 @@ $bannerSeminorSpPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 
         <div class="inq_btn_cnt">
           <?= $this->Html->image($easierIputIconPath,
               array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
-              <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+              <a href="/contact/lang:<?= $top_lang?>" class="inq_btn">
                 <?= $this->Html->image('homepage/top/mail_icon.svg',
                     array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
                     <?= __("CONTACT US")?></a>
@@ -118,14 +118,15 @@ $bannerSeminorSpPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 
     <div class="inq_btn_cnt">
       <?= $this->Html->image($easierIputIconPath,
           array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
-      <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+      <a href="/contact/lang:<?= $top_lang?>" class="inq_btn">
         <?= $this->Html->image('homepage/top/mail_icon.svg',
             array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
             <?= __("CONTACT US")?></a>
     </div>
     <ul class="submenu">
-      <li><a href="/#faq"><?=__('Frequent questions')?></a></li>
-      <li><a href="https://www.goalous.com/users/login"><?=__('Login')?></a></li>
+      <?php $langUrl = $this->Lang->getLangCode() == LangHelper::LANG_CODE_EN ? "en/" : ""; ?>
+      <li><a href="/<?=$langUrl?>#faq"><?=__('Frequent questions')?></a></li>
+      <li><a href="/users/login"><?=__('Login')?></a></li>
     </ul>
       <a href="https://peatix.com/group/66244" target="_blank">
         <?= $this->Html->image($bannerSeminorSpPath,
@@ -252,7 +253,7 @@ $bannerSeminorSpPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><a href="/#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
+                <h3><a href="/<?=$langUrl?>#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
                 <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
