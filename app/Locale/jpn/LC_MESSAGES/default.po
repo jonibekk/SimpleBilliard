@@ -4601,7 +4601,7 @@ msgid "We accept consultation of introduction."
 msgstr "導入のご相談を受け付けています。"
 
 msgid "Contact us | Goalous"
-msgstr "お問い合わせ | Goalous"
+msgstr "お問い合わせ | Goalous(ゴーラス)"
 
 msgid "Say <q>Hello</q> to your company&rsquo;s next communication tool"
 msgstr "社員が目標でつながり、未来のコミュニケーションをあなたの組織に。"
@@ -4622,7 +4622,7 @@ msgid "It is a confirmation of your inquiry."
 msgstr "お問い合わせ内容の確認です。"
 
 msgid "Confirming | Goalous"
-msgstr "入力内容確認 | Goalous (ゴーラス)"
+msgstr "入力内容確認 | Goalous(ゴーラス)"
 
 msgid "Confirm what you ask us"
 msgstr "お問い合わせ内容確認"
@@ -4658,7 +4658,7 @@ msgid "Description of the function is here."
 msgstr "機能の説明はこちら。"
 
 msgid "Features | Goalous"
-msgstr "機能 | Goalous (ゴーラス)"
+msgstr "機能 | Goalous(ゴーラス)"
 
 msgid "You can improve your job and organization!"
 msgstr "Goalousで変えられる、あなたの組織・シゴト"
@@ -4838,7 +4838,7 @@ msgid "Inscription based on specific trade law is here."
 msgstr "特定商取引法に基づく表記はこちら。"
 
 msgid "Inscription by Law | Goalous"
-msgstr "特定商取引法に基づく表記 | Goalous (ゴーラス)"
+msgstr "特定商取引法に基づく表記 | Goalous(ゴーラス)"
 
 msgid "Create a team."
 msgstr "チームを作成してください。"
@@ -5042,7 +5042,7 @@ msgid "Privacy Policy is here."
 msgstr "プライバシーポリシーはこちら。"
 
 msgid "PrivacyPolicy | Goalous"
-msgstr "プライバシーポリシー | Goalous (ゴーラス)"
+msgstr "プライバシーポリシー | Goalous(ゴーラス)"
 
 msgid "Your team no longer has access to Goalous."
 msgstr "あなたのチームはGoalousにアクセスできなくなりました。"
@@ -5521,7 +5521,7 @@ msgstr ""
 msgid "お問い合わせ完了 | Goalous(ゴーラス)"
 msgstr ""
 
-msgid "お問い合わせ完了 | Goalous (ゴーラス)"
+msgid "お問い合わせ完了 | Goalous(ゴーラス)"
 msgstr ""
 
 msgid "Facebook page"
@@ -5731,7 +5731,7 @@ msgstr "KR作成日"
 msgid "KR EDITED"
 msgstr "KR編集日"
 
-msgid "DOWNROAD APP"
+msgid "DOWNLOAD APP"
 msgstr "アプリダウンロード"
 
 msgid "CONTACT US"
@@ -5743,8 +5743,8 @@ msgstr "みえる、"
 msgid "Recognize,"
 msgstr "わかる、"
 
-msgid "Share today’s step\nwith photos."
-msgstr "きょうの一歩を\n写真でシェアして。"
+msgid "Share today’s step<br>with photos."
+msgstr "きょうの一歩を<br>写真でシェアして。"
 
 msgid "Move Forward."
 msgstr "すすむ。"
@@ -5757,3 +5757,22 @@ msgstr "導入事例 | Goalous(ゴーラス)"
 
 msgid "CASE STUDIES"
 msgstr "導入事例"
+
+msgid "Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous."
+msgstr "無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。"
+
+msgid "Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."
+msgstr "OKRをベースにしたGKA(Goal-Key Result-Action)を用いて、目標に向かって実行する組織へと生まれ変わります。"
+
+msgid "Goalous changes the communication of many organizations and creates a team that runs for Key Results."
+msgstr "Goalousは多くの組織のコミュニケーションを変え、成果のために実行するチームを作ります。"
+
+msgid "Goalous has many sophisticated features for teams around the world."
+msgstr "Goalousには世界中のチームのために洗練された多くの機能が存在します。"
+
+msgid "Pay only for what you need. Start with many. Try it free for 15 days and add more at any time."
+msgstr "15日間無料で利用できます。みんなで試してみてください。月間や年間での契約プランがあります。"
+
+msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
+msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
+

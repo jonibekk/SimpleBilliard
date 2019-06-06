@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_law = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
+        "content"  => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_law = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Inscription based on specific trade law is here.")),
+        "content"  => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "property" => "og:url",

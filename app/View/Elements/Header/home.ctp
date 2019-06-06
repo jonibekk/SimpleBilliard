@@ -44,11 +44,11 @@ $backBtn = isset($_GET['backBtn']);
                   <div class="header_top">
                   <ul id="navigationWrapperHome" class="nav navbar-nav">
                     <li class="nav-item" id="h-nav-case_study">
-                      <a href="/#app"><?=__('アプリダウンロード')?></a>
+                      <a href="/#app"><?=__('DOWNLOAD APP')?></a>
                     </li>
 
                     <li class="nav-item hide-on-mobile" id="h-nav-case_study">
-                      <a href="/#faq"><?=__('よくある質問')?></a>
+                      <a href="/#faq"><?=__('Frequent questions')?></a>
                     </li>
 
                     <?php if($isLoggedIn): ?>
@@ -77,7 +77,7 @@ $backBtn = isset($_GET['backBtn']);
                     <ul id="navigationWrapperHome" class="nav navbar-nav txt-bold">
 
                       <li class="nav-item" id="h-nav-case_study">
-                          <?= $this->Html->link(__('導入事例'), [
+                          <?= $this->Html->link(__('CASE STUDIES'), [
                               'controller' => 'pages',
                               'action'     => 'lp',
                               'pagename'   => 'case_study',

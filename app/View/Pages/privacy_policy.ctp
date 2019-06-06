@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_privacy_policy = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Privacy Policy is here.")),
+        "content"  => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_privacy_policy = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Privacy Policy is here.")),
+        "content"  => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "property" => "og:url",
