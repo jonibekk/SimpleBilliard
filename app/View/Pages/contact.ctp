@@ -27,8 +27,7 @@ Page毎に要素が変わるもの
 $meta_contact = [
     [
         "name"    => "description",
-        "content" => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
-            __("We accept consultation of introduction.")),
+        "content" => __("Let's go on a journey to pursue the essence of the team. Get in touch with us!"),
     ],
     [
         "name"    => "keywords",
@@ -44,8 +43,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',
-            __("We accept consultation of introduction.")),
+        "content"  => __("Let's go on a journey to pursue the essence of the team. Get in touch with us!"),
     ],
     [
         "property" => "og:url",
@@ -53,7 +51,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",
