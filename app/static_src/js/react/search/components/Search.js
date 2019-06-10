@@ -134,7 +134,7 @@ export default class SearchItems extends React.Component {
         <div className="panel-block">
           <form onSubmit={this.searchByKeyword.bind(this)}>
             <div className="search-keyword mb_10px">
-              <input type="text" className="search-keyword-input" placeholder={__("Search post and comment")}
+              <input type="text" className="search-keyword-input" placeholder={__("Search (Complete match with ”…”)")}
                      ref="keyword"
                      maxLength="50"
                      value={props.search_conditions.keyword || ""}
