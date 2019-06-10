@@ -27,7 +27,7 @@
 $meta_lp = [
     [
         "name"    => "description",
-        "content" => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App.")),
+        "content" => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "name"    => "keywords",
@@ -39,11 +39,11 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Goalous | Enjoy your work. Achieve your Goal.'),
+        "content"  => __('OKR and Communication Software | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("You can use Goalous on Web and on Mobile App.")),
+        "content"  => __("Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."),
     ],
     [
         "property" => "og:url",
@@ -51,7 +51,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",
@@ -81,41 +81,56 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
 <?php $this->end() ?>
 
+<?php
+$easierIputIconPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'homepage/top/easier_input_icon.svg' : 'homepage/top/easier_input_icon_en.svg';
+$bannerSeminorPcPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'homepage/top/banner_seminor_pc.jpg' : 'homepage/top/banner_seminor_pc_en.jpg';
+$bannerSeminorSpPath = $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP ? 'homepage/top/banner_seminor_sp.jpg' : 'homepage/top/banner_seminor_sp_en.jpg';
+?>
+
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section pcscreen">
   <div class="bg-mask-casestudy"></div>
     <div class="section-container">
-        <h1>みえる、わかる、すすむ。<br>きょうの一歩を<br>写真でシェアして。</h1>
+        <h1>
+          <?= $this->Lang->getLangCode() == LangHelper::LANG_CODE_JP
+              ? __("See,").__("Recognize,").__("Move Forward.")
+              : __("See,")." ".__("Recognize,")."<br>".__("Move Forward.")  ?>
+          <br><?= __("Share today’s step<br>with photos.")?>
+        </h1>
         <div class="inq_btn_cnt">
-          <?= $this->Html->image('homepage/top/easier_input_icon.svg',
+          <?= $this->Html->image($easierIputIconPath,
               array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
-              <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+              <a href="/contact/lang:<?= $top_lang?>" class="inq_btn">
                 <?= $this->Html->image('homepage/top/mail_icon.svg',
                     array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
-                    お問い合わせ</a>
+                    <?= __("CONTACT US")?></a>
         </div>
     </div>
 </section>
 
 <section id="promo" class="promo section spscreen">
     <div class="section-container">
-        <h1>みえる、わかる、<br>すすむ。<br>きょうの一歩を<br>写真でシェアして。</h1>
+        <h1>
+          <?= __("See,")." ".__("Recognize,")."<br>".__("Move Forward.")?>
+          <br><?= __("Share today’s step<br>with photos.")?>
+        </h1>
     </div>
     <div class="inq_btn_cnt">
-      <?= $this->Html->image('homepage/top/easier_input_icon.svg',
+      <?= $this->Html->image($easierIputIconPath,
           array('alt' => __('Pictures let us describe better.'), 'class' => 'baloon')) ?>
-      <a href="https://www.goalous.com/contact/lang:ja" class="inq_btn">
+      <a href="/contact/lang:<?= $top_lang?>" class="inq_btn">
         <?= $this->Html->image('homepage/top/mail_icon.svg',
             array('alt' => __('Pictures let us describe better.'), 'class' => 'svgs')) ?>
-            お問い合わせ</a>
+            <?= __("CONTACT US")?></a>
     </div>
     <ul class="submenu">
-      <li><a href="/#faq">よくある質問</a></li>
-      <li><a href="https://www.goalous.com/users/login">ログイン</a></li>
+      <?php $langUrl = $this->Lang->getLangCode() == LangHelper::LANG_CODE_EN ? "en/" : ""; ?>
+      <li><a href="/<?=$langUrl?>#faq"><?=__('Frequent questions')?></a></li>
+      <li><a href="/users/login"><?=__('Login')?></a></li>
     </ul>
       <a href="https://peatix.com/group/66244" target="_blank">
-        <?= $this->Html->image('homepage/top/banner_seminor_sp.jpg',
-            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner_sp')) ?>
+        <?= $this->Html->image($bannerSeminorSpPath,
+            array('alt' => __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.'), 'class' => 'banner_sp')) ?>
       </a>
 </section><!--//promo-->
 
@@ -124,8 +139,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <div class="seminar pcscreen">
     <div class="seminorbanner">
       <a href="https://peatix.com/group/66244" target="_blank">
-        <?= $this->Html->image('homepage/top/banner_seminor_pc.jpg',
-            array('alt' => __('無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。'), 'class' => 'banner_pc')) ?>
+        <?= $this->Html->image($bannerSeminorPcPath,
+            array('alt' => __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.'), 'class' => 'banner_pc')) ?>
       </a>
     </div>
 </div><!--//seminar-->
@@ -238,7 +253,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><a href="/#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
+                <h3><a href="/<?=$langUrl?>#app"><?= __('Wherever, Whenever, from your smartphone.') ?></a></h3>
                 <p class="lead-text"><?= __('iOS and Android apps avaliable.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),

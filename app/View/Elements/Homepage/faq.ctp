@@ -93,7 +93,7 @@
         </div><!--//row-->
         <div class="more text-center col-md-6 col-md-offset-3">
             <h4 class="title"><?= __('Any other questions?') ?></h4>
-            <?= $this->Html->link(__('Contact us'), array('controller' => 'contact'),
+            <?= $this->Html->link(__('Contact us'), array('controller' => 'pages', 'action' => 'contact', 'lang' => $this->Lang->getLangCode()),
                 array('class' => 'btn btn-cta btn-cta-secondary btn-lg btn-block')); ?>
         </div>
     </div><!--//container-->
