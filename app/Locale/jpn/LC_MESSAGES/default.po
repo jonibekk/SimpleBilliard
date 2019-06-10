@@ -5578,8 +5578,8 @@ msgstr "あなたはいいね！していません。"
 msgid "Information matching the search could not be found"
 msgstr "検索に一致する情報は見つかりませんでした"
 
-msgid "Search post and comment"
-msgstr "投稿とコメントから検索"
+msgid "Search (Complete match with ”…”)"
+msgstr "検索 (”…”で完全一致)"
 
 msgid "Search result %d topics hit"
 msgstr "検索結果 %dトピックが一致しました"
