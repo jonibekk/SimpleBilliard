@@ -174,11 +174,13 @@
         role="menu"
         aria-labelledby="dropdownMenu1">
         <?php if (empty($userHasNoTeam)): ?>
-            <li class="header-nav-function-contents-list">
-                <?= $this->Html->link(__('User Setting'),
-                    ['controller' => 'users', 'action' => 'settings'],
-                    ['class' => 'header-nav-function-contents-user-setting']) ?>
-            </li>
+            <?php if(!IS_DEMO):?>
+              <li class="header-nav-function-contents-list">
+                  <?= $this->Html->link(__('User Setting'),
+                      ['controller' => 'users', 'action' => 'settings'],
+                      ['class' => 'header-nav-function-contents-user-setting']) ?>
+              </li>
+            <?php endif;?>
             <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
             if (!empty($my_member_status) && Hash::get($my_member_status, 'TeamMember.admin_flg', false)):?>
                 <li class="header-nav-function-contents-list">
@@ -234,6 +236,11 @@
                    class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
             </li>
         <?php endif; ?>
+        <?php if (IS_DEMO):?>
+          <li class="header-nav-function-contents-list">
+            <a href="https://demo.goalous.com" target="_blank" class="header-nav-function-contents-logout"><?=__('Try Demo Site')?></a>
+          </li>
+        <?php endif;?>
         <li class="header-nav-function-contents-list">
             <?=
             $this->Html->link(__('Logout'),

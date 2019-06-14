@@ -66,7 +66,19 @@ class UsersController extends AppController
         }
 
         if (!$this->request->is('post')) {
+            if (IS_DEMO) {
+                return $this->render('demo_login');
+            }
             return $this->render();
+        }
+
+        if (IS_DEMO) {
+            $this->request->data['User'] = [
+                'email' => 'enpe.next.adam@gmail.com',
+                'password' => 'demo1234',
+                'installation_id' => 'no_value',
+                'app_version' => 'no_value'
+            ];
         }
 
         //account lock check
@@ -680,6 +692,9 @@ class UsersController extends AppController
      */
     public function settings()
     {
+        if(IS_DEMO) {
+            throw new NotFoundException();
+        }
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put')) {

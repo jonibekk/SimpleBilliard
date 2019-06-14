@@ -5776,3 +5776,23 @@ msgstr "15日間無料で利用できます。みんなで試してみてくだ�
 msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
 msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
 
+msgid "Try Demo Site"
+msgstr "デモサイトに移動"
+
+msgid "Welcome to the Demo Site!"
+msgstr "デモサイトへようこそ！"
+
+msgid "Let's experience Goalous as Demo"
+msgstr "Goalousをデモ体験してみましょう"
+
+msgid "This is free account to experience demo."
+msgstr "デモ体験の為の共用アカウントでどなたでもご利用出来ます。"
+
+msgid "Please be careful not to enter personal information or confidential information."
+msgstr "個人情報や社外秘情報を記載しないようご注意ください。"
+
+msgid "Demo site data is removed every %s hours."
+msgstr "デモサイトのデータは%s時間ごとにリセットされます"
+
+msgid "Demo site data flush every day at %s o'clock"
+msgstr "デモサイトのデータは毎日%s時にリセットされます"
