@@ -7,7 +7,7 @@
             <?= __("Welcome to the Demo Site!") ?><br>
         </h1>
         <p class="demo-login-summary">
-            <?= __("Let's experience Goalous as Demo") ?>
+            <?= __("Try out Goalous's key features such as user invitations, <br>goal creation and actions, and circle postings.") ?>
         </p>
         <div id="RequireCookieAlert" class="alert alert-danger" style="display:none">
             <?= __("Please enable cookie.") ?>
@@ -33,12 +33,14 @@
           </div>
         </div>
         <?= $this->Form->end(); ?>
-        <p class="demo-login-warning">
-          <span class="demo-login-warning-strong">
-            <i class="fa-warning fa fa-5 mr_4px"></i><?= __("This is free account to experience demo.")?><br>
-            <?= __("Please be careful not to enter personal information or confidential information.") ?></span><br>
-            <?= __("Demo site data is removed every %s hours.", DEMO_RESET_HOURS) ?>
-        </p>
+        <div class="demo-login-warning">
+          <span><i class="warning fa-warning fa fa-5 mr_4px"></i><?= __("Notes on use")?></span>
+          <p>
+            <?= __("The demo environment is a shared environment with other customers.")?><br>
+            <?= __("Please do not post confidential or personal information.") ?></p><br>
+            <?= __("Posted data is reset every %s hours. It will not be stored for a long time.", DEMO_RESET_HOURS) ?><br>
+            <?= __("Please review the <a href='/terms' target='_blank'> Terms of Service </a> before using.")?>
+        </div>
       </div>
     </div>
   </div>

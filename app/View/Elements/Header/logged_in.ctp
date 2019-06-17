@@ -46,8 +46,8 @@
       <div class="demo-alert">
         <div class="container">
           <p class="demo-alert-description">
-              <?= __("This is free account to experience demo.")?>
-              <?= __("Please be careful not to enter personal information or confidential information.") ?>
+              <?= __("The demo environment is a shared environment with other customers.")?>
+              <?= __("Please do not post confidential or personal information.") ?>
           </p>
           <p class=""><?= __("Demo site data flush every day at %s o'clock", DEMO_RESET_TIME)?></p>
         </div>

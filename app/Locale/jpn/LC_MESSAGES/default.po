@@ -5785,14 +5785,23 @@ msgstr "デモサイトへようこそ！"
 msgid "Let's experience Goalous as Demo"
 msgstr "Goalousをデモ体験してみましょう"
 
-msgid "This is free account to experience demo."
-msgstr "デモ体験の為の共用アカウントでどなたでもご利用出来ます。"
+msgid "Try out Goalous's key features such as user invitations, <br>goal creation and actions, and circle postings."
+msgstr "ユーザーの招待からゴールの作成やアクション、サークル投稿など<br>Goalousの主要な機能をお試し頂けます。"
 
-msgid "Please be careful not to enter personal information or confidential information."
-msgstr "個人情報や社外秘情報を記載しないようご注意ください。"
+msgid "Notes on use"
+msgstr "ご利用にあたってのご注意"
 
-msgid "Demo site data is removed every %s hours."
-msgstr "デモサイトのデータは%s時間ごとにリセットされます"
+msgid "The demo environment is a shared environment with other customers."
+msgstr "デモ環境は他のお客様との共有環境です。"
+
+msgid "Please do not post confidential or personal information."
+msgstr "機密情報や個人情報を投稿しないようお願いいたします。"
+
+msgid "Posted data is reset every %s hours. It will not be stored for a long time."
+msgstr "デモサイトのデータは%s時間ごとにリセットされます。長期間の保存はされません。"
+
+msgid "Please review the <a href='/terms' target='_blank'> Terms of Service </a> before using."
+msgstr "ご利用前に<a href='/terms' target='_blank'>利用規約</a>をご確認ください。"
 
 msgid "Demo site data flush every day at %s o'clock"
 msgstr "デモサイトのデータは毎日%s時にリセットされます"
