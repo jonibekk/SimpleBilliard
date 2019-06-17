@@ -2379,9 +2379,9 @@ class PaymentService extends AppService
      * @param int $teamId
      * @param int $currentTimeStamp
      *
-     * @return string
+     * @return GoalousDateTime
      */
-    public function getCurrentMonthBaseDate(int $teamId, int $currentTimeStamp): string
+    public function getCurrentMonthBaseDate(int $teamId, int $currentTimeStamp): GoalousDateTime
     {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
@@ -2401,6 +2401,6 @@ class PaymentService extends AppService
             $paymentBaseDay
         );
 
-        return $paymentBaseDate;
+        return GoalousDateTime::createFromFormat('Y-m-d', $paymentBaseDate);
     }
 }

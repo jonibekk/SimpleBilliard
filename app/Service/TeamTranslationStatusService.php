@@ -47,8 +47,8 @@ class TeamTranslationStatusService extends AppService
 
         try {
             $this->TransactionManager->begin();
-            $startDate = $this->calculateLogStartDate($teamId);
-            $endDate = $this->calculateLogEndDate($teamId, $currentTimeStamp);
+            $startDate = $this->calculateLogStartDate($teamId)->format("Y-m-d");
+            $endDate = $this->calculateLogEndDate($teamId, $currentTimeStamp)->format("Y-m-d");
 
             $translationLog = $TeamTranslationStatus->exportUsageAsJson($teamId);
 
@@ -96,7 +96,7 @@ class TeamTranslationStatusService extends AppService
         // Get teams with payment base date of given timestamp, without any log for previous interval
         $teamsToReset = array_filter($paidTeamIds, function ($paidTeamId) use ($PaymentService, $Team, $TeamTranslationUsageLog, $currentTimeStamp) {
 
-            $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $currentTimeStamp);
+            $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $currentTimeStamp)->format('Y-m-d');
 
             $teamTimezone = Hash::get($Team->getById($paidTeamId), 'Team.timezone');
             $localCurrentTs = $currentTimeStamp + ($teamTimezone * HOUR);
@@ -112,7 +112,7 @@ class TeamTranslationStatusService extends AppService
             }
 
             return $latestLog['end_date'] !=
-                date_create($paymentBaseDate)->modify('-1 day')->format('Y-m-d');;
+                date_create($paymentBaseDate)->modify('-1 day')->format('Y-m-d');
         });
 
         // To reset array index
@@ -124,9 +124,9 @@ class TeamTranslationStatusService extends AppService
      *
      * @param int $teamId
      *
-     * @return string
+     * @return GoalousDateTime
      */
-    private function calculateLogStartDate(int $teamId): string
+    private function calculateLogStartDate(int $teamId): GoalousDateTime
     {
         /** @var TeamTranslationUsageLog $TeamTranslationUsageLog */
         $TeamTranslationUsageLog = ClassRegistry::init('TeamTranslationUsageLog');
@@ -139,11 +139,10 @@ class TeamTranslationStatusService extends AppService
             $Team = ClassRegistry::init('Team');
 
             $team = $Team->getById($teamId);
-
-            return Hash::get($team, 'service_use_state_start_date');
+            return GoalousDateTime::createFromFormat('Y-m-d', Hash::get($team, 'service_use_state_start_date'));
         }
 
-        return date_create($previousLog['end_date'])->modify('+1 day')->format('Y-m-d');
+        return GoalousDateTime::createFromFormat('Y-m-d', $previousLog['end_date'])->modify("+1 day");
     }
 
     /**
@@ -152,9 +151,9 @@ class TeamTranslationStatusService extends AppService
      * @param int $teamId
      * @param int $currentTimeStamp
      *
-     * @return string
+     * @return GoalousDateTime
      */
-    private function calculateLogEndDate(int $teamId, int $currentTimeStamp): string
+    private function calculateLogEndDate(int $teamId, int $currentTimeStamp): GoalousDateTime
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
@@ -170,8 +169,9 @@ class TeamTranslationStatusService extends AppService
             $endDateTimeStamp = strtotime($previousLog['end_date']) + MONTH;
         }
 
-        return date_create($PaymentService->getCurrentMonthBaseDate($teamId, $endDateTimeStamp))
-            ->modify('-1 day')->format('Y-m-d');
+        $endDate = $PaymentService->getCurrentMonthBaseDate($teamId, $endDateTimeStamp);
+
+        return  $endDate->modify("-1 day");
     }
 
 }

@@ -4609,11 +4609,11 @@ class PaymentServiceTest extends GoalousTestCase
 
         GoalousDateTime::setTestNow("2017-02-27");
         $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
-        $this->assertEquals('2017-02-28', $res);
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
 
         GoalousDateTime::setTestNow("2017-02-28");
         $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
-        $this->assertEquals('2017-02-28', $res);
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
 
         // No exist day
         $this->PaymentSetting->save([
@@ -4624,7 +4624,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         GoalousDateTime::setTestNow("2017-02-28");
         $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
-        $this->assertEquals('2017-02-28', $res);
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
 
         $this->PaymentSetting->save([
             'team_id'          => $teamId,
@@ -4634,7 +4634,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         GoalousDateTime::setTestNow("2017-04-30");
         $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
-        $this->assertEquals('2017-04-30', $res);
+        $this->assertEquals('2017-04-30', $res->format("Y-m-d"));
     }
 
     /**
