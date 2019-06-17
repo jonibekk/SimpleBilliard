@@ -34,6 +34,10 @@ class UsersController extends AppController
         'Mention'
     ];
 
+    const ALLOW_DEMO_SAVING_USER_SETTINGS = [
+        'User.language'
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -692,12 +696,22 @@ class UsersController extends AppController
      */
     public function settings()
     {
-        if(IS_DEMO) {
-            throw new NotFoundException();
-        }
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put')) {
+            // Restrict saving data if demo env
+            if (IS_DEMO) {
+                // Prevent to save data which is not allowed
+                $tmp = $this->request->data;
+                $this->request->data = [];
+                foreach (self::ALLOW_DEMO_SAVING_USER_SETTINGS as $keyPath) {
+                    $this->request->data[$keyPath] = Hash::get($tmp, $keyPath);
+                }
+                // Convert flatten array to multiple dimensions array.
+                // https://book.cakephp.org/2.0/ja/core-utility-libraries/hash.html#Hash::expand
+                $this->request->data = Hash::expand($this->request->data);
+            }
+
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');

@@ -5805,3 +5805,6 @@ msgstr "ご利用前に<a href='/terms' target='_blank'>利用規約</a>をご�
 
 msgid "Demo site data flush every day at %s o'clock"
 msgstr "デモサイトのデータは毎日%s時にリセットされます"
+
+msgid "※The demo site restricts the items that users can set."
+msgstr "※デモサイトではユーザーが設定できる項目を制限しています"

@@ -34,7 +34,7 @@
         </div>
         <?= $this->Form->end(); ?>
         <div class="demo-login-warning">
-          <span><i class="warning fa-warning fa fa-5 mr_4px"></i><?= __("Notes on use")?></span>
+          <span class="demo-login-warning-title"><i class="warning fa-warning fa fa-5 mr_4px"></i><?= __("Notes on use")?></span>
           <p>
             <?= __("The demo environment is a shared environment with other customers.")?><br>
             <?= __("Please do not post confidential or personal information.") ?></p><br>

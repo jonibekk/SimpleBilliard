@@ -3102,6 +3102,7 @@ Temporary Properties - YOU MUST FIX
         font-weight: bold;
         font-size: 24px;
         color: @darkBlack;
+        margin-top: 40px;
     }
 
     &-summary {
@@ -3120,7 +3121,7 @@ Temporary Properties - YOU MUST FIX
     }
 
     &-warning {
-        color: @darkBlack;
+        color: @trueGray;
         @media (min-width: 768px) {
             margin: 0 auto;
             width: 70%;
@@ -3129,5 +3130,9 @@ Temporary Properties - YOU MUST FIX
         text-align: left;
         font-size: 14px;
         line-height: 1.6em;
+        &-title {
+            font-weight: 600;
+            color: @darkBlack;
+        }
     }
 }
