@@ -206,10 +206,10 @@ class TeamTranslationStatus extends AppModel
         $data = $this->getUsageStatus($teamId);
 
         return json_encode([
-            'circle_post_total'         => $data['circle_post_total'],
-            'circle_post_comment_total' => $data['circle_post_comment_total'],
-            'action_post_total'         => $data['action_post_total'],
-            'action_post_comment_total' => $data['action_post_comment_total'],
+            'circle_post_total'         => $data->getCirclePostUsageCount(),
+            'circle_post_comment_total' => $data->getCirclePostCommentUsageCount(),
+            'action_post_total'         => $data->getActionPostUsageCount(),
+            'action_post_comment_total' => $data->getActionPostCommentUsageCount(),
         ]);
     }
 }

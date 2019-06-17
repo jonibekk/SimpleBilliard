@@ -168,7 +168,7 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $Team->updatePaidPlan($paidTeamWithoutTranslation, '2019-05-14');
         $Team->updatePaidPlan($paidTeamWithTranslationAndLog, '2019-05-14');
 
-        $queryResult = $TeamTranslationStatusService->findPaidTeamToReset($currentTimeStamp);
+        $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEmpty($queryResult);
 
         $this->insertTranslationLanguage($paidTeamWithTranslation, LanguageEnum::DE());
@@ -191,23 +191,23 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
             'payment_base_day' => 14,
         ], false);
 
-        $queryResult = $TeamTranslationStatusService->findPaidTeamToReset($currentTimeStamp);
+        $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEquals([$paidTeamWithTranslation, $paidTeamWithTranslationAndLog], $queryResult);
 
         $PaymentSetting->updateAll(['payment_base_day' => 15], ['team_id' => $paidTeamWithTranslation]);
 
-        $queryResult = $TeamTranslationStatusService->findPaidTeamToReset($currentTimeStamp);
+        $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEquals([$paidTeamWithTranslationAndLog], $queryResult);
 
         $TeamTranslationUsageLog->saveLog($paidTeamWithTranslationAndLog, '2019-05-14', '2019-06-13', "{}");
 
-        $queryResult = $TeamTranslationStatusService->findPaidTeamToReset($currentTimeStamp);
+        $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEmpty($queryResult);
 
         GoalousDateTime::setTestNow("2019-06-15");
         $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
 
-        $queryResult = $TeamTranslationStatusService->findPaidTeamToReset($currentTimeStamp);
+        $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEquals([$paidTeamWithTranslation], $queryResult);
     }
 

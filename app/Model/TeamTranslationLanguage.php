@@ -52,7 +52,7 @@ class TeamTranslationLanguage extends AppModel
      *
      * @return int[]
      */
-    public function getAllTeams(): array
+    public function getAllTeamIds(): array
     {
         $option = [
             'fields' => [

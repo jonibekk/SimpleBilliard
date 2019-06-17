@@ -1804,7 +1804,8 @@ class AppSchema extends CakeSchema {
 		'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1)
+			'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);

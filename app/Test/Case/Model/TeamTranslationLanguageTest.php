@@ -56,17 +56,17 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
         $this->insertTranslationLanguage(1, LanguageEnum::EN());
-        $queryResult = $TeamTranslationLanguage->getAllTeams();
+        $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(1, $queryResult);
         $this->assertEquals([1], $queryResult);
 
         $this->insertTranslationLanguage(1, LanguageEnum::JA());
-        $queryResult = $TeamTranslationLanguage->getAllTeams();
+        $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(1, $queryResult);
         $this->assertEquals([1], $queryResult);
 
         $this->insertTranslationLanguage(2, LanguageEnum::DE());
-        $queryResult = $TeamTranslationLanguage->getAllTeams();
+        $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(2, $queryResult);
         $this->assertEquals([1,2], $queryResult);
     }

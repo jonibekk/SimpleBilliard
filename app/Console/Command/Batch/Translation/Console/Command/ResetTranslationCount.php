@@ -16,6 +16,6 @@ class ResetTranslationCount extends AppShell
         /** @var TeamTranslationStatusService $TeamTranslationStatusService */
         $TeamTranslationStatusService = ClassRegistry::init('TeamTranslationStatusService');
 
-        $TeamTranslationStatusService->findPaidTeamToReset($targetTimestamp);
+        $TeamTranslationStatusService->findPaidTeamIdsToReset($targetTimestamp);
     }
 }

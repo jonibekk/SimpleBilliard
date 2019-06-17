@@ -19,7 +19,7 @@ class TeamTranslationStatusService extends AppService
      */
     public function resetTranslationStatusInPaidTeams(int $currentTimeStamp)
     {
-        $teamsToReset = $this->findPaidTeamToReset($currentTimeStamp);
+        $teamsToReset = $this->findPaidTeamIdsToReset($currentTimeStamp);
 
         if (empty($teamsToReset)) {
             return;
@@ -78,7 +78,7 @@ class TeamTranslationStatusService extends AppService
      *
      * @return int[] Team Ids
      */
-    public function findPaidTeamToReset(int $currentTimeStamp): array
+    public function findPaidTeamIdsToReset(int $currentTimeStamp): array
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
@@ -89,17 +89,17 @@ class TeamTranslationStatusService extends AppService
         /** @var TeamTranslationUsageLog $TeamTranslationUsageLog */
         $TeamTranslationUsageLog = ClassRegistry::init('TeamTranslationUsageLog');
 
-        $teamIdsWithTranslation = $TeamTranslationLanguage->getAllTeams();
+        $teamIdsWithTranslation = $TeamTranslationLanguage->getAllTeamIds();
 
         $paidTeamIds = $Team->filterPaidTeam($teamIdsWithTranslation);
 
         // Get teams with payment base date of given timestamp, without any log for previous interval
         $teamsToReset = array_filter($paidTeamIds, function ($paidTeamId) use ($PaymentService, $Team, $TeamTranslationUsageLog, $currentTimeStamp) {
 
+            $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $currentTimeStamp);
+
             $teamTimezone = Hash::get($Team->getById($paidTeamId), 'Team.timezone');
             $localCurrentTs = $currentTimeStamp + ($teamTimezone * HOUR);
-
-            $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $localCurrentTs);
 
             if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
                 return false;
