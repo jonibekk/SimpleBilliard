@@ -475,8 +475,8 @@ class Team extends AppModel
     /**
      * update part of term settings
      *
-     * @param  int $startTermMonth
-     * @param  int $borderMonth
+     * @param int $startTermMonth
+     * @param int $borderMonth
      *
      * @return bool
      */
@@ -898,6 +898,80 @@ class Team extends AppModel
             return $res['pre_register_amount_per_user'];
         }
         return null;
+    }
+
+    /**
+     * Get default translation language of a team
+     *
+     * @param int $teamId
+     *
+     * @return string ISO-639-1 Language Code
+     */
+    public function getDefaultTranslationLanguage(int $teamId): string
+    {
+        $option = [
+            'conditions' => [
+                'id' => $teamId
+            ],
+            'fields'     => [
+                'default_translation_language'
+            ]
+        ];
+
+        $queryResult = $this->find('first', $option);
+
+        return $queryResult['Team']['default_translation_language'] ?: '';
+    }
+
+    /**
+     * Save default translation language of a team
+     *
+     * @param int    $teamId
+     * @param string $language ISO-639-1 Language code
+     *
+     * @throws InvalidArgumentException
+     * @throws Exception
+     */
+    public function setDefaultTranslationLanguage(int $teamId, string $language)
+    {
+        if (!Enum\Language::isValid($language)) {
+            throw new InvalidArgumentException("Unknown language code.");
+        }
+
+        $this->id = $teamId;
+
+        $this->save([
+            'default_translation_language' => $language
+        ], false);
+    }
+
+    /**
+     * Return ids of paid teams from given array
+     *
+     * @param int[] $teamIds Array of team ids
+     *
+     * @return int[] Array of ids of paid teams
+     */
+    public function filterPaidTeam(array $teamIds): array
+    {
+        if (empty($teamIds)) {
+            return [];
+        }
+
+        $option = [
+            'conditions' => [
+                'id'                 => $teamIds,
+                'service_use_status' => Team::SERVICE_USE_STATUS_PAID,
+                'del_flg'            => false
+            ],
+            'fields'     => [
+                'id'
+            ]
+        ];
+
+        $queryResult = $this->useType()->find('all', $option);
+
+        return Hash::extract($queryResult, '{n}.{s}.id') ?: [];
     }
 
 }
