@@ -3092,37 +3092,48 @@ Temporary Properties - YOU MUST FIX
 }
 
 .demo-login {
-    background: url("/img/demo/demo_login_bg.png") center bottom no-repeat;
-    background-size: 100% auto;
     box-shadow: 0px 0px 3px 2px @cGray;
-    padding-bottom: 300px;
+    background-color: white;
     text-align: center;
 
     &-title {
         font-weight: bold;
         font-size: 24px;
         color: @darkBlack;
-        margin-top: 40px;
+        margin-top: 20px;
     }
 
     &-summary {
         font-size: 15px;
         color: @darkBlack;
-        @media (min-width: 768px) {
-            margin: 0 auto;
+        margin: 20px 0px;
+        @media (min-width: 480px) {
+            margin: 20px auto;
             width: 70%;
-
         }
-
     }
+    .panel-heading {
+        padding: 16px;
+    }
+    .panel-body {
+        padding: 16px;
+        background: url("/img/demo/demo_login_bg.png") center bottom no-repeat;
+        background-size: 100% auto;
+        padding-bottom: 260px;
+    }
+
 
     &-form {
         margin: 40px 0;
     }
+    input[type=submit] {
+        padding: 8px 32px !important;
+    }
 
     &-warning {
         color: @trueGray;
-        @media (min-width: 768px) {
+        padding: 8px 0;
+        @media (min-width: 480px) {
             margin: 0 auto;
             width: 70%;
         }
@@ -3133,6 +3144,8 @@ Temporary Properties - YOU MUST FIX
         &-title {
             font-weight: 600;
             color: @darkBlack;
+            padding: 8px 0;
+            display: block;
         }
     }
 }
