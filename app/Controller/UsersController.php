@@ -4,12 +4,13 @@ App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('Device', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'GoalService');
 App::import('Service', 'UserService');
 App::import('Service', 'CircleService');
 App::import('Service', 'TermService');
-App::import('Service', 'TermService');
+App::import('Service', 'TeamMemberService');
 App::import('Service', 'ExperimentService');
 
 /**
@@ -537,8 +538,8 @@ class UsersController extends AppController
      *
      * @param string $token Token
      *
-     * @throws RuntimeException
      * @return void
+     * @throws RuntimeException
      */
     public function verify($token = null)
     {
@@ -716,7 +717,15 @@ class UsersController extends AppController
                         $this->User->NotifySetting->getSettingValues('mobile',
                             $this->request->data['NotifySetting']['mobile']));
             }
+
+            if (isset($this->request->data['TeamMember'][0]['default_translation_language'])) {
+                /** @var TeamMember $TeamMember */
+                $TeamMember = ClassRegistry::init('TeamMember');
+                $this->request->data['TeamMember'][0]['id'] = $TeamMember->getIdByTeamAndUserId($this->current_team_id, $this->request->data['User']['id']);
+            }
+
             $this->User->id = $this->Auth->user('id');
+
             //ユーザー情報更新
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
@@ -776,8 +785,19 @@ class UsersController extends AppController
                 }
             }
         }
+
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        $team_can_translate = $TeamTranslationLanguage->canTranslate($this->current_team_id);
+        if ($team_can_translate) {
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            $translation_languages = $TeamTranslationLanguageService->getAllLanguages($this->current_team_id);
+        }
+
         $this->set(compact('me', 'is_not_use_local_name', 'lastFirst', 'language_list', 'timezones',
-            'not_verified_email', 'local_name', 'language_name'));
+            'not_verified_email', 'local_name', 'language_name', 'team_can_translate', 'translation_languages'));
         return $this->render();
     }
 

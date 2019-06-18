@@ -20,6 +20,7 @@ use Goalous\Enum as Enum;
 
 use Goalous\Enum\Model\TeamMember as TeamMemberEnum;
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Exception as GlException;
 
 class TeamMember extends AppModel
 
@@ -277,14 +278,14 @@ class TeamMember extends AppModel
     }
 
     /**
-     * @deprecated
-     * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
-     *
      * @param      $uid
      * @param null $teamId
      * @param bool $withCache
      *
      * @return bool
+     * @deprecated
+     * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
+     *
      */
     public function isActive($uid, $teamId = null, bool $withCache = true)
     {
@@ -402,7 +403,8 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    ) {
+    )
+    {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -2053,8 +2055,8 @@ class TeamMember extends AppModel
     /**
      * active admin as team member and user
      *
-     * @param  int $userId
-     * @param  int $teamId
+     * @param int $userId
+     * @param int $teamId
      *
      * @return bool
      */
@@ -2062,7 +2064,8 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2173,7 +2176,8 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    ) {
+    )
+    {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2200,7 +2204,8 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'id'      => $teamMemberId,
@@ -2220,7 +2225,8 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool {
+    ): bool
+    {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2240,7 +2246,8 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2269,7 +2276,8 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array {
+    ): array
+    {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2350,7 +2358,8 @@ class TeamMember extends AppModel
      * Filter active member's user id
      *
      * @param array $userIds
-     * @param int $teamId
+     * @param int   $teamId
+     *
      * @return array user ids array
      */
     public function filterActiveMembers(array $userIds, int $teamId): array
@@ -2373,7 +2382,7 @@ class TeamMember extends AppModel
                     'conditions' => [
                         'User.id = TeamMember.user_id',
                         'User.active_flg' => true,
-                        'User.del_flg' => false
+                        'User.del_flg'    => false
                     ]
                 ]
             ]
@@ -2408,4 +2417,64 @@ class TeamMember extends AppModel
         return !empty($this->find('count', $condition));
     }
 
+    /**
+     * Get user's default translation language in a team
+     *
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return string | null
+     */
+    public function getDefaultTranslationLanguage(int $teamId, int $userId)
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId
+            ],
+            'fields'     => [
+                'team_id',
+                'user_id',
+                'default_translation_language'
+            ]
+        ];
+
+        $queryResult = $this->find('first', $option);
+
+        if (empty($queryResult)) {
+            throw new GlException\GoalousNotFoundException("Team member not found");
+        }
+
+        return Hash::get($queryResult, 'TeamMember.default_translation_language');
+    }
+
+    /**
+     * Set user's default translation language in a team
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     * @param string $langCode ISO 639-1 Language Code
+     *
+     * @throws  Exception
+     */
+    public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode)
+    {
+        if (!Enum\Language::isValid($langCode)) {
+            throw new InvalidArgumentException("Unknown language code.");
+        }
+
+        $teamMemberId = $this->getIdByTeamAndUserId($teamId, $userId);
+
+        if (empty($teamMemberId)) {
+            throw new GlException\GoalousNotFoundException("Team member not found");
+        }
+
+        $this->id = $teamMemberId;
+
+        $newData = [
+            'default_translation_language' => $langCode
+        ];
+
+        $this->save($newData, false);
+    }
 }

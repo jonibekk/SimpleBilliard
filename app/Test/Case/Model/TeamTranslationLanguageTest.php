@@ -17,19 +17,19 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         'app.mst_translation_language'
     ];
 
-    public function test_hasTranslation_success()
+    public function test_canTranslate_success()
     {
         $teamId = 1;
 
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        $queryResult = $TeamTranslationLanguage->hasTranslationLanguage(1);
+        $queryResult = $TeamTranslationLanguage->canTranslate(1);
         $this->assertFalse($queryResult);
 
         $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
 
-        $queryResult = $TeamTranslationLanguage->hasTranslationLanguage(1);
+        $queryResult = $TeamTranslationLanguage->canTranslate(1);
         $this->assertTrue($queryResult);
     }
 
@@ -68,6 +68,24 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         $this->insertTranslationLanguage(2, LanguageEnum::DE());
         $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(2, $queryResult);
-        $this->assertEquals([1,2], $queryResult);
+        $this->assertEquals([1, 2], $queryResult);
+    }
+
+    public function test_supportTranslationLanguage_success()
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        $teamId = 1;
+        $language1 = LanguageEnum::DE();
+        $language2 = LanguageEnum::TH();
+
+        $this->assertFalse($TeamTranslationLanguage->supportTranslationLanguage($teamId, $language1->getValue()));
+        $this->assertFalse($TeamTranslationLanguage->supportTranslationLanguage($teamId, $language2->getValue()));
+
+        $this->insertTranslationLanguage($teamId, $language1);
+
+        $this->assertTrue($TeamTranslationLanguage->supportTranslationLanguage($teamId, $language1->getValue()));
+        $this->assertFalse($TeamTranslationLanguage->supportTranslationLanguage($teamId, $language2->getValue()));
     }
 }

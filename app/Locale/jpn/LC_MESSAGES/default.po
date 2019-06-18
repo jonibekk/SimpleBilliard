@@ -376,10 +376,37 @@ msgid "Invalid screen transition."
 msgstr "不正な画面遷移です。"
 
 msgid "Japanese"
-msgstr "Japanese"
+msgstr "日本語"
 
 msgid "English"
-msgstr "English"
+msgstr "英語"
+
+msgid "Chinese(Simplified)"
+msgstr "中国語(簡体字)"
+
+msgid "Chinese(Traditional)"
+msgstr "中国語(繁体字)"
+
+msgid "Spanish"
+msgstr "スペイン語"
+
+msgid "German"
+msgstr "ドイツ語"
+
+msgid "Italian"
+msgstr "イタリア語"
+
+msgid "French"
+msgstr "フランス語"
+
+msgid "Indonesian"
+msgstr "インドネシア語"
+
+msgid "Malay"
+msgstr "マレー語"
+
+msgid "Thai"
+msgstr "タイ語"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -5776,3 +5803,47 @@ msgstr "15日間無料で利用できます。みんなで試してみてくだ�
 msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
 msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
 
+msgid "Translation Settings"
+msgstr "翻訳設定"
+
+msgid "Translation Language"
+msgstr "翻訳言語"
+
+msgid "Translation Usage"
+msgstr "翻訳可能文字数"
+
+msgid "characters"
+msgstr "文字"
+
+msgid "Translation feature is disabled now. If you would like to use it,"
+msgstr "翻訳機能は現在無効化されています。もしご利用になりたい場合は、"
+
+msgid "If you would like to change the settings,"
+msgstr "翻訳の設定変更を希望する場合は、"
+
+msgid "You have reached your translation limit."
+msgstr "翻訳可能な文字数の上限に達しています。"
+
+msgid "Please wait until reset."
+msgstr "リセットされるまでお待ちいただくか、サポートへお問い合わせください。"
+
+msgid "You will soon reach your translation limit."
+msgstr "翻訳できる文字数の上限に近づいています。"
+
+msgid "If the limit is exceeded, translation feature will be unavailable until reset."
+msgstr "上限を超えるとリセット日時まで翻訳機能は使えなくなります。"
+
+msgid "If you would like to change your limit,"
+msgstr "上限を変更したい場合は、"
+
+msgid "Reset Date"
+msgstr "リセット日時"
+
+msgid "Selected Translation Language"
+msgstr "選択された翻訳言語"
+
+msgid "Default Translation Language"
+msgstr "デフォルト翻訳言語"
+
+msgid "Translation usage won't be reset in free trial plan."
+msgstr "トライアルプランでは、翻訳可能文字数はリセットされません。"

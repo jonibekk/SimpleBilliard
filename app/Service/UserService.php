@@ -3,8 +3,6 @@ App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
 
-use Goalous\Enum as Enum;
-
 /**
  * Class UserService
  */

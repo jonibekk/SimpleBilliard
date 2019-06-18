@@ -48,7 +48,7 @@ class AddedTranslationOptionsAndStatus extends CakeMigration
                     ),
                     'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB'),
                 ),
-                'team_translation_status'     => array(
+                'team_translation_statuses'     => array(
                     'id'                        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
                     'team_id'                   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'unique', 'comment' => 'Team ID'),
                     'circle_post_total'         => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated circle post'),
@@ -87,18 +87,18 @@ class AddedTranslationOptionsAndStatus extends CakeMigration
                 'teams' => array(
                     'default_translation_language' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Default translation language for the team', 'charset' => 'utf8mb4', 'after' => 'country'),
                 ),
-                'users' => array(
-                    'default_translation_language' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Default translation language for the user', 'charset' => 'utf8mb4', 'after' => 'language'),
+                'team_members' => array(
+                    'default_translation_language' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Default translation language for the user in a team', 'charset' => 'utf8mb4', 'after' => 'status'),
                 ),
             ),
         ),
         'down' => array(
             'drop_table' => array(
-                'mst_translation_languages', 'team_translation_languages', 'team_translation_status', 'team_translation_usage_logs'
+                'mst_translation_languages', 'team_translation_languages', 'team_translation_statuses', 'team_translation_usage_logs'
             ),
             'drop_field' => array(
                 'teams' => array('default_translation_language'),
-                'users' => array('default_translation_language'),
+                'team_members' => array('default_translation_language'),
             ),
         ),
     );

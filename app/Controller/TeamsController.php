@@ -3,12 +3,15 @@ App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
 App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
+App::import('Service', 'TeamTranslationLanguageService');
 
 use Goalous\Enum as Enum;
 
@@ -411,6 +414,31 @@ class TeamsController extends AppController
         // Get timezone label
         $timezoneLabel = $this->getTimezoneLabel($team['Team']['timezone']);
 
+        // Translation
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+        if ($TeamTranslationLanguage->canTranslate($team_id)) {
+            $translationTeamLanguageCandidates = $TeamTranslationLanguageService->getAllLanguages($team_id);
+            $translationTeamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($team_id);
+            $translationTeamTotalUsage = $TeamTranslationStatus->getTotalUsageCount($team_id);
+            $translationTeamTotalLimit = $TeamTranslationStatus->getLimit($team_id);
+
+            // Only paid teams have reset date for translation usage status
+            if ($this->Team->isPaidPlan($team_id)) {
+                App::import('View', 'Helper/TimeExHelper');
+                $TimeEx = new TimeExHelper(new View());
+                $translationTeamResetDate = $TimeEx->formatYearDayI18nFromDate($PaymentService->getNextBaseDate($team_id));
+            } else {
+                $translationTeamResetDate = __("Translation usage won't be reset in free trial plan.");
+            }
+        }
+
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
@@ -451,7 +479,12 @@ class TeamsController extends AppController
             'either_start_button_enabled',
             'current_radio_checked',
             'previous_radio_checked',
-            'both_term_selectable'
+            'both_term_selectable',
+            'translationTeamLanguageCandidates',
+            'translationTeamDefaultLanguage',
+            'translationTeamTotalUsage',
+            'translationTeamTotalLimit',
+            'translationTeamResetDate'
         ));
 
         return $this->render();
@@ -1161,12 +1194,12 @@ class TeamsController extends AppController
      * TODO: delete this API if used place migrated to
      * /api/v1/invitations/reInvite
      *
-     * @deprecated
-     *
      * @param $user_id
      * @param $action_flg
      *
      * @return CakeResponse|null
+     * @deprecated
+     *
      */
     function ajax_invite_setting($user_id, $action_flg)
     {
@@ -2132,7 +2165,7 @@ class TeamsController extends AppController
                 } else {
                     $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
                 }
-                $filter_ranking[$rankKey] = $ranking[$rankKey];                
+                $filter_ranking[$rankKey] = $ranking[$rankKey];
             }
             $rank++;
         }
