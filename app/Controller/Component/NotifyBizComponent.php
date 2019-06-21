@@ -1536,7 +1536,7 @@ class NotifyBizComponent extends Component
             $this->notify_settings[$toUserId]['app'] = true;
         }
         if (!is_null($comment_id)) {
-            $comment = $this->Post->Comment->read(null, $comment_id);
+            $comment = Hash::get($this->Post->Comment->read(null, $comment_id), 'Comment') ?? [];
         }
 
         $this->notify_option['count_num'] = count($to_user_ids);
@@ -1553,29 +1553,20 @@ class NotifyBizComponent extends Component
                 'post_id'    => $post['Post']['id']
             ];
         }
-        $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
-        $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
         if (!empty($post['Post']['action_result_id'])) {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
             $actionResult = $this->Post->ActionResult->findById($post['Post']['action_result_id']);
-            $keyResult = $this->Post->KeyResult->findById($actionResult['ActionResult']['key_result_id']);
-            $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
         } else if (!empty($post['Post']['key_result_id'])) {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
-            $keyResult = $this->Post->KeyResult->findById($post['Post']['key_result_id']);
-            $this->notify_option['item_name'] = json_encode([$keyResult['KeyResult']['name']]);
         } else {
             $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT;
-            $itemName = '';
-            if (!empty($share_circle_list)) {
-                $circleCount = count($share_circle_list);
-                $circleName = $this->Post->PostShareCircle->Circle->findById(array_values($share_circle_list)[0])['Circle']['name'];
-                $itemName .= ($circleCount > 1 ? sprintf(__('%1$s and %2$s circle(s)'), $circleName, $circleCount) : $circleName);
-            }
-            $this->notify_option['item_name'] = json_encode([$itemName]);
         }
+        $mentionReplacedBody = MentionComponent::replaceMentionToSimpleReadable($comment['body']);
+        $this->notify_option['item_name'] = json_encode([$mentionReplacedBody]);
+        $this->notify_option['options']['mention_targets'] = $this->Mention->getTargetIdsEachType($comment['body'], $comment['team_id']);
+
         $this->notify_option['force_notify'] = true;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
     }
@@ -1722,7 +1713,11 @@ class NotifyBizComponent extends Component
                     $from_user_name,
                     1,
                     $this->notify_option['item_name'],
-                    $this->notify_option['options']);
+                    array(
+                        $this->notify_option['options'],
+                        ['to_user_id' => $to_user_id]
+                    )
+                );
 
                 //メッセージの場合は本文も出ていたほうがいいので出してみる
                 $item_name = json_decode($this->notify_option['item_name']);
@@ -1934,7 +1929,10 @@ class NotifyBizComponent extends Component
                 $user_name, 1,
                 $data[$k]['Notification']['body'],
                 array_merge($data[$k]['Notification']['options'],
-                    ['from_user_id' => $user_id]));
+                    [
+                        'from_user_id' => $user_id,
+                        'to_user_id' => $this->NotifySetting->my_uid
+                    ]));
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
