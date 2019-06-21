@@ -3,7 +3,7 @@
  * @var array  $translationTeamDefaultLanguage
  * @var int    $translationTeamTotalUsage
  * @var int    $translationTeamTotalLimit
- * @var string $translationTeamResetDate
+ * @var string $translationTeamResetText
  * @var array  $translationTeamLanguageCandidates
  */
 ?>
@@ -69,7 +69,7 @@
                 <div>
                     <label class="col col-sm-3 control-label form-label sm-text-right">
                         <p><?= __("Reset Date") ?></p></label>
-                    <div><?= $translationTeamResetDate ?></div>
+                    <div><?= $translationTeamResetText ?></div>
                 </div>
                 <hr>
                 <div>

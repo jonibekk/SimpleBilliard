@@ -424,21 +424,34 @@ class TeamsController extends AppController
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
         if ($TeamTranslationLanguage->canTranslate($team_id)) {
-            $translationTeamLanguageCandidates = $TeamTranslationLanguageService->getAllLanguages($team_id);
-            $translationTeamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($team_id);
-            $translationTeamTotalUsage = $TeamTranslationStatus->getTotalUsageCount($team_id);
-            $translationTeamTotalLimit = $TeamTranslationStatus->getLimit($team_id);
+            try {
+                $translationTeamLanguageCandidates = $TeamTranslationLanguageService->getAllLanguages($team_id);
+                $translationTeamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($team_id);
+                $translationTeamTotalUsage = $TeamTranslationStatus->getTotalUsageCount($team_id);
+                $translationTeamTotalLimit = $TeamTranslationStatus->getLimit($team_id);
 
-            // Only paid teams have reset date for translation usage status
-            if ($this->Team->isPaidPlan($team_id)) {
-                App::import('View', 'Helper/TimeExHelper');
-                $TimeEx = new TimeExHelper(new View());
-                $translationTeamResetDate = $TimeEx->formatYearDayI18nFromDate($PaymentService->getNextBaseDate($team_id));
-            } else {
-                $translationTeamResetDate = __("Translation usage won't be reset in free trial plan.");
+                // Only paid teams have reset date for translation usage status
+                if ($this->Team->isPaidPlan($team_id)) {
+                    App::import('View', 'Helper/TimeExHelper');
+                    $TimeEx = new TimeExHelper(new View());
+                    $translationTeamResetText = $TimeEx->formatYearDayI18nFromDate($PaymentService->getNextBaseDate($team_id));
+                } else {
+                    $translationTeamResetText = __("Translation usage won't be reset in free trial plan.");
+                }
+            } catch (Exception $e) {
+                GoalousLog::error("Error in getting translation setting for team setting", [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                    'team_id' => $team_id,
+                    'user_id' => $this->Auth->user('id')
+                ]);
+                $translationTeamLanguageCandidates = [];
+                $translationTeamDefaultLanguage = [];
+                $translationTeamTotalUsage = 0;
+                $translationTeamTotalLimit = 0;
+                $translationTeamResetText = "-";
             }
         }
-
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
@@ -484,7 +497,7 @@ class TeamsController extends AppController
             'translationTeamDefaultLanguage',
             'translationTeamTotalUsage',
             'translationTeamTotalLimit',
-            'translationTeamResetDate'
+            'translationTeamResetText'
         ));
 
         return $this->render();
