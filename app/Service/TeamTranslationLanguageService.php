@@ -9,12 +9,12 @@ use Goalous\Exception as GlException;
 class TeamTranslationLanguageService extends AppService
 {
     /**
-     * Get all translation languages supported by the team
+     * Get all translation languages supported by the team asn associative array
      *
      * @param int $teamId
      *
      * @return array
-     *              [ ["language" => "en", "language_name" => "English"],[...] ]
+     *              [ ["en" => "English"], [...] ]
      */
     public function getAllLanguages(int $teamId): array
     {
@@ -36,10 +36,7 @@ class TeamTranslationLanguageService extends AppService
 
             $languageInfo = $TranslationLanguage->getLanguageByCode($singleData['language']);
 
-            $returnArray[] = [
-                "language"      => $singleData['language'],
-                'language_name' => __($languageInfo['intl_name'])
-            ];
+            $returnArray[$singleData['language']] = __($languageInfo['intl_name']);
         };
 
         return $returnArray;
@@ -51,14 +48,15 @@ class TeamTranslationLanguageService extends AppService
      * @param int $teamId
      *
      * @return array
+     *              ["en" => "English"]
      * @throws Exception
      */
-    public function getDefaultLanguage(int $teamId): array
+    public function getDefaultTranslationLanguage(int $teamId): array
     {
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        if (!$TeamTranslationLanguage->hasTranslationLanguage($teamId)) {
+        if (!$TeamTranslationLanguage->canTranslate($teamId)) {
             throw new GlException\GoalousNotFoundException("Team does not have translation languages");
         }
 
@@ -67,8 +65,8 @@ class TeamTranslationLanguageService extends AppService
 
         $defaultLanguage = $Team->getDefaultTranslationLanguage($teamId);
 
-        if (empty($defaultLanguage)) {
-            $defaultLanguage = $this->calculateDefaultLanguage($teamId);
+        if (empty($defaultLanguage) || !$TeamTranslationLanguage->supportTranslationLanguage($teamId, $defaultLanguage)) {
+            $defaultLanguage = $this->calculateDefaultTranslationLanguage($teamId);
             $this->setDefaultTranslationLanguage($teamId, $defaultLanguage);
         }
 
@@ -78,8 +76,7 @@ class TeamTranslationLanguageService extends AppService
         $languageInfo = $TranslationLanguage->getLanguageByCode($defaultLanguage);
 
         return [
-            "language"      => $languageInfo['language'],
-            'language_name' => __($languageInfo['intl_name'])
+            $languageInfo['language'] => __($languageInfo['intl_name'])
         ];
     }
 
@@ -90,12 +87,12 @@ class TeamTranslationLanguageService extends AppService
      *
      * @return string ISO-639-1 Language code
      */
-    public function calculateDefaultLanguage(int $teamId): string
+    public function calculateDefaultTranslationLanguage(int $teamId): string
     {
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        if (!$TeamTranslationLanguage->hasTranslationLanguage($teamId)) {
+        if (!$TeamTranslationLanguage->canTranslate($teamId)) {
             throw new GlException\GoalousNotFoundException("Team does not have translation languages");
         }
 

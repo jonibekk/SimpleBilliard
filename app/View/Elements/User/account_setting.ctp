@@ -13,6 +13,8 @@
  * @var array                       $timezones
  * @var array                       $not_verified_email
  * @var                             $my_teams
+ * @var array                       $translation_languages
+ * @var bool                        $team_can_translate
  */
 ?>
 <?= $this->App->viewStartComment() ?>
@@ -80,6 +82,16 @@
             'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
         ]) ?>
         <hr>
+        <?php if (!empty($team_can_translate)) {
+            echo $this->Form->input('TeamMember.0.default_translation_language', [
+                'label'     => __("Translation Language"),
+                'type'      => 'select',
+                'options'   => $translation_languages,
+                'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
+            ]);
+            echo "<hr>";
+        }
+        ?>
         <?=
         $this->Form->input('timezone', [
             'label'     => __("Timezone"),
@@ -152,13 +164,13 @@
 </div>
 <?php $this->append('script') ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#UserAccountForm').bootstrapValidator({
-            live: 'enabled',
+  $(document).ready(function () {
+    $('#UserAccountForm').bootstrapValidator({
+      live: 'enabled',
 
-            fields: {}
-        });
+      fields: {}
     });
+  });
 </script>
 <?php $this->end() ?>
 <?= $this->element('User/modal_change_password') ?>

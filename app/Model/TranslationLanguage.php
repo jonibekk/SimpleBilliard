@@ -99,7 +99,7 @@ class TranslationLanguage extends AppModel
             ],
             'order'      => [
                 'importance' => 'DESC',
-                'id'         => 'DESC'
+                'id'         => 'ASC'
             ]
         ];
 

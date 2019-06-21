@@ -36,7 +36,7 @@ class TeamTranslationLanguage extends AppModel
      *
      * @return bool
      */
-    public function hasTranslationLanguage(int $teamId): bool
+    public function canTranslate(int $teamId): bool
     {
         $option = [
             'conditions' => [
@@ -61,5 +61,25 @@ class TeamTranslationLanguage extends AppModel
         ];
 
         return Hash::extract($this->useType()->find('all', $option), '{n}.{*}.team_id') ?: [];
+    }
+
+    /**
+     * Whether given translation language is supported in the team
+     *
+     * @param int    $teamId
+     * @param string $languageCode
+     *
+     * @return bool
+     */
+    public function supportTranslationLanguage(int $teamId, string $languageCode): bool
+    {
+        $option = [
+            'conditions' => [
+                'team_id'  => $teamId,
+                'language' => $languageCode
+            ]
+        ];
+
+        return $this->find('count', $option) > 0;
     }
 }

@@ -7,6 +7,8 @@ App::import('Service', 'CampaignService');
 App::import('Service', 'ChargeHistoryService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
@@ -1106,6 +1108,8 @@ class PaymentService extends AppService
                 $metaData
             );
 
+            $this->updatePaidTeamTranslationLimit($teamId);
+
             // Delete cache
             $Team->resetCurrentTeam();
 
@@ -1272,6 +1276,8 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
             }
+
+            $this->updatePaidTeamTranslationLimit($teamId);
 
             // Delete cache
             $Team->resetCurrentTeam();
@@ -2402,5 +2408,22 @@ class PaymentService extends AppService
         );
 
         return GoalousDateTime::createFromFormat('Y-m-d', $paymentBaseDate);
+    }
+
+    /**
+     * Update translation limit in paid team if team has translation feature enabled.
+     *
+     * @param int $teamId
+     */
+    private function updatePaidTeamTranslationLimit(int $teamId)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if ($TeamTranslationLanguage->canTranslate($teamId)) {
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            $TeamTranslationStatus->setLimit($teamId, TRANSLATION_DEFAULT_LIMIT_PAID_TEAM);
+        }
     }
 }

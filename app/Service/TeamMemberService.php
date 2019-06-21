@@ -1,9 +1,12 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'TeamTranslationLanguageService');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Class TeamMemberService
@@ -152,6 +155,82 @@ class TeamMemberService extends AppService
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             throw $exception;
+        }
+    }
+
+    /**
+     * Get user's default translation language in a team
+     *
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return array
+     *              ["en" => "English"]
+     *
+     * @throws Exception
+     */
+    public function getDefaultTranslationLanguage(int $teamId, int $userId): array
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if (!$TeamTranslationLanguage->canTranslate($teamId)) {
+            throw new GlException\GoalousNotFoundException("Team does not have translation languages");
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+
+        if (empty($defaultLanguage) || !$TeamTranslationLanguage->supportTranslationLanguage($teamId, $defaultLanguage)) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+            $teamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($teamId);
+
+            $this->setDefaultTranslationLanguage($teamId, $userId, array_keys($teamDefaultLanguage)[0]);
+
+            return $teamDefaultLanguage;
+        }
+
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+        $languageInfo = $TranslationLanguage->getLanguageByCode($defaultLanguage);
+
+        return [$languageInfo['language'] => __($languageInfo['intl_name'])];
+    }
+
+    /**
+     * Set user's default translation language in a team
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     * @param string $langCode
+     *
+     * @throws Exception
+     */
+    public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode)
+    {
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        try {
+            $this->TransactionManager->begin();
+            $TeamMember->setDefaultTranslationLanguage($teamId, $userId, $langCode);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to set default translation language.", [
+                'message'                      => $e->getMessage(),
+                'trace'                        => $e->getTraceAsString(),
+                'team_id'                      => $teamId,
+                'user_id'                      => $userId,
+                'default_translation_language' => $langCode
+            ]);
+            throw $e;
         }
     }
 }
