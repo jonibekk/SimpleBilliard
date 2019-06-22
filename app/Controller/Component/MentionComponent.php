@@ -92,7 +92,7 @@ class MentionComponent extends Component
     /**
      * replace all mentions to plain text that human can read.
      * e.g.
-     * before: `%%%circle_104:テストサークル%%% %%%user_1:123太郎%%　いいね！`
+     * before: `%%%circle_104:テストサークル%%% %%%user_1:山田 太郎%%%　いいね！`
      * after: `いいね！`
      *
      * @param $text     string the content should be replaced
@@ -258,6 +258,17 @@ class MentionComponent extends Component
             /* @var TeamMember $TeamMember */
             $TeamMember = ClassRegistry::init('TeamMember');
             $userIds = $TeamMember->filterActiveMembers($userIds, $teamId);
+        }
+        if (!empty($circleIds)) {
+            /* @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+            $circles = $Circle->find('all', [
+                'fields' => 'id',
+                'conditions' => [
+                    'id' => $circleIds
+                ]
+            ]);
+            $circleIds = Hash::extract($circles, '{n}.Circle.id');
         }
         return [
             'circle' => $circleIds,

@@ -14,6 +14,7 @@ App::import('Service', 'PushService');
  * @property SessionComponent $Session
  * @property AuthComponent    $Auth
  * @property GlEmailComponent $GlEmail
+ * @property MentionComponent $Mention
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
  * @property Device           $Device
