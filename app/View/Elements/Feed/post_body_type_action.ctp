@@ -8,15 +8,9 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
-            <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
-                <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
-                <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
-                   data-id="<?= Hash::get($post, 'Post.id') ?>"
-                   data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>"></i>
-            <?php endif; ?>
             <div class="dropdown inline-block">
                 <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
-                    <i class="fa fa-chevron-down feed-arrow"></i>
+                    <i class="fa fa-ellipsis-v feed-arrow"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
@@ -198,13 +192,13 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                like_type="post">
                 <i class="fa-thumbs-up fa"></i>
                 <?= __("Like!") ?></a>
-            <?php if (!$without_add_comment): ?>
-                <a href="#" class="feeds-post-comment-btn trigger-click"
-                   target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                >
-                    <i class="fa-comments-o fa"></i>
-                    <?= __("Comments") ?>
-                </a>
+            <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
+            <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
+            <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
+            data-id="<?= Hash::get($post, 'Post.id') ?>"
+            data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>">
+                <span><?= __("Save<!-- 0 -->") ?></span>
+            </i>
             <?php endif; ?>
         </div>
         <div class="feeds-post-btns-wrap-right">

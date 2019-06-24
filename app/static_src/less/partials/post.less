@@ -6,7 +6,7 @@
 .post-saveItem {
   &:extend(.fa-module);
   margin-right: 12px;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1em;
   cursor: pointer;
   &.mod-on {
@@ -20,6 +20,11 @@
     &:before {
       content: "\f097"; // fa-bookmark-o
     }
+  }
+  > span {
+    font-size: 12px;
+    font-weight: bold;
+    -webkit-font-smoothing: initial;
   }
 }
 

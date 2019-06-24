@@ -3216,6 +3216,9 @@ msgstr "編集をやめる"
 msgid "Edit comment"
 msgstr "コメントを編集"
 
+msgid "Save<!-- 0 -->"
+msgstr "保存"
+
 msgid "Save"
 msgstr "保存する"
 
