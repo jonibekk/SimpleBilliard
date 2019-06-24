@@ -9,6 +9,7 @@ App::import('Service', 'TeamTranslationStatusService');
 App::import('Service', 'PaymentService');
 
 use Goalous\Enum\Language as LanguageEnum;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 class TeamTranslationStatusServiceTest extends GoalousTestCase
 {
@@ -302,4 +303,33 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $this->assertEquals('2019-06-13', $log['end_date']);
         $this->assertEquals($rawLog3, $log['translation_log']);
     }
+
+    public function test_incrementUsageCount_success()
+    {
+        $teamId = 1;
+
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TeamTranslationStatusService $TeamTranslationStatusService */
+        $TeamTranslationStatusService = ClassRegistry::init('TeamTranslationStatusService');
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::CIRCLE_POST(), 1001);
+        $this->assertEquals(1001, $TeamTranslationStatus->getUsageStatus($teamId)->getCirclePostUsageCount());
+        $this->assertEquals(1001, $TeamTranslationStatus->getTotalUsageCount($teamId));
+
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::ACTION_POST(), 2002);
+        $this->assertEquals(2002, $TeamTranslationStatus->getUsageStatus($teamId)->getActionPostUsageCount());
+        $this->assertEquals(3003, $TeamTranslationStatus->getTotalUsageCount($teamId));
+
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), 3003);
+        $this->assertEquals(3003, $TeamTranslationStatus->getUsageStatus($teamId)->getCirclePostCommentUsageCount());
+        $this->assertEquals(6006, $TeamTranslationStatus->getTotalUsageCount($teamId));
+
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::ACTION_POST_COMMENT(), 4004);
+        $this->assertEquals(4004, $TeamTranslationStatus->getUsageStatus($teamId)->getActionPostCommentUsageCount());
+        $this->assertEquals(10010, $TeamTranslationStatus->getTotalUsageCount($teamId));
+    }
+
 }

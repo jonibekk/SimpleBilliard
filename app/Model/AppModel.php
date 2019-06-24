@@ -905,9 +905,9 @@ class AppModel extends Model
      * @param string[] $columns        Specify which columns to query from database
      * @param bool     $excludeDeleted Check del_flg
      *
-     * @return BaseEntity
+     * @return BaseEntity | null
      */
-    public final function getEntity(int $id, array $columns = [], bool $excludeDeleted = true): BaseEntity
+    public final function getEntity(int $id, array $columns = [], bool $excludeDeleted = true)
     {
         $conditions = [
             'conditions' => [
@@ -923,6 +923,8 @@ class AppModel extends Model
 
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
+
+        if (empty($return)) return null;
 
         return $return;
     }

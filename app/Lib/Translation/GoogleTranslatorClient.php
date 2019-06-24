@@ -1,33 +1,40 @@
 <?php
-App::import('Lib/Translation', 'TranslatorClientInterface');
+App::import('Lib/Translation', 'BaseTranslatorClient');
+App::import('Lib/Translation', 'TranslationResult');
 
 use Google\Cloud\Translate\TranslateClient;
 use Goalous\Enum\Language as LangEnum;
 
-class GoogleTranslatorClient implements TranslatorClientInterface
+class GoogleTranslatorClient extends BaseTranslatorClient
 {
-    public function translate(string $body, LangEnum $targetLanguage): TranslationResult
-    {
-        return $this->translateMany([$body], $targetLanguage)[0];
-    }
+    const MAX_CHAR_LENGTH = 2000;
+    const MAX_BATCH_ARRAY_LENGTH = 128;
 
-    public function translateBatch(array $body, LangEnum $targetLanguage): array
+    protected function requestTranslation(array $segmentedString, string $targetLanguage): array
     {
+        if (!LangEnum::isValid($targetLanguage)) {
+            throw new InvalidArgumentException('Invalid language code');
+        }
+
+        if (count($segmentedString) > static::MAX_BATCH_ARRAY_LENGTH) {
+            throw new InvalidArgumentException('Array is too long');
+        }
+
         $translate = new TranslateClient([
             'key' => GCP_API_KEY
         ]);
 
-        $translationResults = $translate->translateBatch($body, [
-            'target' => $targetLanguage->getValue()
+        $translationResults = $translate->translateBatch($segmentedString, [
+            'target' => $targetLanguage
         ]);
 
-        $result = [];
+        $returnArray = [];
 
         foreach ($translationResults as $translationResult) {
-            $result[] = new TranslationResult($translationResult['source'], $translationResult['text']);
+            $returnArray[] = new TranslationResult($translationResult['source'], $translationResult['text'], $targetLanguage);
         }
 
-        return $result;
+        return $returnArray;
     }
 
 }

@@ -12,18 +12,27 @@ class TranslationResult
     private $sourceLanguage;
 
     /** @var string */
+    private $targetLanguage;
+
+    /** @var string */
     private $translation;
+
+    /** @var int */
+    private $translationCharLength;
 
     /**
      * TranslationResult constructor.
      *
      * @param string $sourceLanguage
      * @param string $translation
+     * @param string $targetLanguage
      */
-    public function __construct(string $sourceLanguage, string $translation)
+    public function __construct(string $sourceLanguage, string $translation, string $targetLanguage)
     {
         $this->sourceLanguage = $sourceLanguage;
         $this->translation = $translation;
+        $this->translationCharLength = mb_strlen($this->translation, 'UTF-8');
+        $this->targetLanguage = $targetLanguage;
     }
 
     /**
@@ -41,4 +50,34 @@ class TranslationResult
     {
         return $this->translation;
     }
+
+    /**
+     * @return int
+     */
+    public function getTranslationCharLength(): int
+    {
+        return $this->translationCharLength;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'source_language' => $this->sourceLanguage,
+            'language'        => $this->targetLanguage,
+            'translation'     => $this->translation
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetLanguage(): string
+    {
+        return $this->targetLanguage;
+    }
+
+
 }
