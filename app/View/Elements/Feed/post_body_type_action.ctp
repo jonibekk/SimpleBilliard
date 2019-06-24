@@ -16,7 +16,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
             <?php endif; ?>
             <div class="dropdown inline-block">
                 <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
-                    <i class="fa fa-chevron-down feed-arrow"></i>
+                    <i class="fa fa-ellipsis-v feed-arrow"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
