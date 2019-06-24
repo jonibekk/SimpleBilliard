@@ -51,7 +51,6 @@ $(document).ready(function () {
     });
 
   $(document).on("click", ".click-show", evShow);
-  $(document).on("click", ".trigger-click", evTriggerClick);
   //noinspection SpellCheckingInspection
   $(document).on("keyup", ".blank-disable-and-undisable", evBlankDisableAndUndisable);
   //noinspection SpellCheckingInspection
@@ -574,16 +573,6 @@ function evBlankDisable() {
   }
 }
 
-function evTriggerClick() {
-  attrUndefinedCheck(this, 'target-id');
-  var target_id = $(this).attr("target-id");
-  //noinspection JSJQueryEfficiency
-  $("#" + target_id).trigger('click');
-  //noinspection JSJQueryEfficiency
-  $("#" + target_id).focus();
-
-  return false;
-}
 /**
  * クリックしたら、
  * 指定した要素を表示する。(一度だけ)
