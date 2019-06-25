@@ -843,15 +843,15 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_FEED_MENTIONED_IN_COMMENT:
             case self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION:
-                if ($is_plain_mode) {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
-                        $user_text);
+                $options['to_user_id'] = !empty($options['to_user_id']) ? $options['to_user_id']: [];
+                $options['mention_targets'] = !empty($options['mention_targets']['user']) ? $options['mention_targets'] : ['user' => [], 'circle' => []];
+                if (in_array($options['to_user_id'], $options['mention_targets']['user'])) {
+                    $word = '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ';
                 } else {
-                    $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ',
-                        h($user_text));
+                    $word = '<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. ';
                 }
+
+                $title = $is_plain_mode ? __($word, $user_text) : __($word, h($user_text));
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
                 if ($is_plain_mode) {
