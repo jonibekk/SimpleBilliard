@@ -1,4 +1,7 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
 App::import('Service', 'GoalService');
@@ -922,6 +925,14 @@ class GoalsController extends AppController
 //                $kr = $KeyResultService->get($krId);
 //                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
+
+            $post = $this->Goal->Post->getByActionResultId($arId);
+
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $post['Post']['id']);
+
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
             $this->Goal->ActionResult->rollback();

@@ -18,6 +18,7 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('Translation', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -29,7 +30,7 @@ use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Goalous\Exception as GlException;
-
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 /**
  * Class PostService
  */
@@ -828,6 +829,11 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
@@ -920,6 +926,11 @@ class PostService extends AppService
             }
 
             //TODO GL-7259
+
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {

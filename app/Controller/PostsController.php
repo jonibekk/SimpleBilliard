@@ -5,10 +5,12 @@ App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
 App::uses('TeamStatus', 'Lib/Status');
 
+App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * Posts Controller
@@ -32,8 +34,8 @@ class PostsController extends AppController
     }
 
     /**
-     * @deprecated
      * @return \Cake\Network\Response|CakeResponse|null
+     * @deprecated
      */
     public function message()
     {
@@ -48,8 +50,8 @@ class PostsController extends AppController
     }
 
     /**
-     * @deprecated
      * @return \Cake\Network\Response|CakeResponse|null
+     * @deprecated
      */
     public function message_list()
     {
@@ -97,8 +99,8 @@ class PostsController extends AppController
     /**
      * add method
      *
-     * @throws RuntimeException
      * @return void
+     * @throws RuntimeException
      */
     public function _addPost()
     {
@@ -278,8 +280,8 @@ class PostsController extends AppController
     /**
      * post_delete method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function post_delete()
     {
@@ -292,8 +294,15 @@ class PostsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
+
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
             AttachedFile::TYPE_MODEL_POST);
+
+        // Delete translations
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $this->Post->id);
+
         $this->Notification->outSuccess(__("Deleted the post."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -303,8 +312,8 @@ class PostsController extends AppController
     /**
      * post_edit method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function post_edit()
     {
@@ -362,8 +371,8 @@ class PostsController extends AppController
     /**
      * comment_delete method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function comment_delete()
     {
@@ -392,8 +401,8 @@ class PostsController extends AppController
      *
      * @param $comment_id
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function comment_edit()
     {
@@ -1204,6 +1213,7 @@ class PostsController extends AppController
     /**
      * TODO:ファイルアップロード用APIをapi/v1に作成した為、リリース後削除
      *
+     * @return CakeResponse
      * @deprecated
      *   ファイルアップロード
      *   JSON レスポンス形式
@@ -1212,7 +1222,6 @@ class PostsController extends AppController
      *   msg: string,   // 処理結果を示すメッセージ
      *   id: string,    // ファイルID
      *   }
-     * @return CakeResponse
      */
     public function ajax_upload_file(): CakeResponse
     {
@@ -1259,10 +1268,10 @@ class PostsController extends AppController
     }
 
     /**
+     * @return CakeResponse
      * @deprecated
      * OGP のデータを取得する
      *
-     * @return CakeResponse
      */
     public function ajax_get_ogp_info()
     {

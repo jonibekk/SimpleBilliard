@@ -1,5 +1,8 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'ActionService');
+App::import('Service', 'CommentService');
+App::import('Service', 'PostService');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
@@ -157,6 +160,38 @@ class TranslationService extends AppService
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Update the detected language
+     *
+     * @param int                    $userId
+     * @param TranslationContentType $contentType
+     * @param int                    $contentId
+     *
+     * @return bool
+     */
+    public function checkUserAccess(int $userId, TranslationContentType $contentType, int $contentId): bool
+    {
+        switch ($contentType->getValue()) {
+            case TranslationContentType::ACTION_POST:
+                /** @var ActionService $ActionService */
+                $ActionService = ClassRegistry::init('ActionService');
+                return $ActionService = $ActionService->checkUserAccess($userId, $contentId);
+            case TranslationContentType::CIRCLE_POST:
+                /** @var PostService $PostService */
+                $PostService = ClassRegistry::init('PostService');
+                return $PostService->checkUserAccessToCirclePost($userId, $contentId);
+                break;
+            case TranslationContentType::CIRCLE_POST_COMMENT:
+            case TranslationContentType::ACTION_POST_COMMENT:
+                /** @var CommentService $CommentService */
+                $CommentService = ClassRegistry::init('CommentService');
+                return $CommentService->checkUserAccessToComment($userId, $contentId);
+                break;
+        }
+
+        return false;
     }
 
     /**

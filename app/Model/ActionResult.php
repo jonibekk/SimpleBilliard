@@ -1,5 +1,9 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::uses('AppModel', 'Model');
+App::uses('Translation', 'Model');
 
 /**
  * ActionResult Model
@@ -419,6 +423,12 @@ class ActionResult extends AppModel
                 return false;
             }
         }
+
+        // Delete translations
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $data['Post']['id']);
+
         $this->commit();
 
         // 添付ファイルが存在する場合は一時データを削除
