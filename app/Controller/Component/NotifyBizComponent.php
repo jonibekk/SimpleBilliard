@@ -1714,7 +1714,7 @@ class NotifyBizComponent extends Component
                     $from_user_name,
                     1,
                     $this->notify_option['item_name'],
-                    array(
+                    array_merge(
                         $this->notify_option['options'],
                         ['to_user_id' => $to_user_id]
                     )
