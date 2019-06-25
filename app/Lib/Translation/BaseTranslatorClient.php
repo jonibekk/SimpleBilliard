@@ -3,7 +3,6 @@ App::import('Lib/Translation', 'TranslatorClientInterface');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Util', 'StringUtil');
 
-use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
 
 abstract class BaseTranslatorClient implements TranslatorClientInterface
 {
@@ -31,7 +30,7 @@ abstract class BaseTranslatorClient implements TranslatorClientInterface
     public function translate(string $body, string $targetLanguage): TranslationResult
     {
         // Check for string length
-        if (mb_strlen($body, TranslationEncoding::DEFAULT) > static::MAX_SEGMENT_CHAR_LENGTH) {
+        if (StringUtil::mbStrLength($body) > static::MAX_SEGMENT_CHAR_LENGTH) {
             // Segment long string to conform with translator API limitation
             $segmentedBody = StringUtil::splitStringToSegments($body, static::MAX_SEGMENT_CHAR_LENGTH);
         } else {

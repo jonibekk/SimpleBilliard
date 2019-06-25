@@ -4,6 +4,18 @@
 class StringUtil
 {
     /**
+     * Get string length using UTF-8 encoding.
+     *
+     * @param string $input
+     *
+     * @return int
+     */
+    public static function mbStrLength(string $input): int
+    {
+        return mb_strlen($input, 'UTF-8');
+    }
+
+    /**
      * Split long string multiple segments, with each segment having maximum of specified char length
      *
      * @param string $input         Base string
@@ -23,7 +35,7 @@ class StringUtil
         $originalLocale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'C.UTF-8');
 
-        if (mb_strlen($input) < $maxCharLength) {
+        if (self::mbStrLength($input) < $maxCharLength) {
             return [$input];
         }
 
@@ -38,7 +50,7 @@ class StringUtil
                 continue;
             }
 
-            if (mb_strlen($segmentedString[$segmentedStringIndex]) + mb_strlen($splitInput[$splitInputIndex]) <= $maxCharLength) {
+            if (self::mbStrLength($segmentedString[$segmentedStringIndex]) + self::mbStrLength($splitInput[$splitInputIndex]) <= $maxCharLength) {
                 $segmentedString[$segmentedStringIndex] .= $delimiter . $splitInput[$splitInputIndex];
                 $splitInputIndex++;
             } else {

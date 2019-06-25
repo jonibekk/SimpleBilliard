@@ -8,7 +8,6 @@ App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Translation', 'GoogleTranslatorClient');
 
 use Goalous\Enum\Language as LanguageEnum;
-use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 use Goalous\Exception as GlException;
@@ -145,7 +144,7 @@ class TranslationService extends AppService
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
             $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
-            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, mb_strlen($sourceBody, TranslationEncoding::DEFAULT));
+            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, StringUtil::mbStrLength($sourceBody));
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
