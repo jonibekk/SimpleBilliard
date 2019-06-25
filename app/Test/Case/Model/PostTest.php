@@ -6,6 +6,7 @@ App::uses('Post', 'Model');
  *
  * @property Post $Post
  */
+use Goalous\Enum\Language as LanguageEnum;
 class PostTest extends GoalousTestCase
 {
 
@@ -1023,6 +1024,23 @@ class PostTest extends GoalousTestCase
         $postType = $Post->getPostType(6);
         $this->assertEquals(7, $postType);
     }
+
+    public function test_updateLanguage_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postId = 1;
+
+        $post = $Post->getById($postId);
+        $this->assertEmpty($post['language']);
+
+        $Post->updateLanguage($postId, LanguageEnum::ES);
+
+        $post = $Post->getById($postId);
+        $this->assertEquals(LanguageEnum::ES, $post['language']);
+    }
+
 
     function _setDefault()
     {

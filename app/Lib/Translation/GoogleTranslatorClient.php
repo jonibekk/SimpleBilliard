@@ -1,33 +1,44 @@
 <?php
-App::import('Lib/Translation', 'TranslatorClientInterface');
+App::import('Lib/Translation', 'BaseTranslatorClient');
+App::import('Lib/Translation', 'TranslationResult');
 
 use Google\Cloud\Translate\TranslateClient;
 use Goalous\Enum\Language as LangEnum;
 
-class GoogleTranslatorClient implements TranslatorClientInterface
+class GoogleTranslatorClient extends BaseTranslatorClient
 {
-    public function translate(string $body, LangEnum $targetLanguage): TranslationResult
-    {
-        return $this->translateMany([$body], $targetLanguage)[0];
-    }
+    /**
+     * Recommended maximum of 2k code points
+     * https://cloud.google.com/translate/quotas
+     */
+    const MAX_SEGMENT_CHAR_LENGTH = 2000;
+    const MAX_BATCH_ARRAY_SIZE = 128;
 
-    public function translateBatch(array $body, LangEnum $targetLanguage): array
+    protected function requestTranslation(array $segmentedString, string $targetLanguage): array
     {
+        if (!LangEnum::isValid($targetLanguage)) {
+            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
+        }
+
+        if (count($segmentedString) > static::MAX_BATCH_ARRAY_SIZE) {
+            throw new InvalidArgumentException("Batch size is too big.");
+        }
+
         $translate = new TranslateClient([
             'key' => GCP_API_KEY
         ]);
 
-        $translationResults = $translate->translateBatch($body, [
-            'target' => $targetLanguage->getValue()
+        $translationResults = $translate->translateBatch($segmentedString, [
+            'target' => $targetLanguage
         ]);
 
-        $result = [];
+        $translationResultArray = [];
 
         foreach ($translationResults as $translationResult) {
-            $result[] = new TranslationResult($translationResult['source'], $translationResult['text']);
+            $translationResultArray[] = new TranslationResult($translationResult['source'], $translationResult['text'], $targetLanguage);
         }
 
-        return $result;
+        return $translationResultArray;
     }
 
 }

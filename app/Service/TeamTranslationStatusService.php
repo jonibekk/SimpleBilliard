@@ -1,4 +1,7 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('PaymentSetting', 'Model');
@@ -171,7 +174,49 @@ class TeamTranslationStatusService extends AppService
 
         $endDate = $PaymentService->getCurrentMonthBaseDate($teamId, $endDateTimeStamp);
 
-        return  $endDate->modify("-1 day");
+        return $endDate->modify("-1 day");
     }
 
+    /**
+     * Increment translation usage count
+     *
+     * @param int                    $teamId
+     * @param TranslationContentType $contentType
+     * @param int                    $count
+     *
+     * @throws Exception
+     */
+    public function incrementUsageCount(int $teamId, TranslationContentType $contentType, int $count)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        try {
+            $this->TransactionManager->begin();
+            switch ($contentType->getValue()) {
+                case TranslationContentType::CIRCLE_POST:
+                    $TeamTranslationStatus->incrementCirclePostCount($teamId, $count);
+                    break;
+                case TranslationContentType::CIRCLE_POST_COMMENT:
+                    $TeamTranslationStatus->incrementCircleCommentCount($teamId, $count);
+                    break;
+                case TranslationContentType::ACTION_POST:
+                    $TeamTranslationStatus->incrementActionPostCount($teamId, $count);
+                    break;
+                case TranslationContentType::ACTION_POST_COMMENT:
+                    $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
+                    break;
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to increment translation usage count.',[
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'team_id' => $teamId,
+                'content_type' => $contentType->getValue()
+            ]);
+            throw $e;
+        }
+    }
 }
