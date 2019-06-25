@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('StringUtil', 'Util');
 
+use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
+
 class StringUtilTest extends GoalousTestCase
 {
     public function test_splitAndMerge_success()
@@ -13,7 +15,7 @@ class StringUtilTest extends GoalousTestCase
         $segmentedString = StringUtil::splitStringToSegments($originalString, $length);
 
         foreach ($segmentedString as $string) {
-            $this->assertTrue(mb_strlen($string, 'UTF-8') <= $length);
+            $this->assertTrue(mb_strlen($string, TranslationEncoding::DEFAULT) <= $length);
         }
 
         $mergedString = StringUtil::mergeSegmentsToString($segmentedString);

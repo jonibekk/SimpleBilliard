@@ -13,7 +13,7 @@ App::import('Lib/Translation', 'TranslationResult');
 
 use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
-use Goalous\Enum\Model\Translation\TranslationStatus as TranslationStatus;
+use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 
 class TranslationServiceTest extends GoalousTestCase
 {

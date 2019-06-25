@@ -3,13 +3,25 @@ App::import('Lib/Translation', 'TranslatorClientInterface');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Util', 'StringUtil');
 
+use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
+
 abstract class BaseTranslatorClient implements TranslatorClientInterface
 {
-    const MAX_CHAR_LENGTH = 2000;
-    const MAX_BATCH_ARRAY_LENGTH = 100;
+    /**
+     * Translation APIs have limitation to the maximum length of source string.
+     * This value is used to segment long string
+     */
+    const MAX_SEGMENT_CHAR_LENGTH = 2000;
 
     /**
-     * Translate a single string using external API
+     * Translation APIs have limitation to the maximum size of string array in batch translation.
+     * This value is used to translate large array in chunks
+     */
+    const MAX_BATCH_ARRAY_SIZE = 100;
+
+    /**
+     * Translate a single string using external API.
+     * Source string will be split to segments to conform with limitation with respective translation API.
      *
      * @param string $body
      * @param string $targetLanguage
@@ -19,15 +31,16 @@ abstract class BaseTranslatorClient implements TranslatorClientInterface
     public function translate(string $body, string $targetLanguage): TranslationResult
     {
         // Check for string length
-        if (mb_strlen($body, 'UTF-8') > static::MAX_CHAR_LENGTH) {
-            $segmentedBody = StringUtil::splitStringToSegments($body, static::MAX_CHAR_LENGTH);
+        if (mb_strlen($body, TranslationEncoding::DEFAULT) > static::MAX_SEGMENT_CHAR_LENGTH) {
+            // Segment long string to conform with translator API limitation
+            $segmentedBody = StringUtil::splitStringToSegments($body, static::MAX_SEGMENT_CHAR_LENGTH);
         } else {
             $segmentedBody = [$body];
         }
 
         // Check for array length
-        if (count($segmentedBody) > static::MAX_BATCH_ARRAY_LENGTH) {
-            $chunkedBody = array_chunk($segmentedBody, static::MAX_BATCH_ARRAY_LENGTH);
+        if (count($segmentedBody) > static::MAX_BATCH_ARRAY_SIZE) {
+            $chunkedBody = array_chunk($segmentedBody, static::MAX_BATCH_ARRAY_SIZE);
 
             $translatedResult = [];
 

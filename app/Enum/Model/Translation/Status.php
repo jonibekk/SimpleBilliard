@@ -6,14 +6,14 @@ namespace Goalous\Enum\Model\Translation;
 use MyCLabs\Enum\Enum;
 
 /**
- * Class TranslationStatus
+ * Class Status
  *
  * @package Goalous\Enum\Model\Translation
  *
  * @method static static PROCESSING()
  * @method static static DONE()
  */
-class TranslationStatus extends Enum
+class Status extends Enum
 {
     const PROCESSING = 0;
     const DONE = 1;

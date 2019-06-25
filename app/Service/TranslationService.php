@@ -1,13 +1,16 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('Comment', 'Model');
+App::uses('Post', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Translation', 'GoogleTranslatorClient');
 
 use Goalous\Enum\Language as LanguageEnum;
+use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
-use Goalous\Enum\Model\Translation\TranslationStatus as TranslationStatus;
+use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 use Goalous\Exception as GlException;
 
 class TranslationService extends AppService
@@ -28,7 +31,7 @@ class TranslationService extends AppService
     public function getTranslation(TranslationContentType $contentType, int $contentId, string $targetLanguage): TranslationResult
     {
         if (!LanguageEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException('Invalid language code');
+            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
         }
 
         /** @var Translation $Translation */
@@ -106,7 +109,7 @@ class TranslationService extends AppService
     public function createTranslation(TranslationContentType $contentType, int $contentId, string $targetLanguage)
     {
         if (!LanguageEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException('Invalid language code');
+            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
         }
 
         /** @var Translation $Translation */
@@ -130,20 +133,19 @@ class TranslationService extends AppService
 
         $sourceModel = $this->getSourceModel($contentType, $contentId);
         $sourceBody = $sourceModel['body'];
-        $teamId =$sourceModel['team_id'];
+        $teamId = $sourceModel['team_id'];
+
+        /** @var TeamTranslationStatusService $TeamTranslationStatusService */
+        $TeamTranslationStatusService = ClassRegistry::init('TeamTranslationStatusService');
 
         $TranslatorClient = $this->getTranslatorClient();
 
-        $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
-
         try {
-            /** @var TeamTranslationStatusService $TeamTranslationStatusService */
-            $TeamTranslationStatusService = ClassRegistry::init('TeamTranslationStatusService');
-
             $this->TransactionManager->begin();
+            $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
             $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
-            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, mb_strlen($sourceBody, 'UTF-8'));
+            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, mb_strlen($sourceBody, TranslationEncoding::DEFAULT));
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
@@ -173,14 +175,12 @@ class TranslationService extends AppService
         switch ($contentType->getValue()) {
             case TranslationContentType::ACTION_POST:
             case TranslationContentType::CIRCLE_POST:
-                App::uses('Post', 'Model');
                 /** @var Post $Post */
                 $Post = ClassRegistry::init('Post');
                 $originalModel = $Post->getEntity($contentId);
                 break;
             case TranslationContentType::CIRCLE_POST_COMMENT:
             case TranslationContentType::ACTION_POST_COMMENT:
-                App::uses('Comment', 'Model');
                 /** @var Comment $Comment */
                 $Comment = ClassRegistry::init('Comment');
                 $originalModel = $Comment->getEntity($contentId);
@@ -208,14 +208,12 @@ class TranslationService extends AppService
         switch ($contentType->getValue()) {
             case TranslationContentType::ACTION_POST:
             case TranslationContentType::CIRCLE_POST:
-                App::uses('Post', 'Model');
                 /** @var Post $Post */
                 $Post = ClassRegistry::init('Post');
                 $Post->updateLanguage($contentId, $sourceLanguage);
                 break;
             case TranslationContentType::CIRCLE_POST_COMMENT:
             case TranslationContentType::ACTION_POST_COMMENT:
-                App::uses('Comment', 'Model');
                 /** @var Comment $Comment */
                 $Comment = ClassRegistry::init('Comment');
                 $Comment->updateLanguage($contentId, $sourceLanguage);

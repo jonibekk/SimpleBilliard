@@ -7,17 +7,21 @@ use Goalous\Enum\Language as LangEnum;
 
 class GoogleTranslatorClient extends BaseTranslatorClient
 {
-    const MAX_CHAR_LENGTH = 2000;
-    const MAX_BATCH_ARRAY_LENGTH = 128;
+    /**
+     * Recommended maximum of 2k code points
+     * https://cloud.google.com/translate/quotas
+     */
+    const MAX_SEGMENT_CHAR_LENGTH = 2000;
+    const MAX_BATCH_ARRAY_SIZE = 128;
 
     protected function requestTranslation(array $segmentedString, string $targetLanguage): array
     {
         if (!LangEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException('Invalid language code');
+            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
         }
 
-        if (count($segmentedString) > static::MAX_BATCH_ARRAY_LENGTH) {
-            throw new InvalidArgumentException('Array is too long');
+        if (count($segmentedString) > static::MAX_BATCH_ARRAY_SIZE) {
+            throw new InvalidArgumentException("Batch size is too big.");
         }
 
         $translate = new TranslateClient([
@@ -28,13 +32,13 @@ class GoogleTranslatorClient extends BaseTranslatorClient
             'target' => $targetLanguage
         ]);
 
-        $returnArray = [];
+        $translationResultArray = [];
 
         foreach ($translationResults as $translationResult) {
-            $returnArray[] = new TranslationResult($translationResult['source'], $translationResult['text'], $targetLanguage);
+            $translationResultArray[] = new TranslationResult($translationResult['source'], $translationResult['text'], $targetLanguage);
         }
 
-        return $returnArray;
+        return $translationResultArray;
     }
 
 }

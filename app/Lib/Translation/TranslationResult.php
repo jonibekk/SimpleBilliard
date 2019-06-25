@@ -6,6 +6,8 @@
  * Time: 17:51
  */
 
+use Goalous\Enum\Model\Translation\Encoding as TranslationEncoding;
+
 class TranslationResult
 {
     /** @var string */
@@ -31,7 +33,7 @@ class TranslationResult
     {
         $this->sourceLanguage = $sourceLanguage;
         $this->translation = $translation;
-        $this->translationCharLength = mb_strlen($this->translation, 'UTF-8');
+        $this->translationCharLength = mb_strlen($this->translation, TranslationEncoding::DEFAULT);
         $this->targetLanguage = $targetLanguage;
     }
 
