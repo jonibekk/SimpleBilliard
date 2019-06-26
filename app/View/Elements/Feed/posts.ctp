@@ -187,9 +187,9 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
                     </div>
                     <ul class="dropdown-menu" aria-labelledby="download">
-                        <li><a href="#">English</a></li>
-                        <li><a href="#">中文 (簡体)</a></li>
-                        <li><a href="#">中文 (繁体)</a></li>
+                    <?php foreach ($post['Post']['translation_languages'] ?? [] as $translation_languages) { ?>
+                        <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" type="2"><a href="#"><?= $translation_languages['intl_name'] ?> (<?= $translation_languages['local_name'] ?>)</a></li>
+                    <?php } ?>
                     </ul>
                 </div>
                 <?php

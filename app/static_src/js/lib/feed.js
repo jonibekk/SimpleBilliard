@@ -49,6 +49,7 @@ $(function () {
 
     // Translation enable button
     $(document).on("click", ".click-translation", evTranslation);
+    $(document).on("click", ".click-translation-other", evTranslationOtherLanguage);
 
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     $(document).on("click", ".btn-back-notifications", evNotifications);
@@ -93,25 +94,87 @@ $(function () {
     showMore();
 });
 
+function evTranslationOtherLanguage(e) {
+  e.preventDefault();
+  console.log("evTranslationOtherLanguage");
+  attrUndefinedCheck(this, 'model_id');
+  attrUndefinedCheck(this, 'type');
+
+  var $obj = $(this);
+  var model_id = $obj.attr('model_id');
+  var type = $obj.attr('type');
+  console.log(model_id, type);
+}
+
 function evTranslation() {
   attrUndefinedCheck(this, 'model_id');
 
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
+  var translationDropDown = $('#TranslationDropDown_' + model_id);
 
-  var isOn = $obj.hasClass('on');
-  var dd = $('#TranslationDropDown_' + model_id);
-  $obj.toggleClass('on');
-  if (isOn) {
-    if (dd) {
-      dd.hide();
+  // Check if translated once ever
+  var isTranslatedOnce = !!parseInt($obj.attr('translated') || 0);
+  if (isTranslatedOnce) {
+    // Translated once before
+    var isOn = $obj.hasClass('on');
+    $obj.toggleClass('on');
+    swapInnerHtml("#PostTextBody_{id}", "#PostTextBodyMemory_{id}", model_id);
+    if (isOn) {
+      // Turning off translate
+      translationDropDown.hide();
+    } else {
+      // Turning on translate
+      translationDropDown.show();
     }
   } else {
-    if (dd) {
-      dd.show();
-    }
+    // Not translated once yet
+    // TODO: make loading image
+    // Fetch translate text
+    $.get('/api/v1/translations', {
+      type: 1,
+      id: 2,
+      lang: getBrowserLanguage()
+    }).done(function (data) {
+      $obj.attr('translated', '1');
+      var originalText = getOriginalHtml('#PostTextBody_{id}', model_id);
+      setInnerHtmlTo("#PostTextBodyMemory_{id}", model_id, originalText);
+      setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
+      translationDropDown.show();
+      // TODO: end loading image
+      $obj.toggleClass('on');
+    })
   }
+}
 
+function getOriginalHtml(key, id) {
+  var elementBody = $(key.replace('{id}', id));
+  var elementShowMore = elementBody.find(".showmore_content");
+  if (elementShowMore.length > 0) {
+    return elementShowMore.html();
+  }
+  return elementBody.html();
+}
+
+function setInnerHtmlTo(key, id, text) {
+  console.log("saveInnerTextTo", key.replace('{id}', id), text);
+  $(key.replace('{id}', id)).html(text);
+}
+
+function swapInnerHtml(key1, key2, id) {
+  console.log("swapInnerText", key1.replace('{id}', id), key2.replace('{id}', id))
+  var element1 = $(key1.replace('{id}', id));
+  var element2 = $(key2.replace('{id}', id));
+  var tmp = element1.html();
+  element1.html(element2.html());
+  element2.html(tmp);
+}
+
+function getBrowserLanguage() {
+  return (window.navigator.languages && window.navigator.languages[0]) ||
+    window.navigator.language ||
+    window.navigator.userLanguage ||
+    window.navigator.browserLanguage;
 }
 
 /**
