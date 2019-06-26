@@ -46,6 +46,10 @@ $(function () {
             }
         });
     });
+
+    // Translation enable button
+    $(document).on("click", ".click-translation", evTranslation);
+
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     $(document).on("click", ".btn-back-notifications", evNotifications);
 
@@ -88,6 +92,27 @@ $(function () {
     }
     showMore();
 });
+
+function evTranslation() {
+  attrUndefinedCheck(this, 'model_id');
+
+  var $obj = $(this);
+  var model_id = $obj.attr('model_id');
+
+  var isOn = $obj.hasClass('on');
+  var dd = $('#TranslationDropDown_' + model_id);
+  $obj.toggleClass('on');
+  if (isOn) {
+    if (dd) {
+      dd.hide();
+    }
+  } else {
+    if (dd) {
+      dd.show();
+    }
+  }
+
+}
 
 /**
  * Show more posts as user scroll the feed

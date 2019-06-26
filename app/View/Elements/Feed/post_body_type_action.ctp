@@ -8,6 +8,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
+            <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>">g_translate</i>
             <div class="dropdown inline-block">
                 <a href="#" class="font_lightGray-gray font_14px" data-toggle="dropdown" id="download">
                     <i class="fa fa-ellipsis-v feed-arrow"></i>
@@ -162,6 +163,16 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <?php //チェックアイコンはすぐに戻す可能性があるのでコメントアウト ?>
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
         <?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
+    </div>
+    <div class="dropdown inline-block" id="TranslationDropDown_<?= $post['Post']['id'] ?>" style="display: none;">
+        <div href="#" class="drop-down-translation" data-toggle="dropdown">
+            <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
+        </div>
+        <ul class="dropdown-menu" aria-labelledby="download">
+            <li><a href="#">English</a></li>
+            <li><a href="#">中文 (簡体)</a></li>
+            <li><a href="#">中文 (繁体)</a></li>
+        </ul>
     </div>
     <?php if ($post['Post']['site_info']): ?>
         <?php $site_info = json_decode($post['Post']['site_info'], true) ?>

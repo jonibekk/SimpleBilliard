@@ -118,6 +118,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
+                        <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>">g_translate</i>
                         <div class="dropdown inline-block">
                             <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download">
                                 <i class="fa fa-ellipsis-v feed-arrow"></i>
@@ -181,6 +182,16 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_content', compact('post')) ?>
+                <div class="dropdown inline-block" id="TranslationDropDown_<?= $post['Post']['id'] ?>" style="display: none;">
+                    <div href="#" class="drop-down-translation" data-toggle="dropdown">
+                        <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                        <li><a href="#">English</a></li>
+                        <li><a href="#">中文 (簡体)</a></li>
+                        <li><a href="#">中文 (繁体)</a></li>
+                    </ul>
+                </div>
                 <?php
                 /**
                  * 画像のurlを集める
