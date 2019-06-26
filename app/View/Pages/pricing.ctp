@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_pricing = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Pricing is here.")),
+        "content"  => __("Pay only for what you need. Start with many. Try it free for 15 days and add more at any time."),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_pricing = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Pricing is here.")),
+        "content"  => __("Pay only for what you need. Start with many. Try it free for 15 days and add more at any time."),
     ],
     [
         "property" => "og:url",
@@ -51,7 +51,7 @@ $meta_pricing = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",

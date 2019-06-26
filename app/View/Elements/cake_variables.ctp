@@ -728,7 +728,7 @@ App::uses('AttachedFile', 'Model');
             "Item removed": "<?= __("Item removed") ?>",
             // Search
             "Information matching the search could not be found": "<?= __("Information matching the search could not be found") ?>",
-            "Search post and comment": "<?= __("Search post and comment") ?>",
+            "Search (Complete match with ”…”)": "<?= __("Search (Complete match with ”…”)") ?>",
             "Comments": "<?= __("Comments") ?>",
             "Download CSV": "<?= __("Download CSV") ?>",
             "Downloading CSV...": "<?= __("Downloading CSV...") ?>",

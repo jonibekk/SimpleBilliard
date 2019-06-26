@@ -90,6 +90,20 @@ class MentionComponent extends Component
     }
 
     /**
+     * replace all mentions to plain text that human can read.
+     * e.g.
+     * before: `%%%circle_104:テストサークル%%% %%%user_1:山田 太郎%%%　いいね！`
+     * after: `いいね！`
+     *
+     * @param $text     string the content should be replaced
+     * @return string
+     */
+    static public function replaceMentionToSimpleReadable(string $text): string
+    {
+        return preg_replace("/" . self::$PREFIX . "(user|circle)_(\d+):(.*?)" . self::$SUFFIX . "/", '', $text);
+    }
+
+    /**
      * a shortcut method to get belongings
      *
      * @param $body   string the content which can contain mentions
@@ -214,6 +228,52 @@ class MentionComponent extends Component
         }
         $result = array_unique($result);
         return $result;
+    }
+
+    /**
+     * get mention target ids each type (user/circle)
+     *
+     * @param $body              string content of Post/Action/Comment
+     * @param $teamId            int the team ID to identify the circle uniquely
+     * @return array
+     */
+    public function getTargetIdsEachType(
+        string $body = null,
+        int $teamId
+    ): array {
+        $mentions = self::extractAllIdFromMention($body);
+
+        $userIds = [];
+        $circleIds = [];
+        foreach ($mentions as $key => $mention) {
+            if ($mention['isUser']) {
+                $userIds[] = $mention['id'];
+            } else {
+                if ($mention['isCircle']) {
+                    $circleIds[] = $mention['id'];
+                }
+            }
+        }
+        if (!empty($userIds)) {
+            /* @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+            $userIds = $TeamMember->filterActiveMembers($userIds, $teamId);
+        }
+        if (!empty($circleIds)) {
+            /* @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+            $circles = $Circle->find('all', [
+                'fields' => 'id',
+                'conditions' => [
+                    'id' => $circleIds
+                ]
+            ]);
+            $circleIds = Hash::extract($circles, '{n}.Circle.id');
+        }
+        return [
+            'circle' => $circleIds,
+            'user' => $userIds
+        ];
     }
 
     static private function getPostWithShared(int $postId): array

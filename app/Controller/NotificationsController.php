@@ -135,6 +135,8 @@ class NotificationsController extends AppController
     }
 
     /**
+     * Message Notification (is not Bell Notification)
+     * ※ This method might not be used anywhere
      * @return array
      */
     public function ajax_get_latest_message_notify_items()
