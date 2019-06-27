@@ -164,14 +164,15 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         <!--        <i class="fa fa-check-circle disp_i"></i>&nbsp;-->
         <?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     </div>
+    <div id="PostTextBodyMemory_<?= $post['Post']['id'] ?>" style="display: none;"></div>
     <div class="dropdown inline-block" id="TranslationDropDown_<?= $post['Post']['id'] ?>" style="display: none;">
         <div href="#" class="drop-down-translation" data-toggle="dropdown">
             <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
         </div>
         <ul class="dropdown-menu" aria-labelledby="download">
-            <li><a href="#">English</a></li>
-            <li><a href="#">中文 (簡体)</a></li>
-            <li><a href="#">中文 (繁体)</a></li>
+            <?php foreach ($post['Post']['translation_languages'] ?? [] as $tl) { ?>
+            <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
+            <?php } ?>
         </ul>
     </div>
     <?php if ($post['Post']['site_info']): ?>

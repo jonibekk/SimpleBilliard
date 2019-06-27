@@ -3129,6 +3129,9 @@ msgstr "■お問い合わせ"
 msgid "Company"
 msgstr "■運営会社"
 
+msgid "Change language"
+msgstr "言語の変更"
+
 msgid "Login Goalous"
 msgstr "◆Goalousログイン"
 

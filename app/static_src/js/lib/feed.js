@@ -96,14 +96,21 @@ $(function () {
 
 function evTranslationOtherLanguage(e) {
   e.preventDefault();
-  console.log("evTranslationOtherLanguage");
   attrUndefinedCheck(this, 'model_id');
   attrUndefinedCheck(this, 'type');
 
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
   var type = $obj.attr('type');
-  console.log(model_id, type);
+  var language = $obj.attr('language');
+
+  $.get('/api/v1/translations', {
+    type: type,
+    id: model_id,
+    lang: language
+  }).done(function (data) {
+    setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
+  })
 }
 
 function evTranslation() {
@@ -129,7 +136,9 @@ function evTranslation() {
     }
   } else {
     // Not translated once yet
-    // TODO: make loading image
+    var $loader = $('<i class="fa fa-refresh fa-spin icon-translating"></i>');
+    $obj.hide();
+    $obj.after($loader);
     // Fetch translate text
     $.get('/api/v1/translations', {
       type: 1,
@@ -141,7 +150,10 @@ function evTranslation() {
       setInnerHtmlTo("#PostTextBodyMemory_{id}", model_id, originalText);
       setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
       translationDropDown.show();
-      // TODO: end loading image
+
+      $loader.remove();
+      $obj.show();
+
       $obj.toggleClass('on');
     })
   }
@@ -157,12 +169,10 @@ function getOriginalHtml(key, id) {
 }
 
 function setInnerHtmlTo(key, id, text) {
-  console.log("saveInnerTextTo", key.replace('{id}', id), text);
   $(key.replace('{id}', id)).html(text);
 }
 
 function swapInnerHtml(key1, key2, id) {
-  console.log("swapInnerText", key1.replace('{id}', id), key2.replace('{id}', id))
   var element1 = $(key1.replace('{id}', id));
   var element2 = $(key2.replace('{id}', id));
   var tmp = element1.html();
