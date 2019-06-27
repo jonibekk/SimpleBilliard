@@ -848,7 +848,7 @@ class NotifySetting extends AppModel
                 if (in_array($options['to_user_id'], $options['mention_targets']['user'])) {
                     $word = '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ';
                 } else {
-                    $word = '<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. ';
+                    $word = '<span class="notify-card-head-target">%1$s</span> mentioned the circle includes you in a comment. ';
                 }
 
                 $title = $is_plain_mode ? __($word, $user_text) : __($word, h($user_text));
