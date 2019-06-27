@@ -30,11 +30,11 @@ class NotificationPagingService extends BasePagingService
             return $notifications;
         }
 
-        $notifications = $this->processResponse($notifications);
+        $notifications = $this->processResponse($notifications, $pagingRequest->getCurrentUserId());
         return $notifications;
     }
 
-    private function processResponse(array $notifications)
+    private function processResponse(array $notifications, int $loginUserId)
     {
         foreach($notifications as &$noti) {
             $noti['type'] = (int)$noti['type'];
@@ -72,7 +72,10 @@ class NotificationPagingService extends BasePagingService
                 $userName, 1,
                 $noti['body'],
                 array_merge($noti['options'],
-                    ['from_user_id' => $userId]));
+                    [
+                        'from_user_id' => $userId,
+                        'to_user_id' => $loginUserId
+                    ]));
             $noti['html_title'] = $title;
         }
 

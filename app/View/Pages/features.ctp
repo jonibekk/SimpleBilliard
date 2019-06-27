@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_features = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
+        "content"  => __("Goalous has many sophisticated features for teams around the world."),
     ],
     [
         "name"    => "keywords",
@@ -43,7 +43,7 @@ $meta_features = [
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
+        "content"  => __("Goalous has many sophisticated features for teams around the world."),
     ],
     [
         "property" => "og:url",
@@ -51,7 +51,7 @@ $meta_features = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",

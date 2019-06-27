@@ -30,7 +30,7 @@ if (!isset($top_lang)) {
 $meta_features = [
     [
         "name"    => "description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
+        "content"  => __("Goalous changes the communication of many organizations and creates a team that runs for Key Results."),
     ],
     [
         "name"    => "keywords",
@@ -42,11 +42,11 @@ $meta_features = [
     ],
     [
         "property" => "og:title",
-        "content"  => __('Features | Goalous'),
+        "content"  => __('Case Studies | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content"  => __('Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. %s',__("Description of the function is here.")),
+        "content"  => __("Goalous changes the communication of many organizations and creates a team that runs for Key Results."),
     ],
     [
         "property" => "og:url",
@@ -54,7 +54,7 @@ $meta_features = [
     ],
     [
         "property" => "og:image",
-        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
     ],
     [
         "property" => "og:site_name",
@@ -78,7 +78,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_features[$i]);
 }
 ?>
-<title><?= __('Casestudy | Goalous') ?></title>
+<title><?= __('Case Studies | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/casestudy') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/casestudy') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/casestudy') ?>"/>
