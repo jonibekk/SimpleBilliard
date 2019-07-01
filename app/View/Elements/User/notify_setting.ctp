@@ -55,7 +55,7 @@
                     <i class="fa fa-envelope-o"></i> <?= __('Email') ?>
                 </label>
                 <?=
-                $this->Form->input("NotifySetting.email", [
+                $this->Form->input("NotifySetting.email_status", [
                     'id'        => 'NotifySettingEmail',
                     'label'     => false,
                     'div'       => false,
@@ -74,7 +74,7 @@
                     <i class="fa fa-mobile"></i> <?= __('Mobile App') ?>
                 </label>
                 <?=
-                $this->Form->input("NotifySetting.mobile", [
+                $this->Form->input("NotifySetting.mobile_status", [
                     'id'        => 'NotifySettingMobile',
                     'label'     => false,
                     'div'       => false,
