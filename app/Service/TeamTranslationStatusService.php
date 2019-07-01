@@ -219,4 +219,23 @@ class TeamTranslationStatusService extends AppService
             throw $e;
         }
     }
+
+    public function sendMailIfShortageTranslateLimit(int $teamId, int $latestCountIncreased)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+
+        if ($teamTranslationStatus->isLimitReached()) {
+            GoalousLog::info('$teamTranslationStatus->isLimitReached()');
+            // TODO: Send mail
+            // TODO: Notification
+        }
+
+        if ($teamTranslationStatus->isUsageBecomeHighThanPercent(0.9, $latestCountIncreased)) {
+            GoalousLog::info('$teamTranslationStatus->isUsageBecomeHighThanPercent(0.9)');
+            // TODO: Send mail
+            // TODO: Notification
+        }
+    }
 }

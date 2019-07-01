@@ -3,6 +3,8 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
+App::import('Service', 'TeamTranslationLanguageService');
+App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
 
 App::uses('Translation', 'Model');
@@ -275,6 +277,28 @@ class PostsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Posted."));
+
+        // Make translation
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        $teamId = TeamStatus::getCurrentTeam()->getTeamId();
+        if ($TeamTranslationLanguage->canTranslate($teamId)) {
+            $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
+
+            try {
+                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $this->Post->getLastInsertID(), $defaultLanguage);
+            } catch (\Exception $e) {
+                GoalousLog::error('Failed create translation on new post', [
+                    'message'      => $e->getMessage(),
+                    'posts.id'     => $this->Post->getLastInsertID(),
+                ]);
+            }
+        }
+
     }
 
     /**
