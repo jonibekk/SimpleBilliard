@@ -52,7 +52,7 @@ class NotifySetting extends AppModel
     const TYPE_TRANSCODE_COMPLETED_AND_PUBLISHED = 38;
     const TYPE_TRANSCODE_FAILED = 39;
     const TYPE_EVALUATOR_SET_TO_EVALUATEE = 40;
-    const TYPE_EVALUATOR_SET_TO_COACH = 41;  
+    const TYPE_EVALUATOR_SET_TO_COACH = 41;
     const TYPE_FEED_COMMENTED_ON_GOAL = 42;
     const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
     const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
@@ -109,14 +109,14 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in',
             'icon_class'      => 'fa-circle-o',
-            'groups'          => ['all']
+            'groups'          => ['all', 'primary']
         ],
         self::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION       => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in',
             'icon_class'      => 'fa-key',
-            'groups'          => ['all']
+            'groups'          => ['all', 'primary']
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
             'mail_template'   => "notify_basic",
