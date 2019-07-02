@@ -272,6 +272,12 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
                 $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $to_user_list, $postId);
                 break;
+            case NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED:
+                $this->_setTranslationLimitReached($team_id, $to_user_list);
+                break;
+            case NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING:
+                $this->_setTranslationLimitClosing($team_id, $to_user_list);
+                break;
             default:
                 break;
         }
@@ -1095,6 +1101,42 @@ class NotifyBizComponent extends Component
             'commenter_user_id'  => $commenterUserId,
             'post_owner_user_id' => $Post->getById($postId)['user_id']
         ];
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+    }
+
+    private function _setTranslationLimitReached(int $teamId, array $toUserList) {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED);
+
+        $this->notify_option['from_user_id'] = null;
+        $this->skipCheckFromUserId = true;
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED;
+        $this->notify_option['url_data'] = [
+            'controller' => 'teams',
+            'action'     => 'settings',
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
+        $this->NotifySetting->current_team_id = $teamId;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+    }
+
+    private function _setTranslationLimitClosing(int $teamId, array $toUserList) {
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING);
+
+        $this->notify_option['from_user_id'] = null;
+        $this->skipCheckFromUserId = true;
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING;
+        $this->notify_option['url_data'] = [
+            'controller' => 'teams',
+            'action'     => 'settings',
+        ];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['force_notify'] = true;
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
     }

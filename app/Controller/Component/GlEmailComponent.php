@@ -365,6 +365,30 @@ class GlEmailComponent extends Component
         $this->execSendMailById($this->SendMail->id);
     }
 
+    public function sendTranslateLimitReached(array $toUserIds)
+    {
+        $templateValues = [
+
+        ];
+        $this->SendMail->saveMailData(
+            $toUserIds,
+            Sendmail::TYPE_TMPL_TRANSLATION_LIMIT_REACHED,
+            $templateValues);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
+    public function sendTranslateLimitClosing(array $toUserIds)
+    {
+        $templateValues = [
+
+        ];
+        $this->SendMail->saveMailData(
+            $toUserIds,
+            Sendmail::TYPE_TMPL_TRANSLATION_LIMIT_REACHED,
+            $templateValues);
+        $this->execSendMailById($this->SendMail->id);
+    }
+
     /**
      * メールにてセットアップガイドメールを送信
      *

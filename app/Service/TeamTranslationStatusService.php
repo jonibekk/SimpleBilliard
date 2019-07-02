@@ -191,51 +191,19 @@ class TeamTranslationStatusService extends AppService
         /** @var TeamTranslationStatus $TeamTranslationStatus */
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
-        try {
-            $this->TransactionManager->begin();
-            switch ($contentType->getValue()) {
-                case TranslationContentType::CIRCLE_POST:
-                    $TeamTranslationStatus->incrementCirclePostCount($teamId, $count);
-                    break;
-                case TranslationContentType::CIRCLE_POST_COMMENT:
-                    $TeamTranslationStatus->incrementCircleCommentCount($teamId, $count);
-                    break;
-                case TranslationContentType::ACTION_POST:
-                    $TeamTranslationStatus->incrementActionPostCount($teamId, $count);
-                    break;
-                case TranslationContentType::ACTION_POST_COMMENT:
-                    $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
-                    break;
-            }
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            GoalousLog::error('Failed to increment translation usage count.',[
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'team_id' => $teamId,
-                'content_type' => $contentType->getValue()
-            ]);
-            throw $e;
-        }
-    }
-
-    public function sendMailIfShortageTranslateLimit(int $teamId, int $latestCountIncreased)
-    {
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
-
-        if ($teamTranslationStatus->isLimitReached()) {
-            GoalousLog::info('$teamTranslationStatus->isLimitReached()');
-            // TODO: Send mail
-            // TODO: Notification
-        }
-
-        if ($teamTranslationStatus->isUsageBecomeHighThanPercent(0.9, $latestCountIncreased)) {
-            GoalousLog::info('$teamTranslationStatus->isUsageBecomeHighThanPercent(0.9)');
-            // TODO: Send mail
-            // TODO: Notification
+        switch ($contentType->getValue()) {
+            case TranslationContentType::CIRCLE_POST:
+                $TeamTranslationStatus->incrementCirclePostCount($teamId, $count);
+                break;
+            case TranslationContentType::CIRCLE_POST_COMMENT:
+                $TeamTranslationStatus->incrementCircleCommentCount($teamId, $count);
+                break;
+            case TranslationContentType::ACTION_POST:
+                $TeamTranslationStatus->incrementActionPostCount($teamId, $count);
+                break;
+            case TranslationContentType::ACTION_POST_COMMENT:
+                $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
+                break;
         }
     }
 }

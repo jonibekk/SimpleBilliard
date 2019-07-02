@@ -143,6 +143,10 @@ class TranslationService extends AppService
 
         $TranslatorClient = $this->getTranslatorClient();
 
+        $resultCreateTranslation = [
+            'result' => false,
+            'length' => 0.
+        ];
         try {
             $this->TransactionManager->begin();
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
@@ -150,7 +154,8 @@ class TranslationService extends AppService
             $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
             $translationLength = StringUtil::mbStrLength($sourceBody);
             $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, $translationLength);
-            $commitSucceed = $this->TransactionManager->commit();
+            $resultCreateTranslation['result'] = $this->TransactionManager->commit();
+            $resultCreateTranslation['length'] = $translationLength;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error('Failed to insert translation.', [
@@ -162,11 +167,7 @@ class TranslationService extends AppService
             ]);
             throw $e;
         }
-        // Separated process for preventing running rollback()
-        // when sendMailIfShortageTranslateLimit() throwing Exception
-        if ($commitSucceed) {
-            $TeamTranslationStatusService->sendMailIfShortageTranslateLimit($teamId, $translationLength);
-        }
+        return $resultCreateTranslation;
     }
 
     /**

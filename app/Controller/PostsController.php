@@ -290,7 +290,11 @@ class PostsController extends AppController
             $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
 
             try {
-                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $this->Post->getLastInsertID(), $defaultLanguage);
+                $result = $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $this->Post->getLastInsertID(), $defaultLanguage);
+                if ($result['result']) {
+                    // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
+                    $this->sendMailIfShortageTranslateLimit($teamId, $result['length']);
+                }
             } catch (\Exception $e) {
                 GoalousLog::error('Failed create translation on new post', [
                     'message'      => $e->getMessage(),
@@ -299,6 +303,45 @@ class PostsController extends AppController
             }
         }
 
+    }
+
+
+    public function sendMailIfShortageTranslateLimit(int $teamId, int $latestCountIncreased)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        if ($teamTranslationStatus->isLimitReached()) {
+            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
+        } else if ($teamTranslationStatus->isUsageBecomeHighThanPercent(0.9, $latestCountIncreased)) {
+            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
+        }
+    }
+
+    private function notifyTranslateLimitReached(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
+    }
+
+    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
     }
 
     /**
