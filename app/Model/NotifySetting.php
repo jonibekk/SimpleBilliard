@@ -412,18 +412,18 @@ class NotifySetting extends AppModel
             'force_notify'    => true,
         ],
         self::TYPE_TRANSLATION_LIMIT_REACHED => [
-            'mail_template'   => "notify_basic",
+            'mail_template'   => "translation_limit_reached",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-cog',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
         self::TYPE_TRANSLATION_LIMIT_CLOSING => [
-            'mail_template'   => "notify_basic",
+            'mail_template'   => "translation_limit_closing",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-flag',
+            'icon_class'      => 'fa-cog',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ]

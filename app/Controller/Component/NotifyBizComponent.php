@@ -1117,7 +1117,7 @@ class NotifyBizComponent extends Component
             'action'     => 'settings',
         ];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = json_encode([__('Team settings')]);
         $this->notify_option['force_notify'] = true;
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
@@ -1135,7 +1135,7 @@ class NotifyBizComponent extends Component
             'action'     => 'settings',
         ];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = json_encode([__('Team settings')]);
         $this->notify_option['force_notify'] = true;
         $this->NotifySetting->current_team_id = $teamId;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
