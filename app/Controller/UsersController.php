@@ -701,8 +701,8 @@ class UsersController extends AppController
             }
 
             // 通知設定 更新時
-            if (isset($this->request->data['NotifySetting']['email']) &&
-                isset($this->request->data['NotifySetting']['mobile'])
+            if (isset($this->request->data['NotifySetting']['email_status']) &&
+                isset($this->request->data['NotifySetting']['mobile_status'])
             ) {
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
@@ -710,11 +710,11 @@ class UsersController extends AppController
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('email',
-                            $this->request->data['NotifySetting']['email']));
+                            $this->request->data['NotifySetting']['email_status']));
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('mobile',
-                            $this->request->data['NotifySetting']['mobile']));
+                            $this->request->data['NotifySetting']['mobile_status']));
             }
             $this->User->id = $this->Auth->user('id');
             //ユーザー情報更新
@@ -754,28 +754,6 @@ class UsersController extends AppController
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
 
-        // 通知設定のプルダウンデフォルト
-        $this->request->data['NotifySetting']['email'] = 'all';
-        $this->request->data['NotifySetting']['mobile'] = 'all';
-        // 既に通知設定が保存されている場合
-        foreach (['email', 'mobile'] as $notify_target) {
-            foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {
-                $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
-                $same = true;
-                foreach ($values as $k => $v) {
-                    if (isset($this->request->data['NotifySetting'][$k])) {
-                        if ($this->request->data['NotifySetting'][$k] !== $v) {
-                            $same = false;
-                            break;
-                        }
-                    }
-                }
-                if ($same) {
-                    $this->request->data['NotifySetting'][$notify_target] = $type_group;
-                    break;
-                }
-            }
-        }
         $this->set(compact('me', 'is_not_use_local_name', 'lastFirst', 'language_list', 'timezones',
             'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
