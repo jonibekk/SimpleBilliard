@@ -610,7 +610,6 @@ class PostService extends AppService
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
         /** @var TeamTranslationStatus $TeamTranslationStatus */
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        $teamId = TeamStatus::getCurrentTeam()->getTeamId();
 
         if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
 

@@ -1539,11 +1539,11 @@ class GoalsController extends AppController
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$goalPost = $this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                    $this->Goal->ActionResult->getLastInsertID(), $share,
-                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
-                || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
-                    AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                    $file_ids)
+                        $this->Goal->ActionResult->getLastInsertID(), $share,
+                        PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+                    || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
+                        AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                        $file_ids)
             ) {
                 throw new RuntimeException(__("Failed to add an action."));
             }
@@ -1562,10 +1562,10 @@ class GoalsController extends AppController
                 /** @var TranslationService $TranslationService */
                 $TranslationService = ClassRegistry::init('TranslationService');
 
-                $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
+                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
 
                 try {
-                    $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $goalPost['Post']['id'], $defaultLanguage);
+                    $TranslationService->createTranslation(TranslationContentType::ACTION_POST(), $goalPost['Post']['id'], $defaultLanguage);
                     // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
                     $this->sendTranslationUsageNotification($teamId);
                 } catch (Exception $e) {

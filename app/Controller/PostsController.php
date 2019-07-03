@@ -295,7 +295,7 @@ class PostsController extends AppController
             /** @var TranslationService $TranslationService */
             $TranslationService = ClassRegistry::init('TranslationService');
 
-            $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
 
             try {
                 $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postedPostId, $defaultLanguage);

@@ -3,6 +3,7 @@
 use Mockery as mock;
 
 App::uses('GoalousTestCase', 'Test');
+App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::uses('Translation', 'Model');
@@ -18,6 +19,7 @@ use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 class TranslationServiceTest extends GoalousTestCase
 {
     public $fixtures = [
+        'app.action_result',
         'app.translation',
         'app.post',
         'app.comment',
@@ -101,6 +103,25 @@ class TranslationServiceTest extends GoalousTestCase
         $translationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
         $this->assertEquals(355, $translationStatus->getCirclePostUsageCount());
         $this->assertEquals(355, $translationStatus->getTotalUsageCount());
+
+        $contentType = TranslationContentType::ACTION_POST();
+        $contentId = 9;
+        $targetLanguage = LanguageEnum::JA;
+
+        $TranslationService->createTranslation($contentType, $contentId, $targetLanguage);
+
+        $this->assertEquals('en', $Post->getById($contentId)['language']);
+
+        $translation = $Translation->getTranslation($contentType, $contentId, $targetLanguage);
+        $this->assertEquals($contentType->getValue(), $translation['content_type']);
+        $this->assertEquals($contentId, $translation['content_id']);
+        $this->assertEquals($targetLanguage, $translation['language']);
+        $this->assertEquals(TranslationStatus::DONE, $translation['status']);
+        $this->assertEquals('Esta es una muestra de traducción.', $translation['body']);
+
+        $translationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+        $this->assertEquals(4, $translationStatus->getActionPostUsageCount());
+        $this->assertEquals(359, $translationStatus->getTotalUsageCount());
     }
 
     public function test_createTranslationUnknownSourceLanguage_success()

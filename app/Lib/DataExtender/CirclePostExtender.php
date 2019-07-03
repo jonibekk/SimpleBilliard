@@ -45,7 +45,7 @@ class CirclePostExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_CIRCLE)) {
             /** @var CircleExtension $CircleExtension */
             $CircleExtension = ClassRegistry::init('CircleExtension');
-            $data = $CircleExtension->extendMulti($data, "{n}.id");
+            $data = $CircleExtension->extendMulti($data, "{n}.circle_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
             /** @var CommentPagingService $CommentPagingService */
@@ -123,12 +123,11 @@ class CirclePostExtender extends BaseExtender
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
             if ($TeamTranslationLanguage->canTranslate($teamId)) {
-
                 /** @var TeamTranslationStatus $TeamTranslationStatus */
                 $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
                 if ($TeamTranslationStatus->isLimitReached($teamId)) {
-                    foreach ($data as $entry) {
+                    foreach ($data as &$entry) {
                         $entry['translation_limit_reached'] = true;
                         $entry['translation_languages'] = [];
                     }
@@ -138,9 +137,9 @@ class CirclePostExtender extends BaseExtender
                     /** @var TranslationLanguage $TranslationLanguage */
                     $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
-                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
 
-                    foreach ($data as $entry) {
+                    foreach ($data as &$entry) {
 
                         $postLanguage = Hash::get($entry, 'language');
 

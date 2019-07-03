@@ -155,7 +155,7 @@ class PostExtender extends BaseExtender
 
                     $postLanguage = Hash::get($data, 'language');
 
-                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
 
                     if ($userDefaultLanguage !== $postLanguage) {
 

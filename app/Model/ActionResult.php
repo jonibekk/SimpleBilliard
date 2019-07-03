@@ -734,5 +734,4 @@ class ActionResult extends AppModel
         $res = $this->find('first', $options);
         return $res;
     }
-
 }

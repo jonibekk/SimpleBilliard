@@ -5,7 +5,9 @@ use Goalous\Enum\Language as LanguageEnum;
 App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
+App::uses('Post', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
+App::import('Service', 'TeamMemberService');
 
 /**
  * Created by PhpStorm.
@@ -191,6 +193,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
         $teamId = 1;
+        $userId = 1;
 
         $TeamTranslationStatus->createEntry($teamId);
 
@@ -198,19 +201,18 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
         $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
 
-
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
         $cursor = new PagingRequest();
         $cursor->addResource('res_id', 1);
-        $cursor->addResource('current_user_id', 1);
-        $cursor->addResource('current_team_id', 1);
-        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_POST_FILE);
-
-        $this->assertCount(1, $result['data']);
+        $cursor->addResource('current_user_id', $userId);
+        $cursor->addResource('current_team_id', $teamId);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
 
         $postData = $result['data'][0];
+
         $this->assertArrayHasKey('translation_limit_reached', $postData);
+        $this->assertFalse($postData['translation_limit_reached']);
         $this->assertArrayHasKey('translation_languages', $postData);
         $this->assertCount(3, $postData['translation_languages']);
         foreach ($postData['translation_languages'] as $translationLanguage) {
@@ -218,5 +220,44 @@ class CirclePostPagingServiceTest extends GoalousTestCase
             $this->assertNotEmpty($translationLanguage['intl_name']);
             $this->assertNotEmpty($translationLanguage['local_name']);
         }
+
+        // Post's language is not included
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $Post->updateLanguage(1, LanguageEnum::JA);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
+
+        $postData = $result['data'][0];
+
+        $this->assertFalse($postData['translation_limit_reached']);
+        $this->assertCount(2, $postData['translation_languages']);
+        foreach ($postData['translation_languages'] as $translationLanguage) {
+            $this->assertNotEquals(LanguageEnum::JA, $translationLanguage['language']);
+        }
+
+        //If user has same language, don't include language
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, LanguageEnum::DE);
+        $Post->updateLanguage(1, LanguageEnum::DE);
+
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
+        $postData = $result['data'][0];
+
+        $this->assertFalse($postData['translation_limit_reached']);
+        $this->assertArrayHasKey('translation_languages', $postData);
+        $this->assertEmpty($postData['translation_languages']);
+
+        //If limit reached
+        $TeamTranslationStatus->incrementActionCommentCount($teamId, 100000);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
+
+        $this->assertCount(1, $result['data']);
+
+        $postData = $result['data'][0];
+
+        $this->assertTrue($postData['translation_limit_reached']);
+        $this->assertArrayHasKey('translation_languages', $postData);
+        $this->assertEmpty($postData['translation_languages']);
     }
 }
