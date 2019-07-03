@@ -979,14 +979,14 @@ class UsersController extends AppController
             $this->User->saveField('2fa_secret', $secret_key);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            return $this->redirect($this->referer());
+            return $this->redirect('/users/settings');
         }
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Notification->outSuccess(__("Succeeded to save 2-Step Verification."));
         $this->Flash->set(null,
             ['element' => 'flash_click_event', 'params' => ['id' => 'ShowRecoveryCodeButton'], 'key' => 'click_event']);
-        return $this->redirect($this->referer());
+        return $this->redirect('/users/settings');
     }
 
     function ajax_get_modal_2fa_delete()
