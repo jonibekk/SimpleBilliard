@@ -77,12 +77,25 @@ class UsersController extends AppController
         }
 
         if (IS_DEMO) {
-            $this->request->data['User'] = [
-                'email' => 'enpe.next.adam@gmail.com',
-                'password' => 'demo1234',
-                'installation_id' => 'no_value',
-                'app_version' => 'no_value'
-            ];
+            App::uses('LangHelper', 'View/Helper');
+            $Lang = new LangHelper(new View());
+            $lang = $Lang->getLangCode();
+
+            if ($lang === LangHelper::LANG_CODE_JP) {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            } else {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous+EN@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            }
         }
 
         //account lock check
