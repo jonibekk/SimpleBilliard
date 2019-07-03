@@ -98,7 +98,31 @@ class TeamTranslationLanguageServiceTest extends GoalousTestCase
         $Team->setDefaultTranslationLanguage($teamId, LanguageEnum::TH);
         $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($teamId);
         $this->assertEquals(LanguageEnum::JA, array_keys($defaultLanguage)[0]);
+    }
 
+    public function test_getDefaultTranslationLanguageCode_success()
+    {
+        $teamId = 1;
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ZH_CN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+        $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        $this->assertEquals(LanguageEnum::JA, $defaultLanguage);
+
+        $Team->setDefaultTranslationLanguage($teamId, LanguageEnum::DE);
+        $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        $this->assertEquals(LanguageEnum::DE, $defaultLanguage);
+
+        $Team->setDefaultTranslationLanguage($teamId, LanguageEnum::TH);
+        $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        $this->assertEquals(LanguageEnum::JA, $defaultLanguage);
     }
 
 

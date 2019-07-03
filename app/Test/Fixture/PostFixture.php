@@ -44,6 +44,15 @@ class PostFixture extends CakeTestFixtureEx
             'comment' => '投稿本文',
             'charset' => 'utf8mb4'
         ),
+        'language'             => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 10,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'Detected language of the post body',
+            'charset' => 'utf8mb4'
+        ),
         'type'                 => array(
             'type'     => 'integer',
             'null'     => false,

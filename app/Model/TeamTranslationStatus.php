@@ -194,6 +194,25 @@ class TeamTranslationStatus extends AppModel
         $this->save($newData, false);
     }
 
+
+    /**
+     * Check if entry exists for a team
+     *
+     * @param int $teamId Team ID
+     *
+     * @return bool
+     */
+    public function hasEntry(int $teamId): bool
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+            ]
+        ];
+
+        return $this->find('count', $option) > 0;
+    }
+
     /**
      * Return usage data as json string
      *
@@ -211,5 +230,20 @@ class TeamTranslationStatus extends AppModel
             'action_post_total'         => $data->getActionPostUsageCount(),
             'action_post_comment_total' => $data->getActionPostCommentUsageCount(),
         ]);
+    }
+
+    /**
+     * Check whether translation limit is reached in a team
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function isLimitReached(int $teamId): bool
+    {
+        /** @var TeamTranslationStatusEntity $usageStatus */
+        $usageStatus = $this->getUsageStatus($teamId);
+
+        return $usageStatus->getTotalUsageCount() > $usageStatus['total_limit'];
     }
 }

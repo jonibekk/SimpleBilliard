@@ -107,6 +107,8 @@ $defines = [
     //For temporary files, such as upload buffering
     'AWS_S3_BUCKET_TMP'                             => 'goalous-local-tmp',
     'ES_API_BASE_URL'                               => 'dev-search.goalous.com',
+    //Google Cloud Platform API key
+    'GCP_API_KEY'                                   => 'AIzaSyBoznHIZdC2LMMOcxw1WXHgZg6T1IoPGJc',
     // Default translation limit for paid team. 1 million chars
     'TRANSLATION_DEFAULT_LIMIT_PAID_TEAM'           => 1000000
 ];

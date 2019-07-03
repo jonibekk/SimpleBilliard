@@ -62,7 +62,10 @@ class PostServiceTest extends GoalousTestCase
         'app.key_result',
         'app.goal',
         'app.post_file',
-        'app.comment_file'
+        'app.comment_file',
+        'app.team_translation_language',
+        'app.team_translation_status',
+        'app.translation'
     ];
 
     /**
@@ -984,7 +987,7 @@ class PostServiceTest extends GoalousTestCase
         ];
 
         $req = new PostResourceRequest(1, 1, 1, true);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
 
         $this->assertTrue(is_array($ret));
         $this->assertEquals($ret['id'], $req->getId());
@@ -1002,7 +1005,7 @@ class PostServiceTest extends GoalousTestCase
         $extensions = [
             PostExtender::EXTEND_ALL
         ];
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
 
         $this->assertTrue(is_array($ret));
         $this->assertEquals($ret['id'], $req->getId());
@@ -1019,17 +1022,17 @@ class PostServiceTest extends GoalousTestCase
 
         $req->setId(7);
         $req->setUserId(99);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertEquals($ret, []);
 
         $req->setCheckPermission(false);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertNotEmpty($ret);
 
         $req->setId(8);
         $req->setUserId(2);
         $req->setCheckPermission(true);
-        $ret = $this->PostService->get($req,$extensions);
+        $ret = $this->PostService->get($req, $extensions);
         $this->assertTrue(is_array($ret));
         $this->assertEquals(count($ret['attached_files']), 1);
         $this->assertEquals($ret['attached_files'][0]['id'], 2);

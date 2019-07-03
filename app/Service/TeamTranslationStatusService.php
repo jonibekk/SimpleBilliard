@@ -1,4 +1,8 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
+
 App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('PaymentSetting', 'Model');
@@ -6,6 +10,8 @@ App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TeamTranslationUsageLog', 'Model');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
 
 
 class TeamTranslationStatusService extends AppService
@@ -25,8 +31,16 @@ class TeamTranslationStatusService extends AppService
             return;
         }
 
+        $notificationFlagClient = new NotificationFlagClient();
+
         foreach ($teamsToReset as $teamId) {
+
             $this->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+
+            $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
+            $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
+            $notificationFlagClient->del($limitReachedKey);
+            $notificationFlagClient->del($limitClosingKey);
         }
     }
 
@@ -171,7 +185,36 @@ class TeamTranslationStatusService extends AppService
 
         $endDate = $PaymentService->getCurrentMonthBaseDate($teamId, $endDateTimeStamp);
 
-        return  $endDate->modify("-1 day");
+        return $endDate->modify("-1 day");
     }
 
+    /**
+     * Increment translation usage count
+     *
+     * @param int                    $teamId
+     * @param TranslationContentType $contentType
+     * @param int                    $count
+     *
+     * @throws Exception
+     */
+    public function incrementUsageCount(int $teamId, TranslationContentType $contentType, int $count)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        switch ($contentType->getValue()) {
+            case TranslationContentType::CIRCLE_POST:
+                $TeamTranslationStatus->incrementCirclePostCount($teamId, $count);
+                break;
+            case TranslationContentType::CIRCLE_POST_COMMENT:
+                $TeamTranslationStatus->incrementCircleCommentCount($teamId, $count);
+                break;
+            case TranslationContentType::ACTION_POST:
+                $TeamTranslationStatus->incrementActionPostCount($teamId, $count);
+                break;
+            case TranslationContentType::ACTION_POST_COMMENT:
+                $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
+                break;
+        }
+    }
 }

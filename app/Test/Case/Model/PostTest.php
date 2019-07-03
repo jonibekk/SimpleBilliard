@@ -1,11 +1,17 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('Post', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('Translation', 'Model');
 
 /**
  * Post Test Case
  *
  * @property Post $Post
  */
+
+use Goalous\Enum\Language as LanguageEnum;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 class PostTest extends GoalousTestCase
 {
 
@@ -71,6 +77,10 @@ class PostTest extends GoalousTestCase
         'app.post_resource',
         'app.kr_progress_log',
         'app.saved_post',
+        'app.team_translation_status',
+        'app.team_translation_language',
+        'app.mst_translation_language',
+        'app.translation'
     );
 
     /**
@@ -765,6 +775,27 @@ class PostTest extends GoalousTestCase
         $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
     }
 
+    public function test_editPostDeleteTranslation_success()
+    {
+        $this->_setDefault();
+
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+
+        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+        $this->assertNotEmpty($translation);
+        $data = [
+            'Post' => [
+                'id'   => 1,
+                'body' => 'edit string',
+            ]
+        ];
+        $this->Post->postEdit($data);
+        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+        $this->assertEmpty($translation);
+    }
+
     function testGetPostById()
     {
         $this->Post->current_team_id = '1';
@@ -1023,6 +1054,56 @@ class PostTest extends GoalousTestCase
         $postType = $Post->getPostType(6);
         $this->assertEquals(7, $postType);
     }
+
+
+    public function test_getPostWithTranslationLanguage_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        $teamId = 1;
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Post->my_uid = 1;
+        $Post->current_team_id = 1;
+        $posts = $Post->get();
+
+        foreach ($posts as $post) {
+            $this->assertNotEmpty($post['Post']);
+            $this->assertFalse($post['Post']['translation_limit_reached']);
+            $this->assertCount(3, $post['Post']['translation_languages']);
+            foreach ($post['Post']['translation_languages'] as $translationLanguage) {
+                $this->assertNotEmpty($translationLanguage['language']);
+                $this->assertNotEmpty($translationLanguage['intl_name']);
+                $this->assertNotEmpty($translationLanguage['local_name']);
+            }
+        }
+    }
+
+    public function test_updateLanguage_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postId = 1;
+
+        $post = $Post->getById($postId);
+        $this->assertEmpty($post['language']);
+
+        $Post->updateLanguage($postId, LanguageEnum::ES);
+
+        $post = $Post->getById($postId);
+        $this->assertEquals(LanguageEnum::ES, $post['language']);
+    }
+
 
     function _setDefault()
     {

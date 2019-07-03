@@ -8,6 +8,20 @@ class TeamTranslationStatusTest extends GoalousTestCase
         'app.team_translation_status'
     ];
 
+    public function test_hasEntry_success()
+    {
+        $teamId = 1;
+
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        $this->assertFalse($TeamTranslationStatus->hasEntry($teamId));
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->assertTrue($TeamTranslationStatus->hasEntry($teamId));
+    }
+
     public function test_createEntry_success()
     {
         $teamId = 1;

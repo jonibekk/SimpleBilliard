@@ -1,5 +1,9 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::uses('AppModel', 'Model');
+App::uses('Translation', 'Model');
 
 /**
  * ActionResult Model
@@ -419,6 +423,7 @@ class ActionResult extends AppModel
                 return false;
             }
         }
+
         $this->commit();
 
         // 添付ファイルが存在する場合は一時データを削除
@@ -713,7 +718,7 @@ class ActionResult extends AppModel
     /**
      * KRに紐づく最新のアクションを取得
      *
-     * @param  int $krId
+     * @param int $krId
      *
      * @return array|null
      */
@@ -729,5 +734,4 @@ class ActionResult extends AppModel
         $res = $this->find('first', $options);
         return $res;
     }
-
 }

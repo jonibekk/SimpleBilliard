@@ -1198,4 +1198,18 @@ class GoalousTestCase extends CakeTestCase
         $TeamTranslationLanguage->create();
         $TeamTranslationLanguage->save($data, false);
     }
+
+    /**
+     * Get long article. 67,187 characters
+     *
+     * @return string
+     */
+    protected function getLongArticle(): string {
+
+        $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
+
+        $article = file_get_contents($path);
+
+        return $article;
+    }
 }

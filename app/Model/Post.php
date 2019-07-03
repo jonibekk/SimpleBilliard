@@ -7,34 +7,38 @@ App::uses('PostShareCircle', 'Model');
 App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
+App::uses('Translation', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Lib/DataExtender', 'PostExtender');
 
 /**
  * Post Model
  *
- * @property User $User
- * @property Team $Team
- * @property CommentMention $CommentMention
- * @property Comment $Comment
- * @property Goal $Goal
- * @property GivenBadge $GivenBadge
- * @property PostLike $PostLike
- * @property PostMention $PostMention
- * @property PostShareUser $PostShareUser
+ * @property User            $User
+ * @property Team            $Team
+ * @property CommentMention  $CommentMention
+ * @property Comment         $Comment
+ * @property Goal            $Goal
+ * @property GivenBadge      $GivenBadge
+ * @property PostLike        $PostLike
+ * @property PostMention     $PostMention
+ * @property PostShareUser   $PostShareUser
  * @property PostShareCircle $PostShareCircle
- * @property PostRead $PostRead
- * @property ActionResult $ActionResult
- * @property KeyResult $KeyResult
- * @property Circle $Circle
- * @property AttachedFile $AttachedFile
- * @property PostFile $PostFile
- * @property PostSharedLog $PostSharedLog
- * @property SavedPost $SavedPost
+ * @property PostRead        $PostRead
+ * @property ActionResult    $ActionResult
+ * @property KeyResult       $KeyResult
+ * @property Circle          $Circle
+ * @property AttachedFile    $AttachedFile
+ * @property PostFile        $PostFile
+ * @property PostSharedLog   $PostSharedLog
+ * @property SavedPost       $SavedPost
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Language as LanguageEnum;
 
 class Post extends AppModel
 {
@@ -270,7 +274,7 @@ class Post extends AppModel
      * @param        $end
      * @param string $order
      * @param string $order_direction
-     * @param int $limit
+     * @param int    $limit
      *
      * @return array|null|void
      */
@@ -329,19 +333,20 @@ class Post extends AppModel
     }
 
     /**
+     * @param int  $page
+     * @param int  $limit
+     * @param null $start
+     * @param null $end
+     * @param null $params
+     * @param bool $contains_message
+     *
+     * @return array|null
      * @deprecated
      * [Important]
      * Don't use this method when new implementation
      * this is too chaos and has too much a role
      * e.g. read post/comment. but as a major principle, one method has one role.
      *
-     * @param int $page
-     * @param int $limit
-     * @param null $start
-     * @param null $end
-     * @param null $params
-     * @param bool $contains_message
-     * @return array|null
      */
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
@@ -717,11 +722,17 @@ class Post extends AppModel
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
         $res = $this->find('all', $options);
-        //コメントを逆順に
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
         foreach ($res as $key => $val) {
+            //コメントを逆順に
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
+            //Extend language
+            $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id, [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
         }
 
         //コメントを既読に
@@ -771,6 +782,7 @@ class Post extends AppModel
                 break;
             }
         }
+        // TODO extend language options
 
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
@@ -788,7 +800,7 @@ class Post extends AppModel
      * @param DboSource $db
      * @param           $start
      * @param           $end
-     * @param array $params
+     * @param array     $params
      *                 'user_id' : 指定すると投稿者で絞る
      *
      * @return string|null
@@ -860,10 +872,10 @@ class Post extends AppModel
     }
 
     /**
-     * @param  DboSource $db
+     * @param DboSource  $db
      * @param            $start
      * @param            $end
-     * @param array $post_types
+     * @param array      $post_types
      *
      * @return string
      */
@@ -923,9 +935,10 @@ class Post extends AppModel
     }
 
     /**
-     * @param $postId
+     * @param      $postId
      * @param null $userId
      * @param null $teamId
+     *
      * @return bool
      */
     public function isMyPost($postId, $userId = null, $teamId = null)
@@ -1051,7 +1064,7 @@ class Post extends AppModel
      * @param DboSource $db
      * @param           $start
      * @param           $end
-     * @param array $params
+     * @param array     $params
      *                 'user_id' : 指定すると投稿者IDで絞る
      *
      * @return string|null
@@ -1220,7 +1233,7 @@ class Post extends AppModel
      * Return share message by share type
      *
      * @param string $shareType
-     * @param bool $isPostPublished
+     * @param bool   $isPostPublished
      *
      * @return string
      */
@@ -1297,7 +1310,7 @@ class Post extends AppModel
      * Set whether loginUser save favorite item each post
      *
      * @param array $data
-     * @param int $userId
+     * @param int   $userId
      *
      * @return array
      */
@@ -1342,6 +1355,12 @@ class Post extends AppModel
                 isset($data['file_id']) ? $data['file_id'] : [],
                 isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
         }
+
+        // Delete translations
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $data['Post']['id']);
+
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {
             if (!$r) {
@@ -1400,11 +1419,11 @@ class Post extends AppModel
     /**
      * @param       $type
      * @param       $goal_id
-     * @param null $uid
-     * @param bool $public
-     * @param null $model_id
+     * @param null  $uid
+     * @param bool  $public
+     * @param null  $model_id
      * @param array $share
-     * @param int $share_type
+     * @param int   $share_type
      *
      * @return mixed
      * @throws Exception
@@ -1486,7 +1505,7 @@ class Post extends AppModel
     /**
      * Return list of users.id and circles.id to share
      *
-     * @param array $shares string of post targets to share
+     * @param array    $shares string of post targets to share
      *                         e.g. 'public,circle_1,user_2'
      * @param int|null $teamId
      *                         if null is passed, teamId is solved from $this->current_team_id
@@ -1544,9 +1563,9 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param mixed $userId ユーザーIDもしくは'me'を指定する。
-     * @param null $startTimestamp
-     * @param null $endTimestamp
+     * @param mixed  $userId ユーザーIDもしくは'me'を指定する。
+     * @param null   $startTimestamp
+     * @param null   $endTimestamp
      * @param string $date_col
      *
      * @return int
@@ -1644,7 +1663,7 @@ class Post extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param int $userId
+     * @param int      $userId
      * @param int|null $startTimestamp
      * @param int|null $endTimestamp
      *
@@ -1909,7 +1928,7 @@ class Post extends AppModel
      * @override
      *
      * @param array $data
-     * @param bool $filterKey
+     * @param bool  $filterKey
      *
      * @return array
      */
@@ -1989,5 +2008,24 @@ class Post extends AppModel
         ];
 
         return (int)$this->find('first', $condition)['Post']['type'];
+    }
+
+    /**
+     * Update language of the post
+     *
+     * @param int    $postId
+     * @param string $language
+     *
+     * @throws Exception
+     */
+    public function updateLanguage(int $postId, string $language)
+    {
+        $this->id = $postId;
+
+        $newData = [
+            'language' => $language
+        ];
+
+        $this->save($newData, false);
     }
 }
