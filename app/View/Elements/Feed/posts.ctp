@@ -118,7 +118,9 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
-                        <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>">g_translate</i>
+                        <?php if (!empty($post['Post']['translation_languages'])) { ?>
+                        <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>" content_type="1">g_translate</i>
+                        <?php } ?>
                         <div class="dropdown inline-block">
                             <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download">
                                 <i class="fa fa-ellipsis-v feed-arrow"></i>
@@ -188,7 +190,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     </div>
                     <ul class="dropdown-menu" aria-labelledby="download">
                     <?php foreach ($post['Post']['translation_languages'] ?? [] as $tl) { ?>
-                        <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
+                        <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" content_type="1" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
                     <?php } ?>
                     </ul>
                 </div>

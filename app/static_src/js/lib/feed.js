@@ -97,19 +97,19 @@ $(function () {
 function evTranslationOtherLanguage(e) {
   e.preventDefault();
   attrUndefinedCheck(this, 'model_id');
-  attrUndefinedCheck(this, 'type');
+  attrUndefinedCheck(this, 'content_type');
 
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
-  var type = $obj.attr('type');
+  var content_type = $obj.attr('content_type');
   var language = $obj.attr('language');
 
   $.get('/api/v1/translations', {
-    type: type,
+    type: content_type,
     id: model_id,
     lang: language
-  }).done(function (data) {
-    setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
+  }).done(function (json) {
+    setInnerHtmlTo("#PostTextBody_{id}", model_id, json.data.translation);
   }).fail(function (data) {
     $('#modal-alert-translation-error').modal('show')
   })
@@ -117,9 +117,11 @@ function evTranslationOtherLanguage(e) {
 
 function evTranslation() {
   attrUndefinedCheck(this, 'model_id');
+  attrUndefinedCheck(this, 'content_type');
 
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
+  var content_type = $obj.attr('content_type');
   var translationDropDown = $('#TranslationDropDown_' + model_id);
 
   var isDisabled = $obj.hasClass('disabled');
@@ -149,14 +151,14 @@ function evTranslation() {
     $obj.after($loader);
     // Fetch translate text
     $.get('/api/v1/translations', {
-      type: 1,
-      id: 2,
+      type: content_type,
+      id: model_id,
       lang: getBrowserLanguage()
-    }).done(function (data) {
+    }).done(function (json) {
       $obj.attr('translated', '1');
       var originalText = getOriginalHtml('#PostTextBody_{id}', model_id);
       setInnerHtmlTo("#PostTextBodyMemory_{id}", model_id, originalText);
-      setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
+      setInnerHtmlTo("#PostTextBody_{id}", model_id, json.data.translation);
       translationDropDown.show();
       $obj.toggleClass('on');
     }).fail(function (data) {
