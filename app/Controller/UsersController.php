@@ -114,10 +114,9 @@ class UsersController extends AppController
 
         $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
-        // 2要素認証設定ONかつ、設定して30日以内の場合
-        if ((is_null($userInfo['2fa_secret']) === true) || (empty($userInfo['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($userInfo['DefaultTeam']['id'], $userInfo['id']))
-        ) {
+        // [Note]
+        // Refer: https://jira.goalous.com/browse/GL-6874
+        if (is_null($userInfo['2fa_secret']) === true) {
             $is2faAuthEnabled = false;
         }
 
