@@ -1,5 +1,10 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'ActionService');
+App::import('Service', 'CommentService');
+App::import('Service', 'PostService');
+App::import('Service', 'TeamTranslationStatusService');
+App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
@@ -20,8 +25,12 @@ class TranslationService extends AppService
     /**
      *  Get translation for a data
      *
-     * @param TranslationContentType $contentType
-     * @param int                    $contentId
+     * @param TranslationContentType $contentType Content type.
+     * @param int                    $contentId   Id of content type.
+     *                                            ACTION_POST => posts.id
+     *                                            CIRCLE_POST => posts.id
+     *                                            CIRCLE_POST_COMMENT => comments.id
+     *                                            ACTION_POST_COMMENT => comments.id
      * @param string                 $targetLanguage
      *
      * @return TranslationResult
@@ -38,12 +47,13 @@ class TranslationService extends AppService
 
         if ($Translation->hasTranslation($contentType, $contentId, $targetLanguage)) {
 
-            $sourceModel = $this->getSourceModel($contentType, $contentId);
 
             $tryCount = 0;
 
             do {
                 $translation = $Translation->getTranslation($contentType, $contentId, $targetLanguage);
+
+                $sourceModel = $this->getSourceModel($contentType, $contentId);
 
                 if ($translation['status'] === TranslationStatus::DONE) {
                     return new TranslationResult($sourceModel['language'], $translation['body'], $targetLanguage);
@@ -69,7 +79,11 @@ class TranslationService extends AppService
      * Delete existing entry
      *
      * @param TranslationContentType $contentType
-     * @param int                    $contentId
+     * @param int                    $contentId Id of content type.
+     *                                          ACTION_POST => posts.id
+     *                                          CIRCLE_POST => posts.id
+     *                                          CIRCLE_POST_COMMENT => comments.id
+     *                                          ACTION_POST_COMMENT => comments.id
      * @param string                 $targetLanguage
      *
      * @throws Exception
@@ -100,7 +114,11 @@ class TranslationService extends AppService
      * Create translation for a data
      *
      * @param TranslationContentType $contentType
-     * @param int                    $contentId
+     * @param int                    $contentId Id of content type.
+     *                                          ACTION_POST => posts.id
+     *                                          CIRCLE_POST => posts.id
+     *                                          CIRCLE_POST_COMMENT => comments.id
+     *                                          ACTION_POST_COMMENT => comments.id
      * @param string                 $targetLanguage
      *
      * @throws Exception
@@ -160,29 +178,97 @@ class TranslationService extends AppService
     }
 
     /**
+     * Update the detected language
+     *
+     * @param int                    $userId
+     * @param TranslationContentType $contentType
+     * @param int                    $contentId Id of content type.
+     *                                          ACTION_POST => posts.id
+     *                                          CIRCLE_POST => posts.id
+     *                                          CIRCLE_POST_COMMENT => comments.id
+     *                                          ACTION_POST_COMMENT => comments.id
+     *
+     * @return bool
+     */
+    public function checkUserAccess(int $userId, TranslationContentType $contentType, int $contentId): bool
+    {
+        switch ($contentType->getValue()) {
+            case TranslationContentType::ACTION_POST:
+                /** @var ActionService $ActionService */
+                $ActionService = ClassRegistry::init('ActionService');
+                return $ActionService = $ActionService->checkUserAccess($userId, $contentId);
+            case TranslationContentType::CIRCLE_POST:
+                /** @var PostService $PostService */
+                $PostService = ClassRegistry::init('PostService');
+                return $PostService->checkUserAccessToCirclePost($userId, $contentId);
+                break;
+            case TranslationContentType::CIRCLE_POST_COMMENT:
+            case TranslationContentType::ACTION_POST_COMMENT:
+                /** @var CommentService $CommentService */
+                $CommentService = ClassRegistry::init('CommentService');
+                return $CommentService->checkUserAccessToComment($userId, $contentId);
+                break;
+        }
+
+        return false;
+    }
+
+    /**
      * Get source body of data to be translated
      *
      * @param TranslationContentType $contentType
      * @param int                    $contentId
      *
-     * @return BaseEntity
+     * @return array
+     *                 ['body' => "", 'language' => "", 'team_id' => 0]
      */
-    private function getSourceModel(TranslationContentType $contentType, int $contentId): BaseEntity
+    private function getSourceModel(TranslationContentType $contentType, int $contentId): array
     {
         $originalModel = [];
 
         switch ($contentType->getValue()) {
             case TranslationContentType::ACTION_POST:
+                /** @var Post $Post */
+                $Post = ClassRegistry::init('Post');
+                $post = $Post->getById($contentId);
+                /** @var ActionResult $ActionResult */
+                $ActionResult = ClassRegistry::init('ActionResult');
+                $actionResult = $ActionResult->getById($post['action_result_id']);
+                if (empty($actionResult)) {
+                    break;
+                }
+                $originalModel = [
+                    'body'     => $actionResult['name'],
+                    'language' => $post['language'] ?: "",
+                    'team_id'  => $actionResult['team_id']
+                ];
+                break;
             case TranslationContentType::CIRCLE_POST:
                 /** @var Post $Post */
                 $Post = ClassRegistry::init('Post');
-                $originalModel = $Post->getEntity($contentId);
+                $post = $Post->getById($contentId);
+                if (empty($post)) {
+                    break;
+                }
+                $originalModel = [
+                    'body'     => $post['body'],
+                    'language' => $post['language'] ?: "",
+                    'team_id'  => $post['team_id']
+                ];
                 break;
             case TranslationContentType::CIRCLE_POST_COMMENT:
             case TranslationContentType::ACTION_POST_COMMENT:
                 /** @var Comment $Comment */
                 $Comment = ClassRegistry::init('Comment');
-                $originalModel = $Comment->getEntity($contentId);
+                $comment = $Comment->getById($contentId);
+                if (empty($comment)) {
+                    break;
+                }
+                $originalModel = [
+                    'body'     => $comment['body'],
+                    'language' => $comment['language'] ?: "",
+                    'team_id'  => $comment['team_id']
+                ];
                 break;
         }
 

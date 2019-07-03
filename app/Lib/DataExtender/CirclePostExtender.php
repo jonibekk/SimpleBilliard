@@ -8,6 +8,10 @@ App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
+App::import('Service', 'TeamMemberService');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TranslationLanguage', 'Model');
 
 
 class CirclePostExtender extends BaseExtender
@@ -22,9 +26,9 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_LIKE = "ext:circle_post:like";
     const EXTEND_SAVED = "ext:circle_post:saved";
     const EXTEND_READ = "ext:circle_post:read";
+    const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
 
     const DEFAULT_COMMENT_COUNT = 3;
-
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -41,7 +45,7 @@ class CirclePostExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_CIRCLE)) {
             /** @var CircleExtension $CircleExtension */
             $CircleExtension = ClassRegistry::init('CircleExtension');
-            $data = $CircleExtension->extendMulti($data, "{n}.id");
+            $data = $CircleExtension->extendMulti($data, "{n}.circle_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
             /** @var CommentPagingService $CommentPagingService */
@@ -113,6 +117,51 @@ class CirclePostExtender extends BaseExtender
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extendMulti($data, "{n}.id", "post_id");
         }
+        if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
+
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+            if ($TeamTranslationLanguage->canTranslate($teamId)) {
+                /** @var TeamTranslationStatus $TeamTranslationStatus */
+                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+                if ($TeamTranslationStatus->isLimitReached($teamId)) {
+                    foreach ($data as &$entry) {
+                        $entry['translation_limit_reached'] = true;
+                        $entry['translation_languages'] = [];
+                    }
+                } else {
+                    /** @var TeamMemberService $TeamMemberService */
+                    $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+
+                    foreach ($data as &$entry) {
+
+                        $postLanguage = Hash::get($entry, 'language');
+
+                        $entry['translation_limit_reached'] = false;
+                        $entry['translation_languages'] = [];
+
+                        if ($userDefaultLanguage !== $postLanguage) {
+
+                            $availableLanguages = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
+
+                            foreach ($availableLanguages as $availableLanguage) {
+                                if ($postLanguage === $availableLanguage['language']) {
+                                    continue;
+                                }
+                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return $data;
     }
 }

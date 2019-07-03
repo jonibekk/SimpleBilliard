@@ -81,6 +81,20 @@ class TeamTranslationLanguageService extends AppService
     }
 
     /**
+     * Get language code of default translation language of a team
+     *
+     * @param int $teamId
+     *
+     * @return string ISO 639-1 Language Code
+     *
+     * @throws Exception
+     */
+    public function getDefaultTranslationLanguageCode(int $teamId): string
+    {
+        return array_keys($this->getDefaultTranslationLanguage($teamId))[0] ?: "";
+    }
+
+    /**
      * Calculate a default translation language for the team
      *
      * @param int $teamId

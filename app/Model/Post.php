@@ -7,8 +7,10 @@ App::uses('PostShareCircle', 'Model');
 App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
+App::uses('Translation', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Lib/DataExtender', 'PostExtender');
 
 /**
  * Post Model
@@ -34,6 +36,7 @@ App::import('Service', 'PostService');
  */
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Language as LanguageEnum;
 
@@ -719,11 +722,17 @@ class Post extends AppModel
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
         $res = $this->find('all', $options);
-        //コメントを逆順に
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
         foreach ($res as $key => $val) {
+            //コメントを逆順に
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
+            //Extend language
+            $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id, [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
         }
 
         //コメントを既読に
@@ -773,6 +782,7 @@ class Post extends AppModel
                 break;
             }
         }
+        // TODO extend language options
 
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
@@ -1345,6 +1355,12 @@ class Post extends AppModel
                 isset($data['file_id']) ? $data['file_id'] : [],
                 isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
         }
+
+        // Delete translations
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $data['Post']['id']);
+
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {
             if (!$r) {

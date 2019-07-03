@@ -203,6 +203,21 @@ class TeamMemberService extends AppService
     }
 
     /**
+     * Get language code of default translation language of an user in a team
+     *
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return string ISO 639-1 Language Code
+     *
+     * @throws Exception
+     */
+    public function getDefaultTranslationLanguageCode(int $teamId, int $userId): string
+    {
+        return array_keys($this->getDefaultTranslationLanguage($teamId, $userId))[0];
+    }
+
+    /**
      * Set user's default translation language in a team
      *
      * @param int    $teamId

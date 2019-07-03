@@ -55,4 +55,39 @@ class TeamTranslationStatusEntity extends BaseEntity
     {
         return $this['action_post_comment_total'] ?: 0;
     }
+
+    /**
+     * Get translation limit of the team
+     *
+     * @return int
+     */
+    public function getTotalLimit(): int
+    {
+        return $this['total_limit'];
+    }
+
+    /**
+     * Check whether usage is reached
+     *
+     * @return bool
+     */
+    public function isLimitReached(): bool
+    {
+        return $this->getTotalUsageCount() >= $this->getTotalLimit();
+    }
+
+    /**
+     * Return true if difference between usage and limit is within percentage of limit
+     *
+     * @param float $percent
+     *
+     * @return bool
+     */
+    public function isUsageWithinPercentageOfLimit(float $percent): bool
+    {
+        $currentUsage = $this->getTotalUsageCount();
+        $total = $this->getTotalLimit();
+
+        return (float)((1 - $percent) * $total) < $currentUsage;
+    }
 }

@@ -3,12 +3,19 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
+App::import('Service', 'TeamTranslationLanguageService');
+App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
-
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 /**
  * Posts Controller
@@ -32,8 +39,8 @@ class PostsController extends AppController
     }
 
     /**
-     * @deprecated
      * @return \Cake\Network\Response|CakeResponse|null
+     * @deprecated
      */
     public function message()
     {
@@ -48,8 +55,8 @@ class PostsController extends AppController
     }
 
     /**
-     * @deprecated
      * @return \Cake\Network\Response|CakeResponse|null
+     * @deprecated
      */
     public function message_list()
     {
@@ -97,8 +104,8 @@ class PostsController extends AppController
     /**
      * add method
      *
-     * @throws RuntimeException
      * @return void
+     * @throws RuntimeException
      */
     public function _addPost()
     {
@@ -273,13 +280,88 @@ class PostsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Posted."));
+
+        // Make translation
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamId = TeamStatus::getCurrentTeam()->getTeamId();
+
+        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+
+            try {
+                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postedPostId, $defaultLanguage);
+                // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
+                $this->sendTranslationUsageNotification($teamId);
+            } catch (Exception $e) {
+                GoalousLog::error('Failed create translation on new post', [
+                    'message'  => $e->getMessage(),
+                    'posts.id' => $this->Post->getLastInsertID(),
+                ]);
+            }
+        }
+
+        return true;
+    }
+
+    public function sendTranslationUsageNotification(int $teamId)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $notificationFlagClient = new NotificationFlagClient();
+
+        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
+        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
+
+        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
+            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitReachedKey);
+        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
+            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitClosingKey);
+        }
+    }
+
+    private function notifyTranslateLimitReached(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
+    }
+
+    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
     }
 
     /**
      * post_delete method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function post_delete()
     {
@@ -292,8 +374,15 @@ class PostsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
+
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
             AttachedFile::TYPE_MODEL_POST);
+
+        // Delete translations
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $this->Post->id);
+
         $this->Notification->outSuccess(__("Deleted the post."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -303,8 +392,8 @@ class PostsController extends AppController
     /**
      * post_edit method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function post_edit()
     {
@@ -362,8 +451,8 @@ class PostsController extends AppController
     /**
      * comment_delete method
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function comment_delete()
     {
@@ -392,8 +481,8 @@ class PostsController extends AppController
      *
      * @param $comment_id
      *
-     * @throws NotFoundException
      * @return void
+     * @throws NotFoundException
      */
     public function comment_edit()
     {
@@ -1204,6 +1293,7 @@ class PostsController extends AppController
     /**
      * TODO:ファイルアップロード用APIをapi/v1に作成した為、リリース後削除
      *
+     * @return CakeResponse
      * @deprecated
      *   ファイルアップロード
      *   JSON レスポンス形式
@@ -1212,7 +1302,6 @@ class PostsController extends AppController
      *   msg: string,   // 処理結果を示すメッセージ
      *   id: string,    // ファイルID
      *   }
-     * @return CakeResponse
      */
     public function ajax_upload_file(): CakeResponse
     {
@@ -1259,10 +1348,10 @@ class PostsController extends AppController
     }
 
     /**
+     * @return CakeResponse
      * @deprecated
      * OGP のデータを取得する
      *
-     * @return CakeResponse
      */
     public function ajax_get_ogp_info()
     {
