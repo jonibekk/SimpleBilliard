@@ -110,6 +110,8 @@ function evTranslationOtherLanguage(e) {
     lang: language
   }).done(function (data) {
     setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
+  }).fail(function (data) {
+    $('#modal-alert-translation-error').modal('show')
   })
 }
 
@@ -119,6 +121,12 @@ function evTranslation() {
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
   var translationDropDown = $('#TranslationDropDown_' + model_id);
+
+  var isDisabled = $obj.hasClass('disabled');
+  if (isDisabled) {
+    $('#modal-alert-translation-limit').modal('show')
+    return;
+  }
 
   // Check if translated once ever
   var isTranslatedOnce = !!parseInt($obj.attr('translated') || 0);
@@ -150,11 +158,12 @@ function evTranslation() {
       setInnerHtmlTo("#PostTextBodyMemory_{id}", model_id, originalText);
       setInnerHtmlTo("#PostTextBody_{id}", model_id, data.translation);
       translationDropDown.show();
-
+      $obj.toggleClass('on');
+    }).fail(function (data) {
+      $('#modal-alert-translation-error').modal('show')
+    }).always(function () {
       $loader.remove();
       $obj.show();
-
-      $obj.toggleClass('on');
     })
   }
 }
