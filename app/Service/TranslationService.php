@@ -143,19 +143,13 @@ class TranslationService extends AppService
 
         $TranslatorClient = $this->getTranslatorClient();
 
-        $resultCreateTranslation = [
-            'result' => false,
-            'length' => 0.
-        ];
         try {
             $this->TransactionManager->begin();
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
             $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
-            $translationLength = StringUtil::mbStrLength($sourceBody);
-            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, $translationLength);
-            $resultCreateTranslation['result'] = $this->TransactionManager->commit();
-            $resultCreateTranslation['length'] = $translationLength;
+            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, StringUtil::mbStrLength($sourceBody));
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error('Failed to insert translation.', [
@@ -167,7 +161,6 @@ class TranslationService extends AppService
             ]);
             throw $e;
         }
-        return $resultCreateTranslation;
     }
 
     /**

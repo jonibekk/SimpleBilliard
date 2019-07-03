@@ -6,13 +6,16 @@ App::import('Service', 'PostDraftService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
-
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 /**
  * Posts Controller
@@ -281,32 +284,35 @@ class PostsController extends AppController
         // Make translation
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-        /** @var TranslationService $TranslationService */
-        $TranslationService = ClassRegistry::init('TranslationService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         $teamId = TeamStatus::getCurrentTeam()->getTeamId();
-        if ($TeamTranslationLanguage->canTranslate($teamId)) {
+
+        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
             $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
 
             try {
-                $result = $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $this->Post->getLastInsertID(), $defaultLanguage);
-                if ($result['result']) {
-                    // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
-                    $this->sendMailIfShortageTranslateLimit($teamId, $result['length']);
-                }
-            } catch (\Exception $e) {
+                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postedPostId, $defaultLanguage);
+                // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
+                $this->sendTranslationUsageNotification($teamId);
+            } catch (Exception $e) {
                 GoalousLog::error('Failed create translation on new post', [
-                    'message'      => $e->getMessage(),
-                    'posts.id'     => $this->Post->getLastInsertID(),
+                    'message'  => $e->getMessage(),
+                    'posts.id' => $this->Post->getLastInsertID(),
                 ]);
             }
         }
 
+        return true;
     }
 
-
-    public function sendMailIfShortageTranslateLimit(int $teamId, int $latestCountIncreased)
+    public function sendTranslationUsageNotification(int $teamId)
     {
         /** @var TeamTranslationStatus $TeamTranslationStatus */
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
@@ -315,10 +321,17 @@ class PostsController extends AppController
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
-        if ($teamTranslationStatus->isLimitReached()) {
+        $notificationFlagClient = new NotificationFlagClient();
+
+        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
+        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
+
+        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
             $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
-        } else if ($teamTranslationStatus->isUsageBecomeHighThanPercent(0.9, $latestCountIncreased)) {
+            $notificationFlagClient->write($limitReachedKey);
+        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
             $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitClosingKey);
         }
     }
 

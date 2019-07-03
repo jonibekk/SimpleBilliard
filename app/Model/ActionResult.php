@@ -424,11 +424,6 @@ class ActionResult extends AppModel
             }
         }
 
-        // Delete translations
-        /** @var Translation $Translation */
-        $Translation = ClassRegistry::init('Translation');
-        $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $data['Post']['id']);
-
         $this->commit();
 
         // 添付ファイルが存在する場合は一時データを削除
@@ -723,7 +718,7 @@ class ActionResult extends AppModel
     /**
      * KRに紐づく最新のアクションを取得
      *
-     * @param  int $krId
+     * @param int $krId
      *
      * @return array|null
      */

@@ -57,28 +57,37 @@ class TeamTranslationStatusEntity extends BaseEntity
     }
 
     /**
+     * Get translation limit of the team
+     *
+     * @return int
+     */
+    public function getTotalLimit(): int
+    {
+        return $this['total_limit'];
+    }
+
+    /**
+     * Check whether usage is reached
+     *
      * @return bool
      */
     public function isLimitReached(): bool
     {
-        return $this->getTotalUsageCount() >= (int)$this->properties['total_limit'];
+        return $this->getTotalUsageCount() >= $this->getTotalLimit();
     }
 
     /**
-     * Return true if translation
-     * e.g. Return true if usage become higher than 90% by last count increased
-     *      isUsageBecomeHighThanPercent(0.9, 1000);
+     * Return true if difference between usage and limit is within percentage of limit
+     *
      * @param float $percent
-     * @param int $latestCountIncreased
+     *
      * @return bool
      */
-    public function isUsageBecomeHighThanPercent(float $percent, int $latestCountIncreased): bool
+    public function isUsageWithinPercentageOfLimit(float $percent): bool
     {
         $currentUsage = $this->getTotalUsageCount();
-        $total = $this->properties['total_limit'];
-        $percentCurrent = (float)$currentUsage / $total;
-        $percentLast = (float)($currentUsage - $latestCountIncreased) / $total;
+        $total = $this->getTotalLimit();
 
-        return ($percent > $percentLast && $percent <= $percentCurrent);
+        return (float)((1 - $percent) * $total) < $currentUsage;
     }
 }

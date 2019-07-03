@@ -6,7 +6,7 @@ class TeamTranslationStatusEntityTest extends GoalousTestCase
 {
     private static $modelname = 'TeamTranslationStatusEntity';
 
-    function test_isUsageBecomeHighThanPercent()
+    function test_isUsageWithinPercentageOfLimit_success()
     {
         $entity = new TeamTranslationStatusEntity([
             'team_id' => 1,
@@ -16,7 +16,7 @@ class TeamTranslationStatusEntityTest extends GoalousTestCase
             'action_post_comment_total' => 0,
             'total_limit' => 10000,
         ], static::$modelname);
-        $this->assertFalse($entity->isUsageBecomeHighThanPercent(0.9, 1));
+        $this->assertFalse($entity->isUsageWithinPercentageOfLimit(0.1));
 
         $entity = new TeamTranslationStatusEntity([
             'team_id' => 1,
@@ -26,7 +26,7 @@ class TeamTranslationStatusEntityTest extends GoalousTestCase
             'action_post_comment_total' => 0,
             'total_limit' => 10000,
         ], static::$modelname);
-        $this->assertTrue($entity->isUsageBecomeHighThanPercent(0.9, 1));
+        $this->assertFalse($entity->isUsageWithinPercentageOfLimit(0.1));
 
         $entity = new TeamTranslationStatusEntity([
             'team_id' => 1,
@@ -36,7 +36,7 @@ class TeamTranslationStatusEntityTest extends GoalousTestCase
             'action_post_comment_total' => 0,
             'total_limit' => 10000,
         ], static::$modelname);
-        $this->assertFalse($entity->isUsageBecomeHighThanPercent(0.9, 1));
+        $this->assertTrue($entity->isUsageWithinPercentageOfLimit(0.1));
     }
 
     function test_isLimitReached()

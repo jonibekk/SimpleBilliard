@@ -15,6 +15,7 @@ App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
+App::uses('TranslationLanguage', 'Model');
 
 class PostExtender extends BaseExtender
 {
@@ -147,6 +148,8 @@ class PostExtender extends BaseExtender
 
                     /** @var TeamMemberService $TeamMemberService */
                     $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
                     $limitReached = false;
 
@@ -162,7 +165,7 @@ class PostExtender extends BaseExtender
                             if ($postLanguage === $availableLanguage['language']) {
                                 continue;
                             }
-                            $translationLanguages[] = $availableLanguage->languageToArray();
+                            $translationLanguages[] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
                         }
                     }
                 }

@@ -1,7 +1,11 @@
 <?php
+
+use Goalous\Enum\Language as LanguageEnum;
+
 App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
+App::uses('TeamTranslationStatus', 'Model');
 
 /**
  * Created by PhpStorm.
@@ -30,6 +34,10 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
+        'app.team_translation_status',
+        'app.team_translation_language',
+        'app.mst_translation_language',
+        'app.translation'
     ];
 
     public function test_getCirclePost_success()
@@ -175,5 +183,40 @@ class CirclePostPagingServiceTest extends GoalousTestCase
 
         $postData = $result['data'][0];
         $this->assertArrayHasKey('attached_files', $postData);
+    }
+
+    public function test_getCirclePostWithTranslationLanguage_success()
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        $teamId = 1;
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+
+        /** @var CirclePostPagingService $CirclePostPagingService */
+        $CirclePostPagingService = new CirclePostPagingService();
+        $cursor = new PagingRequest();
+        $cursor->addResource('res_id', 1);
+        $cursor->addResource('current_user_id', 1);
+        $cursor->addResource('current_team_id', 1);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_POST_FILE);
+
+        $this->assertCount(1, $result['data']);
+
+        $postData = $result['data'][0];
+        $this->assertArrayHasKey('translation_limit_reached', $postData);
+        $this->assertArrayHasKey('translation_languages', $postData);
+        $this->assertCount(3, $postData['translation_languages']);
+        foreach ($postData['translation_languages'] as $translationLanguage) {
+            $this->assertNotEmpty($translationLanguage['language']);
+            $this->assertNotEmpty($translationLanguage['intl_name']);
+            $this->assertNotEmpty($translationLanguage['local_name']);
+        }
     }
 }

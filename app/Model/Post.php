@@ -10,7 +10,7 @@ App::uses('PostDraft', 'Model');
 App::uses('Translation', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
-App::import('Lib/DataExtender', 'CirclePostExtender');
+App::import('Lib/DataExtender', 'PostExtender');
 
 /**
  * Post Model
@@ -722,11 +722,17 @@ class Post extends AppModel
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
         $res = $this->find('all', $options);
-        //コメントを逆順に
+
+        /** @var PostExtender $PostExtender */
+        $PostExtender = ClassRegistry::init('PostExtender');
+
         foreach ($res as $key => $val) {
+            //コメントを逆順に
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
+            //Extend language
+            $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id, [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
         }
 
         //コメントを既読に

@@ -11,6 +11,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'TeamMemberService');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
+App::uses('TranslationLanguage', 'Model');
 
 
 class CirclePostExtender extends BaseExtender
@@ -28,7 +29,6 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
 
     const DEFAULT_COMMENT_COUNT = 3;
-
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -135,6 +135,8 @@ class CirclePostExtender extends BaseExtender
                 } else {
                     /** @var TeamMemberService $TeamMemberService */
                     $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
                     $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
 
@@ -153,7 +155,7 @@ class CirclePostExtender extends BaseExtender
                                 if ($postLanguage === $availableLanguage['language']) {
                                     continue;
                                 }
-                                $entry['translation_languages'][] = $availableLanguage->languageToArray();
+                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
                             }
                         }
                     }

@@ -1,9 +1,11 @@
 <?php
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+App::uses('Translation', 'Controller');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
@@ -11,6 +13,8 @@ App::import('Service', 'ActionService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 /** @noinspection PhpUndefinedClassInspection */
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
+App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
 
 /**
  * Goals Controller
@@ -1390,6 +1394,12 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             $url = $this->referer();
             $post = $this->Goal->Post->getByActionResultId($ar_id);
+
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $post['Post']['id']);
+
             if ($post) {
                 $url = [
                     'controller' => 'posts',
@@ -1528,7 +1538,7 @@ class GoalsController extends AppController
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
-                || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
+                || !$goalPost = $this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
                     $this->Goal->ActionResult->getLastInsertID(), $share,
                     PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
                 || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
@@ -1537,6 +1547,35 @@ class GoalsController extends AppController
             ) {
                 throw new RuntimeException(__("Failed to add an action."));
             }
+
+            // Make translation
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            $teamId = TeamStatus::getCurrentTeam()->getTeamId();
+
+            if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+                /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+                $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+                /** @var TranslationService $TranslationService */
+                $TranslationService = ClassRegistry::init('TranslationService');
+
+                $defaultLanguage = $TeamTranslationLanguageService->calculateDefaultTranslationLanguage($teamId);
+
+                try {
+                    $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $goalPost['Post']['id'], $defaultLanguage);
+                    // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
+                    $this->sendTranslationUsageNotification($teamId);
+                } catch (Exception $e) {
+                    GoalousLog::error('Failed create translation on new post', [
+                        'message'  => $e->getMessage(),
+                        'posts.id' => $this->Post->getLastInsertID(),
+                    ]);
+                }
+            }
+
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
@@ -1947,4 +1986,51 @@ class GoalsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
+
+
+    public function sendTranslationUsageNotification(int $teamId)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $notificationFlagClient = new NotificationFlagClient();
+
+        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
+        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
+
+        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
+            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitReachedKey);
+        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
+            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitClosingKey);
+        }
+    }
+
+    private function notifyTranslateLimitReached(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
+    }
+
+    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
+    }
+
 }
