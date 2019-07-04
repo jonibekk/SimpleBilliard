@@ -153,7 +153,6 @@ function evTranslation() {
     $.get('/api/v1/translations', {
       type: content_type,
       id: model_id,
-      lang: getBrowserLanguage()
     }).done(function (json) {
       $obj.attr('translated', '1');
       var originalText = getOriginalHtml('#PostTextBody_{id}', model_id);
