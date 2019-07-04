@@ -118,7 +118,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
-                        <?php if (!empty($post['Post']['translation_languages'])) { ?>
+                        <?php if (isset($enable_translation) && $enable_translation && !empty($post['Post']['translation_languages'])) { ?>
                         <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>" content_type="1">g_translate</i>
                         <?php } ?>
                         <div class="dropdown inline-block">

@@ -547,6 +547,7 @@ class PostsController extends AppController
             $this->request->params);
 
         $this->set(compact('posts'));
+        $this->set('enable_translation', true);
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -1063,6 +1064,7 @@ class PostsController extends AppController
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $this->request->params)
             ]);
+            $this->set('enable_translation', true);
 
             // setting draft post data if having circle_id
             /** @var PostDraftService $PostDraftService */
@@ -1103,6 +1105,7 @@ class PostsController extends AppController
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
             $this->request->params);
         $this->set(compact('posts'));
+        $this->set('enable_translation', true);
 
         // setting draft post data if having circle_id
         /** @var PostDraftService $PostDraftService */
