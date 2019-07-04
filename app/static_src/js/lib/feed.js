@@ -104,12 +104,20 @@ function evTranslationOtherLanguage(e) {
   var content_type = $obj.attr('content_type');
   var language = $obj.attr('language');
 
+  var elementBody = '#PostTextBody_{id}';
+  switch (parseInt(content_type)) {
+    case 2:
+    case 4:
+      elementBody = '#CommentTextBody_{id}';
+      break;
+  }
+
   $.get('/api/v1/translations', {
     type: content_type,
     id: model_id,
     lang: language
   }).done(function (json) {
-    setInnerHtmlTo("#PostTextBody_{id}", model_id, json.data.translation);
+    setInnerHtmlTo(elementBody, model_id, json.data.translation);
   }).fail(function (data) {
     $('#modal-alert-translation-error').modal('show')
   })
@@ -122,7 +130,20 @@ function evTranslation() {
   var $obj = $(this);
   var model_id = $obj.attr('model_id');
   var content_type = $obj.attr('content_type');
-  var translationDropDown = $('#TranslationDropDown_' + model_id);
+
+  var elementBody = '#PostTextBody_{id}';
+  var elementBodyMemory = '#PostTextBodyMemory_{id}';
+  var elementTranslationDropDown = '#TranslationDropDown_';
+  switch (parseInt(content_type)) {
+    case 2:
+    case 4:
+      elementBody = '#CommentTextBody_{id}';
+      elementBodyMemory = '#CommentTextBodyMemory_{id}';
+      elementTranslationDropDown = '#TranslationCommentDropDown_';
+      break;
+  }
+
+  var translationDropDown = $(elementTranslationDropDown + model_id);
 
   var isDisabled = $obj.hasClass('disabled');
   if (isDisabled) {
@@ -136,7 +157,7 @@ function evTranslation() {
     // Translated once before
     var isOn = $obj.hasClass('on');
     $obj.toggleClass('on');
-    swapInnerHtml("#PostTextBody_{id}", "#PostTextBodyMemory_{id}", model_id);
+    swapInnerHtml(elementBody, elementBodyMemory, model_id);
     if (isOn) {
       // Turning off translate
       translationDropDown.hide();
@@ -155,9 +176,9 @@ function evTranslation() {
       id: model_id,
     }).done(function (json) {
       $obj.attr('translated', '1');
-      var originalText = getOriginalHtml('#PostTextBody_{id}', model_id);
-      setInnerHtmlTo("#PostTextBodyMemory_{id}", model_id, originalText);
-      setInnerHtmlTo("#PostTextBody_{id}", model_id, json.data.translation);
+      var originalText = getOriginalHtml(elementBody, model_id);
+      setInnerHtmlTo(elementBodyMemory, model_id, originalText);
+      setInnerHtmlTo(elementBody, model_id, json.data.translation);
       translationDropDown.show();
       $obj.toggleClass('on');
     }).fail(function (data) {

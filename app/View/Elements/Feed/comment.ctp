@@ -93,7 +93,17 @@
                     $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($comment['body'])), $mentions)
                 ?>
                 </div>
-
+                <div id="CommentTextBodyMemory_<?= $comment['id'] ?>" style="display: none;"></div>
+                <div class="dropdown inline-block" id="TranslationCommentDropDown_<?= $comment['id'] ?>" style="display: none;">
+                    <div href="#" class="drop-down-translation" data-toggle="dropdown">
+                        <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                    <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
+                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
+                    <?php } ?>
+                    </ul>
+                </div>
             <?php
             /**
              * 画像のurlを集める
@@ -191,6 +201,11 @@
                ]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
+
+            <?php if (isset($enable_translation) && $enable_translation && !empty($comment['translation_languages'])) { ?>
+            ･
+            <i class="icon-translation material-icons md-12 click-translation" model_id="<?= $comment['id'] ?>" content_type="2">g_translate</i>
+            <?php } ?>
             </span>
             </div>
         </div>
