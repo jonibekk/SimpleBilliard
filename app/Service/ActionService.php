@@ -183,6 +183,6 @@ class ActionService extends AppService
         $postType = Hash::get($actionPost, 'type');
         $teamId = Hash::get($actionPost, 'team_id');
 
-        return $postType === Post::TYPE_ACTION && !empty($TeamMember->getIdByTeamAndUserId($teamId, $userId));
+        return ($postType == Post::TYPE_ACTION) && (!empty($TeamMember->getIdByTeamAndUserId($teamId, $userId)));
     }
 }
