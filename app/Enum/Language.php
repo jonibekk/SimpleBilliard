@@ -45,4 +45,23 @@ class Language extends Enum
     const ID = 'id';
     // Malaysian
     const MS = 'ms';
+
+    /**
+     * Remove country code from a locale if not supported.
+     *          e.g. en-US -> en, zh-TW -> zh-TW
+     *
+     * @param string $localizedLanguage
+     *
+     * @return string
+     */
+    public static function cleanLanguage(string $localizedLanguage): string
+    {
+        if (self::isValid($localizedLanguage)) {
+            return $localizedLanguage;
+        }
+
+        $languageCode = locale_get_primary_language($localizedLanguage);
+
+        return $languageCode;
+    }
 }
