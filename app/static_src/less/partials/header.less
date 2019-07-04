@@ -834,7 +834,6 @@ header-nav-add.open ul {
   box-sizing: unset;
 }
 
-
 // ↓ renewal header version
 .glHeaderMobile {
   //For fixing Android's header & footer scrolling issue
@@ -1032,5 +1031,23 @@ header-nav-add.open ul {
   &:hover, &:visited, &:target {
     text-decoration: none;
     color: @color-04-gray;
+  }
+}
+
+.demo-alert {
+  height: auto;
+  width: 100%;
+  background: @veryLightYellow;
+  z-index: 2;
+  padding: 10px 0;
+  display: block;
+  color: @darkRed;
+  font-size: 12px;
+  font-weight: 600;
+  &.mod-mb-app{
+    top: 70px;
+  }
+  .container {
+    margin-top: 0px;
   }
 }

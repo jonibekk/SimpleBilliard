@@ -34,6 +34,10 @@ class UsersController extends AppController
         'Mention'
     ];
 
+    const ALLOW_DEMO_SAVING_USER_SETTINGS = [
+        'User.language'
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -66,7 +70,32 @@ class UsersController extends AppController
         }
 
         if (!$this->request->is('post')) {
+            if (IS_DEMO) {
+                return $this->render('demo_login');
+            }
             return $this->render();
+        }
+
+        if (IS_DEMO) {
+            App::uses('LangHelper', 'View/Helper');
+            $Lang = new LangHelper(new View());
+            $lang = $Lang->getLangCode();
+
+            if ($lang === LangHelper::LANG_CODE_JP) {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            } else {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous+EN@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            }
         }
 
         //account lock check
@@ -682,6 +711,19 @@ class UsersController extends AppController
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put')) {
+            // Restrict saving data if demo env
+            if (IS_DEMO) {
+                // Prevent to save data which is not allowed
+                $tmp = $this->request->data;
+                $this->request->data = [];
+                foreach (self::ALLOW_DEMO_SAVING_USER_SETTINGS as $keyPath) {
+                    $this->request->data[$keyPath] = Hash::get($tmp, $keyPath);
+                }
+                // Convert flatten array to multiple dimensions array.
+                // https://book.cakephp.org/2.0/ja/core-utility-libraries/hash.html#Hash::expand
+                $this->request->data = Hash::expand($this->request->data);
+            }
+
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');

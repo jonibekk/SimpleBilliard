@@ -256,6 +256,11 @@ define('REFERER_STATUS_INVITED_USER_NOT_EXIST_BY_CSV', '?st=inv_no&from=csv');
 
 define('SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS', 1209600); //2 weeks
 
+// For Demo Site
+define('IS_DEMO', ENV_NAME === 'demo'); // How many hours the demo is reset
+define('DEMO_RESET_HOURS', 24); // How many hours the demo is reset
+define('DEMO_RESET_TIME', 3); // Every Day 3AM
+
 App::uses('GoalousLog', 'Log');
 
 /**
