@@ -202,7 +202,7 @@
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
 
-            <?php if (isset($enable_translation) && $enable_translation && !empty($comment['translation_languages'])) { ?>
+            <?php if (!empty($enable_translation) && !empty($comment['translation_languages'])) { ?>
             ･
             <i class="icon-translation material-icons md-12 click-translation" model_id="<?= $comment['id'] ?>" content_type="2">g_translate</i>
             <?php } ?>
