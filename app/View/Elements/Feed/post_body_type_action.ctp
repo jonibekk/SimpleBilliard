@@ -8,7 +8,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
-            <?php if (isset($enable_translation) && $enable_translation && !empty($post['Post']['translation_languages'])) { ?>
+            <?php if (!empty($enable_translation) && !empty($post['Post']['translation_languages'])) { ?>
             <i class="icon-translation material-icons md-16 click-translation" model_id="<?= $post['Post']['id'] ?>" content_type="3">g_translate</i>
             <?php } ?>
             <div class="dropdown inline-block">
