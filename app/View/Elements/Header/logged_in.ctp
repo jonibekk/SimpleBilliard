@@ -41,7 +41,19 @@
             <?php } ?>
         </div>
     </div>
-    <?php // Show header alert only team admin temporarily. [GL-6387]  ?>
+
+    <?php if (IS_DEMO):?>
+      <div class="demo-alert">
+        <div class="container">
+          <p class="demo-alert-description">
+              <?= __("Please do not post confidential or personal information because the demo environment is a shared environment with other customers.") ?>
+          </p>
+          <p class=""><?= __("Demo site data flush every day at %s o'clock.", DEMO_RESET_TIME)?></p>
+        </div>
+      </div>
+    <?php endif;?>
+
+  <?php // Show header alert only team admin temporarily. [GL-6387]  ?>
     <?php if (!empty($isTeamAdmin) && $isTeamAdmin && !($this->request->params['controller'] == 'payments' && $this->request->params['action'] == 'apply')): ?>
         <?php
         // TODO.Payment: must refactoring.
