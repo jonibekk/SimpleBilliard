@@ -155,4 +155,30 @@ class TeamTranslationLanguageServiceTest extends GoalousTestCase
 
         $TeamTranslationLanguageService->getDefaultTranslationLanguage($teamId);
     }
+
+    public function test_selectFirstSupportedLanguage_success()
+    {
+        $teamId = 1;
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ID());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ZH_TW());
+
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+        //Valid language
+        $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["es", "de", "en"]);
+        $this->assertEquals(LanguageEnum::EN, $language);
+        $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["qq", "id", "ww"]);
+        $this->assertEquals(LanguageEnum::ID, $language);
+
+        //Containing country
+        $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["qq", "qw", "en-US"]);
+        $this->assertEquals(LanguageEnum::EN, $language);
+
+        //Valid localized language
+        $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["qq", "zh-TW", "en"]);
+        $this->assertEquals(LanguageEnum::ZH_TW, $language);
+    }
 }

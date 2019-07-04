@@ -5,6 +5,7 @@ App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TranslationLanguage', 'Model');
 
 use Goalous\Exception as GlException;
+use Goalous\Enum\Language as LanguageEnum;
 
 class TeamTranslationLanguageService extends AppService
 {
@@ -149,5 +150,30 @@ class TeamTranslationLanguageService extends AppService
         }
     }
 
+    /**
+     * From given array of language codes, get the first language that the team support
+     *
+     * @param int   $teamId
+     * @param array $languageCodes
+     *
+     * @return string
+     */
+    public function selectFirstSupportedLanguage(int $teamId, array $languageCodes): string
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
+        $queryResult = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
+
+        foreach ($languageCodes as $language) {
+            $cleanedLanguage = LanguageEnum::cleanLanguage($language);
+            foreach ($queryResult as $teamTranslationLanguageEntity) {
+                if ($cleanedLanguage === $teamTranslationLanguageEntity['language']) {
+                    return $cleanedLanguage;
+                }
+            }
+        }
+
+        return "";
+    }
 }

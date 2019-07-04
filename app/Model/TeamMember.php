@@ -2449,6 +2449,19 @@ class TeamMember extends AppModel
     }
 
     /**
+     * Check whether team member has default translation language in the team
+     *
+     * @param int $teamId
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function hasDefaultTranslationLanguage(int $teamId, int $userId): bool
+    {
+        return !empty($this->getDefaultTranslationLanguage($teamId, $userId));
+    }
+
+    /**
      * Set user's default translation language in a team
      *
      * @param int    $teamId

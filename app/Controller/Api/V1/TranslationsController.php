@@ -1,8 +1,10 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'TeamMemberService');
+App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
 App::uses('TeamMember', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
 App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
@@ -25,14 +27,11 @@ class TranslationsController extends ApiController
         $contentTypeValue = $this->request->query('type');
         $contentId = $this->request->query('id');
         $language = $this->request->query('lang');
-        $userId = $this->Auth->user('id');
         $teamId = $this->current_team_id;
 
         try {
             if (empty($language)) {
-                /** @var TeamMemberService $TeamMemberService */
-                $TeamMemberService = ClassRegistry::init('TeamMemberService');
-                $language = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+                $language = $this->selectDefaultTranslationLanguage();
             }
 
             $contentType = TranslationContentType::getEnumObj($contentTypeValue);
@@ -80,8 +79,16 @@ class TranslationsController extends ApiController
             $errorMessage[] = "Missing translation content id.";
         }
 
-        if (!empty($language) && !LangEnum::isValid($language)) {
-            $errorMessage[] = "Invalid language code.";
+        if (!empty($language)) {
+            if (LangEnum::isValid($language)) {
+                /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+                $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+                if (!$TeamTranslationLanguage->supportTranslationLanguage($teamId, $language)) {
+                    $errorMessage[] = "Language not supported in team";
+                }
+            } else {
+                $errorMessage[] = "Invalid language code.";
+            }
         }
 
         /** @var TranslationService $TranslationService */
@@ -140,4 +147,30 @@ class TranslationsController extends ApiController
             $teamId);
     }
 
+    private function selectDefaultTranslationLanguage(): string
+    {
+        $userId = $this->Auth->user('id');
+        $teamId = $this->current_team_id;
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        if (!empty($TeamMember->hasDefaultTranslationLanguage($teamId, $userId))) {
+            return $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+        }
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+        $browserLanguages = CakeRequest::acceptLanguage();
+        $defaultLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+
+        if (empty($defaultLanguage)) {
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        }
+
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
+        return $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+    }
 }

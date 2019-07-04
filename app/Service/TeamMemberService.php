@@ -223,14 +223,20 @@ class TeamMemberService extends AppService
      * @param int    $teamId
      * @param int    $userId
      * @param string $langCode
+     * @param bool   $overwriteFlg Whether language is saved even when data exists.
+     *                             TRUE for overwriting, FALSE for skipping when data exists
      *
      * @throws Exception
      */
-    public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode)
+    public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode, bool $overwriteFlg = true)
     {
-
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
+
+        // If user already has a default translation language & overwriting is not allowed, end method
+        if (!($overwriteFlg || empty($TeamMember->getDefaultTranslationLanguage($teamId, $userId)))){
+            return;
+        }
 
         try {
             $this->TransactionManager->begin();
