@@ -62,6 +62,6 @@ class Language extends Enum
 
         $languageCode = locale_get_primary_language($localizedLanguage);
 
-        return $languageCode;
+        return $languageCode ?: "";
     }
 }

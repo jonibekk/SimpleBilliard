@@ -167,6 +167,9 @@ class TeamTranslationLanguageService extends AppService
 
         foreach ($languageCodes as $language) {
             $cleanedLanguage = LanguageEnum::cleanLanguage($language);
+            if (empty($cleanedLanguage)) {
+                continue;
+            }
             foreach ($queryResult as $teamTranslationLanguageEntity) {
                 if ($cleanedLanguage === $teamTranslationLanguageEntity['language']) {
                     return $cleanedLanguage;
