@@ -8,8 +8,10 @@ App::uses('AppModel', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Translation', 'Model');
+App::uses('Comment', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 
 /**
@@ -723,6 +725,8 @@ class Post extends AppModel
         }
         $res = $this->find('all', $options);
 
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
         /** @var PostExtender $PostExtender */
         $PostExtender = ClassRegistry::init('PostExtender');
 
@@ -731,8 +735,10 @@ class Post extends AppModel
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
-            //Extend language
+            //Extend translation language in post
             $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id, [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
+            //Extend translation language in comment
+            $res[$key]['Comment'] = $CommentExtender->extendMulti($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
         }
 
         //コメントを既読に
@@ -782,7 +788,6 @@ class Post extends AppModel
                 break;
             }
         }
-        // TODO extend language options
 
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
@@ -2027,5 +2032,33 @@ class Post extends AppModel
         ];
 
         $this->save($newData, false);
+    }
+
+    /**
+     * Get post entity by comment id
+     *
+     * @param int $commentId
+     *
+     * @return array
+     */
+    public function getByCommentId(int $commentId): array
+    {
+        $condition = [
+            'table' => 'posts',
+            'alias' => 'Post',
+            'joins' => [
+                [
+                    'table'      => 'comments',
+                    'alias'      => 'Comment',
+                    'type'       => 'INNER',
+                    'conditions' => [
+                        'Post.id = Comment.post_id',
+                        'Comment.id'      => $commentId,
+                    ]
+                ],
+            ]
+        ];
+
+        return $this->useType()->find('first', $condition) ?: [];
     }
 }
