@@ -90,6 +90,10 @@ class TeamsController extends AppController
 
     public function add()
     {
+        if (IS_DEMO) {
+            throw new NotFoundException();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         $border_months_options = $this->Team->getBorderMonthsOptions();
         $start_term_month_options = $this->Team->getMonths();

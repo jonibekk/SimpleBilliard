@@ -31,7 +31,20 @@
         'novalidate'    => true,
         'id'            => 'UserAccountForm',
     ]); ?>
-    <div class="panel-body user-setting-panel-body">
+    <?php if (IS_DEMO):?>
+      <div class="panel-body user-setting-panel-body">
+          <?=
+          $this->Form->input('language', [
+              'label'     => __("Language"),
+              'type'      => 'select',
+              'options'   => $language_list,
+              'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
+          ]) ?>
+      </div>
+
+    <?php else:?>
+
+      <div class="panel-body user-setting-panel-body">
         <div class="form-group">
             <label for="PrimaryEmailEmail" class="col col-sm-3 control-label form-label"><?= __("Email") ?></label>
 
@@ -144,6 +157,7 @@
             </div>
         </div>
     </div>
+    <?php endif;?>
     <div class="panel-footer setting_pannel-footer">
         <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary pull-right']) ?>
         <div class="clearfix"></div>

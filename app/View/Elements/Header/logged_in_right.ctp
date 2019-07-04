@@ -122,7 +122,7 @@
                         <div class="center">
                             <span class="title"><?= __("Notification")?></span>
                         </div>
-                        <div class="right"><a class="mark_all_read"><?= __("Mark All as Read")?></a></div>
+                        <div class="right"><a class="mark_all_read"><?= __("Dismiss All")?></a></div>
                     </div>
                     <div class="content-container" id="NotiListScroll">
                         <ul class="header-nav-notify-contents notify-dropdown-cards" role="menu">

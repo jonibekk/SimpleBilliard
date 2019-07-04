@@ -34,6 +34,10 @@ class UsersController extends AppController
         'Mention'
     ];
 
+    const ALLOW_DEMO_SAVING_USER_SETTINGS = [
+        'User.language'
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -66,7 +70,32 @@ class UsersController extends AppController
         }
 
         if (!$this->request->is('post')) {
+            if (IS_DEMO) {
+                return $this->render('demo_login');
+            }
             return $this->render();
+        }
+
+        if (IS_DEMO) {
+            App::uses('LangHelper', 'View/Helper');
+            $Lang = new LangHelper(new View());
+            $lang = $Lang->getLangCode();
+
+            if ($lang === LangHelper::LANG_CODE_JP) {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            } else {
+                $this->request->data['User'] = [
+                    'email' => 'demo.goalous+EN@gmail.com',
+                    'password' => 'DemoDemo01',
+                    'installation_id' => 'no_value',
+                    'app_version' => 'no_value'
+                ];
+            }
         }
 
         //account lock check
@@ -114,10 +143,9 @@ class UsersController extends AppController
 
         $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
-        // 2要素認証設定ONかつ、設定して30日以内の場合
-        if ((is_null($userInfo['2fa_secret']) === true) || (empty($userInfo['2fa_secret']) === false
-                && $this->GlRedis->isExistsDeviceHash($userInfo['DefaultTeam']['id'], $userInfo['id']))
-        ) {
+        // [Note]
+        // Refer: https://jira.goalous.com/browse/GL-6874
+        if (is_null($userInfo['2fa_secret']) === true) {
             $is2faAuthEnabled = false;
         }
 
@@ -683,6 +711,19 @@ class UsersController extends AppController
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put')) {
+            // Restrict saving data if demo env
+            if (IS_DEMO) {
+                // Prevent to save data which is not allowed
+                $tmp = $this->request->data;
+                $this->request->data = [];
+                foreach (self::ALLOW_DEMO_SAVING_USER_SETTINGS as $keyPath) {
+                    $this->request->data[$keyPath] = Hash::get($tmp, $keyPath);
+                }
+                // Convert flatten array to multiple dimensions array.
+                // https://book.cakephp.org/2.0/ja/core-utility-libraries/hash.html#Hash::expand
+                $this->request->data = Hash::expand($this->request->data);
+            }
+
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
@@ -701,8 +742,8 @@ class UsersController extends AppController
             }
 
             // 通知設定 更新時
-            if (isset($this->request->data['NotifySetting']['email']) &&
-                isset($this->request->data['NotifySetting']['mobile'])
+            if (isset($this->request->data['NotifySetting']['email_status']) &&
+                isset($this->request->data['NotifySetting']['mobile_status'])
             ) {
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
@@ -710,11 +751,11 @@ class UsersController extends AppController
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('email',
-                            $this->request->data['NotifySetting']['email']));
+                            $this->request->data['NotifySetting']['email_status']));
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('mobile',
-                            $this->request->data['NotifySetting']['mobile']));
+                            $this->request->data['NotifySetting']['mobile_status']));
             }
             $this->User->id = $this->Auth->user('id');
             //ユーザー情報更新
@@ -754,28 +795,6 @@ class UsersController extends AppController
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
 
-        // 通知設定のプルダウンデフォルト
-        $this->request->data['NotifySetting']['email'] = 'all';
-        $this->request->data['NotifySetting']['mobile'] = 'all';
-        // 既に通知設定が保存されている場合
-        foreach (['email', 'mobile'] as $notify_target) {
-            foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {
-                $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
-                $same = true;
-                foreach ($values as $k => $v) {
-                    if (isset($this->request->data['NotifySetting'][$k])) {
-                        if ($this->request->data['NotifySetting'][$k] !== $v) {
-                            $same = false;
-                            break;
-                        }
-                    }
-                }
-                if ($same) {
-                    $this->request->data['NotifySetting'][$notify_target] = $type_group;
-                    break;
-                }
-            }
-        }
         $this->set(compact('me', 'is_not_use_local_name', 'lastFirst', 'language_list', 'timezones',
             'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
@@ -1002,14 +1021,14 @@ class UsersController extends AppController
             $this->User->saveField('2fa_secret', $secret_key);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            return $this->redirect($this->referer());
+            return $this->redirect('/users/settings');
         }
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Notification->outSuccess(__("Succeeded to save 2-Step Verification."));
         $this->Flash->set(null,
             ['element' => 'flash_click_event', 'params' => ['id' => 'ShowRecoveryCodeButton'], 'key' => 'click_event']);
-        return $this->redirect($this->referer());
+        return $this->redirect('/users/settings');
     }
 
     function ajax_get_modal_2fa_delete()
