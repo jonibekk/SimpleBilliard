@@ -93,8 +93,8 @@ abstract class BaseTranslatorClient implements TranslatorClientInterface
         }
 
         // Get most frequent source language
-        $language = array_keys($langCount, max($langCount))[0];
+        $sourceLanguage = array_keys($langCount, max($langCount))[0];
 
-        return new TranslationResult($language, $mergedString, $translationResults[0]->getTargetLanguage());
+        return new TranslationResult($sourceLanguage, $mergedString, $translationResults[0]->getTargetLanguage());
     }
 }

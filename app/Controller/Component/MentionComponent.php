@@ -1,6 +1,7 @@
 <?php
 App::uses('Component', 'Controller');
 App::uses('TeamMember', 'Model');
+
 /**
  * Class MentionComponent
  */
@@ -89,6 +90,22 @@ class MentionComponent extends Component
         return $result;
     }
 
+
+    /**
+     * replace all mentions in content with HTML expression.
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionForTranslation(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
+            '<span><b><i class="mention">@${1}</i></b></span>', $result);
+        return $result;
+    }
+
     /**
      * a shortcut method to get belongings
      *
@@ -169,7 +186,8 @@ class MentionComponent extends Component
         $me,
         $includeMe = false,
         $returnAsBelonging = false
-    ): array {
+    ): array
+    {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
 
