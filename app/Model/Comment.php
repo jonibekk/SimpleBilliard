@@ -350,6 +350,15 @@ class Comment extends AppModel
         }
 
         $res = $this->find('all', $options);
+
+        // Add translation
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+
+        foreach ($res as $key => $value) {
+            $res[$key]['Comment'] = $CommentExtender->extend($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+        }
+
         return $res;
     }
 

@@ -244,7 +244,8 @@
                             'comment_file' => $comment['CommentFile'],
                             'user'         => $comment['User'],
                             'like'         => $comment['MyCommentLike'],
-                            'id_prefix'    => 'Action_'
+                            'id_prefix'    => 'Action_',
+                            'post_type'    => $post['type'],
                         ]) ?>
                 <?php endforeach ?>
                 <a href="#" class="btn btn-link click-comment-new"

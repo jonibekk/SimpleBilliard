@@ -39,6 +39,8 @@ class CommentTest extends GoalousTestCase
         'app.circle_member',
         'app.local_name',
         'app.post_share_user',
+        'app.team_translation_language',
+        'app.team_member'
     );
 
     /**
@@ -180,6 +182,7 @@ class CommentTest extends GoalousTestCase
     function testGetPostsComment()
     {
         $post_id = 99;
+        $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $data = [
             'team_id' => 1,

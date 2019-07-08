@@ -287,7 +287,8 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 'comment'      => $comment,
                 'comment_file' => $comment['CommentFile'],
                 'user'         => $comment['User'],
-                'like'         => $comment['MyCommentLike']
+                'like'         => $comment['MyCommentLike'],
+                'post_type'    => $post['Post']['type'],
             ]) ?>
     <?php endforeach ?>
 
