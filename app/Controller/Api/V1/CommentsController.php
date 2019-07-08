@@ -137,6 +137,8 @@ class CommentsController extends ApiController
     {
         /** @var ApiCommentService $ApiCommentService */
         $ApiCommentService = ClassRegistry::init("ApiCommentService");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
 
         $err = $ApiCommentService->validateUpdate($id, $this->Auth->user('id'), $this->request->data);
         if (!empty($err)) {
@@ -151,9 +153,14 @@ class CommentsController extends ApiController
         // Get the newest comment object and return it as its html rendered block
         $comments = array($ApiCommentService->get($id));
 
+        $postId = Hash::get($comments[0], 'Comment.post_id');
+        $post = $Post->getById($postId);
+
         $notifyUsers = $this->Mention->getUserList(Hash::get($comments[0], 'Comment.body'), $this->current_team_id, $this->my_uid);
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, Hash::get($comments[0], 'Comment.post_id'), $id, $notifyUsers);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $id, $notifyUsers);
         $this->set(compact('comments'));
+        $this->set('enable_translation', true);
+        $this->set('post_type', $post['Post']['type']);
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';
         $this->_decideMobileAppRequest();

@@ -19,6 +19,7 @@ if (!isset($long_text)) {
          'comment_file' => $comment['CommentFile'],
          'user'         => $comment['User'],
          'like'         => $comment['MyCommentLike'],
-         'long_text'    => $long_text
+         'long_text'    => $long_text,
+         'post_type'    => $post_type,
         ]) ?>
 <?php endforeach ?>

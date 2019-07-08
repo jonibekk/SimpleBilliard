@@ -801,6 +801,8 @@ class PostsController extends AppController
 
     public function ajax_get_old_comment($get_num)
     {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
         $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getPostsComment($post_id, $get_num);
@@ -808,8 +810,12 @@ class PostsController extends AppController
         if (isset($this->request->params['named']['long_text'])) {
             $long_text = $this->request->params['named']['long_text'];
         }
+
+        $post = $Post->getById($post_id);
         $this->set('long_text', $long_text);
         $this->set(compact('comments'));
+        $this->set('enable_translation', true);
+        $this->set('post_type', $post['type']);
 
         // コメントを既読にする
         $this->Post->Comment->CommentRead->red(Hash::extract($comments, '{n}.Comment.id'));
@@ -827,11 +833,18 @@ class PostsController extends AppController
 
     public function ajax_get_latest_comment($last_comment_id = 0)
     {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
         $post_id = Hash::get($this->request->params, 'named.post_id');
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
+
+        $postId = Hash::get($comments[0], 'Comment.post_id');
+        $post = $Post->getById($postId);
+
         $this->set(compact('comments'));
         $this->set('enable_translation', true);
+        $this->set('post_type', $post['type']);
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
