@@ -79,7 +79,7 @@
                             disabled="disabled"
                         <?php endif ?>
                         >
-                        <span class="ml_5px"><?= __('Follow') ?></span>
+                        <span class="ml_5px"><?= $follow_opt['text'] ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-6">
