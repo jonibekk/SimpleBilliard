@@ -11,6 +11,7 @@ App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Translation', 'GoogleTranslatorClient');
+App::uses('MentionComponent', 'Controller/Component');
 
 use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
@@ -161,7 +162,9 @@ class TranslationService extends AppService
             $this->TransactionManager->begin();
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
+
             $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
+
             $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, StringUtil::mbStrLength($sourceBody));
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -264,8 +267,9 @@ class TranslationService extends AppService
                 if (empty($comment)) {
                     break;
                 }
+                $commentBody = MentionComponent::replaceMentionForTranslation($comment['body']);
                 $originalModel = [
-                    'body'     => $comment['body'],
+                    'body'     => $commentBody,
                     'language' => $comment['language'] ?: "",
                     'team_id'  => $comment['team_id']
                 ];
