@@ -102,7 +102,7 @@ class MentionComponent extends Component
     {
         $result = $text;
         $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
-            '<span><b><i class="mention">@${1}</i></b></span>', $result);
+            '<span class="mention">@${1}</span>', $result);
         return $result;
     }
 

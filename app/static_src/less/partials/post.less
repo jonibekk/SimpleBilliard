@@ -35,6 +35,16 @@ i.mention {
     background-color: @unreadRed;
   }
 }
+// For translation mention
+span.mention {
+  padding: 3px;
+  border-radius: 5px;
+  font-style: italic;
+  font-weight: bold;
+  &.to-me {
+    background-color: @unreadRed;
+  }
+}
 
 .mention-wrapper {
   display: flex;
