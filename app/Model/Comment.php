@@ -9,6 +9,7 @@ App::uses('User', 'Model');
 App::uses('Circle', 'Model');
 App::import('Model', 'HavingMentionTrait');
 App::import('Model/Entity', 'CommentEntity');
+App::import('Lib/DataExtender', 'CommentExtender');
 
 use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum\Language as LanguageEnum;
@@ -418,6 +419,14 @@ class Comment extends AppModel
         ];
         //表示を昇順にする
         $res = array_reverse($this->find('all', $options));
+
+        // Add translation
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+
+        foreach ($res as $key => $value) {
+            $res[$key]['Comment'] = $CommentExtender->extend($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+        }
 
         // Add these comment to red list
         $commentIdList = Hash::extract($res, '{n}.Comment.id');

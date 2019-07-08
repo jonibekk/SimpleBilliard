@@ -831,6 +831,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $comments = $this->Post->Comment->getLatestPostsComment($post_id, $last_comment_id);
         $this->set(compact('comments'));
+        $this->set('enable_translation', true);
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
