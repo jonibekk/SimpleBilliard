@@ -31,7 +31,14 @@ class TranslationsController extends ApiController
 
         try {
             if (empty($language)) {
-                $language = $this->selectDefaultTranslationLanguage();
+                /** @var TeamMemberService $TeamMemberService */
+                $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+                $userId = $this->Auth->user('id');
+                $teamId = $this->current_team_id;
+                $browserLanguages = CakeRequest::acceptLanguage();
+
+                $language = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId, $browserLanguages);
             }
 
             $contentType = TranslationContentType::getEnumObj($contentTypeValue);
@@ -145,32 +152,5 @@ class TranslationsController extends ApiController
             $userIds,
             null,
             $teamId);
-    }
-
-    private function selectDefaultTranslationLanguage(): string
-    {
-        $userId = $this->Auth->user('id');
-        $teamId = $this->current_team_id;
-
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init('TeamMemberService');
-
-        if (!empty($TeamMember->hasDefaultTranslationLanguage($teamId, $userId))) {
-            return $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
-        }
-        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-
-        $browserLanguages = CakeRequest::acceptLanguage();
-        $defaultLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
-
-        if (empty($defaultLanguage)) {
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-        }
-
-        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
-        return $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
     }
 }

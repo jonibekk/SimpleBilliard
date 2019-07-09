@@ -159,17 +159,19 @@ class TeamMemberService extends AppService
     }
 
     /**
-     * Get user's default translation language in a team
+     * Get user's default translation language in a team. Will preferentially choose language from
+     *                                browser language list.
      *
-     * @param int $teamId
-     * @param int $userId
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages Languages supported by user's browser.
      *
      * @return array
      *              ["en" => "English"]
      *
      * @throws Exception
      */
-    public function getDefaultTranslationLanguage(int $teamId, int $userId): array
+    public function getDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages = []): array
     {
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
@@ -188,11 +190,17 @@ class TeamMemberService extends AppService
             /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
             $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
 
-            $teamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($teamId);
+            if (!empty($browserLanguages)) {
+                $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+            }
 
-            $this->setDefaultTranslationLanguage($teamId, $userId, array_keys($teamDefaultLanguage)[0]);
+            if (empty($topBrowserLanguage)) {
+                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+            } else {
+                $defaultLanguage = $topBrowserLanguage;
+            }
 
-            return $teamDefaultLanguage;
+            $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
         }
 
         /** @var TranslationLanguage $TranslationLanguage */
@@ -203,18 +211,20 @@ class TeamMemberService extends AppService
     }
 
     /**
-     * Get language code of default translation language of an user in a team
+     * Get language code of default translation language of an user in a team. Will preferentially choose language from
+     *                                browser language list.
      *
-     * @param int $teamId
-     * @param int $userId
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages Languages supported by user's browser.
      *
      * @return string ISO 639-1 Language Code
      *
      * @throws Exception
      */
-    public function getDefaultTranslationLanguageCode(int $teamId, int $userId): string
+    public function getDefaultTranslationLanguageCode(int $teamId, int $userId, array $browserLanguages = []): string
     {
-        return array_keys($this->getDefaultTranslationLanguage($teamId, $userId))[0];
+        return array_keys($this->getDefaultTranslationLanguage($teamId, $userId, $browserLanguages))[0];
     }
 
     /**
@@ -234,7 +244,7 @@ class TeamMemberService extends AppService
         $TeamMember = ClassRegistry::init('TeamMember');
 
         // If user already has a default translation language & overwriting is not allowed, end method
-        if (!($overwriteFlg || empty($TeamMember->getDefaultTranslationLanguage($teamId, $userId)))){
+        if (!($overwriteFlg || empty($TeamMember->getDefaultTranslationLanguage($teamId, $userId)))) {
             return;
         }
 
