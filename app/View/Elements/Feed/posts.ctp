@@ -119,8 +119,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="col feed-user">
                     <div class="pull-right">
                         <?php if (!empty($enable_translation) && in_array($post['Post']['type'], [Post::TYPE_NORMAL, Post::TYPE_ACTION])) { ?>
-                            <?php $styleTranslationDisabled = $post['Post']['translation_limit_reached'] ? " disabled" : "" ?>
-                            <?php if ($post['Post']['translation_limit_reached'] || !empty($post['Post']['translation_languages'])) { ?>
+                            <?php $styleTranslationDisabled = !empty($post['Post']['translation_limit_reached']) ? " disabled" : "" ?>
+                            <?php if (!empty($post['Post']['translation_limit_reached']) || !empty($post['Post']['translation_languages'])) { ?>
                                 <i class="icon-translation material-icons md-16 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $post['Post']['id'] ?>" content_type="1">g_translate</i>
                             <?php } ?>
                         <?php } ?>
