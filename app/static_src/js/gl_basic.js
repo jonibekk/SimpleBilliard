@@ -343,7 +343,12 @@ $(function () {
           extra = 80;
         }
         extra += 380;
-        $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
+        if (cake.is_demo) {
+          // Calc in light of demo alert header
+          $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px - 54px)")
+        } else {
+          $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px)")
+        }
       }
     });
     $("#NavSearchInputClear").off("click").on("click", function() {
