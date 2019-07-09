@@ -15,6 +15,7 @@
  * @var                             $my_teams
  * @var array                       $translation_languages
  * @var bool                        $team_can_translate
+ * @var string                      $default_translation_language
  */
 ?>
 <?= $this->App->viewStartComment() ?>
@@ -99,6 +100,7 @@
             echo $this->Form->input('TeamMember.0.default_translation_language', [
                 'label'     => __("Translation Language"),
                 'type'      => 'select',
+                'default'   => $default_translation_language,
                 'options'   => $translation_languages,
                 'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
             ]);

@@ -165,6 +165,27 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertEquals(Enum\Language::ID, array_keys($defaultLanguage)[0]);
     }
 
+    public function test_getDefaultTranslationLanguageCodeFromBrowser_success()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+
+        $this->insertTranslationLanguage($teamId, Enum\Language::EN());
+        $this->insertTranslationLanguage($teamId, Enum\Language::MS());
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 1, [Enum\Language::MS, Enum\Language::EN]);
+        $this->assertEquals(Enum\Language::MS, $defaultLanguage);
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 2, [Enum\Language::ID, Enum\Language::MS]);
+        $this->assertEquals(Enum\Language::MS, $defaultLanguage);
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 3, [Enum\Language::JA, Enum\Language::DE]);
+        $this->assertEquals(Enum\Language::EN, $defaultLanguage);
+    }
+
+
     public function test_setDefaultTranslationLanguage_success()
     {
         /** @var TeamMember $TeamMember */

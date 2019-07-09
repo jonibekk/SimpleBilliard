@@ -84,17 +84,17 @@ class UsersController extends AppController
 
             if ($lang === LangHelper::LANG_CODE_JP) {
                 $this->request->data['User'] = [
-                    'email' => 'demo.goalous@gmail.com',
-                    'password' => 'DemoDemo01',
+                    'email'           => 'demo.goalous@gmail.com',
+                    'password'        => 'DemoDemo01',
                     'installation_id' => 'no_value',
-                    'app_version' => 'no_value'
+                    'app_version'     => 'no_value'
                 ];
             } else {
                 $this->request->data['User'] = [
-                    'email' => 'demo.goalous+EN@gmail.com',
-                    'password' => 'DemoDemo01',
+                    'email'           => 'demo.goalous+EN@gmail.com',
+                    'password'        => 'DemoDemo01',
                     'installation_id' => 'no_value',
-                    'app_version' => 'no_value'
+                    'app_version'     => 'no_value'
                 ];
             }
         }
@@ -810,13 +810,28 @@ class UsersController extends AppController
 
         $team_can_translate = $TeamTranslationLanguage->canTranslate($this->current_team_id);
         if ($team_can_translate) {
+            /** @var TeamMemberService $TeamMemberService */
+            $TeamMemberService = ClassRegistry::init('TeamMemberService');
             /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
             $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
             $translation_languages = $TeamTranslationLanguageService->getAllLanguages($this->current_team_id);
+
+            try {
+                $default_translation_language = $TeamMemberService->getDefaultTranslationLanguageCode($this->current_team_id, $this->Auth->user('id'), CakeRequest::acceptLanguage());
+            } catch (Exception $exception) {
+                GoalousLog::error("Failed to get default translation language in user setting page.", [
+                    'message' => $exception->getMessage(),
+                    'trace'   => $exception->getTraceAsString(),
+                    'team_id' => $this->current_team_id,
+                    'user_id' => $this->Auth->user('id')
+                ]);
+                $default_translation_language = "";
+            }
         }
-      
+
         $this->set(compact('me', 'is_not_use_local_name', 'lastFirst', 'language_list', 'timezones',
-            'not_verified_email', 'local_name', 'language_name', 'team_can_translate', 'translation_languages'));
+            'not_verified_email', 'local_name', 'language_name', 'team_can_translate', 'default_translation_language', 'translation_languages'));
         return $this->render();
     }
 
