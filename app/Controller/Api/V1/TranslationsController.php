@@ -29,6 +29,15 @@ class TranslationsController extends ApiController
         $language = $this->request->query('lang');
         $teamId = $this->current_team_id;
 
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        if (!$TeamTranslationLanguage->canTranslate($teamId)
+            || $TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+            return $this->_getResponseBadFail();
+        }
+
         try {
             if (empty($language)) {
                 /** @var TeamMemberService $TeamMemberService */
