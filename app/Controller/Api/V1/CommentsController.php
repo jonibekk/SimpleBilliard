@@ -4,6 +4,7 @@ use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 App::uses('ApiController', 'Controller/Api');
 App::import('Service/Api', 'ApiCommentService');
+App::import('Service', 'TeamTranslationLanguageService');
 App::uses('Comment', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TeamMember', 'Model');
@@ -110,8 +111,13 @@ class CommentsController extends ApiController
                 $this->_notifyUserOfGoalComment($this->Auth->user('id'), $post);
                 break;
         }
+
         // Translation usage notification
-        $this->sendTranslationUsageNotification($this->current_team_id);
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        if ($TeamTranslationLanguage->canTranslate($this->current_team_id)) {
+            $this->sendTranslationUsageNotification($this->current_team_id);
+        }
 
         // Push comments notifications
         $socketId = Hash::get($this->request->data, 'socket_id');
