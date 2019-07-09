@@ -379,34 +379,7 @@ msgid "Japanese"
 msgstr "日本語"
 
 msgid "English"
-msgstr "英語"
-
-msgid "Chinese(Simplified)"
-msgstr "中国語(簡体字)"
-
-msgid "Chinese(Traditional)"
-msgstr "中国語(繁体字)"
-
-msgid "Spanish"
-msgstr "スペイン語"
-
-msgid "German"
-msgstr "ドイツ語"
-
-msgid "Italian"
-msgstr "イタリア語"
-
-msgid "French"
-msgstr "フランス語"
-
-msgid "Indonesian"
-msgstr "インドネシア語"
-
-msgid "Malay"
-msgstr "マレー語"
-
-msgid "Thai"
-msgstr "タイ語"
+msgstr "English"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -3129,9 +3102,6 @@ msgstr "■お問い合わせ"
 msgid "Company"
 msgstr "■運営会社"
 
-msgid "Change language"
-msgstr "言語の変更"
-
 msgid "Login Goalous"
 msgstr "◆Goalousログイン"
 
@@ -3218,9 +3188,6 @@ msgstr "編集をやめる"
 
 msgid "Edit comment"
 msgstr "コメントを編集"
-
-msgid "Save<!-- 0 -->"
-msgstr "保存"
 
 msgid "Save"
 msgstr "保存する"
@@ -4634,7 +4601,7 @@ msgid "We accept consultation of introduction."
 msgstr "導入のご相談を受け付けています。"
 
 msgid "Contact us | Goalous"
-msgstr "お問い合わせ | Goalous(ゴーラス)"
+msgstr "お問い合わせ | Goalous"
 
 msgid "Say <q>Hello</q> to your company&rsquo;s next communication tool"
 msgstr "社員が目標でつながり、未来のコミュニケーションをあなたの組織に。"
@@ -4655,7 +4622,7 @@ msgid "It is a confirmation of your inquiry."
 msgstr "お問い合わせ内容の確認です。"
 
 msgid "Confirming | Goalous"
-msgstr "入力内容確認 | Goalous(ゴーラス)"
+msgstr "入力内容確認 | Goalous (ゴーラス)"
 
 msgid "Confirm what you ask us"
 msgstr "お問い合わせ内容確認"
@@ -4691,7 +4658,7 @@ msgid "Description of the function is here."
 msgstr "機能の説明はこちら。"
 
 msgid "Features | Goalous"
-msgstr "機能 | Goalous(ゴーラス)"
+msgstr "機能 | Goalous (ゴーラス)"
 
 msgid "You can improve your job and organization!"
 msgstr "Goalousで変えられる、あなたの組織・シゴト"
@@ -4871,7 +4838,7 @@ msgid "Inscription based on specific trade law is here."
 msgstr "特定商取引法に基づく表記はこちら。"
 
 msgid "Inscription by Law | Goalous"
-msgstr "特定商取引法に基づく表記 | Goalous(ゴーラス)"
+msgstr "特定商取引法に基づく表記 | Goalous (ゴーラス)"
 
 msgid "Create a team."
 msgstr "チームを作成してください。"
@@ -5075,7 +5042,7 @@ msgid "Privacy Policy is here."
 msgstr "プライバシーポリシーはこちら。"
 
 msgid "PrivacyPolicy | Goalous"
-msgstr "プライバシーポリシー | Goalous(ゴーラス)"
+msgstr "プライバシーポリシー | Goalous (ゴーラス)"
 
 msgid "Your team no longer has access to Goalous."
 msgstr "あなたのチームはGoalousにアクセスできなくなりました。"
@@ -5554,7 +5521,7 @@ msgstr ""
 msgid "お問い合わせ完了 | Goalous(ゴーラス)"
 msgstr ""
 
-msgid "お問い合わせ完了 | Goalous(ゴーラス)"
+msgid "お問い合わせ完了 | Goalous (ゴーラス)"
 msgstr ""
 
 msgid "Facebook page"
@@ -5611,8 +5578,8 @@ msgstr "あなたはいいね！していません。"
 msgid "Information matching the search could not be found"
 msgstr "検索に一致する情報は見つかりませんでした"
 
-msgid "Search (Complete match with ”…”)"
-msgstr "検索 (”…”で完全一致)"
+msgid "Search post and comment"
+msgstr "投稿とコメントから検索"
 
 msgid "Search result %d topics hit"
 msgstr "検索結果 %dトピックが一致しました"
@@ -5764,7 +5731,7 @@ msgstr "KR作成日"
 msgid "KR EDITED"
 msgstr "KR編集日"
 
-msgid "DOWNLOAD APP"
+msgid "DOWNROAD APP"
 msgstr "アプリダウンロード"
 
 msgid "CONTACT US"
@@ -5776,8 +5743,8 @@ msgstr "みえる、"
 msgid "Recognize,"
 msgstr "わかる、"
 
-msgid "Share today’s step<br>with photos."
-msgstr "きょうの一歩を<br>写真でシェアして。"
+msgid "Share today’s step\nwith photos."
+msgstr "きょうの一歩を\n写真でシェアして。"
 
 msgid "Move Forward."
 msgstr "すすむ。"
@@ -5791,23 +5758,68 @@ msgstr "導入事例 | Goalous(ゴーラス)"
 msgid "CASE STUDIES"
 msgstr "導入事例"
 
-msgid "Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous."
-msgstr "無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。"
+msgid "Save<!-- 0 -->"
+msgstr "保存"
 
-msgid "Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."
-msgstr "OKRをベースにしたGKA(Goal-Key Result-Action)を用いて、目標に向かって実行する組織へと生まれ変わります。"
+msgid "Change language"
+msgstr "言語の変更"
 
-msgid "Goalous changes the communication of many organizations and creates a team that runs for Key Results."
-msgstr "Goalousは多くの組織のコミュニケーションを変え、成果のために実行するチームを作ります。"
+msgid "Team settings"
+msgstr "チーム設定"
 
-msgid "Goalous has many sophisticated features for teams around the world."
-msgstr "Goalousには世界中のチームのために洗練された多くの機能が存在します。"
+msgid "Approaching the limit of translatable number."
+msgstr "翻訳可能文字数の上限に近づいています。"
 
-msgid "Pay only for what you need. Start with many. Try it free for 15 days and add more at any time."
-msgstr "15日間無料で利用できます。みんなで試してみてください。月間や年間での契約プランがあります。"
+msgid "Translation feature is paused since limit is reached."
+msgstr "上限に達したため、翻訳機能を一時停止しています。"
 
-msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
-msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
+msgid "Because your team has reached the maximum number of translatable characters, the translation function is paused."
+msgstr "あなたのチームの翻訳可能な文字数が上限に達したため、翻訳機能を一時停止しています。"
+
+msgid "Click the link below to confirm."
+msgstr "以下のリンクをクリックして、確認してください。"
+
+msgid "You can use the translation function again after the reset date and time."
+msgstr "リセット日時を過ぎると再び翻訳機能をご利用いただけます。"
+
+msgid "If you want to resume translation before that time, Please contact us using the form below."
+msgstr "それより前に翻訳機能を再開したい場合は、以下のフォームからお問い合わせください。"
+
+msgid "The number of translatable characters for your team is approaching the limit."
+msgstr "あなたのチームの翻訳可能な文字数が上限に近づいています。"
+
+msgid "If the upper limit is reached, the translation feature will be temporarily unavailable."
+msgstr "上限に達すると翻訳機能が一時的に使用できなくなります。"
+
+msgid "If you want to change the upper limit, Please contact us using the form below."
+msgstr "上限を変更したい場合は、以下のフォームからお問い合わせください。"
+
+msgid "Chinese(Simplified)"
+msgstr "中国語(簡体字)"
+
+msgid "Chinese(Traditional)"
+msgstr "中国語(繁体字)"
+
+msgid "Spanish"
+msgstr "スペイン語"
+
+msgid "German"
+msgstr "ドイツ語"
+
+msgid "Italian"
+msgstr "イタリア語"
+
+msgid "French"
+msgstr "フランス語"
+
+msgid "Indonesian"
+msgstr "インドネシア語"
+
+msgid "Malay"
+msgstr "マレー語"
+
+msgid "Thai"
+msgstr "タイ語"
 
 msgid "Translation Settings"
 msgstr "翻訳設定"
@@ -5816,7 +5828,7 @@ msgid "Translation Language"
 msgstr "翻訳言語"
 
 msgid "Translation Usage"
-msgstr "翻訳可能文字数"
+msgstr "翻訳した文字数"
 
 msgid "characters"
 msgstr "文字"
@@ -5845,14 +5857,62 @@ msgstr "上限を変更したい場合は、"
 msgid "Reset Date"
 msgstr "リセット日時"
 
-msgid "Selected Translation Language"
-msgstr "選択された翻訳言語"
-
 msgid "Default Translation Language"
 msgstr "デフォルト翻訳言語"
 
 msgid "Translation usage won't be reset in free trial plan."
 msgstr "トライアルプランでは、翻訳可能文字数はリセットされません。"
+
+msgid "I Agree. Login."
+msgstr "同意してログインする"
+
+msgid "※The demo site restricts the items that users can set."
+msgstr "※デモサイトではユーザーが設定できる項目を制限しています"
+
+msgid "Demo site data flush every day at %s o'clock."
+msgstr "デモサイトのデータは毎日%s時にリセットされます。"
+
+msgid "By clicking <q>I Agree. Login.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
+msgstr "下の<q>同意してログインする</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
+
+msgid "Also, posted data will be reset in %s hours."
+msgstr "また、投稿されたデータは%s時間でリセットされます。"
+
+msgid "Please do not post confidential or personal information because the demo environment is a shared environment with other customers."
+msgstr "デモ環境は他のお客様との共有環境のため、機密情報や個人情報を投稿しないようお願いいたします。"
+
+msgid "Notes on use"
+msgstr "ご利用にあたってのご注意"
+
+msgid "Try out Goalous's key features such as user invitations, goal creation and actions, and circle postings."
+msgstr "ユーザーの招待からゴールの作成やアクション、サークル投稿などGoalousの主要な機能をお試し頂けます。"
+
+msgid "Search (Complete match with ”…”)"
+msgstr "検索 (”…”で完全一致)"
+
+msgid "DOWNLOAD APP"
+msgstr "アプリダウンロード"
+
+msgid "Share today’s step<br>with photos."
+msgstr "きょうの一歩を<br>写真でシェアして。"
+
+msgid "Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous."
+msgstr "無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。"
+
+msgid "Use GKA(Goal-Key Result-Action) invented based on OKR methodology to improve communication across your organization."
+msgstr "OKRをベースにしたGKA(Goal-Key Result-Action)を用いて、目標に向かって実行する組織へと生まれ変わります。"
+
+msgid "Goalous changes the communication of many organizations and creates a team that runs for Key Results."
+msgstr "Goalousは多くの組織のコミュニケーションを変え、成果のために実行するチームを作ります。"
+
+msgid "Goalous has many sophisticated features for teams around the world."
+msgstr "Goalousには世界中のチームのために洗練された多くの機能が存在します。"
+
+msgid "Pay only for what you need. Start with many. Try it free for 15 days and add more at any time."
+msgstr "15日間無料で利用できます。みんなで試してみてください。月間や年間での契約プランがあります。"
+
+msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
+msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
 
 msgid "Try Demo Site"
 msgstr "デモサイトに移動"
@@ -5862,27 +5922,3 @@ msgstr "デモサイトへようこそ！"
 
 msgid "Let's experience Goalous as Demo"
 msgstr "Goalousをデモ体験してみましょう"
-
-msgid "Try out Goalous's key features such as user invitations, goal creation and actions, and circle postings."
-msgstr "ユーザーの招待からゴールの作成やアクション、サークル投稿などGoalousの主要な機能をお試し頂けます。"
-
-msgid "Notes on use"
-msgstr "ご利用にあたってのご注意"
-
-msgid "Please do not post confidential or personal information because the demo environment is a shared environment with other customers."
-msgstr "デモ環境は他のお客様との共有環境のため、機密情報や個人情報を投稿しないようお願いいたします。"
-
-msgid "Also, posted data will be reset in %s hours."
-msgstr "また、投稿されたデータは%s時間でリセットされます。"
-
-msgid "By clicking <q>I Agree. Login.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
-msgstr "下の<q>同意してログインする</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
-
-msgid "Demo site data flush every day at %s o'clock."
-msgstr "デモサイトのデータは毎日%s時にリセットされます。"
-
-msgid "※The demo site restricts the items that users can set."
-msgstr "※デモサイトではユーザーが設定できる項目を制限しています"
-
-msgid "I Agree. Login."
-msgstr "同意してログインする"

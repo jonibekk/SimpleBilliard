@@ -20,7 +20,7 @@
             <?php else : ?>
                 <div class="form-group">
                     <label class="col col-sm-3 control-label form-label sm-text-right">
-                        <p><?= __('Selected Translation Language') ?></p>
+                        <p><?= __('Translation Language') ?></p>
                     </label>
                     <div><?= implode(", ", $translationTeamLanguageCandidates) ?></div>
                 </div>
@@ -65,7 +65,6 @@
                         </p>
                     </div>
                 </div>
-                <hr style="clear:both;">
                 <div>
                     <label class="col col-sm-3 control-label form-label sm-text-right">
                         <p><?= __("Reset Date") ?></p></label>
