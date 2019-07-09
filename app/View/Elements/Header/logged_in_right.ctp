@@ -85,13 +85,15 @@
                     </a>
                 </li>
             <?php endif; ?>
-            <li class="header-nav-add-contents-team">
-                <a class="header-nav-add-contents-anchor"
-                   href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
-                    <i class=" fa fa-users header-drop-icons"></i>
-                    <p class="header-nav-add-contents-team"><?= __('Create a team') ?></p>
-                </a>
-            </li>
+            <?php if (!IS_DEMO): ?>
+              <li class="header-nav-add-contents-team">
+                  <a class="header-nav-add-contents-anchor"
+                     href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
+                      <i class=" fa fa-users header-drop-icons"></i>
+                      <p class="header-nav-add-contents-team"><?= __('Create a team') ?></p>
+                  </a>
+              </li>
+            <?php endif;?>
         </ul>
     </div>
     <div class="header-dropdown-message has-notify-dropdown header-icon-zoom <?= $is_mb_app ? "hide" : null ?>">
@@ -234,6 +236,11 @@
                    class="intercom-launcher header-nav-function-contents-support"><?= __('Support') ?></a>
             </li>
         <?php endif; ?>
+        <?php if (!IS_DEMO):?>
+          <li class="header-nav-function-contents-list">
+            <a href="https://demo.goalous.com" target="_blank" class="header-nav-function-contents-logout"><?=__('Try Demo Site')?></a>
+          </li>
+        <?php endif;?>
         <li class="header-nav-function-contents-list">
             <?=
             $this->Html->link(__('Logout'),

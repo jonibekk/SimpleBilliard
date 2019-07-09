@@ -1213,6 +1213,8 @@ class AppSchema extends CakeSchema {
 	public $notify_settings = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
+		'email_status' => array('type' => 'string', 'null' => false, 'default' => 'all', 'length' => 16, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Email notification setting'),
+		'mobile_status' => array('type' => 'string', 'null' => false, 'default' => 'all', 'length' => 16, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Mobile notification setting'),
 		'feed_post_app_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '閲覧可能な投稿があった際のアプリ通知'),
 		'feed_post_email_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '閲覧可能な投稿があった際のメール通知'),
 		'feed_post_mobile_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '閲覧可能な投稿があった際のモバイル通知'),

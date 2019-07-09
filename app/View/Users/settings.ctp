@@ -16,20 +16,30 @@
 <div class="sidebar-setting" role="complementary" id="SidebarSetting">
     <ul class="nav">
         <li class="active"><a href="#account"><?= __('Account') ?></a></li>
-        <li class=""><a href="#profile"><?= __('Profile') ?></a></li>
-        <li class=""><a class="" href="#notification"><?= __('Notification') ?></a></li>
+        <?php if (!IS_DEMO):?>
+          <li class=""><a href="#profile"><?= __('Profile') ?></a></li>
+          <li class=""><a class="" href="#notification"><?= __('Notification') ?></a></li>
+        <?php endif;?>
     </ul>
 </div>
 <?php $this->end() ?>
+
+<?php if (IS_DEMO):?>
+  <p class="alert alert-warning">
+    <?= __("※The demo site restricts the items that users can set.")?>
+  </p>
+<?php endif;?>
 <div id="account">
     <?= $this->element('User/account_setting') ?>
 </div>
-<div id="profile">
-    <?= $this->element('User/profile_setting') ?>
-</div>
-<div id="notification">
-    <?= $this->element('User/notify_setting') ?>
-</div>
+<?php if (!IS_DEMO): ?>
+  <div id="profile">
+      <?= $this->element('User/profile_setting') ?>
+  </div>
+  <div id="notification">
+      <?= $this->element('User/notify_setting') ?>
+  </div>
+<?php endif;?>
 <!--<div id="link">-->
 
 <!--</div>-->

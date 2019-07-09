@@ -5853,3 +5853,36 @@ msgstr "デフォルト翻訳言語"
 
 msgid "Translation usage won't be reset in free trial plan."
 msgstr "トライアルプランでは、翻訳可能文字数はリセットされません。"
+
+msgid "Try Demo Site"
+msgstr "デモサイトに移動"
+
+msgid "Welcome to the Demo Site!"
+msgstr "デモサイトへようこそ！"
+
+msgid "Let's experience Goalous as Demo"
+msgstr "Goalousをデモ体験してみましょう"
+
+msgid "Try out Goalous's key features such as user invitations, goal creation and actions, and circle postings."
+msgstr "ユーザーの招待からゴールの作成やアクション、サークル投稿などGoalousの主要な機能をお試し頂けます。"
+
+msgid "Notes on use"
+msgstr "ご利用にあたってのご注意"
+
+msgid "Please do not post confidential or personal information because the demo environment is a shared environment with other customers."
+msgstr "デモ環境は他のお客様との共有環境のため、機密情報や個人情報を投稿しないようお願いいたします。"
+
+msgid "Also, posted data will be reset in %s hours."
+msgstr "また、投稿されたデータは%s時間でリセットされます。"
+
+msgid "By clicking <q>I Agree. Login.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
+msgstr "下の<q>同意してログインする</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
+
+msgid "Demo site data flush every day at %s o'clock."
+msgstr "デモサイトのデータは毎日%s時にリセットされます。"
+
+msgid "※The demo site restricts the items that users can set."
+msgstr "※デモサイトではユーザーが設定できる項目を制限しています"
+
+msgid "I Agree. Login."
+msgstr "同意してログインする"
