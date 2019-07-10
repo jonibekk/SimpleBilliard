@@ -1365,6 +1365,7 @@ class Post extends AppModel
         /** @var Translation $Translation */
         $Translation = ClassRegistry::init('Translation');
         $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $data['Post']['id']);
+        $this->clearLanguage($data['Post']['id']);
 
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {
@@ -2029,6 +2030,24 @@ class Post extends AppModel
 
         $newData = [
             'language' => $language
+        ];
+
+        $this->save($newData, false);
+    }
+
+    /**
+     * Delete language of a post
+     *
+     * @param int $postId
+     *
+     * @throws Exception
+     */
+    public function clearLanguage(int $postId)
+    {
+        $this->id = $postId;
+
+        $newData = [
+            'language' => null
         ];
 
         $this->save($newData, false);

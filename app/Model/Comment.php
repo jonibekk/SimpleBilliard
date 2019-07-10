@@ -730,4 +730,22 @@ class Comment extends AppModel
 
         $this->save($newData, false);
     }
+
+    /**
+     * Delete language of a comment
+     *
+     * @param int $commentId
+     *
+     * @throws Exception
+     */
+    public function clearLanguage(int $commentId)
+    {
+        $this->id = $commentId;
+
+        $newData = [
+            'language' => null
+        ];
+
+        $this->save($newData, false);
+    }
 }

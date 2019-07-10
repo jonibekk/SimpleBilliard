@@ -36,6 +36,7 @@ class ActionServiceTest extends GoalousTestCase
         'app.goal_label',
         'app.goal_category',
         'app.user',
+        'app.team_translation_language',
     ];
 
     /**

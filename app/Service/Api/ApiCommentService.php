@@ -290,9 +290,12 @@ class ApiCommentService extends AppService
      * Delete all translations of a comment
      *
      * @param int $commentId
+     * @throws Exception
      */
     private function deleteTranslation(int $commentId)
     {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var Translation $Translation */
@@ -300,12 +303,17 @@ class ApiCommentService extends AppService
 
         $post = $Post->getByCommentId($commentId);
 
+        $Comment->clearLanguage($commentId);
+
         switch ($post['Post']['type']) {
             case Post::TYPE_NORMAL:
                 $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
                 break;
             case Post::TYPE_ACTION:
                 $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST_COMMENT(), $commentId);
+                break;
+            default:
+                throw new RuntimeException("Unexpected");
                 break;
         }
     }
