@@ -5922,3 +5922,10 @@ msgstr "デモサイトへようこそ！"
 
 msgid "Let's experience Goalous as Demo"
 msgstr "Goalousをデモ体験してみましょう"
+
+msgid "Translation Failed"
+msgstr "翻訳に失敗しました"
+
+msgid "Translation is Stopped Temporarily"
+msgstr "翻訳は一時停止しています"
+

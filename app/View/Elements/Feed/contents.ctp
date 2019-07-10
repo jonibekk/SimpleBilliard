@@ -85,7 +85,7 @@ elseif ($displayBackButtonGoals): ?>
         <div class="modal-dialog modal-dialog-centered modal-action-dialog" role="document">
             <div class="modal-content modal-action-content">
                 <div class="modal-header modal-action-header text-center">
-                    <h5 class="modal-title modal-action-title"><?=  __("Translation failed") ?></h5>
+                    <h5 class="modal-title modal-action-title"><?=  __("Translation Failed") ?></h5>
                 </div>
                 <div class="modal-body modal-action-body">
                     <p><?=  __("Please try again later.") ?></p>
@@ -100,7 +100,7 @@ elseif ($displayBackButtonGoals): ?>
         <div class="modal-dialog modal-dialog-centered modal-action-dialog" role="document">
             <div class="modal-content modal-action-content">
                 <div class="modal-header modal-action-header text-center">
-                    <h5 class="modal-title modal-action-title"><?=  __("Translation is temporary stopped") ?></h5>
+                    <h5 class="modal-title modal-action-title"><?=  __("Translation is Stopped Temporarily") ?></h5>
                 </div>
                 <div class="modal-body modal-action-body">
                     <p><?=  __("Because your team has reached the maximum number of translatable characters, the translation function is paused.") ?></p>
