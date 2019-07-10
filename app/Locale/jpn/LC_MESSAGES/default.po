@@ -5929,3 +5929,5 @@ msgstr "翻訳に失敗しました"
 msgid "Translation is Stopped Temporarily"
 msgstr "翻訳は一時停止しています"
 
+msgid "Translation language is set in each team"
+msgstr "翻訳言語はチームごとに設定されます"
