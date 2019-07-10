@@ -38,7 +38,7 @@
                     </label>
                     <div class="col col-sm-9">
                         <p>
-                            <?php if ($translationTeamTotalUsage > $translationTeamTotalLimit) : ?>
+                            <?php if ($translationTeamTotalUsage >= $translationTeamTotalLimit) : ?>
                                 <span style="color:#d9230f"><b><?= number_format($translationTeamTotalUsage) ?></b></span>
                             <?php elseif ($translationTeamTotalUsage > 0.9 * $translationTeamTotalLimit) : ?>
                                 <span><b><?= number_format($translationTeamTotalUsage) ?></b></span>
@@ -48,7 +48,7 @@
                             <span><?= " / " . number_format($translationTeamTotalLimit) . " " . __("characters") ?></span>
                         </p>
                         <p class="form-control-static">
-                            <?php if ($translationTeamTotalUsage > $translationTeamTotalLimit) : ?>
+                            <?php if ($translationTeamTotalUsage >= $translationTeamTotalLimit) : ?>
                                 <?= __("You have reached your translation limit.") ?> <br>
                                 <?= __("Please wait until reset.") ?> <br>
                                 <?= __('If you would like to change your limit,') ?>
