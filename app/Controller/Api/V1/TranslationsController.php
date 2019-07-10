@@ -35,7 +35,7 @@ class TranslationsController extends ApiController
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         if (!$TeamTranslationLanguage->canTranslate($teamId)
             || $TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-            return $this->_getResponseBadFail();
+            return $this->_getResponseBadFail("Team can't translate");
         }
 
         try {

@@ -895,6 +895,9 @@ class GoalsController extends AppController
             if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
+
+            $post = $this->Goal->Post->getByActionResultId($arId);
+
             $this->Goal->ActionResult->id = $arId;
             $this->Goal->ActionResult->delete();
             $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId,
@@ -929,8 +932,6 @@ class GoalsController extends AppController
 //                $kr = $KeyResultService->get($krId);
 //                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
-
-            $post = $this->Goal->Post->getByActionResultId($arId);
 
             // Delete translations
             /** @var Translation $Translation */
@@ -1399,6 +1400,7 @@ class GoalsController extends AppController
             /** @var Translation $Translation */
             $Translation = ClassRegistry::init('Translation');
             $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $post['Post']['id']);
+            $this->Goal->Post->clearLanguage($post['Post']['id']);
 
             if ($post) {
                 $url = [

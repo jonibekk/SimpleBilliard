@@ -1104,6 +1104,26 @@ class PostTest extends GoalousTestCase
         $this->assertEquals(LanguageEnum::ES, $post['language']);
     }
 
+    public function test_clearLanguage_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postId = 1;
+
+        $post = $Post->getById($postId);
+        $this->assertEmpty($post['language']);
+
+        $Post->updateLanguage($postId, LanguageEnum::ES);
+
+        $post = $Post->getById($postId);
+        $this->assertEquals(LanguageEnum::ES, $post['language']);
+
+        $Post->clearLanguage($postId);
+        $post = $Post->getById($postId);
+        $this->assertEmpty($post['language']);
+    }
+
     public function test_getByCommentId_success()
     {
         /** @var Post $Post */

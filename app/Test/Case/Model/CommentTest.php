@@ -641,4 +641,24 @@ class CommentTest extends GoalousTestCase
         $comment = $Comment->getById($commentId);
         $this->assertEquals(LanguageEnum::ES, $comment['language']);
     }
+
+    public function test_clearLanguage_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $commentId = 1;
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEmpty($comment['language']);
+
+        $Comment->updateLanguage($commentId, LanguageEnum::ES);
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEquals(LanguageEnum::ES, $comment['language']);
+
+        $Comment->clearLanguage($commentId);
+        $comment = $Comment->getById($commentId);
+        $this->assertEmpty($comment['language']);
+    }
 }

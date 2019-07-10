@@ -244,6 +244,6 @@ class TeamTranslationStatus extends AppModel
         /** @var TeamTranslationStatusEntity $usageStatus */
         $usageStatus = $this->getUsageStatus($teamId);
 
-        return $usageStatus->getTotalUsageCount() > $usageStatus['total_limit'];
+        return $usageStatus->getTotalUsageCount() >= $usageStatus['total_limit'];
     }
 }

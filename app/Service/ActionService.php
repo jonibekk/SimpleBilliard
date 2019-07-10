@@ -6,6 +6,8 @@
  * Time: 17:57
  */
 
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('ActionResult', 'Model');
@@ -15,6 +17,8 @@ App::uses('Post', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('AttachedFile', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
@@ -102,7 +106,7 @@ class ActionService extends AppService
             }
 
             // アクションとしての投稿
-            if (!$Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
+            if (!$goalPost = $Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
                 $newActionId, $share, PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
             ) {
                 throw new Exception(sprintf("Failed create post. data:%s"
@@ -145,6 +149,35 @@ class ActionService extends AppService
         // 添付ファイルが存在する場合は一時データを削除
         foreach ($fileIds as $hash) {
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
+        }
+
+        // Make translation
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+
+            try {
+                $TranslationService->createTranslation(TranslationContentType::ACTION_POST(), $goalPost['Post']['id'], $defaultLanguage);
+            } catch (Exception $e) {
+                GoalousLog::error('Failed create translation on new post', [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                    'post.id' => $goalPost['Post']['id'],
+                    'goal.id' => $goalId,
+                    'team.id' => $teamId,
+                    'user.id' => $userId
+                ]);
+            }
         }
 
         return (int)$newActionId;
