@@ -5,6 +5,7 @@ App::import('Lib/DataExtender/Extension', "CommentLikeExtension");
 App::import('Lib/DataExtender/Extension', "CommentReadDataExtension");
 App::import('Service', 'CommentService');
 App::import('Service', 'TeamMemberService');
+App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TranslationLanguage', 'Model');
@@ -41,10 +42,14 @@ class CommentExtender extends BaseExtender
             $data = $this->extendAttachedFiles($data);
         }
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
+
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-            if ($TeamTranslationLanguage->canTranslate($teamId)) {
+            if ($TeamTranslationLanguage->canTranslate($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
 
                 /** @var TeamTranslationStatus $TeamTranslationStatus */
                 $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
@@ -111,10 +116,13 @@ class CommentExtender extends BaseExtender
         }
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
 
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-            if ($TeamTranslationLanguage->canTranslate($teamId)) {
+            if ($TeamTranslationLanguage->canTranslate($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
                 /** @var TeamTranslationStatus $TeamTranslationStatus */
                 $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
@@ -154,7 +162,7 @@ class CommentExtender extends BaseExtender
             }
         }
 
-            return $data;
+        return $data;
     }
 
     /**
