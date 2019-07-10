@@ -379,7 +379,7 @@ msgid "Japanese"
 msgstr "日本語"
 
 msgid "English"
-msgstr "English"
+msgstr "英語"
 
 msgid "Please select"
 msgstr "選択してください"
