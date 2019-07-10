@@ -100,7 +100,7 @@
                     </div>
                     <ul class="dropdown-menu" aria-labelledby="download">
                     <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
-                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
+                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
                     <?php } ?>
                     </ul>
                 </div>

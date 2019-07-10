@@ -8,7 +8,7 @@ class TranslationLanguageEntity extends BaseEntity
     {
         return [
             "language"   => $this['language'],
-            'intl_name'  => $this['intl_name'],
+            'intl_name'  => __($this['intl_name']),
             'local_name' => $this['local_name']
         ];
     }
