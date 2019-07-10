@@ -3,6 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
+App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
@@ -29,12 +30,14 @@ class TranslationsController extends ApiController
         $language = $this->request->query('lang');
         $teamId = $this->current_team_id;
 
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
         /** @var TeamTranslationStatus $TeamTranslationStatus */
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        if (!$TeamTranslationLanguage->canTranslate($teamId)
-            || $TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+        if (($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId)) && (!$TeamTranslationLanguage->canTranslate($teamId)
+            || $TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached())) {
             return $this->_getResponseBadFail("Team can't translate");
         }
 

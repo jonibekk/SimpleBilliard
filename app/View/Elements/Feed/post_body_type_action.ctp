@@ -8,9 +8,9 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
 <div class="posts-panel-body panel-body">
     <div class="col col-xxs-12 feed-user mb_8px">
         <div class="pull-right">
-            <?php if (!empty($enable_translation) && in_array($post['Post']['type'], [1, 3])) { ?>
-                <?php $styleTranslationDisabled = $post['Post']['translation_limit_reached'] ? " disabled" : "" ?>
-                <?php if ($post['Post']['translation_limit_reached'] || !empty($post['Post']['translation_languages'])) { ?>
+            <?php if (!empty($enable_translation) && in_array($post['Post']['type'], [Post::TYPE_NORMAL, Post::TYPE_ACTION])) { ?>
+                <?php $styleTranslationDisabled = !empty($post['Post']['translation_limit_reached']) ? " disabled" : "" ?>
+                <?php if (!empty($post['Post']['translation_limit_reached']) || !empty($post['Post']['translation_languages'])) { ?>
                     <i class="icon-translation material-icons md-16 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $post['Post']['id'] ?>" content_type="3">g_translate</i>
                 <?php } ?>
             <?php } ?>

@@ -13,6 +13,7 @@ App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
+App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TranslationLanguage', 'Model');
@@ -133,10 +134,13 @@ class PostExtender extends BaseExtender
         }
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
 
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-            if ($TeamTranslationLanguage->canTranslate($teamId)) {
+            if ($TeamTranslationLanguage->canTranslate($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
 
                 /** @var TeamTranslationStatus $TeamTranslationStatus */
                 $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
