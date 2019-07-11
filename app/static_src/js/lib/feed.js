@@ -190,6 +190,28 @@ function evTranslation() {
   }
 }
 
+function turnOffTranslation(comment_id) {
+  var elementTranslationIcon = $('#CommentTranslation_' + comment_id);
+  if (!elementTranslationIcon) {
+    return;
+  }
+  var isOn = elementTranslationIcon.hasClass('on');
+  if (isOn) {
+    elementTranslationIcon.removeClass('on');
+    $('#TranslationCommentDropDown_' + comment_id).hide();
+    swapInnerHtml('#CommentTextBody_{id}', '#CommentTextBodyMemory_{id}', comment_id);
+  }
+  elementTranslationIcon.hide();
+}
+
+function turnOnTranslation(comment_id) {
+  var elementTranslationIcon = $('#CommentTranslation_' + comment_id);
+  if (!elementTranslationIcon) {
+    return;
+  }
+  elementTranslationIcon.show();
+}
+
 function getOriginalHtml(key, id) {
   var elementBody = $(key.replace('{id}', id));
   var elementShowMore = elementBody.find(".showmore_content");

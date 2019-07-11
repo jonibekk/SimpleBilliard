@@ -8,6 +8,7 @@ App::import('Service', 'TeamTranslationLanguageService');
 App::uses('Comment', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TeamMember', 'Model');
+App::import('Lib/DataExtender', 'CommentExtender');
 
 /**
  * Class ActionsController
@@ -157,16 +158,24 @@ class CommentsController extends ApiController
         }
 
         // Get the newest comment object and return it as its html rendered block
-        $comments = array($ApiCommentService->get($id));
+        $comment = $ApiCommentService->get($id);
+
+        // Add translation
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+        $comment['Comment'] = $CommentExtender->extend($comment['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+
+        $comments = [$comment];
 
         $postId = Hash::get($comments[0], 'Comment.post_id');
         $post = $Post->getById($postId);
+
 
         $notifyUsers = $this->Mention->getUserList(Hash::get($comments[0], 'Comment.body'), $this->current_team_id, $this->my_uid);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, $postId, $id, $notifyUsers);
         $this->set(compact('comments'));
         $this->set('enable_translation', true);
-        $this->set('post_type', $post['Post']['type']);
+        $this->set('post_type', $post['type']);
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';
         $this->_decideMobileAppRequest();

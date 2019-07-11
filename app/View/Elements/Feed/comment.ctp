@@ -102,6 +102,7 @@
                     <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
                         <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
                     <?php } ?>
+                        <li><a href="/users/settings"><?= __("Change default") ?></a></li>
                     </ul>
                 </div>
             <?php
@@ -203,8 +204,14 @@
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             <?php if (!empty($enable_translation) && in_array($post_type, [Post::TYPE_NORMAL, Post::TYPE_ACTION])) { ?>
                 <?php if (!empty($comment['translation_limit_reached']) || !empty($comment['translation_languages'])) { ?>
-                <?php $styleTranslationDisabled = $comment['translation_limit_reached'] ? " disabled" : "" ?>
-                ･ <i class="icon-translation material-icons md-12 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $comment['id'] ?>" content_type="2">g_translate</i>
+                <?php
+                    $styleTranslationDisabled = $comment['translation_limit_reached'] ? " disabled" : "";
+                    $contentType = 2;
+                    if ($post_type == Post::TYPE_ACTION) {
+                        $contentType = 4;
+                    }
+                ?>
+                ･ <i  id="CommentTranslation_<?= $comment['id'] ?>" class="icon-translation material-icons md-12 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $comment['id'] ?>" content_type="<?= $contentType ?>">g_translate</i>
                 <?php } ?>
             <?php } ?>
             </span>
