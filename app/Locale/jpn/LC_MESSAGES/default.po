@@ -5931,3 +5931,6 @@ msgstr "翻訳は一時停止しています"
 
 msgid "Translation language is set in each team"
 msgstr "翻訳言語はチームごとに設定されます"
+
+msgid "Change default"
+msgstr "デフォルト設定を変更する"

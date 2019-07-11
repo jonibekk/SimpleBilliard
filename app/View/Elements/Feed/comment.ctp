@@ -102,6 +102,7 @@
                     <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
                         <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
                     <?php } ?>
+                        <li><a href="/users/settings"><?= __("Change default") ?></a></li>
                     </ul>
                 </div>
             <?php

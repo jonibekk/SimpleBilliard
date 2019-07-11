@@ -178,6 +178,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
             <?php foreach ($post['Post']['translation_languages'] ?? [] as $tl) { ?>
             <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" content_type="3" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
             <?php } ?>
+            <li><a href="/users/settings"><?= __("Change default") ?></a></li>
         </ul>
     </div>
     <?php if ($post['Post']['site_info']): ?>
