@@ -99,8 +99,14 @@
                         <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
                     </div>
                     <ul class="dropdown-menu" aria-labelledby="download">
+                    <?php
+                        $contentType = 2;
+                        if ($post_type == Post::TYPE_ACTION) {
+                            $contentType = 4;
+                        }
+                    ?>
                     <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
-                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="2" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
+                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="<?= $contentType ?>" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
                     <?php } ?>
                         <li><a href="/users/settings"><?= __("Change default") ?></a></li>
                     </ul>
