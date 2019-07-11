@@ -176,7 +176,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
         </div>
         <ul class="dropdown-menu" aria-labelledby="download">
             <?php foreach ($post['Post']['translation_languages'] ?? [] as $tl) { ?>
-            <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" content_type="3" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> (<?= $tl['local_name'] ?>)</a></li>
+            <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" content_type="3" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
             <?php } ?>
         </ul>
     </div>
