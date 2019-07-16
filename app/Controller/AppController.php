@@ -453,7 +453,6 @@ class AppController extends BaseController
         Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
         $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
             function () use ($model, $currentTerm) {
-                $currentTerm = $model->Team->Term->getCurrentTermData();
                 $timezone = $this->Team->getTimezone();
                 $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
                 $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);

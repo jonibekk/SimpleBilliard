@@ -118,15 +118,15 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <div class="posts-panel-body panel-body">
                 <div class="col feed-user">
                     <div class="pull-right">
-                        <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
-                            <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
-                            <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
-                               data-id="<?= Hash::get($post, 'Post.id') ?>"
-                               data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>"></i>
-                        <?php endif; ?>
+                        <?php if (!empty($enable_translation) && in_array($post['Post']['type'], [Post::TYPE_NORMAL, Post::TYPE_ACTION])) { ?>
+                            <?php $styleTranslationDisabled = !empty($post['Post']['translation_limit_reached']) ? " disabled" : "" ?>
+                            <?php if (!empty($post['Post']['translation_limit_reached']) || !empty($post['Post']['translation_languages'])) { ?>
+                                <i class="icon-translation material-icons md-16 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $post['Post']['id'] ?>" content_type="1">g_translate</i>
+                            <?php } ?>
+                        <?php } ?>
                         <div class="dropdown inline-block">
                             <a href="#" class="font_lightGray-gray" data-toggle="dropdown" id="download">
-                                <i class="fa fa-chevron-down feed-arrow"></i>
+                                <i class="fa fa-ellipsis-v feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                                 <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
@@ -187,6 +187,17 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_content', compact('post')) ?>
+                <div class="dropdown inline-block" id="TranslationDropDown_<?= $post['Post']['id'] ?>" style="display: none;">
+                    <div href="#" class="drop-down-translation" data-toggle="dropdown">
+                        <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                    <?php foreach ($post['Post']['translation_languages'] ?? [] as $tl) { ?>
+                        <li class="click-translation-other" model_id="<?= $post['Post']['id'] ?>" content_type="1" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
+                    <?php } ?>
+                        <li><a href="/users/settings"><?= __("Change default") ?></a></li>
+                    </ul>
+                </div>
                 <?php
                 /**
                  * 画像のurlを集める
@@ -357,14 +368,16 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                            like_type="post">
                             <i class="fa-thumbs-up fa"></i>
                             <?= __("Like!") ?></a>
-                        <?php if (!$without_add_comment): ?>
-                            <a href="#" class="feeds-post-comment-btn trigger-click"
-                               target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                            >
-                                <i class="fa-comments-o fa"></i>
-                                <?= __("Comments") ?>
-                            </a>
+                        <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
+                        <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
+                        <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
+                        data-id="<?= Hash::get($post, 'Post.id') ?>"
+                        data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>">
+                            <span><?= __("Save<!-- 0 -->") ?></span>
+                        </i>
+
                         <?php endif; ?>
+
                     </div>
                     <div class="feeds-post-btns-wrap-right">
                         <a href="#"
@@ -435,7 +448,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 'comment'      => $comment,
                                 'comment_file' => $comment['CommentFile'],
                                 'user'         => $comment['User'],
-                                'like'         => $comment['MyCommentLike']
+                                'like'         => $comment['MyCommentLike'],
+                                'post_type'    => $post['Post']['type'],
                             ]) ?>
                     <?php endforeach ?>
 

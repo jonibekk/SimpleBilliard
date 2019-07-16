@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'TeamMemberService');
 App::import('Lib/DataExtender/Extension', 'UserExtension');
 App::import('Lib/DataExtender/Extension', 'CircleExtension');
 App::import('Lib/DataExtender/Extension', 'ActionExtension');
@@ -12,6 +13,10 @@ App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
+App::uses('Team', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TranslationLanguage', 'Model');
 
 class PostExtender extends BaseExtender
 {
@@ -25,6 +30,7 @@ class PostExtender extends BaseExtender
     const EXTEND_LIKE = "ext:post:like";
     const EXTEND_SAVED = "ext:post:saved";
     const EXTEND_READ = "ext:post:read";
+    const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -125,6 +131,51 @@ class PostExtender extends BaseExtender
             $PostReadExtension = ClassRegistry::init('PostReadExtension');
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extend($data, "id", "post_id");
+        }
+        if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
+
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+            if ($TeamTranslationLanguage->canTranslate($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
+
+                /** @var TeamTranslationStatus $TeamTranslationStatus */
+                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+                $limitReached = true;
+                $translationLanguages = [];
+
+                if (!$TeamTranslationStatus->isLimitReached($teamId)) {
+
+                    /** @var TeamMemberService $TeamMemberService */
+                    $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+                    $limitReached = false;
+
+                    $postLanguage = Hash::get($data, 'language');
+
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+
+                    if ($userDefaultLanguage !== $postLanguage) {
+
+                        $availableLanguages = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
+
+                        foreach ($availableLanguages as $availableLanguage) {
+                            if ($postLanguage === $availableLanguage['language']) {
+                                continue;
+                            }
+                            $translationLanguages[] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                        }
+                    }
+                }
+                $data['translation_limit_reached'] = $limitReached;
+                $data['translation_languages'] = $translationLanguages;
+            }
         }
 
         return $data;

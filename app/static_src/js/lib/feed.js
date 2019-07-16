@@ -46,6 +46,11 @@ $(function () {
             }
         });
     });
+
+    // Translation enable button
+    $(document).on("click", ".click-translation", evTranslation);
+    $(document).on("click", ".click-translation-other", evTranslationOtherLanguage);
+
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
     $(document).on("click", ".btn-back-notifications", evNotifications);
 
@@ -88,6 +93,152 @@ $(function () {
     }
     showMore();
 });
+
+function evTranslationOtherLanguage(e) {
+  e.preventDefault();
+  attrUndefinedCheck(this, 'model_id');
+  attrUndefinedCheck(this, 'content_type');
+
+  var $obj = $(this);
+  var model_id = $obj.attr('model_id');
+  var content_type = $obj.attr('content_type');
+  var language = $obj.attr('language');
+
+  var elementBody = '#PostTextBody_{id}';
+  switch (parseInt(content_type)) {
+    case 2:
+    case 4:
+      elementBody = '#CommentTextBody_{id}';
+      break;
+  }
+
+  $.get('/api/v1/translations', {
+    type: content_type,
+    id: model_id,
+    lang: language
+  }).done(function (json) {
+    setInnerHtmlTo(elementBody, model_id, json.data.translation);
+  }).fail(function (data) {
+    $('#modal-alert-translation-error').modal('show')
+  })
+}
+
+function evTranslation() {
+  attrUndefinedCheck(this, 'model_id');
+  attrUndefinedCheck(this, 'content_type');
+
+  var $obj = $(this);
+  var model_id = $obj.attr('model_id');
+  var content_type = $obj.attr('content_type');
+
+  var elementBody = '#PostTextBody_{id}';
+  var elementBodyMemory = '#PostTextBodyMemory_{id}';
+  var elementTranslationDropDown = '#TranslationDropDown_';
+  switch (parseInt(content_type)) {
+    case 2:
+    case 4:
+      elementBody = '#CommentTextBody_{id}';
+      elementBodyMemory = '#CommentTextBodyMemory_{id}';
+      elementTranslationDropDown = '#TranslationCommentDropDown_';
+      break;
+  }
+
+  var translationDropDown = $(elementTranslationDropDown + model_id);
+
+  var isDisabled = $obj.hasClass('disabled');
+  if (isDisabled) {
+    $('#modal-alert-translation-limit').modal('show')
+    return;
+  }
+
+  // Check if translated once ever
+  var isTranslatedOnce = !!parseInt($obj.attr('translated') || 0);
+  if (isTranslatedOnce) {
+    // Translated once before
+    var isOn = $obj.hasClass('on');
+    $obj.toggleClass('on');
+    swapInnerHtml(elementBody, elementBodyMemory, model_id);
+    if (isOn) {
+      // Turning off translate
+      translationDropDown.hide();
+    } else {
+      // Turning on translate
+      translationDropDown.show();
+    }
+  } else {
+    // Not translated once yet
+    var $loader = $('<i class="fa fa-refresh fa-spin icon-translating"></i>');
+    $obj.hide();
+    $obj.after($loader);
+    // Fetch translate text
+    $.get('/api/v1/translations', {
+      type: content_type,
+      id: model_id,
+    }).done(function (json) {
+      $obj.attr('translated', '1');
+      var originalText = getOriginalHtml(elementBody, model_id);
+      setInnerHtmlTo(elementBodyMemory, model_id, originalText);
+      setInnerHtmlTo(elementBody, model_id, json.data.translation);
+      translationDropDown.show();
+      $obj.toggleClass('on');
+    }).fail(function (data) {
+      $('#modal-alert-translation-error').modal('show')
+    }).always(function () {
+      $loader.remove();
+      $obj.show();
+    })
+  }
+}
+
+function turnOffTranslation(comment_id) {
+  var elementTranslationIcon = $('#CommentTranslation_' + comment_id);
+  if (!elementTranslationIcon) {
+    return;
+  }
+  var isOn = elementTranslationIcon.hasClass('on');
+  if (isOn) {
+    elementTranslationIcon.removeClass('on');
+    $('#TranslationCommentDropDown_' + comment_id).hide();
+    swapInnerHtml('#CommentTextBody_{id}', '#CommentTextBodyMemory_{id}', comment_id);
+  }
+  elementTranslationIcon.hide();
+}
+
+function turnOnTranslation(comment_id) {
+  var elementTranslationIcon = $('#CommentTranslation_' + comment_id);
+  if (!elementTranslationIcon) {
+    return;
+  }
+  elementTranslationIcon.show();
+}
+
+function getOriginalHtml(key, id) {
+  var elementBody = $(key.replace('{id}', id));
+  var elementShowMore = elementBody.find(".showmore_content");
+  if (elementShowMore.length > 0) {
+    return elementShowMore.html();
+  }
+  return elementBody.html();
+}
+
+function setInnerHtmlTo(key, id, text) {
+  $(key.replace('{id}', id)).html(text);
+}
+
+function swapInnerHtml(key1, key2, id) {
+  var element1 = $(key1.replace('{id}', id));
+  var element2 = $(key2.replace('{id}', id));
+  var tmp = element1.html();
+  element1.html(element2.html());
+  element2.html(tmp);
+}
+
+function getBrowserLanguage() {
+  return (window.navigator.languages && window.navigator.languages[0]) ||
+    window.navigator.language ||
+    window.navigator.userLanguage ||
+    window.navigator.browserLanguage;
+}
 
 /**
  * Show more posts as user scroll the feed

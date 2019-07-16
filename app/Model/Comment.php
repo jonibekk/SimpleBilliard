@@ -9,19 +9,21 @@ App::uses('User', 'Model');
 App::uses('Circle', 'Model');
 App::import('Model', 'HavingMentionTrait');
 App::import('Model/Entity', 'CommentEntity');
+App::import('Lib/DataExtender', 'CommentExtender');
 
 use Goalous\Enum\DataType\DataType as DataType;
+use Goalous\Enum\Language as LanguageEnum;
 
 /**
  * Comment Model
  *
- * @property Post $Post
- * @property User $User
- * @property Team $Team
- * @property CommentLike $CommentLike
- * @property CommentRead $CommentRead
+ * @property Post         $Post
+ * @property User         $User
+ * @property Team         $Team
+ * @property CommentLike  $CommentLike
+ * @property CommentRead  $CommentRead
  * @property AttachedFile $AttachedFile
- * @property CommentFile $CommentFile
+ * @property CommentFile  $CommentFile
  */
 class Comment extends AppModel
 {
@@ -292,9 +294,9 @@ class Comment extends AppModel
      * コメント一覧データを返す
      *
      * @param       $post_id
-     * @param null $get_num
-     * @param null $page
-     * @param null $order_by
+     * @param null  $get_num
+     * @param null  $page
+     * @param null  $order_by
      * @param array $params
      *                start: 指定すると、この時間以降に投稿されたコメントのみを返す
      *
@@ -348,6 +350,15 @@ class Comment extends AppModel
         }
 
         $res = $this->find('all', $options);
+
+        // Add translation
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+
+        foreach ($res as $key => $value) {
+            $res[$key]['Comment'] = $CommentExtender->extend($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+        }
+
         return $res;
     }
 
@@ -418,6 +429,14 @@ class Comment extends AppModel
         //表示を昇順にする
         $res = array_reverse($this->find('all', $options));
 
+        // Add translation
+        /** @var CommentExtender $CommentExtender */
+        $CommentExtender = ClassRegistry::init('CommentExtender');
+
+        foreach ($res as $key => $value) {
+            $res[$key]['Comment'] = $CommentExtender->extend($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+        }
+
         // Add these comment to red list
         $commentIdList = Hash::extract($res, '{n}.Comment.id');
         $this->CommentRead->red($commentIdList);
@@ -482,7 +501,7 @@ class Comment extends AppModel
     /**
      * 期間内のいいねの数の合計を取得
      *
-     * @param int $userId
+     * @param int      $userId
      * @param int|null $startTimestamp
      * @param int|null $endTimestamp
      *
@@ -690,5 +709,43 @@ class Comment extends AppModel
         ];
 
         return $this->find('first', $condition)['Comment']['comment_like_count'];
+    }
+
+
+    /**
+     * Update language of the comment
+     *
+     * @param int    $commentId
+     * @param string $language
+     *
+     * @throws Exception
+     */
+    public function updateLanguage(int $commentId, string $language)
+    {
+        $this->id = $commentId;
+
+        $newData = [
+            'language' => $language
+        ];
+
+        $this->save($newData, false);
+    }
+
+    /**
+     * Delete language of a comment
+     *
+     * @param int $commentId
+     *
+     * @throws Exception
+     */
+    public function clearLanguage(int $commentId)
+    {
+        $this->id = $commentId;
+
+        $newData = [
+            'language' => null
+        ];
+
+        $this->save($newData, false);
     }
 }

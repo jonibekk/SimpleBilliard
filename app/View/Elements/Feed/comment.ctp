@@ -44,7 +44,7 @@
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
                     <div id="dropdown_<?= $comment['id'] ?>" class="dropdown dropdown-comment pull-right">
                         <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                            <i class="fa fa-chevron-down fa-lg comment-arrow"></i>
+                            <i class="fa fa-ellipsis-v fa-lg comment-arrow"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
@@ -93,7 +93,24 @@
                     $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($comment['body'])), $mentions)
                 ?>
                 </div>
-
+                <div id="CommentTextBodyMemory_<?= $comment['id'] ?>" style="display: none;"></div>
+                <div class="dropdown inline-block" id="TranslationCommentDropDown_<?= $comment['id'] ?>" style="display: none;">
+                    <div href="#" class="drop-down-translation" data-toggle="dropdown">
+                        <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="download">
+                    <?php
+                        $contentType = 2;
+                        if ($post_type == Post::TYPE_ACTION) {
+                            $contentType = 4;
+                        }
+                    ?>
+                    <?php foreach ($comment['translation_languages'] ?? [] as $tl) { ?>
+                        <li class="click-translation-other" model_id="<?= $comment['id'] ?>" content_type="<?= $contentType ?>" language="<?= $tl['language'] ?>"><a href="#"><?= $tl['intl_name'] ?> - <?= $tl['local_name'] ?></a></li>
+                    <?php } ?>
+                        <li><a href="/users/settings"><?= __("Change default") ?></a></li>
+                    </ul>
+                </div>
             <?php
             /**
              * 画像のurlを集める
@@ -191,6 +208,18 @@
                ]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
+            <?php if (!empty($enable_translation) && in_array($post_type, [Post::TYPE_NORMAL, Post::TYPE_ACTION])) { ?>
+                <?php if (!empty($comment['translation_limit_reached']) || !empty($comment['translation_languages'])) { ?>
+                <?php
+                    $styleTranslationDisabled = $comment['translation_limit_reached'] ? " disabled" : "";
+                    $contentType = 2;
+                    if ($post_type == Post::TYPE_ACTION) {
+                        $contentType = 4;
+                    }
+                ?>
+                ･ <i  id="CommentTranslation_<?= $comment['id'] ?>" class="icon-translation material-icons md-12 click-translation<?=$styleTranslationDisabled?>" model_id="<?= $comment['id'] ?>" content_type="<?= $contentType ?>">g_translate</i>
+                <?php } ?>
+            <?php } ?>
             </span>
             </div>
         </div>

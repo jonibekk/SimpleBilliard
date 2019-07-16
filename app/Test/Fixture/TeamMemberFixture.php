@@ -12,7 +12,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'                    => array(
+        'id'                           => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -20,7 +20,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'primary',
             'comment'  => 'チームメンバーID'
         ),
-        'user_id'               => array(
+        'user_id'                      => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -28,7 +28,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'ユーザID(belongsToでUserモデルに関連)'
         ),
-        'team_id'               => array(
+        'team_id'                      => array(
             'type'     => 'biginteger',
             'null'     => false,
             'default'  => null,
@@ -36,7 +36,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'チームID(belongsToでTeamモデルに関連)'
         ),
-        'coach_user_id'         => array(
+        'coach_user_id'                => array(
             'type'     => 'biginteger',
             'null'     => true,
             'default'  => null,
@@ -44,7 +44,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'コーチのユーザID(belongsToでUserモデルに関連)'
         ),
-        'member_no'             => array(
+        'member_no'                    => array(
             'type'    => 'string',
             'null'    => true,
             'default' => null,
@@ -54,7 +54,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'comment' => 'メンバーナンバー(組織内でメンバーを識別する為のナンバー。exp社員番号)',
             'charset' => 'utf8mb4'
         ),
-        'member_type_id'        => array(
+        'member_type_id'               => array(
             'type'     => 'biginteger',
             'null'     => true,
             'default'  => null,
@@ -62,7 +62,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'メンバータイプID(belongsToでmember_typesモデルに関連)'
         ),
-        'job_category_id'       => array(
+        'job_category_id'              => array(
             'type'     => 'biginteger',
             'null'     => true,
             'default'  => null,
@@ -70,47 +70,47 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => '職種ID(belongsToでJobCategoryモデルに関連)'
         ),
-        'active_flg'            => array(
+        'active_flg'                   => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '1',
             'key'     => 'index',
             'comment' => '有効フラグ(Offの場合はチームにログイン不可。チームメンバーによる当該メンバーのチーム内のコンテンツへのアクセスは可能。当該メンバーへの如何なる発信は不可)'
         ),
-        'invitation_flg'        => array(
+        'invitation_flg'               => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'comment' => '招待中フラグ(招待済みで非アクティブユーザの管理用途)'
         ),
-        'evaluation_enable_flg' => array(
+        'evaluation_enable_flg'        => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '1',
             'comment' => '評価対象フラグ(Offの場合は評価が不可能。対象ページへのアクセスおよび、一切の評価のアクションが行えない。)'
         ),
-        'admin_flg'             => array(
+        'admin_flg'                    => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'key'     => 'index',
             'comment' => 'チーム管理者フラグ(Onの場合はチーム設定が可能)'
         ),
-        'evaluable_count'       => array(
+        'evaluable_count'              => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',
             'unsigned' => true,
             'comment'  => '要評価件数'
         ),
-        'last_login'            => array(
+        'last_login'                   => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'チーム最終ログイン日時'
         ),
-        'comment'               => array(
+        'comment'                      => array(
             'type'    => 'text',
             'null'    => true,
             'default' => null,
@@ -118,42 +118,51 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'comment' => 'コメント',
             'charset' => 'utf8mb4'
         ),
-        'status'                => array(
+        'status'                       => array(
             'type'     => 'integer',
             'null'     => false,
             'default'  => '0',
             'unsigned' => true,
             'comment'  => 'アクティブステータス(0: 招待中,1: アクティブ,2: インアクティブ)'
         ),
-        'del_flg'               => array(
+        'default_translation_language' => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 10,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'Default translation language for the user in a team',
+            'charset' => 'utf8mb4'
+        ),
+        'del_flg'                      => array(
             'type'    => 'boolean',
             'null'    => false,
             'default' => '0',
             'key'     => 'index',
             'comment' => '削除フラグ'
         ),
-        'deleted'               => array(
+        'deleted'                      => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'チームから外れた日付時刻'
         ),
-        'created'               => array(
+        'created'                      => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'チームに参加した日付時刻'
         ),
-        'modified'              => array(
+        'modified'                     => array(
             'type'     => 'integer',
             'null'     => true,
             'default'  => null,
             'unsigned' => true,
             'comment'  => 'チームメンバー設定を更新した日付時刻'
         ),
-        'indexes'               => array(
+        'indexes'                      => array(
             'PRIMARY'         => array('column' => 'id', 'unique' => 1),
             'user_id'         => array('column' => 'user_id', 'unique' => 0),
             'team_id'         => array('column' => 'team_id', 'unique' => 0),
@@ -165,7 +174,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'member_type_id'  => array('column' => 'member_type_id', 'unique' => 0),
             'member_no'       => array('column' => 'member_no', 'unique' => 0)
         ),
-        'tableParameters'       => array(
+        'tableParameters'              => array(
             'charset' => 'utf8mb4',
             'collate' => 'utf8mb4_general_ci',
             'engine'  => 'InnoDB'

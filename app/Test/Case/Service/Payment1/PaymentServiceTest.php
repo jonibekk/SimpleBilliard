@@ -4590,7 +4590,51 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertCount(1, $res1);
         $this->assertContains($ccTeamId, Hash::extract($res1, '{n}.PaymentSetting.team_id'));
         $this->assertNotContains($skippedCcTeamId, Hash::extract($res1, '{n}.PaymentSetting.team_id'));
+    }
 
+    public function test_getCurrentMonthBaseDate_success()
+    {
+        $teamId = 1;
+        $this->Team->current_team_id = $teamId;
+        $this->Team->id = $teamId;
+        $this->Team->save([
+            'timezone' => 0,
+        ]);
+        $teamId = 1;
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 28,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        GoalousDateTime::setTestNow("2017-02-27");
+        $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
+
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
+
+        // No exist day
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 29,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        GoalousDateTime::setTestNow("2017-02-28");
+        $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
+        $this->assertEquals('2017-02-28', $res->format("Y-m-d"));
+
+        $this->PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 31,
+        ], false);
+        $this->PaymentService->clearCachePaymentSettings();
+
+        GoalousDateTime::setTestNow("2017-04-30");
+        $res = $this->PaymentService->getCurrentMonthBaseDate($teamId, GoalousDateTime::now()->getTimestamp());
+        $this->assertEquals('2017-04-30', $res->format("Y-m-d"));
     }
 
     /**

@@ -33,6 +33,7 @@ App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Language as LanguageEnum;
 
 /**
  * CakeTestCase class
@@ -444,7 +445,8 @@ class GoalousTestCase extends CakeTestCase
         $termType = Term::TYPE_CURRENT,
         $tkrFlg = false,
         $valueUnit = 0
-    ) {
+    )
+    {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
@@ -462,7 +464,7 @@ class GoalousTestCase extends CakeTestCase
             'start_date'    => $startDate,
             'end_date'      => $endDate,
             'priority'      => $priority,
-            'tkr_flg'      => $tkrFlg,
+            'tkr_flg'       => $tkrFlg,
         ];
         $KeyResult->create();
         $KeyResult->save($kr, false);
@@ -703,7 +705,8 @@ class GoalousTestCase extends CakeTestCase
         array $creditCard = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    ) {
+    )
+    {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -721,7 +724,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => ($skipPayment) ? 1 : 0,
+                'payment_skip_flg' => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
                 'company_country'  => 'JP',
@@ -757,7 +760,8 @@ class GoalousTestCase extends CakeTestCase
         array $invoice = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    ) {
+    )
+    {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->Invoice = $this->Invoice ?? ClassRegistry::init('Invoice');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -774,7 +778,7 @@ class GoalousTestCase extends CakeTestCase
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 1,
-                'payment_skip_flg'     => ($skipPayment) ? 1 : 0,
+                'payment_skip_flg' => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => 1980,
                 'company_country'  => 'JP',
@@ -829,7 +833,8 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistories = []
-    ): array {
+    ): array
+    {
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $chargeHistoryIds = [];
@@ -863,7 +868,8 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistory = []
-    ): array {
+    ): array
+    {
 
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
@@ -1096,7 +1102,8 @@ class GoalousTestCase extends CakeTestCase
         string $pricePlanCode,
         $team = [],
         $paymentSetting = []
-    ): array {
+    ): array
+    {
         $team = am([
             'country'  => 'JP',
             'timezone' => 9
@@ -1168,5 +1175,41 @@ class GoalousTestCase extends CakeTestCase
     protected function getTestFileName(): string
     {
         return "test.png";
+    }
+
+    /**
+     * Insert translation language option to a team
+     *
+     * @param int          $teamId
+     * @param LanguageEnum $enum
+     *
+     * @throws Exception
+     */
+    protected function insertTranslationLanguage(int $teamId, LanguageEnum $enum)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        $data = [
+            'team_id'  => $teamId,
+            'language' => $enum->getValue()
+        ];
+
+        $TeamTranslationLanguage->create();
+        $TeamTranslationLanguage->save($data, false);
+    }
+
+    /**
+     * Get long article. 67,187 characters
+     *
+     * @return string
+     */
+    protected function getLongArticle(): string {
+
+        $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
+
+        $article = file_get_contents($path);
+
+        return $article;
     }
 }

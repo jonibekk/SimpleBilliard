@@ -57,6 +57,8 @@ class NotifySetting extends AppModel
     const TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL = 43;
     const TYPE_FEED_MENTIONED_IN_COMMENT = 44;
     const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 45;
+    const TYPE_TRANSLATION_LIMIT_REACHED = 46;
+    const TYPE_TRANSLATION_LIMIT_CLOSING = 47;
 
     /**
      * @var array
@@ -406,6 +408,22 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             'field_prefix'    => '',
             'icon_class'      => 'fa-flag',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_TRANSLATION_LIMIT_REACHED => [
+            'mail_template'   => "translation_limit_reached",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-cog',
+            'groups'          => ['all', 'primary'],
+            'force_notify'    => true,
+        ],
+        self::TYPE_TRANSLATION_LIMIT_CLOSING => [
+            'mail_template'   => "translation_limit_closing",
+            'field_real_name' => null,
+            'field_prefix'    => '',
+            'icon_class'      => 'fa-cog',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ]
@@ -1248,6 +1266,12 @@ class NotifySetting extends AppModel
                             h($postOwnerUserName));
                     }
                 }
+                break;
+            case self::TYPE_TRANSLATION_LIMIT_REACHED:
+                $title = __('Translation feature is paused since limit is reached.');
+                break;
+            case self::TYPE_TRANSLATION_LIMIT_CLOSING:
+                $title = __('Approaching the limit of translatable number.');
                 break;
         }
 

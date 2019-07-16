@@ -15,4 +15,5 @@
         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
     <?php endif; ?>
 </div>
+<div id="PostTextBodyMemory_<?= $post['Post']['id'] ?>" style="display: none;"></div>
 <?= $this->App->viewEndComment() ?>

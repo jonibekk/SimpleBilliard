@@ -57,6 +57,7 @@ class GoalServiceTest extends GoalousTestCase
         'app.user',
         'app.kr_values_daily_log',
         'app.key_result',
+        'app.team_translation_language',
     ];
 
     /**

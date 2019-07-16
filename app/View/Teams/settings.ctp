@@ -29,6 +29,7 @@ $this->set('hidden_sidebar_xxs', true);
             <li class=""><a href="#final_evaluation"><?= __("Final evaluation") ?></a></li>
             <li class=""><a href="#progress"><?= __("Evaluation status") ?></a></li>
         <?php endif; ?>
+        <li class=""><a href="#translation"><?= __("Translation Settings") ?></a></li>
     </ul>
 </div>
 <?php $this->end() ?>
@@ -67,11 +68,14 @@ $this->set('hidden_sidebar_xxs', true);
         <?= $this->element('Team/evaluation_progress') ?>
     </div>
 <?php endif; ?>
+<div id="translation">
+    <?= $this->element('Team/translation_setting') ?>
+</div>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('body').scrollspy({target: '.sidebar-setting'});
-    });
+  $(document).ready(function () {
+    $('body').scrollspy({target: '.sidebar-setting'});
+  });
 </script>
 <?php $this->end(); ?>
 <?= $this->App->viewEndComment() ?>

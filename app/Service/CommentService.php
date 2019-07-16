@@ -40,9 +40,6 @@ class CommentService extends AppService
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
 
-        /** @var PostService $PostService */
-        $PostService = ClassRegistry::init('PostService');
-
         $options = [
             'conditions' => [
                 'id' => $commentId
@@ -65,7 +62,23 @@ class CommentService extends AppService
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
-        return $PostService->checkUserAccessToCirclePost($userId, $postId);
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        switch ($Post->getPostType($postId)) {
+            case Post::TYPE_NORMAL:
+                /** @var PostService $PostService */
+                $PostService = ClassRegistry::init('PostService');
+                return $PostService->checkUserAccessToCirclePost($userId, $postId);
+                break;
+            case Post::TYPE_ACTION:
+                /** @var ActionService $ActionService */
+                $ActionService = ClassRegistry::init('ActionService');
+                return $ActionService = $ActionService->checkUserAccess($userId, $postId);
+                break;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -147,7 +160,7 @@ class CommentService extends AppService
             $commentBody['team_id'] = $teamId;
             $commentBody['created'] = GoalousDateTime::now()->getTimestamp();
             // OGP
-            $commentBody['site_info'] = !empty($commentBody['site_info']) ? json_encode($commentBody['site_info']): null;
+            $commentBody['site_info'] = !empty($commentBody['site_info']) ? json_encode($commentBody['site_info']) : null;
 
             /** @var CommentEntity $savedComment */
             $savedComment = $Comment->useType()->useEntity()->save($commentBody, false);
