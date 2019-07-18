@@ -1104,6 +1104,10 @@ textarea{
     background: #d9230f !important;
 }
 
+.fa-ellipsis-v {
+    padding: 0 10px;
+}
+
 .feed-arrow,
 .comment-arrow,
 .comment-cross {
@@ -3169,6 +3173,39 @@ Temporary Properties - YOU MUST FIX
     }
   }
 }
+
+.icon-translating {
+    font-size: 16px;
+    vertical-align: top;
+}
+
+.icon-translation {
+    cursor: pointer;
+    color: @color-04-gray;
+    &:hover {
+        color: @color-02-gray;
+    }
+    &.on {
+        color: @color-00-black;
+    }
+    &.disabled {
+        color: @color-06-gray;
+    }
+}
+
+.drop-down-translation {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 10px;
+}
+
+.drop-down-translation-icon {
+    padding: 4px;
+    vertical-align: bottom;
+    font-size: 10px;
+}
+.material-icons.md-16 { font-size: 16px; }
+.material-icons.md-12 { font-size: 12px; }
 
 .demo-login {
     box-shadow: 0px 0px 3px 2px @cGray;

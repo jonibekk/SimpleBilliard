@@ -159,6 +159,7 @@ class PagesController extends AppController
         } else {
             $this->set('common_form_type', 'action');
         }
+        $this->set('enable_translation', true);
 
         try {
             $paramsPostGet = $this->request->params;

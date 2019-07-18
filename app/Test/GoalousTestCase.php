@@ -37,6 +37,7 @@ App::import('Service', 'PostResourceService');
 App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Language as LanguageEnum;
 
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 
@@ -450,7 +451,8 @@ class GoalousTestCase extends CakeTestCase
         $termType = Term::TYPE_CURRENT,
         $tkrFlg = false,
         $valueUnit = 0
-    ) {
+    )
+    {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
@@ -468,7 +470,7 @@ class GoalousTestCase extends CakeTestCase
             'start_date'    => $startDate,
             'end_date'      => $endDate,
             'priority'      => $priority,
-            'tkr_flg'      => $tkrFlg,
+            'tkr_flg'       => $tkrFlg,
         ];
         $KeyResult->create();
         $KeyResult->save($kr, false);
@@ -1179,6 +1181,43 @@ class GoalousTestCase extends CakeTestCase
     protected function getTestFileName(): string
     {
         return "test.png";
+    }
+
+    /**
+     * Insert translation language option to a team
+     *
+     * @param int          $teamId
+     * @param LanguageEnum $enum
+     *
+     * @throws Exception
+     */
+    protected function insertTranslationLanguage(int $teamId, LanguageEnum $enum)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        $data = [
+            'team_id'  => $teamId,
+            'language' => $enum->getValue()
+        ];
+
+        $TeamTranslationLanguage->create();
+        $TeamTranslationLanguage->save($data, false);
+    }
+
+    /**
+     * Get long article. 67,187 characters
+     *
+     * @return string
+     */
+    protected function getLongArticle(): string
+    {
+
+        $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
+
+        $article = file_get_contents($path);
+
+        return $article;
     }
 
     /**

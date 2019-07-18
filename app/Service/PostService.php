@@ -4,6 +4,7 @@ App::uses('AttachedFile', 'Model');
 App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
+App::import('Service', 'TranslationService');
 App::import('Service', 'VideoStreamService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
@@ -20,6 +21,7 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('Translation', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -35,6 +37,7 @@ use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * Class PostService
@@ -612,6 +615,34 @@ class PostService extends AppService
             throw $e;
         }
 
+        // Make translation
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+
+            try {
+                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postId, $defaultLanguage);
+            } catch (Exception $e) {
+                GoalousLog::error('Failed create translation on new post', [
+                    'message'    => $e->getMessage(),
+                    'trace'      => $e->getTraceAsString(),
+                    'post.id'    => $postId,
+                    'circles.id' => $circleId,
+                    'teams.id'   => $teamId,
+                ]);
+            }
+        }
+
         /** @var UnreadPostsRedisService $UnreadPostsRedisService */
         $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
         $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
@@ -887,6 +918,11 @@ class PostService extends AppService
                 }
             }
 
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
             //Delete post resources
             $deletedPosts = $PostResource->getAllPostResources($postId);
 
@@ -1041,6 +1077,11 @@ class PostService extends AppService
             }
             $newResources = $this->filterNewResources($postId, $resources);
 
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
             if (!empty($newResources)) {
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
@@ -1055,6 +1096,7 @@ class PostService extends AppService
             ]);
             throw $e;
         }
+
         /** @var PostEntity $result */
         $result = $Post->getEntity($postId);
         return $result;

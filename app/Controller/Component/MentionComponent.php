@@ -1,6 +1,7 @@
 <?php
 App::uses('Component', 'Controller');
 App::uses('TeamMember', 'Model');
+
 /**
  * Class MentionComponent
  */
@@ -86,6 +87,22 @@ class MentionComponent extends Component
         }
         $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
             !$plain ? '<b><i class="mention">@${1}</i></b>' : '@${1}', $result);
+        return $result;
+    }
+
+
+    /**
+     * replace all mentions in content with HTML expression.
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionForTranslation(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
+            '<span class="mention">@${1}</span>', $result);
         return $result;
     }
 
@@ -183,7 +200,8 @@ class MentionComponent extends Component
         $me,
         $includeMe = false,
         $returnAsBelonging = false
-    ): array {
+    ): array
+    {
         $mentions = self::extractAllIdFromMention($body);
         $result = array();
 

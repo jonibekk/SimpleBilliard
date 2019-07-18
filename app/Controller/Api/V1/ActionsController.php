@@ -1,10 +1,17 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
+
 App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
 App::import('Service', 'AttachedFileService');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TeamMember', 'Model');
+
 
 /**
  * Class ActionsController
@@ -64,6 +71,14 @@ class ActionsController extends ApiController
             $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
+
+        // Send translation usage notification if applicable
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if ($TeamTranslationLanguage->canTranslate($this->current_team_id)) {
+            $this->sendTranslationUsageNotification($this->current_team_id);
+        }
 
         // TODO:削除 APIはステートレスであるべき
         $this->Notification->outSuccess(__("Added an action."));
@@ -138,5 +153,50 @@ class ActionsController extends ApiController
         }
 
         return true;
+    }
+
+    public function sendTranslationUsageNotification(int $teamId)
+    {
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $notificationFlagClient = new NotificationFlagClient();
+
+        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
+        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
+
+        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
+            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitReachedKey);
+        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
+            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
+            $notificationFlagClient->write($limitClosingKey);
+        }
+    }
+
+    private function notifyTranslateLimitReached(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
+    }
+
+    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
+    {
+        $this->NotifyBiz->sendNotify(
+            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
+            null,
+            null,
+            $userIds,
+            null,
+            $teamId);
     }
 }

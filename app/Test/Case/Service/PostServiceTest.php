@@ -63,7 +63,10 @@ class PostServiceTest extends GoalousTestCase
         'app.key_result',
         'app.goal',
         'app.post_file',
-        'app.comment_file'
+        'app.comment_file',
+        'app.team_translation_language',
+        'app.team_translation_status',
+        'app.translation'
     ];
 
     /**
