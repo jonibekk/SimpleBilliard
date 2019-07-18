@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+App::import('Model/Entity', 'CircleEntity');
 
 /**
  * Circle Model
@@ -176,6 +177,8 @@ class Circle extends AppModel
     }
 
     /**
+     * Use findByKeyword method since API v2
+     * @deprecated
      * $keyword にマッチする公開サークル一覧を返す
      *
      * @param       $keyword
@@ -211,6 +214,36 @@ class Circle extends AppModel
     }
 
     /**
+     * Follow latest spec
+     * $keyword にマッチする公開サークル一覧を返す
+     *
+     * @param string $keyword
+     * @param int $limit
+     * @param array $filterCircleIds
+     * @param bool $publicFlg
+     * @return array
+     */
+    public function findByKeyword(string $keyword, int $limit = 10, $filterCircleIds = [], bool $publicFlg = true) : array
+    {
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+        $options = [
+            'conditions' => [
+                'id'         => $filterCircleIds,
+                'name LIKE'  => $keyword . '%',
+                'public_flg' => $publicFlg
+            ],
+            'limit'      => $limit,
+        ];
+        $res = $this->useType()->find('all', $options);
+        return Hash::extract($res, '{n}.Circle') ?? [];
+    }
+
+    /**
+     * Use findByKeyword method since API v2
+     * @deprecated
      * $keyword にマッチする公開サークル一覧を返す
      *
      * @param     $keyword
@@ -224,7 +257,8 @@ class Circle extends AppModel
     }
 
     /**
-     * $keyword にマッチする非公開サークル一覧を返す
+     * Use findByKeyword method since API v2
+     * @deprecated
      *
      * @param     $keyword
      * @param int $limit
@@ -620,8 +654,39 @@ class Circle extends AppModel
                 'team_id'
             ]
         ];
+        $teamId = Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
+        return $teamId[0];
 
-        return (int)Hash::extract($this->useType()->find('first', $condition), '{*}.team_id');
+    }
+
+    /**
+     * Follow latest spec
+     * Get the team ID of this circle
+     *
+     * @param int $postId
+     * @return int Team ID of the circle
+     */
+    public function getSharedSecretCircleByPostId(int $postId): array
+    {
+        $conditions = [
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'post_share_circles',
+                    'alias'      => 'PostShareCircle',
+                    'field'      => 'PostShareCircle.circle_id',
+                    'conditions' => [
+                        'Circle.id = PostShareCircle.circle_id',
+                        'PostShareCircle.post_id' => $postId,
+                        'Circle.public_flg' => false,
+                        'PostShareCircle.del_flg' => false,
+                    ],
+                ]
+            ]
+        ];
+
+        $res = $this->useType()->find('first', $conditions);
+        return Hash::get($res, 'Circle') ?? [];
     }
 
     /**

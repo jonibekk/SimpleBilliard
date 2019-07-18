@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'PostResourceService');
 App::uses('PostDraft', 'Model');
 App::uses('PostResource', 'Model');
 App::uses('Post', 'Model');
@@ -94,22 +95,26 @@ class PostDraftService extends AppService
      * @param array $postData
      * @param int $userId
      * @param int $teamId
-     * @param array $resources
+     * @param array $files
      *
      * @return array|false
      */
-    public function createPostDraftWithResources(array $postData, int $userId, int $teamId, array $resources)
+    public function createPostDraftWithResources(array $postData, int $userId, int $teamId, array $files)
     {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
         /** @var PostDraft $PostDraft */
         $PostDraft = ClassRegistry::init('PostDraft');
-        /** @var PostResource $PostResource */
-        $PostResource = ClassRegistry::init("PostResource");
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
-        $Post->set($postData['Post']);
-        if (!$Post->validates()) {
-            return false;
+        if (isset($postData['Post'])) {
+            $Post->set($postData['Post']);
+            if (!$Post->validates()) {
+                return false;
+            }
         }
 
         try {
@@ -131,27 +136,7 @@ class PostDraftService extends AppService
                 throw new RuntimeException('failed to save post_draft');
             }
             $postDraft = reset($postDraft);
-            foreach ($resources as $resource) {
-                $PostResource->create([
-                    'post_id' => null,
-                    'post_draft_id' => $postDraft['id'],
-                    // TODO: currently only resource type of video only https://jira.goalous.com/browse/GL-6601
-                    // need to determine what type of resource is passed from arguments
-                    // (maybe should wrap by class, not simple array)
-                    // same as in Post::addNormal()
-                    'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
-                    'resource_id' => $resource['id'],
-                ]);
-                $postResource = $PostResource->save();
-                if (false ===$postDraft) {
-                    GoalousLog::error('failed to save post resource', [
-                        'users.id' => $userId,
-                        'teams.id' => $teamId,
-                        'Post'     => $postData,
-                    ]);
-                    throw new RuntimeException('failed to save post resource');
-                }
-            }
+            $PostService->saveFiles($postDraft['id'], $userId, $teamId, $files, $isDraft = true);
             $this->TransactionManager->commit();
             return $postDraft;
         } catch (Exception $e) {
@@ -190,15 +175,46 @@ class PostDraftService extends AppService
             return true;
         }
         foreach ($resources[$postDraftId] as $resource) {
-            // TODO: currently we have only type of video resource
-            // should be wrapped by kind of resource class
-            $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
-            if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
-                continue;
+            switch ($resource['resource_type']) {
+                case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
+                    $transcodeStatus = new Enum\Model\Video\VideoTranscodeStatus(intval($resource['transcode_status']));
+                    if ($transcodeStatus->equals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE())) {
+                        continue;
+                    }
+                    return false;
+                default:
+                    // Other resource did not need to wait anything.
+                    continue;
             }
-            return false;
         }
 
         return true;
+    }
+
+    public function getPostDraftsFilterByCircleId(int $userId, int $teamId, $circleId = null)
+    {
+        /** @var PostDraft $PostDraft */
+        $PostDraft = ClassRegistry::init('PostDraft');
+
+        $conditions = [
+            'conditions' => [
+                'PostDraft.user_id' => $userId,
+                'PostDraft.team_id' => $teamId,
+            ],
+        ];
+
+        $postDrafts = $PostDraft->useType()->useEntity()->find('all', $conditions);
+        if (empty($circleId)) {
+            return $postDrafts;
+        }
+
+        // Returning data belongs to $circleId
+        $postDrafts = array_filter($postDrafts, function ($v) use ($circleId) {
+            $postDraft = $v->toArray();
+            $draftData = json_decode($postDraft['draft_data'], true);
+            return $circleId === (int)$draftData['circle_id'];
+        });
+
+        return array_values($postDrafts);
     }
 }

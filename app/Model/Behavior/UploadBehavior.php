@@ -9,8 +9,9 @@ use Guzzle\Http\EntityBody;
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
  * UploadBehavior
- * UploadBehavior does all the job of saving files to disk while saving records to database. For more info read UploadPack documentation.
- * joe bartlett's lovingly handcrafted tweaks add several resize modes. see "more on styles" in the documentation.
+ * UploadBehavior does all the job of saving files to disk while saving records to database. For more info read
+ * UploadPack documentation. joe bartlett's lovingly handcrafted tweaks add several resize modes. see "more on styles"
+ * in the documentation.
  *
  * @author Michał Szajbe (michal.szajbe@gmail.com) and joe bartlett (contact@jdbartlett.com)
  * @link   http://github.com/szajbus/uploadpack
@@ -345,7 +346,8 @@ class UploadBehavior extends ModelBehavior
         $filename,
         $style = 'original',
         $defaults = array()
-    ) {
+    )
+    {
         $pathinfo = UploadBehavior::_pathinfo($filename);
         $interpolations = array_merge(array(
             'app'        => preg_replace('/\/$/', '', APP),
@@ -358,7 +360,16 @@ class UploadBehavior extends ModelBehavior
             'attachment' => Inflector::pluralize($field),
             'hash'       => md5((!empty($filename) ? $pathinfo['filename'] : "") . Configure::read('Security.salt'))
         ), $defaults);
-        $settings = self::$__settings[$modelName][$field];
+
+        $settings = self::$__settings[$modelName][$field] ??
+            [
+                'path'                   => ':webroot/upload/:model/:id/:hash_:style.:extension',
+                'styles'                 => [],
+                'resizeToMaxWidth'       => false,
+                'quality'                => 75,
+                'alpha'                  => false,
+                'addFieldNameOnFileName' => true,
+            ];
         $keys = array('path', 'url', 'default_url');
         foreach ($interpolations as $k => $v) {
             foreach ($keys as $key) {
@@ -370,7 +381,7 @@ class UploadBehavior extends ModelBehavior
         return $settings;
     }
 
-    static private function _pathinfo($filename)
+    static public function _pathinfo($filename)
     {
         // TODO: For researching PHP Notice. See -> https://jira.goalous.com/browse/GL-5973
         if (is_array($filename)) {
@@ -383,7 +394,10 @@ class UploadBehavior extends ModelBehavior
             ));
             $pathinfo = pathinfo("");
         } else {
+            $orig_locale = setlocale(LC_CTYPE, 0);
+            setlocale(LC_CTYPE, 'C');
             $pathinfo = pathinfo($filename);
+            setlocale(LC_CTYPE, $orig_locale);
         }
         // PHP < 5.2.0 doesn't include 'filename' key in pathinfo. Let's try to fix this.
         if (empty($pathinfo['filename'])) {
@@ -634,7 +648,8 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         $value,
         $min
-    ) {
+    )
+    {
         $value = array_shift($value);
         if (!empty($value['tmp_name'])) {
             return (int)$min <= (int)$value['size'];
@@ -647,7 +662,8 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         $value,
         $max
-    ) {
+    )
+    {
         $value = array_shift($value);
         if (!empty($value['tmp_name'])) {
             return (int)$value['size'] <= (int)$max;
@@ -669,7 +685,8 @@ class UploadBehavior extends ModelBehavior
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
         array $value
-    ) {
+    )
+    {
         $value = array_shift($value);
         // 一時ファイル名が空の場合
         // ※ 保存が任意のユーザー画像もバリデーションを通るためtrueで返す必要がある
@@ -710,7 +727,8 @@ class UploadBehavior extends ModelBehavior
         /** @noinspection PhpUnusedParameterInspection */
         Model $model,
         array $value
-    ) {
+    )
+    {
         $value = array_shift($value);
         $imgTmpFilePath = $value['tmp_name'];
         if (empty($imgTmpFilePath)) {
@@ -802,7 +820,8 @@ class UploadBehavior extends ModelBehavior
         $value,
         $minWidth,
         $minHeight
-    ) {
+    )
+    {
         // check upload
         if (!$this->isUpload($value)) {
             return true;
@@ -832,7 +851,8 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         $value,
         $minWidth
-    ) {
+    )
+    {
         return $this->_validateDimension($value, 'min', 'x', $minWidth);
     }
 
@@ -841,7 +861,8 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         $value,
         $minHeight
-    ) {
+    )
+    {
         return $this->_validateDimension($value, 'min', 'y', $minHeight);
     }
 
@@ -863,7 +884,8 @@ class UploadBehavior extends ModelBehavior
         Model $model,
         $value,
         $maxHeight
-    ) {
+    )
+    {
         return $this->_validateDimension($value, 'max', 'y', $maxHeight);
     }
 
@@ -917,7 +939,8 @@ class UploadBehavior extends ModelBehavior
     private function _getImgSource(
         string $handler,
         string $imgPath
-    ) {
+    )
+    {
         // 画像によっては問題ない画像でも以下のNoticeが出力される場合がある。
         // Notice (8): imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Invalid SOS parameters for sequential JPEG
         //ローカルでNoticeが邪魔になる場合は、一時的に Configure::write('debug', 0); を推奨。
@@ -938,7 +961,8 @@ class UploadBehavior extends ModelBehavior
             'UPLOAD_ERR_CANT_WRITE',
             'UPLOAD_ERR_EXTENSION'
         )
-    ) {
+    )
+    {
         $value = array_shift($value);
         if (!is_array($uploadErrors)) {
             $uploadErrors = array($uploadErrors);
@@ -1086,6 +1110,7 @@ class UploadBehavior extends ModelBehavior
 
     /**
      * @param string $tmpPath
+     *
      * @return string
      */
     private function processS3UploadPath(string $tmpPath): string

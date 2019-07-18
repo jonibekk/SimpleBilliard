@@ -1,8 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
-App::uses('Model', 'Post');
+App::uses('CircleMember', 'Model');
+App::uses('Post', 'Model');
 App::import('Model/Entity', 'PostReadEntity');
-
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -95,35 +95,47 @@ class PostRead extends AppModel
     }
 
     public $modelConversionTable = [
-        'post_id'       => DataType::INT,
-        'user_id'       => DataType::INT,
-        'team_id'       => DataType::INT,
+        'post_id' => DataType::INT,
+        'user_id' => DataType::INT,
+        'team_id' => DataType::INT,
     ];
 
-    protected function pickUnreadPosts($post_list)
+    /**
+     * Filter unread posts from list of postIds
+     *
+     * @param array | int $postIds
+     * @param int         $userId
+     * @param int         $teamId
+     *
+     * @return array
+     */
+    public function pickUnreadPosts($postIds, int $userId = null, int $teamId = null): array
     {
+        $userId = $userId ?: $this->my_uid;
+        $teamId = $teamId ?: $this->current_team_id;
+
         //既読済みのリスト取得
         $options = [
             'conditions' => [
-                'post_id' => $post_list,
-                'user_id' => $this->my_uid,
-                'team_id' => $this->current_team_id,
+                'post_id' => $postIds,
+                'user_id' => $userId,
+                'team_id' => $teamId,
             ],
             'fields'     => ['post_id']
         ];
         $read = $this->find('all', $options);
         $read_list = Hash::combine($read, '{n}.PostRead.post_id', '{n}.PostRead.post_id');
         $unread_posts = [];
-        if (is_array($post_list)) {
-            foreach ($post_list as $post_id) {
+        if (is_array($postIds)) {
+            foreach ($postIds as $post_id) {
                 //既読をスキップ
                 if (in_array($post_id, $read_list)) {
                     continue;
                 }
                 $unread_posts[$post_id] = $post_id;
             }
-        } elseif (!in_array($post_list, $read_list)) {
-            $unread_posts[$post_list] = $post_list;
+        } elseif (!in_array($postIds, $read_list)) {
+            $unread_posts[$postIds] = $postIds;
         }
         return $unread_posts;
     }
@@ -211,21 +223,22 @@ class PostRead extends AppModel
 
     /**
      * Update the count reader for multiple posts
-     * 
+     *
      * @param array $postsIds
-     *
-     * @var array $posts_counts
-     *      [[$post_id] => [count]]
-     *
      */
     public function updateReadersCountMultiplePost(array $postsIds)
     {
-        $posts_counts = $this->countPostReadersMultiplePost($postsIds);
+        /**
+         * @var array $postsCounts
+         *      [$post_id => count, ...]
+         */
+        $postsCounts = $this->countPostReadersMultiplePost($postsIds);
 
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
-        foreach ($posts_counts as $postId => $count) {
+        foreach ($postsIds as $postId) {
+            $count = Hash::get($postsCounts, $postId, 0);
             $Post->updateAll(['Post.post_read_count' => $count], ['Post.id' => $postId]);
         }
     }
@@ -236,7 +249,7 @@ class PostRead extends AppModel
      * @param array $postsIds
      *
      * @return array $posts_counts
-     *      [[$post_id] => [count]]
+     *      [$post_id => count, ...]
      */
     public function countPostReadersMultiplePost(array $postsIds): array
     {
@@ -248,7 +261,7 @@ class PostRead extends AppModel
                 'post_id',
                 'COUNT(post_id) AS sum'
             ],
-            'group'     => [
+            'group'      => [
                 'post_id'
             ]
         ];
@@ -266,4 +279,63 @@ class PostRead extends AppModel
         return $return;
     }
 
+    /**
+     * Filter unread posts from given postId array
+     *
+     * @param array $postIds
+     * @param int   $circleId
+     * @param int   $userId
+     * @param bool  $filterCreatedTime Only allow unread posts created after user is joined to the circle
+     *
+     * @return array
+     */
+    public function filterUnreadPost(array $postIds, int $circleId, int $userId, bool $filterCreatedTime = false): array
+    {
+        $condition = [
+            'conditions' => [
+                'Post.id'        => $postIds,
+                'Post.del_flg'   => false,
+            ],
+            'table'      => 'posts',
+            'alias'      => 'Post',
+        ];
+
+        if ($filterCreatedTime) {
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+
+            $circleMember = $CircleMember->getCircleMember($circleId, $userId);
+
+            $createdTimeLimit = $circleMember['created'];
+
+            $condition['conditions']['Post.created > '] = $createdTimeLimit;
+        }
+
+        $db = $this->getDataSource();
+
+        $subQuery = $db->buildStatement([
+            'conditions' => [
+                'PostRead.post_id' => $postIds,
+                'PostRead.user_id' => $userId,
+                'PostRead.del_flg' => false,
+            ],
+            'table'      => 'post_reads',
+            'alias'      => 'PostRead',
+            'fields'     => [
+                'PostRead.post_id',
+            ]
+        ], $this);
+        $subQuery = 'Post.id NOT IN (' . $subQuery . ') ';
+        $subQueryExpression = $db->expression($subQuery);
+        $condition['conditions'][] = $subQueryExpression;
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $res = $Post->useType()->find('all', $condition);
+
+        $result = Hash::extract($res, '{n}.Post.id');
+
+        return $result ?: [];
+    }
 }

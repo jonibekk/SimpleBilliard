@@ -3,6 +3,7 @@ App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Lib/DataExtender/Extension', "UserExtension");
 App::import('Lib/DataExtender/Extension', "CommentLikeExtension");
 App::import('Lib/DataExtender/Extension', "CommentReadDataExtension");
+App::import('Lib/DataExtender/Extension', "MentionsToMeExtension");
 App::import('Service', 'CommentService');
 App::import('Service', 'TeamMemberService');
 App::uses('Team', 'Model');
@@ -16,6 +17,7 @@ class CommentExtender extends BaseExtender
     const EXTEND_USER = "ext:comment:user";
     const EXTEND_LIKE = "ext:comment:like";
     const EXTEND_READ = "ext:comment:read";
+    const EXTEND_MENTIONS_TO_ME_IN_BODY = "ext:comment:mentions_to_me_in_body";
     const EXTEND_ATTACHED_FILES = "ext:comment:attached_files";
     const EXTEND_TRANSLATION_LANGUAGE = "ext:comment:translation_language";
 
@@ -41,6 +43,7 @@ class CommentExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_ATTACHED_FILES)) {
             $data = $this->extendAttachedFiles($data);
         }
+
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
 
             /** @var Team $Team */
@@ -87,6 +90,15 @@ class CommentExtender extends BaseExtender
             }
         }
 
+        if ($this->includeExt($extensions, self::EXTEND_MENTIONS_TO_ME_IN_BODY)) {
+            /** @var MentionsToMeExtension $MentionsToMeExtension */
+            $MentionsToMeExtension = ClassRegistry::init('MentionsToMeExtension');
+            $MentionsToMeExtension->setUserId($userId);
+            $MentionsToMeExtension->setTeamId($teamId);
+            $MentionsToMeExtension->setMap([$data['id'] => $data]);
+            $data = $MentionsToMeExtension->extend($data, "id");
+        }
+
         return $data;
     }
 
@@ -114,6 +126,7 @@ class CommentExtender extends BaseExtender
                 $data[$index] = $this->extendAttachedFiles($entry);
             }
         }
+
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
 
             /** @var Team $Team */
@@ -160,6 +173,15 @@ class CommentExtender extends BaseExtender
                     }
                 }
             }
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_MENTIONS_TO_ME_IN_BODY)) {
+            /** @var MentionsToMeExtension $MentionsToMeExtension */
+            $MentionsToMeExtension = ClassRegistry::init('MentionsToMeExtension');
+            $MentionsToMeExtension->setUserId($userId);
+            $MentionsToMeExtension->setTeamId($teamId);
+            $MentionsToMeExtension->setMap(Hash::combine($data, '{n}.id', '{n}'));
+            $data = $MentionsToMeExtension->extendMulti($data, "{n}.id");
         }
 
         return $data;

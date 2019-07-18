@@ -570,7 +570,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Notification->outSuccess(__("Added a Key Result."));
         $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
+        if ($params_referer['controller'] == 'pages' && !empty($params_referer['pass'][0]) && $params_referer['pass'][0] == 'home') {
             $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());
@@ -788,7 +788,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
 
         $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
+        if ($params_referer['controller'] == 'pages' && !empty($params_referer['pass'][0]) && $params_referer['pass'][0] == 'home') {
             $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());

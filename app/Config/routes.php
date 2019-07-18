@@ -79,6 +79,16 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     );
 } elseif (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\//i', $_SERVER['REQUEST_URI'], $matches)) {
     /**
+     * Special cases
+     */
+    Router::connect('/api/notifications/:action',
+        ['controller' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']);
+    Router::connect('/api/me',
+        ['controller' => 'me', 'action' => 'detail', 'prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/me/switch_team',
+        ['controller' => 'me', 'action' => 'switch_team', 'prefix' => 'put', '[method]' => 'PUT']);
+
+    /**
      * REST Endpoints with version in header 'X-API-Version'
      * No action
      */
@@ -115,6 +125,9 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     Router::connect('/api/:controller/:id/:action',
         ['prefix' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
+    Router::connect('/api/:controller/:action',
+        ['prefix' => 'delete', '[method]' => 'DELETE']);
+
 }
 
 /**
@@ -131,6 +144,10 @@ Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'ac
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
 Router::connect('/goals/:id/edit',
     ['controller' => 'goals', 'action' => 'edit', '[method]' => 'GET'],
+    ['id' => '[0-9]+', 'pass' => ['id']]
+);
+Router::connect('/circles/:id/edit',
+    ['controller' => 'circles', 'action' => 'edit', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);

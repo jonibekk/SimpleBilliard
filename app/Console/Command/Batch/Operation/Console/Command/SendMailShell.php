@@ -212,6 +212,7 @@ class SendMailShell extends AppShell
                 array_merge($this->item['options'], [
                     'style'        => 'plain',
                     'from_user_id' => $data['SendMail']['from_user_id'],
+                    'to_user_id' => $to_user_id
                 ])
             );
             $options = [

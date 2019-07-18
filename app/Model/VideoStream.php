@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'VideoStreamEntity');
 
 use Goalous\Enum as Enum;
 
@@ -10,6 +11,7 @@ class VideoStream extends AppModel
 {
     /**
      * Get video_stream from primary-key
+     *
      * @param int $videoId
      *
      * @return array
@@ -34,6 +36,7 @@ class VideoStream extends AppModel
 
     /**
      * Get multiple video_stream data by transcode status
+     *
      * @param array $statuses
      *
      * @return array
@@ -43,7 +46,7 @@ class VideoStream extends AppModel
         $options = [
             'conditions' => [
                 'transcode_status' => $statuses,
-                'del_flg' => false,
+                'del_flg'          => false,
             ],
         ];
         $videoStreams = $this->find('all', $options);
@@ -75,8 +78,8 @@ class VideoStream extends AppModel
                     Enum\Model\Video\VideoTranscodeStatus::UPLOADING,
                     Enum\Model\Video\VideoTranscodeStatus::UPLOAD_COMPLETE,
                 ],
-                'modified <' => $timestamp,
-                'del_flg' => false,
+                'modified <'       => $timestamp,
+                'del_flg'          => false,
             ],
         ];
         $videoStreams = $this->find('all', $options);
@@ -88,5 +91,26 @@ class VideoStream extends AppModel
         }
 
         return Hash::extract($videoStreams, '{n}.VideoStream');
+    }
+
+    /**
+     * Get video ids of given video stream ids
+     *
+     * @param array $videoStreamIds
+     *
+     * @return array
+     */
+    public function getVideoIds(array $videoStreamIds): array
+    {
+        $condition = [
+            'conditions' => [
+                'id'      => $videoStreamIds,
+                'del_flg' => false
+            ],
+            'fields'     => [
+                'video_id'
+            ]
+        ];
+        return Hash::extract($this->useType()->find('all', $condition), '{n}.{s}.video_id');
     }
 }

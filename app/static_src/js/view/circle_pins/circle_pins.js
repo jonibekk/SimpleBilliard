@@ -106,10 +106,6 @@ function editMenu(evt) {
     evt = evt || window.event;
     evt.preventDefault();
     var self = this.parentElement;
-    if (self.classList.contains('double_click')) {
-        return false;
-    }
-    self.classList.add('double_click');
 
     var modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
     modal_elm.on('hidden.bs.modal', function (e) {
@@ -140,10 +136,8 @@ function editMenu(evt) {
             });
             modal_elm.modal();
         }).done(function (data) {
-            self.classList.remove('double_click');
             document.getElementById('circles-edit-page').classList.add('modal-open');
         }).fail(function () {
-            self.classList.remove('double_click')
             new Noty({
                 type: 'error',
                 text: cake.message.notice.d,
@@ -195,9 +189,6 @@ function pinEvent() {
 function bindPinEvent(target) {
     $(target).one('click', pinEvent);
 }
-function bindEditMenu(target) {
-    $(target).on('click', editMenu);
-}
 jQuery.fn.insertAt = function(index, element) {
   var lastIndex = this.children().length;
   if (index < 0) {
@@ -214,8 +205,7 @@ function setEvents() {
     if(circles){   
         for(var i = 0; i < circles.length; i++){
             bindPinEvent($(circles[i]).find('.fa-thumb-tack'));
-            bindEditMenu($(circles[i]).find('.fa-cog'));
-        } 
+        }
     }
 }
 function initialize() {

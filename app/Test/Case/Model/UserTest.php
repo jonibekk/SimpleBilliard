@@ -1,12 +1,19 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
+App::uses('LocalName', 'Model');
+App::uses('CircleMember', 'Model');
+App::uses('TeamMember', 'Model');
 App::import('Model/Entity', 'UserEntity');
 
+use Goalous\Enum as Enum;
 /**
  * User Test Case
  *
  * @property User $User
+ * @property LocalName $LocalName
+ * @property CircleMember $CircleMember
+ * @property TeamMember $TeamMember
  */
 class UserTest extends GoalousTestCase
 {
@@ -65,6 +72,9 @@ class UserTest extends GoalousTestCase
     {
         parent::setUp();
         $this->User = ClassRegistry::init('User');
+        $this->LocalName = ClassRegistry::init('LocalName');
+        $this->CircleMember = ClassRegistry::init('CircleMember');
+        $this->TeamMember = ClassRegistry::init('TeamMember');
     }
 
     /**
@@ -1365,5 +1375,236 @@ class UserTest extends GoalousTestCase
         $result = $User->useType()->useEntity()->find('first', $conditions);
         $this->assertTrue($result instanceof UserEntity);
         $this->assertInternalType('int', $result['id']);
+    }
+
+    public function test_findByKeywordRangeCircle()
+    {
+        $this->prepareTest_findByKeywordRangeCircle();
+        $teamId = 1;
+        $userId = 1;
+
+        // Keyword is empty
+        $res = $this->User->findByKeywordRangeCircle('', $teamId, $userId, 10, true);
+        $this->assertEquals($res, []);
+
+
+        /* Local name exit */
+        /* Keyword: ja last name (local_names.last_name) */
+
+        $res = $this->User->findByKeywordRangeCircle('東', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 1);
+        $this->assertEquals($res[1]['id'], 3);
+        // limit
+        $res = $this->User->findByKeywordRangeCircle('東', $teamId, $userId, 1, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 1);
+        // exclude auth user
+        $res = $this->User->findByKeywordRangeCircle('東', $teamId, $userId, 2, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+        // keyword: 2chara ja last name (local_names.last_name)
+        $res = $this->User->findByKeywordRangeCircle('東大', $teamId, $userId, 2, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+        // Not found
+        $res = $this->User->findByKeywordRangeCircle('東大一', $teamId, $userId, 2, true);
+        $this->assertEmpty($res);
+
+        /* Keyword: ja first name (local_names.last_name) */
+        // 1chara
+        $res = $this->User->findByKeywordRangeCircle('次', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 2);
+        $this->assertEquals($res[1]['id'], 12);
+        // Perfect match
+        $res = $this->User->findByKeywordRangeCircle('次郎', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 2);
+        // Not found
+        $res = $this->User->findByKeywordRangeCircle('次郎子', $teamId, $userId, 10, false);
+        $this->assertEmpty($res);
+
+        /* Keyword: roman last name (users.last_name) */
+        // 1chara lowercase
+        $res = $this->User->findByKeywordRangeCircle('t', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 1);
+        $this->assertEquals($res[1]['id'], 3);
+        // 1chara uppercase
+        $res = $this->User->findByKeywordRangeCircle('T', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 1);
+        $this->assertEquals($res[1]['id'], 3);
+        // 2chara
+        $res = $this->User->findByKeywordRangeCircle('To', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 1);
+        $this->assertEquals($res[1]['id'], 3);
+        // 3chara
+        $res = $this->User->findByKeywordRangeCircle('Tod', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+        // Perfect match
+        $res = $this->User->findByKeywordRangeCircle('Todai', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 3);
+        // Not found
+        $res = $this->User->findByKeywordRangeCircle('Todaii', $teamId, $userId, 10, false);
+        $this->assertEmpty($res);
+
+        /* Keyword: roman first name (users.first_name) */
+        // 1chara lowercase
+        $res = $this->User->findByKeywordRangeCircle('j', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 2);
+        $this->assertEquals($res[1]['id'], 12);
+        // 1chara uppercase
+        $res = $this->User->findByKeywordRangeCircle('J', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 2);
+        $this->assertEquals($res[1]['id'], 12);
+        // 2chara
+        $res = $this->User->findByKeywordRangeCircle('Ji', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 2);
+        $this->assertEquals($res[1]['id'], 12);
+        // many chara
+        $res = $this->User->findByKeywordRangeCircle('Jiro', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 2);
+        $this->assertEquals($res[1]['id'], 12);
+        // Perfect match
+        $res = $this->User->findByKeywordRangeCircle('Jiroko', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 12);
+        // Not found
+        $res = $this->User->findByKeywordRangeCircle('Jirokoo', $teamId, $userId, 10, true);
+        $this->assertEmpty($res);
+
+        /* Secret circle */
+        $res = $this->User->findByKeywordRangeCircle('東', $teamId, $userId, 10, false, 4);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 1);
+
+        $res = $this->User->findByKeywordRangeCircle('埼玉', $teamId, $userId, 10, true, 4);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 1);
+        $this->assertEquals($res[0]['id'], 2);
+
+        $this->CircleMember->deleteAll(['circle_id' => 4]);
+        $res = $this->User->findByKeywordRangeCircle('埼玉', $teamId, $userId, 10, true, 4);
+        $this->assertEmpty($res);
+
+        /* Team member status */
+        // Inactive
+        $this->TeamMember->updateAll(['status' => Enum\Model\TeamMember\Status::INACTIVE], ['user_id' => 12]);
+        $res = $this->User->findByKeywordRangeCircle('J', $teamId, $userId, 10, true);
+        $this->assertNotEmpty($res);
+        $this->assertEquals($res[0]['id'], 2);
+
+        // Invited
+        $this->TeamMember->updateAll(['status' => Enum\Model\TeamMember\Status::INVITED], ['user_id' => 2]);
+        $res = $this->User->findByKeywordRangeCircle('J', $teamId, $userId, 10, true);
+        $this->assertEmpty($res);
+
+        /* Local name doesn't exit */
+        $this->LocalName->deleteAll(['LocalName.del_flg' => false]);
+        $res = $this->User->findByKeywordRangeCircle('東', $teamId, $userId, 10, false);
+        $this->assertEmpty($res);
+
+        $this->LocalName->deleteAll(['LocalName.del_flg' => false]);
+        $res = $this->User->findByKeywordRangeCircle('To', $teamId, $userId, 10, false);
+        $this->assertNotEmpty($res);
+        $this->assertEquals(count($res), 2);
+        $this->assertEquals($res[0]['id'], 1);
+        $this->assertEquals($res[1]['id'], 3);
+
+        /* Different team */
+        $res = $this->User->findByKeywordRangeCircle('To', 2, $userId, 10, false);
+        $this->assertEmpty($res);
+
+    }
+
+    private function prepareTest_findByKeywordRangeCircle()
+    {
+        $this->User->me['language'] = 'jpn';
+        $this->LocalName->deleteAll(['LocalName.del_flg' => false]);
+        $this->User->saveAll([
+            [
+                'id' => 1,
+                'first_name' => 'Ichiro',
+                'last_name' => 'Tokyo'
+            ],
+            [
+                'id' => 2,
+                'first_name' => 'Jiro',
+                'last_name' => 'Saitama'
+            ],
+            [
+                'id' => 3,
+                'first_name' => 'Saburo',
+                'last_name' => 'Todai'
+            ],
+            [
+                'id' => 12,
+                'first_name' => 'Jiroko',
+                'last_name' => 'Chiba'
+            ],
+            [
+                'id' => 13,
+                'first_name' => 'Idaten',
+                'last_name' => 'Kitachiba'
+            ],
+        ], ['validate' => false]);
+        $this->LocalName->saveAll([
+            [
+                'user_id' => 1,
+                'first_name' => '一郎',
+                'last_name' => '東京',
+                'language' => 'jpn'
+            ],
+            [
+                'user_id' => 2,
+                'first_name' => '次郎',
+                'last_name' => '埼玉',
+                'language' => 'jpn'
+            ],
+            [
+                'user_id' => 3,
+                'first_name' => '三郎',
+                'last_name' => '東大',
+                'language' => 'jpn'
+            ],
+            [
+                'user_id' => 12,
+                'first_name' => '次露子',
+                'last_name' => '千葉',
+                'language' => 'jpn'
+            ],
+            [
+                'user_id' => 13,
+                'first_name' => '韋駄天',
+                'last_name' => '北千葉',
+                'language' => 'jpn'
+            ],
+        ], ['validate' => false]);
     }
 }

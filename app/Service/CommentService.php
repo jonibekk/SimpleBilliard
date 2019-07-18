@@ -6,11 +6,15 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
+App::uses('CommentFile', 'Model');
+App::uses('CommentLike', 'Model');
+App::uses('CommentRead', 'Model');
+App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
-App::import('Model/Entity', 'POstEntity');
+
 
 
 /**
@@ -199,17 +203,191 @@ class CommentService extends AppService
     }
 
     /**
+     * Delete comment 
+     *
+     * @param commentId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function delete(int $commentId): bool
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        /** @var CommentFileService $CommentFileService */
+        $CommentFileService = ClassRegistry::init('CommentFileService');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        //Check if comment exists & not deleted
+        $commentCondition = [
+            'conditions' => [
+                'id'      => $commentId,
+                'del_flg' => false
+            ],'fields'     => [
+                'post_id'
+            ]
+        ];
+
+        $postId = $Comment->useType()->find('first', $commentCondition);
+        $postId = Hash::get($postId,"Comment.post_id");
+
+        if (!$postId) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        $modelsToDelete = [
+            'CommentLike'        => 'comment_id',
+            'CommentRead'        => 'comment_id',
+            'CommentMention'     => 'post_id',
+            'Comment'            => 'Comment.id'
+        ];
+
+        try {
+            $this->TransactionManager->begin();
+            foreach ($modelsToDelete as $model => $column) {
+                /** @var AppModel $Model */
+                $Model = ClassRegistry::init($model);
+
+                $condition = [$column => $commentId];
+
+                $res = $Model->softDeleteAll($condition, false);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
+                }                
+            }
+            $CommentFileService->softDeleteAllFiles($commentId);
+
+            //Countdown the post comments number
+            $newCommentCount = $Comment->getCommentCount($postId);
+            if (!$Post->updateCommentCount($postId, $newCommentCount)) {
+                GoalousLog::error('Error on deleting comment: failed updating posts.comment_count');
+                throw new RuntimeException('Error on deleting post: failed updating post comment_count');
+            }
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Error on deleting comment $commentId: failed comment soft delete", $e->getTrace());
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
+     * Edit a comment body
+     *
+     * @param CommentUpdateRequest $data
+     * @return CommentEntity Updated comment
+     * @throws Exception
+     */
+    public function edit(CommentUpdateRequest $data): CommentEntity
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        if (!$Comment->exists($data->getId())) {
+            throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
+        }
+
+        try {
+            $this->TransactionManager->begin();
+
+            $newData = [
+                'body'      => $data->getBody(),
+                'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo())  : null,
+                'created' => false // Prevent updating this field
+            ];
+
+            $Comment->clear();
+            $commentId = $data->getId();
+            $Comment->id = $commentId;
+            if (!$Comment->save($newData, false)) {
+                throw new RuntimeException(sprintf("Failed to update comments table record. data: %s",
+                    AppUtil::jsonOneLine(compact('newData', 'commentId'))
+                ));
+            }
+            $this->updateAttachedFiles($data->getId(), $data->getUserId(), $data->getTeamId(), $data->getResources());
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to update comment", [
+                'message' => $e->getMessage(),
+                'data' => $data,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+        /** @var CommentEntity $result */
+        $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $data->getId()]]);
+        return $result;
+    }
+
+    /**
+     * Update attached files
+     * - delete only files user deleted existing on comment form
+     * - save new files
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     * @param array $resources Existing resources
+     *
+     * @return PostResource[]
+     * @throws Exception
+     */
+    private function updateAttachedFiles(int $commentId, int $userId, int $teamId, array $resources)
+    {
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+        $oldFiles = $CommentFile->getAllCommentFiles($commentId);
+        if (empty($resources) && empty($oldFiles)) {
+            return;
+        }
+        // Each array element is CommentFile entity and can't use Hash::extract
+        $oldFileIds = [];
+        foreach($oldFiles as $oldFile) {
+            $oldFileIds[] = $oldFile['attached_file_id'];
+        }
+
+        $existingFileIds = [];
+        $newFileUuids = [];
+        foreach($resources as $resource) {
+            if (!array_key_exists('id', $resource)) {
+                $newFileUuids[] = $resource['file_uuid'];
+            } else {
+                $existingFileIds[] = $resource['id'];
+            }
+        }
+        $deleteFileIds = array_diff($oldFileIds, $existingFileIds);
+
+        if (!empty($deleteFileIds)) {
+            /** @var CommentFileService $CommentFileService */
+            $CommentFileService = ClassRegistry::init('CommentFileService');
+            $CommentFileService->deleteAllByAttachedFileIds($deleteFileIds);
+        }
+        if (!empty($newFileUuids)) {
+            $existingFilesMaxOrder = $CommentFile->findMaxOrderOfComment($commentId);
+            $this->saveFiles($commentId, $userId, $teamId, $newFileUuids, $existingFilesMaxOrder + 1);
+        }
+    }
+
+    /**
      * Save uploaded files
      *
-     * @param int   $commentId
-     * @param int   $userId
-     * @param int   $teamId
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
      * @param array $fileIDs
      *
+     * @param int $commentFileIndex
      * @return bool
      * @throws Exception
      */
-    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs): bool
+    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs, int $commentFileIndex = 0): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -217,8 +395,6 @@ class CommentService extends AppService
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
         /** @var CommentFileService $CommentFileService */
         $CommentFileService = ClassRegistry::init('CommentFileService');
-
-        $commentFileIndex = 0;
 
         $addedFiles = [];
 

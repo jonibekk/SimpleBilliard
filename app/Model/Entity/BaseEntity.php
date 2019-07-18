@@ -139,11 +139,11 @@ abstract class BaseEntity implements ArrayAccess, IteratorAggregate
      */
     public function toArray(bool $includeModelName = false): array
     {
-        if ($includeModelName) {
-            $result[$this->modelName] = $this->properties;
+        if ($includeModelName && !empty($this->modelName)) {
+            $result[$this->modelName] = $this->properties ?: [];
             return $result;
         } else {
-            return $this->properties;
+            return $this->properties ?: [];
         }
     }
 

@@ -10,13 +10,19 @@ App::import('Lib/DataExtender/Extension', 'GoalExtension');
 App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
+App::import('Lib/DataExtender/Extension', 'PostShareCircleExtension');
 App::import('Service/Paging', 'CommentPagingService');
+App::import('Service/Paging', 'CommentAllService');
 App::import('Service', 'PostService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TranslationLanguage', 'Model');
+App::import('Service', 'PostService');
+App::import('Service', 'VideoStreamService');
+
+use Goalous\Enum as Enum;
 
 class PostExtender extends BaseExtender
 {
@@ -24,8 +30,10 @@ class PostExtender extends BaseExtender
     const EXTEND_USER = "ext:post:user";
     const EXTEND_RELATED_TYPE = "ext:post:related_type";
     const EXTEND_COMMENTS = "ext:post:comments";
+    const EXTEND_COMMENTS_ALL = "ext:post:comments:all";
     const EXTEND_POST_SHARE_CIRCLE = "ext:post:share_circle";
     const EXTEND_POST_SHARE_USER = "ext:post:share_user";
+    const EXTEND_POST_RESOURCES = "ext:post:resources";
     const EXTEND_POST_FILE = "ext:post:file";
     const EXTEND_LIKE = "ext:post:like";
     const EXTEND_SAVED = "ext:post:saved";
@@ -69,30 +77,44 @@ class PostExtender extends BaseExtender
                     break;
             }
         }
-        if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
-            /** @var CommentPagingService $CommentPagingService */
-            $CommentPagingService = ClassRegistry::init('CommentPagingService');
+        $isExtendingAllComment = in_array(self::EXTEND_COMMENTS_ALL, $extensions);
+        if ($isExtendingAllComment) {
+            /** @var CommentAllService $CommentAllService */
+            $CommentAllService = ClassRegistry::init('CommentAllService');
 
             $commentPagingRequest = new PagingRequest();
             $commentPagingRequest->setResourceId(Hash::get($data, 'id'));
             $commentPagingRequest->setCurrentUserId($userId);
             $commentPagingRequest->setCurrentTeamId($teamId);
 
-            $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
+            $comments = $CommentAllService->getAllData(
+                $commentPagingRequest,
                 CommentExtender::EXTEND_ALL);
 
             $data['comments'] = $comments;
-        }
+        } elseif ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
+            /** @var CommentPagingService $CommentPagingService */
+        $CommentPagingService = ClassRegistry::init('CommentPagingService');
+
+        $commentPagingRequest = new PagingRequest();
+        $commentPagingRequest->setResourceId(Hash::get($data, 'id'));
+        $commentPagingRequest->setCurrentUserId($userId);
+        $commentPagingRequest->setCurrentTeamId($teamId);
+
+        $comments = $CommentPagingService->getDataWithPaging(
+            $commentPagingRequest,
+            self::DEFAULT_COMMENT_COUNT,
+            CommentExtender::EXTEND_ALL);
+
+        $data['comments'] = $comments;
+    }
         if ($this->includeExt($extensions, self::EXTEND_POST_FILE)) {
             // Set image url each post photo
             /** @var ImageStorageService $ImageStorageService */
             $ImageStorageService = ClassRegistry::init('ImageStorageService');
-
             /** @var PostService $PostService */
             $PostService = ClassRegistry::init('PostService');
-
             $Upload = new UploadHelper(new View());
-
             $attachedFile = $PostService->getAttachedFiles($data['id']);
             $data['attached_files'] = [];
             /** @var AttachedFileEntity $file */
@@ -101,9 +123,8 @@ class PostExtender extends BaseExtender
                 $file['preview_url'] = '';
                 // download url is common.
                 // TODO: We should consider to preapare new API or using old processe;
-//                    $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
+                // $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
                 $file['download_url'] = '';
-
                 if ($file['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                     $file['file_url'] = $ImageStorageService->getImgUrlEachSize($file->toArray(), 'AttachedFile',
                         'attached');
@@ -112,6 +133,65 @@ class PostExtender extends BaseExtender
                     $file['preview_url'] = $Upload->attachedFileUrl($file->toArray());
                     $data['attached_files'][] = $file->toArray();
                 }
+            }
+        }
+        if ($this->includeExt($extensions, self::EXTEND_POST_RESOURCES)) {
+
+            $data['resources'] = [];
+
+            /** @var PostService $PostService */
+            $PostService = ClassRegistry::init('PostService');
+
+            /** @var ImageStorageService $ImageStorageService */
+            $ImageStorageService = ClassRegistry::init('ImageStorageService');
+            /** @var VideoStreamService $VideoStreamService */
+            $VideoStreamService = ClassRegistry::init('VideoStreamService');
+
+            $Upload = new UploadHelper(new View());
+
+            $resources = $PostService->getResourcesByPostId($data['id']);
+
+            foreach ($resources as $resource) {
+                /** @var PostResourceEntity $resource */
+                $postResource = $resource->offsetGet('PostResource');
+                $attachedFile = $resource->offsetGet('AttachedFile');
+
+                // Joined table does not cast types even if using useEntity()
+                $attachedFile['file_type'] = (int)$attachedFile['file_type'];
+
+                // Fetch data from attached_files
+                if (in_array($postResource['resource_type'], [
+                    Enum\Model\Post\PostResourceType::IMAGE,
+                    Enum\Model\Post\PostResourceType::FILE,
+                    Enum\Model\Post\PostResourceType::FILE_VIDEO,
+                ])) {
+                    $attachedFile['file_url'] = '';
+                    $attachedFile['preview_url'] = '';
+                    // download url is common.
+                    // TODO: We should consider to preapare new API or using old processe;
+                    //  $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
+                    $attachedFile['download_url'] = '';
+
+                    if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                        $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile',
+                            'attached');
+                        $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::IMAGE;
+                        $data['resources'][] = $attachedFile;
+                    } else {
+                        $attachedFile['preview_url'] = $Upload->attachedFileUrl($attachedFile);
+                        $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::FILE;
+                        $data['resources'][] = $attachedFile;
+                    }
+                    continue;
+                };
+
+                // Fetch data from video stream
+                if ((int)$postResource['resource_type'] === Enum\Model\Post\PostResourceType::VIDEO_STREAM) {
+                    $isUserAgentSupportManifestRedirect = $VideoStreamService->isBrowserSupportManifestRedirects();
+                    $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'], !$isUserAgentSupportManifestRedirect);
+                    $data['resources'][] = $resourceVideoStream;
+                }
+
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_LIKE)) {
@@ -132,6 +212,7 @@ class PostExtender extends BaseExtender
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extend($data, "id", "post_id");
         }
+
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
 
             /** @var Team $Team */
@@ -176,6 +257,14 @@ class PostExtender extends BaseExtender
                 $data['translation_limit_reached'] = $limitReached;
                 $data['translation_languages'] = $translationLanguages;
             }
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_POST_SHARE_CIRCLE)) {
+            /** @var PostShareCircleExtension $PostShareCircleExtension */
+            $PostShareCircleExtension = ClassRegistry::init('PostShareCircleExtension');
+            $PostShareCircleExtension->setUserId($userId);
+            $PostShareCircleExtension->setTeamId($teamId);
+            $data = $PostShareCircleExtension->extend($data, "id", "post_id");
         }
 
         return $data;

@@ -40,13 +40,8 @@
         <?php //共有サークル、共有ユーザ
         elseif ($post['share_mode'] == Post::SHARE_CIRCLE): ?>
             <span class="font_lightgray"> ･ </span>
-            <a href="#"
-               data-url="<?= $this->Html->url([
-                   'controller' => 'posts',
-                   'action'     => 'ajax_get_share_circles_users_modal',
-                   'post_id'    => $post['Post']['id']
-               ]) ?>"
-               class="modal-ajax-get-share-circles-users link-dark-gray">
+            <a href="<?= "/circles/" . $post['PostShareCircle'][0]['circle_id'] ."/posts"?>"
+               class="link-dark-gray">
                 <i class="fa fa-circle-o"></i>&nbsp;<?= h($post['share_text']) ?>
             </a>
         <?php endif; ?>

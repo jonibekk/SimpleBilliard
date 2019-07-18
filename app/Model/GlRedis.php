@@ -521,6 +521,7 @@ class GlRedis extends AppModel
      * @param int    $date        UNIX timestamp of when the notification was created
      * @param int    $post_id     ID of post related to the notification
      * @param array  $options
+     * @param bool   $old_gl      Whether notification will redirect to old Goalous
      *
      * @return bool TRUE = succesfully save notification into REDIS.
      */
@@ -533,7 +534,8 @@ class GlRedis extends AppModel
         $url,
         $date,
         $post_id = null,
-        $options = []
+        $options = [],
+        $old_gl = true
     )
     {
 
@@ -563,11 +565,12 @@ class GlRedis extends AppModel
             'id'            => $notify_id,
             'user_id'       => $my_id,
             'body'          => $body,
-            'url'           => Router::url($url, true),
+            'url'           => Router::url($url, $old_gl),
             'type'          => $type,
             'to_user_count' => count($to_user_ids),
             'created'       => $date,
             'options'       => $options,
+            'old_gl'        => $old_gl
         ];
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
@@ -743,6 +746,10 @@ class GlRedis extends AppModel
      */
     function getNotifications($team_id, $user_id, $limit = null, $from_date = null)
     {
+        if ($from_date === 0) {
+            $from_date = null;
+        }
+
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
         $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
@@ -1573,13 +1580,27 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3)
+    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3): JwtAuthentication
     {
         App::uses('AccessAuthenticator', 'Lib/Auth');
-        $jwt = AccessAuthenticator::publish($userId, $teamId);
+        $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->set($key, $jwt->token());
-        return $this->Db->setTimeout($key, $expire);
+        $this->Db->setTimeout($key, $expire);
+        return $jwt;
+    }
+
+    /**
+     * Delete mapping between session id and jwt
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     * @param string $sessionId
+     */
+    function delMapSesAndJwt(int $teamId, int $userId, string $sessionId)
+    {
+        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
+        $this->Db->del($key);
     }
 
     /**
@@ -1627,7 +1648,7 @@ class GlRedis extends AppModel
         $expire = 2 * WEEK;
 
         $keyValueList = [];
-        foreach($memberCountEachCircle as $circleId => $memberCount) {
+        foreach ($memberCountEachCircle as $circleId => $memberCount) {
             $key = $this->getKeyNameForCircleMemberCount($circleId);
             $keyValueList[$key] = $memberCount;
         }

@@ -199,7 +199,8 @@ class GoalMember extends AppModel
         $page = 1,
         $with_owner = false,
         $approval_status = null
-    ) {
+    )
+    {
         $is_default = false;
         if ($user_id == $this->my_uid && $with_owner === true && $limit === null && $page === 1 && $approval_status === null) {
             $is_default = true;
@@ -377,7 +378,8 @@ class GoalMember extends AppModel
         $approvalStatus = null,
         $is_include_priority_0 = true,
         $term_type = null
-    ) {
+    )
+    {
         $conditions = [
             'GoalMember.team_id' => $team_id,
             'GoalMember.user_id' => $goal_user_id,
@@ -501,6 +503,8 @@ class GoalMember extends AppModel
     function countUnapprovedGoal($userId)
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
+
+        if (empty($currentTerm)) return 0;
 
         $options = [
             'fields'     => ['GoalMember.id'],

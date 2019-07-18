@@ -29,17 +29,5 @@ export function getLayout() {
     body_bottom: PositionMobileApp.BODY_BOTTOM,
     footer_bottom: PositionMobileApp.FOOTER_BOTTOM
   };
-  if (!cake.is_mb_app_web_footer) {
-    return layout;
-  }
-
-  const footerEl = document.getElementsByClassName('mobile-app-footer')[0];
-  if (!footerEl) {
-    return layout;
-  }
-  // If mobile app footer is native, change position to fit layout
-  const mobileAppFooterHeight = footerEl.clientHeight;
-  layout.body_bottom += mobileAppFooterHeight;
-  layout.footer_bottom += mobileAppFooterHeight;
   return layout;
 }

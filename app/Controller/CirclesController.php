@@ -16,6 +16,7 @@ class CirclesController extends AppController
     public $components = [
         'Mention'
     ];
+
     /**
      * beforeFilter callback
      *
@@ -24,6 +25,18 @@ class CirclesController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+    }
+
+
+    /**
+     * Display circle creation form
+     *
+     * @return CakeResponse
+     */
+    public function create()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
     }
 
     /**
@@ -65,42 +78,40 @@ class CirclesController extends AppController
         // Notification
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);
-        $this->Notification->outSuccess(__("Created a circle."));
-
         $this->_updateSetupStatusIfNotCompleted();
 
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        return $this->redirect("/circles/${circleId}/posts");
     }
 
-    public function ajax_get_edit_modal()
-    {        
-        $circle_id = $this->request->params['named']['circle_id'];
-
-        if(empty($circle_id)) {
-            $this->response->type('json');
-            $this->response->body(null);
-            return $this->response;
+    /**
+     * Display circle edit form
+     *
+     * @return CakeResponse
+     */
+    public function edit(int $circleId)
+    {
+        if (!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circleId)) {
+            $this->Notification->outError(__("You have no right to operate it."));
+            return $this->redirect($this->referer());
         }
+        $this->set('circleId', $circleId);
+        $this->layout = LAYOUT_ONE_COLUMN;
 
-        $this->request->data = $this->Circle->findById($circle_id);
+        $this->request->data = $this->Circle->findById($circleId);
         $this->request->data['Circle']['members'] = null;
 
-        if(!$this->Circle->CircleMember->isAdmin($this->Auth->User('id'), $circle_id)) {
-            $this->response->type('json');
-            $this->response->body(null);
-            return $this->response;
+        $tab = $this->request->query('type') ?? "";
+        if (!in_array($tab,  ['memberList', 'addMembers'], true)) {
+            $tab = '';
         }
-        $this->_ajaxPreProcess();
+        $this->set('tab', $tab);
 
-        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
+        $circle_members = $this->Circle->CircleMember->getMembers($circleId, true);
         $this->set('circle_members', $circle_members);
-        //htmlレンダリング結果
-        $response = $this->render('modal_edit_circle');
-        $html = $response->__toString();
 
-        return $this->_ajaxGetResponse($html);
+        return $this->render();
     }
 
     function ajax_select2_init_circle_members($circle_id)
@@ -147,7 +158,7 @@ class CirclesController extends AppController
     /**
      * サークル基本情報更新
      */
-    public function edit()
+    public function update()
     {
         $this->request->allowMethod('put');
         $this->Circle->id = $this->request->params['named']['circle_id'];
@@ -168,12 +179,12 @@ class CirclesController extends AppController
         $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
         $this->request->data['Circle']['public_flg'] = $before_circle['Circle']['public_flg'];
 
-        if ($this->Circle->edit($this->request->data)) {
-            $this->Notification->outSuccess(__("Saved circle settings."));
-        } else {
+        if (!$this->Circle->edit($this->request->data)) {
             $this->Notification->outError(__("Failed to save circle settings."));
+            $this->redirect($this->referer());
+            return;
         }
-        $this->redirect($this->referer());
+        return $this->redirect("/circles/" . $this->Circle->id . "/about");
     }
 
     /**
@@ -242,7 +253,7 @@ class CirclesController extends AppController
         //サークル削除時はユーザ数によってキャッシュ削除の処理が重くなるため、user_data全て削除
         Cache::clear(false, 'user_data');
         $this->Notification->outSuccess(__("Deleted a circle."));
-        $this->redirect($this->referer());
+        $this->redirect('/');
     }
 
     public function ajax_get_public_circles_modal()
@@ -420,7 +431,7 @@ class CirclesController extends AppController
         // サークルから外す処理
         $res = $CircleService->removeCircleMember($this->current_team_id, $this->Circle->id, $this->request->data['CircleMember']['user_id']);
         // Remove and update circle pin information
-        if($res){
+        if ($res) {
             $res = $CirclePinService->deleteCircleId($this->request->data['CircleMember']['user_id'], $this->current_team_id, $this->Circle->id);
         }
         // 処理失敗

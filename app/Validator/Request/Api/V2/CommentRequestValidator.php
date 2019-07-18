@@ -22,10 +22,30 @@ class CommentRequestValidator extends BaseValidator
         return $rules;
     }
 
+    public function getCommentEditValidationRule(): array
+    {
+        $rules = [
+            "body" => [validator::notEmpty()::length(1, 5000)],
+            "resources" => [
+                // Could not use max(10) on array
+                validator::arrayType()->length(null, 10),
+                "optional"
+            ],
+        ];
+        return $rules;
+    }
+
     public static function createCommentReadValidator(): self
     {
         $self = new self();
         $self->addRule($self->getCommentReadValidationRule(), true);
+        return $self;
+    }
+
+    public static function createCommentEditValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getCommentEditValidationRule(), true);
         return $self;
     }
 

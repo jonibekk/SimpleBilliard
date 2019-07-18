@@ -204,9 +204,25 @@
         "operationId" : "/api/circles/{circle.id}/members",
         "parameters" : [ {
           "$ref" : "#/components/parameters/Circle.Id"
-        }, {
-          "$ref" : "#/components/parameters/ApiVersion"
-        } ],
+        }],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "user_id" : {
+                    "type" : "int"
+                  }
+                },
+                "example" : {
+                  "user_id" : []
+                }
+              }
+            }
+          },
+          "required" : true
+        },
         "responses" : {
           "200" : {
             "description" : "[Success] Invited a member",
@@ -222,6 +238,42 @@
                 }
               }
             }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.Member.Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/circles/{circle.id}/reset_unread_count" : {
+      "put" : {
+        "tags" : [ "Circles" ],
+        "summary" : "Reset circle posts unread count of current user",
+        "description" : "Reset circle posts unread count of current user",
+        "operationId" : "/api/circles/{circle.id}/reset_unread_count",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Circle.Id"
+        }, {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : ""
           },
           "400" : {
             "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
@@ -768,6 +820,123 @@
         }
       }
     },
+    "/api/mentions/search" : {
+      "get" : {
+        "tags" : [ "Mentions" ],
+        "summary" : "Search mention items (users and circles)",
+        "description" : "Search mention items",
+        "operationId" : "/api/mentions/search",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "name" : "keyword",
+          "in" : "query",
+          "required" : true,
+          "description" : "Search keyword",
+          "schema" : {
+            "type": "string"
+          }
+        }, {
+          "name" : "post_id",
+          "in" : "query",
+          "required" : false,
+          "description" : "Post id that comment belongs if mention in comment. Need to filter mention range.(if secret circle's post id, mention items is only secret circle and secret circle members)",
+          "schema" : {
+            "type" : "integer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get search result mention items",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "img_url": {
+                            "$ref": "#/components/schemas/Model.ImgUrls"
+                          }
+                        }
+                      }
+                    },
+                    "cursor" : {
+                      "type" : "string"
+                    },
+                    "count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  },
+                  "example": {
+                    "data" : [
+                      {
+                        "id" : 1,
+                        "type" : "user",
+                        "label" : "Tarou Gorasu",
+                        "img_url" : {
+                          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+                          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+                          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+                          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+                          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+                          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
+                        }
+                      },
+                      {
+                        "id" : 2,
+                        "type" : "circle",
+                        "label" : "Tokyo",
+                        "img_url" : {
+                          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+                          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+                          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+                          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+                          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+                          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
+                        }
+                      }
+                    ],
+                    "count" : 2,
+                    "cursor" : ""
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.User.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
     "/api/v2/users/{user.id}/goals" : {
       "get" : {
         "tags" : [ "Users" ],
@@ -965,33 +1134,186 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "allOf" : [ {
-                    "$ref" : "#/components/schemas/Model.User.Profile"
-                  }, {
-                    "type" : "object",
-                    "properties" : {
-                      "token" : {
-                        "type" : "string"
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "me" : {
+                          "$ref" : "#/components/schemas/Model.Me"
+                        },
+                        "token" : {
+                          "type" : "string"
+                        }
                       }
                     }
-                  } ],
+                  },
                   "example" : {
                     "data" : {
-                      "id" : 1,
-                      "first_name" : "Admin",
-                      "last_name\"" : "Test",
-                      "photo_file_name" : null,
-                      "cover_photo_file_name" : null,
-                      "language" : "jpn",
-                      "auto_language_flg" : false,
-                      "romanize_flg" : false,
-                      "display_first_name" : "Admin",
-                      "display_last_name" : "Test",
-                      "display_username" : "Admin Test",
-                      "local_username" : null,
-                      "roman_username" : "Admin Test",
-                      "last_first" : true,
-                      "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyNWZhZjQwOC05ZWIzLTQ3ZGQtYWMzOC0zZjhiYzBiNDFmZjkiLCJleHAiOjE1MzUzNjE4NjcsImlhdCI6MTUzNDE1MjI2NywiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjoxLCJ0ZWFtX2lkIjoxfX0.GRYBMO64MM6AFafluYmEWbWWrTalnbXRjzH0DO9PvIsw0Ew6SIsMOELmvyfZnSNcS_V02wWE_BvrEZrm-zswWw"
+                      "me": {
+                        "id": "614",
+                        "photo_file_name": "aa682cea8bd3530212fe0493601dd618_photo.jpg",
+                        "cover_photo_file_name": null,
+                        "first_name": "Taro",
+                        "last_name": "Gorasu",
+                        "middle_name": null,
+                        "language": "ja",
+                        "active_flg": true,
+                        "last_login": "1551833398",
+                        "admin_flg": false,
+                        "default_team_id": "66",
+                        "timezone": 9,
+                        "romanize_flg": false,
+                        "update_email_flg": true,
+                        "agreed_terms_of_service_id": "2",
+                        "gender_type": "1",
+                        "birth_day": "2000-01-01",
+                        "hide_year_flg": false,
+                        "phone_no": null,
+                        "hometown": "",
+                        "display_first_name": "Taro",
+                        "display_last_name": "Gorasu",
+                        "display_username": "Taro Gorasu",
+                        "local_username": null,
+                        "roman_username": "Taro Gorasu",
+                        "last_first": true,
+                        "profile_img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_small.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=cZOCP%2BiY1qBBMyLzWSA%2Fv6DbtZc%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_medium.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=4bVGBI50A2NdMfAY6OPCyd2ZLjI%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_medium_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=rVANQsdZGuYU4vYfv4Kvcy5dTzE%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=T9drebSIcIPioFtc5JtMJXZ2Q6A%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_x_large.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=PyXMoIepSEwaXQnRRN7jm0%2BLPcM%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/users/614/2309eac2a158fcad0d6dd72e203afbee_original.jpg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=0Ffc6ZUkTldHOhmQ8NkOOTS%2BXf8%3D"
+                        },
+                        "cover_img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551852000&Signature=HxNu2iNlEzEcme%2F0gtg0fmNAaLM%3D"
+                        },
+                        "current_team_id": "66",
+                        "current_team_member_own": {
+                          "id": "693",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "coach_user_id": "",
+                          "member_no": null,
+                          "member_type_id": "",
+                          "job_category_id": "",
+                          "active_flg": true,
+                          "invitation_flg": false,
+                          "evaluation_enable_flg": true,
+                          "admin_flg": true,
+                          "evaluable_count": 0,
+                          "last_login": 1551833398,
+                          "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+                          "status": 1,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1534133785,
+                          "modified": 1551833298
+                        },
+                        "my_active_teams": [
+                          {
+                            "id": "66",
+                            "name": "E2ETest"
+                          }
+                        ],
+                        "notify_setting": {
+                          "id": "",
+                          "user_id": "",
+                          "feed_post_app_flg": true,
+                          "feed_post_email_flg": true,
+                          "feed_post_mobile_flg": true,
+                          "feed_commented_on_my_post_app_flg": true,
+                          "feed_commented_on_my_post_email_flg": true,
+                          "feed_commented_on_my_post_mobile_flg": true,
+                          "feed_commented_on_my_commented_post_app_flg": true,
+                          "feed_commented_on_my_commented_post_email_flg": true,
+                          "feed_commented_on_my_commented_post_mobile_flg": true,
+                          "circle_user_join_app_flg": true,
+                          "circle_user_join_email_flg": true,
+                          "circle_user_join_mobile_flg": true,
+                          "circle_changed_privacy_setting_app_flg": true,
+                          "circle_changed_privacy_setting_email_flg": true,
+                          "circle_changed_privacy_setting_mobile_flg": true,
+                          "circle_add_user_app_flg": true,
+                          "circle_add_user_email_flg": true,
+                          "circle_add_user_mobile_flg": true,
+                          "my_goal_follow_app_flg": true,
+                          "my_goal_follow_email_flg": true,
+                          "my_goal_follow_mobile_flg": true,
+                          "my_goal_collaborate_app_flg": true,
+                          "my_goal_collaborate_email_flg": true,
+                          "my_goal_collaborate_mobile_flg": true,
+                          "my_goal_changed_by_leader_app_flg": true,
+                          "my_goal_changed_by_leader_email_flg": true,
+                          "my_goal_changed_by_leader_mobile_flg": true,
+                          "my_goal_target_for_evaluation_app_flg": true,
+                          "my_goal_target_for_evaluation_email_flg": true,
+                          "my_goal_target_for_evaluation_mobile_flg": true,
+                          "my_goal_as_leader_request_to_change_app_flg": true,
+                          "my_goal_as_leader_request_to_change_email_flg": true,
+                          "my_goal_as_leader_request_to_change_mobile_flg": true,
+                          "my_goal_not_target_for_evaluation_app_flg": true,
+                          "my_goal_not_target_for_evaluation_email_flg": true,
+                          "my_goal_not_target_for_evaluation_mobile_flg": true,
+                          "my_member_create_goal_app_flg": true,
+                          "my_member_create_goal_email_flg": true,
+                          "my_member_create_goal_mobile_flg": true,
+                          "my_member_collaborate_goal_app_flg": true,
+                          "my_member_collaborate_goal_email_flg": true,
+                          "my_member_collaborate_goal_mobile_flg": true,
+                          "my_member_change_goal_app_flg": true,
+                          "my_member_change_goal_email_flg": true,
+                          "my_member_change_goal_mobile_flg": true,
+                          "start_evaluation_app_flg": true,
+                          "start_evaluation_email_flg": true,
+                          "start_evaluation_mobile_flg": true,
+                          "fleeze_evaluation_app_flg": true,
+                          "fleeze_evaluation_email_flg": true,
+                          "fleeze_evaluation_mobile_flg": true,
+                          "start_can_oneself_evaluation_app_flg": true,
+                          "start_can_oneself_evaluation_email_flg": true,
+                          "start_can_oneself_evaluation_mobile_flg": true,
+                          "start_can_evaluate_as_evaluator_app_flg": true,
+                          "start_can_evaluate_as_evaluator_email_flg": true,
+                          "start_can_evaluate_as_evaluator_mobile_flg": true,
+                          "my_evaluator_evaluated_app_flg": true,
+                          "my_evaluator_evaluated_email_flg": true,
+                          "my_evaluator_evaluated_mobile_flg": true,
+                          "final_evaluation_is_done_app_flg": true,
+                          "final_evaluation_is_done_email_flg": true,
+                          "final_evaluation_is_done_mobile_flg": true,
+                          "feed_commented_on_my_action_app_flg": true,
+                          "feed_commented_on_my_action_email_flg": true,
+                          "feed_commented_on_my_action_mobile_flg": true,
+                          "feed_commented_on_my_commented_action_app_flg": true,
+                          "feed_commented_on_my_commented_action_email_flg": true,
+                          "feed_commented_on_my_commented_action_mobile_flg": true,
+                          "feed_action_app_flg": true,
+                          "feed_action_email_flg": true,
+                          "feed_action_mobile_flg": true,
+                          "user_joined_to_invited_team_app_flg": true,
+                          "user_joined_to_invited_team_email_flg": true,
+                          "user_joined_to_invited_team_mobile_flg": true,
+                          "feed_message_app_flg": true,
+                          "feed_message_email_flg": true,
+                          "feed_message_mobile_flg": true,
+                          "setup_guide_app_flg": true,
+                          "setup_guide_email_flg": true,
+                          "setup_guide_mobile_flg": true,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": null,
+                          "modified": null,
+                          "feed_mentioned_in_app_flg": true,
+                          "feed_mentioned_in_email_flg": true,
+                          "feed_mentioned_in_mobile_flg": true,
+                          "force_notify": true
+                        }
+                      },
+                      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0YzJjNjZmNy0yMjBjLTQ4ZGEtYmQ5MC1jYmY3YTg3MmRkOGUiLCJleHAiOjE1NTMwNDYxMjYsImlhdCI6MTU1MTgzNjUyNiwiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjo2MTQsInRlYW1faWQiOjY2fX0.k-nERIj7BQm-vBIDjud8NLY4Gim0r2k5OvkPSW-xEyOKzhVynNNti0rWOp11GB7ArCREQpoCv_tCTNMGmjn2zA"
                     }
                   }
                 }
@@ -1140,6 +1462,112 @@
         }
       }
     },
+    "/api/me" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "Get current user info",
+        "description" : "Get current user info.",
+        "operationId" : "/api/me",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get current user info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Me"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/me/switch_team": {
+      "put": {
+        "tags": [
+          "Me"
+        ],
+        "summary": "Login user switch team",
+        "description": "Login user switch team",
+        "operationId": "/api/me/switch_team\"",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "requestBody" : {
+          "description" : "",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "required" : [ "team_id"],
+                "properties" : {
+                  "team_id" : {
+                    "type" : "string"
+                  }
+                }
+              },
+              "example" : {
+                "team_id" : "1"
+              }
+            }
+          },
+          "required" : true
+        },
+
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string"
+                        }
+                      }
+                    }
+                  }
+
+                },
+                "example" : {
+                  "data" : {
+                    "token" : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0YzJjNjZmNy0yMjBjLTQ4ZGEtYmQ5MC1jYmY3YTg3MmRkOGUiLCJleHAiOjE1NTMwNDYxMjYsImlhdCI6MTU1MTgzNjUyNiwiZ29hbG91cy5jb20iOnsiZW52IjoibG9jYWwiLCJ1c2VyX2lkIjo2MTQsInRlYW1faWQiOjY2fX0.k-nERIj7BQm-vBIDjud8NLY4Gim0r2k5OvkPSW-xEyOKzhVynNNti0rWOp11GB7ArCREQpoCv_tCTNMGmjn2zA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+
     "/api/v2/me/email" : {
       "get" : {
         "tags" : [ "Me" ],
@@ -1349,6 +1777,158 @@
         }
       }
     },
+    "/api/me/notifications" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "List current user's notifications",
+        "description" : "Get current user's notifications\\.",
+        "operationId" : "/api/me/notifications",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "$ref" : "#/components/parameters/Paging.Limit"
+        }, {
+          "name" : "extoption",
+          "in" : "query",
+          "description" : "Extension option of the notification",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "ext:notification:all", "ext:notification:user" ]
+            },
+            "default" : [ "ext:notification:all" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get personal notification list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PagingResult.Model.Notification.Paging.Me"
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/me/new_notification_count" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "Current user's unread notification count",
+        "description" : "Get current user's unread notification count\\.",
+        "operationId" : "/api/me/new_notification_count",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Get personal notification list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "required" : [ "new_notification_count" ],
+                  "properties" : {
+                    "new_notification_count" : {
+                      "type" : "integer",
+                      "format" : "int32"
+                    }
+                  }
+                },
+                "example" : {
+                  "new_notification_count" : 10
+                }
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/notifications/read_all" : {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Read logged in user's all notifications",
+        "description": "Read logged in user's all notifications",
+        "operationId": "/api/notifications/read_all",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/api/notifications/read" : {
+      "put": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Read logged in user's specified notification.",
+        "description": "Read logged in user's specified notification.",
+        "operationId": "/api/notifications/read",
+        "requestBody" : {
+          "description" : "Specify notification id",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "notify_id" : {
+                    "type" : "string"
+                  }
+                },
+                "example" : {
+                  "notify_id" : "5ca6fb3a-5540-4a9a-bd49-5538ac150005"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
     "/api/posts" : {
       "post" : {
         "tags" : [ "Posts" ],
@@ -1376,11 +1956,14 @@
                   "circle_id" : {
                     "type" : "number"
                   },
-                  "file_ids" : {
+                  "resources" : {
                     "type" : "array",
                     "items" : {
-                      "$ref" : "#/components/schemas/Object.String.FileID"
+                      "$ref" : "#/components/schemas/Object.FileResources"
                     }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
                   }
                 }
               },
@@ -1445,10 +2028,10 @@
       }
     },
     "/api/posts/{post.id}" : {
-      "put" : {
+      "get" : {
         "tags" : [ "Posts" ],
-        "summary" : "/api/posts/{post.id}",
-        "description" : "For editing post content\nFor the moment, only able to update its text body",
+        "summary" : "Get single post data",
+        "description" : "For get single post detail data",
         "operationId" : "/api/posts/{post.id}",
         "parameters" : [ {
           "$ref" : "#/components/parameters/ApiVersion"
@@ -1478,6 +2061,220 @@
         },
         "responses" : {
           "200" : {
+            "description" : "[Success] Get post",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Post"
+                    }
+                  }
+                },
+                "example" : {
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "type": "1",
+                    "comment_count": "3",
+                    "post_like_count": "0",
+                    "post_read_count": "0",
+                    "important_flg": false,
+                    "goal_id": "",
+                    "circle_id": "",
+                    "action_result_id": "",
+                    "key_result_id": "",
+                    "photo1_file_name": null,
+                    "photo2_file_name": null,
+                    "photo3_file_name": null,
+                    "photo4_file_name": null,
+                    "photo5_file_name": null,
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    },
+                    "comments": {
+                      "data": [
+                        {
+                          "id": "43",
+                          "post_id": "71943",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "body": "asdfa",
+                          "comment_like_count": 0,
+                          "comment_read_count": 0,
+                          "photo1_file_name": null,
+                          "photo2_file_name": null,
+                          "photo3_file_name": null,
+                          "photo4_file_name": null,
+                          "photo5_file_name": null,
+                          "site_info": null,
+                          "site_photo_file_name": null,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1552326677,
+                          "modified": 1552326677,
+                          "user": {
+                            "id": "614",
+                            "first_name": "Taro",
+                            "last_name": "Gorasu",
+                            "photo_file_name": null,
+                            "cover_photo_file_name": null,
+                            "language": "jpn",
+                            "auto_language_flg": false,
+                            "romanize_flg": false,
+                            "display_first_name": "Taro",
+                            "display_last_name": "Gorasu",
+                            "display_username": "Taro Gorasu",
+                            "local_username": null,
+                            "roman_username": "Taro Gorasu",
+                            "last_first": true,
+                            "profile_img_url": {
+                              "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                            }
+                          },
+                          "is_liked": false,
+                          "is_read": true,
+                          "attached_files": [],
+                          "mentions_to_me": []
+                        }
+                      ],
+                      "cursor": "",
+                      "count": 1
+                    },
+                    "attached_files": [],
+                    "resources": [],
+                    "is_liked": false,
+                    "is_saved": false,
+                    "is_read": true,
+                    "shared_circles": [
+                      {
+                        "id": "502",
+                        "team_id": "66",
+                        "name": "\u30c1\u30fc\u30e0\u5168\u4f53",
+                        "description": "Circle description",
+                        "photo_file_name": null,
+                        "public_flg": true,
+                        "team_all_flg": true,
+                        "circle_member_count": 3,
+                        "latest_post_created": 1552326655,
+                        "del_flg": false,
+                        "deleted": null,
+                        "created": 1534133785,
+                        "modified": 1552326655,
+                        "img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D"
+                        },
+                        "is_member": true,
+                        "get_notification_flg": true
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      },
+      "put" : {
+        "tags" : [ "Posts" ],
+        "summary" : "Edit single post",
+        "description" : "For editing post content\nFor the moment, only able to update its text body",
+        "operationId" : "/api/posts/{post.id}",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Post.Id"
+        } ],
+        "requestBody" : {
+          "description" : "New post body",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "body" : {
+                    "type" : "string",
+                    "minLength" : 1,
+                    "maxLength" : 10000
+                  },
+                  "resources" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.FileResources"
+                    }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
+                  }
+                }
+              },
+              "example" : {
+                "body" : "The quick brown fox jumps over the lazily build PHP code ver 3"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
             "description" : "[Success] Added new post",
             "content" : {
               "application/json" : {
@@ -1490,19 +2287,141 @@
                   }
                 },
                 "example" : {
-                  "data" : {
-                    "type" : 1,
-                    "comment_count" : 0,
-                    "post_like_count" : 0,
-                    "post_read_count" : 0,
-                    "important_flg" : false,
-                    "del_flg" : false,
-                    "created" : 1534154797,
-                    "modified" : 1534154797,
-                    "body" : "The quick brown fox jumps over the lazily build PHP code 2",
-                    "user_id" : 1,
-                    "team_id" : 1,
-                    "id" : 55
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "type": "1",
+                    "comment_count": "3",
+                    "post_like_count": "0",
+                    "post_read_count": "0",
+                    "important_flg": false,
+                    "goal_id": "",
+                    "circle_id": "",
+                    "action_result_id": "",
+                    "key_result_id": "",
+                    "photo1_file_name": null,
+                    "photo2_file_name": null,
+                    "photo3_file_name": null,
+                    "photo4_file_name": null,
+                    "photo5_file_name": null,
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    },
+                    "comments": {
+                      "data": [
+                        {
+                          "id": "43",
+                          "post_id": "71943",
+                          "user_id": "614",
+                          "team_id": "66",
+                          "body": "asdfa",
+                          "comment_like_count": 0,
+                          "comment_read_count": 0,
+                          "photo1_file_name": null,
+                          "photo2_file_name": null,
+                          "photo3_file_name": null,
+                          "photo4_file_name": null,
+                          "photo5_file_name": null,
+                          "site_info": null,
+                          "site_photo_file_name": null,
+                          "del_flg": false,
+                          "deleted": null,
+                          "created": 1552326677,
+                          "modified": 1552326677,
+                          "user": {
+                            "id": "614",
+                            "first_name": "Taro",
+                            "last_name": "Gorasu",
+                            "photo_file_name": null,
+                            "cover_photo_file_name": null,
+                            "language": "jpn",
+                            "auto_language_flg": false,
+                            "romanize_flg": false,
+                            "display_first_name": "Taro",
+                            "display_last_name": "Gorasu",
+                            "display_username": "Taro Gorasu",
+                            "local_username": null,
+                            "roman_username": "Taro Gorasu",
+                            "last_first": true,
+                            "profile_img_url": {
+                              "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                              "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                            }
+                          },
+                          "is_liked": false,
+                          "is_read": true,
+                          "attached_files": [],
+                          "mentions_to_me": []
+                        }
+                      ],
+                      "cursor": "",
+                      "count": 1
+                    },
+                    "attached_files": [],
+                    "resources": [],
+                    "is_liked": false,
+                    "is_saved": false,
+                    "is_read": true,
+                    "shared_circles": [
+                      {
+                        "id": "502",
+                        "team_id": "66",
+                        "name": "\u30c1\u30fc\u30e0\u5168\u4f53",
+                        "description": "Circle description",
+                        "photo_file_name": null,
+                        "public_flg": true,
+                        "team_all_flg": true,
+                        "circle_member_count": 3,
+                        "latest_post_created": 1552326655,
+                        "del_flg": false,
+                        "deleted": null,
+                        "created": 1534133785,
+                        "modified": 1552326655,
+                        "img_url": {
+                          "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D",
+                          "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-circle.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=Jql02don3WiYP8%2B0hmxCmiwAYr4%3D"
+                        },
+                        "is_member": true,
+                        "get_notification_flg": true
+                      }
+                    ]
                   }
                 }
               }
@@ -1597,6 +2516,23 @@
           "$ref" : "#/components/parameters/Paging.Limit"
         }, {
           "$ref" : "#/components/parameters/Paging.Cursor"
+        }, {
+          "name" : "cursor_comment_id",
+          "in" : "query",
+          "description" : "base comment id as cursor",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "direction for data getting. (ord or new)",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "old", "new" ]
+          }
         }, {
           "name" : "extoption",
           "in" : "query",
@@ -2391,6 +3327,125 @@
         "responses" : {
           "200" : {
             "description" : ""
+          }
+        },
+        "x-operation-settings" : {
+          "CollectParameters" : false,
+          "AllowDynamicQueryParameters" : false,
+          "AllowDynamicFormParameters" : false,
+          "IsMultiContentStreaming" : false
+        }
+      }
+    },
+    "/api/comments/{comment.id}" : {
+      "put" : {
+        "tags" : [ "Comments" ],
+        "summary" : "Update single comment",
+        "description" : "For editing comment content",
+        "operationId" : "/api/comments/{comment.id}",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/ApiVersion"
+        }, {
+          "$ref" : "#/components/parameters/Post.Id"
+        } ],
+        "requestBody" : {
+          "description" : "Edit comment body",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "body" : {
+                    "type" : "string",
+                    "minLength" : 1,
+                    "maxLength" : 5000
+                  },
+                  "resources" : {
+                    "type" : "array",
+                    "items" : {
+                      "$ref" : "#/components/schemas/Object.FileResources"
+                    }
+                  },
+                  "site_info" : {
+                    "$ref" : "#/components/schemas/Object.FileResources"
+                  }
+                }
+              },
+              "example" : {
+                "body" : "The quick brown fox jumps over the lazily build PHP code ver 3",
+                "resources" : []
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "[Success] Updated comment",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "data" : {
+                      "$ref" : "#/components/schemas/Model.Comment"
+                    }
+                  }
+                },
+                "example" : {
+                  "data": {
+                    "id": "71943",
+                    "user_id": "614",
+                    "post_id": "1",
+                    "team_id": "66",
+                    "body": "abbbb\n123123aaa\n",
+                    "key_result_id": "",
+                    "site_info": null,
+                    "site_photo_file_name": null,
+                    "del_flg": false,
+                    "deleted": null,
+                    "created": "1552326655",
+                    "modified": "1552356670",
+                    "user": {
+                      "id": "614",
+                      "first_name": "Taro",
+                      "last_name": "Gorasu",
+                      "photo_file_name": null,
+                      "cover_photo_file_name": null,
+                      "language": "jpn",
+                      "auto_language_flg": false,
+                      "romanize_flg": false,
+                      "display_first_name": "Taro",
+                      "display_last_name": "Gorasu",
+                      "display_username": "Taro Gorasu",
+                      "local_username": null,
+                      "roman_username": "Taro Gorasu",
+                      "last_first": true,
+                      "profile_img_url": {
+                        "small": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "medium_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "x_large": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D",
+                        "original": "https://goalous-local-assets.s3.amazonaws.com/masuichig/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1552370400&Signature=mqsfoscupw4Mvax%2BZxU8XgDOIf4%3D"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/Error.Global.BadRequest.Validation"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Error.Circle.NotFound"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/Error.Global.InternalServer"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/Error.Post.NotFound"
           }
         },
         "x-operation-settings" : {
@@ -3231,6 +4286,65 @@
         "pattern" : "^[1-9]+[0-9]*$",
         "example" : "900"
       },
+      "Object.FileResources" : {
+        "type" : "object",
+        "properties" : {
+          "id": {
+            "$ref": "#/components/schemas/Object.String.ID"
+          },
+          "resource_type": {
+            "type": "number",
+            "enum": [
+              "0",
+              "1",
+              "2"
+            ]
+          },
+          "file_uuid": {
+            "type": "string"
+          },
+          "is_video": {
+            "type": "boolean"
+          },
+          "video_stream_id": {
+            "id": {
+              "$ref": "#/components/schemas/Object.String.ID"
+            }
+          }
+        },
+        "example" : {}
+      },
+      "Object.SiteInfo" : {
+        "type" : "object",
+        "properties" : {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "site_name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        },
+        "example" : {
+          "title": "プログラマの技術情報共有サービス - Qiita",
+          "type": "external",
+          "site_name": "Qiita",
+          "url": "https://qiita.com/",
+          "description": "Qiitaは、プログラマのための技術情報共有サービスです。 プログラミングに関するTips、ノウハウ、メモを簡単に記録 &amp; 公開することができます。",
+          "image": "https://cdn.qiita.com/assets/qiita-fb-2887e7b4aad86fd8c25cea84846f2236.png"
+        }
+      },
       "Model" : {
         "type" : "object",
         "properties" : {
@@ -3255,6 +4369,765 @@
             "format" : "int32"
           }
         }
+      },
+      "Model.Me" : {
+        "description" : "Logged in user info",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Model.User.Profile"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "current_team_id": {
+              "type": "string"
+            },
+            "current_team_img_url": {
+              "$ref" : "#/components/schemas/Model.ImgUrls"
+            },
+            "unapproved_goal_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "evaluable_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "is_evaluation_available": {
+              "type": "boolean",
+              "default" : false
+            },
+            "new_notification_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "new_message_count": {
+              "type": "integer",
+              "format" : "int32",
+              "default" : 0
+            },
+            "current_team_member_own": {
+              "$ref": "#/components/schemas/Model.TeamMember"
+            },
+            "my_active_teams": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/Object.String.ID"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            },
+            "notify_setting": {
+              "$ref": "#/components/schemas/Model.NotifySetting"
+            },
+            "my_notifying_circles": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Object.String.ID"
+                }
+              }
+            }
+          }
+        ],
+        "example" : {
+          "id": "614",
+          "photo_file_name": null,
+          "cover_photo_file_name": null,
+          "first_name": "Taro",
+          "last_name": "Gorasu",
+          "middle_name": null,
+          "language": "ja",
+          "active_flg": true,
+          "last_login": "1551260824",
+          "admin_flg": false,
+          "default_team_id": "66",
+          "timezone": 9,
+          "romanize_flg": false,
+          "update_email_flg": true,
+          "agreed_terms_of_service_id": "2",
+          "gender_type": "1",
+          "birth_day": "2000-01-01",
+          "hide_year_flg": false,
+          "phone_no": null,
+          "hometown": "",
+          "display_first_name": "Taro",
+          "display_last_name": "Gorasu",
+          "display_username": "Taro Gorasu",
+          "local_username": null,
+          "roman_username": "Taro Gorasu",
+          "last_first": true,
+          "profile_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D"
+          },
+          "cover_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-cover.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=lSCddqOew7IeXFMLshqSn12F5vU%3D"
+          },
+          "current_team_id": "66",
+          "current_team_img_url": {
+            "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D",
+            "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1551808800&Signature=tt1QtR9fZAQsistUaggMr%2F2LxMo%3D"
+          },
+          "unapproved_goal_count": 3,
+          "evaluable_count": 2,
+          "is_evaluation_available": true,
+          "new_notification_count": 1,
+          "new_message_count": 1,
+          "current_team_member_own": {
+            "id": "693",
+            "user_id": "614",
+            "team_id": "66",
+            "coach_user_id": "",
+            "member_no": null,
+            "member_type_id": "",
+            "job_category_id": "",
+            "active_flg": true,
+            "invitation_flg": false,
+            "evaluation_enable_flg": true,
+            "admin_flg": true,
+            "evaluable_count": 0,
+            "last_login": 1551260824,
+            "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+            "status": 1,
+            "del_flg": false,
+            "deleted": null,
+            "created": 1534133785,
+            "modified": 1534141942
+          },
+          "my_active_teams": [
+            {
+              "id": "66",
+              "name": "E2ETest"
+            }
+          ],
+          "notify_setting": {
+            "id": "",
+            "user_id": "",
+            "feed_post_app_flg": true,
+            "feed_post_email_flg": true,
+            "feed_post_mobile_flg": true,
+            "feed_commented_on_my_post_app_flg": true,
+            "feed_commented_on_my_post_email_flg": true,
+            "feed_commented_on_my_post_mobile_flg": true,
+            "feed_commented_on_my_commented_post_app_flg": true,
+            "feed_commented_on_my_commented_post_email_flg": true,
+            "feed_commented_on_my_commented_post_mobile_flg": true,
+            "circle_user_join_app_flg": true,
+            "circle_user_join_email_flg": true,
+            "circle_user_join_mobile_flg": true,
+            "circle_changed_privacy_setting_app_flg": true,
+            "circle_changed_privacy_setting_email_flg": true,
+            "circle_changed_privacy_setting_mobile_flg": true,
+            "circle_add_user_app_flg": true,
+            "circle_add_user_email_flg": true,
+            "circle_add_user_mobile_flg": true,
+            "my_goal_follow_app_flg": true,
+            "my_goal_follow_email_flg": true,
+            "my_goal_follow_mobile_flg": true,
+            "my_goal_collaborate_app_flg": true,
+            "my_goal_collaborate_email_flg": true,
+            "my_goal_collaborate_mobile_flg": true,
+            "my_goal_changed_by_leader_app_flg": true,
+            "my_goal_changed_by_leader_email_flg": true,
+            "my_goal_changed_by_leader_mobile_flg": true,
+            "my_goal_target_for_evaluation_app_flg": true,
+            "my_goal_target_for_evaluation_email_flg": true,
+            "my_goal_target_for_evaluation_mobile_flg": true,
+            "my_goal_as_leader_request_to_change_app_flg": true,
+            "my_goal_as_leader_request_to_change_email_flg": true,
+            "my_goal_as_leader_request_to_change_mobile_flg": true,
+            "my_goal_not_target_for_evaluation_app_flg": true,
+            "my_goal_not_target_for_evaluation_email_flg": true,
+            "my_goal_not_target_for_evaluation_mobile_flg": true,
+            "my_member_create_goal_app_flg": true,
+            "my_member_create_goal_email_flg": true,
+            "my_member_create_goal_mobile_flg": true,
+            "my_member_collaborate_goal_app_flg": true,
+            "my_member_collaborate_goal_email_flg": true,
+            "my_member_collaborate_goal_mobile_flg": true,
+            "my_member_change_goal_app_flg": true,
+            "my_member_change_goal_email_flg": true,
+            "my_member_change_goal_mobile_flg": true,
+            "start_evaluation_app_flg": true,
+            "start_evaluation_email_flg": true,
+            "start_evaluation_mobile_flg": true,
+            "fleeze_evaluation_app_flg": true,
+            "fleeze_evaluation_email_flg": true,
+            "fleeze_evaluation_mobile_flg": true,
+            "start_can_oneself_evaluation_app_flg": true,
+            "start_can_oneself_evaluation_email_flg": true,
+            "start_can_oneself_evaluation_mobile_flg": true,
+            "start_can_evaluate_as_evaluator_app_flg": true,
+            "start_can_evaluate_as_evaluator_email_flg": true,
+            "start_can_evaluate_as_evaluator_mobile_flg": true,
+            "my_evaluator_evaluated_app_flg": true,
+            "my_evaluator_evaluated_email_flg": true,
+            "my_evaluator_evaluated_mobile_flg": true,
+            "final_evaluation_is_done_app_flg": true,
+            "final_evaluation_is_done_email_flg": true,
+            "final_evaluation_is_done_mobile_flg": true,
+            "feed_commented_on_my_action_app_flg": true,
+            "feed_commented_on_my_action_email_flg": true,
+            "feed_commented_on_my_action_mobile_flg": true,
+            "feed_commented_on_my_commented_action_app_flg": true,
+            "feed_commented_on_my_commented_action_email_flg": true,
+            "feed_commented_on_my_commented_action_mobile_flg": true,
+            "feed_action_app_flg": true,
+            "feed_action_email_flg": true,
+            "feed_action_mobile_flg": true,
+            "user_joined_to_invited_team_app_flg": true,
+            "user_joined_to_invited_team_email_flg": true,
+            "user_joined_to_invited_team_mobile_flg": true,
+            "feed_message_app_flg": true,
+            "feed_message_email_flg": true,
+            "feed_message_mobile_flg": true,
+            "setup_guide_app_flg": true,
+            "setup_guide_email_flg": true,
+            "setup_guide_mobile_flg": true,
+            "del_flg": false,
+            "deleted": null,
+            "created": null,
+            "modified": null,
+            "feed_mentioned_in_app_flg": true,
+            "feed_mentioned_in_email_flg": true,
+            "feed_mentioned_in_mobile_flg": true,
+            "force_notify": true
+          },
+          "my_notifying_circles": [ "65", "93", "202" ]
+        }
+      },
+      "Model.TeamMember" : {
+        "description" : "TeamMember model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "team_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "coach_user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "member_no" : {
+            "type" : "string"
+          },
+          "member_type_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "job_category_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "active_flg" : {
+            "type" : "boolean",
+            "default" : true
+          },
+          "invitation_flg" : {
+            "type" : "boolean",
+            "default" : false
+          },
+          "evaluation_enable_flg" : {
+            "type" : "boolean",
+            "default" : true
+          },
+          "admin_flg" : {
+            "type" : "boolean",
+            "default" : false
+          },
+          "evaluable_count" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          },
+          "last_login" : {
+            "type" : "integer"
+          },
+          "comment" : {
+            "type" : "string"
+          },
+          "status": {
+            "type" : "integer"
+          }
+        },
+        "example" : {
+          "id": "693",
+          "user_id": "614",
+          "team_id": "66",
+          "coach_user_id": "",
+          "member_no": null,
+          "member_type_id": "",
+          "job_category_id": "",
+          "active_flg": true,
+          "invitation_flg": false,
+          "evaluation_enable_flg": true,
+          "admin_flg": true,
+          "evaluable_count": 0,
+          "last_login": 1551260824,
+          "comment": "【今、チームに貢献できることは？】\r\n\r\n【これからチームで実現してみたいことは？(具体的に)】\r\n\r\n【その他】",
+          "status": 1
+        }
+      },
+      "Model.NotifySetting" : {
+        "description" : "NotifySetting model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "feed_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_post_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_post_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_post_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_post_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_post_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_post_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_commented_post_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_user_join_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "circle_user_join_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_user_join_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_changed_privacy_setting_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "circle_changed_privacy_setting_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_changed_privacy_setting_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "circle_add_user_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_add_user_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "circle_add_user_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_follow_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_follow_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_follow_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_collaborate_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_collaborate_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_collaborate_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_changed_by_leader_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_target_for_evaluation_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_target_for_evaluation_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_target_for_evaluation_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_as_leader_request_to_change_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_goal_not_target_for_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_goal_not_target_for_evaluation_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_goal_not_target_for_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_create_goal_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_create_goal_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_member_create_goal_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_collaborate_goal_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_change_goal_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_member_change_goal_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_member_change_goal_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "start_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_evaluation_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "fleeze_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "fleeze_evaluation_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "fleeze_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_oneself_evaluation_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_oneself_evaluation_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "start_can_oneself_evaluation_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "start_can_evaluate_as_evaluator_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_evaluator_evaluated_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "my_evaluator_evaluated_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "my_evaluator_evaluated_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "final_evaluation_is_done_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_action_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_action_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_action_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_commented_on_my_commented_action_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_commented_on_my_commented_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_action_app_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_action_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_action_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "user_joined_to_invited_team_app_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "user_joined_to_invited_team_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "user_joined_to_invited_team_mobile_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "feed_message_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_message_email_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_message_mobile_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "setup_guide_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "setup_guide_email_flg": {
+            "type" : "boolean",
+            "default": true
+          },
+          "setup_guide_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_mentioned_in_app_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "feed_mentioned_in_email_flg": {
+            "type": "boolean",
+            "default" : true
+          },
+          "feed_mentioned_in_mobile_flg": {
+            "type": "boolean",
+            "default": true
+          },
+          "force_notify": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "example" : {
+          "id": "1",
+          "user_id": "1",
+          "feed_post_app_flg": true,
+          "feed_post_email_flg": true,
+          "feed_post_mobile_flg": true,
+          "feed_commented_on_my_post_app_flg": true,
+          "feed_commented_on_my_post_email_flg": true,
+          "feed_commented_on_my_post_mobile_flg": true,
+          "feed_commented_on_my_commented_post_app_flg": true,
+          "feed_commented_on_my_commented_post_email_flg": true,
+          "feed_commented_on_my_commented_post_mobile_flg": true,
+          "circle_user_join_app_flg": true,
+          "circle_user_join_email_flg": true,
+          "circle_user_join_mobile_flg": true,
+          "circle_changed_privacy_setting_app_flg": true,
+          "circle_changed_privacy_setting_email_flg": true,
+          "circle_changed_privacy_setting_mobile_flg": true,
+          "circle_add_user_app_flg": true,
+          "circle_add_user_email_flg": true,
+          "circle_add_user_mobile_flg": true,
+          "my_goal_follow_app_flg": true,
+          "my_goal_follow_email_flg": true,
+          "my_goal_follow_mobile_flg": true,
+          "my_goal_collaborate_app_flg": true,
+          "my_goal_collaborate_email_flg": true,
+          "my_goal_collaborate_mobile_flg": true,
+          "my_goal_changed_by_leader_app_flg": true,
+          "my_goal_changed_by_leader_email_flg": true,
+          "my_goal_changed_by_leader_mobile_flg": true,
+          "my_goal_target_for_evaluation_app_flg": true,
+          "my_goal_target_for_evaluation_email_flg": true,
+          "my_goal_target_for_evaluation_mobile_flg": true,
+          "my_goal_as_leader_request_to_change_app_flg": true,
+          "my_goal_as_leader_request_to_change_email_flg": true,
+          "my_goal_as_leader_request_to_change_mobile_flg": true,
+          "my_goal_not_target_for_evaluation_app_flg": true,
+          "my_goal_not_target_for_evaluation_email_flg": true,
+          "my_goal_not_target_for_evaluation_mobile_flg": true,
+          "my_member_create_goal_app_flg": true,
+          "my_member_create_goal_email_flg": true,
+          "my_member_create_goal_mobile_flg": true,
+          "my_member_collaborate_goal_app_flg": true,
+          "my_member_collaborate_goal_email_flg": true,
+          "my_member_collaborate_goal_mobile_flg": true,
+          "my_member_change_goal_app_flg": true,
+          "my_member_change_goal_email_flg": true,
+          "my_member_change_goal_mobile_flg": true,
+          "start_evaluation_app_flg": true,
+          "start_evaluation_email_flg": true,
+          "start_evaluation_mobile_flg": true,
+          "fleeze_evaluation_app_flg": true,
+          "fleeze_evaluation_email_flg": true,
+          "fleeze_evaluation_mobile_flg": true,
+          "start_can_oneself_evaluation_app_flg": true,
+          "start_can_oneself_evaluation_email_flg": true,
+          "start_can_oneself_evaluation_mobile_flg": true,
+          "start_can_evaluate_as_evaluator_app_flg": true,
+          "start_can_evaluate_as_evaluator_email_flg": true,
+          "start_can_evaluate_as_evaluator_mobile_flg": true,
+          "my_evaluator_evaluated_app_flg": true,
+          "my_evaluator_evaluated_email_flg": true,
+          "my_evaluator_evaluated_mobile_flg": true,
+          "final_evaluation_is_done_app_flg": true,
+          "final_evaluation_is_done_email_flg": true,
+          "final_evaluation_is_done_mobile_flg": true,
+          "feed_commented_on_my_action_app_flg": true,
+          "feed_commented_on_my_action_email_flg": true,
+          "feed_commented_on_my_action_mobile_flg": true,
+          "feed_commented_on_my_commented_action_app_flg": true,
+          "feed_commented_on_my_commented_action_email_flg": true,
+          "feed_commented_on_my_commented_action_mobile_flg": true,
+          "feed_action_app_flg": true,
+          "feed_action_email_flg": true,
+          "feed_action_mobile_flg": true,
+          "user_joined_to_invited_team_app_flg": true,
+          "user_joined_to_invited_team_email_flg": true,
+          "user_joined_to_invited_team_mobile_flg": true,
+          "feed_message_app_flg": true,
+          "feed_message_email_flg": true,
+          "feed_message_mobile_flg": true,
+          "setup_guide_app_flg": true,
+          "setup_guide_email_flg": true,
+          "setup_guide_mobile_flg": true,
+          "del_flg": false,
+          "deleted": null,
+          "created": null,
+          "modified": null,
+          "feed_mentioned_in_app_flg": true,
+          "feed_mentioned_in_email_flg": true,
+          "feed_mentioned_in_mobile_flg": true,
+          "force_notify": true        }
       },
       "Model.User.Profile" : {
         "description" : "User model with profile fields",
@@ -3391,27 +5264,7 @@
               "default" : 0
             },
             "img_url" : {
-              "type" : "object",
-              "properties" : {
-                "small" : {
-                  "type" : "string"
-                },
-                "medium" : {
-                  "type" : "string"
-                },
-                "medium_large" : {
-                  "type" : "string"
-                },
-                "large" : {
-                  "type" : "string"
-                },
-                "x_large" : {
-                  "type" : "string"
-                },
-                "original" : {
-                  "type" : "string"
-                }
-              }
+              "$ref" : "#/components/schemas/Model.ImgUrls"
             },
             "is_member" : {
               "type" : "boolean"
@@ -3502,6 +5355,42 @@
           "id" : "13726"
         }
       },
+      "Model.ImgUrls" : {
+        "description" : "Model of image urls each size",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/Model"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "small" : {
+              "type" : "string"
+            },
+            "medium" : {
+              "type" : "string"
+            },
+            "medium_large" : {
+              "type" : "string"
+            },
+            "large" : {
+              "type" : "string"
+            },
+            "x_large" : {
+              "type" : "string"
+            },
+            "original" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "example" : {
+          "small" : "https://dummyimage.com/32x32/000/ffffff.png&text=test",
+          "medium" : "https://dummyimage.com/48x48/000/ffffff.png&text=test",
+          "medium_large" : "https://dummyimage.com/96x96/000/ffffff.png&text=test",
+          "large" : "https://dummyimage.com/128x128/000/ffffff.png&text=test",
+          "x_large" : "https://dummyimage.com/256x256/000/ffffff.png&text=test",
+          "original" : "https://dummyimage.com/1000x1000/000/ffffff.png&text=test"
+        }
+      },
       "Model.Circle.Paging" : {
         "description" : "Circle model in paging response.",
         "allOf" : [ {
@@ -3582,6 +5471,82 @@
           "circle_id" : "505",
           "unread_count" : 0,
           "admin_flg" : false
+        }
+      },
+      "Model.Notification" : {
+        "description": "Notification model",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "to_user_count" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "user_id" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "html_title" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "body" : {
+            "$ref" : "#/components/schemas/Object.String.ID"
+          },
+          "type" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "created" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "score" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "is_read" : {
+            "type" : "boolean"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/Model.User.Profile"
+          }
+        },
+        "example": {
+          "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
+          "to_user_count": 2,
+          "user_id": "615",
+          "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
+          "body": "出典: フリー百科事典『ウィキペディア...",
+          "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
+          "type": 1,
+          "created": 1549265863,
+          "score": 15492658631380,
+          "is_read": true,
+          "user": {
+            "id": "615",
+            "first_name": "Jiro",
+            "last_name": "Gorasu",
+            "photo_file_name": null,
+            "cover_photo_file_name": null,
+            "language": "jpn",
+            "auto_language_flg": false,
+            "romanize_flg": false,
+            "display_first_name": "Jiro",
+            "display_last_name": "Gorasu",
+            "display_username": "Jiro Gorasu",
+            "local_username": null,
+            "roman_username": "Jiro Gorasu",
+            "last_first": true,
+            "profile_img_url": {
+              "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+              "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+            }
+          }
         }
       },
       "Model.Comment" : {
@@ -4146,6 +6111,102 @@
           } ],
           "cursor" : "",
           "count" : 5
+        }
+      },
+      "PagingResult.Model.Notification.Paging.Me" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Model.Notification"
+            }
+          },
+          "cursor" : {
+            "type" : "string"
+          },
+          "count" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : {
+          "data" : [
+            {
+              "to_user_count": 2,
+              "id": "5c57ebc7-7410-42a4-98a3-0800ac120004",
+              "user_id": "615",
+              "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
+              "body": "出典: フリー百科事典『ウィキペディア...",
+              "url": "http://local.goalous.com/post_permanent/71909?notify_id=5c57ebc7-7410-42a4-98a3-0800ac120004",
+              "type": 1,
+              "created": 1549265863,
+              "score": 15492658631380,
+              "is_read": true,
+              "user": {
+                "id": "615",
+                "first_name": "Jiro",
+                "last_name": "Gorasu",
+                "photo_file_name": null,
+                "cover_photo_file_name": null,
+                "language": "jpn",
+                "auto_language_flg": false,
+                "romanize_flg": false,
+                "display_first_name": "Jiro",
+                "display_last_name": "Gorasu",
+                "display_username": "Jiro Gorasu",
+                "local_username": null,
+                "roman_username": "Jiro Gorasu",
+                "last_first": true,
+                "profile_img_url": {
+                  "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+                }
+              }
+            },
+            {
+              "to_user_count": 2,
+              "id": "5c57ebb3-2128-43b7-8f01-07faac120004",
+              "user_id": "615",
+              "body": "ssss",
+              "url": "http://local.goalous.com/post_permanent/71908?notify_id=5c57ebb3-2128-43b7-8f01-07faac120004",
+              "type": 1,
+              "html_title": "<span class=\\\"notify-card-head-target\\\">Jiro Gorasu </span>が<span class=\\\"notify-card-head-target\\\">チーム全体</span>に投稿しました。",
+              "created": 1549265843,
+              "score": 15492658436460,
+              "is_read": true,
+              "user": {
+                "id": "615",
+                "first_name": "Jiro",
+                "last_name": "Gorasu",
+                "photo_file_name": null,
+                "cover_photo_file_name": null,
+                "language": "jpn",
+                "auto_language_flg": false,
+                "romanize_flg": false,
+                "display_first_name": "Jiro",
+                "display_last_name": "Gorasu",
+                "display_username": "Jiro Gorasu",
+                "local_username": null,
+                "roman_username": "Jiro Gorasu",
+                "last_first": true,
+                "profile_img_url": {
+                  "small": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "medium_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "x_large": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D",
+                  "original": "https://goalous-local-assets.s3.amazonaws.com/damasa/sys/defaults/no-image-user.svg?AWSAccessKeyId=AKIAIHP7DNBNP6HADHMA&Expires=1549281600&Signature=oaWEp5nd%2F6qx0k45nz7ezCoPX%2FQ%3D"
+                }
+              }
+            }
+          ],
+          "cursor" : "eyJjb25kaXRpb25zIjp7ImZyb21fdGltZXN0YW1wIjowfSwicG9pbnRlciI6W1siZnJvbV90aW1lc3RhbXAiLCI8IiwxNTQ5MjY1ODQzNjQ2MF1dfQ=",
+          "count": 4
         }
       },
       "PagingResult.Model.Comment" : {

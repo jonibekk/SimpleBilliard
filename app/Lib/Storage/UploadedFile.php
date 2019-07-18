@@ -145,6 +145,7 @@ class UploadedFile
 
     /**
      * @param bool $withBase64Header Always returning result with base64 header
+     *
      * @return string
      */
     public function getEncodedFile(bool $withBase64Header = false): string
@@ -179,7 +180,11 @@ class UploadedFile
     {
         //Remove file extension
         if ($omitExtension) {
-            return pathinfo($this->fileName, PATHINFO_FILENAME);
+            $originalLocale = setlocale(LC_CTYPE, 0);
+            setlocale(LC_CTYPE, 'C');
+            $fileName = pathinfo($this->fileName, PATHINFO_FILENAME);
+            setlocale(LC_CTYPE, $originalLocale);
+            return $fileName;
         }
         return $this->fileName;
     }
@@ -267,6 +272,10 @@ class UploadedFile
     {
         $array['file_name'] = $this->getFileName();
         $array['file_data'] = $this->getEncodedFile();
+
+        if (empty($array['file_name']) || empty($array['file_data'])) {
+            throw new RuntimeException("Missing file information");
+        }
 
         $json = json_encode($array);
 
