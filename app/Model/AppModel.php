@@ -947,9 +947,7 @@ class AppModel extends Model
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
-        if (empty($return)) return null;
-
-        return $return;
+        return $return ?: $this->entityWrapperClass;
     }
 
     /**
