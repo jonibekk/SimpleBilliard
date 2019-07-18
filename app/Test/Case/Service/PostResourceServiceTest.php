@@ -83,9 +83,9 @@ class PostResourceServiceTest extends GoalousTestCase
 
         $PostResourceService->deleteResources($ids);
 
-        $this->assertEmpty($PostResource->getEntity($ids[0])->toArray());
+        $this->assertNull($PostResource->getEntity($ids[0]));
 
-        $this->assertEmpty($VideoStream->getEntity($videoStreamId)->toArray());
+        $this->assertNull($VideoStream->getEntity($videoStreamId));
     }
 
     public function test_deleteResourceVideoStreamNotUnique_success()
@@ -117,7 +117,7 @@ class PostResourceServiceTest extends GoalousTestCase
 
         $PostResourceService->deleteResources([$ids[0]]);
 
-        $this->assertEmpty($PostResource->getEntity($ids[0])->toArray());
+        $this->assertNull($PostResource->getEntity($ids[0]));
         $this->assertNotEmpty($PostResource->getEntity($ids[1])->toArray());
 
         $this->assertNotEmpty($VideoStream->getEntity($videoStreamId)->toArray());
