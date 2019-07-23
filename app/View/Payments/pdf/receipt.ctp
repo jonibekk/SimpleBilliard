@@ -5,7 +5,12 @@
  * @var int maxMembers
  */
 ?>
-
+<style>
+/* Fix bug. refer https://jira.goalous.com/browse/GL-8382 */
+body {
+  background-color: white !important;
+}
+</style>
 <article id="pdfReceipt">
     <header>
         <figure class="logo">
