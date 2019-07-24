@@ -131,6 +131,7 @@ deploy:
     region: ap-northeast-1
     on:
       branch: develop-deploy-auto
+      condition: "$TEST_TARGET = CIParallelTests1"
 ## 本番、ISAO環境においては自動deployをやめる。
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
