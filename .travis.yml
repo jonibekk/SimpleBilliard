@@ -126,6 +126,8 @@ deploy:
   - provider: opsworks
     access-key-id: $AWS_ACCESS_KEY
     secret-access-key: $AWS_SECRET_KEY
+    # Set e2e stack's cake app-id
+    # https://console.aws.amazon.com/opsworks/home?region=ap-northeast-1#/stack/2ac1d699-6382-4b2b-ac1b-a3b962d2df8e/apps/b211b084-022b-4bc1-b5c6-80721b608442
     app-id: b211b084-022b-4bc1-b5c6-80721b608442
     wait-until-deployed: true
     region: ap-northeast-1
