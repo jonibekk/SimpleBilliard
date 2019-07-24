@@ -133,7 +133,10 @@ deploy:
     region: ap-northeast-1
     on:
       branch: develop
+      # Travis CI is running on parallel, deploy may also run in parallel.
+      # Condition below limit the deploy to run only on CIParallelTests1 process.
       condition: "$TEST_TARGET = CIParallelTests1"
+
 ## 本番、ISAO環境においては自動deployをやめる。
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
