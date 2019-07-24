@@ -122,6 +122,15 @@ notifications:
   email: false
 
 deploy:
+  # Deploying to e2e env after merged develop
+  - provider: opsworks
+    access-key-id: $AWS_ACCESS_KEY
+    secret-access-key: $AWS_SECRET_KEY
+    app-id: 2ac1d699-6382-4b2b-ac1b-a3b962d2df8e
+    wait-until-deployed: true
+    region: ap-northeast-1
+    on:
+      branch: develop-deploy-auto
 ## 本番、ISAO環境においては自動deployをやめる。
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
@@ -137,16 +146,6 @@ deploy:
 #    wait-until-deployed: true
 #    on:
 #      branch: master-isao
-
-#  - provider: opsworks
-#    access-key-id: $AWS_ACCESS_KEY
-#    secret-access-key: $AWS_SECRET_KEY
-#    app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
-#    wait-until-deployed: false
-#    region: ap-northeast-1
-#    on:
-#      branch: develop
-#
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
 #    secret-access-key: $AWS_SECRET_KEY
