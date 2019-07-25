@@ -4,6 +4,7 @@ App::import('Service', 'PostService');
 App::import('Service', 'CommentFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
+App::import('Service', 'TranslationService');
 App::import('Lib/Storage', 'UploadedFile');
 App::uses('Comment', 'Model');
 App::uses('CommentFile', 'Model');
@@ -11,10 +12,10 @@ App::uses('CommentLike', 'Model');
 App::uses('CommentRead', 'Model');
 App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
+App::uses('Translation', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
-
 
 
 /**
@@ -24,6 +25,7 @@ App::import('Model/Entity', 'AttachedFileEntity');
  * Time: 16:50
  */
 
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
@@ -199,11 +201,25 @@ class CommentService extends AppService
             throw $e;
         }
 
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+
+        // Create default translation
+        switch ($Post->getPostType($postId)) {
+            case Post::TYPE_NORMAL:
+                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
+                break;
+            case Post::TYPE_ACTION:
+                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST_COMMENT(), $commentId);
+                break;
+        }
+
+
         return $savedComment;
     }
 
     /**
-     * Delete comment 
+     * Delete comment
      *
      * @param commentId
      *
@@ -225,23 +241,23 @@ class CommentService extends AppService
             'conditions' => [
                 'id'      => $commentId,
                 'del_flg' => false
-            ],'fields'     => [
+            ], 'fields'  => [
                 'post_id'
             ]
         ];
 
         $postId = $Comment->useType()->find('first', $commentCondition);
-        $postId = Hash::get($postId,"Comment.post_id");
+        $postId = Hash::get($postId, "Comment.post_id");
 
         if (!$postId) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
         $modelsToDelete = [
-            'CommentLike'        => 'comment_id',
-            'CommentRead'        => 'comment_id',
-            'CommentMention'     => 'post_id',
-            'Comment'            => 'Comment.id'
+            'CommentLike'    => 'comment_id',
+            'CommentRead'    => 'comment_id',
+            'CommentMention' => 'post_id',
+            'Comment'        => 'Comment.id'
         ];
 
         try {
@@ -255,7 +271,7 @@ class CommentService extends AppService
                 $res = $Model->softDeleteAll($condition, false);
                 if (!$res) {
                     throw new RuntimeException("Error on deleting ${model} for comment $commentId: failed comment soft delete");
-                }                
+                }
             }
             $CommentFileService->softDeleteAllFiles($commentId);
 
@@ -273,6 +289,8 @@ class CommentService extends AppService
             throw $e;
         }
 
+        $this->deleteAllTranslations($commentId);
+
         return true;
     }
 
@@ -280,6 +298,7 @@ class CommentService extends AppService
      * Edit a comment body
      *
      * @param CommentUpdateRequest $data
+     *
      * @return CommentEntity Updated comment
      * @throws Exception
      */
@@ -297,8 +316,8 @@ class CommentService extends AppService
 
             $newData = [
                 'body'      => $data->getBody(),
-                'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo())  : null,
-                'created' => false // Prevent updating this field
+                'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo()) : null,
+                'created'   => false // Prevent updating this field
             ];
 
             $Comment->clear();
@@ -316,11 +335,14 @@ class CommentService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error("Failed to update comment", [
                 'message' => $e->getMessage(),
-                'data' => $data,
-                'trace' => $e->getTraceAsString()
+                'data'    => $data,
+                'trace'   => $e->getTraceAsString()
             ]);
             throw $e;
         }
+
+        $this->deleteAllTranslations($commentId);
+
         /** @var CommentEntity $result */
         $result = $Comment->useType()->useEntity()->find('first', ['conditions' => ['id' => $data->getId()]]);
         return $result;
@@ -331,9 +353,9 @@ class CommentService extends AppService
      * - delete only files user deleted existing on comment form
      * - save new files
      *
-     * @param int $commentId
-     * @param int $userId
-     * @param int $teamId
+     * @param int   $commentId
+     * @param int   $userId
+     * @param int   $teamId
      * @param array $resources Existing resources
      *
      * @return PostResource[]
@@ -349,13 +371,13 @@ class CommentService extends AppService
         }
         // Each array element is CommentFile entity and can't use Hash::extract
         $oldFileIds = [];
-        foreach($oldFiles as $oldFile) {
+        foreach ($oldFiles as $oldFile) {
             $oldFileIds[] = $oldFile['attached_file_id'];
         }
 
         $existingFileIds = [];
         $newFileUuids = [];
-        foreach($resources as $resource) {
+        foreach ($resources as $resource) {
             if (!array_key_exists('id', $resource)) {
                 $newFileUuids[] = $resource['file_uuid'];
             } else {
@@ -378,12 +400,13 @@ class CommentService extends AppService
     /**
      * Save uploaded files
      *
-     * @param int $commentId
-     * @param int $userId
-     * @param int $teamId
+     * @param int   $commentId
+     * @param int   $userId
+     * @param int   $teamId
      * @param array $fileIDs
      *
-     * @param int $commentFileIndex
+     * @param int   $commentFileIndex
+     *
      * @return bool
      * @throws Exception
      */
@@ -465,5 +488,35 @@ class CommentService extends AppService
         }
 
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
+    }
+
+
+    /**
+     * Delete all translations of a comment
+     *
+     * @param int $commentId
+     * @throws Exception
+     */
+    public function deleteAllTranslations(int $commentId)
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $post = $Post->getByCommentId($commentId);
+
+        $Comment->clearLanguage($commentId);
+
+        switch ($post['Post']['type']) {
+            case Post::TYPE_NORMAL:
+                $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
+                break;
+            case Post::TYPE_ACTION:
+                $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST_COMMENT(), $commentId);
+                break;
+        }
     }
 }

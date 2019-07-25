@@ -20,11 +20,14 @@ App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
 App::import('Service/Pusher', 'PostPusherService');
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Exception as GlException;
 
 class PostsController extends BasePagingController
 {
+    use TranslationNotificationTrait;
+
     public $components = [
         'NotifyBiz',
         'GlEmail',
@@ -83,7 +86,10 @@ class PostsController extends BasePagingController
             }
 
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+
             $this->notifyNewPost($res, $circleId);
+
+            $this->sendTranslationUsageNotification($this->getTeamId());
 
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -321,7 +327,8 @@ class PostsController extends BasePagingController
 
         $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [
             PostExtender::EXTEND_ALL,
-            PostExtender::EXTEND_COMMENTS_ALL
+            PostExtender::EXTEND_COMMENTS_ALL,
+            PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
 
         // Make user read this post
@@ -531,6 +538,7 @@ class PostsController extends BasePagingController
             $res = $CommentService->add($commentData, $postId, $userId, $teamId, $fileIDs);
             $mentionedUserIds = $this->Mention->getUserList($commentData['body'], $this->getTeamId(), $this->getUserId());
             $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId(), $mentionedUserIds);
+            $this->sendTranslationUsageNotification($teamId);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {

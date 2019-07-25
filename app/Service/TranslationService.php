@@ -7,6 +7,7 @@ App::import('Service', 'TeamTranslationStatusService');
 App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
+App::uses('TeamTranslationLanguag', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
@@ -177,6 +178,48 @@ class TranslationService extends AppService
                 'language'     => $targetLanguage
             ]);
             throw $e;
+        }
+    }
+
+    /**
+     * Create default translation of a content
+     *
+     * @param int                    $teamId
+     * @param TranslationContentType $contentType
+     * @param int                    $contentId Id of content type.
+     *                                          ACTION_POST => posts.id
+     *                                          CIRCLE_POST => posts.id
+     *                                          CIRCLE_POST_COMMENT => comments.id
+     *                                          ACTION_POST_COMMENT => comments.id
+     *
+     * @throws Exception
+     */
+    public function createDefaultTranslation(int $teamId, TranslationContentType $contentType, int $contentId)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+
+            try {
+                $TranslationService->createTranslation($contentType, $contentId, $defaultLanguage);
+            } catch (Exception $e) {
+                GoalousLog::error('Failed create default translation on new content', [
+                    'message'      => $e->getMessage(),
+                    'trace'        => $e->getTraceAsString(),
+                    'content_type' => $contentType->getKey(),
+                    'content_id'   => $contentId,
+                ]);
+            }
         }
     }
 
