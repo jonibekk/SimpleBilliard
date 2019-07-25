@@ -106,7 +106,7 @@ class ActionService extends AppService
             }
 
             // アクションとしての投稿
-            if (!$goalPost = $Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
+            if (!$Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
                 $newActionId, $share, PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
             ) {
                 throw new Exception(sprintf("Failed create post. data:%s"
@@ -151,9 +151,11 @@ class ActionService extends AppService
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
         }
 
+        $postId =  $Post->getByActionResultId($newActionId)['Post']['id'];
+
         /** @var TranslationService $TranslationService */
         $TranslationService = ClassRegistry::init('TranslationService');
-        $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $goalPost['Post']['id']);
+        $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
 
         return (int)$newActionId;
     }
