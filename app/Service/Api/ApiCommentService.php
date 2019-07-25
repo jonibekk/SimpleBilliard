@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Controller/Component', 'OgpComponent');
+App::import('Service', 'CommentService');
 App::import('Service', 'TranslationService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::uses('Post', 'Model');
@@ -166,7 +167,11 @@ class ApiCommentService extends AppService
             $Comment->begin();
             $Comment->delete($id);
             $PostFile->AttachedFile->deleteAllRelatedFiles($id, AttachedFile::TYPE_MODEL_COMMENT);
-            $this->deleteTranslation($id);
+
+            /** @var CommentService $CommentService */
+            $CommentService = ClassRegistry::init('CommentService');
+            $CommentService->deleteAllTranslations($id);
+
             $Comment->updateCounterCache(['post_id' => $id]);
             // Commit
             $Comment->commit();
@@ -200,7 +205,10 @@ class ApiCommentService extends AppService
             // Save comment data
             $Comment->commentEdit($data);
 
-            $this->deleteTranslation($id);
+            /** @var CommentService $CommentService */
+            $CommentService = ClassRegistry::init('CommentService');
+            $CommentService->deleteAllTranslations($id);
+
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
@@ -284,38 +292,6 @@ class ApiCommentService extends AppService
             $ogpIndex['site_photo'] = $ogp['image'];
         }
         return $ogpIndex;
-    }
-
-    /**
-     * Delete all translations of a comment
-     *
-     * @param int $commentId
-     * @throws Exception
-     */
-    private function deleteTranslation(int $commentId)
-    {
-        /** @var Comment $Comment */
-        $Comment = ClassRegistry::init('Comment');
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-        /** @var Translation $Translation */
-        $Translation = ClassRegistry::init('Translation');
-
-        $post = $Post->getByCommentId($commentId);
-
-        $Comment->clearLanguage($commentId);
-
-        switch ($post['Post']['type']) {
-            case Post::TYPE_NORMAL:
-                $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
-                break;
-            case Post::TYPE_ACTION:
-                $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST_COMMENT(), $commentId);
-                break;
-            default:
-                throw new RuntimeException("Unexpected");
-                break;
-        }
     }
 }
 

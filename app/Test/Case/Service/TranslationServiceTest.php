@@ -1,7 +1,4 @@
 <?php
-
-use Mockery as mock;
-
 App::uses('GoalousTestCase', 'Test');
 App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
@@ -23,30 +20,12 @@ class TranslationServiceTest extends GoalousTestCase
         'app.translation',
         'app.post',
         'app.comment',
+        'app.mst_translation_language',
         'app.team_translation_status',
+        'app.team_translation_language',
         'app.user',
         'app.team'
     ];
-
-    private function createTranslatorClientMock(string $sourceLanguage = null, string $translation = null)
-    {
-        $translatorClient = mock::mock('GoogleTranslatorClient');
-
-        if (empty($sourceLanguage)) {
-            $sourceLanguage = LanguageEnum::EN;
-        }
-        if (empty($translation)) {
-            $translation = 'Esta es una muestra de traducción.';
-        }
-
-        $returnValue = new TranslationResult($sourceLanguage, $translation, '');
-
-        $translatorClient->shouldReceive('translate')
-            ->once()
-            ->andReturn($returnValue);
-
-        ClassRegistry::addObject(GoogleTranslatorClient::class, $translatorClient);
-    }
 
     public function test_eraseTranslation_success()
     {
@@ -194,6 +173,53 @@ class TranslationServiceTest extends GoalousTestCase
 
         $TranslationService->createTranslation($contentType, $contendId, $language);
     }
+
+    public function test_createDefaultTranslation_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+
+        $this->createTranslatorClientMock();
+
+        $teamId = 1;
+
+        $contentType = TranslationContentType::CIRCLE_POST();
+        $contentId = 1;
+
+        // Not enabled
+        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
+
+        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
+        $this->assertEmpty($translation);
+
+        // Enabled
+
+        $TeamTranslationStatus->createEntry($teamId, 1000);
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ES());
+
+        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
+
+        $this->assertEquals('en', $Post->getById($contentId)['language']);
+        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
+        $this->assertNotEmpty($translation);
+
+        // Enabled, reached limit
+
+        $Translation->eraseTranslation($contentType, $contentId, LanguageEnum::ES);
+        $TeamTranslationStatus->incrementCirclePostCount($teamId, 1000);
+
+        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
+
+        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
+        $this->assertEmpty($translation);
+    }
+
 
     public function test_getTranslation_success()
     {

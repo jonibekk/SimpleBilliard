@@ -106,7 +106,7 @@ class ActionService extends AppService
             }
 
             // アクションとしての投稿
-            if (!$goalPost = $Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
+            if (!$Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
                 $newActionId, $share, PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
             ) {
                 throw new Exception(sprintf("Failed create post. data:%s"
@@ -151,37 +151,13 @@ class ActionService extends AppService
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
         }
 
-        // Make translation
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        $postId =  $Post->getByActionResultId($newActionId)['Post']['id'];
 
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
-            try {
-                $TranslationService->createTranslation(TranslationContentType::ACTION_POST(), $goalPost['Post']['id'], $defaultLanguage);
-            } catch (Exception $e) {
-                GoalousLog::error('Failed create translation on new post', [
-                    'message' => $e->getMessage(),
-                    'trace'   => $e->getTraceAsString(),
-                    'post.id' => $goalPost['Post']['id'],
-                    'goal.id' => $goalId,
-                    'team.id' => $teamId,
-                    'user.id' => $userId
-                ]);
-            }
-        }
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
 
         return (int)$newActionId;
-
     }
 
     /**
