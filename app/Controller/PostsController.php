@@ -10,8 +10,7 @@ App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
-App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
-App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
@@ -24,6 +23,8 @@ use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
  */
 class PostsController extends AppController
 {
+    use TranslationNotificationTrait;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -315,51 +316,6 @@ class PostsController extends AppController
         }
 
         return true;
-    }
-
-    public function sendTranslationUsageNotification(int $teamId)
-    {
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
-
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        $notificationFlagClient = new NotificationFlagClient();
-
-        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
-        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
-
-        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
-            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
-            $notificationFlagClient->write($limitReachedKey);
-        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
-            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
-            $notificationFlagClient->write($limitClosingKey);
-        }
-    }
-
-    private function notifyTranslateLimitReached(int $teamId, array $userIds)
-    {
-        $this->NotifyBiz->sendNotify(
-            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
-            null,
-            null,
-            $userIds,
-            null,
-            $teamId);
-    }
-
-    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
-    {
-        $this->NotifyBiz->sendNotify(
-            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
-            null,
-            null,
-            $userIds,
-            null,
-            $teamId);
     }
 
     /**
