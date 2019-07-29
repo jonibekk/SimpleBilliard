@@ -54,7 +54,7 @@ class TranslationsController extends BaseApiController
 
         $this->sendTranslationUsageNotification($this->getTeamId());
 
-        return ApiResponse::ok()->withBody($translation->toArray())->getResponse();
+        return ApiResponse::ok()->withData($translation->toArray())->getResponse();
     }
 
     /**
