@@ -619,7 +619,9 @@ class PostService extends AppService
 
         /** @var TranslationService $TranslationService */
         $TranslationService = ClassRegistry::init('TranslationService');
-        $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
+        }
 
         /** @var UnreadPostsRedisService $UnreadPostsRedisService */
         $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');

@@ -1,9 +1,7 @@
 <?php
 App::uses('ApiController', 'Controller/Api');
 App::import('Service', 'TeamMemberService');
-App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
-App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -29,14 +27,9 @@ class TranslationsController extends ApiController
         $language = $this->request->query('lang');
         $teamId = $this->current_team_id;
 
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        if (($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId)) && (!$TeamTranslationLanguage->canTranslate($teamId)
-                || $TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached())) {
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if (!$TranslationService->canTranslate($teamId)) {
             return $this->_getResponseBadFail("Team can't translate");
         }
 
@@ -54,8 +47,6 @@ class TranslationsController extends ApiController
 
             $contentType = TranslationContentType::getEnumObj($contentTypeValue);
 
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
             $translation = $TranslationService->getTranslation($contentType, $contentId, $language);
 
         } catch (GoalousNotFoundException $e) {
@@ -101,7 +92,7 @@ class TranslationsController extends ApiController
             if (LangEnum::isValid($language)) {
                 /** @var TeamTranslationLanguage $TeamTranslationLanguage */
                 $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-                if (!$TeamTranslationLanguage->supportTranslationLanguage($teamId, $language)) {
+                if (!$TeamTranslationLanguage->isLanguageSupported($teamId, $language)) {
                     $errorMessage[] = "Language not supported in team";
                 }
             } else {

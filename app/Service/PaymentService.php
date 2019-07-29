@@ -2420,7 +2420,7 @@ class PaymentService extends AppService
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        if ($TeamTranslationLanguage->canTranslate($teamId)) {
+        if ($TeamTranslationLanguage->hasLanguage($teamId)) {
             /** @var TeamTranslationStatus $TeamTranslationStatus */
             $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
             $TeamTranslationStatus->setLimit($teamId, TRANSLATION_DEFAULT_LIMIT_PAID_TEAM);

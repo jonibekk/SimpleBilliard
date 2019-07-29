@@ -9,6 +9,7 @@ App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'ActionService');
+App::import('Service', 'TranslationService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -1550,23 +1551,14 @@ class GoalsController extends AppController
             }
 
             // Make translation
-            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-            /** @var TeamTranslationStatus $TeamTranslationStatus */
-            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
             $teamId = TeamStatus::getCurrentTeam()->getTeamId();
 
-            if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-
-                /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-                $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-                /** @var TranslationService $TranslationService */
-                $TranslationService = ClassRegistry::init('TranslationService');
-
-                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
+            if ($TranslationService->canTranslate($teamId)) {
                 try {
-                    $TranslationService->createTranslation(TranslationContentType::ACTION_POST(), $goalPost['Post']['id'], $defaultLanguage);
+                    $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $goalPost['Post']['id']);
                     // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
                     $this->sendTranslationUsageNotification($teamId);
                 } catch (Exception $e) {

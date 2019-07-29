@@ -7,7 +7,8 @@ App::import('Service', 'TeamTranslationStatusService');
 App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
-App::uses('TeamTranslationLanguag', 'Model');
+App::uses('Team', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
@@ -196,35 +197,27 @@ class TranslationService extends AppService
      */
     public function createDefaultTranslation(int $teamId, TranslationContentType $contentType, int $contentId)
     {
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
 
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+        $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
 
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
-            try {
-                $TranslationService->createTranslation($contentType, $contentId, $defaultLanguage);
-            } catch (Exception $e) {
-                GoalousLog::error('Failed create default translation on new content', [
-                    'message'      => $e->getMessage(),
-                    'trace'        => $e->getTraceAsString(),
-                    'content_type' => $contentType->getKey(),
-                    'content_id'   => $contentId,
-                ]);
-            }
+        try {
+            $TranslationService->createTranslation($contentType, $contentId, $defaultLanguage);
+        } catch (Exception $e) {
+            GoalousLog::error('Failed create default translation on new content', [
+                'message'      => $e->getMessage(),
+                'trace'        => $e->getTraceAsString(),
+                'content_type' => $contentType->getKey(),
+                'content_id'   => $contentId,
+            ]);
         }
     }
 
     /**
-     * Update the detected language
+     * Check user access right to the corresponding content
      *
      * @param int                    $userId
      * @param TranslationContentType $contentType
@@ -242,7 +235,7 @@ class TranslationService extends AppService
             case TranslationContentType::ACTION_POST:
                 /** @var ActionService $ActionService */
                 $ActionService = ClassRegistry::init('ActionService');
-                return $ActionService = $ActionService->checkUserAccess($userId, $contentId);
+                return $ActionService->checkUserAccess($userId, $contentId);
             case TranslationContentType::CIRCLE_POST:
                 /** @var PostService $PostService */
                 $PostService = ClassRegistry::init('PostService');
@@ -257,6 +250,48 @@ class TranslationService extends AppService
         }
 
         return false;
+    }
+
+    /**
+     * Check whether team can do translation.
+     * Only trial or paid team with translation languages & remaining usage can translate.
+     *
+     * @param int $teamId
+     *
+     * @return bool
+     */
+    public function canTranslate(int $teamId): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        try {
+            // Only free trial or paid team can translate
+            $teamTypeFlg = $Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId);
+
+            if (!$teamTypeFlg) {
+                return false;
+            }
+            // Team must have translation language selected & remaining usage count to translate
+            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
+
+            if (!$translationFlg) {
+                return false;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            GoalousLog::error("Error in checking translation availability of a team.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team.id' => $teamId
+            ]);
+            return false;
+        }
     }
 
     /**

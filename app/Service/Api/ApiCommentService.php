@@ -72,28 +72,17 @@ class ApiCommentService extends AppService
 
             $teamId = Hash::get($post, 'Post.team_id');
 
-            // Make translation
-            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-            /** @var TeamTranslationStatus $TeamTranslationStatus */
-            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
 
-            if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-
-                /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-                $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-                /** @var TranslationService $TranslationService */
-                $TranslationService = ClassRegistry::init('TranslationService');
-
-                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
+            if ($TranslationService->canTranslate($teamId)) {
                 try {
                     switch (Hash::get($post, 'Post.type')) {
                         case Post::TYPE_NORMAL:
-                            $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, $defaultLanguage);
+                            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
                             break;
                         case Post::TYPE_ACTION:
-                            $TranslationService->createTranslation(TranslationContentType::ACTION_POST_COMMENT(), $commentId, $defaultLanguage);
+                            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST_COMMENT(), $commentId);
                             break;
                     }
                 } catch (Exception $e) {

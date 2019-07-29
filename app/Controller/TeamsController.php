@@ -427,7 +427,7 @@ class TeamsController extends AppController
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-        if ($TeamTranslationLanguage->canTranslate($team_id)) {
+        if ($TeamTranslationLanguage->hasLanguage($team_id)) {
             try {
                 $translationTeamLanguageCandidates = $TeamTranslationLanguageService->getAllLanguages($team_id);
                 $translationTeamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($team_id);

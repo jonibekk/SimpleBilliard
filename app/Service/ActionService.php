@@ -151,11 +151,13 @@ class ActionService extends AppService
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
         }
 
-        $postId =  $Post->getByActionResultId($newActionId)['Post']['id'];
+        $postId = $Post->getByActionResultId($newActionId)['Post']['id'];
 
         /** @var TranslationService $TranslationService */
         $TranslationService = ClassRegistry::init('TranslationService');
-        $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
+        }
 
         return (int)$newActionId;
     }
