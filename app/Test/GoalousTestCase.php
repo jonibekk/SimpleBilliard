@@ -40,6 +40,7 @@ use Goalous\Enum as Enum;
 use Goalous\Enum\Language as LanguageEnum;
 
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Mockery as mock;
 
 /**
  * CakeTestCase class
@@ -1426,5 +1427,25 @@ class GoalousTestCase extends CakeTestCase
         $insertedData = $CircleMember->save($newData, false);
 
         return $insertedData['CircleMember'];
+    }
+
+    protected function createTranslatorClientMock(string $sourceLanguage = null, string $translation = null)
+    {
+        $translatorClient = mock::mock('GoogleTranslatorClient');
+
+        if (empty($sourceLanguage)) {
+            $sourceLanguage = LanguageEnum::EN;
+        }
+        if (empty($translation)) {
+            $translation = 'Esta es una muestra de traducción.';
+        }
+
+        $returnValue = new TranslationResult($sourceLanguage, $translation, '');
+
+        $translatorClient->shouldReceive('translate')
+            ->once()
+            ->andReturn($returnValue);
+
+        ClassRegistry::addObject(GoogleTranslatorClient::class, $translatorClient);
     }
 }

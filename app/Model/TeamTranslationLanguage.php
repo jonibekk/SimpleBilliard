@@ -30,13 +30,13 @@ class TeamTranslationLanguage extends AppModel
     }
 
     /**
-     * Check whether the team has translation enabled
+     * Check whether the team has translation language(s)
      *
      * @param int $teamId
      *
      * @return bool
      */
-    public function canTranslate(int $teamId): bool
+    public function hasLanguage(int $teamId): bool
     {
         $option = [
             'conditions' => [
@@ -71,7 +71,7 @@ class TeamTranslationLanguage extends AppModel
      *
      * @return bool
      */
-    public function supportTranslationLanguage(int $teamId, string $languageCode): bool
+    public function isLanguageSupported(int $teamId, string $languageCode): bool
     {
         $option = [
             'conditions' => [

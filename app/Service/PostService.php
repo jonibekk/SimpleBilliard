@@ -21,6 +21,8 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
@@ -615,32 +617,10 @@ class PostService extends AppService
             throw $e;
         }
 
-        // Make translation
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
-            try {
-                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postId, $defaultLanguage);
-            } catch (Exception $e) {
-                GoalousLog::error('Failed create translation on new post', [
-                    'message'    => $e->getMessage(),
-                    'trace'      => $e->getTraceAsString(),
-                    'post.id'    => $postId,
-                    'circles.id' => $circleId,
-                    'teams.id'   => $teamId,
-                ]);
-            }
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
         }
 
         /** @var UnreadPostsRedisService $UnreadPostsRedisService */
@@ -1056,8 +1036,8 @@ class PostService extends AppService
 
             $newData = [
                 'body'      => $newBody['body'],
-                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info'])  : null,
-                'created' => false // Prevent updating this field
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']) : null,
+                'created'   => false // Prevent updating this field
             ];
 
             $Post->clear();
@@ -1092,7 +1072,7 @@ class PostService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update post', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace'   => $e->getTraceAsString()
             ]);
             throw $e;
         }

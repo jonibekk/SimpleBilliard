@@ -1,12 +1,10 @@
 <?php
-
-use Mockery as mock;
-
 App::uses('GoalousTestCase', 'Test');
 App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::uses('Translation', 'Model');
+App::uses('Team', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'TranslationService');
 App::import('Service', 'TeamTranslationStatusService');
@@ -23,29 +21,59 @@ class TranslationServiceTest extends GoalousTestCase
         'app.translation',
         'app.post',
         'app.comment',
+        'app.mst_translation_language',
         'app.team_translation_status',
+        'app.team_translation_language',
         'app.user',
         'app.team'
     ];
 
-    private function createTranslatorClientMock(string $sourceLanguage = null, string $translation = null)
+    public function test_canTranslate_success()
     {
-        $translatorClient = mock::mock('GoogleTranslatorClient');
+        $trialTeamId = 1;
+        $paidTeamId = 2;
+        $translationLimit = 100;
 
-        if (empty($sourceLanguage)) {
-            $sourceLanguage = LanguageEnum::EN;
-        }
-        if (empty($translation)) {
-            $translation = 'Esta es una muestra de traducción.';
-        }
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
 
-        $returnValue = new TranslationResult($sourceLanguage, $translation, '');
+        // No translation
+        $this->assertFalse($TranslationService->canTranslate($trialTeamId));
 
-        $translatorClient->shouldReceive('translate')
-            ->once()
-            ->andReturn($returnValue);
+        // With translation
+        $this->insertTranslationLanguage($trialTeamId, LanguageEnum::EN());
+        $TeamTranslationStatus->createEntry($trialTeamId, $translationLimit);
+        $this->assertTrue($TranslationService->canTranslate($trialTeamId));
 
-        ClassRegistry::addObject(GoogleTranslatorClient::class, $translatorClient);
+        // Limit reached
+        $TeamTranslationStatus->incrementCirclePostCount($trialTeamId, $translationLimit);
+        $this->assertFalse($TranslationService->canTranslate($trialTeamId));
+
+        // Paid team
+        $Team->updatePaidPlan($paidTeamId, GoalousDateTime::now()->toDateString());
+
+        // No translation
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
+
+        // With translation
+        $this->insertTranslationLanguage($paidTeamId, LanguageEnum::EN());
+        $TeamTranslationStatus->createEntry($paidTeamId, $translationLimit);
+        $this->assertTrue($TranslationService->canTranslate($paidTeamId));
+
+        // Limit reached
+        $TeamTranslationStatus->incrementCirclePostCount($paidTeamId, $translationLimit);
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
+
+        // Read only team
+        $TeamTranslationStatus->resetAllTranslationCount($paidTeamId);
+        $this->assertTrue($TranslationService->canTranslate($paidTeamId));
+
+        $Team->updateServiceStatusAndDates([$paidTeamId], Team::SERVICE_USE_STATUS_READ_ONLY);
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
     }
 
     public function test_eraseTranslation_success()
@@ -194,6 +222,35 @@ class TranslationServiceTest extends GoalousTestCase
 
         $TranslationService->createTranslation($contentType, $contendId, $language);
     }
+
+    public function test_createDefaultTranslation_success()
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+
+        $this->createTranslatorClientMock();
+
+        $teamId = 1;
+
+        $contentType = TranslationContentType::CIRCLE_POST();
+        $contentId = 1;
+
+        $TeamTranslationStatus->createEntry($teamId, 1000);
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ES());
+
+        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
+
+        $this->assertEquals('en', $Post->getById($contentId)['language']);
+        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
+        $this->assertNotEmpty($translation);
+    }
+
 
     public function test_getTranslation_success()
     {
