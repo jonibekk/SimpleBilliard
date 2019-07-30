@@ -3,10 +3,8 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
-App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
-App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
@@ -14,7 +12,6 @@ App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
-use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 /**
  * Posts Controller
@@ -288,23 +285,14 @@ class PostsController extends AppController
         $this->Notification->outSuccess(__("Posted."));
 
         // Make translation
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         $teamId = TeamStatus::getCurrentTeam()->getTeamId();
 
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
 
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
+        if ($TranslationService->canTranslate($teamId)) {
             try {
-                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postedPostId, $defaultLanguage);
+                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postedPostId);
                 // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
                 $this->sendTranslationUsageNotification($teamId);
             } catch (Exception $e) {

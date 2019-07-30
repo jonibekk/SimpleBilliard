@@ -54,7 +54,7 @@ class TranslationsController extends BaseApiController
 
         $this->sendTranslationUsageNotification($this->getTeamId());
 
-        return ApiResponse::ok()->withBody($translation->toArray())->getResponse();
+        return ApiResponse::ok()->withData($translation->toArray())->getResponse();
     }
 
     /**
@@ -76,14 +76,9 @@ class TranslationsController extends BaseApiController
 
         $currentTeamId = $this->getTeamId();
 
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        if (($Team->isFreeTrial($currentTeamId) || $Team->isPaidPlan($currentTeamId)) && (!$TeamTranslationLanguage->canTranslate($currentTeamId)
-                || $TeamTranslationStatus->getUsageStatus($currentTeamId)->isLimitReached())) {
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if (!$TranslationService->canTranslate($currentTeamId)) {
             return ErrorResponse::badRequest()->withMessage("Team can't translate.")->getResponse();
         }
 
@@ -91,7 +86,7 @@ class TranslationsController extends BaseApiController
             if (LangEnum::isValid($language)) {
                 /** @var TeamTranslationLanguage $TeamTranslationLanguage */
                 $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-                if (!$TeamTranslationLanguage->supportTranslationLanguage($currentTeamId, $language)) {
+                if (!$TeamTranslationLanguage->isLanguageSupported($currentTeamId, $language)) {
                     return ErrorResponse::badRequest()->withMessage("Language not supported in team.")->getResponse();
                 }
             } else {

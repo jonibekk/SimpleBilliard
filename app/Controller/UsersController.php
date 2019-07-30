@@ -807,7 +807,7 @@ class UsersController extends AppController
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        $team_can_translate = $TeamTranslationLanguage->canTranslate($this->current_team_id);
+        $team_can_translate = $TeamTranslationLanguage->hasLanguage($this->current_team_id);
         if ($team_can_translate) {
             /** @var TeamMemberService $TeamMemberService */
             $TeamMemberService = ClassRegistry::init('TeamMemberService');

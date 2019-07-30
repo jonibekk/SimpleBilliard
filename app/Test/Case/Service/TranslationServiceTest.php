@@ -4,6 +4,7 @@ App::uses('ActionResult', 'Model');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::uses('Translation', 'Model');
+App::uses('Team', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'TranslationService');
 App::import('Service', 'TeamTranslationStatusService');
@@ -26,6 +27,54 @@ class TranslationServiceTest extends GoalousTestCase
         'app.user',
         'app.team'
     ];
+
+    public function test_canTranslate_success()
+    {
+        $trialTeamId = 1;
+        $paidTeamId = 2;
+        $translationLimit = 100;
+
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+
+        // No translation
+        $this->assertFalse($TranslationService->canTranslate($trialTeamId));
+
+        // With translation
+        $this->insertTranslationLanguage($trialTeamId, LanguageEnum::EN());
+        $TeamTranslationStatus->createEntry($trialTeamId, $translationLimit);
+        $this->assertTrue($TranslationService->canTranslate($trialTeamId));
+
+        // Limit reached
+        $TeamTranslationStatus->incrementCirclePostCount($trialTeamId, $translationLimit);
+        $this->assertFalse($TranslationService->canTranslate($trialTeamId));
+
+        // Paid team
+        $Team->updatePaidPlan($paidTeamId, GoalousDateTime::now()->toDateString());
+
+        // No translation
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
+
+        // With translation
+        $this->insertTranslationLanguage($paidTeamId, LanguageEnum::EN());
+        $TeamTranslationStatus->createEntry($paidTeamId, $translationLimit);
+        $this->assertTrue($TranslationService->canTranslate($paidTeamId));
+
+        // Limit reached
+        $TeamTranslationStatus->incrementCirclePostCount($paidTeamId, $translationLimit);
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
+
+        // Read only team
+        $TeamTranslationStatus->resetAllTranslationCount($paidTeamId);
+        $this->assertTrue($TranslationService->canTranslate($paidTeamId));
+
+        $Team->updateServiceStatusAndDates([$paidTeamId], Team::SERVICE_USE_STATUS_READ_ONLY);
+        $this->assertFalse($TranslationService->canTranslate($paidTeamId));
+    }
 
     public function test_eraseTranslation_success()
     {
@@ -192,14 +241,6 @@ class TranslationServiceTest extends GoalousTestCase
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 1;
 
-        // Not enabled
-        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
-
-        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
-        $this->assertEmpty($translation);
-
-        // Enabled
-
         $TeamTranslationStatus->createEntry($teamId, 1000);
         $this->insertTranslationLanguage($teamId, LanguageEnum::ES());
 
@@ -208,16 +249,6 @@ class TranslationServiceTest extends GoalousTestCase
         $this->assertEquals('en', $Post->getById($contentId)['language']);
         $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
         $this->assertNotEmpty($translation);
-
-        // Enabled, reached limit
-
-        $Translation->eraseTranslation($contentType, $contentId, LanguageEnum::ES);
-        $TeamTranslationStatus->incrementCirclePostCount($teamId, 1000);
-
-        $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
-
-        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
-        $this->assertEmpty($translation);
     }
 
 

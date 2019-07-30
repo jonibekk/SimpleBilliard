@@ -182,7 +182,7 @@ class CirclePostExtender extends BaseExtender
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-            if ($TeamTranslationLanguage->canTranslate($teamId) &&
+            if ($TeamTranslationLanguage->hasLanguage($teamId) &&
                 ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
                 /** @var TeamTranslationStatus $TeamTranslationStatus */
                 $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');

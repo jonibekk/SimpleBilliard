@@ -1467,6 +1467,7 @@ class Post extends AppModel
                 break;
         }
         $res = $this->save($data);
+
         if ($res) {
             if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
                 return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);

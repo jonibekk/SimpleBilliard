@@ -204,16 +204,17 @@ class CommentService extends AppService
         /** @var TranslationService $TranslationService */
         $TranslationService = ClassRegistry::init('TranslationService');
 
-        // Create default translation
-        switch ($Post->getPostType($postId)) {
-            case Post::TYPE_NORMAL:
-                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
-                break;
-            case Post::TYPE_ACTION:
-                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST_COMMENT(), $commentId);
-                break;
+        if ($TranslationService->canTranslate($teamId)) {
+            // Create default translation
+            switch ($Post->getPostType($postId)) {
+                case Post::TYPE_NORMAL:
+                    $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
+                    break;
+                case Post::TYPE_ACTION:
+                    $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST_COMMENT(), $commentId);
+                    break;
+            }
         }
-
 
         return $savedComment;
     }

@@ -4521,24 +4521,31 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "source_language": {
-                      "type": "string",
-                      "description": "ISO 639-1 language code of source text's language."
-                    },
-                    "language": {
-                      "type": "string",
-                      "description": "ISO 639-1 language code of target translation language."
-                    },
-                    "translation": {
-                      "type": "string",
-                      "description": "Translation content"
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "source_language": {
+                          "type": "string",
+                          "description": "ISO 639-1 language code of source text's language."
+                        },
+                        "language": {
+                          "type": "string",
+                          "description": "ISO 639-1 language code of target translation language."
+                        },
+                        "translation": {
+                          "type": "string",
+                          "description": "Translation content"
+                        }
+                      }
                     }
                   }
                 },
                 "example": {
-                  "source_language": "en",
-                  "language": "id",
-                  "translation": "Selamat pagi."
+                  "data": {
+                    "source_language": "en",
+                    "language": "id",
+                    "translation": "Selamat pagi."
+                  }
                 }
               }
             }

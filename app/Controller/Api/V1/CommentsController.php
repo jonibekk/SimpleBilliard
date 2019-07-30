@@ -118,7 +118,7 @@ class CommentsController extends ApiController
         // Translation usage notification
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        if ($TeamTranslationLanguage->canTranslate($this->current_team_id)) {
+        if ($TeamTranslationLanguage->hasLanguage($this->current_team_id)) {
             $this->sendTranslationUsageNotification($this->current_team_id);
         }
 
