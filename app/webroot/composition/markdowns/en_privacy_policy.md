@@ -1,4 +1,8 @@
-## Privacy Policy
+# Privacy Policy
+
+----
+
+## Overview
 
 ISAO Corporation (hereafter referred to as “the Company”), based on the recognition of the network solutions business, application services business, mobile service planning and operations, based on the fact that runs a network game management business, etc., is one of the most important issues on the management and on the business, to the appropriate management and thorough protection of information, we will implement the following initiatives.
 
@@ -16,7 +20,7 @@ the Company, take necessary and appropriate measures for the safety management o
 
 5. Responding to complaints and consultation
 the Company, with respect to complaints and consultation of personal information, and appropriate and timely response, and strive to achieve a resolution of the problem.
-    
+
 that’s all  
 
 
@@ -25,7 +29,7 @@ Enactment Date: October 01, 2004
 
 Last Revision Date : July 06, 2018   
 
-ISAO Corporation Representative Director　Keiji Nakamura 
+ISAO Corporation Representative Director　Keiji Nakamura
 
 ----
 
@@ -123,7 +127,7 @@ We use cookies to protect user's privacy and improve convenience. In addition, w
 - What is Cookie?   
 Cookie is a mechanism that saves user's history of service, input contents etc. on the user's computer when the user uses the website.
 
-- How to set cookie 
+- How to set cookie
 Setting cookie differs on the browser, so please check the "Help" menu of the browser in use.
 Users can delete cookies by setting "disable all cookies".
 In that case, you may be subject to restrictions on the use of various services on the Internet, such services that require authentication.
@@ -138,7 +142,7 @@ Regarding the handling of personal information and personal information subject 
 
 #### Personal information protection administrator
 
-Goalous Project Kohei Kikuchi (Contact: similar to the following “Personal Information Consultation Service”)
+Personal information supervising officer Masahiro Harasaki (Contact: similar to the following “Personal Information Consultation Service”)
 
 ----
 
@@ -146,7 +150,7 @@ Goalous Project Kohei Kikuchi (Contact: similar to the following “Personal Inf
 
 CS Tower 7th Floor, 5-20-8 Asakusabashi, Taito-ku, Tokyo 111-0053, Japan    
 
-Ltd. ISAO personal information consultation 
+Ltd. ISAO personal information consultation
 
 Mail: contact@goalous.com
 
