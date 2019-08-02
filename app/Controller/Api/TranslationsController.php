@@ -44,7 +44,7 @@ class TranslationsController extends BaseApiController
 
             /** @var TranslationService $TranslationService */
             $TranslationService = ClassRegistry::init('TranslationService');
-            $translation = $TranslationService->getTranslation($contentType, $contentId, $language);
+            $translation = $TranslationService->getTranslationV2($contentType, $contentId, $language);
 
         } catch (GoalousNotFoundException $e) {
             return ErrorResponse::notFound()->withException($e)->getResponse();

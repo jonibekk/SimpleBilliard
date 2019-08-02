@@ -90,7 +90,6 @@ class MentionComponent extends Component
         return $result;
     }
 
-
     /**
      * replace all mentions in content with HTML expression.
      *
@@ -101,8 +100,23 @@ class MentionComponent extends Component
     public static function replaceMentionForTranslation(string $text): string
     {
         $result = $text;
-        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
-            '<span class="mention">@${1}</span>', $result);
+        $result = preg_replace(self::getMentionReg('(.*?):(.*?)', 'm'),
+            '<span class="mention" mention="${1}">@${2}</span>', $result);
+        return $result;
+    }
+
+    /**
+     * Replace all mention HTML tags in content with mention string
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionTagForTranslationV2(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace('/<span class="mention" mention="(.*?)">@(.*?)<\/span>/m',
+            self::$PREFIX . '${1}:${2}' . self::$SUFFIX, $result);
         return $result;
     }
 
@@ -113,6 +127,7 @@ class MentionComponent extends Component
      * after: `いいね！`
      *
      * @param $text     string the content should be replaced
+     *
      * @return string
      */
     static public function replaceMentionToSimpleReadable(string $text): string
@@ -253,12 +268,14 @@ class MentionComponent extends Component
      *
      * @param $body              string content of Post/Action/Comment
      * @param $teamId            int the team ID to identify the circle uniquely
+     *
      * @return array
      */
     public function getTargetIdsEachType(
         string $body = null,
         int $teamId
-    ): array {
+    ): array
+    {
         $mentions = self::extractAllIdFromMention($body);
 
         $userIds = [];
@@ -281,7 +298,7 @@ class MentionComponent extends Component
             /* @var Circle $Circle */
             $Circle = ClassRegistry::init('Circle');
             $circles = $Circle->find('all', [
-                'fields' => 'id',
+                'fields'     => 'id',
                 'conditions' => [
                     'id' => $circleIds
                 ]
@@ -290,7 +307,7 @@ class MentionComponent extends Component
         }
         return [
             'circle' => $circleIds,
-            'user' => $userIds
+            'user'   => $userIds
         ];
     }
 
