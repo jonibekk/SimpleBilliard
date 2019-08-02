@@ -16,15 +16,19 @@ App::uses('BasePagingController', 'Controller/Api');
 App::uses('PostShareCircle', 'Model');
 App::uses('PostRequestValidator', 'Validator/Request/Api/V2');
 App::uses('TeamMember', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
 App::import('Service/Pusher', 'PostPusherService');
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Exception as GlException;
 
 class PostsController extends BasePagingController
 {
+    use TranslationNotificationTrait;
+
     public $components = [
         'NotifyBiz',
         'GlEmail',
@@ -83,7 +87,14 @@ class PostsController extends BasePagingController
             }
 
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+
             $this->notifyNewPost($res, $circleId);
+
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+            if ($TeamTranslationLanguage->hasLanguage($this->getTeamId())) {
+                $this->sendTranslationUsageNotification($this->getTeamId());
+            }
 
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
@@ -96,11 +107,6 @@ class PostsController extends BasePagingController
 
     private function createDraftPost(array $postBody, $circleId, $userId, $teamId, array $files)
     {
-        /** @var VideoStream $VideoStream */
-        $VideoStream = ClassRegistry::init("VideoStream");
-        /** @var User $User */
-        $User = ClassRegistry::init("User");
-
         /** @var PostDraftService $PostDraftService */
         $PostDraftService = ClassRegistry::init("PostDraftService");
         $postDraft = $PostDraftService->createPostDraftWithResources(
@@ -121,7 +127,7 @@ class PostsController extends BasePagingController
      * Notify new post to other members
      *
      * @param PostEntity $newPost
-     * @param int $circleId
+     * @param int        $circleId
      */
     private function notifyNewPost(PostEntity $newPost, int $circleId)
     {
@@ -183,7 +189,7 @@ class PostsController extends BasePagingController
     public function get_reads(int $postId)
     {
         $error = $this->validatePostAccess($postId);
-        
+
         if (!empty($error)) {
             return $error;
         }
@@ -321,7 +327,8 @@ class PostsController extends BasePagingController
 
         $post = $PostExtender->extend($post, $this->getUserId(), $this->getTeamId(), [
             PostExtender::EXTEND_ALL,
-            PostExtender::EXTEND_COMMENTS_ALL
+            PostExtender::EXTEND_COMMENTS_ALL,
+            PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
 
         // Make user read this post
@@ -531,6 +538,12 @@ class PostsController extends BasePagingController
             $res = $CommentService->add($commentData, $postId, $userId, $teamId, $fileIDs);
             $mentionedUserIds = $this->Mention->getUserList($commentData['body'], $this->getTeamId(), $this->getUserId());
             $this->notifyNewComment($res['id'], $postId, $this->getUserId(), $this->getTeamId(), $mentionedUserIds);
+
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+            if ($TeamTranslationLanguage->hasLanguage($this->getTeamId())) {
+                $this->sendTranslationUsageNotification($teamId);
+            }
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (InvalidArgumentException $e) {
@@ -771,10 +784,10 @@ class PostsController extends BasePagingController
      * Send notification about new comment on a post.
      * Will notify post's author & other users who've commented on the post
      *
-     * @param int $commentId Comment ID of the new comment
-     * @param int $postId Post ID where the comment belongs to
-     * @param int $userId User ID of the author of the new comment
-     * @param int $teamId
+     * @param int   $commentId        Comment ID of the new comment
+     * @param int   $postId           Post ID where the comment belongs to
+     * @param int   $userId           User ID of the author of the new comment
+     * @param int   $teamId
      * @param int[] $mentionedUserIds List of user IDs of mentioned users
      */
     private function notifyNewComment(int $commentId, int $postId, int $userId, int $teamId, array $mentionedUserIds = [])

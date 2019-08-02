@@ -175,6 +175,10 @@ class ActionResultTest extends GoalousTestCase
         $this->assertNotEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
     }
 
+    public function test_editActionWithTranslation_success(){
+        // TODO check whether translation is deleted when editing an action
+    }
+
     function testGetUniqueUserCount()
     {
         $this->_setDefault();

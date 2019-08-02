@@ -29,7 +29,7 @@ class LangComponent extends CakeObject
 
     protected function _setLangList()
     {
-        $this->availableLanguages['jpn'] = __("日本語");
+        $this->availableLanguages['jpn'] = __("Japanese");
         $this->availableLanguages['eng'] = __("English");
     }
 

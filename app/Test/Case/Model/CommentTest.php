@@ -1,4 +1,7 @@
 <?php
+
+use Goalous\Enum\Language as LanguageEnum;
+
 App::uses('GoalousTestCase', 'Test');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
@@ -36,6 +39,8 @@ class CommentTest extends GoalousTestCase
         'app.circle_member',
         'app.local_name',
         'app.post_share_user',
+        'app.team_translation_language',
+        'app.team_member'
     );
 
     /**
@@ -177,6 +182,7 @@ class CommentTest extends GoalousTestCase
     function testGetPostsComment()
     {
         $post_id = 99;
+        $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $data = [
             'team_id' => 1,
@@ -620,4 +626,39 @@ class CommentTest extends GoalousTestCase
         $this->assertInternalType('int', $comment['team_id']);
     }
 
+    public function test_updateLanguage_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $commentId = 1;
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEmpty($comment['language']);
+
+        $Comment->updateLanguage($commentId, LanguageEnum::ES);
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEquals(LanguageEnum::ES, $comment['language']);
+    }
+
+    public function test_clearLanguage_success()
+    {
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+
+        $commentId = 1;
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEmpty($comment['language']);
+
+        $Comment->updateLanguage($commentId, LanguageEnum::ES);
+
+        $comment = $Comment->getById($commentId);
+        $this->assertEquals(LanguageEnum::ES, $comment['language']);
+
+        $Comment->clearLanguage($commentId);
+        $comment = $Comment->getById($commentId);
+        $this->assertEmpty($comment['language']);
+    }
 }

@@ -6,6 +6,8 @@
  * Time: 17:57
  */
 
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('ActionResult', 'Model');
@@ -14,6 +16,9 @@ App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('AttachedFile', 'Model');
+App::uses('TeamMember', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::import('View', 'Helper/TimeExHelper');
@@ -69,13 +74,13 @@ class ActionService extends AppService
 
             // アクション保存
             $actionSaveData = [
-                'goal_id'                 => $goalId,
-                'team_id'                 => $teamId,
-                'user_id'                 => $userId,
-                'type'                    => ActionResult::TYPE_KR,
-                'name'                    => Hash::get($action, 'name'),
-                'key_result_id'           => $krId,
-                'completed'               => $now
+                'goal_id'       => $goalId,
+                'team_id'       => $teamId,
+                'user_id'       => $userId,
+                'type'          => ActionResult::TYPE_KR,
+                'name'          => Hash::get($action, 'name'),
+                'key_result_id' => $krId,
+                'completed'     => $now
             ];
             if (!$ActionResult->save($actionSaveData, false)) {
                 throw new Exception(sprintf("Failed create action. data:%s"
@@ -146,8 +151,15 @@ class ActionService extends AppService
             $GlRedis->delPreUploadedFile($teamId, $userId, $hash);
         }
 
-        return (int)$newActionId;
+        $postId = $Post->getByActionResultId($newActionId)['Post']['id'];
 
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
+        }
+
+        return (int)$newActionId;
     }
 
     /**
@@ -161,5 +173,27 @@ class ActionService extends AppService
         // 配列key振り直し
         $groupedActions = array_values($groupedActions);
         return $groupedActions;
+    }
+
+    /**
+     * Check if user can view the action post
+     *
+     * @param int $userId
+     * @param int $actionPostId
+     *
+     * @return bool
+     */
+    public function checkUserAccess(int $userId, int $actionPostId): bool
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $actionPost = $Post->getById($actionPostId);
+        $postType = Hash::get($actionPost, 'type');
+        $teamId = Hash::get($actionPost, 'team_id');
+
+        return ($postType == Post::TYPE_ACTION) && (!empty($TeamMember->getIdByTeamAndUserId($teamId, $userId)));
     }
 }

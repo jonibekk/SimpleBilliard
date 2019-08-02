@@ -4,6 +4,7 @@ App::uses('AttachedFile', 'Model');
 App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
+App::import('Service', 'TranslationService');
 App::import('Service', 'VideoStreamService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
@@ -20,6 +21,9 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('Translation', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -35,6 +39,7 @@ use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Goalous\Exception as GlException;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * Class PostService
@@ -612,6 +617,12 @@ class PostService extends AppService
             throw $e;
         }
 
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
+        }
+
         /** @var UnreadPostsRedisService $UnreadPostsRedisService */
         $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
         $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
@@ -887,6 +898,11 @@ class PostService extends AppService
                 }
             }
 
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
             //Delete post resources
             $deletedPosts = $PostResource->getAllPostResources($postId);
 
@@ -1020,8 +1036,8 @@ class PostService extends AppService
 
             $newData = [
                 'body'      => $newBody['body'],
-                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info'])  : null,
-                'created' => false // Prevent updating this field
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']) : null,
+                'created'   => false // Prevent updating this field
             ];
 
             $Post->clear();
@@ -1041,6 +1057,11 @@ class PostService extends AppService
             }
             $newResources = $this->filterNewResources($postId, $resources);
 
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
             if (!empty($newResources)) {
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
@@ -1051,10 +1072,11 @@ class PostService extends AppService
             $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update post', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace'   => $e->getTraceAsString()
             ]);
             throw $e;
         }
+
         /** @var PostEntity $result */
         $result = $Post->getEntity($postId);
         return $result;

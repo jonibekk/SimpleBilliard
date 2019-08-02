@@ -81,6 +81,36 @@ elseif ($displayBackButtonGoals): ?>
     <div id="app-view-elements-feed-posts">
         <?= $this->element("Feed/posts") ?>
     </div>
+    <div id="modal-alert-translation-error" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-action-dialog" role="document">
+            <div class="modal-content modal-action-content">
+                <div class="modal-header modal-action-header text-center">
+                    <h5 class="modal-title modal-action-title"><?=  __("Translation Failed") ?></h5>
+                </div>
+                <div class="modal-body modal-action-body">
+                    <p><?=  __("Please try again later.") ?></p>
+                </div>
+                <div class="modal-footer modal-action-footer">
+                    <button type="button" class="btn btn-secondary modal-action-cancel-button-full" data-dismiss="modal"><?=  __("Close") ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-alert-translation-limit" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-action-dialog" role="document">
+            <div class="modal-content modal-action-content">
+                <div class="modal-header modal-action-header text-center">
+                    <h5 class="modal-title modal-action-title"><?=  __("Translation is Stopped Temporarily") ?></h5>
+                </div>
+                <div class="modal-body modal-action-body">
+                    <p><?=  __("Because your team has reached the maximum number of translatable characters, the translation function is paused.") ?></p>
+                </div>
+                <div class="modal-footer modal-action-footer">
+                    <button type="button" class="btn btn-secondary modal-action-cancel-button-full" data-dismiss="modal"><?=  __("Close") ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
 <?php endif ?>
 <?php
 $next_page_num = 2;

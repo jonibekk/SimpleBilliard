@@ -1,6 +1,17 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Controller/Component', 'OgpComponent');
+App::import('Service', 'CommentService');
+App::import('Service', 'TranslationService');
+App::import('Service', 'TeamTranslationLanguageService');
+App::uses('Post', 'Model');
+App::uses('Comment', 'Model');
+App::uses('Translation', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('Translation', 'Model');
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * Class CommentService
@@ -23,8 +34,7 @@ class ApiCommentService extends AppService
 
         try {
             $comment = $Comment->getComment($id);
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             return [];
@@ -39,26 +49,51 @@ class ApiCommentService extends AppService
         $Post->id = Hash::get($data, 'Comment.post_id');
 
         try {
-            $Post->findById($Post->id);
+            $post = $Post->findById($Post->id);
 
             // OGP 情報を取得する URL が含まれるテキスト
             // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
             // それ以外の場合は body テキスト全体から URL を検出する
-            $url_text = Hash::get($data,'Comment.site_info_url');
+            $url_text = Hash::get($data, 'Comment.site_info_url');
             if (!$url_text) {
-                $url_text =  Hash::get($data, 'Comment.body');
+                $url_text = Hash::get($data, 'Comment.body');
             }
 
             $ogp = $this->_getOgpIndex($data);
             $data['Comment'] = am($data['Comment'], $ogp);
 
             // コメントを追加
-            if (!$Post->Comment->add($data)) {
+            if (!$commentId = $Post->Comment->add($data)) {
                 if (!empty($this->Post->Comment->validationErrors)) {
                     $error_msg = array_shift($this->Post->Comment->validationErrors);
                     throw new RuntimeException($error_msg[0]);
                 }
             }
+
+            $teamId = Hash::get($post, 'Post.team_id');
+
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            if ($TranslationService->canTranslate($teamId)) {
+                try {
+                    switch (Hash::get($post, 'Post.type')) {
+                        case Post::TYPE_NORMAL:
+                            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), $commentId);
+                            break;
+                        case Post::TYPE_ACTION:
+                            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST_COMMENT(), $commentId);
+                            break;
+                    }
+                } catch (Exception $e) {
+                    GoalousLog::error('Failed create translation on new post', [
+                        'message' => $e->getMessage(),
+                        'trace'   => $e->getTraceAsString(),
+                        'post.id' => $post['id'],
+                    ]);
+                }
+            }
+
         } catch (RuntimeException $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
@@ -121,6 +156,11 @@ class ApiCommentService extends AppService
             $Comment->begin();
             $Comment->delete($id);
             $PostFile->AttachedFile->deleteAllRelatedFiles($id, AttachedFile::TYPE_MODEL_COMMENT);
+
+            /** @var CommentService $CommentService */
+            $CommentService = ClassRegistry::init('CommentService');
+            $CommentService->deleteAllTranslations($id);
+
             $Comment->updateCounterCache(['post_id' => $id]);
             // Commit
             $Comment->commit();
@@ -153,6 +193,11 @@ class ApiCommentService extends AppService
 
             // Save comment data
             $Comment->commentEdit($data);
+
+            /** @var CommentService $CommentService */
+            $CommentService = ClassRegistry::init('CommentService');
+            $CommentService->deleteAllTranslations($id);
+
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
@@ -201,6 +246,7 @@ class ApiCommentService extends AppService
     /**
      * Return formatted data to be used on comments
      * from OGP data received from frontend.
+     *
      * @param $requestData
      *
      * @return array

@@ -37,8 +37,10 @@ App::import('Service', 'PostResourceService');
 App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Language as LanguageEnum;
 
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Mockery as mock;
 
 /**
  * CakeTestCase class
@@ -450,7 +452,8 @@ class GoalousTestCase extends CakeTestCase
         $termType = Term::TYPE_CURRENT,
         $tkrFlg = false,
         $valueUnit = 0
-    ) {
+    )
+    {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
@@ -468,7 +471,7 @@ class GoalousTestCase extends CakeTestCase
             'start_date'    => $startDate,
             'end_date'      => $endDate,
             'priority'      => $priority,
-            'tkr_flg'      => $tkrFlg,
+            'tkr_flg'       => $tkrFlg,
         ];
         $KeyResult->create();
         $KeyResult->save($kr, false);
@@ -1182,6 +1185,43 @@ class GoalousTestCase extends CakeTestCase
     }
 
     /**
+     * Insert translation language option to a team
+     *
+     * @param int          $teamId
+     * @param LanguageEnum $enum
+     *
+     * @throws Exception
+     */
+    protected function insertTranslationLanguage(int $teamId, LanguageEnum $enum)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        $data = [
+            'team_id'  => $teamId,
+            'language' => $enum->getValue()
+        ];
+
+        $TeamTranslationLanguage->create();
+        $TeamTranslationLanguage->save($data, false);
+    }
+
+    /**
+     * Get long article. 67,187 characters
+     *
+     * @return string
+     */
+    protected function getLongArticle(): string
+    {
+
+        $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
+
+        $article = file_get_contents($path);
+
+        return $article;
+    }
+
+    /**
      * Create a new post with attachment
      *
      * @param int $circleId
@@ -1387,5 +1427,25 @@ class GoalousTestCase extends CakeTestCase
         $insertedData = $CircleMember->save($newData, false);
 
         return $insertedData['CircleMember'];
+    }
+
+    protected function createTranslatorClientMock(string $sourceLanguage = null, string $translation = null)
+    {
+        $translatorClient = mock::mock('GoogleTranslatorClient');
+
+        if (empty($sourceLanguage)) {
+            $sourceLanguage = LanguageEnum::EN;
+        }
+        if (empty($translation)) {
+            $translation = 'Esta es una muestra de traducción.';
+        }
+
+        $returnValue = new TranslationResult($sourceLanguage, $translation, '');
+
+        $translatorClient->shouldReceive('translate')
+            ->once()
+            ->andReturn($returnValue);
+
+        ClassRegistry::addObject(GoogleTranslatorClient::class, $translatorClient);
     }
 }

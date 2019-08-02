@@ -1,13 +1,18 @@
 <?php
+
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
+App::uses('Translation', 'Controller');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'ActionService');
+App::import('Service', 'TranslationService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
-/** @noinspection PhpUndefinedClassInspection */
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 /**
  * Goals Controller
@@ -16,6 +21,8 @@ App::import('Service', 'KeyResultService');
  */
 class GoalsController extends AppController
 {
+    use TranslationNotificationTrait;
+
     public $components = [
         'Security',
     ];
@@ -888,6 +895,9 @@ class GoalsController extends AppController
             if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->GoalMember->isCollaborated($action['goal_id'])) {
                 throw new RuntimeException(__("You have no permission."));
             }
+
+            $post = $this->Goal->Post->getByActionResultId($arId);
+
             $this->Goal->ActionResult->id = $arId;
             $this->Goal->ActionResult->delete();
             $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($arId,
@@ -922,6 +932,12 @@ class GoalsController extends AppController
 //                $kr = $KeyResultService->get($krId);
 //                $KeyResultService->removeGoalMembersCacheInDashboard($kr['goal_id'], false);
             }
+
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $post['Post']['id']);
+
             $this->Goal->ActionResult->commit();
         } catch (RuntimeException $e) {
             $this->Goal->ActionResult->rollback();
@@ -1379,6 +1395,13 @@ class GoalsController extends AppController
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             $url = $this->referer();
             $post = $this->Goal->Post->getByActionResultId($ar_id);
+
+            // Delete translations
+            /** @var Translation $Translation */
+            $Translation = ClassRegistry::init('Translation');
+            $Translation->eraseAllTranslations(TranslationContentType::ACTION_POST(), $post['Post']['id']);
+            $this->Goal->Post->clearLanguage($post['Post']['id']);
+
             if ($post) {
                 $url = [
                     'controller' => 'posts',
@@ -1517,15 +1540,35 @@ class GoalsController extends AppController
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
-                || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                    $this->Goal->ActionResult->getLastInsertID(), $share,
-                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
-                || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
-                    AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                    $file_ids)
+                || !$goalPost = $this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
+                        $this->Goal->ActionResult->getLastInsertID(), $share,
+                        PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+                    || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
+                        AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                        $file_ids)
             ) {
                 throw new RuntimeException(__("Failed to add an action."));
             }
+
+            // Make translation
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+
+            $teamId = TeamStatus::getCurrentTeam()->getTeamId();
+
+            if ($TranslationService->canTranslate($teamId)) {
+                try {
+                    $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $goalPost['Post']['id']);
+                    // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
+                    $this->sendTranslationUsageNotification($teamId);
+                } catch (Exception $e) {
+                    GoalousLog::error('Failed create translation on new post', [
+                        'message'  => $e->getMessage(),
+                        'posts.id' => $this->Post->getLastInsertID(),
+                    ]);
+                }
+            }
+
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
             if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {

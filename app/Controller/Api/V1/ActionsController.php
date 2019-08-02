@@ -5,12 +5,16 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
 App::import('Service', 'AttachedFileService');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TeamMember', 'Model');
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 /**
  * Class ActionsController
  */
 class ActionsController extends ApiController
 {
+    use TranslationNotificationTrait;
 
     public $components = [
         'Notification',
@@ -64,6 +68,13 @@ class ActionsController extends ApiController
             $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
             $this->Goal->ActionResult->getLastInsertID());
+
+        // Send translation usage notification if applicable
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        if ($TeamTranslationLanguage->hasLanguage($this->current_team_id)) {
+            $this->sendTranslationUsageNotification($this->current_team_id);
+        }
 
         // TODO:削除 APIはステートレスであるべき
         $this->Notification->outSuccess(__("Added an action."));

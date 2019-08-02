@@ -13,6 +13,8 @@ App::import('Lib/Network/Response', 'ErrorResponse');
  */
 class PostsController extends ApiController
 {
+    use TranslationNotificationTrait;
+
     public function beforeFilter()
     {
         parent::beforeFilter();

@@ -1,9 +1,12 @@
 <?php
 App::import('Service', 'AppService');
+App::import('Service', 'TeamTranslationLanguageService');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Class TeamMemberService
@@ -152,6 +155,113 @@ class TeamMemberService extends AppService
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             throw $exception;
+        }
+    }
+
+    /**
+     * Get user's default translation language in a team. Will preferentially choose language from
+     *                                browser language list.
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages Languages supported by user's browser.
+     *
+     * @return array
+     *              ["en" => "English"]
+     *
+     * @throws Exception
+     */
+    public function getDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages = []): array
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
+            throw new GlException\GoalousNotFoundException("Team does not have translation languages");
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+
+        if (empty($defaultLanguage) || !$TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
+
+            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+            if (!empty($browserLanguages)) {
+                $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+            }
+
+            if (empty($topBrowserLanguage)) {
+                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+            } else {
+                $defaultLanguage = $topBrowserLanguage;
+            }
+
+            $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
+        }
+
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+        $languageInfo = $TranslationLanguage->getLanguageByCode($defaultLanguage);
+
+        return [$languageInfo['language'] => __($languageInfo['intl_name'])];
+    }
+
+    /**
+     * Get language code of default translation language of an user in a team. Will preferentially choose language from
+     *                                browser language list.
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages Languages supported by user's browser.
+     *
+     * @return string ISO 639-1 Language Code
+     *
+     * @throws Exception
+     */
+    public function getDefaultTranslationLanguageCode(int $teamId, int $userId, array $browserLanguages = []): string
+    {
+        return array_keys($this->getDefaultTranslationLanguage($teamId, $userId, $browserLanguages))[0];
+    }
+
+    /**
+     * Set user's default translation language in a team
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     * @param string $langCode
+     * @param bool   $overwriteFlg Whether language is saved even when data exists.
+     *                             TRUE for overwriting, FALSE for skipping when data exists
+     *
+     * @throws Exception
+     */
+    public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode, bool $overwriteFlg = true)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        // If user already has a default translation language & overwriting is not allowed, end method
+        if (!($overwriteFlg || empty($TeamMember->getDefaultTranslationLanguage($teamId, $userId)))) {
+            return;
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $TeamMember->setDefaultTranslationLanguage($teamId, $userId, $langCode);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to set default translation language.", [
+                'message'                      => $e->getMessage(),
+                'trace'                        => $e->getTraceAsString(),
+                'team_id'                      => $teamId,
+                'user_id'                      => $userId,
+                'default_translation_language' => $langCode
+            ]);
+            throw $e;
         }
     }
 }

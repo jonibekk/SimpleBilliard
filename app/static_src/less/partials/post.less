@@ -6,11 +6,11 @@
 .post-saveItem {
   &:extend(.fa-module);
   margin-right: 12px;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1em;
   cursor: pointer;
   &.mod-on {
-    color: @subColor15;
+    color: @crimsonPink;
     &:before {
       content: "\f02e"; // fa-bookmark
     }
@@ -21,11 +21,26 @@
       content: "\f097"; // fa-bookmark-o
     }
   }
+  > span {
+    font-size: 12px;
+    font-weight: bold;
+    -webkit-font-smoothing: initial;
+  }
 }
 
 i.mention {
   padding: 3px;
   border-radius: 5px;
+  &.to-me {
+    background-color: @unreadRed;
+  }
+}
+// For translation mention
+span.mention {
+  padding: 3px;
+  border-radius: 5px;
+  font-style: italic;
+  font-weight: bold;
   &.to-me {
     background-color: @unreadRed;
   }
