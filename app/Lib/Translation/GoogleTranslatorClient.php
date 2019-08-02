@@ -35,7 +35,9 @@ class GoogleTranslatorClient extends BaseTranslatorClient
         $translationResultArray = [];
 
         foreach ($translationResults as $translationResult) {
-            $translationResultArray[] = new TranslationResult($translationResult['source'], $translationResult['text'], $targetLanguage);
+            // Used to convert NCRs to symbols
+            $decodedString = html_entity_decode($translationResult['text'], ENT_QUOTES | ENT_XML1, 'UTF-8');
+            $translationResultArray[] = new TranslationResult($translationResult['source'], $decodedString, $targetLanguage);
         }
 
         return $translationResultArray;
