@@ -101,12 +101,27 @@ class MentionComponent extends Component
     {
         $result = $text;
         $result = preg_replace(self::getMentionReg('(.*?):(.*?)', 'm'),
-            '<span class="mention" mention="${1}">@${2}</span>', $result);
+            '<span class="mention" translate="no" mention="${1}">${2}</span>', $result);
         return $result;
     }
 
     /**
-     * Replace all mention HTML tags in content with mention string
+     * Replace all mention HTML tags in content with mention string for API v1
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionTagForTranslationV1(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace('/<span class="mention" translate="no" mention=".*?">(.*?)<\/span>/m',
+            '<span class="mention">@${1}</span>', $result);
+        return $result;
+    }
+
+    /**
+     * Replace all mention HTML tags in content with mention string for API v2
      *
      * @param $text     string the content should be replaced
      *
@@ -115,7 +130,7 @@ class MentionComponent extends Component
     public static function replaceMentionTagForTranslationV2(string $text): string
     {
         $result = $text;
-        $result = preg_replace('/<span class="mention" mention="(.*?)">@(.*?)<\/span>/m',
+        $result = preg_replace('/<span class="mention" translate="no" mention="(.*?)">(.*?)<\/span>/m',
             self::$PREFIX . '${1}:${2}' . self::$SUFFIX, $result);
         return $result;
     }
