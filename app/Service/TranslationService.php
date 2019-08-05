@@ -78,6 +78,37 @@ class TranslationService extends AppService
         return new TranslationResult($sourceModel['language'], $translation['body'], $targetLanguage);
     }
 
+
+    /**
+     *  Get translation for a data for API v2.
+     *
+     * @param TranslationContentType $contentType Content type.
+     * @param int                    $contentId   Id of content type.
+     *                                            ACTION_POST => posts.id
+     *                                            CIRCLE_POST => posts.id
+     *                                            CIRCLE_POST_COMMENT => comments.id
+     *                                            ACTION_POST_COMMENT => comments.id
+     * @param string                 $targetLanguage
+     *
+     * @return TranslationResult
+     * @throws Exception
+     */
+    public function getTranslationV2(TranslationContentType $contentType, int $contentId, string $targetLanguage): TranslationResult
+    {
+        $result = $this->getTranslation($contentType, $contentId, $targetLanguage);
+
+        switch ($contentType->getValue()) {
+            case TranslationContentType::CIRCLE_POST_COMMENT:
+            case TranslationContentType::ACTION_POST_COMMENT:
+                $translation = $result->getTranslation();
+                $translation = MentionComponent::replaceMentionTagForTranslationV2($translation);
+                return new TranslationResult($result->getSourceLanguage(), $translation, $result->getTargetLanguage());
+                break;
+        };
+
+        return $result;
+    }
+
     /**
      * Delete existing entry
      *
