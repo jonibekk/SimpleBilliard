@@ -1049,22 +1049,14 @@ class AppController extends BaseController
         $teamId = $this->current_team_id;
         $userId = $this->Auth->user('id');
 
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-
-        // If team doesn't have translation feature enabled, return
-        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
-            return;
-        }
-
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init('TeamMemberService');
         $browserLanguages = CakeRequest::acceptLanguage();
 
         try {
-            $TeamMemberService->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages, false);
+            /** @var TeamMemberService $TeamMemberService */
+            $TeamMemberService = ClassRegistry::init('TeamMemberService');
+            $TeamMemberService->initializeDefaultTranslationLanguage($teamId, $userId, $browserLanguages);
         } catch (Exception $e) {
-            GoalousLog::error("Exception when setting user's default translation language.", [
+            GoalousLog::error("Exception when initializing user's default translation language.", [
                 'message'   => $e->getMessage(),
                 'trace'     => $e->getTraceAsString(),
                 'users.id'  => $userId,

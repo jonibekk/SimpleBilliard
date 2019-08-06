@@ -283,4 +283,35 @@ class TeamMemberService extends AppService
 
         return $defaultLanguage;
     }
+
+    /**
+     * Initialize user's default translation language in a team
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages
+     *
+     * @throws Exception
+     */
+    public function initializeDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
+            return;
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+
+        // If user alreadh have a valid default translation language, return
+        if (!empty($defaultLanguage) && $TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
+            return;
+        }
+
+        $this->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages, false);
+    }
 }
