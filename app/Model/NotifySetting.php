@@ -417,7 +417,7 @@ class NotifySetting extends AppModel
             'mail_template'   => "translation_limit_reached",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-cog',
+            'icon_class'      => 'settings',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ],
@@ -425,7 +425,7 @@ class NotifySetting extends AppModel
             'mail_template'   => "translation_limit_closing",
             'field_real_name' => null,
             'field_prefix'    => '',
-            'icon_class'      => 'fa-cog',
+            'icon_class'      => 'settings',
             'groups'          => ['all', 'primary'],
             'force_notify'    => true,
         ]
