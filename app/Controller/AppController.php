@@ -20,6 +20,7 @@ App::uses('UrlUtil', 'Util');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'TeamMemberService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
@@ -286,6 +287,7 @@ class AppController extends BaseController
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
             $this->_setAvailEvaluation();
             $this->_setAllAlertCnt();
+            $this->setDefaultTranslationLanguage();
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
@@ -1034,6 +1036,41 @@ class AppController extends BaseController
                     }
                 }
             }
+        }
+    }
+
+    private function setDefaultTranslationLanguage()
+    {
+        // If not logged in, return
+        if (empty($this->current_team_id) || empty($this->Auth->user('id'))) {
+            return;
+        }
+
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        // If team doesn't have translation feature enabled, return
+        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
+            return;
+        }
+
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+        $browserLanguages = CakeRequest::acceptLanguage();
+
+        try {
+            $TeamMemberService->updateDefaultTranslationLanguageFromBrowser($teamId, $userId, $browserLanguages, false);
+        } catch (Exception $e) {
+            GoalousLog::error("Exception when setting user's default translation language.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'users.id'  => $userId,
+                'teams.id'  => $teamId,
+                'languages' => $browserLanguages
+            ]);
         }
     }
 

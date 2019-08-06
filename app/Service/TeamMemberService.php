@@ -187,20 +187,7 @@ class TeamMemberService extends AppService
 
         if (empty($defaultLanguage) || !$TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
 
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-
-            if (!empty($browserLanguages)) {
-                $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
-            }
-
-            if (empty($topBrowserLanguage)) {
-                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-            } else {
-                $defaultLanguage = $topBrowserLanguage;
-            }
-
-            $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
+            $this->updateDefaultTranslationLanguageFromBrowser($teamId, $userId, $browserLanguages);
         }
 
         /** @var TranslationLanguage $TranslationLanguage */
@@ -263,5 +250,34 @@ class TeamMemberService extends AppService
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Update team member's default translation language based on user's browser language. If not, use team's
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages ISO 639-1 language code array
+     * @param bool  $overwriteFlg     True for updating regardless if team member already has a default translation
+     *                                language
+     *
+     * @throws Exception
+     */
+    public function updateDefaultTranslationLanguageFromBrowser(int $teamId, int $userId, array $browserLanguages, bool $overwriteFlg = true)
+    {
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+        if (!empty($browserLanguages)) {
+            $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+        }
+
+        if (empty($topBrowserLanguage)) {
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        } else {
+            $defaultLanguage = $topBrowserLanguage;
+        }
+
+        $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage, $overwriteFlg);
     }
 }
