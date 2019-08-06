@@ -7,6 +7,8 @@ App::import('Service', 'CampaignService');
 App::import('Service', 'ChargeHistoryService');
 App::uses('PaymentSetting', 'Model');
 App::uses('Team', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('TransactionManager', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CreditCard', 'Model');
@@ -181,7 +183,7 @@ class PaymentService extends AppService
             $localCurrentDate = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Y-m-d');
         } else {
             $localCurrentDate = GoalousDateTime::createFromTimestamp($timestamp)->setTimeZoneByHour($timezone)
-                                               ->format('Y-m-d');
+                ->format('Y-m-d');
         }
 
         list($y, $m, $d) = explode('-', $localCurrentDate);
@@ -279,7 +281,8 @@ class PaymentService extends AppService
         $useDaysByNext = null,
         $allUseDays = null,
         array $paymentSetting = []
-    ): array {
+    ): array
+    {
         try {
             if ($chargeUserCnt == 0) {
                 throw new Exception(sprintf("Invalid user count. %s",
@@ -339,7 +342,8 @@ class PaymentService extends AppService
         Enum\Model\PaymentSetting\Currency $currencyType,
         string $upgradePlanCode,
         string $currentPlanCode
-    ): array {
+    ): array
+    {
         try {
             /** @var CampaignService $CampaignService */
             $CampaignService = ClassRegistry::init("CampaignService");
@@ -436,7 +440,8 @@ class PaymentService extends AppService
         Enum\Model\PaymentSetting\Currency $currency,
         $useDaysByNext = null,
         $allUseDays = null
-    ): string {
+    ): string
+    {
         $chargeRes = $this->calcRelatedTotalChargeByAddUsers($teamId, $userCnt, $useDaysByNext, $allUseDays);
         // Format ex 1980 → ¥1,980
         $res = $this->formatCharge($chargeRes['total_charge'], $currency->getValue());
@@ -458,7 +463,8 @@ class PaymentService extends AppService
         int $chargeUserCnt,
         Enum\Model\ChargeHistory\ChargeType $chargeType,
         array $paymentSetting = []
-    ): array {
+    ): array
+    {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         $isCampaign = $CampaignService->purchased($teamId);
@@ -627,7 +633,8 @@ class PaymentService extends AppService
      * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
      * @param int                                     $usersCount
      * @param int                                     $opeUserId
-     * @param int|null                                $timestampChargeDateTime timestamp of charge_histories.charge_datetime
+     * @param int|null                                $timestampChargeDateTime timestamp of
+     *                                                                         charge_histories.charge_datetime
      * @param array                                   $chargeInfo
      *
      * @return array charge response
@@ -640,7 +647,8 @@ class PaymentService extends AppService
         $opeUserId = null,
         $timestampChargeDateTime = null,
         $chargeInfo = []
-    ) {
+    )
+    {
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init("CampaignService");
         $isCampaign = $CampaignService->purchased($teamId);
@@ -885,7 +893,8 @@ class PaymentService extends AppService
         int $teamId,
         Enum\Model\ChargeHistory\ChargeType $chargeType,
         int $usersCount
-    ) {
+    )
+    {
         if ($chargeType->getValue() == Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE) {
             return $usersCount;
         }
@@ -914,7 +923,8 @@ class PaymentService extends AppService
         int $teamId,
         string $creditCardToken,
         array $paymentData
-    ) {
+    )
+    {
         $result = [
             'error'     => false,
             // TODO: fix key name to `statusCode`. 200 is not error code
@@ -1098,6 +1108,8 @@ class PaymentService extends AppService
                 $metaData
             );
 
+            $this->updatePaidTeamTranslationLimit($teamId);
+
             // Delete cache
             $Team->resetCurrentTeam();
 
@@ -1179,7 +1191,8 @@ class PaymentService extends AppService
         array $invoiceData,
         bool $checkSentInvoice = true,
         $pricePlanCode = null
-    ) {
+    )
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var TeamMember $TeamMember */
@@ -1263,6 +1276,8 @@ class PaymentService extends AppService
                 throw new Exception(sprintf("Error creating invoice payment: ",
                     AppUtil::varExportOneLine(compact('teamId', 'membersCount'))));
             }
+
+            $this->updatePaidTeamTranslationLimit($teamId);
 
             // Delete cache
             $Team->resetCurrentTeam();
@@ -1371,7 +1386,8 @@ class PaymentService extends AppService
         $userId = null,
         bool $checkSentInvoice = true,
         $rechargeTargetHistoryId = null
-    ): bool {
+    ): bool
+    {
         CakeLog::info(sprintf('register invoice: %s', AppUtil::jsonOneLine([
             'teams.id'     => $teamId,
             'charge_count' => $chargeMemberCount,
@@ -1675,7 +1691,8 @@ class PaymentService extends AppService
     public function findTargetInvoiceChargeHistories(
         int $teamId,
         int $time
-    ) {
+    )
+    {
         // Invoices for only Japanese team. So, $timezone will be always Japan time.
         $timezone = 9;
 
@@ -1715,7 +1732,8 @@ class PaymentService extends AppService
      */
     public function findMonthlyChargeCcTeams(
         int $time = REQUEST_TIMESTAMP
-    ): array {
+    ): array
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var ChargeHistory $ChargeHistory */
@@ -1780,7 +1798,8 @@ class PaymentService extends AppService
      */
     public function findMonthlyChargeInvoiceTeams(
         int $time = REQUEST_TIMESTAMP
-    ): array {
+    ): array
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var InvoiceHistory $InvoiceHistory */
@@ -1832,7 +1851,8 @@ class PaymentService extends AppService
         int $teamId,
         int $userId,
         array $payerData
-    ) {
+    )
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         $paySetting = $PaymentSetting->getUnique($teamId);
@@ -1924,7 +1944,8 @@ class PaymentService extends AppService
         Enum\Model\ChargeHistory\ChargeType $chargeType,
         int $usersCount = 1,
         int $opeUserId
-    ) {
+    )
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
 
@@ -2009,7 +2030,8 @@ class PaymentService extends AppService
         string $currentPlanCode,
         string $upgradePlanCode,
         int $opeUserId
-    ) {
+    )
+    {
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init("PaymentSetting");
         /** @var CampaignService $CampaignService */
@@ -2100,7 +2122,8 @@ class PaymentService extends AppService
     public function updateInvoice(
         int $teamId,
         array $invoiceData
-    ) {
+    )
+    {
         /** @var Invoice $Invoice */
         $Invoice = ClassRegistry::init('Invoice');
         $invoice = $Invoice->getByTeamId($teamId);
@@ -2354,5 +2377,53 @@ class PaymentService extends AppService
 
         $defaultAmountPerUser = $this->getDefaultAmountPerUserByCountry($country);
         return $defaultAmountPerUser;
+    }
+
+    /**
+     * Get payment base date of this month
+     *
+     * @param int $teamId
+     * @param int $currentTimeStamp
+     *
+     * @return GoalousDateTime
+     */
+    public function getCurrentMonthBaseDate(int $teamId, int $currentTimeStamp): GoalousDateTime
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $teamTimezone = Hash::get($Team->getById($teamId), 'Team.timezone');
+        $localCurrentTs = $currentTimeStamp + ($teamTimezone * HOUR);
+
+        $paymentSetting = $PaymentSetting->getUnique($teamId);
+
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
+        $paymentBaseDate = AppUtil::correctInvalidDate(
+            date('Y', $localCurrentTs),
+            date('m', $localCurrentTs),
+            $paymentBaseDay
+        );
+
+        return GoalousDateTime::createFromFormat('Y-m-d', $paymentBaseDate);
+    }
+
+    /**
+     * Update translation limit in paid team if team has translation feature enabled.
+     *
+     * @param int $teamId
+     */
+    private function updatePaidTeamTranslationLimit(int $teamId)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if ($TeamTranslationLanguage->hasLanguage($teamId)) {
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            $TeamTranslationStatus->setLimit($teamId, TRANSLATION_DEFAULT_LIMIT_PAID_TEAM);
+        }
     }
 }

@@ -1,4 +1,5 @@
-<?php App::uses('GoalousTestCase', 'Test');
+<?php
+App::uses('GoalousTestCase', 'Test');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 
@@ -480,6 +481,17 @@ class TeamTest extends GoalousTestCase
 
         $result = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::FREE_TRIAL, '2020-01-02');
         $this->assertEmpty($result);
+    }
+
+    public function test_filterPaidTeam_success()
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $teamIds = [4, 5, 6];
+
+        $queryResult = $Team->filterPaidTeam($teamIds);
+        $this->assertEquals([4, 5], $queryResult);
     }
 
     function _setDefault()

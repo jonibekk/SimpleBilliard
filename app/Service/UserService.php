@@ -7,8 +7,6 @@ App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 
-use Goalous\Enum as Enum;
-
 /**
  * Class UserService
  */

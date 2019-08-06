@@ -5,6 +5,11 @@ App::import('Lib/DataExtender/Extension', "CommentLikeExtension");
 App::import('Lib/DataExtender/Extension', "CommentReadDataExtension");
 App::import('Lib/DataExtender/Extension', "MentionsToMeExtension");
 App::import('Service', 'CommentService');
+App::import('Service', 'TeamMemberService');
+App::uses('Team', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
+App::uses('TranslationLanguage', 'Model');
 
 class CommentExtender extends BaseExtender
 {
@@ -14,6 +19,7 @@ class CommentExtender extends BaseExtender
     const EXTEND_READ = "ext:comment:read";
     const EXTEND_MENTIONS_TO_ME_IN_BODY = "ext:comment:mentions_to_me_in_body";
     const EXTEND_ATTACHED_FILES = "ext:comment:attached_files";
+    const EXTEND_TRANSLATION_LANGUAGE = "ext:comment:translation_language";
 
     public function extend(array $data, int $userId, int $teamId, array $extensions = []): array
     {
@@ -37,6 +43,53 @@ class CommentExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_ATTACHED_FILES)) {
             $data = $this->extendAttachedFiles($data);
         }
+
+        if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
+
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+            if ($TeamTranslationLanguage->hasLanguage($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
+
+                /** @var TeamTranslationStatus $TeamTranslationStatus */
+                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+                $limitReached = true;
+                $translationLanguages = [];
+
+                if (!$TeamTranslationStatus->isLimitReached($teamId)) {
+
+                    /** @var TeamMemberService $TeamMemberService */
+                    $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+                    $limitReached = false;
+
+                    $commentLanguage = Hash::get($data, 'language');
+
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+
+                    if ($userDefaultLanguage !== $commentLanguage) {
+
+                        $availableLanguages = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
+
+                        foreach ($availableLanguages as $availableLanguage) {
+                            if ($commentLanguage === $availableLanguage['language']) {
+                                continue;
+                            }
+                            $translationLanguages[] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                        }
+                    }
+                }
+                $data['translation_limit_reached'] = $limitReached;
+                $data['translation_languages'] = $translationLanguages;
+            }
+        }
+
         if ($this->includeExt($extensions, self::EXTEND_MENTIONS_TO_ME_IN_BODY)) {
             /** @var MentionsToMeExtension $MentionsToMeExtension */
             $MentionsToMeExtension = ClassRegistry::init('MentionsToMeExtension');
@@ -45,7 +98,6 @@ class CommentExtender extends BaseExtender
             $MentionsToMeExtension->setMap([$data['id'] => $data]);
             $data = $MentionsToMeExtension->extend($data, "id");
         }
-
 
         return $data;
     }
@@ -74,6 +126,55 @@ class CommentExtender extends BaseExtender
                 $data[$index] = $this->extendAttachedFiles($entry);
             }
         }
+
+        if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
+
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
+            /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+            $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+            if ($TeamTranslationLanguage->hasLanguage($teamId) &&
+                ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
+                /** @var TeamTranslationStatus $TeamTranslationStatus */
+                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+                if ($TeamTranslationStatus->isLimitReached($teamId)) {
+                    foreach ($data as &$entry) {
+                        $entry['translation_limit_reached'] = true;
+                        $entry['translation_languages'] = [];
+                    }
+                } else {
+                    /** @var TeamMemberService $TeamMemberService */
+                    $TeamMemberService = ClassRegistry::init('TeamMemberService');
+                    /** @var TranslationLanguage $TranslationLanguage */
+                    $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+                    $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
+
+                    foreach ($data as &$entry) {
+
+                        $commentLanguage = Hash::get($entry, 'language');
+
+                        $entry['translation_limit_reached'] = false;
+                        $entry['translation_languages'] = [];
+
+                        if ($userDefaultLanguage !== $commentLanguage) {
+
+                            $availableLanguages = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
+
+                            foreach ($availableLanguages as $availableLanguage) {
+                                if ($commentLanguage === $availableLanguage['language']) {
+                                    continue;
+                                }
+                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if ($this->includeExt($extensions, self::EXTEND_MENTIONS_TO_ME_IN_BODY)) {
             /** @var MentionsToMeExtension $MentionsToMeExtension */
             $MentionsToMeExtension = ClassRegistry::init('MentionsToMeExtension');
@@ -88,6 +189,7 @@ class CommentExtender extends BaseExtender
 
     /**
      * @param array $data
+     *
      * @return array
      */
     private function extendAttachedFiles(array $data)

@@ -130,8 +130,8 @@ class TeamMemberTest extends GoalousTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
-                    'status' => TeamMember::USER_STATUS_INACTIVE,
+                    'user_id' => $uid,
+                    'status'  => TeamMember::USER_STATUS_INACTIVE,
                 ]
             ],
             'Team'       => [
@@ -150,8 +150,8 @@ class TeamMemberTest extends GoalousTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
-                    'status' => TeamMember::USER_STATUS_ACTIVE,
+                    'user_id' => $uid,
+                    'status'  => TeamMember::USER_STATUS_ACTIVE,
                 ]
             ],
             'Team'       => [
@@ -185,9 +185,9 @@ class TeamMemberTest extends GoalousTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
-                    'status' => TeamMember::USER_STATUS_ACTIVE,
-                    'admin_flg'  => false,
+                    'user_id'   => $uid,
+                    'status'    => TeamMember::USER_STATUS_ACTIVE,
+                    'admin_flg' => false,
                 ]
             ],
             'Team'       => [
@@ -205,9 +205,9 @@ class TeamMemberTest extends GoalousTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
-                    'status' => TeamMember::USER_STATUS_ACTIVE,
-                    'admin_flg'  => true,
+                    'user_id'   => $uid,
+                    'status'    => TeamMember::USER_STATUS_ACTIVE,
+                    'admin_flg' => true,
                 ]
             ],
             'Team'       => [
@@ -278,9 +278,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->my_uid = $uid;
         $this->TeamMember->save(['id' => 1, 'evaluation_enable_flg' => false]);
         $expected = [
-            (int)2 => '2',
-            (int)3 => '12',
-            (int)4 => '13',
+            (int)2  => '2',
+            (int)3  => '12',
+            (int)4  => '13',
             (int)13 => '3',
         ];
         $actual = $this->TeamMember->getAllMemberUserIdList(true, true, true);
@@ -1336,7 +1336,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
-            'status' => TeamMember::USER_STATUS_ACTIVE
+            'status'        => TeamMember::USER_STATUS_ACTIVE
         ];
         $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
@@ -1354,7 +1354,7 @@ class TeamMemberTest extends GoalousTestCase
             'user_id'       => $user_id,
             'team_id'       => $team_id,
             'coach_user_id' => $coach_user_id,
-            'status' => TeamMember::USER_STATUS_ACTIVE
+            'status'        => TeamMember::USER_STATUS_ACTIVE
         ];
         $this->TeamMember->save($params, false);
         $res = $this->TeamMember->getMyMembersList($coach_user_id);
@@ -1374,7 +1374,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'status' => TeamMember::USER_STATUS_ACTIVE,
+            'status'                => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -1391,7 +1391,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'status' => TeamMember::USER_STATUS_INACTIVE,
+            'status'                => TeamMember::USER_STATUS_INACTIVE,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -1408,7 +1408,7 @@ class TeamMemberTest extends GoalousTestCase
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
-            'status'            => TeamMember::USER_STATUS_ACTIVE,
+            'status'                => TeamMember::USER_STATUS_ACTIVE,
             'evaluation_enable_flg' => 0
         ];
         $this->TeamMember->current_team_id = $team_id;
@@ -2021,11 +2021,11 @@ class TeamMemberTest extends GoalousTestCase
 
         // TeamMember: is not admin
         $this->TeamMember->save([
-            'id'         => 1,
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'admin_flg'  => false,
-            'status' => TeamMember::USER_STATUS_ACTIVE
+            'id'        => 1,
+            'user_id'   => 1,
+            'team_id'   => 1,
+            'admin_flg' => false,
+            'status'    => TeamMember::USER_STATUS_ACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
@@ -2037,22 +2037,22 @@ class TeamMemberTest extends GoalousTestCase
 
         // TeamMember: not active, User: active
         $this->TeamMember->save([
-            'id'         => 1,
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'admin_flg'  => true,
-            'status' => TeamMember::USER_STATUS_INACTIVE
+            'id'        => 1,
+            'user_id'   => 1,
+            'team_id'   => 1,
+            'admin_flg' => true,
+            'status'    => TeamMember::USER_STATUS_INACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
 
         // TeamMember: not active, User: not active
         $this->TeamMember->save([
-            'id'         => 1,
-            'user_id'    => 1,
-            'team_id'    => 1,
-            'admin_flg'  => true,
-            'status' => TeamMember::USER_STATUS_ACTIVE
+            'id'        => 1,
+            'user_id'   => 1,
+            'team_id'   => 1,
+            'admin_flg' => true,
+            'status'    => TeamMember::USER_STATUS_ACTIVE
         ]);
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
@@ -2189,7 +2189,7 @@ class TeamMemberTest extends GoalousTestCase
     {
         $this->TeamMember->deleteAll(['TeamMember.del_flg' => false]);
         $this->createActiveUser(1);
-        $ret = $this->TeamMember->countChargeTargetUsersEachTeam([1,2]);
+        $ret = $this->TeamMember->countChargeTargetUsersEachTeam([1, 2]);
         // TODO: Add other pattern tests
     }
 
@@ -2228,7 +2228,7 @@ class TeamMemberTest extends GoalousTestCase
     {
         $teamId = 1;
         $allMemberIds = Hash::extract($this->TeamMember->find('all', [
-            'fields' => ['user_id'],
+            'fields'     => ['user_id'],
             'conditions' => ['team_id' => $teamId]
         ]), '{n}.TeamMember.user_id');
 
@@ -2263,8 +2263,81 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
         $this->assertEquals(count($res), 4);
         $this->assertEquals($res, [2, 12, 13, $userId]);
-
     }
+
+    public function test_setDefaultTranslationLanguage_success()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $userId = 1;
+        $teamId = 1;
+        $newLanguage = Enum\Language::DE;
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, $newLanguage);
+        $language = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEquals($newLanguage, $language);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_setDefaultTranslationLanguageMemberNotExist_failure()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $userId = 495;
+        $teamId = 4713;
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::DE);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function test_setDefaultTranslationLanguageInvalidLanguage_failure()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $userId = 1;
+        $teamId = 1;
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, 'xx');
+    }
+
+    public function test_getDefaultTranslationLanguage_success()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $userId = 1;
+        $teamId = 1;
+        $newLanguage = Enum\Language::ES;
+
+        $language = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEmpty($language);
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, $newLanguage);
+        $language = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEquals($newLanguage, $language);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_getDefaultTranslationLanguageMemberNotExist_failure()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $userId = 495;
+        $teamId = 4713;
+
+        $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+    }
+
     public function test_getUnique()
     {
         $res = $this->TeamMember->getUnique(1, 1);

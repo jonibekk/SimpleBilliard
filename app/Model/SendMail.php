@@ -37,6 +37,8 @@ class SendMail extends AppModel
     const TYPE_TMPL_RECHARGE = 20;
     const TYPE_TMPL_DELETE_TEAM_MANUAL = 21;
     const TYPE_TMPL_DELETE_TEAM_AUTO = 22;
+    const TYPE_TMPL_TRANSLATION_LIMIT_REACHED = 23;
+    const TYPE_TMPL_TRANSLATION_LIMIT_CLOSING = 24;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
@@ -144,6 +146,16 @@ class SendMail extends AppModel
             'template' => 'delete_team_auto',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_TRANSLATION_LIMIT_REACHED => [
+            'subject'  => null,
+            'template' => 'translation_limit_reached',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_TRANSLATION_LIMIT_CLOSING => [
+            'subject'  => null,
+            'template' => 'translation_limit_closing',
+            'layout'   => 'default',
+        ],
     ];
 
     public function _setTemplateSubject()
@@ -168,6 +180,8 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_RECHARGE]['subject'] = __("We recharged your team");
         self::$TYPE_TMPL[self::TYPE_TMPL_DELETE_TEAM_MANUAL]['subject'] = __("The team has been deleted");
         self::$TYPE_TMPL[self::TYPE_TMPL_DELETE_TEAM_AUTO]['subject'] = __("The team has been deleted");
+        self::$TYPE_TMPL[self::TYPE_TMPL_TRANSLATION_LIMIT_REACHED]['subject'] = __("Pause translation for your team");
+        self::$TYPE_TMPL[self::TYPE_TMPL_TRANSLATION_LIMIT_CLOSING]['subject'] = __("Approaching the limit of translatable number.");
     }
 
     function __construct($id = false, $table = null, $ds = null)

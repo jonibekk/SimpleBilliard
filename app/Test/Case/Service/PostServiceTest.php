@@ -18,10 +18,11 @@ App::import('Model/Entity', 'PostEntity');
 App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Language as LanguageEnum;
 use Mockery as mock;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
-
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * @property CircleService CircleService
@@ -38,6 +39,7 @@ class PostServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.post',
         'app.team',
+        'app.team_member',
         'app.user',
         'app.post_file',
         'app.attached_file',
@@ -63,7 +65,11 @@ class PostServiceTest extends GoalousTestCase
         'app.key_result',
         'app.goal',
         'app.post_file',
-        'app.comment_file'
+        'app.comment_file',
+        'app.team_translation_language',
+        'app.team_translation_status',
+        'app.mst_translation_language',
+        'app.translation'
     ];
 
     /**
@@ -1197,11 +1203,11 @@ class PostServiceTest extends GoalousTestCase
 
         $resources = [
             [
-                "id"        => $newFiles[0]['attached_file_id'],
+                "id"            => $newFiles[0]['attached_file_id'],
                 "resource_type" => Enum\Model\Post\PostResourceType::IMAGE
             ],
             [
-                "id"        => $newVideos[0]['id'],
+                "id"            => $newVideos[0]['id'],
                 "resource_type" => Enum\Model\Post\PostResourceType::VIDEO_STREAM
             ],
             [
@@ -1220,5 +1226,103 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals(3, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
         $this->assertEquals(2, $PostFile->find('count', ['conditions' => ['post_id' => $newPostId]]));
         $this->assertEquals(2, $PostResource->findMaxResourceOrderOfPost($newPostId));
+    }
+
+    public function test_addCirclePostWithTranslation_success()
+    {
+        $this->createTranslatorClientMock();
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $circleId = 1;
+        $userId = 1;
+        $newBody['type'] = Post::TYPE_NORMAL;
+        $newBody['body'] = "Some content";
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ID());
+
+        $newPostEntity = $PostService->addCirclePost($newBody, $circleId, $userId, $teamId);
+
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'], LanguageEnum::JA));
+        $this->assertEquals(LanguageEnum::EN, $Post->getById($newPostEntity['id'])['language']);
+    }
+
+    public function test_editCirclePostWithTranslation_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $userId = 1;
+        $postId = 1;
+        $otherPostId = 2;
+        $newPostBody = "Translation is gone.";
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+
+        $newBody['body'] = $newPostBody;
+
+        $PostService->editPost($newBody, $postId, $userId, $teamId, []);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
+    }
+
+    public function test_deleteCirclePostWithTranslation_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $postId = 1;
+        $otherPostId = 2;
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+
+        $PostService->softDelete($postId);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
     }
 }

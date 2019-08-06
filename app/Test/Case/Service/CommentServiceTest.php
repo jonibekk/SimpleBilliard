@@ -19,6 +19,8 @@ App::import('Service', 'CommentService');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Service/Request/Form', 'CommentUpdateRequest');
 
+use Goalous\Enum\Language as LanguageEnum;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Mockery as mock;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
@@ -55,6 +57,10 @@ class CommentServiceTest extends GoalousTestCase
         'app.user',
         'app.team',
         'app.local_name',
+        'app.translation',
+        'app.mst_translation_language',
+        'app.team_translation_status',
+        'app.team_translation_language'
     );
 
     public function test_addComment_success()
@@ -162,7 +168,7 @@ class CommentServiceTest extends GoalousTestCase
         $conditions = [
             'conditions' => [
                 'comment_id' => $commentId,
-                'del_flg' => false
+                'del_flg'    => false
             ]
         ];
 
@@ -222,7 +228,7 @@ class CommentServiceTest extends GoalousTestCase
         $commentUpdateRequest = new CommentUpdateRequest(99999999, 1, 1, 'test');
         $CommentService->edit($commentUpdateRequest);
     }
-    
+
     public function test_editComment_success()
     {
         /** @var CommentService $CommentService */
@@ -232,4 +238,105 @@ class CommentServiceTest extends GoalousTestCase
         $this->assertTrue($res instanceof CommentEntity);
         $this->assertEquals('EDITED', $res['body']);
     }
+
+    public function test_addCommentWithTranslation_success()
+    {
+        $this->createTranslatorClientMock();
+
+        /** @var Comment $Comment */
+        $Comment = ClassRegistry::init('Comment');
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $userId = 1;
+        $postId = 1;
+        $newBody['body'] = "Some content";
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ID());
+
+        $newCommentEntity = $CommentService->add($newBody, $postId, $userId, $teamId);
+
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $newCommentEntity['id'], LanguageEnum::JA));
+
+        $this->assertEquals(LanguageEnum::EN, $Comment->getById($newCommentEntity['id'])['language']);
+    }
+
+    public function test_editCommentWithTranslation_success()
+    {
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $userId = 1;
+        $commentId = 1;
+        $otherCommentId = 2;
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $otherCommentId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::ACTION_POST_COMMENT(), $commentId, LanguageEnum::DE);
+
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE));
+
+        $request = new CommentUpdateRequest($commentId, $userId, $teamId, "Something");
+
+        $CommentService->edit($request);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $otherCommentId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::ACTION_POST_COMMENT(), $commentId, LanguageEnum::DE));
+    }
+
+    public function test_deleteCommentWithTranslation_success()
+    {
+        /** @var CommentService $CommentService */
+        $CommentService = ClassRegistry::init('CommentService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $commentId = 1;
+        $otherCommentId = 2;
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $otherCommentId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::ACTION_POST_COMMENT(), $commentId, LanguageEnum::DE);
+
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE));
+
+        $CommentService->delete($commentId);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $commentId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $otherCommentId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::ACTION_POST_COMMENT(), $commentId, LanguageEnum::DE));
+    }
+
 }

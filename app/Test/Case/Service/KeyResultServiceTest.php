@@ -46,6 +46,7 @@ class KeyResultServiceTest extends GoalousTestCase
         'app.action_result',
         'app.action_result_file',
         'app.kr_values_daily_log',
+        'app.team_translation_language',
     );
 
     /**

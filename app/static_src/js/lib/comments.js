@@ -842,6 +842,7 @@ function evTargetToggleClick() {
     var comment_id = target_id.split('_')[1];
 
     if($obj.text() === $obj.attr("closed-text")){
+      turnOffTranslation(comment_id);
         evTargetCancelAnyEdit();
     }
 
@@ -978,6 +979,7 @@ function evTargetToggleClick() {
         });
     } else {
         if ($('#CommentEditForm_' + comment_id).is(':visible')) {
+            turnOnTranslation(comment_id);
             $("#jsGoTop").show();
             $obj.text($obj.attr("closed-text"));
             $('#CommentOgpClose_' + comment_id).hide();

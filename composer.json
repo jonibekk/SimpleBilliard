@@ -24,7 +24,8 @@
     "firebase/php-jwt": "^5.0",
     "ramsey/uuid": "^3.7",
     "mockery/mockery": "~1.1",
-    "bacon/bacon-qr-code": "^1.0"
+    "bacon/bacon-qr-code": "^1.0",
+    "google/cloud-translate": "^1.2"
   },
   "require-dev": {
     "phpunit/phpunit-selenium": "~1.2",

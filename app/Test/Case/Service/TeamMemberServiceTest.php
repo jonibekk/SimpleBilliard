@@ -22,6 +22,8 @@ class TeamMemberServiceTest extends GoalousTestCase
         'app.user',
         'app.team',
         'app.team_member',
+        'app.team_translation_language',
+        'app.mst_translation_language'
     );
 
     /**
@@ -136,5 +138,102 @@ class TeamMemberServiceTest extends GoalousTestCase
 
         $this->assertEquals(Enum\Model\TeamMember\Status::INACTIVE, $teamMember['status']);
         $this->assertEquals($newTeamId, $User->findById($teamMember['user_id'])['User']['default_team_id']);
+    }
+
+    public function test_getDefaultTranslationLanguage_success()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+        $userId = 1;
+
+        $this->insertTranslationLanguage($teamId, Enum\Language::ID());
+        $this->insertTranslationLanguage($teamId, Enum\Language::MS());
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEquals(Enum\Language::ID, array_keys($defaultLanguage)[0]);
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::MS);
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEquals(Enum\Language::MS, array_keys($defaultLanguage)[0]);
+
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::JA);
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+        $this->assertEquals(Enum\Language::ID, array_keys($defaultLanguage)[0]);
+    }
+
+    public function test_getDefaultTranslationLanguageCodeFromBrowser_success()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+
+        $this->insertTranslationLanguage($teamId, Enum\Language::EN());
+        $this->insertTranslationLanguage($teamId, Enum\Language::MS());
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 1, [Enum\Language::MS, Enum\Language::EN]);
+        $this->assertEquals(Enum\Language::MS, $defaultLanguage);
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 2, [Enum\Language::ID, Enum\Language::MS]);
+        $this->assertEquals(Enum\Language::MS, $defaultLanguage);
+
+        $defaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, 3, [Enum\Language::JA, Enum\Language::DE]);
+        $this->assertEquals(Enum\Language::EN, $defaultLanguage);
+    }
+
+
+    public function test_setDefaultTranslationLanguage_success()
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+        $userId = 1;
+
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::JA);
+        $this->assertEquals(Enum\Language::JA, $TeamMember->getDefaultTranslationLanguage($teamId, $userId));
+
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::ID);
+        $this->assertEquals(Enum\Language::ID, $TeamMember->getDefaultTranslationLanguage($teamId, $userId));
+
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::MS, false);
+        $this->assertEquals(Enum\Language::ID, $TeamMember->getDefaultTranslationLanguage($teamId, $userId));
+    }
+
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_getDefaultTranslationLanguageMemberNotExist_failure()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+        $userId = 839182;
+
+        $this->insertTranslationLanguage($teamId, Enum\Language::DE());
+
+        $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_getDefaultTranslationLanguageTeamNoLanguage_failure()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $teamId = 1;
+        $userId = 1;
+
+        $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
     }
 }
