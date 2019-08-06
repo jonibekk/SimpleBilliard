@@ -483,7 +483,7 @@ abstract class BaseApiController extends Controller
         $browserLanguages = CakeRequest::acceptLanguage();
 
         try {
-            $TeamMemberService->updateDefaultTranslationLanguageFromBrowser($teamId, $userId, $browserLanguages, false);
+            $TeamMemberService->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages, false);
         } catch (Exception $e) {
             GoalousLog::error("Exception when setting user's default translation language.", [
                 'message'   => $e->getMessage(),

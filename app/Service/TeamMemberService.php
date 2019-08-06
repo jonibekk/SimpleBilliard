@@ -186,8 +186,7 @@ class TeamMemberService extends AppService
         $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
 
         if (empty($defaultLanguage) || !$TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
-
-            $this->updateDefaultTranslationLanguageFromBrowser($teamId, $userId, $browserLanguages);
+            $defaultLanguage = $this->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages);
         }
 
         /** @var TranslationLanguage $TranslationLanguage */
@@ -261,9 +260,11 @@ class TeamMemberService extends AppService
      * @param bool  $overwriteFlg     True for updating regardless if team member already has a default translation
      *                                language
      *
+     * @return string Team member's new language
+     *
      * @throws Exception
      */
-    public function updateDefaultTranslationLanguageFromBrowser(int $teamId, int $userId, array $browserLanguages, bool $overwriteFlg = true)
+    public function updateDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages, bool $overwriteFlg = true): string
     {
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
@@ -279,5 +280,7 @@ class TeamMemberService extends AppService
         }
 
         $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage, $overwriteFlg);
+
+        return $defaultLanguage;
     }
 }
