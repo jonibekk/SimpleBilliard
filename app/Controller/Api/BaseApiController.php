@@ -5,9 +5,11 @@ App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
 App::uses('ErrorResponse', 'Lib/Network/Response');
+App::uses('TeamTranslationLanguage', 'Model');
 App::import('Lib/Status', 'TeamStatus');
 App::import('Lib/Auth', 'AccessAuthenticator');
 App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'TeamMemberService');
 
 /**
  * Parent controller for API v2
@@ -115,16 +117,18 @@ abstract class BaseApiController extends Controller
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
-                                    ->getResponse();
+                    ->getResponse();
                 return;
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
                 $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
-                                    ->getResponse();
+                    ->getResponse();
                 return;
             }
+
+            $this->setDefaultTranslationLanguage();
         }
 
         $this->_setAppLanguage();
@@ -150,7 +154,7 @@ abstract class BaseApiController extends Controller
      * Do not use this method if validating value is containing credential value.
      *
      * @param BaseValidator $validator
-     * @param array $validateValue
+     * @param array         $validateValue
      *
      * @return null|BaseApiResponse
      */
@@ -164,9 +168,9 @@ abstract class BaseApiController extends Controller
                 ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
-                'class' => get_class($e),
+                'class'   => get_class($e),
                 'message' => $e,
-                'values' => $validateValue,
+                'values'  => $validateValue,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
         }
@@ -309,7 +313,8 @@ abstract class BaseApiController extends Controller
      */
     private function _checkIgnoreRestriction(
         CakeRequest $request
-    ) {
+    )
+    {
         $commentArray = $this->_parseEndpointDocument($request);
 
         foreach ($commentArray as $commentLine) {
@@ -377,9 +382,9 @@ abstract class BaseApiController extends Controller
         } catch (\Throwable $throwable) {
             GoalousLog::error('Caught an throwable that could not catch anywhere.', [
                 'message' => $throwable->getMessage(),
-                'file' => $throwable->getFile(),
-                'line' => $throwable->getLine(),
-                'trace' => $throwable->getTraceAsString(),
+                'file'    => $throwable->getFile(),
+                'line'    => $throwable->getLine(),
+                'trace'   => $throwable->getTraceAsString(),
             ]);
             return ErrorResponse::internalServerError()
                 ->withException($throwable)
@@ -455,6 +460,32 @@ abstract class BaseApiController extends Controller
             : Enum\Language::JA();
     }
 
+    private function setDefaultTranslationLanguage()
+    {
+        // If not logged in, return
+        if (empty($this->_currentTeamId) || empty($this->_currentUserId)) {
+            return;
+        }
+
+        $teamId = $this->_currentTeamId;
+        $userId = $this->_currentUserId;
+        $browserLanguages = CakeRequest::acceptLanguage();
+
+        try {
+            /** @var TeamMemberService $TeamMemberService */
+            $TeamMemberService = ClassRegistry::init('TeamMemberService');
+            $TeamMemberService->initializeDefaultTranslationLanguage($teamId, $userId, $browserLanguages);
+        } catch (Exception $e) {
+            GoalousLog::error("Exception when initializing user's default translation language.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'users.id'  => $userId,
+                'teams.id'  => $teamId,
+                'languages' => $browserLanguages
+            ]);
+        }
+    }
+
     /**
      * Check whether JWT Auth has been set
      */
@@ -482,7 +513,8 @@ abstract class BaseApiController extends Controller
     /**
      * @return UserResourceRequest Current user's resource request
      */
-    protected function getUserResourceRequest(){
+    protected function getUserResourceRequest()
+    {
         return new UserResourceRequest($this->_currentUserId, $this->_currentTeamId, true);
     }
 
