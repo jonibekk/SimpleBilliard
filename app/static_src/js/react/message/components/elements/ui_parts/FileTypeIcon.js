@@ -8,7 +8,8 @@ export default class FileTypeIcon extends React.Component {
   render() {
     let class_name = "";
     // Case insensitive
-    switch (this.props.file_ext.toLowerCase()) {
+    let file_ext = this.props.file_ext || "";
+    switch (file_ext.toLowerCase()) {
       case "xls":
       case "xlsx":
         class_name = "fa fa-file-excel-o file-excel-icon";

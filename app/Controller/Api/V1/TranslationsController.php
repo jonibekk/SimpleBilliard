@@ -47,7 +47,7 @@ class TranslationsController extends ApiController
 
             $contentType = TranslationContentType::getEnumObj($contentTypeValue);
 
-            $translation = $TranslationService->getTranslation($contentType, $contentId, $language);
+            $translation = $TranslationService->getTranslationForApiV1($contentType, $contentId, $language);
 
         } catch (GoalousNotFoundException $e) {
             return $this->_getResponseNotFound($e->getMessage());
