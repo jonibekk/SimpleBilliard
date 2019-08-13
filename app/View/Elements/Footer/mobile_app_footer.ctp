@@ -15,7 +15,7 @@ $footerMenuList = [
     ],
     [
         'name'  => 'circles',
-        'url'   => '/circles',
+        'url'   => '/circles_via',
         'icon'  => 'group_work',
         'label' => __('Circle')
     ],
