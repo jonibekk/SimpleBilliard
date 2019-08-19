@@ -188,7 +188,7 @@ class MeController extends BasePagingController
 
     /**
      * Switch team
-     *
+     * @ignoreRestriction
      * @return ApiResponse|BaseApiResponse
      */
     public function put_switch_team()

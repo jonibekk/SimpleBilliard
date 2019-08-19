@@ -115,14 +115,12 @@ abstract class BaseApiController extends Controller
 
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
-                $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
                     ->getResponse();
                 return;
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
-                $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
                     ->getResponse();
                 return;
