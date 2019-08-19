@@ -11,3 +11,4 @@
 	path = docs/api
 	url = git@github.com:IsaoCorp/goalous-swagger.git
 	branch = master
+	ignore = all
