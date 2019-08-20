@@ -41,9 +41,6 @@ abstract class BaseApiController extends Controller
     /** @var TeamStatus */
     private $_teamStatus;
 
-    /** @var bool */
-    private $_stopInvokeFlag = false;
-
     /** @var JwtAuthentication */
     private $_jwtAuth;
 
@@ -369,9 +366,6 @@ abstract class BaseApiController extends Controller
      */
     public function invokeAction(CakeRequest $request)
     {
-        if ($this->_stopInvokeFlag) {
-            return false;
-        }
         if ($this->_beforeFilterResponse instanceof ErrorResponse) {
             return $this->_beforeFilterResponse;
         }
