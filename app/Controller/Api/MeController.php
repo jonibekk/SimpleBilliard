@@ -110,6 +110,7 @@ class MeController extends BasePagingController
 
     /**
      * Get user detail
+     * @ignoreRestriction
      */
     public function get_detail()
     {
@@ -188,7 +189,7 @@ class MeController extends BasePagingController
 
     /**
      * Switch team
-     *
+     * @ignoreRestriction
      * @return ApiResponse|BaseApiResponse
      */
     public function put_switch_team()

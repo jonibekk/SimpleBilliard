@@ -43,7 +43,7 @@ class MeExtender extends BaseExtender
 
         $data['current_team_id'] = $currentTeamId;
         $currentTeam = $TeamService->get(new TeamResourceRequest($currentTeamId, $userId, $currentTeamId));
-        $data['current_team_img_url'] = $currentTeam['img_url'];
+        $data['current_team'] = $currentTeam;
         $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
 
         if ($this->includeExt($extensions, self::EXTEND_CURRENT_TEAM_MEMBER_OWN)) {

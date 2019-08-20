@@ -41,9 +41,6 @@ abstract class BaseApiController extends Controller
     /** @var TeamStatus */
     private $_teamStatus;
 
-    /** @var bool */
-    private $_stopInvokeFlag = false;
-
     /** @var JwtAuthentication */
     private $_jwtAuth;
 
@@ -115,14 +112,12 @@ abstract class BaseApiController extends Controller
 
             //Check if user is restricted from using the service. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedFromUsingService() && !$this->_checkIgnoreRestriction($this->request)) {
-                $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You cannot use service on the team."))
                     ->getResponse();
                 return;
             }
             //Check if user is restricted to read only. Always skipped if endpoint ignores restriction
             if ($this->_isRestrictedToReadOnly() && !$this->_checkIgnoreRestriction($this->request)) {
-                $this->_stopInvokeFlag = true;
                 $this->_beforeFilterResponse = ErrorResponse::forbidden()->withMessage(__("You may only read your team’s pages."))
                     ->getResponse();
                 return;
@@ -371,9 +366,6 @@ abstract class BaseApiController extends Controller
      */
     public function invokeAction(CakeRequest $request)
     {
-        if ($this->_stopInvokeFlag) {
-            return false;
-        }
         if ($this->_beforeFilterResponse instanceof ErrorResponse) {
             return $this->_beforeFilterResponse;
         }
