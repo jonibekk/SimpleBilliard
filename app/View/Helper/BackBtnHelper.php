@@ -12,7 +12,6 @@ class BackBtnHelper extends AppHelper
             'topics',
             'notifications',
             'users',
-            'goals/kr_progress',
             'post_permanent',
             'goals/create',
             'goals/approval/detail',
