@@ -2280,6 +2280,9 @@ msgstr "例) チームGoalous"
 msgid "Team Name"
 msgstr "チーム名"
 
+msgid "Team ID"
+msgstr "チームID"
+
 msgid "Term"
 msgstr "期"
 
