@@ -110,6 +110,7 @@ class MeController extends BasePagingController
 
     /**
      * Get user detail
+     * @ignoreRestriction
      */
     public function get_detail()
     {
