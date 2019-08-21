@@ -40,6 +40,13 @@
             </div>
             <hr>
             <div class="form-group">
+                <label class="col col-sm-3 control-label form-label"><?= __('Team ID');?></label>
+                <div class="col col-sm-6">
+                    <p class="form-control-static"><?= $team['id'] ?></p>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
                 <label for="" class="col col-sm-3 control-label form-label"><?= __("Team Image") ?></label>
 
                 <div class="col col-sm-6">
