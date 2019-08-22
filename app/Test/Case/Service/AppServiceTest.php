@@ -39,4 +39,8 @@ class AppServiceTest extends GoalousTestCase
         $this->assertEquals($validationErrorsAfter, $actual);
     }
 
+    function test_getWithCache() {
+        // behavior test cases are included in GoalServiceTest
+    }
+
 }

@@ -69,6 +69,69 @@ class PaymentServiceTest extends GoalousTestCase
         $this->InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
     }
 
+    function test_get_single()
+    {
+        $modelName = 'PaymentSetting';
+        $teamId = 1;
+
+        $createData = $this->createTestPaymentData(['team_id' => $teamId, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        /* First data */
+        // Save cache
+        $data = $this->PaymentService->get($teamId);
+        $this->assertNotEmpty($data);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->PaymentSetting->useType()->findById($teamId)[$modelName];
+        // Extract only db record columns(exclude additional data. e.g. img_url)
+        $tmp = array_intersect_key($data, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
+
+        /* Multiple data */
+        // Save cache
+        $teamId2 = 2;
+
+        $createData = $this->createTestPaymentData(['team_id' => $teamId2, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        $data2 = $this->PaymentService->get($teamId2);
+        $this->assertNotEmpty($data2);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data2, $cacheList[$modelName][$teamId2]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->PaymentSetting->useType()->findById($teamId2)[$modelName];
+        $tmp = array_intersect_key($data2, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data2 = $this->PaymentService->get($teamId2);
+        $this->assertSame($data2, $cacheList[$modelName][$teamId2]);
+        $this->assertNotEquals($data, $data2);
+
+        /* Empty */
+        $teamId = 0;
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, []);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertFalse(array_key_exists($teamId, $cacheList[$modelName]));
+
+        $teamId = 9999999;
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, []);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
+    }
+
     private function createTestPaymentData(array $data): array
     {
         $default = [

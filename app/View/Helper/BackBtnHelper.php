@@ -10,7 +10,6 @@ class BackBtnHelper extends AppHelper
         //Create array of pages where the normal header should appear
         $normalPages = array(
             'topics',
-            'notifications',
             'users',
             'goals/kr_progress',
             'post_permanent',

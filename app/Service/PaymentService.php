@@ -38,30 +38,7 @@ class PaymentService extends AppService
      */
     public function get(int $teamId): array
     {
-        // 既にDBからのデータ取得は行っているが情報が存在しなかった場合
-        if (array_key_exists($teamId, self::$cacheList) && empty(self::$cacheList[$teamId])) {
-            return [];
-        }
-
-        // 既にDBからのデータ取得は行っていて、かつ情報が存在している場合
-        if (!empty(self::$cacheList[$teamId])) {
-            // キャッシュから取得
-            $data = self::$cacheList[$teamId];
-            return $data;
-        }
-
-        /** @var PaymentSetting $PaymentSetting */
-        $PaymentSetting = ClassRegistry::init("PaymentSetting");
-
-        $data = self::$cacheList[$teamId] = Hash::extract($PaymentSetting->findByTeamId($teamId), 'PaymentSetting');
-        if (empty($data)) {
-            return [];
-        }
-
-        // キャッシュ変数に保存
-        self::$cacheList[$teamId] = $data;
-
-        // データ拡張
+        $data = $this->_getWithCache($teamId, 'PaymentSetting', null, 'team_id');
         return $data;
     }
 
