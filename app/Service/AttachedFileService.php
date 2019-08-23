@@ -40,32 +40,13 @@ class AttachedFileService extends AppService
     /**
      * Get single file
      *
-     * @param       $fileId
+     * @param       $id
      *
-     * @return AttachedFileEntity
+     * @return array
      */
-    public function get(int $fileId): AttachedFileEntity
+    public function get(int $id): array
     {
-        // In case already got data from db and cached, but data is empty
-        if (array_key_exists($fileId, self::$cacheList) && empty(self::$cacheList[$fileId])) {
-            return [];
-        }
-
-        // In case already got data from db and cached, data is not empty
-        if (!empty(self::$cacheList[$fileId])) {
-            $data = self::$cacheList[$fileId];
-            return $data;
-        }
-
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init("AttachedFile");
-
-        // Get data from db and cache
-        $data = self::$cacheList[$fileId] = $AttachedFile->useType()->useEntity()->findById($fileId);
-        if (empty($data)) {
-            return [];
-        }
-
+        $data = $this->_getWithCache($id, 'AttachedFile');
         return $data;
     }
 
@@ -339,6 +320,6 @@ class AttachedFileService extends AppService
 
         $upload = new UploadHelper(new View());
         $type = $isViewer ? 'viewer' : 'download';
-        return $upload->attachedFileUrl($file->toArray(), $type);
+        return $upload->attachedFileUrl($file, $type);
     }
 }
