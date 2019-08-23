@@ -267,15 +267,19 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $teamId = 1;
         $this->Team->current_team_id = $teamId;
+        $this->Team->clear();
         $this->Team->id = $teamId;
         $this->Team->save([
             'timezone' => 12,
-        ]);
-        $this->PaymentSetting->save([
+        ], false);
+        $this->PaymentSetting->create();
+        $a = $this->PaymentSetting->save([
             'team_id'          => $teamId,
             'payment_base_day' => 2,
         ], false);
         GoalousDateTime::setTestNow("2017-01-01");
+        $this->PaymentService->clearCachePaymentSettings();
+
         $res = $this->PaymentService->getNextBaseDate($teamId);
         $this->assertEquals($res, '2017-01-02');
 
