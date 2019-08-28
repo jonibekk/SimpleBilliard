@@ -493,14 +493,4 @@ class Topic extends AppModel
         return $result;
     }
 
-    /**
-     * HACK: For unknown reason, image file URL creation failed. This is to make sure that the image will be created.
-     *
-     *
-     */
-    private function createDefaultURL()
-    {
-
-    }
-
 }
