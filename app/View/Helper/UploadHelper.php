@@ -6,7 +6,8 @@ App::uses('Security', 'Utility');
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
  * UploadHelper
- * UploadHelper provides fine access to files uploaded with UploadBehavior. It generates url for those files and can display image tags of uploaded images. For more info read UploadPack documentation.
+ * UploadHelper provides fine access to files uploaded with UploadBehavior. It generates url for those files and can
+ * display image tags of uploaded images. For more info read UploadPack documentation.
  *
  * @author Michał Szajbe (michal.szajbe@gmail.com)
  * @link   http://github.com/szajbus/uploadpack
@@ -189,7 +190,8 @@ class UploadHelper extends AppHelper
             $settings = UploadBehavior::interpolate($model, $id, $field, $filename, $options['style'],
                 array('webroot' => ''));
             $url = isset($settings['url']) ? $settings['url'] : $settings['path'];
-        } else {
+        }
+        if (empty($url)) {
             $settings = UploadBehavior::interpolate($model, null, $field, null, $options['style'],
                 array('webroot' => ''));
             $url = isset($settings[$defaultImgKey]) ? $settings[$defaultImgKey] : null;
@@ -202,12 +204,40 @@ class UploadHelper extends AppHelper
     }
 
     /**
+     * Get default image URLs
+     *
+     * @param       $field
+     * @param array $options
+     * @param bool  $isDefImgFromCloud
+     *
+     * @return string|null
+     */
+    public function getDefaultUrl($field, $options = array(), $isDefImgFromCloud = false)
+    {
+        $options += array('style' => 'original', 'urlize' => true);
+
+        list($model, $field) = explode('.', $field);
+
+        $defaultImgKey = $isDefImgFromCloud ? 's3_default_url' : 'default_url';
+
+        if (empty($url)) {
+            $settings = UploadBehavior::interpolate($model, null, $field, null, $options['style'],
+                array('webroot' => ''));
+            $url = isset($settings[$defaultImgKey]) ? $settings[$defaultImgKey] : null;
+        }
+
+        $url = $this->substrS3Url($url);
+
+        return $url;
+    }
+
+    /**
      * Returns appropriate extension for given mimetype.
      *
      * @param null $mimeType
      *
-     * @internal param string $mime Mimetype
      * @return void
+     * @internal param string $mime Mimetype
      * @author   Bjorn Post
      */
     public function extension($mimeType = null)
