@@ -32,6 +32,12 @@ class BackBtnHelper extends AppHelper
                 }
             }
         }
+
+        // Special case if arriving from notification
+        if (!empty($this->request->query("notify_id"))) {
+            $backButton = true;
+        }
+
         // Special case for homepage
         if ($this->request->here == "/") {
             $backButton = false;
