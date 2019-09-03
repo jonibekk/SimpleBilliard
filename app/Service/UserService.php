@@ -42,6 +42,7 @@ class UserService extends AppService
             $data = $MeExtender->extend($data, $userId, $teamId, $extensions);
         } else {
             // TODO: create UserExtender
+            // Be careful to convert language to 2 characters as same as $MeExtender(LangUtil::convertISOFrom3to2)
         }
         return $data;
     }

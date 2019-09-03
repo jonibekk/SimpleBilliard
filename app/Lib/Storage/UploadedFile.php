@@ -109,6 +109,13 @@ class UploadedFile
      */
     private $mimeData;
 
+    /**
+     * MIME encoding of file
+     *
+     * @var string
+     */
+    private $mimeEncoding = '';
+
     public function __construct(string $encodedFile, string $fileName, bool $skipDecoding = false)
     {
         if (empty($encodedFile) || empty($fileName)) {
@@ -155,7 +162,7 @@ class UploadedFile
             return $encodedFile;
         }
         $hasBase64Header = (0 === strpos($this->encodedFile, 'data:'));
-        return $hasBase64Header ? $encodedFile : sprintf('data://%s;base64,%s', $this->getMIME(), $encodedFile);
+        return $hasBase64Header ? $encodedFile : sprintf('data://%s%s;base64,%s', $this->getMIME(), $this->getCharSetForData(), $encodedFile);
     }
 
     public function isEmpty(): bool
@@ -176,6 +183,14 @@ class UploadedFile
         return $this->metadata;
     }
 
+    private function getCharSetForData(): string
+    {
+        if (strlen($this->mimeEncoding) < 1) {
+            return '';
+        }
+        return ';charset=' . $this->mimeEncoding;
+    }
+
     public function getFileName(bool $omitExtension = false): string
     {
         //Remove file extension
@@ -192,6 +207,11 @@ class UploadedFile
     public function getMIME(): string
     {
         return $this->mimeData;
+    }
+
+    public function getMimeWithCharset(): string
+    {
+        return $this->mimeData . $this->getCharSetForData();
     }
 
     public function withUUID(string $uuid): self
@@ -244,6 +264,7 @@ class UploadedFile
 
         $fInfo = new finfo();
         $fileDesc = $fInfo->buffer($rawFile, FILEINFO_MIME_TYPE);
+        $this->mimeEncoding = $fInfo->buffer($rawFile, FILEINFO_MIME_ENCODING);
         list($type, $fileExt) = explode("/", $fileDesc, 2);
         if (empty($type) || empty($fileExt)) {
             GoalousLog::error("Failed to get file extension");

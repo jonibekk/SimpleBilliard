@@ -408,6 +408,10 @@ class CircleService extends AppService
 
             // Delete circles cache
             $this->deleteUserCirclesCache($userId);
+
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
         } catch (Exception $e) {
             CakeLog::error($e->getMessage());
             CakeLog::error($e->getTraceAsString());
@@ -446,6 +450,10 @@ class CircleService extends AppService
             }
 
             $CircleMember->updateCounterCache(['circle_id' => $circleId]);
+
+            /** @var GlRedis $GlRedis */
+            $GlRedis = ClassRegistry::init("GlRedis");
+            $GlRedis->deleteMultiCircleMemberCount([$circleId]);
 
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));

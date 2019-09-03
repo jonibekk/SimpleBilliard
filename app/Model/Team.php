@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'TeamEntity');
 
+use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum as Enum;
 
 /**
@@ -35,6 +36,15 @@ use Goalous\Enum as Enum;
  */
 class Team extends AppModel
 {
+    public $modelConversionTable = [
+        'type'               => DataType::INT,
+        'service_use_status' => DataType::INT,
+        'start_term_month'   => DataType::INT,
+        'border_months'      => DataType::INT,
+        'timezone'           => DataType::INT,
+        'domain_limited_flg' => DataType::BOOL,
+    ];
+
     /**
      * Type | タイプ
      */

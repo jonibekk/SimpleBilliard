@@ -1,7 +1,13 @@
 <?= $this->App->viewStartComment() ?>
 <div class="glHeaderMobile">
     <div class="glHeaderMobile-left">
-        <?= $this->element('Header/back_btn'); ?>
+        <?php if($this->request->url === ''):?>
+            <a href="/goals/kr_progress" class="nav-back-btn">
+                <i class="material-icons">trending_up</i>
+            </a>
+        <?php else: ?>
+            <?= $this->element('Header/back_btn'); ?>
+        <?php endif; ?>
     </div>
     <div class="glHeaderMobile-right">
         <ul class="glHeaderMobile-nav">
