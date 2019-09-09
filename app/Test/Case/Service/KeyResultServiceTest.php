@@ -70,7 +70,54 @@ class KeyResultServiceTest extends GoalousTestCase
 
     function test_get()
     {
-        $this->markTestIncomplete('testClear not implemented.');
+        $modelName = 'KeyResult';
+        $id = 1;
+        /* First data */
+        // Save cache
+        $data = $this->KeyResultService->get($id);
+        $this->assertNotEmpty($data);
+        $cacheList = $this->KeyResultService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->KeyResult->useType()->findById($id)[$modelName];
+        // Extract only db record columns(exclude additional data. e.g. img_url)
+        $tmp = array_intersect_key($data, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data = $this->KeyResultService->get($id);
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
+        /* Multiple data */
+        // Save cache
+        $id2 = 2;
+        $data2 = $this->KeyResultService->get($id2);
+        $this->assertNotEmpty($data2);
+        $cacheList = $this->KeyResultService->getCacheList();
+        $this->assertSame($data2, $cacheList[$modelName][$id2]);
+
+        $ret = $this->KeyResult->useType()->findById($id2)[$modelName];
+        $tmp = array_intersect_key($data2, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data2 = $this->KeyResultService->get($id2);
+        $this->assertSame($data2, $cacheList[$modelName][$id2]);
+        $this->assertNotEquals($data, $data2);
+
+        /* Empty */
+        $id = 0;
+        $data = $this->KeyResultService->get($id);
+        $this->assertSame($data, []);
+        $cacheList = $this->KeyResultService->getCacheList();
+        $this->assertFalse(array_key_exists($id, $cacheList[$modelName]));
+
+        $id = 9999999;
+        $data = $this->KeyResultService->get($id);
+        $this->assertSame($data, []);
+        $cacheList = $this->KeyResultService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$id]);
     }
 
     function test_buildKrUnitsSelectList()

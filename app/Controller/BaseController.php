@@ -488,6 +488,10 @@ class BaseController extends Controller
      */
     public function _isProhibitedRequestByCannotUseService(): bool
     {
+        // Redirect to new Goalous if user can access a page even if team status is locked
+        if ($this->request->url === 'others') {
+            return false;
+        }
         if ($this->_isExcludeRequestParamInProhibited()) {
             return false;
         }

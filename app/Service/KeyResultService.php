@@ -24,28 +24,9 @@ class KeyResultService extends AppService
      *
      * @return array
      */
-    function get($id)
+    function get($id): array
     {
-        if (empty($id)) {
-            return [];
-        }
-
-        // 既にDBからのデータ取得は行っているがゴール情報が存在しなかった場合
-        if (array_key_exists($id, self::$cacheList) && empty(self::$cacheList[$id])) {
-            return [];
-        }
-
-        // 既にDBからのデータ取得は行っていて、かつゴール情報が存在している場合
-        if (!empty(self::$cacheList[$id])) {
-            // キャッシュから取得
-            return self::$cacheList[$id];
-        }
-
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-
-        // キャッシュ変数に保存
-        $data = self::$cacheList[$id] = $KeyResult->getById($id);
+        $data = $this->_getWithCache($id, 'KeyResult');
         return $data;
     }
 

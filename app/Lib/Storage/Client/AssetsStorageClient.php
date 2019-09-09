@@ -51,7 +51,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
         $key = $this->sanitize($key);
 
         try {
-            $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMIME());
+            $this->upload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(), $file->getMimeWithCharset());
 
         } catch (S3Exception $exception) {
             GoalousLog::error("Failed saving to S3. Model: $this->modelName, ID: $this->modelId, File:" . $file->getFileName());
@@ -78,7 +78,7 @@ class AssetsStorageClient extends BaseStorageClient implements StorageClient
                 $key = $this->sanitize($key);
 
                 $commands[] = $this->getCommandForUpload(S3_ASSETS_BUCKET, $key, $file->getBinaryFile(),
-                    $file->getMIME());
+                    $file->getMimeWithCharset());
             }
 
             CommandPool::batch($this->s3Instance, $commands);

@@ -21,27 +21,17 @@ class NewGoalousAssetsStorageClient extends BaseStorageClient
         }
 
         try {
-            // At first, prefetch only main js files to load faster when old Goalous to new Goalous
-            foreach ($this->assetKeyPrefixList as $prefix) {
-                $commands[] = $this->getCommandForListObject($prefix);
-            }
-
-            $responses = CommandPool::batch($this->s3Instance, $commands);
-
+            $result = $this->s3Instance->listObjectsV2([
+                'Bucket' => AWS_S3_BUCKET_NEW_GOALOUS,
+            ]);
         } catch (S3Exception $exception) {
             throw new RuntimeException();
         }
 
-        $allKeys = [];
-        foreach ($responses as $response) {
-            if (empty($response['Contents'])) {
-                continue;
-            }
-            $resKeys = Hash::extract($response['Contents'], '{n}.Key') ?? [];
-            $allKeys = array_merge($allKeys, $resKeys);
-        }
-
-        return $allKeys;
+        $allKeys = Hash::extract($result->toArray(), 'Contents.{n}.Key');
+        // Filter only js for loading in root folder
+        $keys = preg_grep('/^[a-zA-Z0-9.]+.js$/', $allKeys);
+        return $keys;
     }
 
     /**
@@ -51,11 +41,15 @@ class NewGoalousAssetsStorageClient extends BaseStorageClient
      * @param string $prefix
      * @return \Aws\Command
      */
-    protected final function getCommandForListObject(string $prefix): Aws\Command {
-        return $this->s3Instance->getCommand('ListObjects', [
+    protected final function getCommandForListObject(string $prefix = ''): Aws\Command {
+        $options = [
             'Bucket' => AWS_S3_BUCKET_NEW_GOALOUS,
-            'Prefix' => $prefix.'.',
-        ]);
+        ];
+
+        if (!empty($prefix)) {
+            $options['Prefix'] = $prefix;
+        }
+        return $this->s3Instance->getCommand('ListObjects', $options);
     }
 
 

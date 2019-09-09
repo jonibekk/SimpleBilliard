@@ -1695,7 +1695,7 @@ msgstr "不正な電話番号です。"
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
-msgid "%s pixel is the limit."
+msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
 msgid "You can't change members of the all team circle."
@@ -1850,6 +1850,9 @@ msgstr "アップロード出来るファイルサイズは%1$sMBまでです。
 
 msgid "Only picture is allowed. (.jpg, .png, .gif)"
 msgstr "画像ファイルを選択してください。"
+
+msgid "This file type is not allowed."
+msgstr "このファイル形式は許可されていません。"
 
 msgid "{{maxFiles}} is the limit you can upload once."
 msgstr "アップロード出来るファイル数は%1$s個までです。"
