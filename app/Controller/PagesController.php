@@ -97,6 +97,9 @@ class PagesController extends AppController
                 !$CampaignService->isCampaignTeam($this->current_team_id)) {
                 throw new NotFoundException();
             }
+        } elseif ($page === 'case_study') {
+            $company = $this->request->query('company') ?? 'witone';
+            $this->set('company', $company);
         }
 
         $this->set('is_mb_app', $this->is_mb_app);
