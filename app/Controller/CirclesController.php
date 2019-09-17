@@ -225,7 +225,7 @@ class CirclesController extends AppController
             null, $memberIds);
 
         $this->Notification->outSuccess(__("Added circle member(s)."));
-        $this->redirect($this->referer());
+        $this->redirect("/circles/{$circleId}/members");
     }
 
     public function delete()
