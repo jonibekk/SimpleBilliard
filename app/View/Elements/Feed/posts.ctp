@@ -363,15 +363,15 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <i class="fa-thumbs-up fa"></i>
                             <?= __("Like!") ?></a>
                         <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
-                        <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? 'mod-on' : 'mod-off'; ?>
-                        <i class="post-saveItem <?= $isSavedItemClass ?> js-save-item" aria-hidden="true"
-                        data-id="<?= Hash::get($post, 'Post.id') ?>"
-                        data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>">
+                        <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? ' saved' : ''; ?>
+                        <a href="#"
+                           class="post-saveItem js-save-item<?= $isSavedItemClass ?>"
+                           data-id="<?= Hash::get($post, 'Post.id') ?>"
+                           data-is-saved-item="<?= Hash::get($post, 'Post.is_saved_item') ?>">
+                            <i aria-hidden="true"></i>
                             <span><?= __("Save<!-- 0 -->") ?></span>
-                        </i>
-
+                        </a>
                         <?php endif; ?>
-
                     </div>
                     <div class="feeds-post-btns-wrap-right">
                         <a href="#"
