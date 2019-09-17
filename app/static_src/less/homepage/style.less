@@ -52,7 +52,7 @@ a:focus {
 .btn, a.btn {
   transition: all 0.4s ease-in-out;
   font-family: 'Montserrat', sans-serif;
-@backgroundColor316px;
+  background-color: @backgroundColor3;
 }
 .btn .fa, a.btn .fa {
   color: @white;
@@ -1150,7 +1150,7 @@ select {
   background-color: @backgroundColor3;
   padding: 3em;
 
-  > p {
+  >p {
     font-size: 1em;
   }
 
@@ -1163,7 +1163,7 @@ select {
     text-align: center;
     font-weight: bold;
 
-    > img {
+    >img {
       display: inline-block;
       padding: 1em;
       width: auto;
@@ -1179,7 +1179,7 @@ select {
   min-height: 500px;
   margin-bottom: 100px;
 
-  > .bg-mask-casestudy {
+  >.bg-mask-casestudy {
     opacity: 0.9;
     z-index: -100;
     position: absolute;
@@ -1190,7 +1190,7 @@ select {
   }
 
   .casestudy-intro {
-    > h2 {
+    >h2 {
       font-size: 56px;
       line-height: 1.4;
     }
@@ -1218,7 +1218,7 @@ select {
     margin-top: 100px;
     box-shadow: 0 4px 9px 0 rgba(23, 28, 33, 0.06);
 
-    > li {
+    >li {
       font-size: 16px;
       margin-bottom: 0.3em;
       line-height: 1.5;
@@ -1245,7 +1245,7 @@ select {
     font-size: 16px;
   }
 
-  > p {
+  >p {
     font-size: 16px !important;
     color: @subColor15;
     margin-top: 10px;
@@ -1267,6 +1267,7 @@ select {
     width: 60%;
   }
 }
+
 @media (max-width: @tabletL-min-width) {
   .casestudy-list {
     display: flex;
@@ -1275,7 +1276,7 @@ select {
     background-color: @backgroundColor3;
     padding: 1em;
 
-    > p {
+    >p {
       font-size: 1em;
     }
 
@@ -1288,7 +1289,7 @@ select {
       text-align: center;
       font-weight: bold;
 
-      > img {
+      >img {
         display: inline-block;
         padding: 1em 1em 0.5em;
         width: auto;
@@ -1302,13 +1303,13 @@ select {
     margin-bottom: 30px;
 
     .casestudy-list {
-      > li {
+      >li {
         margin-bottom: 10px;
       }
     }
 
     .casestudy-intro {
-      > h2 {
+      >h2 {
         font-size: 32px;
       }
     }
@@ -1316,18 +1317,18 @@ select {
     .enterprise {
       margin-top: 30px;
 
-      > h2 {
+      >h2 {
         font-size: 24px;
       }
 
-      > li {
+      >li {
         font-size: 16px;
       }
     }
   }
 
   .casestudy-text {
-    > h3 {
+    >h3 {
       font-size: 24px;
       margin-top: 80px;
     }
@@ -1345,6 +1346,11 @@ select {
     }
   }
 }
+
+
+
+
+
 /* ======= Contact ======= */
 
 #contact_section{
@@ -2213,7 +2219,7 @@ body {
 
 .switch-action a:hover,
 .switch-action a:focus,
-.switch-action a:active,  {
+.switch-action a:active{
   color: initial;
   text-decoration: unset;
   cursor: pointer;
