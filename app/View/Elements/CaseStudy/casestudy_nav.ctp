@@ -1,5 +1,5 @@
 <div class="casestudy-list">
-    <a href="/case_study_yabusaki/">
+    <a href="/case_study?company=yabusaki">
         <div class="casestudy-list-box">
             <img src="/img/homepage/casestudy/yabusaki/yabusaki_logo.png" alt="あなたの同僚についてカンタンに知ることができます。今までこんな方法ありました？"
                  class="img-responsive"/>
