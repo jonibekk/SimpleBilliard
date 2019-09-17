@@ -150,9 +150,9 @@ function deleteItem(post_id, is_saved_item, $target) {
  */
 function changeSavedPostStyle($obj, current_status) {
   if (current_status) {
-    $obj.removeClass("mod-on").addClass("mod-off");
+    $obj.removeClass("saved");
   } else {
-    $obj.removeClass("mod-off").addClass("mod-on");
+    $obj.addClass("saved");
   }
 }
 
