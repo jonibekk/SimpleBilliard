@@ -81,6 +81,8 @@ $(function () {
 
   $(document).on({
     'click': function (e) {
+      e.preventDefault();
+
       var $target = $(this);
 
       // jQuery .data() shouldn't be used.
