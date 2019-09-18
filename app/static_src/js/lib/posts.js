@@ -81,6 +81,8 @@ $(function () {
 
   $(document).on({
     'click': function (e) {
+      e.preventDefault();
+
       var $target = $(this);
 
       // jQuery .data() shouldn't be used.
@@ -150,9 +152,9 @@ function deleteItem(post_id, is_saved_item, $target) {
  */
 function changeSavedPostStyle($obj, current_status) {
   if (current_status) {
-    $obj.removeClass("mod-on").addClass("mod-off");
+    $obj.removeClass("feeds-post-saved");
   } else {
-    $obj.removeClass("mod-off").addClass("mod-on");
+    $obj.addClass("feeds-post-saved");
   }
 }
 
