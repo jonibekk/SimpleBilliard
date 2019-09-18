@@ -8,6 +8,7 @@ App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
 App::uses('LangUtil', 'Util');
+App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
 
@@ -149,8 +150,6 @@ class AuthController extends BaseApiController
      */
     public function get_recover_token()
     {
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init('GlRedis');
         $user = $this->Session->read('Auth.User');
         $teamId = $this->Session->read('current_team_id');
         if (empty($user) || empty($teamId)) {
@@ -158,11 +157,8 @@ class AuthController extends BaseApiController
                 ->withMessage(__("Session doesn't exist"))
                 ->getResponse();
         }
-        $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $this->Session->id());
-        if (empty($token)) {
-            return ErrorResponse::badRequest()
-                ->getResponse();
-        }
+        $token = $this->getTokenForRecovery($user, $teamId);
+
         $data = [
             'me' => $this->_getAuthUserInfo($user['id'], $teamId),
             'token' => $token
@@ -171,6 +167,32 @@ class AuthController extends BaseApiController
         return ApiResponse::ok()->withData($data)->getResponse();
     }
 
+    /**
+     * Get token from redis integrated session
+     * If token is not verified, regenerate token
+     * @param array $user
+     * @param int $teamId
+     * @return string
+     */
+    private function getTokenForRecovery(array $user, int $teamId): string {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
 
+        $sesId = $this->Session->id();
+        $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
+        try {
+            $jwtAuth = AccessAuthenticator::verify($token);
+            if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
+                throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
+            }
+        } catch (Exception $e) {
+            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
+            // Regenerate token
+            $jwt = $GlRedis->saveMapSesAndJwt($teamId, $user['id'], $sesId);
+            $token = $jwt->token();
+            return $token;
+        }
 
+        return $token;
+    }
 }
