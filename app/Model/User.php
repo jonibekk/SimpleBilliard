@@ -351,7 +351,10 @@ class User extends AppModel
         'birth_day',
         'hide_year_flg',
         'phone_no',
-        'hometown'
+        'hometown',
+        'primary_email_id',
+        'setup_complete_flg',
+        'created'
     ];
 
     /**
