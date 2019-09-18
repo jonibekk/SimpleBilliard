@@ -341,7 +341,7 @@ $(function () {
         if($(".banner-alert").css("display") === "block"){
           extra = 80;
         }
-        extra += 380;
+        extra += 360;
         if (cake.is_demo) {
           // Calc in light of demo alert header
           $(".dashboard-circle-list-body").css("height","calc(100vh - " + extra + "px - 54px)")
