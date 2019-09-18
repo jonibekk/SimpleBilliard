@@ -38,7 +38,7 @@ class ImageResizeProcessor extends BaseImageProcessor
         }
 
         //Create Image resource from binary string
-        $sourceImage = imagecreatefromstring($file->getBinaryFile());
+        $sourceImage = @imagecreatefromstring($file->getBinaryFile());
 
         if (!$sourceImage) {
             GoalousLog::error("Failed creating image resource");
