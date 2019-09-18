@@ -211,7 +211,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                 <i class="fa-thumbs-up fa"></i>
                 <?= __("Like!") ?></a>
             <?php if (in_array(Hash::get($post, 'Post.type'), [Post::TYPE_NORMAL, Post::TYPE_ACTION])): ?>
-            <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? ' saved' : ''; ?>
+            <?php $isSavedItemClass = Hash::get($post, 'Post.is_saved_item') ? ' feeds-post-saved' : ''; ?>
             <a href="#"
                class="post-saveItem js-save-item<?= $isSavedItemClass ?>"
                data-id="<?= Hash::get($post, 'Post.id') ?>"

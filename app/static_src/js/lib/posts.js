@@ -152,9 +152,9 @@ function deleteItem(post_id, is_saved_item, $target) {
  */
 function changeSavedPostStyle($obj, current_status) {
   if (current_status) {
-    $obj.removeClass("saved");
+    $obj.removeClass("feeds-post-saved");
   } else {
-    $obj.addClass("saved");
+    $obj.addClass("feeds-post-saved");
   }
 }
 
