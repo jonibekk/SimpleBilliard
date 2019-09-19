@@ -8,7 +8,7 @@
        public-flg="<?= $circle['public_flg'] ?>"
        team-all-flg="<?= $circle['team_all_flg'] ?>"
        oldest-post-time="<?= $circle['created'] ?>"
-       href="<?= $this->Html->url("/circles/{$circle['id']}") ?>">
+       href="<?= $this->Html->url("/circles/{$circle['id']}/posts") ?>">
         <div class="dashboard-circle-unread-point">
             <div class="circle"></div>
         </div>
