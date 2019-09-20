@@ -820,7 +820,7 @@ class GoalsController extends AppController
         $this->Notification->outSuccess(__("Made a Key Result uncompleted."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
+        if ($params_referer['controller'] == 'pages' && !empty($params_referer['pass'][0]) && $params_referer['pass'][0] == 'home') {
             $this->redirect('/goals/kr_progress');
         } else {
             return $this->redirect($this->referer());

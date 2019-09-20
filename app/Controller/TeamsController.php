@@ -326,7 +326,7 @@ class TeamsController extends AppController
         /** @var Enum\Model\Term\EvaluateStatus $previous_term_evaluation_status */
         $previous_term_evaluation_status = null;
         if ($previous_term_exists) {
-            $previous_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval($previous_term['evaluate_status']));
+            $previous_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval(Hash::get($previous_term, 'evaluate_status', 0)));
         }
 
         $eval_start_button_enabled = true;
@@ -816,7 +816,7 @@ class TeamsController extends AppController
         $this->Team->TeamMember->begin();
         $save_res = $this->Team->TeamMember->updateMembersFromCsv($csv);
 
-        $this->GlRedis->dellKeys("cache_user_data:unapproved_count:team:".$this->current_team_id.":user:*");
+        $this->GlRedis->dellKeys("cache_user_data:unapproved_count:team:" . $this->current_team_id . ":user:*");
         if ($save_res['error']) {
             $this->Team->TeamMember->rollback();
             $result['error'] = true;
