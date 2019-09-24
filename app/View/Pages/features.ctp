@@ -242,7 +242,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 </div><!--//item-->
                 <div class="item clearfix">
                     <div class="icon col-md-3  col-xs-12 text-center">
-                        <i class="fa fa-venus-double"></i>
+                        <i class="fa fa-handshake-o"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Coach') ?></h3>
