@@ -118,32 +118,14 @@ class MeExtender extends BaseExtender
             $data['email'] = $email['email'] ?? '';
         }
         if ($this->includeExt($extensions, self::EXTEND_SETUP_REST_COUNT)) {
-            $data['setup_rest_count'] = $this->getSetupRestCount($data['id'], $data['setup_complete_flg']);
+            /** @var SetupService $SetupService */
+            $SetupService = ClassRegistry::init("SetupService");
+            $setupResolved = $SetupService->resolveSetupCompleteAndRest($data['id'], $data['setup_complete_flg']);
+            $data['setup_complete_flg'] = $setupResolved['complete'];
+            $data['setup_rest_count'] = $setupResolved['rest_count'];
         }
 
         return $data;
-    }
-
-    /**
-     * Return the rest of setups count user have not done yet.
-     *
-     * @param string $userId
-     * @param bool $setupCompleteFlg
-     * @return int
-     */
-    private function getSetupRestCount(string $userId, bool $setupCompleteFlg): int
-    {
-        if ($setupCompleteFlg) {
-            return 0;
-        }
-
-        /** @var SetupService $SetupService */
-        $SetupService = ClassRegistry::init("SetupService");
-        $setupStatuses = $SetupService->getSetupStatuses($userId);
-        $completed = array_filter($setupStatuses, function($value) {
-            return $value;
-        });
-        return max(0, count(User::$TYPE_SETUP_GUIDE) - count($completed));
     }
 
     public function extendMulti(array $data, int $userId, int $teamId, array $extensions = []): array
