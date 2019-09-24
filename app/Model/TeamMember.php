@@ -1314,6 +1314,9 @@ class TeamMember extends AppModel
                 unset($this->all_users[$k]);
                 continue;
             }
+            if (Hash::get($v, 'TeamMember.status') == Enum\Model\TeamMember\Status::INVITED) {
+                continue;
+            }
             $this->csv_datas[$k]['email'] = Hash::get($v,
                 'User.PrimaryEmail.email') ? $v['User']['PrimaryEmail']['email'] : null;
             $this->csv_datas[$k]['first_name'] = Hash::get($v, 'User.first_name') ? $v['User']['first_name'] : null;
