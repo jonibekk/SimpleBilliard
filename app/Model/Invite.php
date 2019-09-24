@@ -301,6 +301,7 @@ class Invite extends AppModel
                     'alias'      => 'Email',
                     'conditions' => [
                         'Invite.email = Email.email',
+                        'Email.del_flg' => 0
                     ],
                 ]
             ]
