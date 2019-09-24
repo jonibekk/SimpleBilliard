@@ -8,6 +8,7 @@ App::uses('Email', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'SetupService');
 App::uses('LangUtil', 'Util');
 
 App::uses('GlRedis', 'Model');
@@ -28,6 +29,7 @@ class MeExtender extends BaseExtender
     const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
     const EXTEND_EMAIL = "ext:user:email";
     const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
+    const EXTEND_SETUP_REST_COUNT = "ext:user:setup_rest_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -115,8 +117,33 @@ class MeExtender extends BaseExtender
             $email = $Email->getById($data['primary_email_id']);
             $data['email'] = $email['email'] ?? '';
         }
+        if ($this->includeExt($extensions, self::EXTEND_SETUP_REST_COUNT)) {
+            $data['setup_rest_count'] = $this->getSetupRestCount($data['id'], $data['setup_complete_flg']);
+        }
 
         return $data;
+    }
+
+    /**
+     * Return the rest of setups count user have not done yet.
+     *
+     * @param string $userId
+     * @param bool $setupCompleteFlg
+     * @return int
+     */
+    private function getSetupRestCount(string $userId, bool $setupCompleteFlg): int
+    {
+        if ($setupCompleteFlg) {
+            return 0;
+        }
+
+        /** @var SetupService $SetupService */
+        $SetupService = ClassRegistry::init("SetupService");
+        $setupStatuses = $SetupService->getSetupStatuses($userId);
+        $completed = array_filter($setupStatuses, function($value) {
+            return $value;
+        });
+        return max(0, count(User::$TYPE_SETUP_GUIDE) - count($completed));
     }
 
     public function extendMulti(array $data, int $userId, int $teamId, array $extensions = []): array
