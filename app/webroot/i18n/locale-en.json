@@ -11,20 +11,28 @@
     "HEADLINE": "Team Vision",
     "ADD_VISION":"Add Vision",
     "VIEW_ARCHIVE":"View Archive",
+    "ARCHIVE": "Archive",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
     "ARCHIVE_FAILED_MESSAGE": "Failed.",
     "ARCHIVE_SUCCESS_MESSAGE": "Success.",
     "DELETE_FAILED_MESSAGE": "Failed.",
-    "DELETE_SUCCESS_MESSAGE": "Success."
+    "DELETE_SUCCESS_MESSAGE": "Success.",
+    "LAST_UPDATED": "Last Updated"
   },
   "GROUP_VISION": {
     "HEADLINE": "Group Vision",
     "ADD_VISION":"Add Vision",
+    "ARCHIVE": "Archive",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
     "ARCHIVE_FAILED_MESSAGE": "Failed.",
     "ARCHIVE_SUCCESS_MESSAGE": "Success.",
     "DELETE_FAILED_MESSAGE": "Failed.",
     "DELETE_SUCCESS_MESSAGE": "Success."
   },
   "TEAM_MEMBER_LIST": {
+    "MEMBER": "Member",
     "MEMBER_LIST": "Member List",
     "INVITE_MEMBERS": "Invite members",
     "ALL": "All",
@@ -42,5 +50,11 @@
     "TO_CHANGE_TO_NOT_EVALUATEE": "Remove from the evaluation",
     "INVITE_AGAIN": "Invite again"
   },
-  "ACCESS_MESSAGE_DETAIL_MESSAGE": "Access Failed."
+  "ACCESS_MESSAGE_DETAIL_MESSAGE": "Access Failed.",
+  "PUT_MESSAGE_FAIL": "Failed to send message.",
+  "VISION_DELETE_MODAL": {
+    "CONFIRMATION_TITLE": "Confirm Deleting {vision}",
+    "CONFIRMATION_MSG":"Are you sure you want to delete ({body})?",
+    "DELETE": "Delete"
+  }
 }
