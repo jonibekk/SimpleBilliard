@@ -111,6 +111,9 @@ class ActionsController extends ApiController
             return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
+        if (empty($file)) {
+            return $this->_getResponseBadFail(__("Please reselect an image."));
+        }
         //バリデーションの為に一時的に保存する
         file_put_contents($file['info']['tmp_name'], $file['content']);
         $imgValidateRes = $AttachedFileService->validateImgType($file['info']);

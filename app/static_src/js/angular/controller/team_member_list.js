@@ -16,7 +16,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
         }
 
         function setTeamMemberList (user_info) {
-            all_member_list = user_info;
+            all_member_list = excludeInvitedMembers(user_info);
             active_member_list = ActiveMemberList(user_info);
             $scope.team_list = active_member_list;
             $scope.invite_member_url = cake.url.invite_member;
@@ -197,6 +197,17 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             } else {
                 $scope.team_list = active_member_list;
             }
+        }
+
+        function excludeInvitedMembers(teamMember) {
+          var memberList = [];
+          angular.forEach(teamMember, function(value){
+            if (value.TeamMember.status != cake.const.USER_STATUS.INVITED) {
+              this.push(value);
+            }
+          }, memberList);
+
+          return memberList;
         }
     }
 );

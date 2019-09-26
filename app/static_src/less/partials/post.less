@@ -4,19 +4,21 @@
 @import "parent_for_extend";
 
 .post-saveItem {
-  &:extend(.fa-module);
+  color: @subColor3;
   margin-right: 12px;
   font-size: 15px;
   line-height: 1em;
   cursor: pointer;
-  &.mod-on {
-    color: @crimsonPink;
-    &:before {
-      content: "\f02e"; // fa-bookmark
-    }
-  }
-  &.mod-off {
+  text-decoration: none;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    text-decoration: none;
     color: @subColor3;
+  }
+  > i {
+    &:extend(.fa-module);
     &:before {
       content: "\f097"; // fa-bookmark-o
     }
@@ -25,6 +27,23 @@
     font-size: 12px;
     font-weight: bold;
     -webkit-font-smoothing: initial;
+  }
+}
+
+.feeds-post-saved {
+  color: @crimsonPink;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    text-decoration: none;
+    color: @crimsonPink;
+  }
+  > i {
+    &:extend(.fa-module);
+    &:before {
+      content: "\f02e"; // fa-bookmark
+    }
   }
 }
 
