@@ -978,7 +978,7 @@ class AppController extends BaseController
 
     function _getStatusWithRedisSave($userId = false)
     {
-        $userId = ($userId === false) ? $this->Auth->user('id') : $userId;
+        $userId = empty($userId) ? $this->Auth->user('id') : $userId;
         /** @var SetupService $SetupService */
         $SetupService = ClassRegistry::init("SetupService");
         return $SetupService->getSetupStatuses($userId);
