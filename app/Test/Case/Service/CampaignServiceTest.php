@@ -177,8 +177,8 @@ class CampaignServiceTest extends GoalousTestCase
                 'can_select'       => true,
                 'sub_total_charge' => '¥50,000',
                 'format_price'     => '¥50,000',
-                'tax'              => '¥4,000',
-                'total_charge'     => '¥54,000',
+                'tax'              => '¥5,000',
+                'total_charge'     => '¥55,000',
                 'max_members'      => '50',
             ],
             [
@@ -190,8 +190,8 @@ class CampaignServiceTest extends GoalousTestCase
                 'can_select'       => true,
                 'sub_total_charge' => '¥100,000',
                 'format_price'     => '¥100,000',
-                'tax'              => '¥8,000',
-                'total_charge'     => '¥108,000',
+                'tax'              => '¥10,000',
+                'total_charge'     => '¥110,000',
                 'max_members'      => '200',
             ],
             [
@@ -203,8 +203,8 @@ class CampaignServiceTest extends GoalousTestCase
                 'can_select'       => true,
                 'sub_total_charge' => '¥150,000',
                 'format_price'     => '¥150,000',
-                'tax'              => '¥12,000',
-                'total_charge'     => '¥162,000',
+                'tax'              => '¥15,000',
+                'total_charge'     => '¥165,000',
                 'max_members'      => '300',
             ],
             [
@@ -216,8 +216,8 @@ class CampaignServiceTest extends GoalousTestCase
                 'can_select'       => true,
                 'sub_total_charge' => '¥200,000',
                 'format_price'     => '¥200,000',
-                'tax'              => '¥16,000',
-                'total_charge'     => '¥216,000',
+                'tax'              => '¥20,000',
+                'total_charge'     => '¥220,000',
                 'max_members'      => '400',
             ],
             [
@@ -229,8 +229,8 @@ class CampaignServiceTest extends GoalousTestCase
                 'can_select'       => true,
                 'sub_total_charge' => '¥250,000',
                 'format_price'     => '¥250,000',
-                'tax'              => '¥20,000',
-                'total_charge'     => '¥270,000',
+                'tax'              => '¥25,000',
+                'total_charge'     => '¥275,000',
                 'max_members'      => '500',
             ],
         ];
@@ -400,15 +400,15 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals([
             'id'               => '1',
             'sub_total_charge' => '50000',
-            'tax'              => floatval(4000),
-            'total_charge'     => floatval(54000),
+            'tax'              => floatval(5000),
+            'total_charge'     => floatval(55000),
             'member_count'     => '50',
         ], $this->CampaignService->getChargeInfo('1-1'));
         $this->assertEquals([
             'id'               => '5',
             'sub_total_charge' => '250000',
-            'tax'              => floatval(20000),
-            'total_charge'     => floatval(270000),
+            'tax'              => floatval(25000),
+            'total_charge'     => floatval(275000),
             'member_count'     => '500',
         ], $this->CampaignService->getChargeInfo('1-5'));
         $this->assertEquals([
@@ -433,8 +433,8 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals([
             'id'               => '1',
             'sub_total_charge' => '50000',
-            'tax'              => floatval(4000),
-            'total_charge'     => floatval(54000),
+            'tax'              => floatval(5000),
+            'total_charge'     => floatval(55000),
             'member_count'     => '50',
         ], $this->CampaignService->getTeamChargeInfo($teamId));
 
@@ -442,8 +442,8 @@ class CampaignServiceTest extends GoalousTestCase
         $this->assertEquals([
             'id'               => '4',
             'sub_total_charge' => '200000',
-            'tax'              => floatval(16000),
-            'total_charge'     => floatval(216000),
+            'tax'              => floatval(20000),
+            'total_charge'     => floatval(220000),
             'member_count'     => '400',
         ], $this->CampaignService->getTeamChargeInfo($teamId));
     }
