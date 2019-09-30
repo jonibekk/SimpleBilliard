@@ -119,6 +119,11 @@ class AppController extends BaseController
     public $evaluable_cnt = 0;
 
     /**
+     * Count of setup items user needs to be done.
+     */
+    public $setup_rest_cnt = 0;
+
+    /**
      * 通知設定
      *
      * @var null
@@ -427,7 +432,7 @@ class AppController extends BaseController
      */
     public function _setAllAlertCnt()
     {
-        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
+        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt + $this->setup_rest_cnt;
         $this->set(compact('all_alert_cnt'));
     }
 
@@ -966,7 +971,8 @@ class AppController extends BaseController
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         $this->set('setup_status', $status_from_redis);
-        $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
+        $this->setup_rest_cnt = count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis));
+        $this->set('setup_rest_count', $this->setup_rest_cnt);
         return;
     }
 
