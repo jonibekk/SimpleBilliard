@@ -1034,9 +1034,12 @@ class TeamMember extends AppModel
         ];
 
         $before_csv_data = $this->getAllMembersCsvData();
+        GoalousLog::info('before csv data', $before_csv_data);
+        GoalousLog::info('upload csv data', $csv_data);
         $this->csv_datas = [];
         //emails
         $before_emails = array_column($before_csv_data, 'email');
+        GoalousLog::info('before_emails', $before_emails);
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
@@ -1071,9 +1074,11 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
 
             $before_record = $before_csv_data[array_search($row['email'], $before_emails)];
+            $before_record2 = $before_csv_data[array_search($row['email'], $before_emails, true)];
 
             //first name check
             if ($row['first_name'] != $before_record['first_name']) {
+                GoalousLog::info("first name doesn't match", compact('before_record', 'before_record2', 'row'));
                 $res['error_msg'] = __("You can't change first name.");
                 return $res;
             }
