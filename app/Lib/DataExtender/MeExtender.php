@@ -4,6 +4,8 @@ App::import('Service', 'ImageStorageService');
 App::uses('CircleMember', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
+App::uses('Email', 'Model');
+App::uses('User', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
 App::uses('LangUtil', 'Util');
@@ -24,6 +26,8 @@ class MeExtender extends BaseExtender
     const EXTEND_JOINED_NOTIFYING_CIRCLES = "ext:user:joined_notifying_circles";
     const EXTEND_NEW_NOTIFICATION_COUNT = "ext:user:new_notification_count";
     const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
+    const EXTEND_EMAIL = "ext:user:email";
+    const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -98,6 +102,18 @@ class MeExtender extends BaseExtender
                 $circleIds[] = (string)$circle['circle_id'];
             }
             $data['my_notifying_circles'] = $circleIds;
+        }
+        if ($this->includeExt($extensions, self::EXTEND_IS_2FA_COMPLETED)) {
+            /** @var User $User */
+            $User = ClassRegistry::init('User');
+            $user = $User->getById($data['id']);
+            $data['is_2fa_completed'] = !empty($user['2fa_secret']);
+        }
+        if ($this->includeExt($extensions, self::EXTEND_EMAIL)) {
+            /** @var Email $Email */
+            $Email = ClassRegistry::init('Email');
+            $email = $Email->getById($data['primary_email_id']);
+            $data['email'] = $email['email'] ?? '';
         }
 
         return $data;

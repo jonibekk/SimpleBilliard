@@ -270,7 +270,7 @@ App::uses('AttachedFile', 'Model');
                     {
                         id: "coach",
                         text: "<?=__("Coach")?>",
-                        icon: "fa fa-venus-double",
+                        icon: "fa fa-handshake-o",
                         locked: true
                     },
                     {

@@ -60,7 +60,5 @@ export function isIOSApp() {
  * disabled async events other message.
  */
 export function disableAsyncEvents() {
-  $(document).off("click", ".js-dashboard-circle-list");
-  $(document).off("click", ".circle-link");
   $(document).off("click", ".call-notifications");
 }
