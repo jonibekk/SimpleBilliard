@@ -8,6 +8,7 @@ App::uses('Email', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'SetupService');
 App::uses('LangUtil', 'Util');
 
 App::uses('GlRedis', 'Model');
@@ -28,6 +29,7 @@ class MeExtender extends BaseExtender
     const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
     const EXTEND_EMAIL = "ext:user:email";
     const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
+    const EXTEND_SETUP_REST_COUNT = "ext:user:setup_rest_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -114,6 +116,13 @@ class MeExtender extends BaseExtender
             $Email = ClassRegistry::init('Email');
             $email = $Email->getById($data['primary_email_id']);
             $data['email'] = $email['email'] ?? '';
+        }
+        if ($this->includeExt($extensions, self::EXTEND_SETUP_REST_COUNT)) {
+            /** @var SetupService $SetupService */
+            $SetupService = ClassRegistry::init("SetupService");
+            $setupResolved = $SetupService->resolveSetupCompleteAndRest($data['id'], $data['setup_complete_flg']);
+            $data['setup_complete_flg'] = $setupResolved['complete'];
+            $data['setup_rest_count'] = $setupResolved['rest_count'];
         }
 
         return $data;
