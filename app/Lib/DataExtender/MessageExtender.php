@@ -19,7 +19,7 @@ class MessageExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_SENDER)) {
             /** @var UserExtension $UserExtension */
             $UserExtension = ClassRegistry::init('UserExtension');
-            $data = $UserExtension->extend($data, "{n}.sender_user_id", 'id', 'sender');
+            $data = $UserExtension->extend($data, "sender_user_id", 'id', 'sender');
         }
 
         return $data;

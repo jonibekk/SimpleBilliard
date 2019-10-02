@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'TeamEntity');
 
+use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum as Enum;
 
 /**
@@ -35,6 +36,15 @@ use Goalous\Enum as Enum;
  */
 class Team extends AppModel
 {
+    public $modelConversionTable = [
+        'type'               => DataType::INT,
+        'service_use_status' => DataType::INT,
+        'start_term_month'   => DataType::INT,
+        'border_months'      => DataType::INT,
+        'timezone'           => DataType::INT,
+        'domain_limited_flg' => DataType::BOOL,
+    ];
+
     /**
      * Type | タイプ
      */
@@ -102,16 +112,17 @@ class Team extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles'      => [
+                'styles'         => [
                     'small'        => '32x32',
                     'medium'       => '48x48',
                     'medium_large' => '96x96',
                     'large'        => '128x128',
                     'x_large'      => '256x256',
                 ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-team.jpg',
-                'quality'     => 100,
+                'path'           => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'default_url'    => 'no-image-team.jpg',
+                's3_default_url' => 'sys/defaults/no-image-team.svg',
+                'quality'        => 100,
             ]
         ]
     ];

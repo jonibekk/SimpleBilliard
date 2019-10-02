@@ -2074,7 +2074,7 @@ textarea.comment-post-form {
 
 .modal-footer {
     margin-top: 0;
-    background: #f0f0f0;
+    background: white;
 }
 
 .modalFeedTextPadding {
@@ -2203,7 +2203,7 @@ textarea.comment-post-form {
 /*=== メディアクエリで切り替え =======================*/
 
 /*Extrasmall*/
-@media (min-width: 480px) {
+@media (min-width: 500px) {
     .container {
         width: 97.5%;
     }
@@ -2976,14 +2976,41 @@ Temporary Properties - YOU MUST FIX
   position: absolute;
   z-index: 10;
   color: @whiteColor;
-  background-color: @acidRed;
+  background-color: @color-primary-01;
   padding: 0;
-  width: 19px;
-  height: 19px;
-  line-height: 18px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
   border-radius: 50%;
-  display: block;
-  font-size: 10px;
+  display: inline-block;
+  border: none;
+  &.mod-small {
+    width: 8px;
+    height: 8px;
+    top: 6px;
+    right: 16px;
+    > span {
+      display: none;
+    }
+  }
+  > span {
+    font-size: 10px;
+    bottom: 0;
+    color: #ffffff;
+    display: inline-block;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    &.oval {
+      background-color: @white;
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      font-size: 0;
+    }
+  }
 }
 
 .frame-arrow-pic {
@@ -3092,6 +3119,58 @@ Temporary Properties - YOU MUST FIX
   &:visited,
   &:focus {
     text-decoration: none;
+  }
+}
+.glNavMenuLink {
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0;
+  height: @mobile-header-height;
+  position: relative;
+  text-align: center;
+  width: 64px;
+  text-decoration: none !important;
+  border: none !important;
+  &:hover, &.open {
+    text-decoration: none;
+    > span,
+    > i,
+    > div {
+      color: @color-02-gray;
+      .mod-feed {
+        background-position: 50% 0%;
+      }
+    }
+  }
+
+  > i,
+  > div {
+    font-size: 28px;
+    height: 28px;
+    color: @color-04-gray;
+    width: 28px;
+    display: block;
+    margin: 4px auto 0;
+    &.mod-feed {
+      background: url('../img/svg/logomark.svg') no-repeat;
+      background-position: 50% 100%;
+      background-size: 200% 200%;
+    }
+  }
+
+  > span {
+    color: @color-04-gray;
+    font-size: 10.5px;
+    text-decoration: none;
+  }
+  &.active {
+    > i,
+    > span {
+      color: @color-02-gray;
+    }
+    .mod-feed {
+      background-position: 50% 0%;
+    }
   }
 }
 

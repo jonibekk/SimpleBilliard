@@ -96,7 +96,6 @@ class Header extends React.Component {
       return (
         <div
           className={`topicDetail-header ${sp_class}`}
-          style={header_styles}
           onTouchMove={this.onTouchMove}
         >
           <div className="topicDetail-header-left">
@@ -142,7 +141,6 @@ class Header extends React.Component {
 
       <div
         className={`topicDetail-header ${sp_class}`}
-        style={header_styles}
         onTouchMove={this.onTouchMove}
       >
         <div className="topicDetail-header-left">

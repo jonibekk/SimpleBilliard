@@ -14,6 +14,7 @@ App::uses('AttachedFile', 'Model');
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
+        jwt_token: "<?= empty($jwt_token) ? "" : $jwt_token ?>",
         require_banner_notification: "<?=
             (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]))
             || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
@@ -73,7 +74,7 @@ App::uses('AttachedFile', 'Model');
                 b: "<?=__("Loading...")?>",
                 c: "<?=__("Searching...")?>",
                 d: "<?=__("Following")?>",
-                e: "<?=__("More") ?> ",
+                e: "<?=__("More ") ?> ",
                 f: "<?=__("View previous posts ▼") ?> ",
                 g: "<?=__('No further comment.')?>",
                 h: "<?=__("Close")?>",
@@ -269,7 +270,7 @@ App::uses('AttachedFile', 'Model');
                     {
                         id: "coach",
                         text: "<?=__("Coach")?>",
-                        icon: "fa fa-venus-double",
+                        icon: "fa fa-handshake-o",
                         locked: true
                     },
                     {
@@ -353,7 +354,7 @@ App::uses('AttachedFile', 'Model');
             "Circle Image": "<?= __("Circle Image") ?>",
             "Select an image": "<?= __("Select an image") ?>",
             "Reselect an image": "<?= __("Reselect an image") ?>",
-            "Create": "<?= __("Create") ?>",
+            "Create": "<?= __("Create ") ?>",
             "Create a goal": "<?= __("Create a goal") ?>",
             "Purpose": "<?= __("Purpose") ?>",
             "Goal Name": "<?= __("Goal Name") ?>",
@@ -760,6 +761,7 @@ App::uses('AttachedFile', 'Model');
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>",
         is_current_team_admin: "<?= viaIsSet($is_current_team_admin) ?>",
         attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>",
+        my_notifying_circles: <?= json_encode(viaIsSet($my_notifying_circles)) ?>,
         is_demo: "<?= IS_DEMO ?>"
     };
 

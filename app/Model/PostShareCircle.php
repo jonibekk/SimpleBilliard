@@ -8,6 +8,9 @@ App::uses('AppModel', 'Model');
  * @property Circle $Circle
  * @property Team   $Team
  */
+
+use Goalous\Enum\DataType\DataType as DataType;
+
 class PostShareCircle extends AppModel
 {
     //そのユーザのALLフィード、サークルページ両方に表示される
@@ -37,6 +40,13 @@ class PostShareCircle extends AppModel
         'Post',
         'Circle',
         'Team',
+    ];
+
+    public $modelConversionTable = [
+        'post_id'    => DataType::INT,
+        'circle_id'  => DataType::INT,
+        'team_id'    => DataType::INT,
+        'share_type' => DataType::INT
     ];
 
     public function add($post_id, $circles, $team_id = null, $share_type = self::SHARE_TYPE_SHARED)
@@ -86,9 +96,9 @@ class PostShareCircle extends AppModel
     /**
      * $post_id の投稿が公開サークルに共有されているか確認する
      *
-     * @param $postId
-     *
+     * @param      $postId
      * @param null $teamId
+     *
      * @return bool 公開サークルに共有されている時 true
      */
     public function isShareWithPublicCircle($postId, $teamId = null)
@@ -109,26 +119,43 @@ class PostShareCircle extends AppModel
         return $res ? true : false;
     }
 
+    /**
+     * Get list of circle IDs where the post is shared
+     *
+     * @param int $postId
+     * @param int $teamId
+     *
+     * @return array
+     */
+    public function getShareCircleList(int $postId, int $teamId = null): array
+    {
+        $teamId = $teamId ?: $this->current_team_id;
+
+        $options = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $postId,
+                'PostShareCircle.team_id' => $teamId,
+                'PostShareCircle.del_flg' => false
+            ],
+            'fields'     => [
+                'PostShareCircle.circle_id',
+            ],
+        ];
+        $res = $this->useType()->find('all', $options);
+        return Hash::extract($res, '{n}.{s}.circle_id') ?: [];
+    }
+
+    /**
+     * Get list of circles and their members where the post is shared to
+     *
+     * @param $post_id
+     *
+     * @return mixed
+     */
     public function getShareCirclesAndMembers($post_id)
     {
         $circle_list = $this->getShareCircleList($post_id);
         $res = $this->Circle->getCirclesAndMemberById($circle_list);
-        return $res;
-    }
-
-    public function getShareCircleList($post_id)
-    {
-        $options = [
-            'conditions' => [
-                'PostShareCircle.post_id' => $post_id,
-                'PostShareCircle.team_id' => $this->current_team_id,
-            ],
-            'fields'     => [
-                'PostShareCircle.circle_id',
-                'PostShareCircle.circle_id',
-            ],
-        ];
-        $res = $this->find('list', $options);
         return $res;
     }
 
@@ -337,5 +364,93 @@ class PostShareCircle extends AppModel
             $options['conditions']["Comment.user_id"] = $params['comment_user_id'];
         }
         return $this->find('list', $options);
+    }
+
+    /**
+     * Get list of post IDs in each circles
+     *
+     * @param array $circleIds
+     *
+     * @return array
+     *              [circle_id => post_id[]]
+     */
+    public function getListOfPost(array $circleIds): array
+    {
+        $condition = [
+            'conditions' => [
+                'PostShareCircle.circle_id' => $circleIds,
+                'PostShareCircle.del_flg'   => false,
+            ],
+            'table'      => 'post_share_circles',
+            'alias'      => 'PostShareCircle',
+            'fields'     => [
+                'PostShareCircle.circle_id',
+                'PostShareCircle.post_id'
+            ]
+        ];
+
+        return $this->queryPostList($condition);
+    }
+
+    /**
+     * Get list of post IDs in each circles a post is shared to
+     *
+     * @param array $postIds Post to check circle share destination
+     *
+     * @return array
+     *              [circle_id => post_id[]]
+     */
+    public function getListOfPostByPostId(array $postIds): array
+    {
+        $condition = [
+            'conditions' => [
+                'PostShareCircle.del_flg' => false,
+            ],
+            'table'      => 'post_share_circles',
+            'alias'      => 'PostShareCircle',
+            'fields'     => [
+                'PostShareCircle.post_id',
+                'PostShareCircle.circle_id'
+            ],
+        ];
+
+        $db = $this->getDataSource();
+
+        $subQuery = $db->buildStatement([
+            'conditions' => [
+                'PostShareCircle.post_id' => $postIds,
+                'PostShareCircle.del_flg' => false,
+            ],
+            'table'      => 'post_share_circles',
+            'alias'      => 'PostShareCircle',
+            'fields'     => [
+                'PostShareCircle.circle_id',
+            ]
+        ], $this);
+        $subQuery = 'PostShareCircle.circle_id IN (' . $subQuery . ') ';
+        $subQueryExpression = $db->expression($subQuery);
+        $condition['conditions'][] = $subQueryExpression;
+
+        return $this->queryPostList($condition);
+    }
+
+    private function queryPostList(array $condition): array
+    {
+        $postList = $this->useType()->find('all', $condition);
+
+        $postList = Hash::extract($postList, '{n}.{s}');
+
+        $result = [];
+
+        foreach ($postList as $entry) {
+            $circleId = $entry['circle_id'];
+            $postId = $entry['post_id'];
+            if (isset($result[$circleId]) && in_array($postId, $result[$circleId])) {
+                continue;
+            }
+            $result[$circleId][] = $postId;
+        }
+
+        return $result ?: [];
     }
 }

@@ -47,6 +47,7 @@ class PaymentServiceTest extends GoalousTestCase
         'app.mst_price_plan',
         'app.view_price_plan',
         'app.campaign_team',
+        'app.team_translation_language',
     );
 
     /**
@@ -67,6 +68,69 @@ class PaymentServiceTest extends GoalousTestCase
         $this->CampaignService = ClassRegistry::init('CampaignService');
         $this->TeamMember = $this->TeamMember ?? ClassRegistry::init('TeamMember');
         $this->InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+    }
+
+    function test_get_single()
+    {
+        $modelName = 'PaymentSetting';
+        $teamId = 1;
+
+        $createData = $this->createTestPaymentData(['team_id' => $teamId, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        /* First data */
+        // Save cache
+        $data = $this->PaymentService->get($teamId);
+        $this->assertNotEmpty($data);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->PaymentSetting->useType()->findById($teamId)[$modelName];
+        // Extract only db record columns(exclude additional data. e.g. img_url)
+        $tmp = array_intersect_key($data, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
+
+        /* Multiple data */
+        // Save cache
+        $teamId2 = 2;
+
+        $createData = $this->createTestPaymentData(['team_id' => $teamId2, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        $data2 = $this->PaymentService->get($teamId2);
+        $this->assertNotEmpty($data2);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data2, $cacheList[$modelName][$teamId2]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->PaymentSetting->useType()->findById($teamId2)[$modelName];
+        $tmp = array_intersect_key($data2, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data2 = $this->PaymentService->get($teamId2);
+        $this->assertSame($data2, $cacheList[$modelName][$teamId2]);
+        $this->assertNotEquals($data, $data2);
+
+        /* Empty */
+        $teamId = 0;
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, []);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertFalse(array_key_exists($teamId, $cacheList[$modelName]));
+
+        $teamId = 9999999;
+        $data = $this->PaymentService->get($teamId);
+        $this->assertSame($data, []);
+        $cacheList = $this->PaymentService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$teamId]);
     }
 
     private function createTestPaymentData(array $data): array
@@ -204,15 +268,19 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $teamId = 1;
         $this->Team->current_team_id = $teamId;
+        $this->Team->clear();
         $this->Team->id = $teamId;
         $this->Team->save([
             'timezone' => 12,
-        ]);
-        $this->PaymentSetting->save([
+        ], false);
+        $this->PaymentSetting->create();
+        $a = $this->PaymentSetting->save([
             'team_id'          => $teamId,
             'payment_base_day' => 2,
         ], false);
         GoalousDateTime::setTestNow("2017-01-01");
+        $this->PaymentService->clearCachePaymentSettings();
+
         $res = $this->PaymentService->getNextBaseDate($teamId);
         $this->assertEquals($res, '2017-01-02');
 
@@ -683,7 +751,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertTrue($res['charge_datetime'] <= time());
@@ -720,7 +788,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -756,7 +824,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
@@ -804,7 +872,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertTrue($res['charge_datetime'] <= time());
@@ -853,7 +921,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -888,7 +956,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -1083,7 +1151,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $paymentSetting = $this->PaymentService->get($teamId);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByType($teamId, $usersCount,
@@ -1145,7 +1213,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -1183,7 +1251,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -1221,7 +1289,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -1261,7 +1329,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -1284,7 +1352,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertNotEmpty($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
@@ -1306,7 +1374,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertNotEmpty($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
@@ -1328,7 +1396,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertNotEmpty($res['stripe_payment_code']);
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
@@ -1373,7 +1441,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
@@ -1412,7 +1480,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
@@ -1459,7 +1527,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($res['charge_datetime'] <= time());
         $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
         $totalAmount = $amountPerUser * $chargeUserCnt;
@@ -1493,7 +1561,7 @@ class PaymentServiceTest extends GoalousTestCase
         }
         $this->assertEmpty($res);
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($res['charge_datetime'] <= time());
         $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
         $totalAmount = $amountPerUser * $chargeUserCnt;
@@ -1570,7 +1638,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($payLog['plain_data'], $paySetting);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $amountPerUser = 1000;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
@@ -1663,7 +1731,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($payLog['plain_data'], $paySetting);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $amountPerUser = PaymentService::AMOUNT_PER_USER_USD;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
@@ -1797,7 +1865,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($payLog['plain_data'], $paySetting);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
@@ -1908,7 +1976,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertCount(1, $InvoiceHistoriesChargeHistories);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $amountPerUser = PaymentService::AMOUNT_PER_USER_JPY;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
@@ -2004,7 +2072,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertCount(1, $InvoiceHistoriesChargeHistories);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
         $chargeInfo = $this->CampaignService->getChargeInfo($pricePlanCode);
@@ -2101,7 +2169,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertCount(1, $InvoiceHistoriesChargeHistories);
 
         // Check saved ChargeHistory data
-        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $history = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($history['charge_datetime'] <= time());
         $amountPerUser = 1200;
         $chargeUserCnt = $this->TeamMember->countChargeTargetUsers($teamId);
@@ -4036,7 +4104,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4070,7 +4138,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4092,7 +4160,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4133,7 +4201,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4169,7 +4237,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4191,7 +4259,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
@@ -4230,7 +4298,7 @@ class PaymentServiceTest extends GoalousTestCase
             $teamId, $currentPlanCode, $upgradePlanCode, $opeUserId
         );
 
-        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId);
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
         $this->assertTrue($res['charge_datetime'] <= time());
         $baseExpected = [
             'team_id'                     => $teamId,

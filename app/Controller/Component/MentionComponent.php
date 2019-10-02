@@ -90,7 +90,6 @@ class MentionComponent extends Component
         return $result;
     }
 
-
     /**
      * replace all mentions in content with HTML expression.
      *
@@ -101,9 +100,54 @@ class MentionComponent extends Component
     public static function replaceMentionForTranslation(string $text): string
     {
         $result = $text;
-        $result = preg_replace(self::getMentionReg('.*?:(.*?)', 'm'),
+        $result = preg_replace(self::getMentionReg('(.*?):(.*?)', 'm'),
+            '<span class="mention" translate="no" mention="${1}">${2}</span>', $result);
+        return $result;
+    }
+
+    /**
+     * Replace all mention HTML tags in content with mention string for API v1
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionTagForTranslationV1(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace('/<span class="mention" translate="no" mention=".*?">(.*?)<\/span>/m',
             '<span class="mention">@${1}</span>', $result);
         return $result;
+    }
+
+    /**
+     * Replace all mention HTML tags in content with mention string for API v2
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    public static function replaceMentionTagForTranslationV2(string $text): string
+    {
+        $result = $text;
+        $result = preg_replace('/<span class="mention" translate="no" mention="(.*?)">(.*?)<\/span>/m',
+            self::$PREFIX . '${1}:${2}' . self::$SUFFIX, $result);
+        return $result;
+    }
+
+    /**
+     * replace all mentions to plain text that human can read.
+     * e.g.
+     * before: `%%%circle_104:テストサークル%%% %%%user_1:山田 太郎%%%　いいね！`
+     * after: `いいね！`
+     *
+     * @param $text     string the content should be replaced
+     *
+     * @return string
+     */
+    static public function replaceMentionToSimpleReadable(string $text): string
+    {
+        return preg_replace("/" . self::$PREFIX . "(user|circle)_(\d+):(.*?)" . self::$SUFFIX . "/", '', $text);
     }
 
     /**
@@ -232,6 +276,54 @@ class MentionComponent extends Component
         }
         $result = array_unique($result);
         return $result;
+    }
+
+    /**
+     * get mention target ids each type (user/circle)
+     *
+     * @param $body              string content of Post/Action/Comment
+     * @param $teamId            int the team ID to identify the circle uniquely
+     *
+     * @return array
+     */
+    public function getTargetIdsEachType(
+        string $body = null,
+        int $teamId
+    ): array
+    {
+        $mentions = self::extractAllIdFromMention($body);
+
+        $userIds = [];
+        $circleIds = [];
+        foreach ($mentions as $key => $mention) {
+            if ($mention['isUser']) {
+                $userIds[] = $mention['id'];
+            } else {
+                if ($mention['isCircle']) {
+                    $circleIds[] = $mention['id'];
+                }
+            }
+        }
+        if (!empty($userIds)) {
+            /* @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
+            $userIds = $TeamMember->filterActiveMembers($userIds, $teamId);
+        }
+        if (!empty($circleIds)) {
+            /* @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+            $circles = $Circle->find('all', [
+                'fields'     => 'id',
+                'conditions' => [
+                    'id' => $circleIds
+                ]
+            ]);
+            $circleIds = Hash::extract($circles, '{n}.Circle.id');
+        }
+        return [
+            'circle' => $circleIds,
+            'user'   => $userIds
+        ];
     }
 
     static private function getPostWithShared(int $postId): array

@@ -979,7 +979,8 @@ class PostTest extends GoalousTestCase
         $this->assertFalse($res);
 
         $this->User->id = 1;
-        $this->User->save(['created' => $this->start_date - 1]);
+        $created = (new GoalousDateTime($this->start_date))->subDay(1)->format('Y-m-d');
+        $this->User->save(['created' => $created]);
         // In case that user posted circle post
         $this->Post->save([
             'id'       => 1,
@@ -1176,8 +1177,8 @@ class PostTest extends GoalousTestCase
         $this->start_date = $this->Post->Team->Term->getCurrentTermData()['start_date'];
         $this->end_date = $this->Post->Team->Term->getCurrentTermData()['end_date'];
         $timezone = $this->Post->Team->Term->getCurrentTermData()['timezone'];
-        $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
-        $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
+        $this->start_date_format = (new GoalousDateTime($this->start_date))->addHour($timezone)->format('Y-m-d');
+        $this->end_date_format = (new GoalousDateTime($this->end_date))->addHour($timezone)->format('Y-m-d');
     }
 
     function repQuote($str)

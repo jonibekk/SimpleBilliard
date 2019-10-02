@@ -16,12 +16,34 @@ class ErrorTypeValidation extends AbstractErrorType
         $this->field = $field;
     }
 
+    private function currentLanguage(): string
+    {
+        $lang = Configure::read("Config.language") ?? 'en';
+        switch ($lang) {
+            case 'ja':
+            case 'jpn':
+                return 'ja';
+            case 'en':
+            case 'eng':
+            default:
+                return 'en';
+        }
+    }
+
+    private function buildMessage(): string
+    {
+        $fieldTranslations = Configure::read("translation_validation_fields");
+        $lang = $this->currentLanguage();
+        $filedName = $fieldTranslations[$this->field][$lang];
+        return str_replace('{{field}}', $filedName, $this->getMessage());
+    }
+
     public function toArray():array
     {
         return [
             'type' => Enum\Network\Response\ErrorType::VALIDATION,
             'field' => $this->field,
-            'message' => $this->getMessage(),
+            'message' => $this->buildMessage(),
         ];
     }
 }

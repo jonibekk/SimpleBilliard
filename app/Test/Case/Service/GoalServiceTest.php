@@ -3,6 +3,7 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'GoalService');
 App::import('Service', 'ActionService');
 App::import('Service', 'KrValuesDailyLogService');
+App::import('Service', 'KeyResultService');
 App::uses('Follower', 'Model');
 
 use Goalous\Enum\Csv\GoalAndKrs as GoalAndKrs;
@@ -21,6 +22,7 @@ use Goalous\Enum\Model\KeyResult\ValueUnit as ValueUnit;
  * @property Goal                    $Goal
  * @property GoalCategory            $GoalCategory
  * @property KrValuesDailyLogService $KrValuesDailyLogService
+ * @property KeyResultService        $KeyResultService
  * @property KeyResult               $KeyResult
  * @property KrValuesDailyLog        $KrValuesDailyLog
  * @property Follower                $Follower
@@ -58,6 +60,10 @@ class GoalServiceTest extends GoalousTestCase
         'app.kr_values_daily_log',
         'app.key_result',
         'app.team_translation_language',
+        'app.team_translation_status',
+        'app.mst_translation_language',
+        'app.translation',
+        'app.evaluation_setting'
     ];
 
     /**
@@ -81,8 +87,101 @@ class GoalServiceTest extends GoalousTestCase
         $this->KeyResult = ClassRegistry::init('KeyResult');
         $this->KrValuesDailyLogService = ClassRegistry::init('KrValuesDailyLogService');
         $this->KrValuesDailyLog = ClassRegistry::init('KrValuesDailyLog');
+        $this->KeyResultService = ClassRegistry::init('KeyResultService');
 
         $this->setDefaultTeamIdAndUid();
+    }
+
+    function setDefault() {
+        $this->Goal->my_uid = 1;
+        $this->Goal->current_team_id = 1;
+        $this->Goal->Team->my_uid = 1;
+        $this->Goal->Team->current_team_id = 1;
+        $this->Goal->KeyResult->my_uid = 1;
+        $this->Goal->KeyResult->current_team_id = 1;
+        $this->Goal->GoalMember->my_uid = 1;
+        $this->Goal->GoalMember->current_team_id = 1;
+        $this->Goal->Follower->my_uid = 1;
+        $this->Goal->Follower->current_team_id = 1;
+        $this->Goal->Post->my_uid = 1;
+        $this->Goal->Post->current_team_id = 1;
+        $this->Goal->Evaluation->current_team_id = 1;
+        $this->Goal->Evaluation->my_uid = 1;
+        $this->Goal->Team->Term->current_team_id = 1;
+        $this->Goal->Team->Term->my_uid = 1;
+
+        $this->Goal->Team->Term->addTermData(Term::TYPE_CURRENT);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_PREVIOUS);
+        $this->Goal->Team->Term->addTermData(Term::TYPE_NEXT);
+    }
+
+    function test_get_single()
+    {
+        $this->setDefault();
+        $modelName = 'Goal';
+        $id = 1;
+        /* First data */
+        // Save cache
+        $data = $this->GoalService->get($id);
+        $this->assertNotEmpty($data);
+        $cacheList = $this->GoalService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
+        // Check data is as same as data getting from db directly
+        $ret = $this->Goal->useType()->findById($id)[$modelName];
+        // Extract only db record columns(exclude additional data. e.g. img_url)
+        $tmp = array_intersect_key($data, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data = $this->GoalService->get($id);
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
+        /* Multiple data */
+        // Save cache
+        $id2 = 2;
+        $data2 = $this->GoalService->get($id2);
+        $this->assertNotEmpty($data2);
+        $cacheList = $this->GoalService->getCacheList();
+        $this->assertSame($data2, $cacheList[$modelName][$id2]);
+
+        $ret = $this->Goal->useType()->findById($id2)[$modelName];
+        $tmp = array_intersect_key($data2, $ret);
+        $this->assertSame($tmp, $ret);
+
+        // Get from cache
+        $data2 = $this->GoalService->get($id2);
+        $this->assertSame($data2, $cacheList[$modelName][$id2]);
+        $this->assertNotEquals($data, $data2);
+
+        /* if save other type data to cache (whether prevent override cache data */
+        $modelName2 = 'KeyResult';
+        $krId = 1;
+        // Save cache
+        $data4 = $this->KeyResultService->get($krId);
+        $this->assertNotEmpty($data4);
+        $cacheList = $this->KeyResultService->getCacheList();
+        $this->assertSame($data4, $cacheList[$modelName2][$krId]);
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
+        $data = $this->GoalService->get($id);
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+        $this->assertSame($data['name'], 'ゴール1');
+        $this->assertSame($data4, $cacheList[$modelName2][$krId]);
+
+        /* Empty */
+        $id = 0;
+        $data = $this->GoalService->get($id);
+        $this->assertSame($data, []);
+        $cacheList = $this->GoalService->getCacheList();
+        $this->assertFalse(array_key_exists($id, $cacheList[$modelName]));
+
+        $id = 9999999;
+        $data = $this->GoalService->get($id);
+        $this->assertSame($data, []);
+        $cacheList = $this->GoalService->getCacheList();
+        $this->assertSame($data, $cacheList[$modelName][$id]);
+
     }
 
     function testGoalValidateFields()

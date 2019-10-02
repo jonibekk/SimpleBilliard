@@ -156,4 +156,27 @@ class AuthService extends AppService
         }
         return true;
     }
+
+
+    /**
+     * Recreate new jwt
+     * use case: switch team
+     *
+     * @param JwtAuthentication $jwt: old jwt
+     * @param int $teamId
+     * @return JwtAuthentication new jwt
+     */
+    public function recreateJwt(JwtAuthentication $jwt, int $teamId): JwtAuthentication
+    {
+        try {
+            $userId = $jwt->getUserId();
+            // Del old jwt
+            $this->invalidateUser($jwt);
+            // Recreate with switched team id
+            return AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
+        } catch (\Throwable $e) {
+            throw new GlException\Auth\AuthFailedException($e->getMessage());
+        }
+    }
+
 }

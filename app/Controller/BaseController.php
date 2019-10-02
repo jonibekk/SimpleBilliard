@@ -208,7 +208,8 @@ class BaseController extends Controller
                 // GL-7364：Enable to keep login status between old Goalous and new Goalous
                 $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
                 if (empty($mapSesAndJwt)) {
-                    $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                    $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+                    $this->set('jwt_token', $jwt->token());
                 }
             }
             //Check from DB whether user is deleted
@@ -452,9 +453,11 @@ class BaseController extends Controller
         }
         $this->set('is_mb_app_ios_high_header', $this->is_mb_app_ios_high_header);
 
-        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
-            $this->is_mb_app_web_footer = true;
-        }
+        // TODO: Delete line after fixed final spec
+//        if ($this->is_mb_app && $mbAppVersion >= self::MOBILE_APP_VERSION_WEB_FOOTER) {
+//            $this->is_mb_app_web_footer = true;
+//        }
+        $this->is_mb_app_web_footer = true;
         $this->set('is_mb_app_web_footer', $this->is_mb_app_web_footer);
     }
 
@@ -485,6 +488,10 @@ class BaseController extends Controller
      */
     public function _isProhibitedRequestByCannotUseService(): bool
     {
+        // Redirect to new Goalous if user can access a page even if team status is locked
+        if ($this->request->url === 'others') {
+            return false;
+        }
         if ($this->_isExcludeRequestParamInProhibited()) {
             return false;
         }
@@ -571,6 +578,12 @@ class BaseController extends Controller
             ], false);
         }
 
+        // Delete mapping jwt and session id
+        $sesId = $this->Session->id();
+        if ($this->current_team_id && $this->my_uid) {
+            $this->GlRedis->delMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+        }
+
         foreach ($this->Session->read() as $key => $val) {
             if (in_array($key, ['Config', '_Token', 'Auth'])) {
                 continue;
@@ -579,7 +592,6 @@ class BaseController extends Controller
         }
 
         $this->Cookie->destroy();
-
         return $this->Auth->logout();
     }
 

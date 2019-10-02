@@ -4,7 +4,7 @@ sudo: false
 language: php
 
 php:
-  - 7.0.12
+  - 7.1.25
 
 env:
   global:
@@ -122,6 +122,21 @@ notifications:
   email: false
 
 deploy:
+  # Deploying to e2e env after merged develop.
+  - provider: opsworks
+    access-key-id: $AWS_ACCESS_KEY
+    secret-access-key: $AWS_SECRET_KEY
+    # Set e2e stack's cake app-id
+    # https://console.aws.amazon.com/opsworks/home?region=ap-northeast-1#/stack/2ac1d699-6382-4b2b-ac1b-a3b962d2df8e/apps/b211b084-022b-4bc1-b5c6-80721b608442
+    app-id: b211b084-022b-4bc1-b5c6-80721b608442
+    wait-until-deployed: true
+    region: ap-northeast-1
+    on:
+      branch: develop
+      # Travis CI is running on parallel, deploy may also run in parallel.
+      # Condition below limit the deploy to run only on CIParallelTests1 process.
+      condition: "$TEST_TARGET = CIParallelTests1"
+
 ## 本番、ISAO環境においては自動deployをやめる。
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
@@ -137,16 +152,6 @@ deploy:
 #    wait-until-deployed: true
 #    on:
 #      branch: master-isao
-
-#  - provider: opsworks
-#    access-key-id: $AWS_ACCESS_KEY
-#    secret-access-key: $AWS_SECRET_KEY
-#    app-id: 42c32abd-5bf8-4d36-b3ef-b417425fb7c1
-#    wait-until-deployed: false
-#    region: ap-northeast-1
-#    on:
-#      branch: develop
-#
 #  - provider: opsworks
 #    access-key-id: $AWS_ACCESS_KEY
 #    secret-access-key: $AWS_SECRET_KEY

@@ -39,7 +39,8 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         'app.team_translation_status',
         'app.team_translation_language',
         'app.mst_translation_language',
-        'app.translation'
+        'app.translation',
+        'app.post_resource',
     ];
 
     public function test_getCirclePost_success()
@@ -179,12 +180,12 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $cursor->addResource('res_id', 1);
         $cursor->addResource('current_user_id', 1);
         $cursor->addResource('current_team_id', 1);
-        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_POST_FILE);
+        $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, CirclePostExtender::EXTEND_RESOURCES);
 
         $this->assertCount(1, $result['data']);
 
         $postData = $result['data'][0];
-        $this->assertArrayHasKey('attached_files', $postData);
+        $this->assertArrayHasKey('resources', $postData);
     }
 
     public function test_getCirclePostWithTranslationLanguage_success()

@@ -176,7 +176,7 @@ class TeamMemberService extends AppService
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        if (!$TeamTranslationLanguage->canTranslate($teamId)) {
+        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
             throw new GlException\GoalousNotFoundException("Team does not have translation languages");
         }
 
@@ -185,22 +185,8 @@ class TeamMemberService extends AppService
 
         $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
 
-        if (empty($defaultLanguage) || !$TeamTranslationLanguage->supportTranslationLanguage($teamId, $defaultLanguage)) {
-
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-
-            if (!empty($browserLanguages)) {
-                $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
-            }
-
-            if (empty($topBrowserLanguage)) {
-                $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-            } else {
-                $defaultLanguage = $topBrowserLanguage;
-            }
-
-            $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage);
+        if (empty($defaultLanguage) || !$TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
+            $defaultLanguage = $this->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages);
         }
 
         /** @var TranslationLanguage $TranslationLanguage */
@@ -263,5 +249,69 @@ class TeamMemberService extends AppService
             ]);
             throw $e;
         }
+    }
+
+    /**
+     * Update team member's default translation language based on user's browser language. If not, use team's
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages ISO 639-1 language code array
+     * @param bool  $overwriteFlg     True for updating regardless if team member already has a default translation
+     *                                language
+     *
+     * @return string Team member's new language
+     *
+     * @throws Exception
+     */
+    public function updateDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages, bool $overwriteFlg = true): string
+    {
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+
+        if (!empty($browserLanguages)) {
+            $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+        }
+
+        if (empty($topBrowserLanguage)) {
+            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
+        } else {
+            $defaultLanguage = $topBrowserLanguage;
+        }
+
+        $this->setDefaultTranslationLanguage($teamId, $userId, $defaultLanguage, $overwriteFlg);
+
+        return $defaultLanguage;
+    }
+
+    /**
+     * Initialize user's default translation language in a team
+     *
+     * @param int   $teamId
+     * @param int   $userId
+     * @param array $browserLanguages
+     *
+     * @throws Exception
+     */
+    public function initializeDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages)
+    {
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+
+        if (!$TeamTranslationLanguage->hasLanguage($teamId)) {
+            return;
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $defaultLanguage = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
+
+        // If user alreadh have a valid default translation language, return
+        if (!empty($defaultLanguage) && $TeamTranslationLanguage->isLanguageSupported($teamId, $defaultLanguage)) {
+            return;
+        }
+
+        $this->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages, false);
     }
 }

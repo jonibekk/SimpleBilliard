@@ -54,11 +54,7 @@ $member_count = isset($member_count) ? $member_count : '';
             <?php if (!$circle['Circle']['public_flg']): ?>
                 <i class="fa fa-lock circle-item-secret-mark"></i>
             <?php endif ?>
-            <a href="<?= $this->Html->url([
-                'controller' => 'posts',
-                'action'     => 'feed',
-                'circle_id'  => $circle['Circle']['id']
-            ]) ?>"
+            <a href="<?= "/circles/" . $circle['Circle']['id'] ."/posts"?>"
                class="link-dark-gray circle-item-circle-link">
                 <p class="circle-item-circle-name"><?= h($circle['Circle']['name']) ?></p>
             </a>

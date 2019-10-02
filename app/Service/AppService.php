@@ -25,14 +25,24 @@ class AppService extends CakeObject
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
     }
 
+    public function getCacheList() {
+        return static::$cacheList;
+    }
+
     /**
      *
      *
      * @param int $id
      * @param string $modelName
-     * @return entity|array
+     * @param null $fields
+     * @param string $key
+     * @return array
      */
-    protected function _getWithCache(int $id, string $modelName) {
+    protected function _getWithCache(int $id, string $modelName, $fields = null, string $key = 'id'): array {
+        if (empty($id)) {
+            return [];
+        }
+
         $path = $modelName.".".$id;
         // In case already got data from db and cached, but data is empty
         if (Hash::check(static::$cacheList, $path)
@@ -49,15 +59,28 @@ class AppService extends CakeObject
         $model = ClassRegistry::init($modelName);
 
         // Get data from db and cache
-        $data = $model->useType()->findById($id);
+        $data = $model->useType()->find('first', [
+            'conditions' => [$key => $id],
+            'fields' => $fields
+        ]);
         $data = Hash::get($data, $modelName) ?? [];
-        static::$cacheList[$modelName][$id] = $data;
-        if (empty($data)) {
-            return [];
+        if (!empty($data)) {
+            $data = $this->beforeCache($id, $data);
         }
+        static::$cacheList[$modelName][$id] = $data;
         return $data;
     }
 
+    /**
+     * Process before saving cache if necessary
+     * @param int $id
+     * @param array $data
+     * @return array
+     */
+    protected function beforeCache(int $id, array $data): array
+    {
+        return $data;
+    }
 
     /**
      * バリデーションメッセージの展開

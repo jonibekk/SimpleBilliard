@@ -5,7 +5,9 @@ App::import('Service', 'PostFileService');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Service', 'TranslationService');
+App::import('Service', 'VideoStreamService');
 App::import('Lib/Storage', 'UploadedFile');
+App::import('Service', 'PostResourceService');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -19,13 +21,19 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
 App::import('Model/Entity', 'PostFileEntity');
+App::import('Model/Entity', 'PostResourceEntity');
 App::import('Lib/DataExtender', 'PostExtender');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Service/Redis', 'UnreadPostsRedisService');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\AttachedFile\AttachedFileType as AttachedFileType;
@@ -47,7 +55,7 @@ class PostService extends AppService
      *
      * @return array
      */
-    function get(PostResourceRequest $req, array $extensions = []): array
+    public function get(PostResourceRequest $req, array $extensions = []): array
     {
         $id = $req->getId();
         $userId = $req->getUserId();
@@ -248,6 +256,8 @@ class PostService extends AppService
         $PostFile = ClassRegistry::init('PostFile');
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
 
         // TODO: should be fix for better system
         // Having deep dependence on each class's property(my_uid, current_team_id).
@@ -308,31 +318,28 @@ class PostService extends AppService
             throw new RuntimeException('Error on adding post: failed post save');
         }
         $postId = $post['Post']['id'];
+
+        $hasVideoStream = false;
+        // Handling post resources
+        // This is the legacy code, only handling video stream on here.
+        // See the image or document file for $postData['file_id'] valuable
+        foreach ($postResources as $postResource) {
+            $hasVideoStream = true;
+            $PostResourceService->addResourcePost($postId,
+                Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                $postResource['id'],
+                $order = 0);
+        }
+
         // If posted with attach files
         if (isset($postData['file_id']) && is_array($postData['file_id'])) {
             if (false === $PostFile->AttachedFile->saveRelatedFiles($postId,
                     AttachedFile::TYPE_MODEL_POST,
-                    $postData['file_id'])
+                    $postData['file_id'],
+                    $hasVideoStream)
             ) {
                 throw new RuntimeException('Error on adding post: failed saving related files');
             }
-        }
-        // Handling post resources
-        foreach ($postResources as $postResource) {
-            $PostResource->create();
-            $postResource = $PostResource->save([
-                'post_id'       => $postId,
-                'post_draft_id' => null,
-                // TODO: currently only resource type of video only https://jira.goalous.com/browse/GL-6601
-                // need to determine what type of resource is passed from arguments
-                // (maybe should wrap by class, not simple array)
-                // same as in PostDraftService::createPostDraftWithResources()
-                'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM()->getValue(),
-                'resource_id'   => $postResource['id'],
-            ], [
-                'atomic' => false
-            ]);
-            $postResource = reset($postResource);
         }
 
         if (!empty($share)) {
@@ -478,14 +485,19 @@ class PostService extends AppService
     /**
      * Method to save a circle post
      *
-     * @param array    $postBody
+     * @param array   $postBody
      *                   ["body" => '',
      *                   "type" => ''
      *                   ]
-     * @param int      $circleId
-     * @param int      $userId
-     * @param int      $teamId
-     * @param string[] $fileIDs
+     * @param int     $circleId
+     * @param int     $userId
+     * @param int     $teamId
+     * @param array[] $files
+     *                   [
+     *                   {"file_uuid": "5c3eae43d92d06.36873270"},
+     *                   {"is_video": true, "video_stream_id": "33"},
+     *                   ...
+     *                   ]
      *
      * @return PostEntity Entity of saved post
      * @throws Exception
@@ -495,7 +507,7 @@ class PostService extends AppService
         int $circleId,
         int $userId,
         int $teamId,
-        array $fileIDs = []
+        array $files = []
     ): PostEntity
     {
         /** @var Post $Post */
@@ -575,7 +587,7 @@ class PostService extends AppService
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
             // Update unread post numbers if specified sharing circle
-            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId)) {
+            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId)) {
                 GoalousLog::error($errorMessage = 'failed increment unread count', [
                     'post.id'    => $postId,
                     'circles.id' => $circleId,
@@ -594,8 +606,8 @@ class PostService extends AppService
             }
 
             //Save attached files
-            if (!empty($fileIDs)) {
-                $this->saveFiles($postId, $userId, $teamId, $fileIDs);
+            if (!empty($files)) {
+                $this->saveFiles($postId, $userId, $teamId, $files);
             }
 
             $this->TransactionManager->commit();
@@ -605,33 +617,15 @@ class PostService extends AppService
             throw $e;
         }
 
-        // Make translation
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
-
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
-            try {
-                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postId, $defaultLanguage);
-            } catch (Exception $e) {
-                GoalousLog::error('Failed create translation on new post', [
-                    'message'    => $e->getMessage(),
-                    'trace'      => $e->getTraceAsString(),
-                    'post.id'    => $postId,
-                    'circles.id' => $circleId,
-                    'teams.id'   => $teamId,
-                ]);
-            }
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
         }
+
+        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
+        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
+        $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
 
         return $savedPost;
     }
@@ -652,6 +646,13 @@ class PostService extends AppService
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $post = $Post->findById($postId);
+        if (empty($post)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
 
         $circleOption = [
             'conditions' => [
@@ -765,6 +766,41 @@ class PostService extends AppService
         return $AttachedFile->useType()->useEntity()->find('all', $conditions);
     }
 
+    public function getResourcesByPostId(int $postId): array
+    {
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+
+        $conditions = [
+            'fields'     => [
+                'PostResource.*',
+                'AttachedFile.*',
+            ],
+            'table'      => 'post_resources',
+            'alias'      => 'PostResource',
+            'conditions' => [
+                'PostResource.post_id' => $postId,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'attached_files',
+                    'alias'      => 'AttachedFile',
+                    'conditions' => [
+                        'AttachedFile.id = PostResource.resource_id',
+                        'PostResource.resource_type' => [
+                            Enum\Model\Post\PostResourceType::IMAGE,
+                            Enum\Model\Post\PostResourceType::FILE,
+                            Enum\Model\Post\PostResourceType::FILE_VIDEO,
+                        ],
+                    ]
+                ],
+            ],
+            'order'      => ['PostResource.resource_order' => 'ASC'],
+        ];
+
+        return $PostResource->useType()->useEntity()->find('all', $conditions);
+    }
 
     /**
      * Get list of action attached files of a post
@@ -823,6 +859,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
 
         //Check if post exists & not deleted
         $postCondition = [
@@ -837,11 +875,9 @@ class PostService extends AppService
 
         $modelsToDelete = [
             'PostDraft'       => 'post_id',
-            'PostFile'        => 'post_id',
             'PostLike'        => 'post_id',
             'PostMention'     => 'post_id',
             'PostRead'        => 'post_id',
-            'PostResource'    => 'post_id',
             'PostShareCircle' => 'post_id',
             'PostShareUser'   => 'post_id',
             'Post'            => 'Post.id'
@@ -849,6 +885,7 @@ class PostService extends AppService
 
         try {
             $this->TransactionManager->begin();
+
             foreach ($modelsToDelete as $model => $column) {
                 /** @var AppModel $Model */
                 $Model = ClassRegistry::init($model);
@@ -860,10 +897,20 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+
             // Delete translations
             /** @var Translation $Translation */
             $Translation = ClassRegistry::init('Translation');
             $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
+
+            //Delete post resources
+            $deletedPosts = $PostResource->getAllPostResources($postId);
+
+            if (!empty($deletedPosts)) {
+                /** @var PostResourceService $PostResourceService */
+                $PostResourceService = ClassRegistry::init('PostResourceService');
+                $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
+            }
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -878,15 +925,17 @@ class PostService extends AppService
     /**
      * Save all attached files
      *
-     * @param int      $postId
-     * @param int      $userId
-     * @param int      $teamId
-     * @param string[] $fileIDs
+     * @param int   $postId
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $files         Refer addCirclePost() method document
+     * @param bool  $isDraft
+     * @param int   $postFileIndex Custom starting index for post files
      *
      * @return bool
      * @throws Exception
      */
-    private function saveFiles(int $postId, int $userId, int $teamId, array $fileIDs): bool
+    public function saveFiles(int $postId, int $userId, int $teamId, array $files, bool $isDraft = false, int $postFileIndex = 0): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -894,27 +943,62 @@ class PostService extends AppService
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
         /** @var PostFileService $PostFileService */
         $PostFileService = ClassRegistry::init('PostFileService');
-
-        $postFileIndex = 0;
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
 
         $addedFiles = [];
 
         try {
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFiles = $UploadService->getBuffers($userId, $teamId, $fileIDs);
+            foreach ($files as $file) {
+                if (isset($file['file_uuid'])) {
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFiles = $UploadService->getBuffers($userId, $teamId, [$file['file_uuid']]);
 
-            //Save attached files
-            foreach ($uploadedFiles as $uploadedFile) {
+                    //Save attached files
+                    foreach ($uploadedFiles as $uploadedFile) {
 
-                /** @var AttachedFileEntity $attachedFile */
-                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
-                    AttachedModelType::TYPE_MODEL_POST());
+                        /** @var AttachedFileEntity $attachedFile */
+                        $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile,
+                            AttachedModelType::TYPE_MODEL_POST());
 
-                $addedFiles[] = $attachedFile['id'];
+                        $addedFiles[] = $attachedFile['id'];
 
-                $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex++);
+                        $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
+                        if ($isDraft) {
+                            $PostResourceService->addResourceDraft(
+                                $postId,
+                                $postResourceType,
+                                $attachedFile['id'],
+                                $postFileIndex);
+                            // Could not insert to post_files (post_id is not exists on here).
+                        } else {
+                            $PostResourceService->addResourcePost(
+                                $postId,
+                                $postResourceType,
+                                $attachedFile['id'],
+                                $postFileIndex);
+                            $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+                        }
 
-                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                    }
+                } else if (isset($file['is_video'])) {
+                    // VideoStream (file is already in transcode)
+                    if ($isDraft) {
+                        $postResource = $PostResourceService->addResourceDraft(
+                            $postId,
+                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                            $file['video_stream_id'],
+                            $postFileIndex);
+                    } else {
+                        $PostResourceService->addResourcePost(
+                            $postId,
+                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                            $file['video_stream_id'],
+                            $postFileIndex);
+                    }
+                }
+                $postFileIndex++;
             }
         } catch (Exception $e) {
             //If any error happened, remove uploaded file
@@ -930,13 +1014,16 @@ class PostService extends AppService
     /**
      * Edit a post body
      *
-     * @param string $newBody
-     * @param int    $postId
+     * @param array $newBody
+     * @param int   $postId
+     * @param int   $userId
+     * @param int   $teamId
+     * @param array $resources
      *
      * @return PostEntity Updated post
      * @throws Exception
      */
-    public function editPost(string $newBody, int $postId): PostEntity
+    public function editPost(array $newBody, int $postId, int $userId, int $teamId, array $resources): PostEntity
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
@@ -948,30 +1035,50 @@ class PostService extends AppService
             $this->TransactionManager->begin();
 
             $newData = [
-                'body'     => '"' . $newBody . '"',
-                'modified' => REQUEST_TIMESTAMP
+                'body'      => $newBody['body'],
+                'site_info' => !empty($newBody['site_info']) ? json_encode($newBody['site_info']) : null,
+                'created'   => false // Prevent updating this field
             ];
 
-            if (!$Post->updateAll($newData, ['Post.id' => $postId])) {
-                throw new RuntimeException("Failed to update post");
+            $Post->clear();
+            $Post->id = $postId;
+            if (!$Post->save($newData, false)) {
+                throw new RuntimeException(sprintf("Failed to update posts table record. data: %s",
+                    AppUtil::jsonOneLine(compact('newData', 'postId'))
+                ));
             }
 
-            //TODO GL-7259
+            $deletedPosts = $this->findDeletedResourcesInPost($postId, $resources);
+
+            if (!empty($deletedPosts)) {
+                /** @var PostResourceService $PostResourceService */
+                $PostResourceService = ClassRegistry::init('PostResourceService');
+                $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
+            }
+            $newResources = $this->filterNewResources($postId, $resources);
 
             // Delete translations
             /** @var Translation $Translation */
             $Translation = ClassRegistry::init('Translation');
             $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
 
+            if (!empty($newResources)) {
+                /** @var PostResource $PostResource */
+                $PostResource = ClassRegistry::init('PostResource');
+                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1);
+            }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to update post', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString()
+            ]);
             throw $e;
         }
 
         /** @var PostEntity $result */
-        $result = $Post->useType()->useEntity()->find('first', ['conditions' => ['id' => $postId]]);
-
+        $result = $Post->getEntity($postId);
         return $result;
     }
 
@@ -1032,4 +1139,66 @@ class PostService extends AppService
 
         return true;
     }
+
+    /**
+     * Find resources newly added during post edit
+     *
+     * @param int   $postId
+     * @param array $resources
+     *
+     * @return array
+     */
+    private function filterNewResources($postId, array $resources): array
+    {
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        $currentPostResources = $PostResource->getAllPostResources($postId);
+
+        return array_filter($resources, function ($resource) use ($currentPostResources) {
+            if (array_key_exists('is_video', $resource)) {
+                // Check about given resources are already set to post.
+                foreach ($currentPostResources as $currentPostResource) {
+                    if ($currentPostResource["resource_type"] === Enum\Model\Post\PostResourceType::VIDEO_STREAM
+                        && $currentPostResource["resource_id"] === (int)$resource["video_stream_id"]) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return array_key_exists('file_uuid', $resource);
+        });
+    }
+
+    /**
+     * Find resources removed during post edit
+     *
+     * @param int   $postId
+     * @param array $resources Existing resources
+     *                         ['id' => 1, 'file_type' => 1]
+     *
+     * @return PostResource[]
+     */
+    private function findDeletedResourcesInPost(int $postId, array $resources): array
+    {
+        if (empty($resources)) {
+            /** @var PostResource $PostResource */
+            $PostResource = ClassRegistry::init('PostResource');
+            return $PostResource->getAllPostResources($postId);
+        }
+
+        $groupedResource = [];
+
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        foreach ($resources as $resource) {
+            if (isset($resource['is_video']) && $resource['is_video']) {
+                $groupedResource[Enum\Model\Post\PostResourceType::VIDEO_STREAM][] = $resource['video_stream_id'];
+            }
+            if (!array_key_exists('resource_type', $resource)) continue;
+            $groupedResource[$resource['resource_type']][] = $resource['id'];
+        }
+
+        return $PostResource->findDeletedPostResourcesInPost($postId, $groupedResource);
+    }
+
 }

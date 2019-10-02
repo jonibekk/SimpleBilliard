@@ -65,6 +65,6 @@ Vagrant.configure('2') do |config|
         chef.add_recipe 'local_etc'
         chef.add_recipe npm_recipe
         chef.add_recipe 'deploy_cake_local'
-        chef.json = { doc_root: doc_root, app_root: app_root, php: { session_secure: 'Off' }, phpbrew: { php_version: '7.0.12'} }
+        chef.json = { doc_root: doc_root, app_root: app_root, php: { session_secure: 'Off' }, phpbrew: { php_version: '7.1.25'} }
     end
 end

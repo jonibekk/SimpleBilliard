@@ -40,6 +40,10 @@
     ?>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <?php foreach ($newGoalousAssets ?? [] as $assetKey):?>
+        <link rel="prefetch" href="//<?= ENV_NAME ?>.goalous.com/<?= $assetKey?>">
+    <?php endforeach;?>
+
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
     <!--[if lt IE 9]>

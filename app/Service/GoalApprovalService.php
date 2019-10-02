@@ -37,15 +37,19 @@ class GoalApprovalService extends AppService
      *
      * @return mixed
      */
-    function countUnapprovedGoal($userId)
+    function countUnapprovedGoal($userId, $teamId = null)
     {
+        /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        if (!empty($teamId)) {
+            $GoalMember->current_team_id = $teamId;
+        }
         // Redisのキャッシュデータ取得
-        $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+        $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $userId), 'user_data');
         // Redisから無ければDBから取得してRedisに保存
         if ($count === false) {
             $count = $GoalMember->countUnapprovedGoal($userId);
-            Cache::write($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), $count, 'user_data');
+            Cache::write($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $userId), $count, 'user_data');
         }
         return $count;
     }

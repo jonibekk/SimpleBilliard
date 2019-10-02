@@ -10,6 +10,7 @@ App::import('Service', 'AppService');
 App::uses('AttachedFile', 'Model');
 App::uses('GlRedis', 'Model');
 App::uses('UploadHelper', 'View/Helper');
+
 /**
  * Class AttachedFileService
  */
@@ -23,6 +24,11 @@ class AttachedFileService extends AppService
     const UPLOAD_TYPE_ALL = 1;
     const UPLOAD_TYPE_IMG = 2;
 
+    /** add here if there is aother Media file Extension you want to treat as DOC */
+    const NON_MEDIA_EXT = [
+        'psd'
+    ];
+
     // アップロード可能な画像種類
     public $supportedImgTypes = [
         IMAGETYPE_PNG,
@@ -34,32 +40,13 @@ class AttachedFileService extends AppService
     /**
      * Get single file
      *
-     * @param       $fileId
+     * @param       $id
      *
-     * @return AttachedFileEntity
+     * @return array
      */
-    public function get(int $fileId): AttachedFileEntity
+    public function get(int $id): array
     {
-        // In case already got data from db and cached, but data is empty
-        if (array_key_exists($fileId, self::$cacheList) && empty(self::$cacheList[$fileId])) {
-            return [];
-        }
-
-        // In case already got data from db and cached, data is not empty
-        if (!empty(self::$cacheList[$fileId])) {
-            $data = self::$cacheList[$fileId];
-            return $data;
-        }
-
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init("AttachedFile");
-
-        // Get data from db and cache
-        $data = self::$cacheList[$fileId] = $AttachedFile->useType()->useEntity()->findById($fileId);
-        if (empty($data)) {
-            return [];
-        }
-
+        $data = $this->_getWithCache($id, 'AttachedFile');
         return $data;
     }
 
@@ -81,7 +68,7 @@ class AttachedFileService extends AppService
      * ];
      *
      * @param array $postData
-     * @param int $type
+     * @param int   $type
      *
      * @return array
      */
@@ -89,8 +76,8 @@ class AttachedFileService extends AppService
     {
         $ret = [
             'error' => false,
-            'msg' => "",
-            'id' => "",
+            'msg'   => "",
+            'id'    => "",
         ];
         $fileInfo = Hash::get($postData, 'file');
 
@@ -127,7 +114,7 @@ class AttachedFileService extends AppService
      * - ファイルの画素数チェック(画像の場合のみ)
      *
      * @param array $fileInfo
-     * @param int $type
+     * @param int   $type
      *
      * @return array
      */
@@ -136,7 +123,7 @@ class AttachedFileService extends AppService
         //default return values
         $ret = [
             'error' => true,
-            'msg' => "",
+            'msg'   => "",
         ];
 
         //不正データ
@@ -176,7 +163,7 @@ class AttachedFileService extends AppService
      * 画像バリデーションを行うかどうか判定
      *
      * @param array $fileInfo
-     * @param int $type
+     * @param int   $type
      *
      * @return array|bool
      */
@@ -210,7 +197,7 @@ class AttachedFileService extends AppService
     {
         $ret = [
             'error' => false,
-            'msg' => "",
+            'msg'   => "",
         ];
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
@@ -227,12 +214,12 @@ class AttachedFileService extends AppService
     /**
      * Add a new attached file
      *
-     * @param int $userId
-     * @param int $teamId
-     * @param UploadedFile $file
+     * @param int               $userId
+     * @param int               $teamId
+     * @param UploadedFile      $file
      * @param AttachedModelType $modelType
-     * @param bool $displayFileList
-     * @param bool $removable
+     * @param bool              $displayFileList
+     * @param bool              $removable
      *
      * @return AttachedFileEntity
      * @throws Exception
@@ -249,26 +236,16 @@ class AttachedFileService extends AppService
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
 
-        switch ($file->getFileType()) {
-            case "image" :
-                $fileType = AttachedFileType::TYPE_FILE_IMG;
-                break;
-            case "video" :
-                $fileType = AttachedFileType::TYPE_FILE_VIDEO;
-                break;
-            default:
-                $fileType = AttachedFileType::TYPE_FILE_DOC;
-                break;
-        }
+        $fileType = $this->getFileMimeType($file);
 
         $newData = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'attached_file_name' => $file->getFileName(),
-            'file_type' => $fileType,
-            'file_ext' => $file->getFileExt(),
-            'file_size' => $file->getFileSize(),
-            'model_type' => $modelType->getValue(),
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $file->getFileName(),
+            'file_type'             => $fileType->getValue(),
+            'file_ext'              => $file->getFileExt(),
+            'file_size'             => $file->getFileSize(),
+            'model_type'            => $modelType->getValue(),
             'display_file_list_flg' => $displayFileList,
             'removable_flg'         => $removable,
             'created'               => GoalousDateTime::now()->getTimestamp()
@@ -282,8 +259,8 @@ class AttachedFileService extends AppService
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
             GoalousLog::error($errorMessage = 'Failed saving attached files', [
-                'user.id' => $userId,
-                'team.id' => $teamId,
+                'user.id'  => $userId,
+                'team.id'  => $teamId,
                 'filename' => $file->getFileName(),
             ]);
             throw new RuntimeException('Error on adding attached file: ' . $errorMessage);
@@ -292,12 +269,46 @@ class AttachedFileService extends AppService
         return $result;
     }
 
+    /**
+     * get file's Mime-type
+     *
+     * @param UploadedFile      $file
+     *
+     * @return AttachedFileType
+     */
+    public function getFileMimeType(UploadedFile $file): AttachedFileType
+    {
+        if(in_array($file->getFileExt(), self::NON_MEDIA_EXT, true)){
+            return AttachedFileType::TYPE_FILE_DOC();
+        }
+        switch ($file->getFileType()) {
+            case "image" :
+                return AttachedFileType::TYPE_FILE_IMG();
+            case "video" :
+                return AttachedFileType::TYPE_FILE_VIDEO();
+            default:
+                return AttachedFileType::TYPE_FILE_DOC();
+        }
+
+    }
+    /**
+     * check file is an image or not
+     *
+     * @param UploadedFile      $file
+     *
+     * @return bool
+     */
+    public function isImg(UploadedFile $file): bool
+    {
+        return $this->getFileMimeType($file)->getValue() === AttachedFileType::TYPE_FILE_IMG;
+    }
 
     /**
      * Get file url
      *
-     * @param int $fileId
+     * @param int  $fileId
      * @param bool $isViewer
+     *
      * @return bool|null|string
      */
     public function getFileUrl(int $fileId, bool $isViewer = false)
@@ -309,6 +320,6 @@ class AttachedFileService extends AppService
 
         $upload = new UploadHelper(new View());
         $type = $isViewer ? 'viewer' : 'download';
-        return $upload->attachedFileUrl($file->toArray(), $type);
+        return $upload->attachedFileUrl($file, $type);
     }
 }

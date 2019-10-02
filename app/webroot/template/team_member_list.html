@@ -87,10 +87,10 @@
                         class="fa fa-sitemap team-members-card-filled-icon"></i>
                         {{item.TeamMember.group_name}}</p>
 
-                    <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> {{ 'TEAM_MEMBER_LIST.NO_COACH' | translate}}</p>
+                    <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-handshake-o"></i> {{ 'TEAM_MEMBER_LIST.NO_COACH' | translate}}</p>
 
                     <p ng-if="item.TeamMember.coach_user_id != null && item.TeamMember.coacha_name != ''">
-                        <i class="fa fa-venus-double team-members-card-filled-icon"></i> {{item.TeamMember.coach_name}}
+                        <i class="fa fa-handshake-o team-members-card-filled-icon"></i> {{item.TeamMember.coach_name}}
                     </p>
 
                     <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == false">

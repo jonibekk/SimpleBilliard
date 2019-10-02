@@ -351,7 +351,10 @@ class User extends AppModel
         'birth_day',
         'hide_year_flg',
         'phone_no',
-        'hometown'
+        'hometown',
+        'primary_email_id',
+        'setup_complete_flg',
+        'created'
     ];
 
     /**
@@ -1142,6 +1145,8 @@ class User extends AppModel
     }
 
     /**
+     * Use findByKeywordRangeCircle method since API v2
+     * @deprecated
      * @param       $keyword
      * @param int   $limit
      * @param bool  $excludeAuthUser If set to true, auth user in php session will be excluded from result.
@@ -1188,6 +1193,79 @@ class User extends AppModel
         $res = $this->find('all', $options);
 
         return $res;
+    }
+
+    /**
+     * Follow latest spec
+     * @param string $keyword
+     * @param int $teamId
+     * @param int $userId
+     * @param int $limit
+     * @param bool $excludeAuthUser If set to true, auth user in php session will be excluded from result.
+     *
+     * @param null $circleId
+     * @return array|null
+     */
+    public function findByKeywordRangeCircle(
+        string $keyword,
+        int $teamId,
+        int $userId,
+        $limit = 10,
+        $excludeAuthUser = true,
+        $circleId = null
+    ): array
+    {
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+        $keywordConditions = $this->makeUserNameConditions($keyword);
+        $options = [
+            'conditions' => [
+                'User.active_flg' => true,
+                'OR'              => $keywordConditions,
+            ],
+            'limit'      => $limit,
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'local_names',
+                    'alias'      => 'SearchLocalName',
+                    'conditions' => [
+                        'SearchLocalName.user_id = User.id',
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'team_members',
+                    'alias'      => 'TeamMember',
+                    'conditions' => [
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.team_id' => $teamId,
+                        'TeamMember.status' => Enum\Model\TeamMember\Status::ACTIVE,
+                        'TeamMember.del_flg' => false,
+                    ],
+                ]
+            ]
+        ];
+        if ($excludeAuthUser) {
+            $options['conditions']['User.id !='] = $userId;
+        }
+        if (!empty($circleId)) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'circle_members',
+                'alias'      => 'CircleMember',
+                'conditions' => [
+                    'CircleMember.user_id = User.id',
+                    'CircleMember.circle_id' => $circleId,
+                    'CircleMember.del_flg' => false,
+                ],
+
+            ];
+        }
+        $res = $this->useType()->find('all', $options);
+        return Hash::extract($res, '{n}.User') ?? [];
     }
 
     public function getNewUsersByKeywordNotSharedOnPost($keyword, $limit = 10, $not_me = true, $post_id)

@@ -29,7 +29,8 @@ class CircleMemberInfoExtension extends DataExtension
             'fields'     => [
                 'circle_id',
                 'unread_count',
-                'admin_flg'
+                'admin_flg',
+                'get_notification_flg'
             ],
         ];
         $result = $CircleMember->useType()->find('all', $options);

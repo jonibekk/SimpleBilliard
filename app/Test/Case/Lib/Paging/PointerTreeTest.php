@@ -25,7 +25,8 @@ class PointerTreeTest extends GoalousTestCase
     /**
      * @expectedException RuntimeException
      */
-    public function test_treeToConditionBadTree_failed(){
+    public function test_treeToConditionBadTree_failed()
+    {
         $tree = new PointerTree('AND');
         $tree->toCondition();
     }

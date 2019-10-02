@@ -748,4 +748,29 @@ class Comment extends AppModel
 
         $this->save($newData, false);
     }
+
+    /**
+     * Check whether the owner is owned by the user
+     *
+     * @param int $commentId
+     * @param int $userId
+     *
+     * @return bool True if owned
+     */
+    public function isCommentOwned(int $commentId, int $userId): bool
+    {
+        $options = [
+            'conditions' => [
+                'id'      => $commentId,
+                'user_id' => $userId,
+            ]
+        ];
+        $res = $this->find('count', $options);
+        
+        if ($res === 1) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -31,9 +31,16 @@ App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Experiment', 'Model');
+App::import('Service', 'AttachedFileService');
+App::import('Service', 'PostFileService');
+App::import('Service', 'PostResourceService');
+App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Language as LanguageEnum;
+
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Mockery as mock;
 
 /**
  * CakeTestCase class
@@ -531,7 +538,7 @@ class GoalousTestCase extends CakeTestCase
         return $userId;
     }
 
-    function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
+    protected function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
     {
         $this->Team->TeamMember->create();
         $this->Team->TeamMember->save([
@@ -1204,12 +1211,241 @@ class GoalousTestCase extends CakeTestCase
      *
      * @return string
      */
-    protected function getLongArticle(): string {
+    protected function getLongArticle(): string
+    {
 
         $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
 
         $article = file_get_contents($path);
 
         return $article;
+    }
+
+    /**
+     * Create a new post with attachment
+     *
+     * @param int $circleId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $fileCount
+     * @param int $videoCount
+     *
+     * @return array
+     *              [post_id, [post_file,...], [video_stream,...]]
+     * @throws Exception
+     */
+    protected final function createNewCirclePost(int $circleId, int $userId, int $teamId, int $fileCount = 0, int $videoCount = 0): array
+    {
+        /** @var TransactionManager $TransactionManager */
+        $TransactionManager = ClassRegistry::init('TransactionManager');
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init('AttachedFileService');
+        /** @var PostFileService $PostFileService */
+        $PostFileService = ClassRegistry::init('PostFileService');
+        /** @var PostResourceService $PostResourceService */
+        $PostResourceService = ClassRegistry::init('PostResourceService');
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+
+        try {
+            $TransactionManager->begin();
+            $postBody = "New post in circle $circleId by user $userId in team $teamId";
+
+            if ($videoCount > 1) throw new InvalidArgumentException('Too many videos');
+            if ($fileCount + $videoCount > 10) throw new InvalidArgumentException("Too many files");
+
+            if ($fileCount > 0) {
+                $postBody .= " with $fileCount files";
+            }
+            if ($videoCount > 0) {
+                $postBody .= " with $videoCount videos";
+            }
+
+            $Post->create();
+            $postData = [
+                'body'    => $postBody,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'type'    => Post::TYPE_NORMAL
+            ];
+            $savedPost = $Post->save($postData, false);
+            $postId = $savedPost['Post']['id'];
+            $postCreated = $savedPost['Post']['created'];
+            $updateCondition = [
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.circle_id' => $circleId
+            ];
+            $CircleMember->updateAll(['last_posted' => $postCreated], $updateCondition);
+            $PostShareCircle->add($postId, [$circleId], $teamId);
+            $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId);
+            $Circle->updateLatestPosted($circleId);
+
+            //Save files
+
+            $addedFiles = [];
+            $addedVideos = [];
+            $postFileIndex = 0;
+
+            for ($i = 0; $i < $fileCount; $i++) {
+
+                $UploadedFile = new UploadedFile($this->getTestFileDataBase64WithHeader(), 'test.jpg', false);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $UploadedFile,
+                    AttachedModelType::TYPE_MODEL_POST());
+
+                $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
+
+                $PostResourceService->addResourcePost(
+                    $postId,
+                    $postResourceType,
+                    $attachedFile['id'],
+                    $postFileIndex);
+                $addedPostFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+
+                $addedFiles[] = $addedPostFile->toArray();
+                $postFileIndex++;
+            }
+
+            for ($i = 0; $i < $videoCount; $i++) {
+                $newVideo = [
+                    'user_id'   => $userId,
+                    'team_id'   => $teamId,
+                    'file_name' => "video $i"
+                ];
+                $Video->create();
+                $video = $Video->save($newVideo, false);
+
+                $newVideoStream = [
+                    'video_id'         => $video['Video']['id'],
+                    'output_version'   => 1,
+                    'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE,
+                ];
+                $VideoStream->create();
+                $videoStream = $VideoStream->save($newVideoStream, false);
+                $addedVideos[] = $videoStream['VideoStream'];
+                $PostResourceService->addResourcePost(
+                    $postId,
+                    Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                    $videoStream['VideoStream']['id'],
+                    $postFileIndex);
+                $postFileIndex++;
+            }
+            $TransactionManager->commit();
+        } catch (Exception $e) {
+            $TransactionManager->rollback();
+            throw $e;
+        }
+
+        return [$postId, $addedFiles, $addedVideos];
+    }
+
+    protected function createAttachedFile(int $userId, int $teamId, Enum\Model\AttachedFile\AttachedFileType $type, Enum\Model\AttachedFile\AttachedModelType $modelType): AttachedFileEntity
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
+        $fileName = "user_" . $userId . "_team_" . $teamId . ".test";
+
+        $newData = [
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $fileName,
+            'file_type'             => $type->getValue(),
+            'file_ext'              => 'test',
+            'file_size'             => 123,
+            'model_type'            => $modelType->getValue(),
+            'display_file_list_flg' => true,
+            'removable_flg'         => true,
+        ];
+
+        $AttachedFile->create();
+        /** @var AttachedFileEntity $newAttachedFile */
+        $newAttachedFile = $AttachedFile->useType()->useEntity()->save($newData, false);
+
+        return $newAttachedFile;
+    }
+
+    /**
+     * Create new comment file
+     *
+     * @param int $commentId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $count Number of files to create
+     *
+     * @return CommentFileEntity[]
+     */
+    protected function createCommentFile(int $commentId, int $userId, int $teamId, int $count = 1): array
+    {
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        $result = [];
+
+        for ($indexNum = 0; $indexNum < $count; $indexNum++) {
+
+            $newAttachedFile = $this->createAttachedFile($userId, $teamId, Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_DOC(), Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_COMMENT());
+
+            $newCommentFile = [
+                'comment_id'       => $commentId,
+                'attached_file_id' => $newAttachedFile['id'],
+                'team_id'          => $teamId,
+                'index_num'        => $indexNum
+            ];
+
+            $CommentFile->create();
+            $result[] = $CommentFile->useType()->useEntity()->save($newCommentFile, false);
+        }
+
+        return $result;
+    }
+
+    protected function createCircleMember(int $circleId, int $teamId, int $userId, array $options = []): array
+    {
+        $mainData = [
+            'circle_id' => $circleId,
+            'team_id'   => $teamId,
+            'user_id'   => $userId
+        ];
+
+        $newData = array_merge($mainData, $options);
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $CircleMember->create();
+        $insertedData = $CircleMember->save($newData, false);
+
+        return $insertedData['CircleMember'];
+    }
+
+    protected function createTranslatorClientMock(string $sourceLanguage = null, string $translation = null)
+    {
+        $translatorClient = mock::mock('GoogleTranslatorClient');
+
+        if (empty($sourceLanguage)) {
+            $sourceLanguage = LanguageEnum::EN;
+        }
+        if (empty($translation)) {
+            $translation = 'Esta es una muestra de traducción.';
+        }
+
+        $returnValue = new TranslationResult($sourceLanguage, $translation, '');
+
+        $translatorClient->shouldReceive('translate')
+            ->once()
+            ->andReturn($returnValue);
+
+        ClassRegistry::addObject(GoogleTranslatorClient::class, $translatorClient);
     }
 }

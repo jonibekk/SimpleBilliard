@@ -634,11 +634,12 @@ class Term extends AppModel
                 $startTermMonth,
                 $borderMonths
             );
+            $startDate = (new GoalousDateTime($currentTerm['end_date']))->addDay(1)->format('Y-m-d');
             $data = [
                 $this->getNextTermId() =>
                     [
                         'id'         => $this->getNextTermId(),
-                        'start_date' => $currentTerm['end_date'] + 1,
+                        'start_date' => $startDate,
                         'end_date'   => $newNext['end'],
                     ],
             ];

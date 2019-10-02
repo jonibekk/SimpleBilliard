@@ -51,4 +51,65 @@ class CommentFileService extends AppService
         }
         return $result;
     }
+
+    /**
+     * Soft delete all files attached to a comment
+     *
+     * @param int $commentId
+     *
+     * @throws Exception
+     */
+    public function softDeleteAllFiles(int $commentId)
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        $commentFiles = $CommentFile->getAllCommentFiles($commentId);
+
+        if (empty($commentFiles)) return;
+
+        $attachedFileIds = [];
+        foreach($commentFiles as $commentFile) {
+            $attachedFileIds[] = $commentFile['attached_file_id'];
+        }
+        $this->deleteAllByAttachedFileIds($attachedFileIds);
+    }
+
+    /**
+     * Soft delete all files attached to a comment
+     *
+     * @param array $attachedFileIds
+     * @throws Exception
+     */
+    public function deleteAllByAttachedFileIds(array $attachedFileIds)
+    {
+        if (empty($attachedFileIds)) {
+            return;
+        }
+
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var CommentFile $CommentFile */
+        $CommentFile = ClassRegistry::init('CommentFile');
+
+        try {
+            $this->TransactionManager->begin();
+
+            $result = $CommentFile->softDeleteAll(['CommentFile.attached_file_id' => $attachedFileIds], false) &&
+                $AttachedFile->softDeleteAll(['AttachedFile.id' => $attachedFileIds], false);
+
+            if (!$result) {
+                throw new RuntimeException("Failed to delete comment files & their attached files.");
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to delete comment files & their attached files.',
+                ['attached_file_ids' => $attachedFileIds]);
+            throw $e;
+        }
+
+    }
 }

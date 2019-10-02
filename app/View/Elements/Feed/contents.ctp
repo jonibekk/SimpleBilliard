@@ -25,7 +25,8 @@ $displayBackButtonNotifications = false;
 $displayBackButtonUsers = false;
 $displayBackButtonGoals = false;
 if(isset($this->request->params['post_id'])) {
-  if(isset($this->request->params['named']['notify_id'])) {
+    // Display back buttons only if the URL has notification ID and view is not mobile
+  if(!empty($this->request->query('notify_id')) && empty($isMobileBrowser)) {
     $displayBackButtonNotifications = true;
   }
   if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'],"/users/view_actions/") !== false) {
@@ -54,7 +55,7 @@ if (!isset($this->request->params['post_id'])) {
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
 if ($displayBackButtonNotifications): ?>
-    <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications']) ?>"
+    <a href="javascript:history.back()"
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
@@ -159,7 +160,7 @@ $firstPostTime = $this->Post->getFirstPostTime($posts, $currentCircle, $currentT
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
 if ($displayBackButtonNotifications): ?>
-    <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications']) ?>"
+    <a href="javascript:history.back()"
        class="btn-back btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
