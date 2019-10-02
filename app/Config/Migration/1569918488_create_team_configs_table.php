@@ -26,7 +26,7 @@ class CreateTeamConfigsTable extends CakeMigration {
 					'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'indexes' => array(
 						'PRIMARY' => array('column' => 'id', 'unique' => 1),
-						'team_id' => array('column' => 'team_id', 'unique' => 0),
+						'team_id' => array('column' => 'team_id', 'unique' => 1),
 					),
 					'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB'),
 				),
