@@ -414,42 +414,6 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    /**
-     * join Circle
-     *
-     * @param int     $circleId
-     * @param int     $userId
-     * @param boolean $showForAllFeedFlg
-     * @param boolean $getNotificationFlg
-     *
-     * @return mixed
-     */
-    function join(
-        int $circleId,
-        int $userId,
-        bool $showForAllFeedFlg = true,
-        bool $getNotificationFlg = true,
-        bool $isAdmin = false
-    ): bool
-    {
-        if (!empty($this->isBelong($circleId, $userId))) {
-            return false;
-        }
-
-        $options = [
-            'CircleMember' => [
-                'circle_id'             => $circleId,
-                'team_id'               => $this->current_team_id,
-                'user_id'               => $userId,
-                'admin_flg'             => $isAdmin,
-                'show_for_all_feed_flg' => $showForAllFeedFlg,
-                'get_notification_flg'  => $getNotificationFlg,
-            ]
-        ];
-        $this->create();
-        return (bool)$this->save($options);
-    }
-
     function isBelong($circleId, $userId = null, $teamId = null)
     {
         $teamId = !empty($teamId) ? $teamId : $this->current_team_id;
