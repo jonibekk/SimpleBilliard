@@ -1550,19 +1550,6 @@ class PostsController extends AppController
         return 'not_joined';
     }
 
-    function circle_toggle_status($status)
-    {
-        $circle_id = $this->request->params['named']['circle_id'];
-        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
-
-        if ($this->Post->Circle->CircleMember->validates()) {
-            $this->Post->Circle->CircleMember->circleStatusToggle($circle_id, $status);
-            return $this->redirect($this->request->referer());
-        } else {
-            throw new NotFoundException(__("Invalid Request"));
-        }
-    }
-
     public function ajax_add_post_for_setup_guide()
     {
         $this->_ajaxPreProcess();

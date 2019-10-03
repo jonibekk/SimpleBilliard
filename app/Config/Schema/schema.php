@@ -236,7 +236,7 @@ class AppSchema extends CakeSchema {
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
 		'admin_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '管理者フラグ'),
 		'unread_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '未読数'),
-		'show_for_all_feed_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'オールフィード表示フラグ'),
+		'show_for_all_feed_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'オールフィード表示フラグ'),
 		'get_notification_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '通知設定'),
 		'last_posted' => array('type' => 'integer', 'null' => true, 'default' => '0', 'unsigned' => true),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
