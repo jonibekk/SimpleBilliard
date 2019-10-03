@@ -13,6 +13,11 @@ class TeamExtender extends BaseExtender
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         $data['img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'Team');
 
+        $data['configs'] = [];
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        $data['configs']['video_duration_max_seconds'] = $VideoStreamService->getTeamVideoDurationLimit($teamId);
+
         return $data;
     }
 
