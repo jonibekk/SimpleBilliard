@@ -166,12 +166,6 @@ class PostResource extends AppModel
     private function shouldIgnoreResource(Enum\Model\Post\PostResourceType $postResourceType, bool $checkTeamStatus): bool
     {
         switch ($postResourceType->getValue()) {
-            case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
-                if ($checkTeamStatus && !TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
-                    // If team can't play the video
-                    return true;
-                }
-                break;
             default:
                 break;
         }

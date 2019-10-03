@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'VideoStreamService');
 
 class TeamExtender extends BaseExtender
 {
@@ -12,6 +13,11 @@ class TeamExtender extends BaseExtender
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         $data['img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'Team');
+
+        $data['configs'] = [];
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        $data['configs']['video_duration_max_seconds'] = $VideoStreamService->getTeamVideoDurationLimit($teamId);
 
         return $data;
     }

@@ -91,8 +91,10 @@ $defines = [
     // OpsWorks Custom JSON output true/false as string
     'ENABLE_VIDEO_POST_TRANSCODING'                 => '1',
     'ENABLE_VIDEO_POST_PLAY'                        => '1',
-    'AWS_ELASTIC_TRANSCODER_KEY'                    => 'AKIAJWRB3ISRYGDYHV5A',
-    'AWS_ELASTIC_TRANSCODER_SECRET_KEY'             => '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',
+    'VIDEO_MAX_DURATION_SECONDS_PAID'               => 60,
+    'VIDEO_MAX_DURATION_SECONDS_LIMITED'            => 10,
+    'AWS_ELASTIC_TRANSCODER_KEY'                    => 'AKIAYQOFCLEQLDEPMEHW',
+    'AWS_ELASTIC_TRANSCODER_SECRET_KEY'             => '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',
     'AWS_ELASTIC_TRANSCODER_PIPELINE_ID'            => '1510729662392-4lzb0n',
     'AWS_S3_BUCKET_VIDEO_ORIGINAL'                  => 'goalous-dev-videos-original',
     'AWS_S3_BUCKET_VIDEO_TRANSCODED'                => 'goalous-dev-videos',

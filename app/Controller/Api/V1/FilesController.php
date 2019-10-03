@@ -5,6 +5,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'VideoStreamService');
 App::uses('TeamStatus', 'Lib/Status');
+App::uses('UploadVideoStreamRequest', 'Service/Request/VideoStream');
 
 /**
  * Class FilesController
@@ -30,7 +31,7 @@ class FilesController extends ApiController
         // if $enableVideoTranscode = true from API
         if ($enableVideoTranscode) {
             $isVideo = $this->isVideo($form);
-            if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+            if ($isVideo) {
                 return $this->processVideoUpload($form);
             }
         }
@@ -122,7 +123,8 @@ class FilesController extends ApiController
         /** @var VideoStreamService $VideoStreamService */
         $VideoStreamService = ClassRegistry::init('VideoStreamService');
         try {
-            $videoStream = $VideoStreamService->uploadVideoStream($requestFileUpload['file'], $userId, $teamId);
+            $uploadVideoStreamRequest = new UploadVideoStreamRequest($requestFileUpload['file'], $userId, $teamId);
+            $videoStream = $VideoStreamService->uploadVideoStream($uploadVideoStreamRequest);
         } catch (Exception $e) {
             GoalousLog::error('upload new video stream failed', [
                 'message' => $e->getMessage(),

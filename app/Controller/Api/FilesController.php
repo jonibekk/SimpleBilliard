@@ -6,12 +6,15 @@ App::import('Service', 'AttachedFileService');
 App::uses('HttpSocket', 'Network/Http');
 App::import('Validator/Lib/Storage', 'UploadValidator');
 App::import('Service', 'VideoStreamService');
+App::uses('UploadVideoStreamRequest', 'Service/Request/VideoStream');
+App::uses('Experiment', 'Model');
 
 /**
  * Class FilesController
  */
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 class FilesController extends BaseApiController
 {
@@ -91,18 +94,17 @@ class FilesController extends BaseApiController
             return $error;
         }
 
-
         $isVideo = $this->isVideo($file['tmp_name']);
         // Uploading video to transcode
-        if ($allowVideo && $isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+        if ($allowVideo && $isVideo) {
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
-
             try {
-                $videoStream = $VideoStreamService->uploadVideoStream(
-                    $file,
+                $uploadVideoStreamRequest = new UploadVideoStreamRequest($file,
                     $this->getUserId(),
                     $this->getTeamId());
+                $uploadVideoStreamRequest->setSecondsDurationLimit($VideoStreamService->getTeamVideoDurationLimit($this->getTeamId()));
+                $videoStream = $VideoStreamService->uploadVideoStream($uploadVideoStreamRequest);
                 GoalousLog::info('video uploaded stream', [
                     'video_streams.id' => $videoStream['id'],
                 ]);

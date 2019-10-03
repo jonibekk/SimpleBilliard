@@ -29,30 +29,6 @@ export default class Top extends React.Component {
         subject: __('Login from mobile app'),
         explain: __("Install Goalous's iOS and Android apps."),
         link: '/setup/app/image'
-      },
-      {
-        index: TYPE_GOAL,
-        subject: __('Create a goal'),
-        explain: __('Create or collaborate with a goal.'),
-        link: '/goals/create/step1'
-      },
-      {
-        index: TYPE_ACTION,
-        subject: __('Do an action'),
-        explain: __('Add an Action for your Goal.'),
-        link: '/goals/add_action'
-      },
-      {
-        index: TYPE_CIRCLE_JOIN,
-        subject: __('Join a circle'),
-        explain: __('Create a circle or join.'),
-        link: '/setup/circle/image'
-      },
-      {
-        index: TYPE_CIRCLE_POST,
-        subject: __('Post to a circle'),
-        explain: __('Share your topic with a circle.'),
-        link: '/setup/post/image'
       }
     ])
   }
