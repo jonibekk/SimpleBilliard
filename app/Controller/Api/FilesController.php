@@ -96,7 +96,7 @@ class FilesController extends BaseApiController
 
         $isVideo = $this->isVideo($file['tmp_name']);
         // Uploading video to transcode
-        if ($allowVideo && $isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+        if ($allowVideo && $isVideo) {
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             try {

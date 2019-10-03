@@ -107,28 +107,6 @@ class TeamStatus {
     }
 
     /**
-     * return true if team can transcode video
-     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
-     *
-     * @return bool
-     */
-    public function canVideoPostTranscode(): bool
-    {
-        return true;
-    }
-
-    /**
-     * return true if team can play video
-     * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
-     *
-     * @return bool
-     */
-    public function canVideoPostPlay(): bool
-    {
-        return true;
-    }
-
-    /**
      * @param mixed $enableVideoPostTranscodingOnEnvironment
      */
     public function setEnableVideoPostTranscodingOnEnvironment(bool $enableVideoPostTranscodingOnEnvironment)
