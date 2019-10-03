@@ -114,7 +114,7 @@ class TeamStatus {
      */
     public function canVideoPostTranscode(): bool
     {
-        return $this->enableVideoPostTranscodingOnEnvironment || $this->isEnableExperiment(Experiment::NAME_ENABLE_VIDEO_POST_TRANSCODING);
+        return true;
     }
 
     /**
@@ -125,7 +125,7 @@ class TeamStatus {
      */
     public function canVideoPostPlay(): bool
     {
-        return $this->enableVideoPostPlayOnEnvironment || $this->isEnableExperiment(Experiment::NAME_ENABLE_VIDEO_POST_PLAY);
+        return true;
     }
 
     /**

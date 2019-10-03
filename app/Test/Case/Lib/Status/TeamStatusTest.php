@@ -131,8 +131,8 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus->setEnableVideoPostTranscodingOnEnvironment(false);
         $teamStatus->setEnableVideoPostPlayOnEnvironment(false);
 
-        $this->assertFalse($teamStatus->canVideoPostTranscode());
-        $this->assertFalse($teamStatus->canVideoPostPlay());
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
     }
 
     function test_videoPostAllEnableByEnvironment()
@@ -194,7 +194,7 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus->setEnableVideoPostPlayOnEnvironment(false);
 
         $this->assertTrue($teamStatus->canVideoPostTranscode());
-        $this->assertFalse($teamStatus->canVideoPostPlay());
+        $this->assertTrue($teamStatus->canVideoPostPlay());
     }
 
     function test_videoPostAllEnabledOnlyPlay()
@@ -209,7 +209,7 @@ class TeamStatusTest extends GoalousTestCase
         $teamStatus->setEnableVideoPostTranscodingOnEnvironment(false);
         $teamStatus->setEnableVideoPostPlayOnEnvironment(true);
 
-        $this->assertFalse($teamStatus->canVideoPostTranscode());
+        $this->assertTrue($teamStatus->canVideoPostTranscode());
         $this->assertTrue($teamStatus->canVideoPostPlay());
     }
 
