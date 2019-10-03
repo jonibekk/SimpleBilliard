@@ -17,13 +17,13 @@
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ui-sref="set_vision_archive({team_vision_id:detail.id, active_flg:0})">アーカイブ</a>
+                           ui-sref="set_vision_archive({team_vision_id:detail.id, active_flg:0})">{{ 'TEAM_VISION.ARCHIVE' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ng-href="/teams/edit_team_vision/team_vision_id:{{detail.id}}">編集</a>
+                           ng-href="/teams/edit_team_vision/team_vision_id:{{detail.id}}">{{ 'TEAM_VISION.EDIT' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === true"
-                           ng-click="viewDeleteModal(detail.id, detail.name)">削除</a>
+                           ng-click="viewDeleteModal(detail.id, detail.name)">{{ 'TEAM_VISION.DELETE' | translate }}</a>
                     </li>
                 </ul>
             </div>

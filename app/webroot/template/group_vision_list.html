@@ -3,18 +3,18 @@
     <div class="col-xs-4">
         <a href="/teams/add_group_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button"
            ng-class="{disabled: allMyGroupVisionCreated}">
-            <i class="fa fa-plus-circle font_brownRed"></i>&nbsp;{{ 'GROUP_VISION.ADD_VISION' | translate}}</a>
+            <i class="fa fa-plus-circle font_brownRed"></i>&nbsp;{{ 'GROUP_VISION.ADD_VISION' | translate }}</a>
     </div>
 
     <div class="col-xs-offset-4 col-xs-4">
         <a class="pull-right font_verydark" ng-if="archive_flag === false"
-           ui-sref="group_vision_archive({team_id:team_id, active_flg:0})"><i class="fa fa-eye"></i> アーカイブを見る</a>
+           ui-sref="group_vision_archive({team_id:team_id, active_flg:0})"><i class="fa fa-eye"></i>{{'TEAM_VISION.VIEW_ARCHIVE' | translate}}</a>
     </div>
 </div>
 
 <table class="table table-hover team-member-table">
     <tr>
-        <th colspan="4"><i class="fa fa-plane"></i> {{ 'GROUP_VISION.HEADLINE' | translate}} ( {{GroupVisionCount}} )</th>
+        <th colspan="4"><i class="fa fa-plane"></i> {{ 'GROUP_VISION.HEADLINE' | translate }} ( {{GroupVisionCount}} )</th>
     </tr>
     <tr ng-repeat="item in GroupVisionList">
         <td class="pointer" width="20%"
@@ -30,8 +30,8 @@
 
                     <div class="vision_modified_date">
                         <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}}
-                        <span ng-if="item.GroupVision.member_count > 0">({{item.GroupVision.member_count}}メンバー)</span>
-                        <span ng-if="item.GroupVision.member_count == 0">(メンバーはおりません)</span>
+                        <span ng-if="item.GroupVision.member_count > 0">({{item.GroupVision.member_count}}{{ 'TEAM_MEMBER_LIST.MEMBER' | translate }})</span>
+                        <span ng-if="item.GroupVision.member_count == 0">({{ 'TEAM_MEMBER_LIST.NO_MEMBER' | translate }})</span>
                         <br>
                         <span ng-bind-html="item.GroupVision.modified"/>
                     </div>
@@ -53,13 +53,13 @@
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ui-sref="set_group_vision_archive({group_vision_id:item.GroupVision.id, active_flg:0})">アーカイブ</a>
+                           ui-sref="set_group_vision_archive({group_vision_id:item.GroupVision.id, active_flg:0})">{{ 'GROUP_VISION.ARCHIVE' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ng-href="/teams/edit_group_vision/group_vision_id:{{item.GroupVision.id}}">編集</a>
+                           ng-href="/teams/edit_group_vision/group_vision_id:{{item.GroupVision.id}}">{{ 'GROUP_VISION.EDIT' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === true"
-                           ng-click="viewDeleteModal(item.GroupVision.id, item.GroupVision.name)">削除</a>
+                           ng-click="viewDeleteModal(item.GroupVision.id, item.GroupVision.name)">{{ 'GROUP_VISION.DELETE' | translate }}</a>
                     </li>
                 </ul>
             </div>

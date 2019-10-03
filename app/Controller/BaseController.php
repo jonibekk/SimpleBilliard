@@ -329,7 +329,7 @@ class BaseController extends Controller
 
     function _calcSetupRestCount($status)
     {
-        return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
+        return max(0, count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status)));
     }
 
     function _calcSetupCompletePercent($status)

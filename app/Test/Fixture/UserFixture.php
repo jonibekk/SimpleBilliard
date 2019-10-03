@@ -298,7 +298,7 @@ class UserFixture extends CakeTestFixtureEx
             'password_token'     => 'Lorem ipsum dolor sit amet',
             'password_modified'  => '2014-05-22 02:28:04',
             'no_pass_flg'        => 1,
-            'photo_file_name'    => '',
+            'photo_file_name'    => 'photo.png',
             'primary_email_id'   => '1',
             'active_flg'         => 1,
             'last_login'         => '2014-05-22 02:28:04',

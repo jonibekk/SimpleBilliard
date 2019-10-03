@@ -1033,7 +1033,7 @@ class TeamMember extends AppModel
             'error_msg'     => null,
         ];
 
-        $before_csv_data = $this->getAllMembersCsvData();
+        $before_csv_data = array_values($this->getAllMembersCsvData());
         $this->csv_datas = [];
         //emails
         $before_emails = array_column($before_csv_data, 'email');
