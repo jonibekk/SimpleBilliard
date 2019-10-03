@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'VideoStreamService');
 
 class TeamExtender extends BaseExtender
 {
