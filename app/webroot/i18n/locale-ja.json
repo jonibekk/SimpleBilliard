@@ -13,7 +13,7 @@
     "VIEW_ARCHIVE":"アーカイブを見る",
     "ARCHIVE": "アーカイブ",
     "EDIT": "編集",
-    "DELETE": "削除,
+    "DELETE": "削除",
     "ARCHIVE_FAILED_MESSAGE": "管理者以外の方にはアーカイブできません",
     "ARCHIVE_SUCCESS_MESSAGE": "チームビジョンをアーカイブしました",
     "DELETE_FAILED_MESSAGE": "管理者以外の方には削除できません",
@@ -56,6 +56,6 @@
   "VISION_DELETE_MODAL": {
     "CONFIRMATION_TITLE": "{title}削除確認",
     "CONFIRMATION_MSG":"「{body}」を削除してもよろしいですか？",
-    "DELETE": "Delete"
+    "DELETE": "削除"
   }
 }
