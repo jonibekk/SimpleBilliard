@@ -62,7 +62,7 @@
         require(['validate'], function (validate) {
             window.bvCallbackAvailableEmailNotVerified = validate.bvCallbackAvailableEmailNotVerified;
         });
-        if ($('input[name="data[Email][email]"').val().length > 0) {
+        if ($('input[name="data[Email][email]"]').val().length > 0) {
             $('.signup-email-submit-button').attr('disabled', false);
         }
     });
