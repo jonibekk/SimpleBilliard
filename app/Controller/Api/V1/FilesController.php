@@ -31,7 +31,7 @@ class FilesController extends ApiController
         // if $enableVideoTranscode = true from API
         if ($enableVideoTranscode) {
             $isVideo = $this->isVideo($form);
-            if ($isVideo && TeamStatus::getCurrentTeam()->canVideoPostTranscode()) {
+            if ($isVideo) {
                 return $this->processVideoUpload($form);
             }
         }
