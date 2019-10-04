@@ -19,6 +19,7 @@ class UserServiceTest extends GoalousTestCase
         'app.user',
         'app.team',
         'app.team_member',
+        'app.team_config',
     );
 
     /**

@@ -34,13 +34,13 @@
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ui-sref="set_vision_archive({team_vision_id:item.TeamVision.id, active_flg:0})">アーカイブ</a>
+                           ui-sref="set_vision_archive({team_vision_id:item.TeamVision.id, active_flg:0})">{{ 'TEAM_VISION.ARCHIVE' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === false"
-                           ng-href="/teams/edit_team_vision/team_vision_id:{{item.TeamVision.id}}">編集</a>
+                           ng-href="/teams/edit_team_vision/team_vision_id:{{item.TeamVision.id}}">{{ 'TEAM_VISION.EDIT' | translate }}</a>
                         <a role="menuitem" tabindex="-1"
                            ng-if="archive_flag === true"
-                           ng-click="viewDeleteModal(item.TeamVision.id, item.TeamVision.name)">削除</a>
+                           ng-click="viewDeleteModal(item.TeamVision.id, item.TeamVision.name)">{{ 'TEAM_VISION.DELETE' | translate }}</a>
                     </li>
                 </ul>
             </div>
@@ -54,7 +54,7 @@
         </div>
 
         <div class="teamvision_modified_date">
-            最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
+            {{ 'TEAM_VISION.LAST_UPDATED' | translate }}:<span ng-bind-html="item.TeamVision.modified"/>
         </div>
     </div>
     <!-- repeatEND -->

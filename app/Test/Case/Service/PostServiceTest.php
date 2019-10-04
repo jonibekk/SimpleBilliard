@@ -970,17 +970,6 @@ class PostServiceTest extends GoalousTestCase
             $msg = $e->getMessage();
         }
         $this->assertNotEmpty($msg);
-
-
-        /* Login user belong to secret circle */
-        $this->CircleMember->join($circleId, $userId);
-        $msg = "";
-        try {
-            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousNotFoundException $e) {
-            $msg = $e->getMessage();
-        }
-        $this->assertEmpty($msg);
     }
 
     public function test_checkUserAccessToMultiplePost_success()

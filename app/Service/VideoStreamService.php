@@ -13,6 +13,9 @@ App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 App::uses('AwsEtsTranscodeInput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('VideoTranscodeLog', 'Model');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
+App::uses('UploadVideoStreamRequest', 'Service/Request/VideoStream');
+App::uses('Experiment', 'Model');
+App::uses('TeamConfig', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -188,13 +191,11 @@ class VideoStreamService extends AppService
     /**
      * Upload and transcode video stream
      *
-     * @param array $uploadFile
-     * @param int   $userId
-     * @param int   $teamId
-     *
+     * @param UploadVideoStreamRequest $uploadVideoStreamRequest
      * @return array
+     * @throws Exception
      */
-    public function uploadVideoStream(array $uploadFile, int $userId, int $teamId): array
+    public function uploadVideoStream(UploadVideoStreamRequest $uploadVideoStreamRequest): array
     {
         /** @var Video $Video */
         $Video = ClassRegistry::init("Video");
@@ -205,19 +206,20 @@ class VideoStreamService extends AppService
         /** @var VideoTranscodeLog $VideoTranscodeLog */
         $VideoTranscodeLog = ClassRegistry::init('VideoTranscodeLog');
 
-        $user = $User->getById($userId);
+        $user = $User->getById($uploadVideoStreamRequest->getUserId());
         if (is_null($user)) {
-            throw new NotFoundException(sprintf('user(%d) not found', $userId));
+            throw new NotFoundException(sprintf('user(%d) not found', $uploadVideoStreamRequest->getUserId()));
         }
         $userId = $user['id'];
 
-        $filePath = $uploadFile['tmp_name'];
-        $fileName = $uploadFile['name'];
+        $filePath = $uploadVideoStreamRequest->getUploadFile()['tmp_name'];
+        $fileName = $uploadVideoStreamRequest->getUploadFile()['name'];
 
         $transcodeOutputVersion = TeamStatus::getCurrentTeam()->getTranscodeOutputVersion();
 
         $hash = VideoFileHasher::hashFile(new \SplFileInfo($filePath));
 
+        $teamId = $uploadVideoStreamRequest->getTeamId();
         $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
         if (!empty($videoStreamIfExists)) {
             GoalousLog::info('uploaded same hash video exists', [
@@ -304,7 +306,7 @@ class VideoStreamService extends AppService
             $transcodeOutputVersion
         );
         $inputVideo = new AwsEtsTranscodeInput($resourcePath);
-        $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
+        $inputVideo->setTimeSpan($uploadVideoStreamRequest->getSecondsDurationLimit(), 0);
         $transcodeRequest->addInputVideo($inputVideo);
         $transcodeRequest->setUserMetaData([
             'videos.id'        => $video['id'],
@@ -493,5 +495,21 @@ class VideoStreamService extends AppService
             GoalousLog::error("Failed to delete video_streams", ['video_stream_ids' => $videoStreamIds]);
             throw $e;
         }
+    }
+
+    public function getTeamVideoDurationLimit(int $teamId): int
+    {
+        /** @var TeamConfig $TeamConfig */
+        $TeamConfig = ClassRegistry::init('TeamConfig');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+        $serviceUserStatus = $TeamService->getServiceUseStatusByTeamId($teamId);
+
+        $defaultVideoDurationLimit = ($serviceUserStatus === Enum\Model\Team\ServiceUseStatus::PAID)
+            ? VIDEO_MAX_DURATION_SECONDS_PAID : VIDEO_MAX_DURATION_SECONDS_LIMITED;
+
+        $teamConfig = $TeamConfig->getConfig($teamId);
+
+        return $teamConfig->getVideoDurationMaxSecond() ?? $defaultVideoDurationLimit;
     }
 }

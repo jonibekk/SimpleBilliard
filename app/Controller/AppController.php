@@ -24,6 +24,7 @@ App::import('Service', 'TeamMemberService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
+App::import('Service', 'SetupService');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
@@ -116,6 +117,11 @@ class AppController extends BaseController
      * 評価対象ゴール件数
      */
     public $evaluable_cnt = 0;
+
+    /**
+     * Count of setup items user needs to be done.
+     */
+    public $setup_rest_cnt = 0;
 
     /**
      * 通知設定
@@ -426,7 +432,7 @@ class AppController extends BaseController
      */
     public function _setAllAlertCnt()
     {
-        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
+        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt + $this->setup_rest_cnt;
         $this->set(compact('all_alert_cnt'));
     }
 
@@ -965,7 +971,8 @@ class AppController extends BaseController
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         $this->set('setup_status', $status_from_redis);
-        $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
+        $this->setup_rest_cnt = count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis));
+        $this->set('setup_rest_count', $this->setup_rest_cnt);
         return;
     }
 
@@ -975,22 +982,12 @@ class AppController extends BaseController
         return $this->GlRedis->getSetupGuideStatus($user_id);
     }
 
-    function _getStatusWithRedisSave($user_id = false)
+    function _getStatusWithRedisSave($userId = false)
     {
-        $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
-        $status = $this->_getAllSetupDataFromRedis($user_id);
-        if (!$status) {
-            $status = $this->User->generateSetupGuideStatusDict($user_id);
-            //set update time
-            $status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
-            $this->GlRedis->saveSetupGuideStatus($user_id, $status);
-
-            $status = $this->GlRedis->getSetupGuideStatus($user_id);
-        }
-        // remove last update time
-        unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
-
-        return $status;
+        $userId = empty($userId) ? $this->Auth->user('id') : $userId;
+        /** @var SetupService $SetupService */
+        $SetupService = ClassRegistry::init("SetupService");
+        return $SetupService->getSetupStatuses($userId);
     }
 
     function _setValsForAlert()
