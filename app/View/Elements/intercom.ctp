@@ -31,7 +31,6 @@
             created_at: <?= h($this->Session->read('Auth.User.created')) ?>, // Signup date as a Unix timestamp
             user_id: <?= h(intval($this->Session->read('Auth.User.id'))) ?>, // User Id
             setup: <?= h(intval($this->Session->read('Auth.User.setup_complete_flg'))) ?>, // Setup Complete Flag
-            user_del: <?= h(intval($this->Session->read('Auth.User.del_flg'))) ?>, // User del Flag
             default_team: <?= h(intval($this->Session->read('Auth.User.default_team_id'))) ?>, // User DEFAULT TEAM id
             user_timezone: <?= h(intval($this->Session->read('Auth.User.timezone'))) ?>, // User timezone
             language: "<?= h($this->Session->read('Auth.User.language')) ?>", // Language

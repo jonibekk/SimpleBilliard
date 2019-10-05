@@ -165,9 +165,12 @@ class PagesController extends AppController
         $this->set('enable_translation', true);
 
         try {
+            $paramsPostGet = $this->request->params;
+            // Ignore circle posts on home feed
+            $paramsPostGet["no_circle_posts"] = true;
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                    $this->request->params)
+                    $paramsPostGet)
             ]);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());

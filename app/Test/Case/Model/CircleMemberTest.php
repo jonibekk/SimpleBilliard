@@ -5,7 +5,7 @@ App::uses('CircleMember', 'Model');
  * CircleMember Test Case
  *
  * @property CircleMember $CircleMember
- * @property TeamMember $TeamMember
+ * @property TeamMember   $TeamMember
  */
 class CircleMemberTest extends GoalousTestCase
 {
@@ -387,38 +387,6 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
-    function test_join_success()
-    {
-        $this->_setDefault(1, 1);
-        $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
-            'description' => 'test'
-        ]);
-        $this->assertTrue($this->CircleMember->join($circle['Circle']['id'], 1));
-    }
-
-    function test_join_alreadyJoined()
-    {
-        $this->_setDefault(1, 1);
-        $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
-            'description' => 'test'
-        ]);
-        $this->CircleMember->join($circle['Circle']['id'], 1);
-        $this->assertFalse($this->CircleMember->join($circle['Circle']['id'], 1));
-    }
-
-    function test_leave_success()
-    {
-        $this->_setDefault(1, 1);
-        $circle = $this->CircleMember->Circle->save([
-            'name'        => 'test',
-            'description' => 'test'
-        ]);
-        $this->CircleMember->join($circle['Circle']['id'], 1);
-        $this->assertTrue($this->CircleMember->remove($circle['Circle']['id'], 1));
-    }
-
     function testCircleStatusToggle()
     {
         $this->_setDefault(1, 1);
@@ -596,5 +564,23 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->softDeleteAll(['circle_id' => 1, 'user_id' => 12], false);
         $res = $this->CircleMember->countEachCircle([1, 3, 4]);
         $this->assertEquals($res, [1 => 1, 3 => 1, 4 => 1]);
+    }
+
+    public function test_incrementUnreadCount_success()
+    {
+        $circleId = 1;
+        $userId = 1;
+        $teamId = 1;
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+
+        $unreadCount = $CircleMember->getUnreadCount(1, 1);
+        $CircleMember->incrementUnreadCount($circleId, false, $teamId);
+        $newUnreadCount = $CircleMember->getUnreadCount(1, 1);
+        $this->assertEquals($unreadCount + 1, $newUnreadCount);
+
+        $CircleMember->incrementUnreadCount($circleId, true, $teamId, $userId);
+        $this->assertEquals($newUnreadCount, $CircleMember->getUnreadCount(1, 1));
     }
 }

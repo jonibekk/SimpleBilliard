@@ -57,7 +57,9 @@ class CircleMemberPagingService extends BasePagingService
             'fields'     => [
                 'CircleMember.id',
                 'CircleMember.user_id',
-                'CircleMember.last_posted'
+                'CircleMember.last_posted',
+                'CircleMember.admin_flg',
+                'CircleMember.created'
             ],
             'conditions' => [
                 'CircleMember.team_id'   => $teamId,
@@ -83,10 +85,17 @@ class CircleMemberPagingService extends BasePagingService
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
+        $pagingRequest->addQueriesToCondition('admin_first');
+        if (!empty($pagingRequest->getQuery('admin_first'))) {
+            $pagingRequest->addOrder(static::MAIN_MODEL . '.admin_flg');
+        }
         $pagingRequest->addOrder(static::MAIN_MODEL . '.last_posted');
         $pagingRequest->addOrder(static::MAIN_MODEL . '.id');
+
         return $pagingRequest;
     }
+
+
 
     protected function createPointer(
         array $lastElement,
@@ -96,14 +105,27 @@ class CircleMemberPagingService extends BasePagingService
     {
         $prevLastPosted = $pagingRequest->getPointer('last_posted')[2] ?? -1;
 
+        $lastPostedTree = new PointerTree(['last_posted', '<', $lastElement['last_posted']]);
+
         if ($lastElement['last_posted'] == $headNextElement['last_posted'] ||
             $lastElement['last_posted'] == $prevLastPosted) {
             $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
-            $condition = new PointerTree('AND', $orCondition,
-                ['last_posted', '<=', $lastElement['last_posted']]);
-            return $condition;
-        } else {
-            return new PointerTree(['last_posted', '<', $lastElement['last_posted']]);
+            $lastPostedTree = new PointerTree('AND', $orCondition, ['last_posted', '<=', $lastElement['last_posted']]);
         }
+
+        if (empty($pagingRequest->getCondition('admin_first'))) {
+            return $lastPostedTree;
+        }
+
+        $lastAdmin = $lastElement['admin_flg'];
+
+        $subCondition = new PointerTree('AND', $lastPostedTree, [static::MAIN_MODEL . '.admin_flg', '=', $lastAdmin]);
+
+        if ($lastAdmin) {
+            return new PointerTree('OR', $subCondition, [static::MAIN_MODEL . '.admin_flg', '=', false]);
+        }
+
+        return $subCondition;
+
     }
 }

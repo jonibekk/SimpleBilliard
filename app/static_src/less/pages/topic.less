@@ -5,6 +5,10 @@
 @import "../partials/attached_file";
 @import(reference) "../partials/btn";
 
+// GL-8026: fix bug that window will be scroll, not message body if user try to scroll
+#message-app {
+  height: auto;
+}
 .topicList {
   font-size: 12px;
   &-header {
@@ -321,7 +325,7 @@
   &.mod-sp {
     border-radius: 0;
     position: fixed;
-    top: 45px;
+    top: @mobile-header-height !important;
     left: 0;
     right: 0;
     padding: 14px 0;
@@ -483,7 +487,7 @@
       bottom: 55px;
       right: 0;
       left: 0;
-      top: 95px;
+      top: 90px;
       background-color: #fff;
       z-index: 0;
     }

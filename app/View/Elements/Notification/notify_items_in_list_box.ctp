@@ -10,6 +10,15 @@
  */
 ?>
 
-<?= $this->App->viewStartComment()?>
-<?= $this->element('Notification/notify_items', ['notify_items' => $notify_items, 'location_type' => 'dropdown']) ?>
-<?= $this->App->viewEndComment()?>
+<?= $this->App->viewStartComment() ?>
+<?php if (empty($notify_items)): ?>
+    <div class="empty">
+        <div class="empty-box">
+            <i class="material-icons">notifications</i>
+            <p><?= __("No notifications")?></p>
+        </div>
+    </div>
+<?php else: ?>
+    <?= $this->element('Notification/notify_items', ['notify_items' => $notify_items, 'location_type' => 'dropdown']) ?>
+<?php endif; ?>
+<?= $this->App->viewEndComment() ?>

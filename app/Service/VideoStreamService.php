@@ -12,6 +12,10 @@ App::uses('AwsVideoTranscodeJobRequest', 'Model/Video/Requests');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
 App::uses('AwsEtsTranscodeInput', 'Model/Video/Transcode/AwsEtsStructure');
 App::uses('VideoTranscodeLog', 'Model');
+App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
+App::uses('UploadVideoStreamRequest', 'Service/Request/VideoStream');
+App::uses('Experiment', 'Model');
+App::uses('TeamConfig', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -154,7 +158,7 @@ class VideoStreamService extends AppService
         $VideoStream = ClassRegistry::init("VideoStream");
 
         $video = $Video->getByUserIdAndTeamIdAndHash($userId, $teamId, $hash);
-        if(empty($video)) {
+        if (empty($video)) {
             return [];
         }
         $videoId = $video['id'];
@@ -167,6 +171,7 @@ class VideoStreamService extends AppService
 
     /**
      * return video output path
+     *
      * @see https://confluence.goalous.com/display/GOAL/Video+storage+structure
      *
      * @param string $inputS3FileKey
@@ -186,13 +191,11 @@ class VideoStreamService extends AppService
     /**
      * Upload and transcode video stream
      *
-     * @param array $uploadFile
-     * @param int   $userId
-     * @param int   $teamId
-     *
+     * @param UploadVideoStreamRequest $uploadVideoStreamRequest
      * @return array
+     * @throws Exception
      */
-    public function uploadVideoStream(array $uploadFile, int $userId, int $teamId): array
+    public function uploadVideoStream(UploadVideoStreamRequest $uploadVideoStreamRequest): array
     {
         /** @var Video $Video */
         $Video = ClassRegistry::init("Video");
@@ -203,25 +206,26 @@ class VideoStreamService extends AppService
         /** @var VideoTranscodeLog $VideoTranscodeLog */
         $VideoTranscodeLog = ClassRegistry::init('VideoTranscodeLog');
 
-        $user = $User->getById($userId);
+        $user = $User->getById($uploadVideoStreamRequest->getUserId());
         if (is_null($user)) {
-            throw new NotFoundException(sprintf('user(%d) not found', $userId));
+            throw new NotFoundException(sprintf('user(%d) not found', $uploadVideoStreamRequest->getUserId()));
         }
         $userId = $user['id'];
 
-        $filePath = $uploadFile['tmp_name'];
-        $fileName = $uploadFile['name'];
+        $filePath = $uploadVideoStreamRequest->getUploadFile()['tmp_name'];
+        $fileName = $uploadVideoStreamRequest->getUploadFile()['name'];
 
         $transcodeOutputVersion = TeamStatus::getCurrentTeam()->getTranscodeOutputVersion();
 
         $hash = VideoFileHasher::hashFile(new \SplFileInfo($filePath));
 
+        $teamId = $uploadVideoStreamRequest->getTeamId();
         $videoStreamIfExists = $this->findVideoStreamIfExists($userId, $teamId, $hash);
         if (!empty($videoStreamIfExists)) {
             GoalousLog::info('uploaded same hash video exists', [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'hash'    => $hash,
+                'user_id'          => $userId,
+                'team_id'          => $teamId,
+                'hash'             => $hash,
                 'video_streams.id' => $videoStreamIfExists['id'],
             ]);
             return $videoStreamIfExists;
@@ -302,11 +306,12 @@ class VideoStreamService extends AppService
             $transcodeOutputVersion
         );
         $inputVideo = new AwsEtsTranscodeInput($resourcePath);
-        $inputVideo->setTimeSpan(60, 0);// 00:00 to 01:00
+        $inputVideo->setTimeSpan($uploadVideoStreamRequest->getSecondsDurationLimit(), 0);
         $transcodeRequest->addInputVideo($inputVideo);
         $transcodeRequest->setUserMetaData([
             'videos.id'        => $video['id'],
             'video_streams.id' => $videoStreamId,
+            'env'              => ENV_NAME,
         ]);
         // set watermark if env is not production
         $transcodeRequest->setPutWaterMark(in_array(ENV_NAME, ['local', 'dev', 'stage']));
@@ -367,5 +372,144 @@ class VideoStreamService extends AppService
         $this->logTranscodeEvent($videoStreamId, Enum\Model\Video\VideoTranscodeLogType::ERROR(), [
             'reason' => $errorMessage,
         ]);
+    }
+
+    public function isAllCompletedTrancode(array $videoStreamIds): bool
+    {
+        if (empty($videoStreamIds)) {
+            return true;
+        }
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $transcodeStatus = $VideoStream->find('all', [
+            'conditions' => [
+                'id' => $videoStreamIds,
+            ],
+            'fields'     => [
+                'VideoStream.transcode_status'
+            ]
+        ]);
+        $transcodeStatuses = Hash::extract($transcodeStatus, '{n}.VideoStream');
+        foreach ($transcodeStatuses as $transcodeStatus) {
+            if ((int)$transcodeStatus['transcode_status'] !== Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function getVideoStreamForPlayer(int $videoStreamId, bool $setDirectUrl = false)
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init("VideoStream");
+
+        $resourceVideoStream = $VideoStream->getById($videoStreamId);
+        if (empty($resourceVideoStream)) {
+            return false;
+        }
+        $videoStoragePath = $resourceVideoStream['storage_path'];
+        $urlBaseStorage = sprintf('%s/%s/%s', S3_BASE_URL, AWS_S3_BUCKET_VIDEO_TRANSCODED, $videoStoragePath);
+        $transcoderOutputVersion = new Enum\Model\Video\TranscodeOutputVersion(intval($resourceVideoStream['output_version']));
+        $transcodeOutput = TranscodeOutputVersionDefinition::getVersion($transcoderOutputVersion);
+
+        $videoSources = [];
+        foreach ($transcodeOutput->getVideoSources($urlBaseStorage) as $videoSource) {
+            $source = [
+                'video_stream_id' => $videoStreamId,
+                'type'            => $videoSource->getType()->getValue(),
+            ];
+            if ($setDirectUrl && $videoSource->getType()->equals(Goalous\Enum\Model\Video\VideoSourceType::PLAYLIST_M3U8_HLS())) {
+                $source['url'] = $urlBaseStorage . 'playlist.m3u8';
+            }
+            array_push($videoSources, $source);
+        }
+        $resourceVideoStream['video_sources'] = $videoSources;
+        $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
+        $resourceVideoStream['file_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
+        $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
+
+        return $resourceVideoStream;
+    }
+
+    /**
+     * Decide current user browser is supporting redirecting on HLS video play.
+     *
+     * @see
+     *     https://github.com/videojs/videojs-contrib-hls/pull/912#discussion_r164196518
+     *     https://developer.mozilla.org/ja/docs/XMLHttpRequest/responseURL
+     *     IE11 does not have responseURL property,
+     *     unless we are redirecting, IE11 cant play video if we redirects Cross-Origin
+     *
+     * @return bool
+     */
+    public function isBrowserSupportManifestRedirects(): bool
+    {
+        try {
+            $currentBrowser = (new \BrowscapPHP\Browscap())->getBrowser();
+        } catch (Exception $e) {
+            // logging on info
+            // not critical if exception throws on here
+            GoalousLog::info('Failed to detect browser', [
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
+
+        $browser = strtolower(trim($currentBrowser->browser ?? ''));
+        $version = intval($currentBrowser->majorver ?? 0);
+
+        // IE is not supporting
+        if ('ie' === $browser && $version <= 11) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Soft delete entries in video_streams by their ids
+     *
+     * @param array $videoStreamIds
+     *
+     * @throws Exception
+     */
+    public function deleteStreamsAndVideos(array $videoStreamIds)
+    {
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+        try {
+            $this->TransactionManager->begin();
+            $videoIds = $VideoStream->getVideoIds($videoStreamIds);
+            $result = $VideoStream->softDeleteAll(['id' => $videoStreamIds], false) &&
+                $Video->softDeleteAll(['id' => $videoIds], false);
+            if (!$result) {
+                throw new RuntimeException();
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to delete video_streams", ['video_stream_ids' => $videoStreamIds]);
+            throw $e;
+        }
+    }
+
+    public function getTeamVideoDurationLimit(int $teamId): int
+    {
+        /** @var TeamConfig $TeamConfig */
+        $TeamConfig = ClassRegistry::init('TeamConfig');
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+        $serviceUserStatus = $TeamService->getServiceUseStatusByTeamId($teamId);
+
+        $defaultVideoDurationLimit = ($serviceUserStatus === Enum\Model\Team\ServiceUseStatus::PAID)
+            ? VIDEO_MAX_DURATION_SECONDS_PAID : VIDEO_MAX_DURATION_SECONDS_LIMITED;
+
+        $teamConfig = $TeamConfig->getConfig($teamId);
+
+        return $teamConfig->getVideoDurationMaxSecond() ?? $defaultVideoDurationLimit;
     }
 }

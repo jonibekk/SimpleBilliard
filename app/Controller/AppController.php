@@ -12,15 +12,23 @@ App::uses('BaseController', 'Controller');
 App::uses('HelpsController', 'Controller');
 App::uses('NotifySetting', 'Model');
 App::uses('User', 'Model');
+App::uses('CircleMember', 'Model');
 App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
+App::uses('UrlUtil', 'Util');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
+App::import('Service', 'TeamMemberService');
 App::import('Service', 'ChargeHistoryService');
 App::import('Service', 'CreditCardService');
 App::import('Service', 'CirclePinService');
+App::import('Service', 'SetupService');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
+App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
 
 use Goalous\Enum as Enum;
 
@@ -109,6 +117,11 @@ class AppController extends BaseController
      * 評価対象ゴール件数
      */
     public $evaluable_cnt = 0;
+
+    /**
+     * Count of setup items user needs to be done.
+     */
+    public $setup_rest_cnt = 0;
 
     /**
      * 通知設定
@@ -271,12 +284,16 @@ class AppController extends BaseController
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
                 $this->_setTimeZoneEnvironment();
+                $this->_setNotifyingCircleList();
+                $this->_setCircleBadgeCount();
+                $this->_setNewGoalousAssets();
             }
             $this->set('current_term', $this->Team->Term->getCurrentTermData());
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
             $this->_setAvailEvaluation();
             $this->_setAllAlertCnt();
+            $this->setDefaultTranslationLanguage();
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
@@ -415,7 +432,7 @@ class AppController extends BaseController
      */
     public function _setAllAlertCnt()
     {
-        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
+        $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt + $this->setup_rest_cnt;
         $this->set(compact('all_alert_cnt'));
     }
 
@@ -492,6 +509,7 @@ class AppController extends BaseController
             }
         }
     }
+
     public function _setMyTeam()
     {
         $my_teams = [];
@@ -853,6 +871,16 @@ class AppController extends BaseController
         $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_topic_ids'));
     }
 
+    public function _setCircleBadgeCount()
+    {
+        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
+        $UnreadPostsClient = new UnreadPostsClient();
+
+        $UnreadPostsCount = count($UnreadPostsClient->read($UnreadPostsKey)->get());
+
+        $this->set('circle_badge_cnt', $UnreadPostsCount);
+    }
+
     function _getRedirectUrl()
     {
         $redirect_url = $this->request->data('Post.redirect_url');
@@ -943,7 +971,8 @@ class AppController extends BaseController
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
         $this->set('setup_status', $status_from_redis);
-        $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
+        $this->setup_rest_cnt = count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis));
+        $this->set('setup_rest_count', $this->setup_rest_cnt);
         return;
     }
 
@@ -953,22 +982,12 @@ class AppController extends BaseController
         return $this->GlRedis->getSetupGuideStatus($user_id);
     }
 
-    function _getStatusWithRedisSave($user_id = false)
+    function _getStatusWithRedisSave($userId = false)
     {
-        $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
-        $status = $this->_getAllSetupDataFromRedis($user_id);
-        if (!$status) {
-            $status = $this->User->generateSetupGuideStatusDict($user_id);
-            //set update time
-            $status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
-            $this->GlRedis->saveSetupGuideStatus($user_id, $status);
-
-            $status = $this->GlRedis->getSetupGuideStatus($user_id);
-        }
-        // remove last update time
-        unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
-
-        return $status;
+        $userId = empty($userId) ? $this->Auth->user('id') : $userId;
+        /** @var SetupService $SetupService */
+        $SetupService = ClassRegistry::init("SetupService");
+        return $SetupService->getSetupStatuses($userId);
     }
 
     function _setValsForAlert()
@@ -1014,6 +1033,33 @@ class AppController extends BaseController
                     }
                 }
             }
+        }
+    }
+
+    private function setDefaultTranslationLanguage()
+    {
+        // If not logged in, return
+        if (empty($this->current_team_id) || empty($this->Auth->user('id'))) {
+            return;
+        }
+
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
+
+        $browserLanguages = CakeRequest::acceptLanguage();
+
+        try {
+            /** @var TeamMemberService $TeamMemberService */
+            $TeamMemberService = ClassRegistry::init('TeamMemberService');
+            $TeamMemberService->initializeDefaultTranslationLanguage($teamId, $userId, $browserLanguages);
+        } catch (Exception $e) {
+            GoalousLog::error("Exception when initializing user's default translation language.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'users.id'  => $userId,
+                'teams.id'  => $teamId,
+                'languages' => $browserLanguages
+            ]);
         }
     }
 
@@ -1163,6 +1209,39 @@ class AppController extends BaseController
         $browser = $this->_getBrowser();
         $this->is_tablet = $browser['istablet'];
         $this->set('isTablet', $this->is_tablet);
+    }
+
+    /**
+     * Set new Goalous assets to prefetch on old Goalous
+     */
+    public function _setNewGoalousAssets()
+    {
+        if (!$this->request->is('get')) {
+            $this->set('newGoalousAssets', []);
+            return;
+        }
+        /** @var NewGoalousAssetsStorageClient $NewGoalousAssetsStorageClient */
+        $NewGoalousAssetsStorageClient = ClassRegistry::init('NewGoalousAssetsStorageClient');
+        $newGoalousAssets = $NewGoalousAssetsStorageClient->getKeys();
+        $this->set('newGoalousAssets', $newGoalousAssets);
+    }
+
+    /**
+     * Set list of joined circles with enabled notification for this user
+     */
+    protected function _setNotifyingCircleList(){
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $circleIds = [];
+
+        $circles = $CircleMember->getCirclesWithNotificationFlg($this->Auth->user('id'), true);
+        /** @var CircleMemberEntity $circle */
+        foreach ($circles as $circle) {
+            $circleIds[] = strval($circle['circle_id']);
+        }
+
+        $this->set('my_notifying_circles', $circleIds);
     }
 
 }

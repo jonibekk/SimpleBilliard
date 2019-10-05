@@ -51,6 +51,12 @@ class PostResourceFixture extends CakeTestFixtureEx
             'unsigned' => true,
             'comment'  => 'resource table\'s primary key id'
         ),
+        'resource_order'   => array(
+            'type'     => 'integer',
+            'null'     => false,
+            'default'  => '0',
+            'unsigned' => true,
+        ),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),

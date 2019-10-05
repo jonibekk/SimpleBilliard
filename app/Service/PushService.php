@@ -255,9 +255,11 @@ class PushService extends AppService
         // Check if the device already exists
         $data = $Device->getDeviceByToken($deviceToken);
         if (!empty($data['Device'])) {
-            $data['Device']['user_id'] = $userId;
-            $data['Device']['os_type'] = $deviceType->getValue();
-            $data['Device']['version'] = $version;
+            $now = GoalousDateTime::now();
+            $data['Device']['user_id']  = $userId;
+            $data['Device']['os_type']  = $deviceType->getValue();
+            $data['Device']['version']  = $version;
+            $data['Device']['modified'] = $now->getTimestamp();
 
             try {
                 $Device->save($data, false);

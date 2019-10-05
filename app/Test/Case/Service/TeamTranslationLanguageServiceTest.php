@@ -172,6 +172,8 @@ class TeamTranslationLanguageServiceTest extends GoalousTestCase
         $this->assertEquals(LanguageEnum::EN, $language);
         $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["qq", "id", "ww"]);
         $this->assertEquals(LanguageEnum::ID, $language);
+        $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["id", "en", "zh-TW"]);
+        $this->assertEquals(LanguageEnum::ID, $language);
 
         //Containing country
         $language = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, ["qq", "qw", "en-US"]);

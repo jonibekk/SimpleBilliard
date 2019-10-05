@@ -200,6 +200,7 @@ class TeamMemberFixture extends CakeTestFixtureEx
             'evaluation_enable_flg' => 1,
             'admin_flg'             => 1,
             'last_login'            => '2014-05-22 02:28:04',
+            'comment'               => 'User comment',
             'status'                => 1,
             'del_flg'               => false,
             'deleted'               => null,

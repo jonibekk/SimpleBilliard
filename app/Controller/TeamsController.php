@@ -326,7 +326,7 @@ class TeamsController extends AppController
         /** @var Enum\Model\Term\EvaluateStatus $previous_term_evaluation_status */
         $previous_term_evaluation_status = null;
         if ($previous_term_exists) {
-            $previous_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval($previous_term['evaluate_status']));
+            $previous_term_evaluation_status = new Enum\Model\Term\EvaluateStatus(intval(Hash::get($previous_term, 'evaluate_status', 0)));
         }
 
         $eval_start_button_enabled = true;
@@ -427,7 +427,7 @@ class TeamsController extends AppController
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-        if ($TeamTranslationLanguage->canTranslate($team_id)) {
+        if ($TeamTranslationLanguage->hasLanguage($team_id)) {
             try {
                 $translationTeamLanguageCandidates = $TeamTranslationLanguageService->getAllLanguages($team_id);
                 $translationTeamDefaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguage($team_id);
@@ -815,6 +815,8 @@ class TeamsController extends AppController
         $csv = $this->Csv->convertCsvToArray($this->request->data['Team']['csv_file']['tmp_name']);
         $this->Team->TeamMember->begin();
         $save_res = $this->Team->TeamMember->updateMembersFromCsv($csv);
+
+        $this->GlRedis->dellKeys("cache_user_data:unapproved_count:team:" . $this->current_team_id . ":user:*");
         if ($save_res['error']) {
             $this->Team->TeamMember->rollback();
             $result['error'] = true;
@@ -1585,7 +1587,7 @@ class TeamsController extends AppController
 
         // １つ前の期間との比較
         foreach ($insights[0] as $k => $v) {
-            if (isset($insights[1][$k])) {
+            if (!empty($insights[1][$k]) && is_numeric($insights[1][$k])) {
                 $cmp_key = $k . "_cmp";
                 if (strpos($k, '_percent') !== false) {
                     $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];

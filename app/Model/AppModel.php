@@ -733,6 +733,29 @@ class AppModel extends Model
     }
 
     /**
+     * Override saveAll() function. Do post-processing
+     *
+     * @param array  $data
+     * @param array  $opotions
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function saveAll($data = array(), $options = array())
+    {
+        $functions = $this->postProcessFunctions;
+
+        $result = parent::saveAll($data, $options);
+
+        $this->postProcessFunctions = $functions;
+
+        if (is_array($result)) {
+            $result = $this->postProcess($result);
+        }
+
+        return $result;
+    }
+    /**
      * Override afterFind(). Will process find() result
      *
      * @param mixed $results
@@ -758,7 +781,7 @@ class AppModel extends Model
      *
      * @return array | BaseEntity
      */
-    private function postProcess(array $data = [])
+    private function postProcess($data = [])
     {
         foreach ($this->postProcessFunctions as $callable) {
             if (!is_callable($callable)) {
@@ -800,7 +823,7 @@ class AppModel extends Model
      */
     public function useType(): self
     {
-        $this->postProcessFunctions['type'] = function (array $data): array {
+        $this->postProcessFunctions['type'] = function ($data) {
             return $this->convertType($data);
         };
 
@@ -810,11 +833,11 @@ class AppModel extends Model
     /**
      * Convert data from string to configured ones
      *
-     * @param array $data
+     * @param array | BaseEntity $data
      *
-     * @return array
+     * @return array | BaseEntity
      */
-    protected function convertType(array $data): array
+    protected function convertType($data)
     {
         $conversionTable = array_merge($this->defaultConversionTable, $this->modelConversionTable);
 
@@ -857,7 +880,7 @@ class AppModel extends Model
      * @param array  $data
      * @param string $className Entity wrapper class name
      *
-     * @return array | BaseEntity
+     * @return BaseEntity[] | BaseEntity
      */
     protected function convertEntity(array $data, string $className = null)
     {
@@ -911,7 +934,7 @@ class AppModel extends Model
     {
         $conditions = [
             'conditions' => [
-                'id' => $id
+                $this->alias . '.id' => $id
             ]
         ];
         if ($excludeDeleted) {

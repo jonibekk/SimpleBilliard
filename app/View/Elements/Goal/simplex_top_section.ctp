@@ -46,7 +46,7 @@
                     </div>
                     <div class="col col-xxs-3 col-xs-2">
                         <a class="btn btn-white btn-ellipsis dropdown-toggle" data-toggle="dropdown"><span
-                                class="fa fa-ellipsis-h"></span></a>
+                                    class="fa fa-ellipsis-h"></span></a>
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li>
                                 <?=
@@ -79,7 +79,7 @@
                             disabled="disabled"
                         <?php endif ?>
                         >
-                        <span class="ml_5px"><?= __('Follow') ?></span>
+                        <span class="ml_5px"><?= $follow_opt['text'] ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-6">
@@ -96,7 +96,7 @@
                                'action'     => 'ajax_get_collabo_change_modal',
                                'goal_id'    => $goal['Goal']['id']
                            ]) ?>">
-                            <span class=""><?= __("Collab") ?></span>
+                            <span class=""><?= $collabo_opt['text'] ?></span>
                         </a>
                     </div>
                 <?php endif ?>
@@ -106,7 +106,7 @@
     <div class="goal-detail-upper-panel-detail">
         <div class="goal-detail-more-details-wrap">
             <a href="#" class="goal-detail-more-details-link js-open-goal-details-info"><span
-                    class="fa fa-info-circle"></span>&nbsp;<?= h(__('View info')) ?></a>
+                        class="fa fa-info-circle"></span>&nbsp;<?= h(__('View info')) ?></a>
         </div>
         <div class="goal-detail-more-details-info col-xxs-12">
             <ul class="goal-detail-items">
@@ -126,7 +126,7 @@
                             <?php endforeach ?>
                         </ul>
                     <?php else: ?>
-                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目                ?>
+                        <?= __('No Labels') //TODO 既存のゴール対策。現行のゴールではラベルは必須項目                 ?>
                     <?php endif; ?>
                 </li>
                 <li class="goal-detail-goal-date">
@@ -141,7 +141,7 @@
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
                 <li class="goal-detail-info-followers">
-                    <p><?= __('Followers').' ('.count($followers).')'; ?></p>
+                    <p><?= __('Followers') . ' (' . count($followers) . ')'; ?></p>
                     <?php
                     $follower_view_num = 5;
                     $iterator = $follower_view_num;

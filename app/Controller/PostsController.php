@@ -3,19 +3,15 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
-App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
-App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
-App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
-App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
+App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
-use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
 
 /**
  * Posts Controller
@@ -24,6 +20,8 @@ use Goalous\Enum\NotificationFlag\Name as NotificationFlagName;
  */
 class PostsController extends AppController
 {
+    use TranslationNotificationTrait;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -164,7 +162,12 @@ class PostsController extends AppController
                     $postDraft = $PostDraftService->createPostDraftWithResources($this->request->data,
                         $userId,
                         $teamId,
-                        [$videoStream]
+                        [
+                            [
+                                'is_video' => true,
+                                'video_stream_id' => $videoStream['id'],
+                            ]
+                        ]
                     );
                     if (false === $postDraft) {
                         // バリデーションエラーのケース
@@ -282,23 +285,14 @@ class PostsController extends AppController
         $this->Notification->outSuccess(__("Posted."));
 
         // Make translation
-        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
-        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
         $teamId = TeamStatus::getCurrentTeam()->getTeamId();
 
-        if ($TeamTranslationLanguage->canTranslate($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached()) {
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
 
-            /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
-            $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-            /** @var TranslationService $TranslationService */
-            $TranslationService = ClassRegistry::init('TranslationService');
-
-            $defaultLanguage = $TeamTranslationLanguageService->getDefaultTranslationLanguageCode($teamId);
-
+        if ($TranslationService->canTranslate($teamId)) {
             try {
-                $TranslationService->createTranslation(TranslationContentType::CIRCLE_POST(), $postedPostId, $defaultLanguage);
+                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postedPostId);
                 // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
                 $this->sendTranslationUsageNotification($teamId);
             } catch (Exception $e) {
@@ -310,51 +304,6 @@ class PostsController extends AppController
         }
 
         return true;
-    }
-
-    public function sendTranslationUsageNotification(int $teamId)
-    {
-        /** @var TeamTranslationStatus $TeamTranslationStatus */
-        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-        $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
-
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-
-        $notificationFlagClient = new NotificationFlagClient();
-
-        $limitReachedKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_REACHED());
-        $limitClosingKey = new NotificationFlagKey($teamId, NotificationFlagName::TYPE_TRANSLATION_LIMIT_CLOSING());
-
-        if (empty($notificationFlagClient->read($limitReachedKey)) && $teamTranslationStatus->isLimitReached()) {
-            $this->notifyTranslateLimitReached($teamId, $TeamMember->findAdminList($teamId) ?? []);
-            $notificationFlagClient->write($limitReachedKey);
-        } else if (empty($notificationFlagClient->read($limitClosingKey)) && $teamTranslationStatus->isUsageWithinPercentageOfLimit(0.1)) {
-            $this->notifyTranslateLimitClosing($teamId, $TeamMember->findAdminList($teamId) ?? []);
-            $notificationFlagClient->write($limitClosingKey);
-        }
-    }
-
-    private function notifyTranslateLimitReached(int $teamId, array $userIds)
-    {
-        $this->NotifyBiz->sendNotify(
-            NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED,
-            null,
-            null,
-            $userIds,
-            null,
-            $teamId);
-    }
-
-    private function notifyTranslateLimitClosing(int $teamId, array $userIds)
-    {
-        $this->NotifyBiz->sendNotify(
-            NotifySetting::TYPE_TRANSLATION_LIMIT_CLOSING,
-            null,
-            null,
-            $userIds,
-            null,
-            $teamId);
     }
 
     /**
@@ -1071,6 +1020,60 @@ class PostsController extends AppController
 
     function feed()
     {
+        // If specified circle_id
+        if (!empty($this->request->params['circle_id'])) {
+            $circleId = $this->request->params['circle_id'];
+            $urlCircleFeed = sprintf('/circles/%s/posts', $circleId);
+            if (ENV_NAME == 'local') {
+                $urlCircleFeed = "http://local.goalous.com:5790".$urlCircleFeed;
+            }
+            $this->redirect($urlCircleFeed);
+            return;
+        }
+
+        // If specified post_id, showing post detail.
+        if (!empty($this->request->params['post_id'])) {
+            $postId = $this->request->params['post_id'];
+            /** @var Post $Post */
+            $Post = ClassRegistry::init('Post');
+            $post = $Post->findById($postId);
+            $url = sprintf('/posts/%s?%s', $postId, http_build_query($this->request->query));
+            if (ENV_NAME == 'local') {
+                $url = "http://local.goalous.com:5790".$url;
+            }
+            do {
+                if (empty($post)) {
+                    // Post doesn't exists
+                    // But redirecting to show new 404
+                    $this->redirect($url);
+                    break;
+                }
+
+                $postType = (int)$post['Post']['type'];
+                $typesCanViewOnAngular = [
+                    Enum\Model\Post\Type::NORMAL
+                ];
+                if (!in_array($postType, $typesCanViewOnAngular)) {
+                    // Angular could not show this type of post yet.
+                    // Show post on old Goalous.
+                    break;
+                }
+
+                /** @var PostService $PostService */
+                $PostService = ClassRegistry::init('PostService');
+                if (!$PostService->checkUserAccessToCirclePost($this->Auth->user('id'), $postId)) {
+                    // User can't access post
+                    // But redirecting to show new 404
+                    $this->redirect($url);
+                    break;
+                }
+
+                // User can see this type of post on Angular
+                $this->redirect($url);
+                return;
+            } while (false);
+        }
+
         $this->_setCircleCommonVariables();
 
         try {
@@ -1545,19 +1548,6 @@ class PostsController extends AppController
             }
         }
         return 'not_joined';
-    }
-
-    function circle_toggle_status($status)
-    {
-        $circle_id = $this->request->params['named']['circle_id'];
-        $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
-
-        if ($this->Post->Circle->CircleMember->validates()) {
-            $this->Post->Circle->CircleMember->circleStatusToggle($circle_id, $status);
-            return $this->redirect($this->request->referer());
-        } else {
-            throw new NotFoundException(__("Invalid Request"));
-        }
     }
 
     public function ajax_add_post_for_setup_guide()

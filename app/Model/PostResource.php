@@ -3,8 +3,10 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('AppModel', 'Model');
 App::uses('VideoStream', 'Model');
 App::uses('TranscodeOutputVersionDefinition', 'Model/Video/Transcode');
+App::import('Model/Entity', 'PostResourceEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\DataType\DataType as DataType;
 
 /**
  * Class PostResource
@@ -13,6 +15,14 @@ class PostResource extends AppModel
 {
     const COLUMN_POST = 'post_id';
     const COLUMN_POST_DRAFT = 'post_draft_id';
+
+    protected $modelConversionTable = [
+        'post_id'        => DataType::INT,
+        'post_draft_id'  => DataType::INT,
+        'resource_type'  => DataType::INT,
+        'resource_id'    => DataType::INT,
+        'resource_order' => DataType::INT
+    ];
 
     /**
      * Return all post_resources of posts.id
@@ -110,16 +120,12 @@ class PostResource extends AppModel
 
                     $resourceVideoStream['video_sources'] = $transcodeOutput->getVideoSources($urlBaseStorage);
                     $resourceVideoStream['thumbnail'] = $transcodeOutput->getThumbnailUrl($urlBaseStorage);
-                    $resourceVideoStream['post_resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM();
+                    $resourceVideoStream['resource_type'] = Enum\Model\Post\PostResourceType::VIDEO_STREAM;
                     $resources = Hash::insert($resources, $hashKeyResource, $resourceVideoStream);
             }
         }
 
         $results = [];
-        // make the empty array of specified id's
-        foreach ($ids as $id) {
-            $results[$id] = [];
-        }
         // create $results:array = [
         //      (posts.id | post_draft_id):int => [
         //          resource data:array,
@@ -135,15 +141,16 @@ class PostResource extends AppModel
             switch ($resourceType->getValue()) {
                 case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
                     $hashKeyResource = sprintf('%s.%s', Enum\Model\Post\PostResourceType::VIDEO_STREAM, $postResource['resource_id']);
+                    $targetId = $postResource[$postOrDraftColumnName];
+                    if (empty($results[$targetId])) {
+                        $results[$targetId] = [];
+                    }
+                    $results[$targetId][] = Hash::get($resources, $hashKeyResource);
                     break;
                 default:
-                    GoalousLog::error('resource type not found for post resource', [
-                        'resource_type' => sprintf('%s:%s', $resourceType->getValue(), $resourceType->getKey()),
-                    ]);
+                    // Currently not returning image/file/video file resource.
                     break;
             }
-            $targetId = $postResource[$postOrDraftColumnName];
-            $results[$targetId][] = Hash::get($resources, $hashKeyResource);
         }
         return $results;
     }
@@ -152,19 +159,13 @@ class PostResource extends AppModel
      * Return bool if team is not need to see target resource
      *
      * @param Enum\Model\Post\PostResourceType $postResourceType
-     * @param bool                       $checkTeamStatus
+     * @param bool                             $checkTeamStatus
      *
      * @return bool
      */
     private function shouldIgnoreResource(Enum\Model\Post\PostResourceType $postResourceType, bool $checkTeamStatus): bool
     {
         switch ($postResourceType->getValue()) {
-            case Enum\Model\Post\PostResourceType::VIDEO_STREAM:
-                if ($checkTeamStatus && !TeamStatus::getCurrentTeam()->canVideoPostPlay()) {
-                    // If team can't play the video
-                    return true;
-                }
-                break;
             default:
                 break;
         }
@@ -184,7 +185,7 @@ class PostResource extends AppModel
      *      means finding the post_drafts.id that have relation to 'video_streams.id = 123'
      *
      * @param Enum\Model\Post\PostResourceType $resourceType
-     * @param int                        $resourceId
+     * @param int                              $resourceId
      *
      * @return int|null
      */
@@ -204,5 +205,120 @@ class PostResource extends AppModel
             return null;
         }
         return $r['PostResource']['post_draft_id'];
+    }
+
+    /**
+     * Find post resources that does not exist in given array
+     *
+     * @param int   $postId
+     * @param array $resources
+     *              [resource_type => [resource_id]]
+     *
+     * @return array
+     */
+    public function findDeletedPostResourcesInPost(int $postId, array $resources): array
+    {
+        $result = [];
+
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+            ],
+        ];
+
+        $queried = Hash::extract($this->useType()->find('all', $condition), '{n}.{s}');
+
+        foreach ($queried as $singleQueried) {
+            if (empty($resources[$singleQueried['resource_type']]) || !in_array($singleQueried['resource_id'], $resources[$singleQueried['resource_type']])) {
+                $result[] = $singleQueried;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Find the highest resource order of a given post id
+     *
+     * @param int $postId
+     *
+     * @return int Highest resource order of a post. -1 for not existing
+     */
+    public function findMaxResourceOrderOfPost(int $postId): int
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+                'del_flg' => false
+            ],
+            'fields'     => [
+                'MAX(resource_order) as max_order'
+            ]
+        ];
+
+        return $this->find('first', $condition)[0]['max_order'] ?: -1;
+    }
+
+    /**
+     * Find all post_resources of a given post id
+     *
+     * @param int $postId
+     *
+     * @return array
+     */
+    public function getAllPostResources(int $postId): array
+    {
+        $condition = [
+            'conditions' => [
+                'post_id' => $postId,
+            ],
+        ];
+        $result = $this->useType()->find('all', $condition);
+
+        return Hash::extract($result, '{n}.{s}');
+    }
+
+    /**
+     * Check whether video stream is only used by a single post
+     *
+     * @param int $videoStreamId
+     *
+     * @return bool
+     */
+    public function isVideoStreamUnique(int $videoStreamId): bool
+    {
+        $condition = [
+            'conditions' => [
+                'resource_id'   => $videoStreamId,
+                'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM,
+                'del_flg'       => false
+            ]
+        ];
+
+        return $this->find('count', $condition) == 1;
+    }
+
+    /**
+     * Get PostResource ID
+     *
+     * @param int                              $resourceId
+     * @param Enum\Model\Post\PostResourceType $type
+     *
+     * @return int[] PostResource.id
+     */
+    public function getPostResourceId(int $resourceId, Enum\Model\Post\PostResourceType $type): array {
+
+        $condition = [
+            'conditions' => [
+                'resource_id'   => $resourceId,
+                'resource_type' => $type->getValue(),
+                'del_flg'       => false
+            ],
+            'fields' => [
+                'id'
+            ]
+        ];
+
+        return Hash::extract($this->find('all', $condition), '{n}.{s}.id') ?: [];
     }
 }

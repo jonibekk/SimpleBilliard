@@ -13,6 +13,7 @@ App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
+App::import('Model/Entity', 'PostEntity');
 
 /**
  * Post Model
@@ -41,6 +42,7 @@ use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Language as LanguageEnum;
+use Goalous\Enum\Model\Post\PostResourceType as PostResourceType;
 
 class Post extends AppModel
 {
@@ -397,14 +399,16 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            //自分の投稿
-            $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
-            //自分が共有範囲指定された投稿
-            $post_filter_conditions['OR'][] =
-                $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
-            //自分のサークルが共有範囲指定された投稿
-            $post_filter_conditions['OR'][] =
-                $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
+            if (empty($params['no_circle_posts'])) {
+                //自分の投稿
+                $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
+                //自分が共有範囲指定された投稿
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
+                //自分のサークルが共有範囲指定された投稿
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
+            }
 
             //関連ゴール
             $post_filter_conditions['OR'][] =
@@ -779,13 +783,12 @@ class Post extends AppModel
             $res[$key] = am($post, [
                 'PostResources' => $postResources[$post['Post']['id']] ?? [],
             ]);
-            // check if post_resource have a video or not
-            // TODO: https://jira.goalous.com/browse/GL-6601
             $res[$key]['hasVideoResource'] = false;
             foreach ($res[$key]['PostResources'] as $resource) {
-                // we have only video resource now, if in the loop, we have video resource
-                $res[$key]['hasVideoResource'] = true;
-                break;
+                if ($resource['resource_type'] === PostResourceType::VIDEO_STREAM) {
+                    $res[$key]['hasVideoResource'] = true;
+                    break;
+                }
             }
         }
 
@@ -1464,6 +1467,7 @@ class Post extends AppModel
                 break;
         }
         $res = $this->save($data);
+
         if ($res) {
             if ($public && $team_all_circle_id = $this->Circle->getTeamAllCircleId()) {
                 return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);

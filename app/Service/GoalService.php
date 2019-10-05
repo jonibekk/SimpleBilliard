@@ -72,24 +72,16 @@ class GoalService extends AppService
      *
      * @return array|mixed
      */
-    function get($id, $userId = null, $extends = [])
+    function get($id, $userId = null, $extends = []): array
     {
-        if (empty($id)) {
-            return [];
-        }
+        $data = $this->_getWithCache($id, 'Goal');
 
-        // 既にDBからのデータ取得は行っているがゴール情報が存在しなかった場合
-        if (array_key_exists($id, self::$cacheList) && empty(self::$cacheList[$id])) {
-            return [];
-        }
+        // データ拡張
+        return $this->extend($data, $userId, $extends);
+    }
 
-        // 既にDBからのデータ取得は行っていて、かつゴール情報が存在している場合
-        if (!empty(self::$cacheList[$id])) {
-            // キャッシュから取得
-            $data = self::$cacheList[$id];
-            return $this->extend($data, $userId, $extends);
-        }
-
+    protected function beforeCache(int $id, array $data): array
+    {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var Term $EvaluateTerm */
@@ -98,12 +90,6 @@ class GoalService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         /** @var GoalMemberService $GoalMemberService */
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
-        $TimeExHelper = new TimeExHelper(new View());
-
-        $data = self::$cacheList[$id] = Hash::extract($Goal->findById($id), 'Goal');
-        if (empty($data)) {
-            return $data;
-        }
 
         // 各サイズの画像URL追加
         $data = $Goal->attachImgUrl($data, 'Goal');
@@ -129,12 +115,7 @@ class GoalService extends AppService
         if ($goalLeaderId) {
             $data['is_approvable'] = $GoalMemberService->isApprovableGoalMember($goalLeaderId);
         }
-
-        // キャッシュ変数に保存
-        self::$cacheList[$id] = $data;
-
-        // データ拡張
-        return $this->extend($data, $userId, $extends);
+        return $data;
     }
 
     /**

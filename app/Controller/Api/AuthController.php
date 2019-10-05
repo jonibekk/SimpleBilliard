@@ -1,10 +1,14 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
+App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
+App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
 App::uses('User', 'Model');
 App::uses('LangUtil', 'Util');
+App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
 
@@ -45,6 +49,7 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
+                                ->withMessage(__('Email address or Password is incorrect.'))
                                 ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
                                 ->getResponse();
         } catch (\Throwable $e) {
@@ -55,7 +60,10 @@ class AuthController extends BaseApiController
                                 ->getResponse();
         }
 
-        $data = $this->_getAuthUserInfo($jwt->token(), $jwt->getUserId());
+        $data = [
+            'me' => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
+            'token' => $jwt->token()
+        ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
@@ -63,23 +71,16 @@ class AuthController extends BaseApiController
     /**
      * Get auth user info for Login API response
      *
-     * @param string $token
      * @param int $userId
+     * @param int $teamId
      * @return array
      */
-    private function _getAuthUserInfo(string $token, int $userId): array
+    private function _getAuthUserInfo(int $userId, int $teamId): array
     {
-        /** @var ImageStorageService $ImageStorageService */
-        $ImageStorageService = ClassRegistry::init('ImageStorageService');
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
-
-        $data = $User->getUserForLoginResponse($userId)->toArray();
-        $data['token'] = $token;
-        $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
-        $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
-        $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
-        return $data;
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+        $req = new UserResourceRequest($userId, $teamId, true);
+        return $UserService->get($req, [MeExtender::EXTEND_ALL]);
     }
 
     /**
@@ -149,8 +150,6 @@ class AuthController extends BaseApiController
      */
     public function get_recover_token()
     {
-        /** @var GlRedis $GlRedis */
-        $GlRedis = ClassRegistry::init('GlRedis');
         $user = $this->Session->read('Auth.User');
         $teamId = $this->Session->read('current_team_id');
         if (empty($user) || empty($teamId)) {
@@ -158,16 +157,42 @@ class AuthController extends BaseApiController
                 ->withMessage(__("Session doesn't exist"))
                 ->getResponse();
         }
-        $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $this->Session->id());
-        if (empty($token)) {
-            return ErrorResponse::badRequest()
-                ->getResponse();
-        }
-        $data = $this->_getAuthUserInfo($token, $user['id']);
+        $token = $this->getTokenForRecovery($user, $teamId);
+
+        $data = [
+            'me' => $this->_getAuthUserInfo($user['id'], $teamId),
+            'token' => $token
+        ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
 
+    /**
+     * Get token from redis integrated session
+     * If token is not verified, regenerate token
+     * @param array $user
+     * @param int $teamId
+     * @return string
+     */
+    private function getTokenForRecovery(array $user, int $teamId): string {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
 
+        $sesId = $this->Session->id();
+        $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
+        try {
+            $jwtAuth = AccessAuthenticator::verify($token);
+            if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
+                throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
+            }
+        } catch (Exception $e) {
+            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
+            // Regenerate token
+            $jwt = $GlRedis->saveMapSesAndJwt($teamId, $user['id'], $sesId);
+            $token = $jwt->token();
+            return $token;
+        }
 
+        return $token;
+    }
 }

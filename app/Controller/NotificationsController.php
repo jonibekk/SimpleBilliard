@@ -8,6 +8,7 @@ class NotificationsController extends AppController
 {
 
     /**
+     * @deprecated
      * @return array
      */
     public function index()
@@ -23,6 +24,7 @@ class NotificationsController extends AppController
     }
 
     /**
+     * @deprecated
      * お知らせを返すajax版
      *
      * @return CakeResponse
@@ -128,10 +130,13 @@ class NotificationsController extends AppController
         $this->set(compact('notify_items', 'team'));
         $response = $this->render('Notification/notify_items_in_list_box');
         $html = $response->__toString();
-        return $this->_ajaxGetResponse($html);
+        $res = ['html' => $html, 'has_noti' => count($notify_items) > 0];
+        return $this->_ajaxGetResponse($res);
     }
 
     /**
+     * Message Notification (is not Bell Notification)
+     * ※ This method might not be used anywhere
      * @return array
      */
     public function ajax_get_latest_message_notify_items()

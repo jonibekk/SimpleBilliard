@@ -10,9 +10,7 @@ class BackBtnHelper extends AppHelper
         //Create array of pages where the normal header should appear
         $normalPages = array(
             'topics',
-            'notifications',
             'users',
-            'goals/kr_progress',
             'post_permanent',
             'goals/create',
             'goals/approval/detail',
@@ -34,6 +32,12 @@ class BackBtnHelper extends AppHelper
                 }
             }
         }
+
+        // Special case if arriving from notification
+        if (!empty($this->request->query("notify_id"))) {
+            $backButton = true;
+        }
+
         // Special case for homepage
         if ($this->request->here == "/") {
             $backButton = false;

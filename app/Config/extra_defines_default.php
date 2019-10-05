@@ -91,15 +91,17 @@ $defines = [
     // OpsWorks Custom JSON output true/false as string
     'ENABLE_VIDEO_POST_TRANSCODING'                 => '1',
     'ENABLE_VIDEO_POST_PLAY'                        => '1',
-    'AWS_ELASTIC_TRANSCODER_KEY'                    => 'AKIAJWRB3ISRYGDYHV5A',
-    'AWS_ELASTIC_TRANSCODER_SECRET_KEY'             => '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',
-    'AWS_ELASTIC_TRANSCODER_PIPELINE_ID'            => null,
-    'AWS_S3_BUCKET_VIDEO_ORIGINAL'                  => null,
-    'AWS_S3_BUCKET_VIDEO_TRANSCODED'                => null,
+    'VIDEO_MAX_DURATION_SECONDS_PAID'               => 60,
+    'VIDEO_MAX_DURATION_SECONDS_LIMITED'            => 10,
+    'AWS_ELASTIC_TRANSCODER_KEY'                    => 'AKIAYQOFCLEQLDEPMEHW',
+    'AWS_ELASTIC_TRANSCODER_SECRET_KEY'             => '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',
+    'AWS_ELASTIC_TRANSCODER_PIPELINE_ID'            => '1510729662392-4lzb0n',
+    'AWS_S3_BUCKET_VIDEO_ORIGINAL'                  => 'goalous-dev-videos-original',
+    'AWS_S3_BUCKET_VIDEO_TRANSCODED'                => 'goalous-dev-videos',
     // For local env
     // Used for storage key name sharing AWS ElasticTranscode PipeLine on
     // Local and development env
-    'AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR' => null,
+    'AWS_S3_BUCKET_VIDEO_TRANSCODE_LOCAL_SEPARATOR' => 'default',
     'JWT_TOKEN_SECRET_KEY_AUTH'                     => 'jwt_secret_key_auth',
     //For local S3 user name
     //https://confluence.goalous.com/x/agMQAQ
@@ -110,7 +112,8 @@ $defines = [
     //Google Cloud Platform API key
     'GCP_API_KEY'                                   => 'AIzaSyBoznHIZdC2LMMOcxw1WXHgZg6T1IoPGJc',
     // Default translation limit for paid team. 1 million chars
-    'TRANSLATION_DEFAULT_LIMIT_PAID_TEAM'           => 1000000
+    'TRANSLATION_DEFAULT_LIMIT_PAID_TEAM'           => 1000000,
+    'AWS_S3_BUCKET_NEW_GOALOUS'                     => '',
 ];
 // for local
 if (file_exists(APP . 'Config/extra_defines_local.php')) {

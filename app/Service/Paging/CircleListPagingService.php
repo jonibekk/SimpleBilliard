@@ -6,65 +6,17 @@ App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
 
-/**
- * Created by PhpStorm.
- * User: StephenRaharja
- * Date: 2018/06/28
- * Time: 11:23
- */
 class CircleListPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Circle';
-
-    /**
-     * Get all circles and not including with paging data
-     *
-     * @param       $pagingRequest
-     * @param array $extendFlags
-     *
-     * @return array
-     */
-    public function getAllData(
-        $pagingRequest,
-        $extendFlags = []
-    ): array
-    {
-        // Check whether exist current user id and team id
-        $this->validatePagingResource($pagingRequest);
-
-        $finalResult = [
-            'data' => [],
-            'paging' => '',
-            'count' => 0
-        ];
-
-        //If only 1 flag is given, make it an array
-        if (!is_array($extendFlags)) {
-            $extendFlags = [$extendFlags];
-        }
-
-        $this->beforeRead($pagingRequest);
-        $pagingRequest = $this->addDefaultValues($pagingRequest);
-
-        $queryResult = $this->readData($pagingRequest, 0);
-        $finalResult['count'] = count($queryResult);
-
-        if (!empty($extendFlags) && !empty($queryResult)) {
-            $this->extendPagingResult($queryResult, $pagingRequest, $extendFlags);
-        }
-
-        $this->afterRead($pagingRequest);
-
-        $finalResult['data'] = $queryResult;
-
-        return $finalResult;
-    }
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
         $options = $this->createSearchCondition($pagingRequest);
 
-        $options['limit'] = $limit == 0 ? null : $limit;
+        if ($limit) {
+            $options['limit'] = $limit;
+        }
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
 
         /** @var Circle $Circle */
@@ -74,6 +26,17 @@ class CircleListPagingService extends BasePagingService
 
         return Hash::extract($result, '{n}.Circle');
     }
+
+    protected function countData(PagingRequest $request): int
+    {
+        $options = $this->createSearchCondition($request);
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        return (int)$Circle->find('count', $options);
+    }
+
 
     private function createSearchCondition(PagingRequest $pagingRequest)
     {
@@ -180,36 +143,6 @@ class CircleListPagingService extends BasePagingService
         return $searchConditions;
     }
 
-    protected function countData(PagingRequest $request): int
-    {
-        $options = $this->createSearchCondition($request);
-
-        /** @var Circle $Circle */
-        $Circle = ClassRegistry::init('Circle');
-
-        return (int)$Circle->find('count', $options);
-    }
-
-    protected function createPointer(
-        array $lastElement,
-        array $headNextElement = [],
-        PagingRequest $pagingRequest = null
-    ): PointerTree
-    {
-
-        $prevLatestPost = $pagingRequest->getPointer('latest_post_created')[2] ?? -1;
-
-        if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
-            $lastElement['latest_post_created'] == $prevLatestPost) {
-            $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
-            $condition = new PointerTree('AND', $orCondition,
-                ['latest_post_created', '<=', $lastElement['latest_post_created']]);
-            return $condition;
-        } else {
-            return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
-        }
-    }
-
     protected function extendPagingResult(array &$data, PagingRequest $request, array $options = [])
     {
         $userId = $request->getResourceId() ?: $request->getCurrentUserId();
@@ -217,19 +150,50 @@ class CircleListPagingService extends BasePagingService
 
         /** @var CircleExtender $CircleExtender */
         $CircleExtender = ClassRegistry::init('CircleExtender');
+
+        // Set data whether user joined all circles or not to extend list
+        $joined = boolval(Hash::get($request->getConditions(), 'joined', true));
+        $CircleExtender->joined = $joined;
+
         $data = $CircleExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     protected function beforeRead(PagingRequest $pagingRequest)
     {
         $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
+        return $pagingRequest;
     }
 
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
-        $pagingRequest->addOrder('latest_post_created');
-        $pagingRequest->addOrder('id');
+        $conditions = $pagingRequest->getConditions();
+        if (empty(Hash::get($conditions, 'pinned'))) {
+            $pagingRequest->addOrder('Circle.latest_post_created');
+            $pagingRequest->addOrder('Circle.id');
+        }
         return $pagingRequest;
+    }
+
+    protected function createPointer(
+        array $lastElement,
+        array $headNextElement = [],
+        PagingRequest $pagingRequest = null
+    ): PointerTree {
+        $conditions = $pagingRequest->getConditions();
+        if (empty(Hash::get($conditions, 'pinned'))) {
+            $prevLastPosted = $pagingRequest->getPointer('last_posted')[2] ?? -1;
+
+            if ($lastElement['latest_post_created'] == $headNextElement['latest_post_created'] ||
+                $lastElement['latest_post_created'] == $prevLastPosted) {
+                $orCondition = new PointerTree('OR', [static::MAIN_MODEL . '.id', '<', $lastElement['id']]);
+                $condition = new PointerTree('AND', $orCondition,
+                    ['latest_post_created', '<=', $lastElement['latest_post_created']]);
+                return $condition;
+            } else {
+                return new PointerTree(['latest_post_created', '<', $lastElement['latest_post_created']]);
+            }
+        }
+        return new PointerTree();
     }
 
 }

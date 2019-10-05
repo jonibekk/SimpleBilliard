@@ -91,11 +91,8 @@ window.addEventListener('load', function() {
           return;
         }
 
-        if (cake.is_mb_app_web_footer) {
-          setNotifyCntToBellForMobileApp(1, true);
-        } else {
-          setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
-        }
+        setNotifyCntToBellForMobileApp(1, true);
+        setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
     });
     pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
         //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
@@ -117,13 +114,17 @@ window.addEventListener('load', function() {
         }
         cake.unread_msg_topic_ids.push(data.topic_id);
 
-        if (cake.is_mb_app_web_footer) {
-          setNotifyCntToMessageForMobileApp(1, true);
-        } else {
-          setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
-        }
+        setNotifyCntToMessageForMobileApp(1, true);
+        setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
-
+    pusher.subscribe('team_' + cake.data.team_id).bind('circle_feed.new_post', function(data) {
+      if (!!cake.my_notifying_circles && cake.my_notifying_circles.includes(data.circle_id) && cake.data.user_id !== data.user_id){
+        $('#nav-circle-badge').css('opacity', 1);
+        // Since we only need to show badge new unread in old Goalous
+        $('#nav-circle-badge-count').text('1');
+        $('.js-mbAppFooter-setBadgeCnt-circles').removeClass('hidden');
+      }
+    });
 });
 
 function appendSocketId(form, socketId) {

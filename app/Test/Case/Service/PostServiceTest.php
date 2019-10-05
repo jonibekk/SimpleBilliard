@@ -18,9 +18,11 @@ App::import('Model/Entity', 'PostEntity');
 App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
+use Goalous\Enum\Language as LanguageEnum;
 use Mockery as mock;
 use Goalous\Exception as GlException;
-
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 /**
  * @property CircleService CircleService
@@ -37,6 +39,7 @@ class PostServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.post',
         'app.team',
+        'app.team_member',
         'app.user',
         'app.post_file',
         'app.attached_file',
@@ -65,6 +68,7 @@ class PostServiceTest extends GoalousTestCase
         'app.comment_file',
         'app.team_translation_language',
         'app.team_translation_status',
+        'app.mst_translation_language',
         'app.translation'
     ];
 
@@ -533,7 +537,7 @@ class PostServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException         RuntimeException
+     * @expectedException        RuntimeException
      * @expectedExceptionMessage Error on adding post: failed increment unread count
      */
     function test_addNormal_incrementUnreadCount_error()
@@ -741,6 +745,9 @@ class PostServiceTest extends GoalousTestCase
         /** @var PostShareUser $PostShareUser */
         $PostShareUser = ClassRegistry::init('PostShareUser');
 
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
 
@@ -758,7 +765,10 @@ class PostServiceTest extends GoalousTestCase
             ]
         ];
 
+        $numAttachedFiles = $AttachedFile->getCountOfAttachedFiles($postId, AttachedModelType::TYPE_MODEL_POST);
+
         $this->assertEmpty($PostDraft->find('first', $conditions));
+        $this->assertEquals(0, $numAttachedFiles);
         $this->assertEmpty($PostFile->find('first', $conditions));
         $this->assertEmpty($PostLike->find('first', $conditions));
         $this->assertEmpty($PostMention->find('first', $conditions));
@@ -815,7 +825,9 @@ class PostServiceTest extends GoalousTestCase
             'type' => 1
         ];
 
-        $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [$uuid]);
+        $postEntity = $this->PostService->addCirclePost($newPostData, 1, 1, 1, [
+            ["file_uuid" => $uuid],
+        ]);
 
         $files = $this->PostService->getNormalAttachedFiles($postEntity['id']);
 
@@ -827,20 +839,60 @@ class PostServiceTest extends GoalousTestCase
      */
     public function test_editPostMissing_failed()
     {
-        $newBody = 'EDITED';
+        $updatePost['body'] = 'EDITED';
 
-        $this->PostService->editPost($newBody, 183281390);
+        $this->PostService->editPost($updatePost, 183281390, 1, 1, []);
 
     }
 
     public function test_editPost_success()
     {
-        $newBody = 'EDITED';
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
 
-        $res = $this->PostService->editPost($newBody, 1);
+        $postId = 1;
+
+        $circleId = 1;
+        $userId = 1;
+        $teamId = 1;
+
+        $oldPost = $Post->getEntity($postId);
+
+        $updatePost['body'] = 'EDITED';
+
+        $res = $this->PostService->editPost($updatePost, $postId, $userId, $teamId, []);
 
         $this->assertTrue($res instanceof PostEntity);
-        $this->assertEquals($newBody, $res['body']);
+        $this->assertNotEquals($Post->getEntity($postId)['body'], $oldPost['body']);
+        $this->assertEquals($updatePost['body'], $res['body']);
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        $newBody['body'] = 'EDITED 2';
+
+        $resources = [
+            ['id' => $newFiles[0]['attached_file_id'], 'resource_type' => Enum\Model\Post\PostResourceType::IMAGE],
+            ['id' => $newVideos[0]['id'], 'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM]
+        ];
+
+        $editedPost = $this->PostService->editPost($newBody, $newPostId, $userId, $teamId, $resources);
+
+        $this->assertEquals($newBody['body'], $editedPost['body']);
+        $this->assertEquals(2, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertNotEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
+        $this->assertNotEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+        $this->assertNotEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
+        $this->assertNotEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
     }
 
     public function test_checkUserAccessToMultiplePost_failure()
@@ -918,17 +970,6 @@ class PostServiceTest extends GoalousTestCase
             $msg = $e->getMessage();
         }
         $this->assertNotEmpty($msg);
-
-
-        /* Login user belong to secret circle */
-        $this->CircleMember->join($circleId, $userId);
-        $msg = "";
-        try {
-            $this->PostService->checkUserAccessToMultiplePost($userId, $postIds);
-        } catch (GlException\GoalousNotFoundException $e) {
-            $msg = $e->getMessage();
-        }
-        $this->assertEmpty($msg);
     }
 
     public function test_checkUserAccessToMultiplePost_success()
@@ -980,7 +1021,7 @@ class PostServiceTest extends GoalousTestCase
             PostExtender::EXTEND_COMMENTS,
             PostExtender::EXTEND_POST_SHARE_CIRCLE,
             PostExtender::EXTEND_POST_SHARE_USER,
-            PostExtender::EXTEND_POST_FILE,
+            PostExtender::EXTEND_POST_RESOURCES,
             PostExtender::EXTEND_LIKE,
             PostExtender::EXTEND_SAVED,
             PostExtender::EXTEND_READ,
@@ -996,7 +1037,7 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['is_liked'], false);
         $this->assertEquals($ret['is_read'], false);
         $this->assertEquals($ret['is_saved'], false);
-        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals($ret['resources'], []);
         $this->assertEquals(count($ret['comments']['data']), 2);
         $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
@@ -1014,7 +1055,7 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['is_liked'], false);
         $this->assertEquals($ret['is_read'], false);
         $this->assertEquals($ret['is_saved'], false);
-        $this->assertEquals($ret['attached_files'], []);
+        $this->assertEquals($ret['resources'], []);
         $this->assertEquals(count($ret['comments']['data']), 2);
         $this->assertEquals($ret['comments']['data'][0]['post_id'], $req->getId());
         $this->assertEquals($ret['comments']['count'], 2);
@@ -1040,5 +1081,237 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['action_result']['id'], 1);
         $this->assertEquals($ret['key_result']['id'], $ret['action_result']['key_result_id']);
         $this->assertEquals($ret['goal']['id'], $ret['action_result']['goal_id']);
+    }
+
+    public function test_editPostWithRemovedResource_success()
+    {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        /** @var Video $Video */
+        $Video = ClassRegistry::init('Video');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+
+        $circleId = 1;
+        $userId = 1;
+        $teamId = 1;
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        $newBody['body'] = 'EDITED 1';
+
+        $resources = [
+            ['id' => $newFiles[0]['attached_file_id'], 'resource_type' => Enum\Model\Post\PostResourceType::IMAGE]
+        ];
+
+        $editedPost = $this->PostService->editPost($newBody, $newPostId, $userId, $teamId, $resources);
+
+        $this->assertEquals($newBody['body'], $editedPost['body']);
+        $this->assertEquals(1, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertNotEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
+        $this->assertNotEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+        $this->assertEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
+        $this->assertEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        $newBody['body'] = 'EDITED 2';
+
+        $resources = [
+            ['id' => $newVideos[0]['id'], 'resource_type' => Enum\Model\Post\PostResourceType::VIDEO_STREAM]
+        ];
+
+        $editedPost = $this->PostService->editPost($newBody, $newPostId, $userId, $teamId, $resources);
+
+        $this->assertEquals($newBody['body'], $editedPost['body']);
+        $this->assertEquals(1, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertNotEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
+        $this->assertNotEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
+        $this->assertEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
+        $this->assertEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        $newBody['body'] = 'EDITED 3';
+
+        $resources = [];
+
+        $editedPost = $this->PostService->editPost($newBody, $newPostId, $userId, $teamId, $resources);
+
+        $this->assertEquals($newBody['body'], $editedPost['body']);
+        $this->assertEquals(0, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
+        $this->assertEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
+        $this->assertEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
+        $this->assertEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+    }
+
+    public function test_editPostWithAddedResource_success()
+    {
+
+        //Mock storage clients
+        $bufferClient = mock::mock('BufferStorageClient');
+        $bufferClient->shouldReceive('bulkGet')->withAnyArgs()
+            ->atLeast()->once()
+            ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
+        $bufferClient->shouldReceive('save')->withAnyArgs()
+            ->atLeast()->once()
+            ->andReturn("1234567890abcd.12345678");
+        ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
+
+        $assetsClient = mock::mock('AssetsStorageClient');
+        $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
+            ->atLeast()->once()->andReturn(true);
+        ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
+
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+
+        $uuid = $UploadService->buffer(1, 1, $this->getTestFileData(), $this->getTestFileName());
+
+        $circleId = 1;
+        $userId = 1;
+        $teamId = 1;
+
+        list($newPostId, $newFiles, $newVideos) = $this->createNewCirclePost($circleId, $userId, $teamId, 1, 1);
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostFile $PostFile */
+        $PostFile = ClassRegistry::init('PostFile');
+        /** @var PostResource $PostResource */
+        $PostResource = ClassRegistry::init('PostResource');
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+
+        $resources = [
+            [
+                "id"            => $newFiles[0]['attached_file_id'],
+                "resource_type" => Enum\Model\Post\PostResourceType::IMAGE
+            ],
+            [
+                "id"            => $newVideos[0]['id'],
+                "resource_type" => Enum\Model\Post\PostResourceType::VIDEO_STREAM
+            ],
+            [
+                "file_uuid" => $uuid
+            ]
+        ];
+
+        $newBody = 'EDITED';
+
+        $PostService->editPost(['body' => $newBody], $newPostId, $userId, $teamId, $resources);
+
+        $editedPost = $Post->getEntity($newPostId);
+
+        $this->assertEquals($newBody, $editedPost['body']);
+        $this->assertEquals(1, $VideoStream->find('count', ['conditions' => ['id' => $newVideos[0]['id']]]));
+        $this->assertEquals(3, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertEquals(2, $PostFile->find('count', ['conditions' => ['post_id' => $newPostId]]));
+        $this->assertEquals(2, $PostResource->findMaxResourceOrderOfPost($newPostId));
+    }
+
+    public function test_addCirclePostWithTranslation_success()
+    {
+        $this->createTranslatorClientMock();
+
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $circleId = 1;
+        $userId = 1;
+        $newBody['type'] = Post::TYPE_NORMAL;
+        $newBody['body'] = "Some content";
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::ID());
+
+        $newPostEntity = $PostService->addCirclePost($newBody, $circleId, $userId, $teamId);
+
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'], LanguageEnum::JA));
+        $this->assertEquals(LanguageEnum::EN, $Post->getById($newPostEntity['id'])['language']);
+    }
+
+    public function test_editCirclePostWithTranslation_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $userId = 1;
+        $postId = 1;
+        $otherPostId = 2;
+        $newPostBody = "Translation is gone.";
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+
+        $newBody['body'] = $newPostBody;
+
+        $PostService->editPost($newBody, $postId, $userId, $teamId, []);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
+    }
+
+    public function test_deleteCirclePostWithTranslation_success()
+    {
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var Translation $Translation */
+        $Translation = ClassRegistry::init('Translation');
+
+        $teamId = 1;
+        $postId = 1;
+        $otherPostId = 2;
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+
+        $PostService->softDelete($postId);
+
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
     }
 }

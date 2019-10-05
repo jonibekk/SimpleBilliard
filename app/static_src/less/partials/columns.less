@@ -53,15 +53,21 @@
 
 /*=====/ dashboard-profile-card ======*/
 
-.dashboard_saved {
-  border-bottom: 1px solid @subColor4;
-  border-top: 1px solid @subColor4;
-  margin-bottom: 6px;
+.dashboard-menu {
+  &.mod-border {
+    border-bottom: 1px solid @subColor4;
+    border-top: 1px solid @subColor4;
+  }
   & > a {
+    > .dashboard-menu-icon {
+      width: 24px;
+      text-align: center;
+    }
     color: #333;
     text-decoration: none;
     width: 100%;
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 8px 4px;
     &:hover,
     &:active,
