@@ -95,8 +95,18 @@ class FilesController extends BaseApiController
         }
 
         $isVideo = $this->isVideo($file['tmp_name']);
+        $fileTypeRecognized = $this->request->data('file_type_recognized');
+        $isFrontRecognizeAsVideo = (int)$fileTypeRecognized === Enum\Model\Post\PostResourceType::VIDEO_STREAM;
         // Uploading video to transcode
-        if ($allowVideo && $isVideo) {
+        if ($allowVideo && $isFrontRecognizeAsVideo) {
+            if ($allowVideo && !$isVideo) {
+                // Returning error, because file type recognize is different between front/back ends.
+                // TODO: When returning error, need to fix the process of recognizing file type of upload files.
+                // Front/Backend recognize file type should be equal.
+                // Fix Front or Backend codes, see $this->isVideo() methods about backend.
+                return ErrorResponse::badRequest()->getResponse();
+            }
+
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             try {
