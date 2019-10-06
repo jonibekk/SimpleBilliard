@@ -140,6 +140,36 @@ class VideoStreamService extends AppService
         throw new RuntimeException("video_streams.id({$videoStreamId}) is not transcoding");
     }
 
+    public function isVideoStreamBelongsToTeam(int $videoStreamId, int $teamId): bool
+    {
+        /** @var VideoStream $VideoStream */
+        $VideoStream = ClassRegistry::init('VideoStream');
+        $conditions = [
+            'fields' => [
+                'Videos.team_id',
+            ],
+            'conditions' => [
+                'VideoStream.id' => $videoStreamId,
+                'VideoStream.del_flg' => false,
+            ],
+            'joins' => [
+                [
+                    'table' => 'videos',
+                    'alias' => 'Videos',
+                    'type' => 'INNER',
+                    'conditions' => [
+                        'VideoStream.video_id = Videos.id',
+                    ],
+                ]
+            ]
+        ];
+        $videoSteam = $VideoStream->find('first', $conditions);
+        if (empty($videoSteam)) {
+            return false;
+        }
+        return (int)$videoSteam['Videos']['team_id'] === $teamId;
+    }
+
     /**
      * Find video stream by users.id, teams.id, and video hash string.
      * Return video_streams array if find

@@ -105,6 +105,19 @@ class VideoStreamServiceTest extends GoalousTestCase
         $this->assertEquals(Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE, $videoStreamProgressing['transcode_status']);
     }
 
+    function test_isVideoStreamBelongsToTeam()
+    {
+        list($video1, $videoStream1) = $this->createVideoSet($userId = 1, $teamId = 1, 'A', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        list($video2, $videoStream2) = $this->createVideoSet($userId = 2, $teamId = 2, 'B', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        $this->assertTrue($this->VideoStreamService->isVideoStreamBelongsToTeam($videoStream1['id'], 1));
+        $this->assertFalse($this->VideoStreamService->isVideoStreamBelongsToTeam($videoStream1['id'], 2));
+        $this->assertFalse($this->VideoStreamService->isVideoStreamBelongsToTeam($videoStream2['id'], 1));
+        $this->assertTrue($this->VideoStreamService->isVideoStreamBelongsToTeam($videoStream2['id'], 2));
+        $this->assertFalse($this->VideoStreamService->isVideoStreamBelongsToTeam($videoStream1['id'], 99999));
+        $this->assertFalse($this->VideoStreamService->isVideoStreamBelongsToTeam(99999, 1));
+        $this->assertFalse($this->VideoStreamService->isVideoStreamBelongsToTeam(99999, 99999));
+    }
+
     function test_updateFromTranscodeProgressData_withPostDraft()
     {
         $userId = 1;
