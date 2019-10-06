@@ -146,10 +146,10 @@ class VideoStreamService extends AppService
         $VideoStream = ClassRegistry::init('VideoStream');
         $conditions = [
             'fields' => [
-                'Videos.team_id',
+                'Videos.id',
             ],
             'conditions' => [
-                'VideoStream.id' => $videoStreamId,
+                'Videos.team_id' => $teamId,
                 'VideoStream.del_flg' => false,
             ],
             'joins' => [
@@ -164,10 +164,7 @@ class VideoStreamService extends AppService
             ]
         ];
         $videoSteam = $VideoStream->find('first', $conditions);
-        if (empty($videoSteam)) {
-            return false;
-        }
-        return (int)$videoSteam['Videos']['team_id'] === $teamId;
+        return !empty($videoSteam);
     }
 
     /**
