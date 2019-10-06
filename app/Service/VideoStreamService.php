@@ -149,8 +149,9 @@ class VideoStreamService extends AppService
                 'Videos.id',
             ],
             'conditions' => [
-                'Videos.team_id' => $teamId,
+                'VideoStream.id' => $videoStreamId,
                 'VideoStream.del_flg' => false,
+                'Videos.team_id' => $teamId,
             ],
             'joins' => [
                 [
