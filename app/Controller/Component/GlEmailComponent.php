@@ -504,7 +504,7 @@ class GlEmailComponent extends Component
     ): void {
         // TODO: 仕様が決まり次第、URLを入れ替える
         if ($password === null) { // existing user
-            $url = 'https://' . ENV_NAME . '.goalous.com/others?team_id' . $team_id;
+            $url = 'https://' . ENV_NAME . '.goalous.com/others?team_id=' . $team_id;
         } else { // new user
             $url = 'https://' . ENV_NAME . '.goalous.com/users/accept_invite/***';
         }

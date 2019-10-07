@@ -30,7 +30,7 @@ class S3Reader
 
     /**
      * @param array $header
-     * @return Reader
+     * @return S3Reader
      */
     public function setHeader(array $header): self
     {
@@ -88,11 +88,17 @@ class S3Reader
         return $this->header;
     }
 
+    /**
+     * @return bool
+     */
     private function doesBucketExist(): bool
     {
         return $this->s3_instance->doesBucketExist($this->bucket, $this->path);
     }
 
+    /**
+     * @return \Aws\Result
+     */
     private function getS3Object(): \Aws\Result
     {
         $s3Instance = AwsClientFactory::createS3ClientForFileStorage();
@@ -102,7 +108,10 @@ class S3Reader
         ]);
     }
 
-    private function responseValidate($response)
+    /**
+     * @param \Aws\Result $response
+     */
+    private function responseValidate(\Aws\Result $response): void
     {
         $content_type = $response['@metadata']['headers']['content-type'] ?? '';
         if ($content_type !== 'text/csv') {
@@ -112,6 +121,7 @@ class S3Reader
 
     /**
      * initialize
+     * @return void
      */
     private function initialize(): void
     {

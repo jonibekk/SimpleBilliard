@@ -37,7 +37,7 @@ class UserSignUpFromCsv
 
     /**
      * @param string $email
-     * @return TeamMemberBulkRegister
+     * @return UserSignUpFromCsv
      */
     public function setEmail(string $email): self
     {
@@ -55,7 +55,7 @@ class UserSignUpFromCsv
 
     /**
      * @param string $first_name
-     * @return TeamMemberBulkRegister
+     * @return UserSignUpFromCsv
      */
     public function setFirstName(string $first_name): self
     {
@@ -73,7 +73,7 @@ class UserSignUpFromCsv
 
     /**
      * @param string $last_name
-     * @return TeamMemberBulkRegister
+     * @return UserSignUpFromCsv
      */
     public function setLastName(string $last_name): self
     {
@@ -109,9 +109,9 @@ class UserSignUpFromCsv
 
     /**
      * @param string $language
-     * @return $this
+     * @return UserSignUpFromCsv
      */
-    public function setLanguage(string $language)
+    public function setLanguage(string $language): self
     {
         $this->language = $language;
         return $this;
@@ -127,7 +127,7 @@ class UserSignUpFromCsv
 
     /**
      * @param float $timezone
-     * @return TeamMemberBulkRegister
+     * @return UserSignUpFromCsv
      */
     public function setTimezone(float $timezone): self
     {

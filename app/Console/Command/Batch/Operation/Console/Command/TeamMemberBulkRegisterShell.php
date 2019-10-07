@@ -26,17 +26,20 @@ class TeamMemberBulkRegisterShell extends AppShell
     /** @var \Aws\S3\S3Client */
     private $s3_instance;
 
+    /** @var array */
+    private $log = [];
+
+    protected $enableOutputLogStartStop = true;
+
     public function startup()
     {
         parent::startup();
         $this->s3_instance = AwsClientFactory::createS3ClientForFileStorage();
     }
 
-    /** @var array */
-    private $log = [];
-
-    protected $enableOutputLogStartStop = true;
-
+    /**
+     * @return ConsoleOptionParser
+     */
     public function getOptionParser(): ConsoleOptionParser
     {
         $parser = parent::getOptionParser();

@@ -1,7 +1,5 @@
 <?php
 
-use Goalous\Enum\Model\Team\ServiceUseStatus;
-
 /**
  * Class TeamMemberBulkRegister
  */
@@ -30,11 +28,18 @@ class TeamMemberBulkRegister
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isDryRun(): bool
     {
         return $this->dry_run;
     }
 
+    /**
+     * @param bool $dry_run
+     * @return TeamMemberBulkRegister
+     */
     public function setDryRun(bool $dry_run): self
     {
         $this->dry_run = $dry_run;

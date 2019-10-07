@@ -112,7 +112,7 @@ class TeamMemberBulkRegisterService
         }
 
         $admin_flg = $record['admin_flg'] === 'on' ? 1 : 0;
-        $this->joinTeam($user_id, $email, $admin_flg)->joinCircle($user_id, $email);
+        $this->joinTeam($user_id, $admin_flg)->joinCircle($user_id);
 
         if (!$this->getRegisterModel()->isDryRun()) {
             $this->GlEmail->sendMailTeamMemberBulkRegistration(
@@ -145,7 +145,13 @@ class TeamMemberBulkRegisterService
             ->setEmailVerified(EmailVerified::YES);
     }
 
-    private function joinTeam(string $user_id, string $email, bool $admin_flg): self
+    /**
+     * @param string $user_id
+     * @param bool $admin_flg
+     * @return TeamMemberBulkRegisterService
+     * @throws Exception
+     */
+    private function joinTeam(string $user_id, bool $admin_flg): self
     {
         $team_id = $this->getRegisterModel()->getTeamId();
         if ($this->getUserTeamJoiningService()->isJoined($user_id, $team_id)) {
@@ -165,7 +171,12 @@ class TeamMemberBulkRegisterService
         return $this;
     }
 
-    private function joinCircle(string $user_id, string $email): self
+    /**
+     * @param string $user_id
+     * @return TeamMemberBulkRegisterService
+     * @throws Exception
+     */
+    private function joinCircle(string $user_id): self
     {
         $team_id = $this->getRegisterModel()->getTeamId();
         $circle_id = $this->getRegisterModel()->getTeamAllCircleId();
@@ -194,6 +205,9 @@ class TeamMemberBulkRegisterService
         return $this->log;
     }
 
+    /**
+     * @param string $message
+     */
     private function addLog(string $message): void
     {
         $this->log[] = $message;
