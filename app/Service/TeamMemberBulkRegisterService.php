@@ -93,7 +93,7 @@ class TeamMemberBulkRegisterService
 
                 $this->executeRecord($record);
 
-                if ($this->getRegisterModel()->isDryRun()) {
+                if ($this->isDryRun()) {
                     $this->TransactionManager->rollback();
                 } else {
                     $this->TransactionManager->commit();
@@ -184,7 +184,6 @@ class TeamMemberBulkRegisterService
 
         $this->getRegisterModel()
             ->setTeam($team)
-            ->setDryRun($this->isDryRun())
             ->setRecords($records)
             ->setExistUsers($exist_users)
             ->setAgreedTermsOfServiceId($this->getAgreedTermsOfServiceId())
@@ -318,7 +317,7 @@ class TeamMemberBulkRegisterService
         $admin_flg = $record['admin_flg'] === 'on' ? 1 : 0;
         $this->joinTeam($user_id, $admin_flg)->joinCircle($user_id);
 
-        if (!$this->getRegisterModel()->isDryRun()) {
+        if (!$this->isDryRun()) {
             $this->getGlMailComponent()->sendMailTeamMemberBulkRegistration(
                 $user_id,
                 $this->getRegisterModel()->getTeamId(),
