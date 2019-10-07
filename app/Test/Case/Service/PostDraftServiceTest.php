@@ -159,8 +159,7 @@ class PostDraftServiceTest extends GoalousTestCase
         $userId = 1;
         $teamId = 1;
 
-        $resourceId = 123;
-
+        list($video, $videoStream) = $this->createVideoSet($userId, $teamId, 'hash_string', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
         $postDraft = $this->PostDraftService->createPostDraftWithResources([
             'Post' => [
                 'body' => 'body',
@@ -169,7 +168,7 @@ class PostDraftServiceTest extends GoalousTestCase
             // TODO: https://jira.goalous.com/browse/GL-6601
             [
                 'is_video' => true,
-                'video_stream_id' => $resourceId,
+                'video_stream_id' => $videoStream['id'],
             ],
         ]);
 
@@ -180,7 +179,35 @@ class PostDraftServiceTest extends GoalousTestCase
             ],
         ]);
         $this->assertTrue(1 === count($postResources));
-        $this->assertSame($resourceId, intval($postResources[0]['PostResource']['resource_id']));
+        $this->assertSame($videoStream['id'], $postResources[0]['PostResource']['resource_id']);
+    }
+
+    public function test_createPostDraftWithResources_resourceFail()
+    {
+        $userId = 1;
+        $teamId = 1;
+        $teamIdNotJoined = 999;
+
+        list($video, $videoStream) = $this->createVideoSet($userId, $teamIdNotJoined, 'hash_string', Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE());
+        $postDraft = $this->PostDraftService->createPostDraftWithResources([
+            'Post' => [
+                'body' => 'body',
+            ]
+        ], $userId, $teamId, [
+            // TODO: https://jira.goalous.com/browse/GL-6601
+            [
+                'is_video' => true,
+                'video_stream_id' => $videoStream['id'],
+            ],
+        ]);
+
+        $this->assertTrue(is_numeric($postDraft['id']));
+        $postResources = $this->PostResource->find('all', [
+            'conditions' => [
+                'post_draft_id' => $postDraft['id'],
+            ],
+        ]);
+        $this->assertTrue(0 === count($postResources));
     }
 
     public function test_isPreparedToPost_true()
