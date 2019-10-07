@@ -1,9 +1,6 @@
 <?php
 
 use Goalous\Enum\Model\Team\ServiceUseStatus;
-use Goalous\Enum\Model\User\ActiveFlg;
-use Goalous\Enum\Model\User\UpdateEmailFlg;
-use Goalous\Enum\Model\Email\EmailVerified;
 use Goalous\Enum\S3Bucket\TeamMemberBulkRegistrationBucketName;
 
 App::uses('User', 'Model');
