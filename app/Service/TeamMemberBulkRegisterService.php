@@ -28,6 +28,10 @@ class TeamMemberBulkRegisterService
     const CSV_PATH_PREFIX = 'csv/';
     const CSV_LOG_PREFIX = 'log/';
 
+    const ACTIVE_FLG_YES = 1;
+    const EMAIL_VERIFIED_YES = 1;
+    const UPDATE_EMAIL_FLG_YES = 1;
+
     /** @var array */
     private $params;
     /** @var TeamMemberBulkRegister */
@@ -337,12 +341,12 @@ class TeamMemberBulkRegisterService
             ->setLanguage($record['language'])
             ->setDefaultTeamId($this->getRegisterModel()->getTeamId())
             ->setPassword($this->randomPassword())
-            ->setUpdateEmailFlg(UpdateEmailFlg::YES)
+            ->setUpdateEmailFlg(self::UPDATE_EMAIL_FLG_YES)
             ->setTimezone($this->getRegisterModel()->getTeamTimezone())
             ->setAgreedTermsOfServiceId($this->getRegisterModel()->getAgreedTermsOfServiceId())
-            ->setActiveFlg(ActiveFlg::YES)
+            ->setActiveFlg(self::ACTIVE_FLG_YES)
             ->setEmail($record['email'])
-            ->setEmailVerified(EmailVerified::YES);
+            ->setEmailVerified(self::EMAIL_VERIFIED_YES);
     }
 
     /**
