@@ -22,6 +22,7 @@ App::import('Lib/Csv', 'S3Reader');
 
 class TeamMemberBulkRegisterService
 {
+    const BUCKET_NAME_FORMAT = 'goalous-%s-csv-bulk-registration';
     const CSV_HEADERS = ['email', 'first_name', 'last_name', 'admin_flg', 'language'];
     const CSV_PATH_PREFIX = 'csv/';
     const CSV_LOG_PREFIX = 'log/';
@@ -524,7 +525,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getLogFilename(): string
     {
-        return ENV_NAME . '_' . date('Ymd_His.u') . '.log';
+        return date('Ymd_His.u') . '.log';
     }
 
     /**
@@ -532,14 +533,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getBucketName(): string
     {
-        switch (ENV_NAME) {
-            case 'isao':
-                return TeamMemberBulkRegistrationBucketName::ISAO;
-            case 'www':
-                return TeamMemberBulkRegistrationBucketName::WWW;
-            default:
-                return TeamMemberBulkRegistrationBucketName::DEV;
-        }
+        return sprintf(self::BUCKET_NAME_FORMAT, ENV_NAME);
     }
 
     /**
