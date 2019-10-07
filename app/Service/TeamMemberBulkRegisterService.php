@@ -312,7 +312,11 @@ class TeamMemberBulkRegisterService
      */
     protected function executeRecord(array $record): void
     {
-        TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
+        try {
+            TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            throw new $e('Validation error occurred in csv data.');
+        }
 
         $email = $record['email'];
         $language = $record['language'];

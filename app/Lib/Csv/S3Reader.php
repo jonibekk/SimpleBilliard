@@ -59,7 +59,7 @@ class S3Reader
             }
 
             if ($column_count !== count($record)) {
-                throw new\RuntimeException('There is not enough data needed. (line ' . ($index + 2). ')');
+                throw new\RuntimeException('The number of CSV items is incorrect. (line ' . ($index + 2). ')');
             }
 
             foreach ($record as $index => $value) {
