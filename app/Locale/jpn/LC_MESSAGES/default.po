@@ -3492,9 +3492,6 @@ msgstr "チームを作成"
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
 
-msgid "Mark All as Read"
-msgstr "すべて既読にする"
-
 msgid "No new notification"
 msgstr "未読の通知はありません。"
 
