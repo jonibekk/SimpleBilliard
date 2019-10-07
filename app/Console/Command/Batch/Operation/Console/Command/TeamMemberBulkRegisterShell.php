@@ -43,7 +43,6 @@ class TeamMemberBulkRegisterShell extends AppShell
             $service->execute();
         } catch (Throwable $e) {
             $service->addLog($e->getMessage());
-            $service->addLog($e->getTraceAsString());
         } finally {
             print_r($service->outputLog());
             if (!$service->isDryRun()) {
