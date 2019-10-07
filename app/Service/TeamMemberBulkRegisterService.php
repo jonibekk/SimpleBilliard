@@ -139,12 +139,12 @@ class TeamMemberBulkRegisterService
     /**
      * @return void
      */
-    public function writeResult(string $log): void
+    public function writeResult(): void
     {
         $this->s3_instance->putObject([
             'Bucket' => $this->getBucketName(),
             'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
-            'Body' => $log
+            'Body' => $this->outputLog()
         ]);
     }
 

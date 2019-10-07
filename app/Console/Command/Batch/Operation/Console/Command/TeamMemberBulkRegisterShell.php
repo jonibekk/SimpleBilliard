@@ -47,7 +47,7 @@ class TeamMemberBulkRegisterShell extends AppShell
         } finally {
             print_r($service->outputLog());
             if (!$service->isDryRun()) {
-                $service->writeResult($this->outputLog());
+                $service->writeResult();
             }
         }
     }
