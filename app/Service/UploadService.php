@@ -8,6 +8,8 @@ App::import('Lib/Storage/Client', 'AssetsStorageClient');
 App::import('Validator/Lib/Storage', 'UploadValidator');
 App::import('Validator/Lib/Storage', 'UploadImageValidator');
 
+use Goalous\Enum as Enum;
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -243,5 +245,20 @@ class UploadService extends AppService
         $assetStorageClient = $this->getAssetsStorageClient($modelName, $modelId);
 
         return $assetStorageClient->delete($fileName);
+    }
+
+    public function getFileTypeFromFileName($fileName): Enum\Model\Post\PostResourceType
+    {
+        $pathInfo = pathinfo($fileName);
+        if (empty($pathInfo['extension'])) {
+            return Enum\Model\Post\PostResourceType::FILE();
+        }
+        $ext = strtolower($pathInfo['extension']);
+        if (in_array($ext, Configure::read('image_file_types'))) {
+            return Enum\Model\Post\PostResourceType::IMAGE();
+        } elseif (in_array($ext, Configure::read('video_file_types'))) {
+            return Enum\Model\Post\PostResourceType::VIDEO_STREAM();
+        }
+        return Enum\Model\Post\PostResourceType::FILE();
     }
 }

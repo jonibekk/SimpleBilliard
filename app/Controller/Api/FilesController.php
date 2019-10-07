@@ -87,6 +87,9 @@ class FilesController extends BaseApiController
      */
     public function post_upload()
     {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+
         $file = Hash::get($this->request->params, 'form.file');
         $allowVideo = $this->request->data('allow_video');
         $error = $this->validatePost($file);
@@ -95,8 +98,19 @@ class FilesController extends BaseApiController
         }
 
         $isVideo = $this->isVideo($file['tmp_name']);
+        $fileTypeFromFileName = $UploadService->getFileTypeFromFileName($file['name']);
         // Uploading video to transcode
-        if ($allowVideo && $isVideo) {
+        if ($allowVideo && $fileTypeFromFileName->equals(Enum\Model\Post\PostResourceType::VIDEO_STREAM())) {
+            if (!$isVideo) {
+                // Returning error, because file type recognize is different between front/back ends.
+                // TODO: When returning error, need to fix the process of recognizing file type of upload files.
+                // Front/Backend recognize file type should be equal.
+                // Fix Front or Backend codes, see $this->isVideo() methods about backend.
+                return ErrorResponse::badRequest()->withMessage(
+                    __("This video cannot be posted.")
+                )->getResponse();
+            }
+
             /** @var VideoStreamService $VideoStreamService */
             $VideoStreamService = ClassRegistry::init('VideoStreamService');
             try {
@@ -124,9 +138,6 @@ class FilesController extends BaseApiController
                 return ErrorResponse::badRequest()->getResponse();
             }
         }
-
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init('UploadService');
 
         $content = file_get_contents($file['tmp_name']);
         $encodedFile = base64_encode($content);
