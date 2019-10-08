@@ -126,7 +126,7 @@ class S3Reader
     private function initialize(): void
     {
         if (!$this->doesBucketExist()) {
-            throw new \RuntimeException('CSV file does not exist.');
+            throw new \RuntimeException('Bucket not exist.');
         }
 
         $response = $this->getS3Object();
