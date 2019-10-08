@@ -13,16 +13,21 @@ class UserTeamJoiningService
     }
 
     /**
-     * @param array $data
+     * @param int $userId
+     * @param int $teamId
+     * @param bool $adminFlg
      * @return array|mixed
      * @throws Exception
      */
-    public function addMember(array $data)
+    public function addMember(int $userId, int $teamId, bool $adminFlg)
     {
         $this->getTeamMemberEntity()->create();
-        return $this->getTeamMemberEntity()->save(array_merge($data, [
+        return $this->getTeamMemberEntity()->save([
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'admin_flg' => $adminFlg,
             'status'  => TeamMember::USER_STATUS_ACTIVE
-        ]));
+        ]);
     }
 
     /**

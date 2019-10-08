@@ -98,11 +98,18 @@ class TeamMemberBulkRegisterService
     {
         $this->initialize();
 
+        $teamId = $this->getTeamId();
         foreach ($this->getRegisterModel()->getRecords() as $record) {
             try {
+                try {
+                    TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
+                } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+                    throw new $e('Validation error occurred in csv data.');
+                }
+
                 $this->TransactionManager->begin();
 
-                $this->executeRecord($record);
+                $this->executeRecord($teamId, $record);
 
                 if ($this->isDryRun()) {
                     $this->TransactionManager->rollback();
@@ -309,17 +316,12 @@ class TeamMemberBulkRegisterService
     }
 
     /**
+     * @param int $teamId
      * @param array $record
      * @throws Exception
      */
-    protected function executeRecord(array $record): void
+    protected function executeRecord(int $teamId, array $record): void
     {
-        try {
-            TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
-        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
-            throw new $e('Validation error occurred in csv data.');
-        }
-
         $email = $record['email'];
         $language = $record['language'];
         $password = null;
@@ -334,7 +336,8 @@ class TeamMemberBulkRegisterService
         }
 
         $adminFlg = $record['admin_flg'] === 'on' ? 1 : 0;
-        $this->joinTeam($userId, $adminFlg)->joinCircle($userId);
+        $this->joinTeam($userId, $teamId, $adminFlg);
+        $this->joinCircle($userId, $teamId, $this->getTeamAllCircleId());
 
         if (!$this->isDryRun()) {
             $this->getGlMailComponent()->sendMailTeamMemberBulkRegistration(
@@ -379,25 +382,20 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
+     * @param int $teamId
      * @param bool $adminFlg
      * @return TeamMemberBulkRegisterService
      * @throws Exception
      */
-    protected function joinTeam(string $userId, bool $adminFlg): self
+    protected function joinTeam(int $userId, int $teamId, bool $adminFlg): self
     {
-        $teamId = $this->getRegisterModel()->getTeamId();
         if ($this->getUserTeamJoiningService()->isJoined($userId, $teamId)) {
             $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a team member.');
         }
 
-        $result = !!$this->getUserTeamJoiningService()->addMember([
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'admin_flg' => $adminFlg
-        ]);
-
+        $result = !!$this->getUserTeamJoiningService()->addMember($userId, $teamId, $adminFlg);
         if ($result === false) {
             $this->getAggregateModel()->addFailedCount();
             throw new \RuntimeException('Failed to add member to team.');
@@ -407,14 +405,14 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @param string $userId
+     * @param int $userId
+     * @param int $teamId
+     * @param int $circleId
      * @return TeamMemberBulkRegisterService
      * @throws Exception
      */
-    protected function joinCircle(string $userId): self
+    protected function joinCircle(int $userId, int $teamId, int $circleId): self
     {
-        $teamId = $this->getRegisterModel()->getTeamId();
-        $circleId = $this->getRegisterModel()->getTeamAllCircleId();
         if ($this->getTeamCircleService()->isJoined($circleId, $userId)) {
             $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a circle member.');
