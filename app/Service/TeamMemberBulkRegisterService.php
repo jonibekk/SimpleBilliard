@@ -390,12 +390,12 @@ class TeamMemberBulkRegisterService
      */
     protected function joinTeam(int $userId, int $teamId, bool $adminFlg): self
     {
-        if ($this->getUserTeamJoiningService()->isJoined($userId, $teamId)) {
+        if ($this->userTeamJoiningService->isJoined($userId, $teamId)) {
             $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a team member.');
         }
 
-        $result = !!$this->getUserTeamJoiningService()->addMember($userId, $teamId, $adminFlg);
+        $result = !!$this->userTeamJoiningService->addMember($userId, $teamId, $adminFlg);
         if ($result === false) {
             $this->getAggregateModel()->addFailedCount();
             throw new \RuntimeException('Failed to add member to team.');
@@ -413,12 +413,12 @@ class TeamMemberBulkRegisterService
      */
     protected function joinCircle(int $userId, int $teamId, int $circleId): self
     {
-        if ($this->getTeamCircleService()->isJoined($circleId, $userId)) {
+        if ($this->userCircleJoiningService->isJoined($circleId, $userId)) {
             $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a circle member.');
         }
 
-        $result = !!$this->getTeamCircleService()->addMember([
+        $result = !!$this->userCircleJoiningService->addMember([
             'circle_id' => $circleId,
             'team_id' => $teamId,
             'user_id' => $userId
@@ -444,22 +444,6 @@ class TeamMemberBulkRegisterService
         $number = substr(str_shuffle('123456789'), 0, $numberDigits);
 
         return str_shuffle($str . $number);
-    }
-
-    /**
-     * @return UserTeamJoiningService
-     */
-    protected function getUserTeamJoiningService(): UserTeamJoiningService
-    {
-        return $this->userTeamJoiningService;
-    }
-
-    /**
-     * @return UserCircleJoiningService
-     */
-    protected function getTeamCircleService(): UserCircleJoiningService
-    {
-        return $this->userCircleJoiningService;
     }
 
     /**
