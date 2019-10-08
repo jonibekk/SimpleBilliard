@@ -30,6 +30,9 @@ class TeamMemberBulkRegisterService
     const EMAIL_VERIFIED_YES = 1;
     const UPDATE_EMAIL_FLG_YES = 1;
 
+    const PASSWORD_LENGTH = 8;
+    const PASSWORD_MAX_NUMBER_DIGITS = 4;
+
     /** @var int */
     private $teamId;
     /** @var string */
@@ -436,9 +439,8 @@ class TeamMemberBulkRegisterService
      */
     protected function randomPassword(): string
     {
-        $passwordLength = 8;
-        $numberDigits = rand(1, 4);
-        $strDigits = $passwordLength - $numberDigits;
+        $numberDigits = rand(1, self::PASSWORD_MAX_NUMBER_DIGITS);
+        $strDigits = self::PASSWORD_LENGTH - $numberDigits;
 
         $str = substr(str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'), 0, $strDigits);
         $number = substr(str_shuffle('123456789'), 0, $numberDigits);
