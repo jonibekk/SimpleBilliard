@@ -6,98 +6,98 @@
 class TeamMemberBulkRegisterAggregate
 {
     /** @var int */
-    private $success = 0;
+    private $successCount = 0;
     /** @var int */
-    private $newUser = 0;
+    private $newUserCount = 0;
     /** @var int */
-    private $existUser = 0;
+    private $existUserCount = 0;
     /** @var int */
-    private $failed = 0;
+    private $failedCount = 0;
     /** * @var int */
-    private $excluded = 0;
+    private $excludedCount = 0;
 
     /**
      * @return TeamMemberBulkRegisterAggregate
      */
-    public function addSuccess(): self
+    public function addSuccessCount(): self
     {
-        $this->success += 1;
+        $this->successCount += 1;
         return $this;
     }
 
     /**
      * @return TeamMemberBulkRegisterAggregate
      */
-    public function addNewUser(): self
+    public function addNewUserCount(): self
     {
-        $this->newUser += 1;
+        $this->newUserCount += 1;
         return $this;
     }
 
     /**
      * @return TeamMemberBulkRegisterAggregate
      */
-    public function addExistUser(): self
+    public function addExistUserCount(): self
     {
-        $this->existUser += 1;
+        $this->existUserCount += 1;
         return $this;
     }
 
     /**
      * @return TeamMemberBulkRegisterAggregate
      */
-    public function addFailed(): self
+    public function addFailedCount(): self
     {
-        $this->failed += 1;
+        $this->failedCount += 1;
         return $this;
     }
 
     /**
      * @return TeamMemberBulkRegisterAggregate
      */
-    public function addExcluded(): self
+    public function addExcludedCount(): self
     {
-        $this->excluded += 1;
+        $this->excludedCount += 1;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getSuccess(): int
+    public function getSuccessCount(): int
     {
-        return $this->success;
+        return $this->successCount;
     }
 
     /**
      * @return int
      */
-    public function getNewUser(): int
+    public function getNewUserCount(): int
     {
-        return $this->newUser;
+        return $this->newUserCount;
     }
 
     /**
      * @return int
      */
-    public function getExistUser(): int
+    public function getExistUserCount(): int
     {
-        return $this->existUser;
+        return $this->existUserCount;
     }
 
     /**
      * @return int
      */
-    public function getFailed(): int
+    public function getFailedCount(): int
     {
-        return $this->failed;
+        return $this->failedCount;
     }
 
     /**
      * @return int
      */
-    public function getExcluded(): int
+    public function getExcludedCount(): int
     {
-        return $this->excluded;
+        return $this->excludedCount;
     }
 }

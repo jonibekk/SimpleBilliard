@@ -155,11 +155,11 @@ class TeamMemberBulkRegisterService
     {
         return [
             'Total User Count: ' . count($this->getCsvRecords()),
-            'Success: ' . $this->getAggregateModel()->getSuccess(),
-            'New User: ' . $this->getAggregateModel()->getNewUser(),
-            'Exist User: ' . $this->getAggregateModel()->getExistUser(),
-            'Failed: ' . $this->getAggregateModel()->getFailed(),
-            'Excluded: ' . $this->getAggregateModel()->getExcluded()
+            'Success: ' . $this->getAggregateModel()->getSuccessCount(),
+            'New User: ' . $this->getAggregateModel()->getNewUserCount(),
+            'Exist User: ' . $this->getAggregateModel()->getExistUserCount(),
+            'Failed: ' . $this->getAggregateModel()->getFailedCount(),
+            'Excluded: ' . $this->getAggregateModel()->getExcludedCount()
         ];
     }
 
@@ -346,9 +346,11 @@ class TeamMemberBulkRegisterService
         }
 
         if ($isNewUser) {
-            $this->getAggregateModel()->addSuccess()->addNewUser();
+            $this->getAggregateModel()->addSuccessCount();
+            $this->getAggregateModel()->addNewUserCount();
         } else {
-            $this->getAggregateModel()->addSuccess()->addExistUser();
+            $this->getAggregateModel()->addSuccessCount();
+            $this->getAggregateModel()->addExistUserCount();
         }
     }
 
@@ -381,7 +383,7 @@ class TeamMemberBulkRegisterService
     {
         $teamId = $this->getRegisterModel()->getTeamId();
         if ($this->getUserTeamJoiningService()->isJoined($userId, $teamId)) {
-            $this->getAggregateModel()->addExcluded();
+            $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a team member.');
         }
 
@@ -392,7 +394,7 @@ class TeamMemberBulkRegisterService
         ]);
 
         if ($result === false) {
-            $this->getAggregateModel()->addFailed();
+            $this->getAggregateModel()->addFailedCount();
             throw new \RuntimeException('Failed to add member to team.');
         }
 
@@ -409,7 +411,7 @@ class TeamMemberBulkRegisterService
         $teamId = $this->getRegisterModel()->getTeamId();
         $circleId = $this->getRegisterModel()->getTeamAllCircleId();
         if ($this->getTeamCircleService()->isJoined($circleId, $userId)) {
-            $this->getAggregateModel()->addExcluded();
+            $this->getAggregateModel()->addExcludedCount();
             throw new \RuntimeException('Already registered as a circle member.');
         }
 
@@ -420,7 +422,7 @@ class TeamMemberBulkRegisterService
         ]);
 
         if ($result === false) {
-            $this->getAggregateModel()->addFailed();
+            $this->getAggregateModel()->addFailedCount();
             throw new \RuntimeException('Failed to add member to circle.');
         }
 
