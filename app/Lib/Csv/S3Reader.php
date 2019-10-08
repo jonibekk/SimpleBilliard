@@ -141,6 +141,7 @@ class S3Reader
 
         $stream = $response['Body'];
         $stream->rewind();
+        // FIXME: Convert character encoding more strictly
         $contents = mb_convert_encoding($stream->getContents(), 'UTF-8', 'sjis-win');
         $handle = tmpfile();
         fwrite($handle, $contents);
