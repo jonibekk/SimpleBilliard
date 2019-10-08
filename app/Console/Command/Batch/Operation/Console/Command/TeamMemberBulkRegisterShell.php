@@ -7,8 +7,6 @@ App::import('Service', 'TeamMemberBulkRegisterService');
  */
 class TeamMemberBulkRegisterShell extends AppShell
 {
-    protected $enableOutputLogStartStop = true;
-
     /**
      * @return ConsoleOptionParser
      */
