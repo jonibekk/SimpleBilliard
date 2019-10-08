@@ -333,6 +333,8 @@ class TeamMemberBulkRegisterService
             $signUpModel = $this->createUserSignUpFromCsvModel($record);
             $password = $signUpModel->getPassword();
             $userId = $this->getRegisterer()->signUpFromCsv($signUpModel);
+        } else {
+            // TODO: Overwrite the default team ID of existing users
         }
 
         $adminFlg = $record['admin_flg'] === 'on' ? 1 : 0;
