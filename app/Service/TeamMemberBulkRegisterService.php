@@ -297,7 +297,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getPath(): string
     {
-        return $this->path;
+        return self::CSV_PATH_PREFIX . $this->path;
     }
 
     /**
