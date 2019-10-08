@@ -10,11 +10,11 @@ class TeamMemberBulkRegister
     /** @var array */
     private $records;
     /** @var int */
-    private $team_all_circle_id;
+    private $teamAllCircleId;
     /** @var int */
-    private $agreed_terms_of_service_id;
+    private $agreedTermsOfServiceId;
     /** @var array */
-    private $exist_users;
+    private $existUsers;
 
     /**
      * @param array $team
@@ -73,16 +73,16 @@ class TeamMemberBulkRegister
      */
     public function getAgreedTermsOfServiceId(): int
     {
-        return $this->agreed_terms_of_service_id;
+        return $this->agreedTermsOfServiceId;
     }
 
     /**
-     * @param int $agreed_terms_of_service_id
+     * @param int $agreedTermsOfServiceId
      * @return TeamMemberBulkRegister
      */
-    public function setAgreedTermsOfServiceId(int $agreed_terms_of_service_id): self
+    public function setAgreedTermsOfServiceId(int $agreedTermsOfServiceId): self
     {
-        $this->agreed_terms_of_service_id = $agreed_terms_of_service_id;
+        $this->agreedTermsOfServiceId = $agreedTermsOfServiceId;
         return $this;
     }
 
@@ -91,26 +91,26 @@ class TeamMemberBulkRegister
      */
     public function getTeamAllCircleId(): int
     {
-        return $this->team_all_circle_id;
+        return $this->teamAllCircleId;
     }
 
     /**
-     * @param int $team_all_circle_id
+     * @param int $teamAllCircleId
      * @return TeamMemberBulkRegister
      */
-    public function setTeamAllCircleId(int $team_all_circle_id): self
+    public function setTeamAllCircleId(int $teamAllCircleId): self
     {
-        $this->team_all_circle_id = $team_all_circle_id;
+        $this->teamAllCircleId = $teamAllCircleId;
         return $this;
     }
 
     /**
-     * @param array $exist_users
+     * @param array $existUsers
      * @return TeamMemberBulkRegister
      */
-    public function setExistUsers(array $exist_users): self
+    public function setExistUsers(array $existUsers): self
     {
-        $this->exist_users = $exist_users;
+        $this->existUsers = $existUsers;
         return $this;
     }
 
@@ -119,7 +119,7 @@ class TeamMemberBulkRegister
      */
     public function getExistUsers(): array
     {
-        return $this->exist_users;
+        return $this->existUsers;
     }
 
     /**
@@ -131,13 +131,13 @@ class TeamMemberBulkRegister
     }
 
     /**
-     * @param string $email_id
+     * @param string $emailId
      * @return string|null
      */
-    public function getExistUserId(string $email_id): ?string
+    public function getExistUserId(string $emailId): ?string
     {
-        $email_user_map = $this->getEmailUserMap();
-        return $email_user_map[$email_id] ?? null;
+        $emailUserMap = $this->getEmailUserMap();
+        return $emailUserMap[$emailId] ?? null;
     }
 
     /**

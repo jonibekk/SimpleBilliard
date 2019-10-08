@@ -487,30 +487,30 @@ class GlEmailComponent extends Component
     }
 
     /**
-     * @param int $user_id
-     * @param int $team_id
-     * @param string $team_name
+     * @param int $userId
+     * @param int $teamId
+     * @param string $teamName
      * @param string $language
      * @param string $email
      * @param string|null $password
      */
     public function sendMailTeamMemberBulkRegistration(
-        int $user_id,
-        int $team_id,
-        string $team_name,
+        int $userId,
+        int $teamId,
+        string $teamName,
         string $language,
         string $email,
         ?string $password
     ): void {
         // TODO: 仕様が決まり次第、URLを入れ替える
         if ($password === null) { // existing user
-            $url = 'https://' . ENV_NAME . '.goalous.com/others?team_id=' . $team_id;
+            $url = 'https://' . ENV_NAME . '.goalous.com/others?team_id=' . $teamId;
         } else { // new user
             $url = 'https://' . ENV_NAME . '.goalous.com/users/accept_invite/***';
         }
-        $item = compact('team_name', 'email', 'password', 'url');
-        $this->SendMail->SendMailToUser->current_team_id = $team_id;
-        $this->SendMail->saveMailData($user_id, SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION, $item, null, $team_id);
+        $item = compact('teamName', 'email', 'password', 'url');
+        $this->SendMail->SendMailToUser->current_team_id = $teamId;
+        $this->SendMail->saveMailData($userId, SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id, 'send_mail_by_id', $language);
     }
 }

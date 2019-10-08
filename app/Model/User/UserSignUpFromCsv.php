@@ -7,11 +7,11 @@ class UserSignUpFromCsv
     /** @var string */
     private $email;
     /** @var string */
-    private $first_name;
+    private $firstName;
     /** @var string */
-    private $last_name;
+    private $lastName;
     /** @var bool */
-    private $active_flg;
+    private $activeFlg;
     /** @var string */
     private $language;
     /** @var float */
@@ -19,13 +19,13 @@ class UserSignUpFromCsv
     /** @var string */
     private $password;
     /** @var int */
-    private $update_email_flg;
+    private $updateEmailFlg;
     /** @var int */
-    private $default_team_id;
+    private $defaultTeamId;
     /** @var int */
-    private $agreed_terms_of_service_id;
+    private $agreedTermsOfServiceId;
     /** @var int */
-    private $email_verified;
+    private $emailVerified;
 
     /**
      * @return string
@@ -50,16 +50,16 @@ class UserSignUpFromCsv
      */
     public function getFirstName(): string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
     /**
-     * @param string $first_name
+     * @param string $firstName
      * @return UserSignUpFromCsv
      */
-    public function setFirstName(string $first_name): self
+    public function setFirstName(string $firstName): self
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
         return $this;
     }
 
@@ -68,16 +68,16 @@ class UserSignUpFromCsv
      */
     public function getLastName(): string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
     /**
-     * @param string $last_name
+     * @param string $lastName
      * @return UserSignUpFromCsv
      */
-    public function setLastName(string $last_name): self
+    public function setLastName(string $lastName): self
     {
-        $this->last_name = $last_name;
+        $this->lastName = $lastName;
         return $this;
     }
 
@@ -86,16 +86,16 @@ class UserSignUpFromCsv
      */
     public function getActiveFlg(): bool
     {
-        return $this->active_flg;
+        return $this->activeFlg;
     }
 
     /**
-     * @param bool $active_flg
+     * @param bool $activeFlg
      * @return UserSignUpFromCsv
      */
-    public function setActiveFlg(bool $active_flg): self
+    public function setActiveFlg(bool $activeFlg): self
     {
-        $this->active_flg = $active_flg;
+        $this->activeFlg = $activeFlg;
         return $this;
     }
 
@@ -158,16 +158,16 @@ class UserSignUpFromCsv
      */
     public function getUpdateEmailFlg(): int
     {
-        return $this->update_email_flg;
+        return $this->updateEmailFlg;
     }
 
     /**
-     * @param int $update_email_flg
+     * @param int $updateEmailFlg
      * @return UserSignUpFromCsv
      */
-    public function setUpdateEmailFlg(int $update_email_flg): self
+    public function setUpdateEmailFlg(int $updateEmailFlg): self
     {
-        $this->update_email_flg = $update_email_flg;
+        $this->updateEmailFlg = $updateEmailFlg;
         return $this;
     }
 
@@ -176,16 +176,16 @@ class UserSignUpFromCsv
      */
     public function getDefaultTeamId(): int
     {
-        return $this->default_team_id;
+        return $this->defaultTeamId;
     }
 
     /**
-     * @param int $default_team_id
+     * @param int $defaultTeamId
      * @return UserSignUpFromCsv
      */
-    public function setDefaultTeamId(int $default_team_id): self
+    public function setDefaultTeamId(int $defaultTeamId): self
     {
-        $this->default_team_id = $default_team_id;
+        $this->defaultTeamId = $defaultTeamId;
         return $this;
     }
 
@@ -194,16 +194,16 @@ class UserSignUpFromCsv
      */
     public function getAgreedTermsOfServiceId(): int
     {
-        return $this->agreed_terms_of_service_id;
+        return $this->agreedTermsOfServiceId;
     }
 
     /**
-     * @param int $agreed_terms_of_service_id
+     * @param int $agreedTermsOfServiceId
      * @return UserSignUpFromCsv
      */
-    public function setAgreedTermsOfServiceId(int $agreed_terms_of_service_id): self
+    public function setAgreedTermsOfServiceId(int $agreedTermsOfServiceId): self
     {
-        $this->agreed_terms_of_service_id = $agreed_terms_of_service_id;
+        $this->agreedTermsOfServiceId = $agreedTermsOfServiceId;
         return $this;
     }
 
@@ -212,16 +212,16 @@ class UserSignUpFromCsv
      */
     public function getEmailVerified(): int
     {
-        return $this->email_verified;
+        return $this->emailVerified;
     }
 
     /**
-     * @param int $email_verified
+     * @param int $emailVerified
      * @return UserSignUpFromCsv
      */
-    public function setEmailVerified(int $email_verified): self
+    public function setEmailVerified(int $emailVerified): self
     {
-        $this->email_verified = $email_verified;
+        $this->emailVerified = $emailVerified;
         return $this;
     }
 }

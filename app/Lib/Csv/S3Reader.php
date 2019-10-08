@@ -11,9 +11,9 @@ class S3Reader
     /** @var array */
     private $header = [];
     /** @var array */
-    private $origin_records = [];
+    private $originRecords = [];
     /** @var \Aws\S3\S3Client */
-    private $s3_instance;
+    private $s3Instance;
 
     /**
      * S3Reader constructor.
@@ -24,7 +24,7 @@ class S3Reader
     {
         $this->bucket = $bucket;
         $this->path = $path;
-        $this->s3_instance = AwsClientFactory::createS3ClientForFileStorage();
+        $this->s3Instance = AwsClientFactory::createS3ClientForFileStorage();
         $this->initialize();
     }
 
@@ -49,7 +49,7 @@ class S3Reader
             return $this->getOriginRecords();
         }
 
-        $column_count = count($header);
+        $columnCount = count($header);
 
         $records = [];
         foreach ($this->getOriginRecords() as $index => $record) {
@@ -58,7 +58,7 @@ class S3Reader
                 continue;
             }
 
-            if ($column_count !== count($record)) {
+            if ($columnCount !== count($record)) {
                 throw new\RuntimeException('The number of CSV items is incorrect. (line ' . ($index + 2). ')');
             }
 
@@ -77,7 +77,7 @@ class S3Reader
      */
     private function getOriginRecords(): array
     {
-        return $this->origin_records;
+        return $this->originRecords;
     }
 
     /**
@@ -93,7 +93,7 @@ class S3Reader
      */
     private function doesBucketExist(): bool
     {
-        return $this->s3_instance->doesBucketExist($this->bucket, $this->path);
+        return $this->s3Instance->doesBucketExist($this->bucket, $this->path);
     }
 
     /**
@@ -113,8 +113,8 @@ class S3Reader
      */
     private function responseValidate(\Aws\Result $response): void
     {
-        $content_type = $response['@metadata']['headers']['content-type'] ?? '';
-        if ($content_type !== 'text/csv') {
+        $contentType = $response['@metadata']['headers']['content-type'] ?? '';
+        if ($contentType !== 'text/csv') {
             throw new \RuntimeException('It is not a csv format file.');
         }
     }
@@ -137,7 +137,7 @@ class S3Reader
         }
 
         $data = [];
-        $row_number = 0;
+        $rowNumber = 0;
 
         $stream = $response['Body'];
         $stream->rewind();
@@ -146,16 +146,16 @@ class S3Reader
         fwrite($handle, $contents);
         rewind($handle);
 
-        while (($line_data = fgetcsv($handle)) !== false) {
-            $row_number++;
-            if ($row_number === 1) {
+        while (($lineData = fgetcsv($handle)) !== false) {
+            $rowNumber++;
+            if ($rowNumber === 1) {
                 continue;
             }
-            $data[] = $line_data;
+            $data[] = $lineData;
         }
 
         fclose($handle);
 
-        $this->origin_records = $data;
+        $this->originRecords = $data;
     }
 }

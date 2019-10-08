@@ -8,9 +8,9 @@ class TeamMemberBulkRegisterAggregate
     /** @var int */
     private $success = 0;
     /** @var int */
-    private $new_user = 0;
+    private $newUser = 0;
     /** @var int */
-    private $exist_user = 0;
+    private $existUser = 0;
     /** @var int */
     private $failed = 0;
     /** * @var int */
@@ -30,7 +30,7 @@ class TeamMemberBulkRegisterAggregate
      */
     public function addNewUser(): self
     {
-        $this->new_user += 1;
+        $this->newUser += 1;
         return $this;
     }
 
@@ -39,7 +39,7 @@ class TeamMemberBulkRegisterAggregate
      */
     public function addExistUser(): self
     {
-        $this->exist_user += 1;
+        $this->existUser += 1;
         return $this;
     }
 
@@ -74,7 +74,7 @@ class TeamMemberBulkRegisterAggregate
      */
     public function getNewUser(): int
     {
-        return $this->new_user;
+        return $this->newUser;
     }
 
     /**
@@ -82,7 +82,7 @@ class TeamMemberBulkRegisterAggregate
      */
     public function getExistUser(): int
     {
-        return $this->exist_user;
+        return $this->existUser;
     }
 
     /**

@@ -26,21 +26,21 @@ class UserCircleJoiningService
         $this->getCircleMemberEntity()->create();
         $result = $this->getCircleMemberEntity()->save($data);
 
-        $circle_id = Hash::get($data, 'circle_id');
-        $this->getCircleMemberEntity()->updateCounterCache(['circle_id' => $circle_id]);
-        $this->getGlRedisEntity()->deleteMultiCircleMemberCount([$circle_id]);
+        $circleId = Hash::get($data, 'circle_id');
+        $this->getCircleMemberEntity()->updateCounterCache(['circle_id' => $circleId]);
+        $this->getGlRedisEntity()->deleteMultiCircleMemberCount([$circleId]);
 
         return $result;
     }
 
     /**
-     * @param int $circle_id
-     * @param int $user_id
+     * @param int $circleId
+     * @param int $userId
      * @return bool
      */
-    public function isJoined(int $circle_id, int $user_id): bool
+    public function isJoined(int $circleId, int $userId): bool
     {
-        return $this->getCircleMemberEntity()->isJoined($circle_id, $user_id);
+        return $this->getCircleMemberEntity()->isJoined($circleId, $userId);
     }
 
     /**

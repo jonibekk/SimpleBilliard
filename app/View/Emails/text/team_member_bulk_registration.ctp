@@ -1,7 +1,7 @@
 <?php
 echo __('Hello!') . "\n";
 echo "\n";
-echo __('You have a new invitation from the %s team in Goalous.', $team_name) . "\n";
+echo __('You have a new invitation from the %s team in Goalous.', $teamName) . "\n";
 echo "\n";
 echo __('You have been invited to the team. Please use username and password given below to login in the following URL.') . "\n";
 echo "\n";

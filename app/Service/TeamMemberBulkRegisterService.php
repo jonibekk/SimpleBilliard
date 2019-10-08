@@ -34,11 +34,11 @@ class TeamMemberBulkRegisterService
     /** @var array */
     private $params;
     /** @var TeamMemberBulkRegister */
-    private $register_model;
+    private $registerModel;
     /** @var TeamMemberBulkRegisterAggregate */
-    private $aggregate_model;
+    private $aggregateModel;
     /** @var \Aws\S3\S3Client */
-    private $s3_instance;
+    private $s3Instance;
     /** @var TransactionManager */
     private $TransactionManager;
     /** @var User */
@@ -50,11 +50,11 @@ class TeamMemberBulkRegisterService
     /** @var Circle */
     private $Circle;
     /** @var UserTeamJoiningService */
-    private $user_team_joining_service;
+    private $userTeamJoiningService;
     /** @var UserCircleJoiningService */
-    private $user_circle_joining_service;
+    private $userCircleJoiningService;
     /** @var UserRegistererService */
-    private $registerer_service;
+    private $registererService;
     /** @var GlEmailComponent */
     private $GlEmail;
     /** * @var array */
@@ -66,19 +66,19 @@ class TeamMemberBulkRegisterService
      */
     public function __construct(array $params) {
         $this->params = $params;
-        $this->register_model = new TeamMemberBulkRegister();
-        $this->aggregate_model = new TeamMemberBulkRegisterAggregate();
+        $this->registerModel = new TeamMemberBulkRegister();
+        $this->aggregateModel = new TeamMemberBulkRegisterAggregate();
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
-        $this->user_team_joining_service = new UserTeamJoiningService();
-        $this->user_circle_joining_service = new UserCircleJoiningService();
-        $this->registerer_service = new UserRegistererService();
+        $this->userTeamJoiningService = new UserTeamJoiningService();
+        $this->userCircleJoiningService = new UserCircleJoiningService();
+        $this->registererService = new UserRegistererService();
         $this->User = ClassRegistry::init('User');
         $this->Email = ClassRegistry::init('Email');
         $this->Team = ClassRegistry::init('Team');
         $this->Circle = ClassRegistry::init('Circle');
         $this->GlEmail = new GlEmailComponent(new ComponentCollection());
         $this->GlEmail->startup(new AppController());
-        $this->s3_instance = AwsClientFactory::createS3ClientForFileStorage();
+        $this->s3Instance = AwsClientFactory::createS3ClientForFileStorage();
     }
 
     /**
@@ -101,8 +101,8 @@ class TeamMemberBulkRegisterService
                 }
             } catch (\Throwable $e) {
                 $this->TransactionManager->rollback();
-                $error_message = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
-                $this->addLog($error_message);
+                $errorMessage = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
+                $this->addLog($errorMessage);
             }
         }
 
@@ -116,12 +116,12 @@ class TeamMemberBulkRegisterService
     protected function convertHiddenEmail(string $email): string
     {
         $prefix = substr($email, 0, 4);
-        $other_count = count(str_split($email)) - 4;
-        if ($other_count < 0) {
-            $other_count = 0;
+        $otherCount = count(str_split($email)) - 4;
+        if ($otherCount < 0) {
+            $otherCount = 0;
         }
 
-        return $prefix . str_repeat('*', $other_count);
+        return $prefix . str_repeat('*', $otherCount);
     }
 
     /**
@@ -168,7 +168,7 @@ class TeamMemberBulkRegisterService
      */
     public function writeResult(): void
     {
-        $this->s3_instance->putObject([
+        $this->s3Instance->putObject([
             'Bucket' => $this->getBucketName(),
             'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
             'Body' => $this->outputLog()
@@ -186,12 +186,12 @@ class TeamMemberBulkRegisterService
 
         $this->validateLogStorageLocation();
 
-        $team_id = $this->getTeamId();
-        $team = $this->getTeamEntity()->findById($team_id);
+        $teamId = $this->getTeamId();
+        $team = $this->getTeamEntity()->findById($teamId);
 
         $this->validateTeam($team);
 
-        $this->addLog('teamId: ' . $team_id);
+        $this->addLog('teamId: ' . $teamId);
 
         $this->extractNecessaryData($team);
     }
@@ -203,13 +203,13 @@ class TeamMemberBulkRegisterService
     {
         $records = $this->getCsvRecords();
 
-        $csv_emails = Hash::extract($records, '{n}.email');
-        $exist_users = $this->getEmailEntity()->findExistUsersByEmail($csv_emails);
+        $csvEmails = Hash::extract($records, '{n}.email');
+        $existUsers = $this->getEmailEntity()->findExistUsersByEmail($csvEmails);
 
         $this->getRegisterModel()
             ->setTeam($team)
             ->setRecords($records)
-            ->setExistUsers($exist_users)
+            ->setExistUsers($existUsers)
             ->setAgreedTermsOfServiceId($this->getAgreedTermsOfServiceId())
             ->setTeamAllCircleId($this->getTeamAllCircleId());
     }
@@ -248,29 +248,29 @@ class TeamMemberBulkRegisterService
             throw new \RuntimeException('Target team ID does not exist.');
         }
 
-        $service_use_status = Hash::get($team, 'Team.service_use_status');
-        if (!$this->canCstTeamMemberBulkRegistration($service_use_status)) {
+        $serviceUseStatus = Hash::get($team, 'Team.service_use_status');
+        if (!$this->canCstTeamMemberBulkRegistration($serviceUseStatus)) {
             throw new \RuntimeException('The target team is a plan in which users cannot be registered in bulk.');
         }
 
-        $team_name = Hash::get($team, 'Team.name');
-        if ($this->confirmTeamName($team_name) !== 'yes') {
+        $teamName = Hash::get($team, 'Team.name');
+        if ($this->confirmTeamName($teamName) !== 'yes') {
             throw new \RuntimeException('Stop processing');
         }
     }
 
     /**
-     * @param int $service_user_status
+     * @param int $serviceUserStatus
      * @return bool
      */
-    protected function canCstTeamMemberBulkRegistration(int $service_user_status)
+    protected function canCstTeamMemberBulkRegistration(int $serviceUserStatus)
     {
-        return $service_user_status === ServiceUseStatus::FREE_TRIAL;
+        return $serviceUserStatus === ServiceUseStatus::FREE_TRIAL;
     }
 
-    protected function confirmTeamName(string $team_name): string
+    protected function confirmTeamName(string $teamName): string
     {
-        echo "Is the target team name [\033[0;32m{$team_name}\033[0m] ? (yes/no) ";
+        echo "Is the target team name [\033[0;32m{$teamName}\033[0m] ? (yes/no) ";
         return trim(fgets(STDIN));
     }
 
@@ -322,21 +322,21 @@ class TeamMemberBulkRegisterService
         $language = $record['language'];
         $password = null;
 
-        $user_id = $this->getRegisterModel()->getExistUserId($email);
+        $userId = $this->getRegisterModel()->getExistUserId($email);
 
-        $is_new_user = $user_id === null;
-        if ($is_new_user) {
-            $sign_up_model = $this->createUserSignUpFromCsvModel($record);
-            $password = $sign_up_model->getPassword();
-            $user_id = $this->getRegisterer()->signUpFromCsv($sign_up_model);
+        $isNewUser = $userId === null;
+        if ($isNewUser) {
+            $signUpModel = $this->createUserSignUpFromCsvModel($record);
+            $password = $signUpModel->getPassword();
+            $userId = $this->getRegisterer()->signUpFromCsv($signUpModel);
         }
 
-        $admin_flg = $record['admin_flg'] === 'on' ? 1 : 0;
-        $this->joinTeam($user_id, $admin_flg)->joinCircle($user_id);
+        $adminFlg = $record['admin_flg'] === 'on' ? 1 : 0;
+        $this->joinTeam($userId, $adminFlg)->joinCircle($userId);
 
         if (!$this->isDryRun()) {
             $this->getGlMailComponent()->sendMailTeamMemberBulkRegistration(
-                $user_id,
+                $userId,
                 $this->getRegisterModel()->getTeamId(),
                 $this->getRegisterModel()->getTeamName(),
                 $language,
@@ -345,7 +345,7 @@ class TeamMemberBulkRegisterService
             );
         }
 
-        if ($is_new_user) {
+        if ($isNewUser) {
             $this->getAggregateModel()->addSuccess()->addNewUser();
         } else {
             $this->getAggregateModel()->addSuccess()->addExistUser();
@@ -372,23 +372,23 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @param string $user_id
-     * @param bool $admin_flg
+     * @param string $userId
+     * @param bool $adminFlg
      * @return TeamMemberBulkRegisterService
      * @throws Exception
      */
-    protected function joinTeam(string $user_id, bool $admin_flg): self
+    protected function joinTeam(string $userId, bool $adminFlg): self
     {
-        $team_id = $this->getRegisterModel()->getTeamId();
-        if ($this->getUserTeamJoiningService()->isJoined($user_id, $team_id)) {
+        $teamId = $this->getRegisterModel()->getTeamId();
+        if ($this->getUserTeamJoiningService()->isJoined($userId, $teamId)) {
             $this->getAggregateModel()->addExcluded();
             throw new \RuntimeException('Already registered as a team member.');
         }
 
         $result = !!$this->getUserTeamJoiningService()->addMember([
-            'user_id' => $user_id,
-            'team_id' => $team_id,
-            'admin_flg' => $admin_flg
+            'user_id' => $userId,
+            'team_id' => $teamId,
+            'admin_flg' => $adminFlg
         ]);
 
         if ($result === false) {
@@ -400,23 +400,23 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @param string $user_id
+     * @param string $userId
      * @return TeamMemberBulkRegisterService
      * @throws Exception
      */
-    protected function joinCircle(string $user_id): self
+    protected function joinCircle(string $userId): self
     {
-        $team_id = $this->getRegisterModel()->getTeamId();
-        $circle_id = $this->getRegisterModel()->getTeamAllCircleId();
-        if ($this->getTeamCircleService()->isJoined($circle_id, $user_id)) {
+        $teamId = $this->getRegisterModel()->getTeamId();
+        $circleId = $this->getRegisterModel()->getTeamAllCircleId();
+        if ($this->getTeamCircleService()->isJoined($circleId, $userId)) {
             $this->getAggregateModel()->addExcluded();
             throw new \RuntimeException('Already registered as a circle member.');
         }
 
         $result = !!$this->getTeamCircleService()->addMember([
-            'circle_id' => $circle_id,
-            'team_id' => $team_id,
-            'user_id' => $user_id
+            'circle_id' => $circleId,
+            'team_id' => $teamId,
+            'user_id' => $userId
         ]);
 
         if ($result === false) {
@@ -432,12 +432,12 @@ class TeamMemberBulkRegisterService
      */
     protected function randomPassword(): string
     {
-        $password_length = 8;
-        $number_digits = rand(1, 4);
-        $str_digits = $password_length - $number_digits;
+        $passwordLength = 8;
+        $numberDigits = rand(1, 4);
+        $strDigits = $passwordLength - $numberDigits;
 
-        $str = substr(str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'), 0, $str_digits);
-        $number = substr(str_shuffle('123456789'), 0, $number_digits);
+        $str = substr(str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'), 0, $strDigits);
+        $number = substr(str_shuffle('123456789'), 0, $numberDigits);
 
         return str_shuffle($str . $number);
     }
@@ -447,7 +447,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getUserTeamJoiningService(): UserTeamJoiningService
     {
-        return $this->user_team_joining_service;
+        return $this->userTeamJoiningService;
     }
 
     /**
@@ -455,7 +455,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getTeamCircleService(): UserCircleJoiningService
     {
-        return $this->user_circle_joining_service;
+        return $this->userCircleJoiningService;
     }
 
     /**
@@ -463,7 +463,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getRegisterModel(): TeamMemberBulkRegister
     {
-        return $this->register_model;
+        return $this->registerModel;
     }
 
     /**
@@ -471,7 +471,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getRegisterer(): UserRegistererService
     {
-        return $this->registerer_service;
+        return $this->registererService;
     }
 
     /**
@@ -519,7 +519,7 @@ class TeamMemberBulkRegisterService
      */
     protected function validateLogStorageLocation(): void
     {
-        if (!$this->s3_instance->doesBucketExist($this->getBucketName())) {
+        if (!$this->s3Instance->doesBucketExist($this->getBucketName())) {
             throw new \RuntimeException('The log s3 bucket does not exist. -> ' . $this->getBucketName());
         }
     }
@@ -545,6 +545,6 @@ class TeamMemberBulkRegisterService
      */
     protected function getAggregateModel(): TeamMemberBulkRegisterAggregate
     {
-        return $this->aggregate_model;
+        return $this->aggregateModel;
     }
 }

@@ -26,16 +26,16 @@ class UserTeamJoiningService
     }
 
     /**
-     * @param int $user_id
-     * @param int $team_id
+     * @param int $userId
+     * @param int $teamId
      * @return bool
      */
-    public function isJoined(int $user_id, int $team_id): bool
+    public function isJoined(int $userId, int $teamId): bool
     {
         $options = [
             'conditions' => [
-                'user_id' => $user_id,
-                'team_id' => $team_id
+                'user_id' => $userId,
+                'team_id' => $teamId
             ]
         ];
 
