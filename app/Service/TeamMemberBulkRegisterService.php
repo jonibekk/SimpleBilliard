@@ -359,17 +359,20 @@ class TeamMemberBulkRegisterService
      */
     protected function createUserSignUpFromCsvModel(array $record): UserSignUpFromCsv
     {
-        return (new UserSignUpFromCsv())->setFirstName($record['first_name'])
-            ->setLastName($record['last_name'])
-            ->setLanguage($record['language'])
-            ->setDefaultTeamId($this->getRegisterModel()->getTeamId())
-            ->setPassword($this->randomPassword())
-            ->setUpdateEmailFlg(self::UPDATE_EMAIL_FLG_YES)
-            ->setTimezone($this->getRegisterModel()->getTeamTimezone())
-            ->setAgreedTermsOfServiceId($this->getRegisterModel()->getAgreedTermsOfServiceId())
-            ->setActiveFlg(self::ACTIVE_FLG_YES)
-            ->setEmail($record['email'])
-            ->setEmailVerified(self::EMAIL_VERIFIED_YES);
+        $useSignUpFromCsv = new UserSignUpFromCsv();
+        $useSignUpFromCsv->setFirstName($record['first_name']);
+        $useSignUpFromCsv->setLastName($record['last_name']);
+        $useSignUpFromCsv->setLanguage($record['language']);
+        $useSignUpFromCsv->setDefaultTeamId($this->getRegisterModel()->getTeamId());
+        $useSignUpFromCsv->setPassword($this->randomPassword());
+        $useSignUpFromCsv->setUpdateEmailFlg(self::UPDATE_EMAIL_FLG_YES);
+        $useSignUpFromCsv->setTimezone($this->getRegisterModel()->getTeamTimezone());
+        $useSignUpFromCsv->setAgreedTermsOfServiceId($this->getRegisterModel()->getAgreedTermsOfServiceId());
+        $useSignUpFromCsv->setActiveFlg(self::ACTIVE_FLG_YES);
+        $useSignUpFromCsv->setEmail($record['email']);
+        $useSignUpFromCsv->setEmailVerified(self::EMAIL_VERIFIED_YES);
+
+        return $useSignUpFromCsv;
     }
 
     /**
