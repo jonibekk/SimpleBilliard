@@ -30,8 +30,12 @@ class TeamMemberBulkRegisterService
     const EMAIL_VERIFIED_YES = 1;
     const UPDATE_EMAIL_FLG_YES = 1;
 
-    /** @var array */
-    private $params;
+    /** @var int */
+    private $teamId;
+    /** @var string */
+    private $path;
+    /** @var bool */
+    private $dryRun;
     /** @var TeamMemberBulkRegister */
     private $registerModel;
     /** @var TeamMemberBulkRegisterAggregate */
@@ -61,10 +65,14 @@ class TeamMemberBulkRegisterService
 
     /**
      * TeamMemberBulkRegisterService constructor.
-     * @param array $params
+     * @param int $teamId
+     * @param string $path
+     * @param bool $dryRun
      */
-    public function __construct(array $params) {
-        $this->params = $params;
+    public function __construct(int $teamId, string $path, bool $dryRun) {
+        $this->teamId = $teamId;
+        $this->path = $path;
+        $this->dryRun = $dryRun;
         $this->registerModel = new TeamMemberBulkRegister();
         $this->aggregateModel = new TeamMemberBulkRegisterAggregate();
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
@@ -274,19 +282,11 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @return array
-     */
-    protected function getParams(): array
-    {
-        return $this->params;
-    }
-
-    /**
      * @return int
      */
     protected function getTeamId(): int
     {
-        return (int) Hash::get($this->getParams(), 'team_id');
+        return $this->teamId;
     }
 
     /**
@@ -294,7 +294,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getPath(): string
     {
-        return self::CSV_PATH_PREFIX . Hash::get($this->getParams(), 'path');
+        return $this->path;
     }
 
     /**
@@ -302,7 +302,7 @@ class TeamMemberBulkRegisterService
      */
     public function isDryRun(): bool
     {
-        return array_key_exists('dry-run', $this->getParams());
+        return $this->dryRun;
     }
 
     /**

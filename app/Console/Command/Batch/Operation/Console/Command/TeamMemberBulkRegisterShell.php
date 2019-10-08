@@ -35,7 +35,10 @@ class TeamMemberBulkRegisterShell extends AppShell
 
     public function main()
     {
-        $service = new TeamMemberBulkRegisterService($this->params);
+        $teamId = (int) Hash::get($this->params, 'team_id');
+        $path = Hash::get($this->params, 'path');
+        $dryRun = array_key_exists('dry-run', $this->params);
+        $service = new TeamMemberBulkRegisterService($teamId, $path, $dryRun);
 
         try {
             $service->execute();
