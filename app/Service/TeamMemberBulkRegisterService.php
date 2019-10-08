@@ -303,7 +303,7 @@ class TeamMemberBulkRegisterService
      */
     public function isDryRun(): bool
     {
-        return array_key_exists('dry_run', $this->getParams());
+        return array_key_exists('dry-run', $this->getParams());
     }
 
     /**

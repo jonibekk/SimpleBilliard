@@ -26,7 +26,7 @@ class TeamMemberBulkRegisterShell extends AppShell
                 'help'    => 'This is csv file path.',
                 'default' => '',
             ],
-            'dry_run' => [
+            'dry-run' => [
                 'help'    => 'This is dry run.',
                 'default' => null,
             ]
