@@ -256,7 +256,7 @@ class TeamMemberBulkRegisterService
         }
 
         $serviceUseStatus = Hash::get($team, 'Team.service_use_status');
-        if (!$this->canCstTeamMemberBulkRegistration($serviceUseStatus)) {
+        if (!$this->canCsvTeamMemberBulkRegistration($serviceUseStatus)) {
             throw new \RuntimeException('The target team is a plan in which users cannot be registered in bulk.');
         }
 
@@ -270,7 +270,7 @@ class TeamMemberBulkRegisterService
      * @param int $serviceUserStatus
      * @return bool
      */
-    protected function canCstTeamMemberBulkRegistration(int $serviceUserStatus)
+    protected function canCsvTeamMemberBulkRegistration(int $serviceUserStatus)
     {
         return $serviceUserStatus === ServiceUseStatus::FREE_TRIAL;
     }
