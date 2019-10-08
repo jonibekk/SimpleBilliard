@@ -17,7 +17,7 @@
 
             <div class="enterprise col-md-4 col-sm-12 col-xs-12 center-block">
                 <img src="/img/homepage/casestudy/yabusaki/yabusaki_logo.png?1561614554"
-                     alt="あなたの同僚についてカンタンに知ることができます。今までこんな方法ありました？" class="img-responsive"/>
+                     alt="ヤブサキ産業株式会社" class="img-responsive"/>
                 <h2>ヤブサキ産業株式会社</h2>
                 <ul class="list-unstyled enterprise-list">
                     <li>会社概要</li>
@@ -51,7 +51,7 @@
                     <p>今まで会社が目指しているもの・経営者の思いなど、会社の情報を社員に直接伝える手段がなかったため、情報を社内で共有できて社員の声を聞くようなコミュニケーションが必要であると感じていました。
                         その想いから7年前に社内向けの新聞を作成していましたが、全員が読んでいるのかわからなかったり、反応をきくまでにタイムラグがあったりと一方的なコミュニケーションになっていることに気づきました。
                     </p>
-                    <img src="/img/homepage/casestudy/yabusaki/yabusaki_01.jpg?1561614554" alt="様々な活動や話題をサークルで共有しよう！"
+                    <img src="/img/homepage/casestudy/yabusaki/yabusaki_01.jpg?1561614554" alt="現場と経営者の間にあるコミュニケーションの壁を壊したかった"
                          class="center-block img-responsive img-casestudy"/></div>
             </div><!--//content-->
         </div><!--//item-->
@@ -66,7 +66,7 @@
                         会社や社員が目指す目標を見える化することによって、一方的なコミュニケーションではなく、会社全体で双方向のコミュニケーションができると思ったので、導入を決めました。
                         また、いくつか事業所があるのですが、離れていてもゴールの他に写真を共有できるので、一体感を感じられると思いました。
                 </div>
-                <img src="/img/homepage/casestudy/yabusaki/yabusaki_02.jpg?1561614554" alt="写真によって活動の表現力が格段にあがります。"
+                <img src="/img/homepage/casestudy/yabusaki/yabusaki_02.jpg?1561614554" alt="導入の決め手は「社内新聞」をリアルタイムで実現できること"
                      class="center-block img-responsive img-casestudy"/></div><!--//content-->
         </div><!--//item-->
 
@@ -83,7 +83,7 @@
                         また、数字の進捗を追ったり現状他の店舗がどれくらい達成しているのかも共有できていたので、モチベーションアップにつながりました.
                     </p>
                 </div>
-                <img src="/img/homepage/casestudy/yabusaki/yabusaki_03.jpg?1561614554" alt="様々な活動や話題をサークルで共有しよう！"
+                <img src="/img/homepage/casestudy/yabusaki/yabusaki_03.jpg?1561614554" alt="共通のゴールを目指すことで今までにない一体感が生まれた"
                      class="center-block img-responsive img-casestudy img-ui"/></div><!--//content-->
         </div><!--//item-->
 
@@ -98,7 +98,7 @@
                         ○○事業部情報共有の部屋や○○部連絡板のように目的別に作成可能です。
                     </p>
                 </div>
-                <img src="/img/homepage/casestudy/yabusaki/yabusaki_04.jpg?1561614554" alt="評価？もちろんGoalousでできます。"
+                <img src="/img/homepage/casestudy/yabusaki/yabusaki_04.jpg?1561614554" alt="コミュニケーションの目的に応じて自由に作れる「サークル機能」"
                      class="center-block img-responsive img-casestudy img-ui"/></div><!--//content-->
         </div><!--//item-->
 
@@ -115,7 +115,7 @@
                         会ったことのない社員同士であってもGoalousを通じたコミュニケーションがとりやすく、社員の帰属意識も高まったと思います。
                     </p>
                 </div>
-                <img src="/img/homepage/casestudy/yabusaki/yabusaki_05.jpg?1561614554" alt="様々な活動や話題をサークルで共有しよう！"
+                <img src="/img/homepage/casestudy/yabusaki/yabusaki_05.jpg?1561614554" alt="仕事だけでなくプライベートまでもオープンに！家族的な双方向のコミュニケーションを実現"
                      class="center-block img-responsive img-casestudy"/></div><!--//content-->
         </div><!--//item-->
     </div>
