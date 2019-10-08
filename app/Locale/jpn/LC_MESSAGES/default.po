@@ -379,7 +379,7 @@ msgid "Japanese"
 msgstr "日本語"
 
 msgid "English"
-msgstr "英語"
+msgstr "English"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -1116,9 +1116,6 @@ msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class=\"
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしました。"
 
-msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. "
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルにコメントしました。"
-
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しました。"
 
@@ -1695,7 +1692,7 @@ msgstr "不正な電話番号です。"
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
-msgid "%s pixels is the limit."
+msgid "%s pixel is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
 msgid "You can't change members of the all team circle."
@@ -1851,9 +1848,6 @@ msgstr "アップロード出来るファイルサイズは%1$sMBまでです。
 msgid "Only picture is allowed. (.jpg, .png, .gif)"
 msgstr "画像ファイルを選択してください。"
 
-msgid "This file type is not allowed."
-msgstr "このファイル形式は許可されていません。"
-
 msgid "{{maxFiles}} is the limit you can upload once."
 msgstr "アップロード出来るファイル数は%1$s個までです。"
 
@@ -1924,9 +1918,6 @@ msgid "Following"
 msgstr "フォロー中"
 
 msgid "More"
-msgstr "その他"
-
-msgid "More "
 msgstr "もっと見る"
 
 msgid "View previous posts ▼"
@@ -2092,9 +2083,6 @@ msgid "Reselect an image"
 msgstr "画像を再選択"
 
 msgid "Create"
-msgstr "作成"
-
-msgid "Create "
 msgstr "作成する"
 
 msgid "Initial point"
@@ -2291,9 +2279,6 @@ msgstr "例) チームGoalous"
 
 msgid "Team Name"
 msgstr "チーム名"
-
-msgid "Team ID"
-msgstr "チームID"
 
 msgid "Term"
 msgstr "期"
@@ -3506,9 +3491,6 @@ msgstr "チームを作成"
 
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
-
-msgid "Dismiss All"
-msgstr "すべて既読にする"
 
 msgid "No new notification"
 msgstr "未読の通知はありません。"
@@ -5943,6 +5925,30 @@ msgstr "翻訳に失敗しました"
 
 msgid "Translation is Stopped Temporarily"
 msgstr "翻訳は一時停止しています"
+
+msgid "This video cannot be posted."
+msgstr "この動画は現在は投稿できません。"
+
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルにコメントしました。"
+
+msgid "%s pixels is the limit."
+msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
+
+msgid "This file type is not allowed."
+msgstr "このファイル形式は許可されていません。"
+
+msgid "More "
+msgstr "もっと見る"
+
+msgid "Create "
+msgstr "作成する"
+
+msgid "Team ID"
+msgstr "チームID"
+
+msgid "Dismiss All"
+msgstr "すべて既読にする"
 
 msgid "Translation language is set in each team"
 msgstr "翻訳言語はチームごとに設定されます"

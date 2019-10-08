@@ -16,7 +16,7 @@
             <!--//intro-->
 
             <div class="enterprise col-md-4 col-sm-12 col-xs-12 center-block">
-                <img src="/img/homepage/casestudy/witone/witone_logo.png" alt="あなたの同僚についてカンタンに知ることができます。今までこんな方法ありました？"
+                <img src="/img/homepage/casestudy/witone/witone_logo.png" alt="株式会社ウィットワン"
                      class="img-responsive"/>
                 <h2>株式会社ウィットワン</h2>
                 <ul class="list-unstyled enterprise-list">
@@ -48,7 +48,7 @@
         <div class="item row flex">
             <div class="content col-md-7 col-sm-8 col-xs-12 center-block from-left col-left">
                 <div class="details">
-                    <img src="/img/homepage/casestudy/witone/witone_01.jpg" alt="様々な活動や話題をサークルで共有しよう！"
+                    <img src="/img/homepage/casestudy/witone/witone_01.jpg" alt="インタビュイーのお二人"
                          class="center-block img-responsive img-casestudy-sub"/>
                     <p>ゴール達成への最強にオープンな社内SNSとしてご愛顧いただいている『Goalous』。　<br>チームと所属するメンバーが設定した『ゴール』、組織の『ヴィジョン』『課題』、それぞれのメンバーが『やっていること・考えていること』。全てをオープンにすることで設定したゴールを手繰り寄せる強力なツールです。現在、Goalousを導入する会社（組織）が徐々に広がっています。
                     </p>
@@ -66,7 +66,7 @@
 
         <div class="item row flex">
             <div class="content col-md-7 col-sm-8 col-xs-12 center-block col-xs-offset-0 from-right col-right">
-                <img src="/img/homepage/casestudy/witone/witone_02.jpg" alt="様々な活動や話題をサークルで共有しよう！"
+                <img src="/img/homepage/casestudy/witone/witone_02.jpg" alt="コミュニケーションの促進"
                      class="center-block img-responsive img-casestudy-sub"/>
                 <h4>コミュニケーションの促進</h4>
                 <div class="details">
@@ -92,7 +92,7 @@
                     </p>
 
                     <p>「中途入社の社員が組織に馴染むのに、通常３ヶ月くらいはかかっていたのですが、Goalous導入のおかげでその時間が半減したのではないかと思います。<br>
-                        あと、どんな組織も同じだと思いますが、中には人間関係の形成が得意でない人もいるかとおもいます。でもGoalousが、業務と人間関係の両方を同時進行で円滑にしてくれる。そこがいいのだと思います」（藤原さん）
+                        あと、どんな組織も同じだと思いますが、中には人間関係の形成が得意でない人もいるかと思います。でもGoalousが、業務と人間関係の両方を同時進行で円滑にしてくれる。そこがいいのだと思います」（藤原さん）
                     </p>
 
 
@@ -105,7 +105,7 @@
 
         <div class="item row flex">
             <div class="content col-md-7 col-sm-8 col-xs-12 center-block from-left col-left">
-                <img src="/img/homepage/casestudy/witone/witone_03.png" alt="写真によって活動の表現力が格段にあがります。"
+                <img src="/img/homepage/casestudy/witone/witone_03.png" alt="期待以上のうれしい効果"
                      class="center-block img-responsive img-casestudy-sub img-ui"/>
 
                 <h4>期待以上のうれしい効果</h4>
@@ -151,7 +151,7 @@
 
         <div class="item row flex">
             <div class="content col-md-7 col-sm-8 col-xs-12 center-block col-xs-offset-0 from-right col-right">
-                <img src="/img/homepage/casestudy/witone/witone_04.png" alt="様々な活動や話題をサークルで共有しよう！"
+                <img src="/img/homepage/casestudy/witone/witone_04.png" alt="ネガティブ発言はゼロ"
                      class="center-block img-responsive img-casestudy-sub img-ui"/>
                 <h4>ネガティブ発言はゼロ</h4>
                 <div class="details">
@@ -187,7 +187,7 @@
 
         <div class="item row flex">
             <div class="content col-md-7 col-sm-8 col-xs-12 center-block from-left col-left">
-                <img src="/img/homepage/casestudy/witone/witone_05.jpg" alt="評価？もちろんGoalousでできます。"
+                <img src="/img/homepage/casestudy/witone/witone_05.jpg" alt="人事評価にかかる時間が半減"
                      class="center-block img-responsive img-casestudy-sub"/>
                 <h4>人事評価にかかる時間が半減</h4>
                 <div class="details">
@@ -205,7 +205,7 @@
                     </p>
 
                     <p>
-                        「Goalousの評価機能を使えば、ゴールとアクション。つまり、目標と工程が一覧できるので、各自の業務内容の評価が一瞬でできるわけです。AさんとBさんは評価済みで、Cさんはまだ終わっていないといったステイタスもこちらからは確認できるので、間違いや業務の重複も極端に減ります。また、ゴールへのアクションの中に極端なマイナス事項が仮にあったとしても、全体が一覧できるので、ひとつのマイナスにに引っ張られることなく、公平な評価ができます。あと査定時期の直前にいきなり頑張るみたいな人もいますが、そうしたズルさも見え見え（笑い）実は、Goalousの導入を検討するさい、私が一番注目したのはこの人事評価機能です」（藤原さん）
+                        「Goalousの評価機能を使えば、ゴールとアクション。つまり、目標と工程が一覧できるので、各自の業務内容の評価が一瞬でできるわけです。AさんとBさんは評価済みで、Cさんはまだ終わっていないといったステイタスもこちらからは確認できるので、間違いや業務の重複も極端に減ります。また、ゴールへのアクションの中に極端なマイナス事項が仮にあったとしても、全体が一覧できるので、ひとつのマイナスに引っ張られることなく、公平な評価ができます。あと査定時期の直前にいきなり頑張るみたいな人もいますが、そうしたズルさも見え見え（笑い）実は、Goalousの導入を検討するさい、私が一番注目したのはこの人事評価機能です」（藤原さん）
 
                     </p>
 

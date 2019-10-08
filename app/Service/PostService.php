@@ -984,6 +984,12 @@ class PostService extends AppService
                     }
                 } else if (isset($file['is_video'])) {
                     // VideoStream (file is already in transcode)
+                    /** @var VideoStreamService $VideoStreamService */
+                    $VideoStreamService = ClassRegistry::init('VideoStreamService');
+                    if (!$VideoStreamService->isVideoStreamBelongsToTeam($file['video_stream_id'], $teamId)) {
+                        // If video_stream is not belongs to team, skip adding to resource.
+                        continue;
+                    }
                     if ($isDraft) {
                         $postResource = $PostResourceService->addResourceDraft(
                             $postId,

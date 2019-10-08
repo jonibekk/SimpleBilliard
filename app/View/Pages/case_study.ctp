@@ -50,11 +50,11 @@ $meta_features = [
     ],
     [
         "property" => "og:url",
-        "content"  => "https://www.goalous.com/features/",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME). $_SERVER['REQUEST_URI'],
     ],
     [
         "property" => "og:image",
-        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo.jpg",
+        "content"  => AppUtil::fullBaseUrl(ENV_NAME)."/img/homepage/promo_".$company.".png",
     ],
     [
         "property" => "og:site_name",
@@ -87,6 +87,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
 <?= $this->element('CaseStudy/casestudy_nav') ?>
 <?= $this->element('CaseStudy/'.$company) ?>
+
 
 <!--START-contact-->
 <section id="contact_section">
