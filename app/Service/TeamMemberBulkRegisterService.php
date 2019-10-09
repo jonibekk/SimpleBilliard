@@ -161,12 +161,12 @@ class TeamMemberBulkRegisterService
                     $this->TransactionManager->commit();
                 }
             } catch (\Throwable $e) {
+                $this->TransactionManager->rollback();
                 if ($e instanceof ExcludeException) {
                     $this->aggregate->addExcludedCount();
                 } else {
                     $this->aggregate->addFailedCount();
                 }
-                $this->TransactionManager->rollback();
                 $errorMessage = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
                 $this->addLog($errorMessage);
             } finally {
@@ -326,17 +326,17 @@ class TeamMemberBulkRegisterService
             throw new \RuntimeException('The file_name parameter is required. (--file_name <file_name>)');
         }
 
-        if (!$this->s3Instance->doesBucketExist($this->getBucketName())) {
+        if (!$this->getS3Instance()->doesBucketExist($this->getBucketName())) {
             throw new \RuntimeException('The log s3 bucket does not exist. -> ' . $this->getBucketName());
         }
 
-        if (!$this->s3Instance->doesObjectExist($this->getBucketName(), $this->getPath())) {
+        if (!$this->getS3Instance()->doesObjectExist($this->getBucketName(), $this->getPath())) {
             throw new \RuntimeException('The log s3 csv file does not exist. -> ' . $this->getBucketName() . '/' . $this->getPath());
         }
 
         $teamId = $this->getTeamId();
         if ($teamId <= 0) {
-            throw new \RuntimeException('The team_id parameter is required. (--team_id <team_id>)');
+            throw new \RuntimeException('The team_id parameter is invalid. (--team_id <team_id>)');
         }
 
         $team = $this->Team->findById($teamId);
@@ -355,12 +355,23 @@ class TeamMemberBulkRegisterService
         }
     }
 
-    protected function getCsvRecords()
+    /**
+     * @return array
+     */
+    protected function getCsvRecords(): array
     {
         $reader = new S3Reader($this->getBucketName(), $this->getPath());
         $reader->setHeader(self::CSV_HEADERS);
 
         return $reader->getRecords();
+    }
+
+    /**
+     * @return \Aws\S3\S3Client
+     */
+    protected function getS3Instance(): \Aws\S3\S3Client
+    {
+        return $this->s3Instance;
     }
 
     /**
