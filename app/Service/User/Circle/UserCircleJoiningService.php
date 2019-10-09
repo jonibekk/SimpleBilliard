@@ -17,18 +17,23 @@ class UserCircleJoiningService
     }
 
     /**
-     * @param array $data
+     * @param int $userId
+     * @param int $teamId
+     * @param int $circleId
      * @return array|mixed
      * @throws Exception
      */
-    public function addMember(array $data)
+    public function addMember(int $userId, int $teamId, int $circleId)
     {
         $this->getCircleMemberEntity()->create();
-        $result = $this->getCircleMemberEntity()->save($data);
+        $result = $this->getCircleMemberEntity()->save([
+            'circle_id' => $circleId,
+            'team_id' => $teamId,
+            'user_id' => $userId
+        ]);
 
-        $circleId = Hash::get($data, 'circle_id');
         $this->getCircleMemberEntity()->updateCounterCache(['circle_id' => $circleId]);
-        $this->getGlRedisEntity()->deleteMultiCircleMemberCount([$circleId]);
+        $this->getGlRedis()->deleteMultiCircleMemberCount([$circleId]);
 
         return $result;
     }
@@ -54,7 +59,7 @@ class UserCircleJoiningService
     /**
      * @return GlRedis
      */
-    protected function getGlRedisEntity(): GlRedis
+    protected function getGlRedis(): GlRedis
     {
         return $this->GlRedis;
     }

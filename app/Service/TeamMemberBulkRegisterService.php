@@ -422,11 +422,7 @@ class TeamMemberBulkRegisterService
             throw new \RuntimeException('Already registered as a circle member.');
         }
 
-        $result = !!$this->userCircleJoiningService->addMember([
-            'circle_id' => $circleId,
-            'team_id' => $teamId,
-            'user_id' => $userId
-        ]);
+        $result = !!$this->userCircleJoiningService->addMember($userId, $teamId, $circleId);
 
         if ($result === false) {
             $this->getAggregateModel()->addFailedCount();
