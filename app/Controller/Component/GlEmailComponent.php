@@ -502,12 +502,7 @@ class GlEmailComponent extends Component
         string $email,
         ?string $password
     ): void {
-        // TODO: 仕様が決まり次第、URLを入れ替える
-        if ($password === null) { // existing user
-            $url = 'https://' . ENV_NAME . '.goalous.com/others?team_id=' . $teamId;
-        } else { // new user
-            $url = 'https://' . ENV_NAME . '.goalous.com/users/accept_invite/***';
-        }
+        $url = 'https://' . ENV_NAME . '.goalous.com/users/agree_and_login?team_id=' . $teamId;
         $item = compact('teamName', 'email', 'password', 'url');
         $this->SendMail->SendMailToUser->current_team_id = $teamId;
         $this->SendMail->saveMailData($userId, SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION, $item, null, $teamId);
