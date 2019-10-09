@@ -148,7 +148,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $fileName = Hash::get($params, 'file_name', '');
         $dryRun = array_key_exists('dry-run', $params);
 
-        $s3ClientMock = \Mockery::mock(\Aws\S3\S3Client::class);
+        $s3ClientMock = \Mockery::mock(\Aws\S3\S3Client::class)->makePartial();
         $s3ClientMock->shouldReceive('doesBucketExist')->andReturn($doesBucketExist);
         $s3ClientMock->shouldReceive('doesObjectExist')->andReturn($doesObjectExist);
 
