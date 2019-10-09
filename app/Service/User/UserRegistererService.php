@@ -24,12 +24,12 @@ class UserRegistererService
      */
     public function signUpFromCsv(UserSignUpFromCsv $signUpModel): int
     {
-        $this->getUserEntity()->create();
-        $user = $this->getUserEntity()->save([
+        $this->User->create();
+        $user = $this->User->save([
             'default_team_id' => $signUpModel->getDefaultTeamId(),
             'first_name' => $signUpModel->getFirstName(),
             'last_name' => $signUpModel->getLastName(),
-            'password' => $this->getUserEntity()->generateHash($signUpModel->getPassword()),
+            'password' => $this->User->generateHash($signUpModel->getPassword()),
             'update_email_flg' => $signUpModel->getUpdateEmailFlg(),
             'timezone' => $signUpModel->getTimezone(),
             'language' => $signUpModel->getLanguage(),
@@ -38,32 +38,16 @@ class UserRegistererService
         ]);
 
         $userId = Hash::get($user, 'User.id');
-        $this->getEmailEntity()->create();
-        $email = $this->getEmailEntity()->save([
+        $this->Email->create();
+        $email = $this->Email->save([
             'user_id' => $userId,
             'email' => $signUpModel->getEmail(),
             'email_verified' => $signUpModel->getEmailVerified()
         ]);
 
         $primaryEmailId = Hash::get($email, 'Email.id');
-        $this->getUserEntity()->save(['User' => ['primary_email_id' => $primaryEmailId]]);
+        $this->User->save(['User' => ['primary_email_id' => $primaryEmailId]]);
 
         return $userId;
-    }
-
-    /**
-     * @return User
-     */
-    protected function getUserEntity(): User
-    {
-        return $this->User;
-    }
-
-    /**
-     * @return Email
-     */
-    protected function getEmailEntity(): Email
-    {
-        return $this->Email;
     }
 }
