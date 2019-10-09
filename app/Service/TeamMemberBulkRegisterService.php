@@ -36,7 +36,7 @@ class TeamMemberBulkRegisterService
     /** @var int */
     private $teamId;
     /** @var string */
-    private $path;
+    private $fileName;
     /** @var bool */
     private $dryRun;
     /** @var TeamMemberBulkRegister */
@@ -69,12 +69,12 @@ class TeamMemberBulkRegisterService
     /**
      * TeamMemberBulkRegisterService constructor.
      * @param int $teamId
-     * @param string $path
+     * @param string $fileName
      * @param bool $dryRun
      */
-    public function __construct(int $teamId, string $path, bool $dryRun) {
+    public function __construct(int $teamId, string $fileName, bool $dryRun) {
         $this->teamId = $teamId;
-        $this->path = $path;
+        $this->fileName = $fileName;
         $this->dryRun = $dryRun;
         $this->registerModel = new TeamMemberBulkRegister();
         $this->aggregateModel = new TeamMemberBulkRegisterAggregate();
@@ -201,6 +201,8 @@ class TeamMemberBulkRegisterService
             $this->addLog('[INFO] This is dry-run');
         }
 
+        // TODO Required check of parameter file_name
+
         $this->validateLogStorageLocation();
 
         $teamId = $this->getTeamId();
@@ -304,7 +306,7 @@ class TeamMemberBulkRegisterService
      */
     protected function getPath(): string
     {
-        return self::CSV_PATH_PREFIX . $this->path;
+        return self::CSV_PATH_PREFIX . $this->fileName;
     }
 
     /**

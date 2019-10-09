@@ -19,9 +19,9 @@ class TeamMemberBulkRegisterShell extends AppShell
                 'help'    => 'This is target team id.',
                 'default' => null,
             ],
-            'path' => [
-                'short'   => 'p',
-                'help'    => 'This is csv file path.',
+            'file_name' => [
+                'short'   => 'f',
+                'help'    => 'This is csv file name.',
                 'default' => '',
             ],
             'dry-run' => [
@@ -36,9 +36,9 @@ class TeamMemberBulkRegisterShell extends AppShell
     public function main()
     {
         $teamId = (int) Hash::get($this->params, 'team_id');
-        $path = Hash::get($this->params, 'path');
+        $fileName = Hash::get($this->params, 'file_name');
         $dryRun = array_key_exists('dry-run', $this->params);
-        $service = new TeamMemberBulkRegisterService($teamId, $path, $dryRun);
+        $service = new TeamMemberBulkRegisterService($teamId, $fileName, $dryRun);
 
         try {
             $service->execute();
