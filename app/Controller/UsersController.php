@@ -185,6 +185,9 @@ class UsersController extends AppController
             return $this->render();
         }
 
+
+        // Prevent bulk registered user to login from "/users/login"
+        // if user have not login from "/users/agree_and_login" .
         $activeFlg = (int)$userInfo['active_flg'];
         $isUserActive = ($activeFlg === Enum\Model\User\ActiveFlg::ON);
 
@@ -192,9 +195,10 @@ class UsersController extends AppController
         $isNotAgreedToAnyTerm = (0 === $termOfServiceIdUserAgreed);
 
         if ($isUserActive && $isNotAgreedToAnyTerm) {
-            $this->Notification->outError(__("Please Agree to the term of service."));
+            $this->Notification->outError(__("Please agree to the term of service."));
             return $this->redirect('/users/agree_and_login');
         }
+
 
         $this->Session->write('preAuthPost', $this->request->data);
 
