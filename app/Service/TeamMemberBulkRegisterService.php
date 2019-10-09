@@ -326,11 +326,11 @@ class TeamMemberBulkRegisterService
             throw new \RuntimeException('The file_name parameter is required. (--file_name <file_name>)');
         }
 
-        if (!$this->getS3Instance()->doesBucketExist($this->getBucketName())) {
+        if (!$this->doesBucketExist()) {
             throw new \RuntimeException('The log s3 bucket does not exist. -> ' . $this->getBucketName());
         }
 
-        if (!$this->getS3Instance()->doesObjectExist($this->getBucketName(), $this->getPath())) {
+        if (!$this->doesObjectExist()) {
             throw new \RuntimeException('The log s3 csv file does not exist. -> ' . $this->getBucketName() . '/' . $this->getPath());
         }
 
@@ -367,11 +367,19 @@ class TeamMemberBulkRegisterService
     }
 
     /**
-     * @return \Aws\S3\S3Client
+     * @return bool
      */
-    protected function getS3Instance(): \Aws\S3\S3Client
+    protected function doesBucketExist(): bool
     {
-        return $this->s3Instance;
+        return $this->getS3Instance()->doesBucketExist($this->getBucketName());
+    }
+
+    /**
+     * @return bool
+     */
+    protected function doesObjectExist(): bool
+    {
+       return $this->getS3Instance()->doesObjectExist($this->getBucketName(), $this->getPath());
     }
 
     /**
@@ -573,5 +581,13 @@ class TeamMemberBulkRegisterService
     protected function getBucketName(): string
     {
         return sprintf(self::BUCKET_NAME_FORMAT, ENV_NAME);
+    }
+
+    /**
+     * @return \Aws\S3\S3Client
+     */
+    private function getS3Instance(): \Aws\S3\S3Client
+    {
+        return $this->s3Instance;
     }
 }

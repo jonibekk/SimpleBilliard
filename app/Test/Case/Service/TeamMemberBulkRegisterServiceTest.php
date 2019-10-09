@@ -144,8 +144,6 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         bool $doesObjectExist,
         string $confirmTeamName
     ) {
-        // TODO
-        $this->markTestIncomplete('Somehow an error occurs in CLI.');
         $teamId = (int) Hash::get($params, 'team_id');
         $fileName = Hash::get($params, 'file_name', '');
         $dryRun = array_key_exists('dry-run', $params);
@@ -154,13 +152,14 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $s3ClientMock->shouldReceive('doesBucketExist')->andReturn($doesBucketExist);
         $s3ClientMock->shouldReceive('doesObjectExist')->andReturn($doesObjectExist);
 
-        $service_mock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$teamId, $fileName, $dryRun])
+        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$teamId, $fileName, $dryRun])
             ->shouldAllowMockingProtectedMethods()->makePartial();
-        $service_mock->shouldReceive('getS3Instance')->andReturn($s3ClientMock);
-        $service_mock->shouldReceive('confirmTeamName')->andReturn($confirmTeamName);
-        $service_mock->shouldReceive('validParameter')->passthru();
+        $serviceMock->shouldReceive('doesBucketExist')->andReturn($doesBucketExist);
+        $serviceMock->shouldReceive('doesObjectExist')->andReturn($doesObjectExist);
+        $serviceMock->shouldReceive('confirmTeamName')->andReturn($confirmTeamName);
+        $serviceMock->shouldReceive('validParameter')->passthru();
 
-        $service_mock->validParameter();
+        $serviceMock->validParameter();
     }
 
     /**
@@ -192,14 +191,14 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $glMailMock = \Mockery::mock(GlEmailComponent::class);
         $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(count($records));
 
-        $service_mock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
+        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
             ->shouldAllowMockingProtectedMethods()->makePartial();
-        $service_mock->shouldReceive('execute')->passthru();
-        $service_mock->shouldReceive('validParameter')->once();
-        $service_mock->shouldReceive('getCsvRecords')->andReturn($records);
-        $service_mock->shouldReceive('getGlMail')->andReturn($glMailMock);
+        $serviceMock->shouldReceive('execute')->passthru();
+        $serviceMock->shouldReceive('validParameter')->once();
+        $serviceMock->shouldReceive('getCsvRecords')->andReturn($records);
+        $serviceMock->shouldReceive('getGlMail')->andReturn($glMailMock);
 
-        $service_mock->execute();
+        $serviceMock->execute();
 
         $csvDataEmailMap = [];
         foreach ($records as $record) {
@@ -269,14 +268,14 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
 
         $glMailMock = \Mockery::mock(GlEmailComponent::class);
         $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(0);
-        $service_mock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
+        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
             ->shouldAllowMockingProtectedMethods()->makePartial();
-        $service_mock->shouldReceive('execute')->passthru();
-        $service_mock->shouldReceive('validParameter')->once();
-        $service_mock->shouldReceive('getCsvRecords')->andReturn($records);
-        $service_mock->shouldReceive('getGlMail')->andReturn($glMailMock);
+        $serviceMock->shouldReceive('execute')->passthru();
+        $serviceMock->shouldReceive('validParameter')->once();
+        $serviceMock->shouldReceive('getCsvRecords')->andReturn($records);
+        $serviceMock->shouldReceive('getGlMail')->andReturn($glMailMock);
 
-        $service_mock->execute();
+        $serviceMock->execute();
 
         $csvDataEmailMap = [];
         foreach ($records as $record) {
