@@ -45,11 +45,7 @@ class S3Reader
     public function getRecords(): array
     {
         $header = $this->getHeader();
-        if (empty($header)) {
-            return $this->getOriginRecords();
-        }
-
-        $columnCount = count($header);
+        $headerColumnCount = count($header);
 
         $records = [];
         foreach ($this->getOriginRecords() as $index => $record) {
@@ -58,13 +54,17 @@ class S3Reader
                 continue;
             }
 
-            if ($columnCount !== count($record)) {
+            if ($headerColumnCount > 0 && $headerColumnCount !== count($record)) {
                 throw new \RuntimeException('The number of CSV items is incorrect. (line ' . ($index + 2). ')');
             }
 
             foreach ($record as $index => $value) {
-                $key = $header[$index];
-                $data[$key] = $value;
+                if (empty($header)) {
+                    $data[] = $value;
+                } else {
+                    $key = $header[$index];
+                    $data[$key] = $value;
+                }
             }
             $records[] = $data;
         }
@@ -73,57 +73,9 @@ class S3Reader
     }
 
     /**
-     * @return array
-     */
-    private function getOriginRecords(): array
-    {
-        return $this->originRecords;
-    }
-
-    /**
-     * @return array
-     */
-    private function getHeader(): array
-    {
-        return $this->header;
-    }
-
-    /**
-     * @return bool
-     */
-    private function doesBucketExist(): bool
-    {
-        return $this->s3Instance->doesBucketExist($this->bucket, $this->path);
-    }
-
-    /**
-     * @return \Aws\Result
-     */
-    private function getS3Object(): \Aws\Result
-    {
-        $s3Instance = AwsClientFactory::createS3ClientForFileStorage();
-        return $s3Instance->getObject([
-            'Bucket' => $this->bucket,
-            'Key'    => $this->path,
-        ]);
-    }
-
-    /**
-     * @param \Aws\Result $response
-     */
-    private function responseValidate(\Aws\Result $response): void
-    {
-        $contentType = $response['@metadata']['headers']['content-type'] ?? '';
-        if ($contentType !== 'text/csv') {
-            throw new \RuntimeException('It is not a csv format file.');
-        }
-    }
-
-    /**
-     * initialize
      * @return void
      */
-    private function initialize(): void
+    protected function initialize(): void
     {
         if (!$this->doesBucketExist()) {
             throw new \RuntimeException('Bucket not exist.');
@@ -158,5 +110,51 @@ class S3Reader
         fclose($handle);
 
         $this->originRecords = $data;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getOriginRecords(): array
+    {
+        return $this->originRecords;
+    }
+
+    /**
+     * @return array
+     */
+    private function getHeader(): array
+    {
+        return $this->header;
+    }
+
+    /**
+     * @return bool
+     */
+    private function doesBucketExist(): bool
+    {
+        return $this->s3Instance->doesBucketExist($this->bucket, $this->path);
+    }
+
+    /**
+     * @return \Aws\Result
+     */
+    private function getS3Object(): \Aws\Result
+    {
+        return $this->s3Instance->getObject([
+            'Bucket' => $this->bucket,
+            'Key'    => $this->path,
+        ]);
+    }
+
+    /**
+     * @param \Aws\Result $response
+     */
+    private function responseValidate(\Aws\Result $response): void
+    {
+        $contentType = $response['@metadata']['headers']['content-type'] ?? '';
+        if ($contentType !== 'text/csv') {
+            throw new \RuntimeException('It is not a csv format file.');
+        }
     }
 }
