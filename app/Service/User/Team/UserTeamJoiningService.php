@@ -21,8 +21,8 @@ class UserTeamJoiningService
      */
     public function addMember(int $userId, int $teamId, bool $adminFlg)
     {
-        $this->getTeamMemberEntity()->create();
-        return $this->getTeamMemberEntity()->save([
+        $this->TeamMember->create();
+        return $this->TeamMember->save([
             'user_id' => $userId,
             'team_id' => $teamId,
             'admin_flg' => $adminFlg,
@@ -44,14 +44,6 @@ class UserTeamJoiningService
             ]
         ];
 
-        return !!$this->getTeamMemberEntity()->find('first', $options);
-    }
-
-    /**
-     * @return TeamMember
-     */
-    protected function getTeamMemberEntity(): TeamMember
-    {
-        return $this->TeamMember;
+        return !!$this->TeamMember->find('first', $options);
     }
 }
