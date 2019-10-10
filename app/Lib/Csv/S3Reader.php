@@ -55,7 +55,7 @@ class S3Reader
             }
 
             if ($headerColumnCount > 0 && $headerColumnCount !== count($record)) {
-                continue;
+                throw new \RuntimeException('The number of CSV items is incorrect. (line ' . ($index + 2). ')');
             }
 
             foreach ($record as $index => $value) {
