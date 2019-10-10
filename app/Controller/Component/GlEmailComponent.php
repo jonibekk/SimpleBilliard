@@ -443,9 +443,11 @@ class GlEmailComponent extends Component
      *
      * @param        $id
      * @param string $method_name
+     * @param string|null $language
      */
-    public function execSendMailById($id, $method_name = "send_mail_by_id")
+    public function execSendMailById($id, $method_name = "send_mail_by_id", $language = null)
     {
+        $language = $language ?? Configure::read('Config.language');
         $set_web_env = "";
         $nohup = "nohup ";
         if (ENV_NAME == 'local') {
@@ -458,7 +460,7 @@ class GlEmailComponent extends Component
         $cmd = " Operation.send_mail {$method_name}";
         $cmd .= " -i " . $id;
         $cmd .= " -s " . $this->Session->id();
-        $cmd .= " -l " . Configure::read('Config.language');
+        $cmd .= " -l " . $language;
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
@@ -482,5 +484,28 @@ class GlEmailComponent extends Component
         $item = compact('url');
         $this->SendMail->saveMailData($toUid, $template, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $teamId
+     * @param string $teamName
+     * @param string $language
+     * @param string $email
+     * @param string|null $password
+     */
+    public function sendMailTeamMemberBulkRegistration(
+        int $userId,
+        int $teamId,
+        string $teamName,
+        string $language,
+        string $email,
+        ?string $password
+    ): void {
+        $url = 'https://' . ENV_NAME . '.goalous.com/users/agree_and_login?team_id=' . $teamId;
+        $item = compact('teamName', 'email', 'password', 'url');
+        $this->SendMail->SendMailToUser->current_team_id = $teamId;
+        $this->SendMail->saveMailData($userId, SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION, $item, null, $teamId);
+        $this->execSendMailById($this->SendMail->id, 'send_mail_by_id', $language);
     }
 }

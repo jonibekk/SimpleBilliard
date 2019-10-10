@@ -177,6 +177,9 @@ msgstr "このデバイスは最新バージョンではありません。"
 msgid "This email address doesn't exist."
 msgstr "このメールアドレスは存在しません。"
 
+msgid "【Log in URL】"
+msgstr "【ログインURL】"
+
 msgid "This email address isn't yours."
 msgstr "このメールアドレスはあなたのものではありません。"
 
@@ -4366,8 +4369,20 @@ msgstr "なお、このまま有料プランへのご契約がない場合は、
 msgid "Hello."
 msgstr "こんにちは。"
 
+msgid "Hello!"
+msgstr "こんにちは！"
+
 msgid "%s sent you an invitation to team %s."
 msgstr "%sがGoalous内のチーム「%s」へあなたを招待しています。"
+
+msgid "You have a new invitation from the %s team in Goalous."
+msgstr "Goalous内のチーム「%s」にあなたは招待されています。"
+
+msgid "You have been invited to the team. Please use username and password given below to login in the following URL."
+msgstr "この招待に応じる場合は、次のIDとパスワードを利用して、以下のURLからログインしてください。"
+
+msgid "Email Address: %s"
+msgstr "メールアドレス: %s"
 
 msgid "Click the below link to accept the invitation."
 msgstr "この招待に応じる場合は、次のリンクをクリックしてください。"
