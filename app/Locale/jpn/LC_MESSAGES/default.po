@@ -5970,3 +5970,6 @@ msgstr "翻訳言語はチームごとに設定されます"
 
 msgid "Change default"
 msgstr "デフォルト設定を変更する"
+
+msgid "Please agree to the term of service."
+msgstr "規約に同意してください"
