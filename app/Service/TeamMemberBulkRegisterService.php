@@ -119,13 +119,13 @@ class TeamMemberBulkRegisterService
             $teamAllCircleId = $this->getTeamAllCircleId();
 
             $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
-        } catch (\Throwable $e) {
-            throw new $e($e->getMessage());
-        } finally {
             if (!$this->isDryRun()) {
                 $this->cleanCache();
                 $this->addLog('Cleared cache.');
             }
+            $this->addAggregateLog();
+        } catch (\Throwable $e) {
+            throw new $e($e->getMessage());
         }
     }
 
@@ -282,7 +282,17 @@ class TeamMemberBulkRegisterService
      */
     public function outputLog(): string
     {
-        return implode("\n", array_merge($this->getlog(), $this->getAggregateLog())) . "\n";
+        return implode("\n", $this->getlog()) . "\n";
+    }
+
+    /**
+     * @return void
+     */
+    protected function addAggregateLog(): void
+    {
+        foreach ($this->getAggregateLog() as $log) {
+            $this->addLog($log);
+        }
     }
 
     /**
