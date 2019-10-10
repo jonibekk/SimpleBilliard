@@ -55,7 +55,7 @@ class UserTeamJoiningServiceTest extends GoalousTestCase
                 'user_id' => $this->userId,
                 'team_id' => $this->teamId,
             ],
-            'fields' => ['id', 'user_id', 'team_id']
+            'fields' => ['id', 'user_id', 'team_id', 'admin_flg']
         ]);
 
         $this->assertEquals($resultId, Hash::get($actual, 'TeamMember.id'));

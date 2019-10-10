@@ -19,9 +19,11 @@ App::import('Service', 'TeamMemberBulkRegisterService');
  * @property Circle $Circle
  * @property CircleMember $CircleMember
  * @property int $freeTrialTeamId
- * @property float freeTrialTeamTimeZone
+ * @property int $otherFreeTrialTeamId1
+ * @property float $commonTeamTimeZone
  * @property int $notFreeTrialTeamId
  * @property int $teamAllCircleId
+ * @property int $other1TeamAllCircleId
  */
 class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
 {
@@ -53,9 +55,13 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
 
         $this->freeTrialTeamId = 1;
         $this->notFreeTrialTeamId = 2;
-        $this->freeTrialTeamTimeZone = Hash::get($this->createFreeTrialTeam($this->freeTrialTeamId), 'Team.timezone');
+        $this->otherFreeTrialTeamId1 = 3;
+
+        $this->commonTeamTimeZone = Hash::get($this->createFreeTrialTeam($this->freeTrialTeamId), 'Team.timezone');
         $this->createNotFreeTrialTeam($this->notFreeTrialTeamId);
+        $this->createFreeTrialTeam($this->otherFreeTrialTeamId1);
         $this->teamAllCircleId = Hash::get($this->createTeamAllCircle($this->freeTrialTeamId), 'Circle.id');
+        $this->other1TeamAllCircleId = Hash::get($this->createTeamAllCircle($this->otherFreeTrialTeamId1), 'Circle.id');
     }
 
     /**
@@ -181,23 +187,160 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
      * @param array $records
      * @dataProvider dataProviderExecute
      */
+    public function testExecuteDryRun(array $records)
+    {
+        $fileName = 'hoge.csv';
+        $dryRun = true;
+
+        // Do not send email
+        $glMailMock = \Mockery::mock(GlEmailComponent::class);
+        $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(0);
+
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        $this->assertSame(count($records), $serviceMock->getAggregate()->getNewUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExistUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getFailedCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExcludedCount());
+
+        $csvDataEmailMap = [];
+        foreach ($records as $record) {
+            $csvDataEmailMap[$record['email']] = $record;
+        }
+
+        $registedCount = $this->Email->find('count', [
+            'conditions' => ['Email.email' => array_keys($csvDataEmailMap)],
+            'contain'    => ['User']
+        ]);
+
+        $this->assertSame(0, $registedCount);
+    }
+
+    /**
+     * @group execute
+     * @param array $records
+     * @dataProvider dataProviderExecute
+     */
     public function testExecuteAllNewUser(array $records)
     {
         $fileName = 'hoge.csv';
         $dryRun = false;
 
+        // Send email to all CSV users
         $glMailMock = \Mockery::mock(GlEmailComponent::class);
         $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(count($records));
 
-        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
-            ->shouldAllowMockingProtectedMethods()->makePartial();
-        $serviceMock->shouldReceive('execute')->passthru();
-        $serviceMock->shouldReceive('validParameter')->once();
-        $serviceMock->shouldReceive('getCsvRecords')->andReturn($records);
-        $serviceMock->shouldReceive('getGlMail')->andReturn($glMailMock);
-
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
         $serviceMock->execute();
 
+        $this->assertSame(count($records), $serviceMock->getAggregate()->getNewUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExistUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getFailedCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExcludedCount());
+
+        $this->checkSavedData($records);
+    }
+
+    /**
+     * @group execute
+     * @param array $records
+     * @dataProvider dataProviderExecute
+     */
+    public function testExecuteAllExistUserJoinedOtherTeam(array $records)
+    {
+        $fileName = 'hoge.csv';
+        $dryRun = false;
+
+        // Email all teams to all CSV users
+        $glMailMock = \Mockery::mock(GlEmailComponent::class);
+        $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(count($records) * 2);
+
+        // Join the first team
+        $serviceMock = $this->createServiceMock($this->otherFreeTrialTeamId1, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        // Join the second team
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        $this->assertSame(0, $serviceMock->getAggregate()->getNewUserCount());
+        $this->assertSame(count($records), $serviceMock->getAggregate()->getExistUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getFailedCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExcludedCount());
+
+        $this->checkSavedData($records);
+    }
+
+    /**
+     * @group execute
+     * @param array $records
+     * @dataProvider dataProviderExecute
+     */
+    public function testExecuteAllExistUserAlreadyJoinedSameTeam(array $records)
+    {
+        $fileName = 'hoge.csv';
+        $dryRun = false;
+
+        // Email first team to all CSV users
+        $glMailMock = \Mockery::mock(GlEmailComponent::class);
+        $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(count($records));
+
+        // Join the first team
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        // Join the first team again
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        $this->assertSame(0, $serviceMock->getAggregate()->getNewUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExistUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getFailedCount());
+        $this->assertSame(count($records), $serviceMock->getAggregate()->getExcludedCount());
+
+        $this->checkSavedData($records);
+    }
+
+    /**
+     * @group execute
+     * @param array $records
+     * @dataProvider dataProviderExecute
+     */
+    public function testExecuteMixedNewUserAndExistUser(array $records)
+    {
+        $fileName = 'hoge.csv';
+        $dryRun = false;
+
+        $totalCsvUserCount = count($records);
+        $preRegistryCount = 2;
+        $preRegistryRecords = array_slice($records , 0, $preRegistryCount);
+
+        // Send email to 2 users registered in the first team
+        // Send email to the second team to all CSV users
+        $glMailMock = \Mockery::mock(GlEmailComponent::class);
+        $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times($totalCsvUserCount + $preRegistryCount);
+
+        // Join the first team
+        $serviceMock = $this->createServiceMock($this->otherFreeTrialTeamId1, $fileName, $dryRun, $preRegistryRecords, $glMailMock);
+        $serviceMock->execute();
+
+        $newRegistryCount = count($records) - $preRegistryCount;
+
+        // Join the second team
+        $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records, $glMailMock);
+        $serviceMock->execute();
+
+        $this->assertSame($newRegistryCount, $serviceMock->getAggregate()->getNewUserCount());
+        $this->assertSame($preRegistryCount, $serviceMock->getAggregate()->getExistUserCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getFailedCount());
+        $this->assertSame(0, $serviceMock->getAggregate()->getExcludedCount());
+
+        $this->checkSavedData($records);
+    }
+
+    private function checkSavedData(array $records)
+    {
         $csvDataEmailMap = [];
         foreach ($records as $record) {
             $csvDataEmailMap[$record['email']] = $record;
@@ -229,7 +372,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
             $this->assertSame(Hash::get($csvDataRecord, 'first_name'), $firstName);
             $this->assertSame(Hash::get($csvDataRecord, 'language'), $language);
             $this->assertSame($this->freeTrialTeamId, $defaultTeamId);
-            $this->assertSame($this->freeTrialTeamTimeZone, $timezone);
+            $this->assertSame($this->commonTeamTimeZone, $timezone);
             $this->assertNotEmpty($password);
             $this->assertSame(TeamMemberBulkRegisterService::ACTIVE_FLG_YES, $activeFlg);
 
@@ -254,38 +397,16 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         }
     }
 
-    /**
-     * @group execute
-     * @param array $records
-     * @dataProvider dataProviderExecute
-     */
-    public function testExecuteAllNewUserDryRun(array $records)
+    private function createServiceMock(int $teamId, string $fileName, bool $dryRun, array $records, $glMailMock)
     {
-        $fileName = 'hoge.csv';
-        $dryRun = true;
-
-        $glMailMock = \Mockery::mock(GlEmailComponent::class);
-        $glMailMock->shouldReceive('sendMailTeamMemberBulkRegistration')->times(0);
-        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$this->freeTrialTeamId, $fileName, $dryRun])
+        $serviceMock = \Mockery::mock(TeamMemberBulkRegisterService::class, [$teamId, $fileName, $dryRun])
             ->shouldAllowMockingProtectedMethods()->makePartial();
         $serviceMock->shouldReceive('execute')->passthru();
         $serviceMock->shouldReceive('validParameter')->once();
         $serviceMock->shouldReceive('getCsvRecords')->andReturn($records);
         $serviceMock->shouldReceive('getGlMail')->andReturn($glMailMock);
 
-        $serviceMock->execute();
-
-        $csvDataEmailMap = [];
-        foreach ($records as $record) {
-            $csvDataEmailMap[$record['email']] = $record;
-        }
-
-        $registedCount = $this->Email->find('count', [
-            'conditions' => ['Email.email' => array_keys($csvDataEmailMap)],
-            'contain'    => ['User']
-        ]);
-
-        $this->assertSame(0, $registedCount);
+        return $serviceMock;
     }
 
     /**
@@ -312,7 +433,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
     {
         $this->Team->id = $teamId;
         return $this->Team->save([
-            'name' => 'FreeTrialTeam',
+            'name' => 'FreeTrialTeam' . $teamId,
             'timezone' => 9.0,
             'service_use_status' => ServiceUseStatus::FREE_TRIAL,
         ]);
@@ -328,9 +449,9 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $this->Circle->create();
         return $this->Circle->save([
             'team_id' => $teamId,
-            'name' => 'FreeTrialTeamTeamAllCircle',
+            'name' => 'FreeTrialTeamTeamAllCircle' . $teamId,
             'team_all_flg' => true,
-            'description' => 'Test Free Trial Team TeamAllCircle'
+            'description' => 'Test Free Trial Team TeamAllCircle' . $teamId
         ]);
     }
 

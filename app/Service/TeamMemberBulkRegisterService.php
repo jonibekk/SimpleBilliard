@@ -92,32 +92,40 @@ class TeamMemberBulkRegisterService
      */
     public function execute(): void
     {
-        $this->validParameter();
+        try {
+            $this->validParameter();
 
-        if ($this->isDryRun()) {
-            $this->addLog('[INFO] This is dry-run');
+            if ($this->isDryRun()) {
+                $this->addLog('[INFO] This is dry-run');
+            }
+
+            $teamId = $this->getTeamId();
+            $team = $this->getTeamEntity()->findById($teamId);
+            $teamName = Hash::get($team, 'Team.name');
+            $teamTimezone = Hash::get($team, 'Team.timezone');
+
+            $this->addLog('teamId: ' . $teamId);
+
+            $records = $this->getCsvRecords();
+            $this->addLog('Total User Count: ' . count($records));
+
+            $csvEmails = Hash::extract($records, '{n}.email');
+            $emailUserMap = Hash::combine(
+                $this->Email->findExistUsersByEmail($csvEmails),
+                '{n}.email',
+                '{n}.user_id'
+            );
+
+            $teamAllCircleId = $this->getTeamAllCircleId();
+
+            $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
+        } catch (\Throwable $e) {
+            throw new $e;
+        } finally {
+            if (!$this->isDryRun()) {
+                $this->cleanCache();
+            }
         }
-
-        $teamId = $this->getTeamId();
-        $team = $this->getTeamEntity()->findById($teamId);
-        $teamName = Hash::get($team, 'Team.name');
-        $teamTimezone = Hash::get($team, 'Team.timezone');
-
-        $this->addLog('teamId: ' . $teamId);
-
-        $records = $this->getCsvRecords();
-        $this->addLog('Total User Count: ' . count($records));
-
-        $csvEmails = Hash::extract($records, '{n}.email');
-        $emailUserMap = Hash::combine(
-            $this->Email->findExistUsersByEmail($csvEmails),
-            '{n}.email',
-            '{n}.user_id'
-        );
-
-        $teamAllCircleId = $this->getTeamAllCircleId();
-
-        $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
     }
 
     /**
@@ -163,9 +171,9 @@ class TeamMemberBulkRegisterService
             } catch (\Throwable $e) {
                 $this->TransactionManager->rollback();
                 if ($e instanceof ExcludeException) {
-                    $this->aggregate->addExcludedCount();
+                    $this->getAggregate()->addExcludedCount();
                 } else {
-                    $this->aggregate->addFailedCount();
+                    $this->getAggregate()->addFailedCount();
                 }
                 $errorMessage = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
                 $this->addLog($errorMessage);
@@ -244,11 +252,11 @@ class TeamMemberBulkRegisterService
         }
 
         if ($isNewUser) {
-            $this->aggregate->addSuccessCount();
-            $this->aggregate->addNewUserCount();
+            $this->getAggregate()->addSuccessCount();
+            $this->getAggregate()->addNewUserCount();
         } else {
-            $this->aggregate->addSuccessCount();
-            $this->aggregate->addExistUserCount();
+            $this->getAggregate()->addSuccessCount();
+            $this->getAggregate()->addExistUserCount();
         }
     }
 
@@ -277,6 +285,34 @@ class TeamMemberBulkRegisterService
     }
 
     /**
+     * @return bool
+     */
+    public function isDryRun(): bool
+    {
+        return $this->dryRun;
+    }
+
+    /**
+     * @return void
+     */
+    public function writeResult(): void
+    {
+        $this->s3Instance->putObject([
+            'Bucket' => $this->getBucketName(),
+            'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
+            'Body' => $this->outputLog()
+        ]);
+    }
+
+    /**
+     * @return TeamMemberBulkRegisterAggregate
+     */
+    protected function getAggregate(): TeamMemberBulkRegisterAggregate
+    {
+        return $this->aggregate;
+    }
+
+    /**
      * @param string $email
      * @return string
      */
@@ -297,24 +333,12 @@ class TeamMemberBulkRegisterService
     protected function getAggregateLog(): array
     {
         return [
-            'Success: ' . $this->aggregate->getSuccessCount(),
-            'New User: ' . $this->aggregate->getNewUserCount(),
-            'Exist User: ' . $this->aggregate->getExistUserCount(),
-            'Failed: ' . $this->aggregate->getFailedCount(),
-            'Excluded: ' . $this->aggregate->getExcludedCount()
+            'Success: ' . $this->getAggregate()->getSuccessCount(),
+            'New User: ' . $this->getAggregate()->getNewUserCount(),
+            'Exist User: ' . $this->getAggregate()->getExistUserCount(),
+            'Failed: ' . $this->getAggregate()->getFailedCount(),
+            'Excluded: ' . $this->getAggregate()->getExcludedCount()
         ];
-    }
-
-    /**
-     * @return void
-     */
-    public function writeResult(): void
-    {
-        $this->s3Instance->putObject([
-            'Bucket' => $this->getBucketName(),
-            'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
-            'Body' => $this->outputLog()
-        ]);
     }
 
     /**
@@ -428,14 +452,6 @@ class TeamMemberBulkRegisterService
     protected function getPath(): string
     {
         return self::CSV_PATH_PREFIX . $this->fileName;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDryRun(): bool
-    {
-        return $this->dryRun;
     }
 
     /**
@@ -589,5 +605,26 @@ class TeamMemberBulkRegisterService
     private function getS3Instance(): \Aws\S3\S3Client
     {
         return $this->s3Instance;
+    }
+
+    /**
+     * @return void
+     */
+    private function cleanCache(): void
+    {
+        $ignore_configs = [
+            'session',
+            'default',
+        ];
+
+        $config_list = Cache::configured();
+        foreach ($config_list as $value) {
+            if (in_array($value, $ignore_configs)) {
+                continue;
+            }
+            Cache::clear(false, $value);
+        }
+        clearCache();
+        $this->addLog('Cleared cache.');
     }
 }
