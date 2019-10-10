@@ -103,22 +103,6 @@ class S3ReaderTest extends GoalousTestCase
                     ['hoge@isao.co.jp', 'Hoge', 'Yamada', 'on', 'jpn'],
                     ['fuga@isao.co.jp', 'Fuga', 'John', 'off', 'eng', 'over'],
                     ['piyo@isao.co.jp', 'Piyo', 'Cheng', 'on', 'chn'],
-                ],
-                'expected' => [
-                    [
-                        'h1' => 'hoge@isao.co.jp',
-                        'h2' => 'Hoge',
-                        'h3' => 'Yamada',
-                        'h4' => 'on',
-                        'h5' => 'jpn'
-                    ],
-                    [
-                        'h1' => 'piyo@isao.co.jp',
-                        'h2' => 'Piyo',
-                        'h3' => 'Cheng',
-                        'h4' => 'on',
-                        'h5' => 'chn'
-                    ],
                 ]
             ],
             'abnormal: Many record columns' => [
@@ -127,8 +111,7 @@ class S3ReaderTest extends GoalousTestCase
                     ['hoge@isao.co.jp', 'Hoge', 'Yamada', 'on', 'jpn'],
                     ['fuga@isao.co.jp', 'Fuga', 'John', 'off', 'eng'],
                     ['piyo@isao.co.jp', 'Piyo', 'Cheng', 'on', 'chn'],
-                ],
-                'expected' => []
+                ]
             ],
         ];
     }
@@ -137,13 +120,13 @@ class S3ReaderTest extends GoalousTestCase
      * @group getRecords
      * @param array $header
      * @param array $records
-     * @param array $expected
      * @dataProvider dataProviderAbnormalGetRecords
+     * @expectedException \RuntimeException
      */
-    public function testGetRecordsAbnormal(array $header, array $records, array $expected)
+    public function testGetRecordsAbnormal(array $header, array $records)
     {
         $readerMock = $this->getS3ReaderMock($header, $records);
-        $this->assertEquals($expected, $readerMock->getRecords());
+        $readerMock->getRecords();
     }
 
     /**
