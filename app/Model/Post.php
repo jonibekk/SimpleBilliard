@@ -40,8 +40,6 @@ App::import('Model/Entity', 'PostEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
-use Goalous\Exception as GlException;
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Post\PostResourceType as PostResourceType;
 
 class Post extends AppModel

@@ -3,6 +3,7 @@ App::uses('BaseApiController', 'Controller/Api');
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TranslationLanguage', 'Model');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::import('Service', 'TranslationService');
@@ -83,7 +84,10 @@ class TranslationsController extends BaseApiController
         }
 
         if (!empty($language)) {
-            if (LangEnum::isValid($language)) {
+            /** @var TranslationLanguage $TranslationLanguage */
+            $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+            if ($TranslationLanguage->isValidLanguage($language)) {
                 /** @var TeamTranslationLanguage $TeamTranslationLanguage */
                 $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
                 if (!$TeamTranslationLanguage->isLanguageSupported($currentTeamId, $language)) {

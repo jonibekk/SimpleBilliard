@@ -2,7 +2,6 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('Translation', 'Model');
 
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 
@@ -17,17 +16,17 @@ class TranslationTest extends GoalousTestCase
         /** @var Translation $Translation */
         $Translation = ClassRegistry::init('Translation');
 
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::ACTION_POST(), 1, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 2, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ID));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::ACTION_POST(), 1, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 2, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, "id"));
 
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::MS);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), 1, "ms");
 
-        $this->assertTrue($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::ACTION_POST(), 1, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 2, LanguageEnum::MS));
-        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ID));
+        $this->assertTrue($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::ACTION_POST(), 1, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 2, "ms"));
+        $this->assertFalse($Translation->hasTranslation(TranslationContentType::CIRCLE_POST(), 1, "id"));
     }
 
     public function test_getTranslation_success()
@@ -37,7 +36,7 @@ class TranslationTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 202;
-        $language = LanguageEnum::DE;
+        $language = "de";
 
         $this->assertEmpty($Translation->getTranslation($contentType, $contentId, $language));
 
@@ -58,7 +57,7 @@ class TranslationTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 202;
-        $language = LanguageEnum::DE;
+        $language = "de";
         $body = "Danke";
 
         $Translation->createEntry($contentType, $contentId, $language);
@@ -83,7 +82,7 @@ class TranslationTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 202;
-        $language = LanguageEnum::DE;
+        $language = "de";
 
         $Translation->updateTranslationBody($contentType, $contentId, $language, 'Danke');
     }
@@ -96,19 +95,19 @@ class TranslationTest extends GoalousTestCase
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 202;
 
-        $Translation->createEntry($contentType, $contentId, LanguageEnum::ES);
-        $Translation->createEntry($contentType, $contentId, LanguageEnum::FR);
-        $Translation->createEntry($contentType, $contentId, LanguageEnum::IT);
+        $Translation->createEntry($contentType, $contentId, "es");
+        $Translation->createEntry($contentType, $contentId, "fr");
+        $Translation->createEntry($contentType, $contentId, "it");
 
-        $Translation->eraseTranslation($contentType, $contentId, LanguageEnum::ES);
-        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, LanguageEnum::ES));
-        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, LanguageEnum::FR));
-        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, LanguageEnum::IT));
+        $Translation->eraseTranslation($contentType, $contentId, "es");
+        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, "es"));
+        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, "fr"));
+        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, "it"));
 
-        $Translation->eraseTranslation($contentType, $contentId, LanguageEnum::FR);
-        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, LanguageEnum::ES));
-        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, LanguageEnum::FR));
-        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, LanguageEnum::IT));
+        $Translation->eraseTranslation($contentType, $contentId, "fr");
+        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, "es"));
+        $this->assertFalse($Translation->hasTranslation($contentType, $contentId, "fr"));
+        $this->assertTrue($Translation->hasTranslation($contentType, $contentId, "it"));
     }
 
     public function test_eraseAllTranslations_success()
@@ -118,14 +117,14 @@ class TranslationTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
 
-        $Translation->createEntry($contentType, 202, LanguageEnum::ES);
-        $Translation->createEntry($contentType, 202, LanguageEnum::FR);
-        $Translation->createEntry($contentType, 209, LanguageEnum::ES);
+        $Translation->createEntry($contentType, 202, "es");
+        $Translation->createEntry($contentType, 202, "fr");
+        $Translation->createEntry($contentType, 209, "es");
 
         $Translation->eraseAllTranslations($contentType, 202);
-        $this->assertFalse($Translation->hasTranslation($contentType, 202, LanguageEnum::ES));
-        $this->assertFalse($Translation->hasTranslation($contentType, 202, LanguageEnum::FR));
-        $this->assertTrue($Translation->hasTranslation($contentType, 209, LanguageEnum::ES));
+        $this->assertFalse($Translation->hasTranslation($contentType, 202, "es"));
+        $this->assertFalse($Translation->hasTranslation($contentType, 202, "fr"));
+        $this->assertTrue($Translation->hasTranslation($contentType, 209, "es"));
     }
 
 }
