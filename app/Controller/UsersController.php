@@ -79,33 +79,34 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        //account lock check
-        $ipAddress = $this->request->clientIp();
-        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
-        if ($isAccountLocked) {
-            $this->Notification->outError(__("Your account is temporary locked. It will be unlocked after %s minutes.",
-                ACCOUNT_LOCK_TTL / 60));
-            return $this->render();
-        }
         //メアド、パスの認証(セッションのストアはしていない)
         $userInfo = $this->Auth->identify($this->request, $this->response);
-        if (!$userInfo) {
-            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
-            $this->Notification->outError(__("Email address or Password is incorrect."));
-            return $this->render();
+        $response = $this->validateAuth($userInfo);
+        if (!empty($response)) {
+            return $response;
         }
 
+        $this->Session->write('preAuthPost', $this->request->data);
+
+        // Make user agreed to latest term of service
         /* @var TermsOfService $TermsOfService */
         $TermsOfService = ClassRegistry::init('TermsOfService');
         /** @var User $User */
         $User = ClassRegistry::init("User");
-
         $userId = $userInfo['id'];
         $termsOfService = $TermsOfService->getCurrent();
         $User->updateAgreedTermsOfServiceId($userId, $termsOfService['id']);
 
-        $this->Session->write('preAuthPost', $this->request->data);
+        $teamIdSwitch = $this->request->query("team_id") ?? $userInfo['DefaultTeam']['id'];
+        $this->Session->write('invited_team_id', $teamIdSwitch);
 
+        $this->confirm2faAuth($userInfo, $teamIdSwitch);
+
+        return $this->_afterAuthSessionStore();
+    }
+
+    private function confirm2faAuth(array $userInfo, int $teamId)
+    {
         $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
         // [Note]
@@ -114,17 +115,35 @@ class UsersController extends AppController
             $is2faAuthEnabled = false;
         }
 
-        $teamIdSwitch = $this->request->query("team_id") ?? $userInfo['DefaultTeam']['id'];
-        $this->Session->write('invited_team_id', $teamIdSwitch);
         //２要素設定有効なら
         if ($is2faAuthEnabled) {
             $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
             $this->Session->write('user_id', $userInfo['id']);
-            $this->Session->write('team_id', $teamIdSwitch);
+            $this->Session->write('team_id', $teamId);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
+    }
 
-        return $this->_afterAuthSessionStore();
+    /**
+     * @param array|bool $userInfo
+     * @return CakeResponse|null
+     */
+    private function validateAuth($userInfo)
+    {
+        //account lock check
+        $ipAddress = $this->request->clientIp();
+        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
+        if ($isAccountLocked) {
+            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+        if (!$userInfo) {
+            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
+            $this->Notification->outError(__("Email address or Password is incorrect."));
+            return $this->render();
+        }
+        return null;
     }
 
     /**
@@ -169,30 +188,17 @@ class UsersController extends AppController
             }
         }
 
-        //account lock check
-        $ipAddress = $this->request->clientIp();
-        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
-        if ($isAccountLocked) {
-            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
-                ACCOUNT_LOCK_TTL / 60));
-            return $this->render();
-        }
         //メアド、パスの認証(セッションのストアはしていない)
         $userInfo = $this->Auth->identify($this->request, $this->response);
-        if (!$userInfo) {
-            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
-            $this->Notification->outError(__("Email address or Password is incorrect."));
-            return $this->render();
+        $response = $this->validateAuth($userInfo);
+        if (!empty($response)) {
+            return $response;
         }
-
 
         // Prevent bulk registered user to login from "/users/login"
         // if user have not login from "/users/agree_and_login" .
-        $activeFlg = (int)$userInfo['active_flg'];
-        $isUserActive = ($activeFlg === Enum\Model\User\ActiveFlg::ON);
-
-        $termOfServiceIdUserAgreed = (int)$userInfo['agreed_terms_of_service_id'];
-        $isNotAgreedToAnyTerm = (0 === $termOfServiceIdUserAgreed);
+        $isUserActive = !empty($userInfo['active_flg']);
+        $isNotAgreedToAnyTerm = empty($userInfo['agreed_terms_of_service_id']);
 
         if ($isUserActive && $isNotAgreedToAnyTerm) {
             $this->Notification->outError(__("Please agree to the term of service."));
@@ -227,21 +233,7 @@ class UsersController extends AppController
             }
         }
 
-        $is2faAuthEnabled = true;
-        // 2要素認証設定OFFの場合
-        // [Note]
-        // Refer: https://jira.goalous.com/browse/GL-6874
-        if (is_null($userInfo['2fa_secret']) === true) {
-            $is2faAuthEnabled = false;
-        }
-
-        //２要素設定有効なら
-        if ($is2faAuthEnabled) {
-            $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
-            $this->Session->write('user_id', $userInfo['id']);
-            $this->Session->write('team_id', $userInfo['DefaultTeam']['id']);
-            return $this->redirect(['action' => 'two_fa_auth']);
-        }
+        $this->confirm2faAuth($userInfo, $userInfo['DefaultTeam']['id']);
 
         return $this->_afterAuthSessionStore();
     }
