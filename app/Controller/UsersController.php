@@ -100,7 +100,10 @@ class UsersController extends AppController
         $teamIdSwitch = $this->request->query("team_id") ?? $userInfo['DefaultTeam']['id'];
         $this->Session->write('invited_team_id', $teamIdSwitch);
 
-        $this->confirm2faAuth($userInfo, $teamIdSwitch);
+        $response = $this->confirm2faAuth($userInfo, $teamIdSwitch);
+        if (!empty($response)) {
+            return $response;
+        }
 
         return $this->_afterAuthSessionStore();
     }
@@ -122,6 +125,7 @@ class UsersController extends AppController
             $this->Session->write('team_id', $teamId);
             return $this->redirect(['action' => 'two_fa_auth']);
         }
+        return null;
     }
 
     /**
@@ -233,7 +237,10 @@ class UsersController extends AppController
             }
         }
 
-        $this->confirm2faAuth($userInfo, $userInfo['DefaultTeam']['id']);
+        $response = $this->confirm2faAuth($userInfo, $userInfo['DefaultTeam']['id']);
+        if (!empty($response)) {
+            return $response;
+        }
 
         return $this->_afterAuthSessionStore();
     }
