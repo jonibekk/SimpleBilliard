@@ -329,7 +329,6 @@ class TeamMemberBulkRegisterService
         ]);
 
         $this->User->save();
-
     }
 
     /**
