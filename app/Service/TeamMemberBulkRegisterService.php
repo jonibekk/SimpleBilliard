@@ -270,7 +270,6 @@ class TeamMemberBulkRegisterService
                 $password = $this->randomPassword();
                 $hashedPassword = $this->User->generateHash($password);
                 $this->updateUser($userId, $emailId, $teamId, $teamTimezone, $hashedPassword, $firstName, $lastName, $language);
-
             }
         }
 
