@@ -4381,6 +4381,9 @@ msgstr "Goalous内のチーム「%s」にあなたは招待されています。
 msgid "You have been invited to the team. Please use username and password given below to login in the following URL."
 msgstr "この招待に応じる場合は、次のIDとパスワードを利用して、以下のURLからログインしてください。"
 
+msgid "You have been invited to the team. Please use your username and password to login in the following URL."
+msgstr "この招待に応じる場合は、IDとパスワードを利用して、以下のURLからログインしてください。"
+
 msgid "* This is a temporary password, so you should change it immediately. Click More(in Header) > User Settings >  Account > Password > Change Password, you can change the password."
 msgstr "* これは一時的なパスワードなので、ログイン後すぐに変更してください。[その他] (ヘッダー内) > [ユーザー設定] > [パスワード] > [パスワードを変更する]をクリックしてください。"
 
