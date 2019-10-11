@@ -382,7 +382,7 @@ msgid "Japanese"
 msgstr "日本語"
 
 msgid "English"
-msgstr "English"
+msgstr "英語"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -1695,9 +1695,6 @@ msgstr "不正な電話番号です。"
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
-msgid "%s pixel is the limit."
-msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
-
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 
@@ -1921,7 +1918,7 @@ msgid "Following"
 msgstr "フォロー中"
 
 msgid "More"
-msgstr "もっと見る"
+msgstr "その他"
 
 msgid "View previous posts ▼"
 msgstr "さらに投稿を読み込む ▼"
@@ -2086,7 +2083,7 @@ msgid "Reselect an image"
 msgstr "画像を再選択"
 
 msgid "Create"
-msgstr "作成する"
+msgstr "作成"
 
 msgid "Initial point"
 msgstr "開始時"
