@@ -124,3 +124,53 @@ $config['allow_video_types'] = [
     'video/x-matroska',
 ];
 
+/**
+ * Be sure to keep same list in front-end
+ * https://github.com/IsaoCorp/goalous-front-end/blob/develop/src/app/core/services/file.service.ts
+ */
+$config['image_file_types'] = [
+    'gif',
+    'ief',
+    'jpe',
+    'jpeg',
+    'jpg',
+    'pbm',
+    'pgm',
+    'png',
+    'pnm',
+    'ppm',
+    'ras',
+    'rgb',
+    'tif',
+    'tiff',
+    'xbm',
+    'xpm',
+    'xwd',
+    'svg',
+    'svgz'
+];
+
+/**
+ * Be sure to keep same list in front-end
+ * https://github.com/IsaoCorp/goalous-front-end/blob/develop/src/app/core/services/file.service.ts
+ */
+$config['video_file_types'] = [
+    'mp4',
+    'webm',
+    'mpeg4',
+    '3gpp',
+    'hevc',
+    'mov',
+    'avi',
+    'mpegps',
+    'wmv',
+    'flv',
+    'ogg',
+    'mpeg',
+    '3gp',
+    'mpg',
+    'ogm',
+    'mkv',
+    'ogv'
+];
+

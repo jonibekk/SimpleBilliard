@@ -9,6 +9,7 @@ App::import('Lib/Storage/Processor/Image', 'ImageRotateProcessor');
 App::import('Lib/Storage/Processor/Image', 'ImageResizeProcessor');
 
 use Mockery as mock;
+use \Goalous\Enum\Model\Post\PostResourceType;
 
 /**
  * Created by PhpStorm.
@@ -86,5 +87,50 @@ class UploadServiceTest extends GoalousTestCase
         $this->assertEquals(1000, $yLength);
         $this->assertEquals($sourceFile->getFileName(), $file->getFileName());
         $this->assertEquals($sourceFile->getMIME(), $file->getMIME());
+    }
+
+    /**
+     * @dataProvider providerFileNameTypeResult
+     * @param PostResourceType $resultType
+     * @param string $fileName
+     */
+    public function test_getFileTypeFromFileName(PostResourceType $resultType, $fileName)
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init('UploadService');
+
+        $this->assertTrue($resultType->equals($UploadService->getFileTypeFromFileName($fileName)));
+    }
+
+    public function providerFileNameTypeResult()
+    {
+        foreach (Configure::read('image_file_types') as $ext) {
+            yield [PostResourceType::IMAGE(), 'file.' . $ext];
+            yield [PostResourceType::IMAGE(), 'file.' . strtoupper($ext)];
+        }
+        foreach (Configure::read('video_file_types') as $ext) {
+            yield [PostResourceType::VIDEO_STREAM(), 'file.' . $ext];
+            yield [PostResourceType::VIDEO_STREAM(), 'file.' . strtoupper($ext)];
+        }
+        $other = [
+            null,
+            '',
+            '0',
+            '0.0',
+            '0.exe',
+            '/tmp/0',
+            '/tmp/0.exe',
+            '/tmp/0png',
+            '/tmp/0gif',
+            'file.pdf',
+            'file.PDF',
+            'file.xlsx',
+            'file.doc',
+            'file.csv',
+            'file.aaa',
+        ];
+        foreach ($other as $filename) {
+            yield [PostResourceType::FILE(), $filename];
+        }
     }
 }

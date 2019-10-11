@@ -13,6 +13,8 @@ App::import('Service', 'TermService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'ExperimentService');
 
+use Goalous\Enum as Enum;
+
 /**
  * Users Controller
  *
@@ -42,7 +44,7 @@ class UsersController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
+        $this->Auth->allow('register', 'login', 'agree_and_login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
             'accept_invite', 'register_with_invite', 'registration_with_set_password', 'two_fa_auth',
             'two_fa_auth_recovery',
             'add_subscribe_email', 'ajax_validate_email');
@@ -55,6 +57,97 @@ class UsersController extends AppController
             $this->Security->validatePost = false;
             $this->Security->csrfCheck = false;
         }
+    }
+
+    /**
+     * This route `/users/agree_and_login` is for bulk registration.
+     * User will land here from url written in the email sent by bulk registration.
+     * Check the document for spec.
+     * https://isao.esa.io/#path=%2FGoalous%2FSpecification%2FUsers%2FUser%20bulk%20registration%20and%20link%20to%20a%20team
+     *
+     * @return \Cake\Network\Response|CakeResponse|null
+     */
+    public function agree_and_login()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        if ($this->Auth->user()) {
+            return $this->redirect('/');
+        }
+
+        if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        //メアド、パスの認証(セッションのストアはしていない)
+        $userInfo = $this->Auth->identify($this->request, $this->response);
+        $response = $this->validateAuth($userInfo);
+        if (!empty($response)) {
+            return $response;
+        }
+
+        $this->Session->write('preAuthPost', $this->request->data);
+
+        // Make user agreed to latest term of service
+        /* @var TermsOfService $TermsOfService */
+        $TermsOfService = ClassRegistry::init('TermsOfService');
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        $userId = $userInfo['id'];
+        $termsOfService = $TermsOfService->getCurrent();
+        $User->updateAgreedTermsOfServiceId($userId, $termsOfService['id']);
+
+        $teamIdSwitch = $this->request->query("team_id") ?? $userInfo['DefaultTeam']['id'];
+        $this->Session->write('invited_team_id', $teamIdSwitch);
+
+        $response = $this->confirm2faAuth($userInfo, $teamIdSwitch);
+        if (!empty($response)) {
+            return $response;
+        }
+
+        return $this->_afterAuthSessionStore();
+    }
+
+    private function confirm2faAuth(array $userInfo, int $teamId)
+    {
+        $is2faAuthEnabled = true;
+        // 2要素認証設定OFFの場合
+        // [Note]
+        // Refer: https://jira.goalous.com/browse/GL-6874
+        if (is_null($userInfo['2fa_secret']) === true) {
+            $is2faAuthEnabled = false;
+        }
+
+        //２要素設定有効なら
+        if ($is2faAuthEnabled) {
+            $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
+            $this->Session->write('user_id', $userInfo['id']);
+            $this->Session->write('team_id', $teamId);
+            return $this->redirect(['action' => 'two_fa_auth']);
+        }
+        return null;
+    }
+
+    /**
+     * @param array|bool $userInfo
+     * @return CakeResponse|null
+     */
+    private function validateAuth($userInfo)
+    {
+        //account lock check
+        $ipAddress = $this->request->clientIp();
+        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
+        if ($isAccountLocked) {
+            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+        if (!$userInfo) {
+            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
+            $this->Notification->outError(__("Email address or Password is incorrect."));
+            return $this->render();
+        }
+        return null;
     }
 
     /**
@@ -99,21 +192,23 @@ class UsersController extends AppController
             }
         }
 
-        //account lock check
-        $ipAddress = $this->request->clientIp();
-        $isAccountLocked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ipAddress);
-        if ($isAccountLocked) {
-            $this->Notification->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
-                ACCOUNT_LOCK_TTL / 60));
-            return $this->render();
-        }
         //メアド、パスの認証(セッションのストアはしていない)
         $userInfo = $this->Auth->identify($this->request, $this->response);
-        if (!$userInfo) {
-            $this->GlRedis->incrementLoginFailedCount($this->request->data['User']['email'], $ipAddress);
-            $this->Notification->outError(__("Email address or Password is incorrect."));
-            return $this->render();
+        $response = $this->validateAuth($userInfo);
+        if (!empty($response)) {
+            return $response;
         }
+
+        // Prevent bulk registered user to login from "/users/login"
+        // if user have not login from "/users/agree_and_login" .
+        $isUserActive = !empty($userInfo['active_flg']);
+        $isNotAgreedToAnyTerm = empty($userInfo['agreed_terms_of_service_id']);
+
+        if ($isUserActive && $isNotAgreedToAnyTerm) {
+            $this->Notification->outError(__("Please agree to the term of service."));
+            return $this->redirect('/users/agree_and_login');
+        }
+
 
         $this->Session->write('preAuthPost', $this->request->data);
 
@@ -142,20 +237,9 @@ class UsersController extends AppController
             }
         }
 
-        $is2faAuthEnabled = true;
-        // 2要素認証設定OFFの場合
-        // [Note]
-        // Refer: https://jira.goalous.com/browse/GL-6874
-        if (is_null($userInfo['2fa_secret']) === true) {
-            $is2faAuthEnabled = false;
-        }
-
-        //２要素設定有効なら
-        if ($is2faAuthEnabled) {
-            $this->Session->write('2fa_secret', $userInfo['2fa_secret']);
-            $this->Session->write('user_id', $userInfo['id']);
-            $this->Session->write('team_id', $userInfo['DefaultTeam']['id']);
-            return $this->redirect(['action' => 'two_fa_auth']);
+        $response = $this->confirm2faAuth($userInfo, $userInfo['DefaultTeam']['id']);
+        if (!empty($response)) {
+            return $response;
         }
 
         return $this->_afterAuthSessionStore();
