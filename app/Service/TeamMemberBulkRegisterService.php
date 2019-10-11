@@ -201,7 +201,7 @@ class TeamMemberBulkRegisterService
                 $this->addLog($errorMessage);
             } finally {
                 $this->outputCompleteMessage($index + 1);
-                usleep(500000);
+                usleep(500000);// 0.5sec
             }
         }
     }
