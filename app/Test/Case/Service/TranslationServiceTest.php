@@ -10,7 +10,6 @@ App::import('Service', 'TranslationService');
 App::import('Service', 'TeamTranslationStatusService');
 App::import('Lib/Translation', 'TranslationResult');
 
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 
@@ -45,7 +44,7 @@ class TranslationServiceTest extends GoalousTestCase
         $this->assertFalse($TranslationService->canTranslate($trialTeamId));
 
         // With translation
-        $this->insertTranslationLanguage($trialTeamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($trialTeamId, "en");
         $TeamTranslationStatus->createEntry($trialTeamId, $translationLimit);
         $this->assertTrue($TranslationService->canTranslate($trialTeamId));
 
@@ -60,7 +59,7 @@ class TranslationServiceTest extends GoalousTestCase
         $this->assertFalse($TranslationService->canTranslate($paidTeamId));
 
         // With translation
-        $this->insertTranslationLanguage($paidTeamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($paidTeamId, "en");
         $TeamTranslationStatus->createEntry($paidTeamId, $translationLimit);
         $this->assertTrue($TranslationService->canTranslate($paidTeamId));
 
@@ -85,7 +84,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::ACTION_POST();
         $contendId = 2213;
-        $language = LanguageEnum::ZH_TW;
+        $language = "zh-TW";
 
         $Translation->createEntry($contentType, $contendId, $language);
 
@@ -113,7 +112,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 1;
-        $targetLanguage = LanguageEnum::ES;
+        $targetLanguage = "es";
 
         $TeamTranslationStatus->createEntry($teamId);
 
@@ -134,7 +133,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::ACTION_POST();
         $contentId = 9;
-        $targetLanguage = LanguageEnum::JA;
+        $targetLanguage = "ja";
 
         $TranslationService->createTranslation($contentType, $contentId, $targetLanguage);
 
@@ -169,7 +168,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 1;
-        $targetLanguage = LanguageEnum::ES;
+        $targetLanguage = "es";
 
         $TeamTranslationStatus->createEntry($teamId);
 
@@ -201,7 +200,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::ACTION_POST();
         $contendId = 2213;
-        $language = LanguageEnum::ZH_TW;
+        $language = "zh-TW";
 
         $TranslationService->createTranslation($contentType, $contendId, $language);
     }
@@ -242,12 +241,12 @@ class TranslationServiceTest extends GoalousTestCase
         $contentId = 1;
 
         $TeamTranslationStatus->createEntry($teamId, 1000);
-        $this->insertTranslationLanguage($teamId, LanguageEnum::ES());
+        $this->insertTranslationLanguage($teamId, "es");
 
         $TranslationService->createDefaultTranslation($teamId, $contentType, $contentId);
 
         $this->assertEquals('en', $Post->getById($contentId)['language']);
-        $translation = $Translation->getTranslation($contentType, $contentId, LanguageEnum::ES);
+        $translation = $Translation->getTranslation($contentType, $contentId, "es");
         $this->assertNotEmpty($translation);
     }
 
@@ -271,13 +270,13 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 1;
-        $targetLanguage = LanguageEnum::ES;
+        $targetLanguage = "es";
 
         $TeamTranslationStatus->createEntry($teamId);
 
         $translationResult = $TranslationService->getTranslation($contentType, $contentId, $targetLanguage);
 
-        $this->assertEquals(LanguageEnum::EN, $translationResult->getSourceLanguage());
+        $this->assertEquals("en", $translationResult->getSourceLanguage());
         $this->assertEquals('Esta es una muestra de traducción.', $translationResult->getTranslation());
 
         $translation = $Translation->getTranslation($contentType, $contentId, $targetLanguage);
@@ -295,11 +294,11 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST_COMMENT();
         $contentId = 2;
-        $targetLanguage = LanguageEnum::ES;
+        $targetLanguage = "es";
 
         $translationResult = $TranslationService->getTranslation($contentType, $contentId, $targetLanguage);
 
-        $this->assertEquals(LanguageEnum::EN, $translationResult->getSourceLanguage());
+        $this->assertEquals("en", $translationResult->getSourceLanguage());
         $this->assertEquals('Esta es una muestra de traducción.', $translationResult->getTranslation());
 
         $translation = $Translation->getTranslation($contentType, $contentId, $targetLanguage);
@@ -331,7 +330,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::CIRCLE_POST();
         $contentId = 1;
-        $targetLanguage = LanguageEnum::ES;
+        $targetLanguage = "es";
 
         $TeamTranslationStatus->createEntry($teamId);
 
@@ -339,7 +338,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $translationResult = $TranslationService->getTranslation($contentType, $contentId, $targetLanguage);
 
-        $this->assertEquals(LanguageEnum::EN, $translationResult->getSourceLanguage());
+        $this->assertEquals("en", $translationResult->getSourceLanguage());
         $this->assertEquals('Esta es una muestra de traducción.', $translationResult->getTranslation());
 
         $translation = $Translation->getTranslation($contentType, $contentId, $targetLanguage);
@@ -366,7 +365,7 @@ class TranslationServiceTest extends GoalousTestCase
 
         $contentType = TranslationContentType::ACTION_POST();
         $contendId = 2213;
-        $language = LanguageEnum::ZH_TW;
+        $language = "zh-TW";
 
         $TranslationService->createTranslation($contentType, $contendId, $language);
     }

@@ -9,7 +9,6 @@ App::uses('Translation', 'Model');
  * @property Post $Post
  */
 
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 class PostTest extends GoalousTestCase
@@ -781,9 +780,9 @@ class PostTest extends GoalousTestCase
 
         /** @var Translation $Translation */
         $Translation = ClassRegistry::init('Translation');
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), 1, "es");
 
-        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, "es");
         $this->assertNotEmpty($translation);
         $data = [
             'Post' => [
@@ -792,7 +791,7 @@ class PostTest extends GoalousTestCase
             ]
         ];
         $this->Post->postEdit($data);
-        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, LanguageEnum::ES);
+        $translation = $Translation->getTranslation(TranslationContentType::CIRCLE_POST(), 1, "es");
         $this->assertEmpty($translation);
     }
 
@@ -1069,9 +1068,9 @@ class PostTest extends GoalousTestCase
 
         $TeamTranslationStatus->createEntry($teamId);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, "en");
+        $this->insertTranslationLanguage($teamId, "ja");
+        $this->insertTranslationLanguage($teamId, "de");
 
         $Post->my_uid = 1;
         $Post->current_team_id = 1;
@@ -1099,10 +1098,10 @@ class PostTest extends GoalousTestCase
         $post = $Post->getById($postId);
         $this->assertEmpty($post['language']);
 
-        $Post->updateLanguage($postId, LanguageEnum::ES);
+        $Post->updateLanguage($postId, "es");
 
         $post = $Post->getById($postId);
-        $this->assertEquals(LanguageEnum::ES, $post['language']);
+        $this->assertEquals("es", $post['language']);
     }
 
     public function test_clearLanguage_success()
@@ -1115,10 +1114,10 @@ class PostTest extends GoalousTestCase
         $post = $Post->getById($postId);
         $this->assertEmpty($post['language']);
 
-        $Post->updateLanguage($postId, LanguageEnum::ES);
+        $Post->updateLanguage($postId, "es");
 
         $post = $Post->getById($postId);
-        $this->assertEquals(LanguageEnum::ES, $post['language']);
+        $this->assertEquals("es", $post['language']);
 
         $Post->clearLanguage($postId);
         $post = $Post->getById($postId);

@@ -3,6 +3,7 @@ App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('View', 'View');
 App::uses('TransactionManager', 'Model');
+App::uses('TranslationLanguage', 'Model');
 App::import('Service', 'UserService');
 App::import('Model/Entity', 'TeamMemberEntity');
 
@@ -285,7 +286,6 @@ class TeamMember extends AppModel
      * @return bool
      * @deprecated
      * We should consider whether keep to use CACHE_KEY_MEMBER_IS_ACTIVE cache
-     *
      */
     public function isActive($uid, $teamId = null, bool $withCache = true)
     {
@@ -403,8 +403,7 @@ class TeamMember extends AppModel
         $required_active = true,
         $required_evaluate = false,
         $teamId = null
-    )
-    {
+    ) {
         $teamId = $teamId ?? $this->current_team_id;
         $options = [
             'conditions' => [
@@ -1276,15 +1275,13 @@ class TeamMember extends AppModel
     }
 
     /**
-     * @deprecated
-     * Don't use AppMode.current_team_id/my_uid
-     *
-     * $user_id をキーにしてチームメンバー情報を取得
-     *
      * @param      $user_id
      * @param null $team_id
      *
      * @return array|null
+     * @deprecated
+     * Don't use AppMode.current_team_id/my_uid
+     * $user_id をキーにしてチームメンバー情報を取得
      */
     function getByUserId($user_id, $team_id = null)
     {
@@ -2090,8 +2087,7 @@ class TeamMember extends AppModel
     function isActiveAdmin(
         int $userId,
         int $teamId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2202,8 +2198,7 @@ class TeamMember extends AppModel
     function getTeamMemberListByStatus(
         $status,
         $teamId = null
-    )
-    {
+    ) {
         if (!$teamId) {
             $teamId = $this->current_team_id;
         }
@@ -2230,8 +2225,7 @@ class TeamMember extends AppModel
     function isTeamMember(
         int $teamId,
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'      => $teamMemberId,
@@ -2251,8 +2245,7 @@ class TeamMember extends AppModel
     public
     function isInactive(
         int $teamMemberId
-    ): bool
-    {
+    ): bool {
         $options = [
             'conditions' => [
                 'id'     => $teamMemberId,
@@ -2272,8 +2265,7 @@ class TeamMember extends AppModel
     public
     function getUserById(
         int $teamMemberId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.id' => $teamMemberId
@@ -2302,8 +2294,7 @@ class TeamMember extends AppModel
     public
     function findBelongsByUser(
         int $userId
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
@@ -2378,7 +2369,6 @@ class TeamMember extends AppModel
 
         return Hash::get($res, 'TeamMember.team_id', null);
     }
-
 
     /**
      * Filter active member's user id
@@ -2498,8 +2488,11 @@ class TeamMember extends AppModel
      */
     public function setDefaultTranslationLanguage(int $teamId, int $userId, string $langCode)
     {
-        if (!Enum\Language::isValid($langCode)) {
-            throw new InvalidArgumentException("Unknown language code.");
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+        if (!$TranslationLanguage->isValidLanguage($langCode)) {
+            throw new InvalidArgumentException("Unknown translation language: " . $langCode);
         }
 
         $teamMemberId = $this->getIdByTeamAndUserId($teamId, $userId);

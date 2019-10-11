@@ -12,8 +12,6 @@ App::import('Model/Entity', 'CommentEntity');
 App::import('Lib/DataExtender', 'CommentExtender');
 
 use Goalous\Enum\DataType\DataType as DataType;
-use Goalous\Enum\Language as LanguageEnum;
-
 /**
  * Comment Model
  *
@@ -766,7 +764,7 @@ class Comment extends AppModel
             ]
         ];
         $res = $this->find('count', $options);
-        
+
         if ($res === 1) {
             return true;
         }

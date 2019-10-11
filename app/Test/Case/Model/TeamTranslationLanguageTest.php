@@ -2,8 +2,6 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('TeamTranslationLanguage', 'Model');
 
-use Goalous\Enum\Language as LanguageEnum;
-
 /**
  * TeamTranslationLanguage model test case
  *
@@ -27,7 +25,7 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         $queryResult = $TeamTranslationLanguage->hasLanguage(1);
         $this->assertFalse($queryResult);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
+        $this->insertTranslationLanguage($teamId, "en");
 
         $queryResult = $TeamTranslationLanguage->hasLanguage(1);
         $this->assertTrue($queryResult);
@@ -39,8 +37,8 @@ class TeamTranslationLanguageTest extends GoalousTestCase
 
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
+        $this->insertTranslationLanguage($teamId, "en");
+        $this->insertTranslationLanguage($teamId, "ja");
 
         $queryResult = $TeamTranslationLanguage->getLanguagesByTeam(1);
         $this->assertCount(2, $queryResult);
@@ -55,17 +53,17 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
-        $this->insertTranslationLanguage(1, LanguageEnum::EN());
+        $this->insertTranslationLanguage(1, "en");
         $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(1, $queryResult);
         $this->assertEquals([1], $queryResult);
 
-        $this->insertTranslationLanguage(1, LanguageEnum::JA());
+        $this->insertTranslationLanguage(1, "ja");
         $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(1, $queryResult);
         $this->assertEquals([1], $queryResult);
 
-        $this->insertTranslationLanguage(2, LanguageEnum::DE());
+        $this->insertTranslationLanguage(2, "de");
         $queryResult = $TeamTranslationLanguage->getAllTeamIds();
         $this->assertCount(2, $queryResult);
         $this->assertEquals([1, 2], $queryResult);
@@ -77,15 +75,15 @@ class TeamTranslationLanguageTest extends GoalousTestCase
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
         $teamId = 1;
-        $language1 = LanguageEnum::DE();
-        $language2 = LanguageEnum::TH();
+        $language1 = "de";
+        $language2 = "th";
 
-        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language1->getValue()));
-        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language2->getValue()));
+        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language1));
+        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language2));
 
         $this->insertTranslationLanguage($teamId, $language1);
 
-        $this->assertTrue($TeamTranslationLanguage->isLanguageSupported($teamId, $language1->getValue()));
-        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language2->getValue()));
+        $this->assertTrue($TeamTranslationLanguage->isLanguageSupported($teamId, $language1));
+        $this->assertFalse($TeamTranslationLanguage->isLanguageSupported($teamId, $language2));
     }
 }

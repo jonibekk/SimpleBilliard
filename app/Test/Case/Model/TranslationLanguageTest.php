@@ -2,8 +2,6 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('TranslationLanguage', 'Model');
 
-use Goalous\Enum\Language as LanguageEnum;
-
 /**
  * Class TranslationLanguageTest
  */
@@ -34,7 +32,7 @@ class TranslationLanguageTest extends GoalousTestCase
         /** @var TranslationLanguage $TranslationLanguage */
         $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
-        $queryResult = $TranslationLanguage->getLanguage(LanguageEnum::EN());
+        $queryResult = $TranslationLanguage->getLanguage("en");
 
         $this->assertEquals('en', $queryResult['language']);
         $this->assertEquals('English', $queryResult['intl_name']);
@@ -46,7 +44,7 @@ class TranslationLanguageTest extends GoalousTestCase
         /** @var TranslationLanguage $TranslationLanguage */
         $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
-        $queryResult = $TranslationLanguage->getLanguageByCode(LanguageEnum::EN);
+        $queryResult = $TranslationLanguage->getLanguageByCode("en");
 
         $this->assertEquals('en', $queryResult['language']);
         $this->assertEquals('English', $queryResult['intl_name']);
