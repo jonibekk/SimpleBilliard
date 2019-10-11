@@ -18,7 +18,6 @@ App::import('Model/Entity', 'PostEntity');
 App::import('Service/Request/Resource', 'PostResourceRequest');
 
 use Goalous\Enum as Enum;
-use Goalous\Enum\Language as LanguageEnum;
 use Mockery as mock;
 use Goalous\Exception as GlException;
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
@@ -1238,14 +1237,14 @@ class PostServiceTest extends GoalousTestCase
 
         $TeamTranslationStatus->createEntry($teamId);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::ID());
+        $this->insertTranslationLanguage($teamId, "ja");
+        $this->insertTranslationLanguage($teamId, "de");
+        $this->insertTranslationLanguage($teamId, "id");
 
         $newPostEntity = $PostService->addCirclePost($newBody, $circleId, $userId, $teamId);
 
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'], LanguageEnum::JA));
-        $this->assertEquals(LanguageEnum::EN, $Post->getById($newPostEntity['id'])['language']);
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'], "ja"));
+        $this->assertEquals("en", $Post->getById($newPostEntity['id'])['language']);
     }
 
     public function test_editCirclePostWithTranslation_success()
@@ -1265,23 +1264,23 @@ class PostServiceTest extends GoalousTestCase
 
         $TeamTranslationStatus->createEntry($teamId);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, "en");
+        $this->insertTranslationLanguage($teamId, "ja");
+        $this->insertTranslationLanguage($teamId, "de");
 
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, "de");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, "ja");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de");
 
         $newBody['body'] = $newPostBody;
 
         $PostService->editPost($newBody, $postId, $userId, $teamId, []);
 
-        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
-        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "de"));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "ja"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de"));
     }
 
     public function test_deleteCirclePostWithTranslation_success()
@@ -1298,20 +1297,20 @@ class PostServiceTest extends GoalousTestCase
         $otherPostId = 2;
         $TeamTranslationStatus->createEntry($teamId);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, "en");
+        $this->insertTranslationLanguage($teamId, "ja");
+        $this->insertTranslationLanguage($teamId, "de");
 
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA);
-        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE);
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, "de");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $postId, "ja");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja");
+        $Translation->createEntry(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de");
 
         $PostService->softDelete($postId);
 
-        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::DE));
-        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, LanguageEnum::JA));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, LanguageEnum::JA));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, LanguageEnum::DE));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "de"));
+        $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "ja"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de"));
     }
 }

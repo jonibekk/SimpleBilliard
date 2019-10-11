@@ -5,7 +5,6 @@ App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TranslationLanguage', 'Model');
 
 use Goalous\Exception as GlException;
-use Goalous\Enum\Language as LanguageEnum;
 
 class TeamTranslationLanguageService extends AppService
 {
@@ -87,7 +86,6 @@ class TeamTranslationLanguageService extends AppService
      * @param int $teamId
      *
      * @return string ISO 639-1 Language Code
-     *
      * @throws Exception
      */
     public function getDefaultTranslationLanguageCode(int $teamId): string
@@ -137,6 +135,13 @@ class TeamTranslationLanguageService extends AppService
      */
     private function setDefaultTranslationLanguage(int $teamId, string $language)
     {
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+        if (!$TranslationLanguage->isValidLanguage($language)) {
+            throw new InvalidArgumentException("Unknown translation language: " . $language);
+        }
+
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
         try {
@@ -160,13 +165,16 @@ class TeamTranslationLanguageService extends AppService
      */
     public function selectFirstSupportedLanguage(int $teamId, array $languageCodes): string
     {
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
         $queryResult = $TeamTranslationLanguage->getLanguagesByTeam($teamId);
 
         foreach ($languageCodes as $language) {
-            $cleanedLanguage = LanguageEnum::cleanLanguage($language);
+
+            $cleanedLanguage = $TranslationLanguage->cleanLanguage($language);
             if (empty($cleanedLanguage)) {
                 continue;
             }

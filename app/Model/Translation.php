@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'TranslationEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 use Goalous\Exception as GlException;
@@ -49,10 +48,6 @@ class Translation extends AppModel
      */
     public function createEntry(TranslationContentType $contentType, int $contentId, string $language)
     {
-        if (!LanguageEnum::isValid($language)) {
-            throw new InvalidArgumentException("Invalid language code: $language");
-        }
-
         $newData = [
             'content_type' => $contentType->getValue(),
             'content_id'   => $contentId,
@@ -78,10 +73,6 @@ class Translation extends AppModel
      */
     public function updateTranslationBody(TranslationContentType $contentType, int $contentId, string $language, string $translationBody)
     {
-        if (!LanguageEnum::isValid($language)) {
-            throw new InvalidArgumentException("Invalid language code: $language");
-        }
-
         $translationEntry = $this->getTranslation($contentType, $contentId, $language);
 
         if (empty($translationEntry)) {

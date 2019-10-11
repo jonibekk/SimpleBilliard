@@ -5,7 +5,6 @@ App::import('Model/Entity', 'TranslationLanguageEntity');
 
 use Goalous\Enum as Enum;
 use Goalous\Enum\DataType\DataType as DataType;
-use Goalous\Enum\Language as LanguageEnum;
 
 class TranslationLanguage extends AppModel
 {
@@ -38,17 +37,53 @@ class TranslationLanguage extends AppModel
     }
 
     /**
-     * Get information of a specified language
+     * Get all translation language codes
      *
-     * @param Enum\Language $language
-     *
-     * @return TranslationLanguageEntity
+     * @return string[]
      */
-    public function getLanguage(Enum\Language $language): TranslationLanguageEntity
+    public function getAllLanguagesAsBasicArray(): array
+    {
+        $languageEntities = $this->getAllLanguages();
+
+        $languages = [];
+
+        foreach ($languageEntities as $entity) {
+            $languages[] = $entity['language'];
+        }
+
+        return $languages;
+    }
+
+    /**
+     * Check whether given language code is valid
+     *
+     * @param string $language
+     *
+     * @return bool
+     */
+    public function isValidLanguage(string $language): bool
     {
         $option = [
             'conditions' => [
-                'language' => $language->getValue()
+                'language' => $language
+            ]
+        ];
+
+        return $this->find('count', $option) > 0;
+    }
+
+    /**
+     * Get information of a specified language
+     *
+     * @param string $language ISO 639-1 Language code
+     *
+     * @return TranslationLanguageEntity
+     */
+    public function getLanguage(string $language): TranslationLanguageEntity
+    {
+        $option = [
+            'conditions' => [
+                'language' => $language
             ]
         ];
 
@@ -67,10 +102,6 @@ class TranslationLanguage extends AppModel
      */
     public function getLanguageByCode(string $language): TranslationLanguageEntity
     {
-        if (!LanguageEnum::isValid($language)) {
-            throw new InvalidArgumentException("Unknown language code");
-        }
-
         $option = [
             'conditions' => [
                 'language' => $language
@@ -80,7 +111,30 @@ class TranslationLanguage extends AppModel
         /** @var TranslationLanguageEntity $return */
         $return = $this->useType()->useEntity()->find('first', $option);
 
+        if (empty($return)) {
+            throw new InvalidArgumentException("Unknown language code");
+        }
+
         return $return;
+    }
+
+    /**
+     * Remove country code from a locale if not supported.
+     *          e.g. en-US -> en, zh-TW -> zh-TW
+     *
+     * @param string $localizedLanguage
+     *
+     * @return string
+     */
+    public function cleanLanguage(string $localizedLanguage): string
+    {
+        if ($this->isValidLanguage($localizedLanguage)) {
+            return $localizedLanguage;
+        }
+
+        $languageCode = locale_get_primary_language($localizedLanguage);
+
+        return $languageCode ?: "";
     }
 
     /**

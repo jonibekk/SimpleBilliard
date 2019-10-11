@@ -34,6 +34,7 @@ class TeamMemberTest extends GoalousTestCase
         'app.term',
         'app.circle',
         'app.circle_member',
+        'app.mst_translation_language',
     );
 
     /**
@@ -2272,7 +2273,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $userId = 1;
         $teamId = 1;
-        $newLanguage = Enum\Language::DE;
+        $newLanguage = "de";
 
         $TeamMember->setDefaultTranslationLanguage($teamId, $userId, $newLanguage);
         $language = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
@@ -2290,7 +2291,7 @@ class TeamMemberTest extends GoalousTestCase
         $userId = 495;
         $teamId = 4713;
 
-        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, Enum\Language::DE);
+        $TeamMember->setDefaultTranslationLanguage($teamId, $userId, "de");
     }
 
     /**
@@ -2314,7 +2315,7 @@ class TeamMemberTest extends GoalousTestCase
 
         $userId = 1;
         $teamId = 1;
-        $newLanguage = Enum\Language::ES;
+        $newLanguage = "es";
 
         $language = $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
         $this->assertEmpty($language);

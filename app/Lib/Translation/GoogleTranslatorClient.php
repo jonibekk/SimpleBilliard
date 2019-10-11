@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/Translation', 'BaseTranslatorClient');
 App::import('Lib/Translation', 'TranslationResult');
+App::uses('TranslationLanguage', 'Model');
 
 use Google\Cloud\Translate\TranslateClient;
 use Goalous\Enum\Language as LangEnum;
@@ -16,8 +17,11 @@ class GoogleTranslatorClient extends BaseTranslatorClient
 
     protected function requestTranslation(array $segmentedString, string $targetLanguage): array
     {
-        if (!LangEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+        if (!$TranslationLanguage->isValidLanguage($targetLanguage)) {
+            throw new InvalidArgumentException("Unknown translation language: $targetLanguage");
         }
 
         if (count($segmentedString) > static::MAX_BATCH_ARRAY_SIZE) {
@@ -37,7 +41,8 @@ class GoogleTranslatorClient extends BaseTranslatorClient
         foreach ($translationResults as $translationResult) {
             // Used to convert NCRs to symbols
             $decodedString = html_entity_decode($translationResult['text'], ENT_QUOTES | ENT_XML1, 'UTF-8');
-            $translationResultArray[] = new TranslationResult($translationResult['source'], $decodedString, $targetLanguage);
+            $translationResultArray[] = new TranslationResult($translationResult['source'], $decodedString,
+                $targetLanguage);
         }
 
         return $translationResultArray;

@@ -37,7 +37,6 @@ App::import('Service', 'PostResourceService');
 App::uses('CircleMember', 'Model');
 
 use Goalous\Enum as Enum;
-use Goalous\Enum\Language as LanguageEnum;
 
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Mockery as mock;
@@ -1188,18 +1187,18 @@ class GoalousTestCase extends CakeTestCase
      * Insert translation language option to a team
      *
      * @param int          $teamId
-     * @param LanguageEnum $enum
+     * @param string $language
      *
      * @throws Exception
      */
-    protected function insertTranslationLanguage(int $teamId, LanguageEnum $enum)
+    protected function insertTranslationLanguage(int $teamId, string $language)
     {
         /** @var TeamTranslationLanguage $TeamTranslationLanguage */
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
         $data = [
             'team_id'  => $teamId,
-            'language' => $enum->getValue()
+            'language' => $language
         ];
 
         $TeamTranslationLanguage->create();
@@ -1434,7 +1433,7 @@ class GoalousTestCase extends CakeTestCase
         $translatorClient = mock::mock('GoogleTranslatorClient');
 
         if (empty($sourceLanguage)) {
-            $sourceLanguage = LanguageEnum::EN;
+            $sourceLanguage = "en";
         }
         if (empty($translation)) {
             $translation = 'Esta es una muestra de traducción.';
