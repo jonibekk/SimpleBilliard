@@ -177,6 +177,9 @@ msgstr "このデバイスは最新バージョンではありません。"
 msgid "This email address doesn't exist."
 msgstr "このメールアドレスは存在しません。"
 
+msgid "【Log in URL】"
+msgstr "【ログインURL】"
+
 msgid "This email address isn't yours."
 msgstr "このメールアドレスはあなたのものではありません。"
 
@@ -379,7 +382,7 @@ msgid "Japanese"
 msgstr "日本語"
 
 msgid "English"
-msgstr "English"
+msgstr "英語"
 
 msgid "Please select"
 msgstr "選択してください"
@@ -1692,9 +1695,6 @@ msgstr "不正な電話番号です。"
 msgid "%sMB is the limit."
 msgstr "%sMBがアップロードできるファイルの上限です。"
 
-msgid "%s pixel is the limit."
-msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
-
 msgid "You can't change members of the all team circle."
 msgstr "チーム全体サークルは変更出来ません。"
 
@@ -1918,7 +1918,7 @@ msgid "Following"
 msgstr "フォロー中"
 
 msgid "More"
-msgstr "もっと見る"
+msgstr "その他"
 
 msgid "View previous posts ▼"
 msgstr "さらに投稿を読み込む ▼"
@@ -2083,7 +2083,7 @@ msgid "Reselect an image"
 msgstr "画像を再選択"
 
 msgid "Create"
-msgstr "作成する"
+msgstr "作成"
 
 msgid "Initial point"
 msgstr "開始時"
@@ -4366,8 +4366,26 @@ msgstr "なお、このまま有料プランへのご契約がない場合は、
 msgid "Hello."
 msgstr "こんにちは。"
 
+msgid "Hello!"
+msgstr "こんにちは！"
+
 msgid "%s sent you an invitation to team %s."
 msgstr "%sがGoalous内のチーム「%s」へあなたを招待しています。"
+
+msgid "You have a new invitation from the %s team in Goalous."
+msgstr "Goalous内のチーム「%s」にあなたは招待されています。"
+
+msgid "You have been invited to the team. Please use username and password given below to login in the following URL."
+msgstr "この招待に応じる場合は、次のIDとパスワードを利用して、以下のURLからログインしてください。"
+
+msgid "You have been invited to the team. Please use your username and password to login in the following URL."
+msgstr "この招待に応じる場合は、IDとパスワードを利用して、以下のURLからログインしてください。"
+
+msgid "* This is a temporary password, so you should change it immediately. Click More(in Header) > User Settings >  Account > Password > Change Password, you can change the password."
+msgstr "* これは一時的なパスワードなので、ログイン後すぐに変更してください。[その他] (ヘッダー内) > [ユーザー設定] > [パスワード] > [パスワードを変更する]をクリックしてください。"
+
+msgid "Email Address: %s"
+msgstr "メールアドレス: %s"
 
 msgid "Click the below link to accept the invitation."
 msgstr "この招待に応じる場合は、次のリンクをクリックしてください。"
@@ -6000,3 +6018,6 @@ msgstr "翻訳言語はチームごとに設定されます"
 
 msgid "Change default"
 msgstr "デフォルト設定を変更する"
+
+msgid "Please agree to the term of service."
+msgstr "規約に同意してください"

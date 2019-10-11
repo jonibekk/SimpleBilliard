@@ -39,6 +39,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_DELETE_TEAM_AUTO = 22;
     const TYPE_TMPL_TRANSLATION_LIMIT_REACHED = 23;
     const TYPE_TMPL_TRANSLATION_LIMIT_CLOSING = 24;
+    const TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION = 25;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
@@ -156,6 +157,11 @@ class SendMail extends AppModel
             'template' => 'translation_limit_closing',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION => [
+            'subject'  => null,
+            'template' => 'team_member_bulk_registration',
+            'layout'   => 'default',
+        ]
     ];
 
     public function _setTemplateSubject()
@@ -182,6 +188,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_DELETE_TEAM_AUTO]['subject'] = __("The team has been deleted");
         self::$TYPE_TMPL[self::TYPE_TMPL_TRANSLATION_LIMIT_REACHED]['subject'] = __("Pause translation for your team");
         self::$TYPE_TMPL[self::TYPE_TMPL_TRANSLATION_LIMIT_CLOSING]['subject'] = __("Approaching the limit of translatable number.");
+        self::$TYPE_TMPL[self::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION]['subject'] = __("Invitation for team");
     }
 
     function __construct($id = false, $table = null, $ds = null)

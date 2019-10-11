@@ -1119,6 +1119,15 @@ class User extends AppModel
         return true;
     }
 
+    public function updateAgreedTermsOfServiceId(int $userId, int $agreedTermsOfServiceId)
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        $user = $User->find('first', ['conditions' => ['id' => $userId]]);
+        $user['User']['agreed_terms_of_service_id'] = $agreedTermsOfServiceId;
+        $User->save($user);
+    }
+
     /**
      * デフォルトチームを更新
      * 未設定の場合のみ(強制的に変更可)
