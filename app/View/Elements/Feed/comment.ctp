@@ -89,7 +89,7 @@
             <div
                 <?php $mentions = $this->Mention->getMyMentions($comment['body'], $my_id, $my_team_id) ?>
                 class="col <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
-                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= 
+                id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?=
                     $this->Mention->replaceMention(nl2br($this->TextEx->autoLink($comment['body'])), $mentions)
                 ?>
                 </div>
@@ -98,7 +98,7 @@
                     <div href="#" class="drop-down-translation" data-toggle="dropdown">
                         <?= __("Change language") ?><i class="fa fa-sort-down drop-down-translation-icon"></i>
                     </div>
-                    <ul class="dropdown-menu" aria-labelledby="download">
+                    <ul class="dropdown-menu dropdown-translation-menu" aria-labelledby="download">
                     <?php
                         $contentType = 2;
                         if ($post_type == Post::TYPE_ACTION) {

@@ -944,10 +944,6 @@ class Team extends AppModel
      */
     public function setDefaultTranslationLanguage(int $teamId, string $language)
     {
-        if (!Enum\Language::isValid($language)) {
-            throw new InvalidArgumentException("Unknown language code.");
-        }
-
         $this->id = $teamId;
 
         $this->save([

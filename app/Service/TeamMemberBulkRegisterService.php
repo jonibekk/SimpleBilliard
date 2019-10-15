@@ -88,6 +88,31 @@ class TeamMemberBulkRegisterService
     }
 
     /**
+     * @param array $emails
+     * @return array
+     */
+    protected function findExistUsersByEmail(array $emails): array
+    {
+        $result = $this->Email->find('all', [
+            'fields' => ['Email.id', 'Email.email', 'Email.user_id', 'User.active_flg'],
+            'conditions' => ['Email.email' => $emails, 'Email.del_flg' => false],
+            'joins' => [[
+                'type' => 'INNER',
+                'table' => 'users',
+                'alias' => 'User',
+                'conditions' => ['Email.user_id = User.id', 'User.del_flg' => false],
+            ]]
+        ]);
+
+        $emailUserMap = [];
+        foreach ($result as $data) {
+            $email = Hash::get($data, 'Email.email');
+            $emailUserMap[$email] = $data;
+        }
+        return $emailUserMap;
+    }
+
+    /**
      * @return void
      */
     public function execute(): void
@@ -110,11 +135,7 @@ class TeamMemberBulkRegisterService
             $this->addLog('Total User Count: ' . count($records));
 
             $csvEmails = Hash::extract($records, '{n}.email');
-            $emailUserMap = Hash::combine(
-                $this->Email->findExistUsersByEmail($csvEmails),
-                '{n}.email',
-                '{n}.user_id'
-            );
+            $emailUserMap = $this->findExistUsersByEmail($csvEmails);
 
             $teamAllCircleId = $this->getTeamAllCircleId();
 
@@ -180,6 +201,7 @@ class TeamMemberBulkRegisterService
                 $this->addLog($errorMessage);
             } finally {
                 $this->outputCompleteMessage($index + 1);
+                usleep(500000);// 0.5sec
             }
         }
     }
@@ -232,8 +254,8 @@ class TeamMemberBulkRegisterService
         array $emailUserMap,
         int $teamAllCircleId
     ): void {
-        $userId = $emailUserMap[$email] ?? null;
-        $isNewUser = $userId === null;
+        $userData = $emailUserMap[$email] ?? null;
+        $isNewUser = $userData === null;
         $password = null;
 
         if ($isNewUser) {
@@ -241,7 +263,15 @@ class TeamMemberBulkRegisterService
             $hashedPassword = $this->User->generateHash($password);
             $userId = $this->createUser($teamId, $teamTimezone, $email, $hashedPassword, $firstName, $lastName, $language);
         } else {
-            $this->updateUser($userId, $teamId);
+            $userId = Hash::get($userData, 'Email.user_id');
+            if (Hash::get($userData, 'User.active_flg')) {
+                $this->updateUserDefaultTeamId($userId, $teamId);
+            } else {
+                $emailId = Hash::get($userData, 'Email.id');
+                $password = $this->randomPassword();
+                $hashedPassword = $this->User->generateHash($password);
+                $this->updateUser($userId, $emailId, $teamId, $teamTimezone, $hashedPassword, $firstName, $lastName, $language);
+            }
         }
 
         $this->joinTeam($userId, $teamId, $adminFlg);
@@ -259,6 +289,46 @@ class TeamMemberBulkRegisterService
             $this->getAggregate()->addSuccessCount();
             $this->getAggregate()->addExistUserCount();
         }
+    }
+
+    /**
+     * @param int $userId
+     * @param string $emailId
+     * @param int $teamId
+     * @param float $teamTimezone
+     * @param string $hashedPassword
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $language
+     * @throws Exception
+     */
+    protected function updateUser(
+        int $userId,
+        string $emailId,
+        int $teamId,
+        float $teamTimezone,
+        string $hashedPassword,
+        string $firstName,
+        string $lastName,
+        string $language
+    ) {
+        $this->Email->id = $emailId;
+        $this->Email->saveField('email_verified', self::EMAIL_VERIFIED_YES);
+
+        $this->User->id = $userId;
+        $this->User->set([
+            'primary_email_id' => $emailId,
+            'default_team_id' => $teamId,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'password' => $hashedPassword,
+            'update_email_flg' => self::UPDATE_EMAIL_FLG_YES,
+            'timezone' => $teamTimezone,
+            'language' => $language,
+            'active_flg' => self::ACTIVE_FLG_YES,
+        ]);
+
+        $this->User->save();
     }
 
     /**
@@ -515,7 +585,7 @@ class TeamMemberBulkRegisterService
      * @param int $userId
      * @param int $teamId
      */
-    protected function updateUser(int $userId, int $teamId)
+    protected function updateUserDefaultTeamId(int $userId, int $teamId)
     {
         $this->User->id = $userId;
         $this->User->saveField('default_team_id', $teamId);

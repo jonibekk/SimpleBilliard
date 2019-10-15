@@ -1,7 +1,5 @@
 <?php
 
-use Goalous\Enum\Language as LanguageEnum;
-
 App::uses('GoalousTestCase', 'Test');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
@@ -198,9 +196,9 @@ class CirclePostPagingServiceTest extends GoalousTestCase
 
         $TeamTranslationStatus->createEntry($teamId);
 
-        $this->insertTranslationLanguage($teamId, LanguageEnum::EN());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::JA());
-        $this->insertTranslationLanguage($teamId, LanguageEnum::DE());
+        $this->insertTranslationLanguage($teamId, "en");
+        $this->insertTranslationLanguage($teamId, "ja");
+        $this->insertTranslationLanguage($teamId, "de");
 
         /** @var CirclePostPagingService $CirclePostPagingService */
         $CirclePostPagingService = new CirclePostPagingService();
@@ -225,7 +223,7 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         // Post's language is not included
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
-        $Post->updateLanguage(1, LanguageEnum::JA);
+        $Post->updateLanguage(1, "ja");
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
 
         $postData = $result['data'][0];
@@ -233,14 +231,14 @@ class CirclePostPagingServiceTest extends GoalousTestCase
         $this->assertFalse($postData['translation_limit_reached']);
         $this->assertCount(2, $postData['translation_languages']);
         foreach ($postData['translation_languages'] as $translationLanguage) {
-            $this->assertNotEquals(LanguageEnum::JA, $translationLanguage['language']);
+            $this->assertNotEquals("ja", $translationLanguage['language']);
         }
 
         //If user has same language, don't include language
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init('TeamMemberService');
-        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, LanguageEnum::DE);
-        $Post->updateLanguage(1, LanguageEnum::DE);
+        $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, "de");
+        $Post->updateLanguage(1, "de");
 
         $result = $CirclePostPagingService->getDataWithPaging($cursor, 1, [CirclePostExtender::EXTEND_TRANSLATION_LANGUAGE]);
         $postData = $result['data'][0];
