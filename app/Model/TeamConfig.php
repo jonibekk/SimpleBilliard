@@ -20,11 +20,23 @@ class TeamConfig extends AppModel
         if (empty($teamConfig)) {
             return new TeamConfigValues();
         }
-        return TeamConfigValues::createFromJsonString($teamConfig['TeamConfig']['config']);
+
+        try {
+            return TeamConfigValues::createFromJsonString($teamConfig['TeamConfig']['config']);
+        } catch (\Throwable $exception) {
+            GoalousLog::warning('Failed to create TeamConfig from json string.', [
+                'teams.id' => $teamId,
+                'message' => $exception->getMessage()
+            ]);
+            return (new TeamConfigValues())->setErroredConfig(true);
+        }
     }
 
     public function updateConfig(int $teamId, TeamConfigValues $teamConfigValues)
     {
+        if ($teamConfigValues->isErroredConfig()) {
+            return;
+        }
         // FYI: Avoid using CakePHP updateAll()
         // This method handling json string, need a careful quote and sanitizing.
         // https://qiita.com/HamaTech/items/cc2b3b2a44f7aba0b71e
@@ -50,6 +62,12 @@ class TeamConfig extends AppModel
 
 class TeamConfigValues implements JsonSerializable
 {
+    /**
+     * The flag what handles this config instance having created with error.
+     * @var bool
+     */
+    protected $erroredConfig;
+
     const KEY_VIDEO_DURATION_MAX_SECONDS = 'video_duration_max_seconds';
     const KEY_FILE_SIZE_MB_MAX_VIDEO = 'file_size_mb_max_video';
 
@@ -64,6 +82,32 @@ class TeamConfigValues implements JsonSerializable
      * @var int|null
      */
     protected $fileSizeMbMaxVideo;
+
+    /**
+     * TeamConfigValues constructor.
+     */
+    public function __construct()
+    {
+        $this->erroredConfig = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isErroredConfig(): bool
+    {
+        return $this->erroredConfig;
+    }
+
+    /**
+     * @param bool $erroredConfig
+     * @return TeamConfigValues
+     */
+    public function setErroredConfig(bool $erroredConfig): self
+    {
+        $this->erroredConfig = $erroredConfig;
+        return $this;
+    }
 
     /**
      * @return int|null
@@ -99,7 +143,14 @@ class TeamConfigValues implements JsonSerializable
 
     public static function createFromJsonString(string $jsonString): self
     {
-        return static::createFromArray(json_decode($jsonString, true));
+        if (empty($jsonString)) {
+            return static::createFromArray([]);
+        }
+        $decodedConfigArray = json_decode($jsonString, true);
+        if (is_null($decodedConfigArray)) {
+            throw new RuntimeException('Failed json decode team config string.');
+        }
+        return static::createFromArray($decodedConfigArray);
     }
 
     public static function createFromArray(array $teamConfigArray): self
