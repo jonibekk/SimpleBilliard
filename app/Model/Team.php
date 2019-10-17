@@ -273,7 +273,8 @@ class Team extends AppModel
         // Originally, actions and circle posts should not be displayed as mix on top page
         /** @var ExperimentService $ExperimentService */
         $ExperimentService = ClassRegistry::init('ExperimentService');
-        $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON);
+        $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON, $this->id);
+
 
         // Add All team | 「チーム全体」サークルを追加
         $circleData = [

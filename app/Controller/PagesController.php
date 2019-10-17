@@ -166,8 +166,6 @@ class PagesController extends AppController
 
         try {
             $paramsPostGet = $this->request->params;
-            // Ignore circle posts on home feed
-            $paramsPostGet["no_circle_posts"] = true;
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $paramsPostGet)
