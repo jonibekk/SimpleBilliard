@@ -39,4 +39,39 @@ class TeamConfigEntityTest extends GoalousTestCase
 
         $this->assertCount(1, $TeamConfig->find('all'));
     }
+
+    function test_TeamConfigValues()
+    {
+        $fileSizeMaxMbVideo = 300;
+        $videoDurationMaxSecond = 1200;
+
+        $teamConfigValue = new TeamConfigValues();
+        $teamConfigValue->setFileSizeMbMaxVideo($fileSizeMaxMbVideo);
+        $teamConfigValue->setVideoDurationMaxSecond($videoDurationMaxSecond);
+        $jsonString = json_encode($teamConfigValue);
+
+        $teamConfigValueDecoded = TeamConfigValues::createFromJsonString($jsonString);
+        $this->assertSame($fileSizeMaxMbVideo, $teamConfigValueDecoded->getFileSizeMbMaxVideo());
+        $this->assertSame($videoDurationMaxSecond, $teamConfigValueDecoded->getVideoDurationMaxSecond());
+        $this->assertSame($jsonString, json_encode($teamConfigValueDecoded));
+    }
+
+    function test_TeamConfigValues_empty()
+    {
+        $teamConfigValue = new TeamConfigValues();
+        $jsonString = json_encode($teamConfigValue);
+
+        $teamConfigValueDecoded = TeamConfigValues::createFromJsonString($jsonString);
+        $this->assertNull($teamConfigValueDecoded->getFileSizeMbMaxVideo());
+        $this->assertNull($teamConfigValueDecoded->getVideoDurationMaxSecond());
+        $this->assertSame($jsonString, json_encode($teamConfigValueDecoded));
+    }
+
+    function test_a()
+    {
+        $teamConfigValue = new TeamConfigValues();
+        $teamConfigValue->setFileSizeMbMaxVideo(300);
+        $teamConfigValue->setVideoDurationMaxSecond(1200);
+        var_dump(json_encode($teamConfigValue));
+    }
 }
