@@ -11,6 +11,7 @@ App::uses('Translation', 'Model');
 App::uses('Comment', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Service', 'ExperimentService');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');
@@ -397,7 +398,13 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            if (empty($params['no_circle_posts'])) {
+            // TODO: `show_for_all_feed_flg`  must be deleted for Goalous feature
+            // Originally, actions and circle posts should not be displayed as mix on top page
+            /** @var ExperimentService $ExperimentService */
+            $ExperimentService = ClassRegistry::init('ExperimentService');
+            $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON, $this->current_team_id);
+
+            if ($showForAllFeedFlg) {
                 //自分の投稿
                 $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
                 //自分が共有範囲指定された投稿
