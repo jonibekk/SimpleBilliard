@@ -11,6 +11,7 @@ App::uses('Translation', 'Model');
 App::uses('Comment', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Service', 'ExperimentService');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');

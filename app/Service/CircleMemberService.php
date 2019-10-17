@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CirclePinService');
 App::import('Service', 'SavedPostService');
+App::import('Service', 'ExperimentService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Model/Entity', 'CircleEntity');

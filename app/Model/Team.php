@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'TeamEntity');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum as Enum;
