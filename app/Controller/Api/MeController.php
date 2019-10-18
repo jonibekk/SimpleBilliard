@@ -12,6 +12,7 @@ App::uses('CircleMember', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -80,10 +81,11 @@ class MeController extends BasePagingController
         /** @var NotificationPagingService $NotificationPagingService */
         $NotificationPagingService = ClassRegistry::init('NotificationPagingService');
 
-        $notifications = $NotificationPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(), [NotificationExtender::EXTEND_ALL]);
+        $notifications = $NotificationPagingService->getDataWithPaging($pagingRequest, $this->getPagingLimit(),
+            [NotificationExtender::EXTEND_ALL]);
 
         return ApiResponse::ok()
-            ->withBody($notifications)->getResponse();
+                          ->withBody($notifications)->getResponse();
     }
 
     /**
@@ -105,22 +107,35 @@ class MeController extends BasePagingController
         $data = ['new_notification_count' => $unreadCount];
 
         return ApiResponse::ok()
-            ->withBody(compact('data'))->getResponse();
+                          ->withBody(compact('data'))->getResponse();
     }
 
     /**
      * Get user detail
+     *
      * @ignoreRestriction
      */
     public function get_detail()
     {
+        $req = new UserResourceRequest($this->getUserId(), $this->getTeamId(), true);
+
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init('UserService');
-        $req = new UserResourceRequest($this->getUserId(), $this->getTeamId(), true);
-        $data = $UserService->get($req, [MeExtender::EXTEND_ALL]);
+
+        try {
+            $data = $UserService->get($req, [MeExtender::EXTEND_ALL]);
+        } catch (Exception $e) {
+            GoalousLog::error('Failed to get personal data', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'user_id' => $this->getUserId(),
+                'team_id' => $this->getTeamId()
+            ]);
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
 
         return ApiResponse::ok()
-            ->withBody(compact('data'))->getResponse();
+                          ->withBody(compact('data'))->getResponse();
     }
 
     /**
@@ -189,6 +204,7 @@ class MeController extends BasePagingController
 
     /**
      * Switch team
+     *
      * @ignoreRestriction
      * @return ApiResponse|BaseApiResponse
      */
@@ -202,18 +218,21 @@ class MeController extends BasePagingController
         // Check permission whether access team
         $myTeams = $TeamMember->getActiveTeamList($userId);
         if (!array_key_exists($teamId, $myTeams)) {
-            return ErrorResponse::forbidden()->withMessage(__("You don't have access right to this team."))->getResponse();
+            return ErrorResponse::forbidden()->withMessage(__("You don't have access right to this team."))
+                                ->getResponse();
         }
 
         try {
             $jwt = $this->resetAuth($userId, $teamId, $this->getJwtAuth());
         } catch (Exception $e) {
             GoalousLog::error('failed to switch team', [
+                'message'        => $e->getMessage(),
+                'trace'          => $e->getTraceAsString(),
                 'user_id'        => $userId,
                 'switch_team_id' => $teamId,
             ]);
             return ErrorResponse::internalServerError()
-                ->getResponse();
+                                ->getResponse();
         }
 
         $data = [
