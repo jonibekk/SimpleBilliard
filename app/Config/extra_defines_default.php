@@ -114,6 +114,7 @@ $defines = [
     // Default translation limit for paid team. 1 million chars
     'TRANSLATION_DEFAULT_LIMIT_PAID_TEAM'           => 1000000,
     'AWS_S3_BUCKET_NEW_GOALOUS'                     => '',
+    'FILE_SIZE_UPLOAD_MAX_MB'                       => 100,
 ];
 // for local
 if (file_exists(APP . 'Config/extra_defines_local.php')) {
