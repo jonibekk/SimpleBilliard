@@ -52,11 +52,11 @@ class PagesController extends AppController
     /**
      * Displays a view
      *
-     * @throws NotFoundException
+     * @return $this->redirect('/') or void
      * @throws Exception
      * @throws MissingViewException
+     * @throws NotFoundException
      * @internal param \What $mixed page to display
-     * @return $this->redirect('/') or void
      */
     public function home()
     {
@@ -171,6 +171,12 @@ class PagesController extends AppController
                     $paramsPostGet)
             ]);
         } catch (RuntimeException $e) {
+            GoalousLog::error("Error in showing home page.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'user_id' => $this->Auth->user('id'),
+                'team_id' => $current_team['Team']['id']
+            ]);
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
