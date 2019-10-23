@@ -50,12 +50,12 @@ class CommentExtender extends BaseExtender
             $Team = ClassRegistry::init('Team');
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
             if ($TeamTranslationLanguage->hasLanguage($teamId) &&
+                $TeamTranslationStatus->hasEntry($teamId) &&
                 ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
-
-                /** @var TeamTranslationStatus $TeamTranslationStatus */
-                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
                 $limitReached = true;
                 $translationLanguages = [];
@@ -133,11 +133,12 @@ class CommentExtender extends BaseExtender
             $Team = ClassRegistry::init('Team');
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
             if ($TeamTranslationLanguage->hasLanguage($teamId) &&
+                $TeamTranslationStatus->hasEntry($teamId) &&
                 ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
-                /** @var TeamTranslationStatus $TeamTranslationStatus */
-                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
 
                 if ($TeamTranslationStatus->isLimitReached($teamId)) {
                     foreach ($data as &$entry) {
