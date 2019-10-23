@@ -1584,10 +1584,15 @@ class GlRedis extends AppModel
     {
         App::uses('AccessAuthenticator', 'Lib/Auth');
         $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
-        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
-        $this->Db->set($key, $jwt->token());
-        $this->Db->setTimeout($key, $expire);
+        $this->saveMapSesAndJwtWithToken($teamId, $userId, $jwt->token(), $sessionId, $expire);
         return $jwt;
+    }
+
+    function saveMapSesAndJwtWithToken(int $teamId, int $userId, string $jwtToken, string $sessionId, int $expireTime  = 60 * 24 * 30 * 3)
+    {
+        $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
+        $this->Db->set($key, $jwtToken);
+        $this->Db->setTimeout($key, $expireTime);
     }
 
     /**

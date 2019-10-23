@@ -12,8 +12,10 @@ App::import('Service', 'PaymentService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
 App::import('Service', 'TeamTranslationLanguageService');
+App::import('Controller/Traits', 'AuthTrait');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Teams Controller
@@ -22,6 +24,9 @@ use Goalous\Enum as Enum;
  */
 class TeamsController extends AppController
 {
+
+    use AuthTrait;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -904,23 +909,40 @@ class TeamsController extends AppController
 
     public function ajax_switch_team()
     {
-        $team_id = Hash::get($this->request->params, 'named.team_id');
+        $newTeamId = Hash::get($this->request->params, 'named.team_id');
         $this->layout = 'ajax';
         Configure::write('debug', 0);
         $redirect_url = Router::url("/", true);
         $this->set(compact("redirect_url"));
-        if (!$team_id || !$this->request->is('ajax')) {
+        if (!$newTeamId || !$this->request->is('ajax')) {
             $this->Notification->outError(__("Invalid access."));
             return $this->render();
         }
+        $userId = $this->Auth->user('id');
+        $sessionId = $this->Session->id();
+        $previousTeamId = $this->Session->read('current_team_id');
+
         //チーム所属チェック
-        $my_teams = $this->Team->TeamMember->getActiveTeamList($this->Auth->user('id'));
-        if (!array_key_exists($team_id, $my_teams)) {
+        $my_teams = $this->Team->TeamMember->getActiveTeamList($userId);
+        if (!array_key_exists($newTeamId, $my_teams)) {
             $this->Notification->outError(__("You are not a member of this team."));
             return $this->render();
         }
-        $this->_switchTeam($team_id, $this->Auth->user('id'));
-        $this->Notification->outSuccess(__("Changed team to %s.", $my_teams[$team_id]));
+        try {
+            $jwtToken = $this->GlRedis->getMapSesAndJwt($previousTeamId, $userId, $sessionId);
+            $newJwtAuth = $this->resetAuth($userId, $newTeamId,
+                AccessAuthenticator::verify($jwtToken)->getJwtAuthentication());
+            $this->GlRedis->delMapSesAndJwt($previousTeamId, $userId, $sessionId);
+            $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
+        } catch (Exception $exception) {
+            // If user does not have valid JWT token in Redis
+            $this->GlRedis->delMapSesAndJwt($previousTeamId, $userId, $sessionId);
+            $this->_switchTeam($newTeamId, $userId);
+            $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
+        } finally {
+            $this->set('jwt_token', $newJwtAuth->token());
+        }
+        $this->Notification->outSuccess(__("Changed team to %s.", $my_teams[$newTeamId]));
         return $this->render();
     }
 
