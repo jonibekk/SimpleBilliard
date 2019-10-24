@@ -355,8 +355,9 @@ class TranslationService extends AppService
                 return false;
             }
             // Team must have translation language selected & remaining usage count to translate
-            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)
-                                                                                                       ->isLimitReached();
+            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) &&
+                $TeamTranslationStatus->hasEntry($teamId) &&
+                !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
 
             if (!$translationFlg) {
                 return false;

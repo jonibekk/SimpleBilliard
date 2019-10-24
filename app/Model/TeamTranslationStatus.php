@@ -35,7 +35,7 @@ class TeamTranslationStatus extends AppModel
         $queryResult = $this->useType()->UseEntity()->find('first', $option);
 
         if (empty($queryResult)) {
-            throw new GlException\GoalousNotFoundException();
+            throw new GlException\GoalousNotFoundException("Missing entry in team_translation_statuses for team $teamId");
         }
 
         return $queryResult;
