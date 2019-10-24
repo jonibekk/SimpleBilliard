@@ -5,6 +5,7 @@ App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
+App::import('Service', 'AuthService');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
