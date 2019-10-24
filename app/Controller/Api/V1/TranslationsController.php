@@ -4,6 +4,7 @@ App::import('Service', 'TeamMemberService');
 App::import('Service', 'TranslationService');
 App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
+App::uses('TranslationLanguage', 'Model');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
 use Goalous\Enum\Language as LangEnum;
@@ -89,7 +90,10 @@ class TranslationsController extends ApiController
         }
 
         if (!empty($language)) {
-            if (LangEnum::isValid($language)) {
+            /** @var TranslationLanguage $TranslationLanguage */
+            $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+            if ($TranslationLanguage->isValidLanguage($language)) {
                 /** @var TeamTranslationLanguage $TeamTranslationLanguage */
                 $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
                 if (!$TeamTranslationLanguage->isLanguageSupported($teamId, $language)) {

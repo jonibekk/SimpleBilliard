@@ -1,7 +1,5 @@
 <?php
 
-use Goalous\Enum\Language as LanguageEnum;
-
 App::uses('GoalousTestCase', 'Test');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
@@ -636,10 +634,10 @@ class CommentTest extends GoalousTestCase
         $comment = $Comment->getById($commentId);
         $this->assertEmpty($comment['language']);
 
-        $Comment->updateLanguage($commentId, LanguageEnum::ES);
+        $Comment->updateLanguage($commentId, "es");
 
         $comment = $Comment->getById($commentId);
-        $this->assertEquals(LanguageEnum::ES, $comment['language']);
+        $this->assertEquals("es", $comment['language']);
     }
 
     public function test_clearLanguage_success()
@@ -652,10 +650,10 @@ class CommentTest extends GoalousTestCase
         $comment = $Comment->getById($commentId);
         $this->assertEmpty($comment['language']);
 
-        $Comment->updateLanguage($commentId, LanguageEnum::ES);
+        $Comment->updateLanguage($commentId, "es");
 
         $comment = $Comment->getById($commentId);
-        $this->assertEquals(LanguageEnum::ES, $comment['language']);
+        $this->assertEquals("es", $comment['language']);
 
         $Comment->clearLanguage($commentId);
         $comment = $Comment->getById($commentId);

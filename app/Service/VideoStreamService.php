@@ -540,4 +540,18 @@ class VideoStreamService extends AppService
 
         return $teamConfig->getVideoDurationMaxSecond() ?? $defaultVideoDurationLimit;
     }
+
+    public function getTeamVideoFileSizeMBMax(int $teamId): int
+    {
+        /** @var TeamConfig $TeamConfig */
+        $TeamConfig = ClassRegistry::init('TeamConfig');
+
+        $teamConfig = $TeamConfig->getConfig($teamId);
+        $maxMb = $teamConfig->getFileSizeMbMaxVideo();
+        if (!empty($maxMb)) {
+            return $maxMb;
+        }
+
+        return FILE_SIZE_UPLOAD_MAX_MB;
+    }
 }

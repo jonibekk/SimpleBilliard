@@ -1,9 +1,3 @@
-[submodule "cookbooks"]
-	path = cookbooks
-	url = git@github.com:IsaoCorp/vagrant-opsworks-cookbooks.git
-
-
-
 [submodule "scripts"]
 	path = scripts
 	url = git@github.com:IsaoCorp/goalous_scripts.git

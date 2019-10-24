@@ -8,6 +8,7 @@ App::import('Validator/Lib/Storage', 'UploadValidator');
 App::import('Service', 'VideoStreamService');
 App::uses('UploadVideoStreamRequest', 'Service/Request/VideoStream');
 App::uses('Experiment', 'Model');
+App::uses('TeamConfig', 'Model');
 
 /**
  * Class FilesController
@@ -78,6 +79,18 @@ class FilesController extends BaseApiController
         return null;
     }
 
+    private function getFileSizeMaxMbUploadable(Enum\Model\Post\PostResourceType $postResourceType, int $teamId): int
+    {
+        if (!$postResourceType->equals(Enum\Model\Post\PostResourceType::VIDEO_STREAM())) {
+            return FILE_SIZE_UPLOAD_MAX_MB;
+        }
+
+        // Upload file will upload as a video.
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+        return $VideoStreamService->getTeamVideoFileSizeMBMax($teamId);
+    }
+
     /**
      * File uploading way is `multipart/form-data`, not `base64` in request body
      * At first, we have used `base64` way, but when upload large files, Chrome crash happens so easily.
@@ -92,16 +105,24 @@ class FilesController extends BaseApiController
 
         $file = Hash::get($this->request->params, 'form.file');
         $allowVideo = $this->request->data('allow_video');
-        $error = $this->validatePost($file);
+        $fileTypeFromFileName = $UploadService->getFileTypeFromFileName($file['name']);
+        $maxUploadableFileSize = $this->getFileSizeMaxMbUploadable($fileTypeFromFileName, $this->getTeamId());
+
+        $error = $this->validatePost($file, $maxUploadableFileSize);
         if (!empty($error)) {
             return $error;
         }
 
         $isVideo = $this->isVideo($file['tmp_name']);
         $fileTypeFromFileName = $UploadService->getFileTypeFromFileName($file['name']);
+
         // Uploading video to transcode
         if ($allowVideo && $fileTypeFromFileName->equals(Enum\Model\Post\PostResourceType::VIDEO_STREAM())) {
+            // Allow posting video from front-end
+            // && Frontend will decided file is video
             if (!$isVideo) {
+                // && Backend not decided file is video
+
                 // Returning error, because file type recognize is different between front/back ends.
                 // TODO: When returning error, need to fix the process of recognizing file type of upload files.
                 // Front/Backend recognize file type should be equal.
@@ -162,10 +183,11 @@ class FilesController extends BaseApiController
      * Validation method for post function
      *
      * @param $file
+     * @param $maxFileSizeMB
      *
      * @return BaseApiResponse|null
      */
-    private function validatePost($file)
+    private function validatePost($file, int $maxFileSizeMB)
     {
         if (empty($file) || !is_array($file)) {
             return ErrorResponse::badRequest()
@@ -189,9 +211,9 @@ class FilesController extends BaseApiController
 
         // Check if file size doesn't over limit
         // UploadValidator do same checking, but it is after decode content.
-        if ($file['size'] > UploadValidator::MAX_FILE_SIZE * 1024 * 1024) {
+        if ($file['size'] > $maxFileSizeMB * 1024 * 1024) {
             return ErrorResponse::badRequest()
-                ->withMessage(__("%sMB is the limit.", UploadValidator::MAX_FILE_SIZE))
+                ->withMessage(__("%sMB is the limit.", $maxFileSizeMB))
                 ->getResponse();
         }
 
@@ -219,6 +241,10 @@ class FilesController extends BaseApiController
         // We should use ffmpeg/ffprove
 
         // checking in mime-types in the file for more certain info
+        if (!is_file($filePath)) {
+            return false;
+        }
+
         $fileMimeType = mime_content_type($filePath);
         $fileMimeType = strtolower($fileMimeType);
         $allowVideoTypes = Configure::read("allow_video_types");

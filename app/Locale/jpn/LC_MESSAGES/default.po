@@ -177,9 +177,6 @@ msgstr "このデバイスは最新バージョンではありません。"
 msgid "This email address doesn't exist."
 msgstr "このメールアドレスは存在しません。"
 
-msgid "【Log in URL】"
-msgstr "【ログインURL】"
-
 msgid "This email address isn't yours."
 msgstr "このメールアドレスはあなたのものではありません。"
 
@@ -1916,9 +1913,6 @@ msgstr "検索中･･･"
 
 msgid "Following"
 msgstr "フォロー中"
-
-msgid "More"
-msgstr "その他"
 
 msgid "View previous posts ▼"
 msgstr "さらに投稿を読み込む ▼"
@@ -4366,26 +4360,8 @@ msgstr "なお、このまま有料プランへのご契約がない場合は、
 msgid "Hello."
 msgstr "こんにちは。"
 
-msgid "Hello!"
-msgstr "こんにちは！"
-
 msgid "%s sent you an invitation to team %s."
 msgstr "%sがGoalous内のチーム「%s」へあなたを招待しています。"
-
-msgid "You have a new invitation from the %s team in Goalous."
-msgstr "Goalous内のチーム「%s」にあなたは招待されています。"
-
-msgid "You have been invited to the team. Please use username and password given below to login in the following URL."
-msgstr "この招待に応じる場合は、次のIDとパスワードを利用して、以下のURLからログインしてください。"
-
-msgid "You have been invited to the team. Please use your username and password to login in the following URL."
-msgstr "この招待に応じる場合は、IDとパスワードを利用して、以下のURLからログインしてください。"
-
-msgid "* This is a temporary password, so you should change it immediately. Click More(in Header) > User Settings >  Account > Password > Change Password, you can change the password."
-msgstr "* これは一時的なパスワードなので、ログイン後すぐに変更してください。[その他] (ヘッダー内) > [ユーザー設定] > [パスワード] > [パスワードを変更する]をクリックしてください。"
-
-msgid "Email Address: %s"
-msgstr "メールアドレス: %s"
 
 msgid "Click the below link to accept the invitation."
 msgstr "この招待に応じる場合は、次のリンクをクリックしてください。"
@@ -5638,6 +5614,9 @@ msgstr "{{field}}の文字数は {{minValue}} 文字以上 {{maxValue}} 文字�
 msgid "{{field}} max limit is {{maxValue}}"
 msgstr "{{field}}の上限数は {{maxValue}} です"
 
+msgid "More"
+msgstr "その他"
+
 msgid "Search"
 msgstr "検索"
 
@@ -5956,9 +5935,6 @@ msgstr "%s画素(pixel)がアップロードできるファイルの上限です
 msgid "This file type is not allowed."
 msgstr "このファイル形式は許可されていません。"
 
-msgid "More "
-msgstr "もっと見る"
-
 msgid "Create "
 msgstr "作成する"
 
@@ -5976,3 +5952,223 @@ msgstr "デフォルト設定を変更する"
 
 msgid "Please agree to the term of service."
 msgstr "規約に同意してください"
+
+msgid "【Log in URL】"
+msgstr "【ログインURL】"
+
+msgid "Hello!"
+msgstr "こんにちは！"
+
+msgid "You have a new invitation from the %s team in Goalous."
+msgstr "Goalous内のチーム「%s」にあなたは招待されています。"
+
+msgid "You have been invited to the team. Please use username and password given below to login in the following URL."
+msgstr "この招待に応じる場合は、次のIDとパスワードを利用して、以下のURLからログインしてください。"
+
+msgid "You have been invited to the team. Please use your username and password to login in the following URL."
+msgstr "この招待に応じる場合は、IDとパスワードを利用して、以下のURLからログインしてください。"
+
+msgid "* This is a temporary password, so you should change it immediately. Click More(in Header) > User Settings >  Account > Password > Change Password, you can change the password."
+msgstr "* これは一時的なパスワードなので、ログイン後すぐに変更してください。[その他] (ヘッダー内) > [ユーザー設定] > [パスワード] > [パスワードを変更する]をクリックしてください。"
+
+msgid "Email Address: %s"
+msgstr "メールアドレス: %s"
+
+msgid "Hindi"
+msgstr "ヒンディー語"
+
+msgid "Vietnamese"
+msgstr "ベトナム語"
+
+msgid "Urdu"
+msgstr "ウルドゥー語"
+
+msgid "Filipino"
+msgstr "フィリピン語"
+
+msgid "Czech"
+msgstr "チェコ語"
+
+msgid "Hungarian"
+msgstr "ハンガリー語"
+
+msgid "Portuguese"
+msgstr "ポルトガル語"
+
+msgid "Polish"
+msgstr "ポーランド語"
+
+msgid "Russian"
+msgstr "ロシア語"
+
+msgid "Afrikaans"
+msgstr "アフリカーンス語"
+
+msgid "Swahili"
+msgstr "スアヒリ語"
+
+msgid "Shona"
+msgstr "ショナ語"
+
+msgid "Zulu"
+msgstr "ズールー語"
+
+msgid "Xhosa"
+msgstr "コサ語"
+
+msgid "Chichewa"
+msgstr "チェワ語"
+
+msgid "More "
+msgstr "もっと見る"
+
+msgid "%s teams now on-board!"
+msgstr "%sチーム達成!!"
+
+msgid "Introducing “Goalous”<br class=\"spbr\"> the next generation OKR SNS"
+msgstr "コミュニケーション型<br class=\"spbr\">目標達成サービス「ゴーラス」"
+
+msgid "Your organization will change drastically."
+msgstr "あなたの<br class=\"spbr\">組織が、<br>激変する。"
+
+msgid "Do you have these problems within your organization?<br class=\"spbr\">"
+msgstr "組織のこんなお悩み<br class=\"spbr\">ありませんか？"
+
+msgid "Individual"
+msgstr "個人"
+
+msgid "Employees being passive"
+msgstr "社員が自ら動いてくれない"
+
+msgid "Employees do their work seriously, but they are not pro-active. It is caused by company’s vision not permeate employees. If employees understand the management’s principles more, they would be able to know what to do, and creating actions towards own’s goals."
+msgstr "与えられた仕事はまじめにこなすけれど、自分から動く事は少ない社員。その原因は会社のビジョンが浸透していない事にあります。社員の「経営理念の腹落ち化」が進めば何をすべきかが分かり自ら設定した目標へのアクションが自ずと生まれます。"
+
+msgid "Department"
+msgstr "部署"
+
+msgid "The team has no sense of unity"
+msgstr "チームに一体感が無い"
+
+msgid "A sense of unity at school festivals and clubs! Do you think that it is not related to working adults?There is no sense of unity if you are blind to other people’s goals.Understanding each other is the first step to creating a sense of unity in your company."
+msgstr "文化祭や体育祭の一体感！社会人には関係ない話と思っていませんか？断言しましょう。あなたの会社にも一体感は生まれます。役割の垣根を超え、共通の目標に向かい１つになる。喜びや悔しさまでも仲間と共有できる、そんな「一体感」を生み出すことができます。"
+
+msgid "Organization"
+msgstr "組織"
+
+msgid "Nothing “new” is born in organization"
+msgstr "組織に”新しい”が生まれない"
+
+msgid "In this fast-changing era, those who do not change cannot survive.In order to make a change, a chain of communication in various places is necessary.With “proactive individuals” and “united team”, a new collaboration is formed and something “new” will be created!"
+msgstr "流れが早いこの時代、変わらないものは生き残れません。そのためには情報共有の効率化により活動時間を増やす事が必要です。「個人が自ら動く事」と「社員の一体感」により「新しい」が生まれます！"
+
+msgid "“Goalous solves those problems!”"
+msgstr "そのお悩みGoalousが解決します！"
+
+msgid "\"OKR\" is said to be an excellent goal management format worldwide. You may have heard of it before.           Based on this “OKR” concept, we have developed a new goal management framework for creating “pro-activeness,” “team unity,” and “fun”. That is “GKA”.           Goalous is the only service that incorporates GKA, which can be said to be compatible with OKR, into the social networking system.           Now, let’s create something “new” in your organization with Goalous."
+msgstr ""
+"世界的に優れた目標管理形式と言われる「OKR」。みなさんも1度は耳にしたことがあるかもしれません。この「OKR」の考え方をベースに、さらに「自発性」「コラボレーションによる一体感」そして「楽しい」を生みだす事を目的に弊社が発案する新しい目標管理形式。それが「GKA」です。<br>"
+"          Goalousはこの「OKR」の上位互換とも言える「GKA」をSNSのシステムに取り入れた唯一のサービスです。<br>"
+"          さあ、Goalousであなたの組織に「新しい」を生み出しましょう。"
+
+msgid "* OKR is an abbreviation for Objectives and Key Results. It is a model created by Intel in the 1970s that is the best practice to connect the goals of organizations and employees and measure progress based on the results achieved. Currently, it is used in Google, Uber, LinkedIn, Twitter, Sears, Zynga, Oracle, Yahoo!, Spotify, Box, GoPro, Flipboard, etc."
+msgstr ""
+"※OKRは、Objectives and Key"
+"          Resultsの略で、「組織や従業員の目標をつなぎ、また達成された結果に基づき進捗を測定するベストな実践」とされ、1970年代にIntelにより創案されたモデルです。現在では、Google, Uber,"
+"          LinkedIn, Twitter, Sears, Zynga, Oracle, Yahoo!, Spotify, Box, GoPro, Flipboardなどが採用しています。"
+
+msgid "Learn more about GKA（Check out our Goalous Blog）"
+msgstr "GKAについて詳しく(Goalousブログへ)"
+
+msgid "Start today, Goalous!"
+msgstr "さぁ、Goalousへ！"
+
+msgid "“So it can be solved, Image of using Goalous”"
+msgstr "だから解決できる、Goalous活用イメージ"
+
+msgid "Make a goal"
+msgstr "ゴールを作る"
+
+msgid "Let ’s set the objectives of the team to “Goal”. It is also important to set a “key result” to be done to achieve the goal. All members collaborate and share goals. If the goals are clear, employees will be able to think and act pro-actively on what to do to achieve it."
+msgstr ""
+"チームの目標を「ゴール」に設定しましょう。<br>"
+"            ゴールを達成するためにやるべき「キーリザルト」の設定も重要です。<br>"
+"            メンバー全員でコラボしゴールを共有します。<br>"
+"            ゴールが明確になると社員は何をすべきかを自分で考えることができます。"
+
+msgid "Take action"
+msgstr "アクションする"
+
+msgid "Take action to achieve your goals. Photo action is more intuitive than words. Everyone knows the action is for what goal.             Express your thoughts with Like! and comments. A deeper understanding of communication with each other. Various actions give you a sense of the whole company and create a sense of unity."
+msgstr ""
+"ゴールを目指すためのアクションをしましょう。<br>"
+"            写真付きのアクションは言葉よりも直感的に伝えます。<br>"
+"            いいね！やコメントで思いを形にすることで社員感のコミュニケーションは広がり<br>"
+"            一体感を生み出します。<br>"
+"            口頭の報告よりも、インタラクティブに一度に全員に伝わるのも魅力です。"
+
+msgid "A new one is born"
+msgstr "新しいが生まれる"
+
+msgid "“I ’d like to introduce you to the company,” “I ’ll help you with that job,” “Would you like to change this rule?” A new kind of communication is born in the same direction. Let's start with the first action!"
+msgstr ""
+"「その会社の知り合い紹介するね」「その役割手伝いますよ」「こんなサービス考えたんだけどどう？」「英語でランチしてみませんか？」「このルールこうしませんか？」<br>"
+"            同じ方向を向くコミュニケーションの中には「新しい」の種が生まれてきます。<br>"
+"            まずは、始めのアクションから一歩を踏み出しましょう！"
+
+msgid "Goalous has features that can be evaluated by looking at the progress of the goal and all actions. If you look at the action, you can feel not only the efforts of the members but also the heat of the thoughts. Employees who are evaluated can obtain a more satisfactory evaluation."
+msgstr ""
+"Goalousにはゴールの進捗とすべてのアクションをまとめて見ながら評価できます。<br>"
+"            アクションを見れば、そのメンバーの頑張りはもちろん、<br>"
+"            思いや熱量までも感じることができます。<br>"
+"            さらに、評価にかかる時間が一般的な評価に比べ大幅に減る事もゴールへの活動を加速させます。"
+
+msgid "Interactive communication between management and employees have become more active than ever before."
+msgstr "Goalousを使うことで、経営層と従業員との双方向コミュニケーションが活発になりました。"
+
+msgid "Promote communication with amazing speed. Team members taking initiatives increased marginally."
+msgstr "驚きのスピードでコミュニケーションを促進。メンバーの自発的な活動が増えました。"
+
+msgid "Feedback from our seminar participants"
+msgstr "セミナー参加者の声"
+
+msgid "We hold Organizational reform seminars regularly. This seminar is very popular every time for <br>CEO’s, upper / lower management, HR Team, team management and those who want to improve their organizational capabilities.<br> Please feel free to join us at our next seminar!"
+msgstr ""
+"運営会社・株式会社ISAO (イサオ) による組織改革セミナーを定期開催しております。<br>"
+"        経営者・人事・チームマネジメントや組織力を上げたい方に、毎回大好評のセミナーです。<br>"
+"        お気軽にご参加ください！"
+
+msgid "I felt that it was ideal to go from fairness to a fun world and apply that mind to business."
+msgstr "フェアネスから楽しい世界に進まれていて、そのマインドをビジネスにも応用されているのは理想的だと感じました。"
+
+msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that ISAO has achieved that ideal, I would like to observe how ISAO grows with this ideal moving forward."
+msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、ISAOは実現できているということで今後も展開を見守りたいと思いました。"
+
+msgid "I started visualizing our evaluations at my company, so I would like to consider using Goalous for that as well."
+msgstr "自分の会社で評価の見える化をスタートしたので、Goalousの利用も検討してみたい。"
+
+msgid "It was very interesting! A lot of keywords came to mind that applied to my company as well."
+msgstr "とても面白かったです！自分の会社のことかと思うワードがたくさん出てきました。"
+
+msgid "I thought about our current internal corporate plans and personnel goal management and it made me want to make that process more enjoyable for all parties involved."
+msgstr "現在の社内の計画とか個人の目標管理をやはり楽しくしたいなぁと思いました。"
+
+msgid "Thanks for today. I will apply GKA for my organization as well."
+msgstr "本日はありがとうございました。GKAの可視化していきます。"
+
+msgid "It was an interesting content that I wanted our management to hear."
+msgstr "経営層に聞かせたい面白い内容でした"
+
+msgid "I thought that the organization could change depending on the approach."
+msgstr "組織づくりって取り組み方で変わるなって思いました。"
+
+msgid "I thought it was nice to be able to hit the spotlight to all the employees."
+msgstr "全社員にスポットを当てることができるのがいいと思いました。"
+
+msgid "Free Goalous Seminar!"
+msgstr "無料の組織改革セミナー開催！"
+
+msgid "Check out the video for Goalous"
+msgstr "動画で見るGoalous"
+
+msgid "Introduction video for Goalous"
+msgstr "サービス紹介動画"

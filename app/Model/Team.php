@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::import('Model/Entity', 'TeamEntity');
+App::import('Service', 'ExperimentService');
 
 use Goalous\Enum\DataType\DataType as DataType;
 use Goalous\Enum as Enum;
@@ -269,6 +270,13 @@ class Team extends AppModel
             $this->TeamMember->User->updateDefaultTeam($this->id, true, $uid);
         }
 
+        // TODO: `show_for_all_feed_flg`  must be deleted for Goalous feature
+        // Originally, actions and circle posts should not be displayed as mix on top page
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+        $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON, $this->id);
+
+
         // Add All team | 「チーム全体」サークルを追加
         $circleData = [
             'Circle'       => [
@@ -283,6 +291,7 @@ class Team extends AppModel
                     'team_id'               => $this->id,
                     'user_id'               => $uid,
                     'admin_flg'             => true,
+                    'show_for_all_feed_flg' => $showForAllFeedFlg,
                     'get_notification_flg'  => true,
                 ]
             ]
@@ -944,10 +953,6 @@ class Team extends AppModel
      */
     public function setDefaultTranslationLanguage(int $teamId, string $language)
     {
-        if (!Enum\Language::isValid($language)) {
-            throw new InvalidArgumentException("Unknown language code.");
-        }
-
         $this->id = $teamId;
 
         $this->save([

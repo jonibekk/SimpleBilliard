@@ -11,11 +11,11 @@ App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
+App::uses('TranslationLanguage', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Translation', 'GoogleTranslatorClient');
 App::uses('MentionComponent', 'Controller/Component');
 
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Enum\Model\Translation\Status as TranslationStatus;
 use Goalous\Exception as GlException;
@@ -39,10 +39,17 @@ class TranslationService extends AppService
      * @return TranslationResult
      * @throws Exception
      */
-    public function getTranslation(TranslationContentType $contentType, int $contentId, string $targetLanguage): TranslationResult
-    {
-        if (!LanguageEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
+    public function getTranslation(
+        TranslationContentType $contentType,
+        int $contentId,
+        string $targetLanguage
+    ): TranslationResult {
+
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+        if (!$TranslationLanguage->isValidLanguage($targetLanguage)) {
+            throw new InvalidArgumentException("Unknown translation language: " . $targetLanguage);
         }
 
         /** @var Translation $Translation */
@@ -78,7 +85,6 @@ class TranslationService extends AppService
         return new TranslationResult($sourceModel['language'], $translation['body'], $targetLanguage);
     }
 
-
     /**
      *  Get translation for a data for API v1
      *
@@ -93,8 +99,11 @@ class TranslationService extends AppService
      * @return TranslationResult
      * @throws Exception
      */
-    public function getTranslationForApiV1(TranslationContentType $contentType, int $contentId, string $targetLanguage): TranslationResult
-    {
+    public function getTranslationForApiV1(
+        TranslationContentType $contentType,
+        int $contentId,
+        string $targetLanguage
+    ): TranslationResult {
         $result = $this->getTranslation($contentType, $contentId, $targetLanguage);
 
         switch ($contentType->getValue()) {
@@ -123,8 +132,11 @@ class TranslationService extends AppService
      * @return TranslationResult
      * @throws Exception
      */
-    public function getTranslationForApiV2(TranslationContentType $contentType, int $contentId, string $targetLanguage): TranslationResult
-    {
+    public function getTranslationForApiV2(
+        TranslationContentType $contentType,
+        int $contentId,
+        string $targetLanguage
+    ): TranslationResult {
         $result = $this->getTranslation($contentType, $contentId, $targetLanguage);
 
         switch ($contentType->getValue()) {
@@ -189,8 +201,11 @@ class TranslationService extends AppService
      */
     public function createTranslation(TranslationContentType $contentType, int $contentId, string $targetLanguage)
     {
-        if (!LanguageEnum::isValid($targetLanguage)) {
-            throw new InvalidArgumentException("Invalid language code: $targetLanguage");
+        /** @var TranslationLanguage $TranslationLanguage */
+        $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
+
+        if (!$TranslationLanguage->isValidLanguage($targetLanguage)) {
+            throw new InvalidArgumentException("Unknown translation language: " . $targetLanguage);
         }
 
         /** @var Translation $Translation */
@@ -226,9 +241,11 @@ class TranslationService extends AppService
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
 
-            $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, $translatedResult->getTranslation());
+            $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage,
+                $translatedResult->getTranslation());
 
-            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType, StringUtil::mbStrLength($sourceBody));
+            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType,
+                StringUtil::mbStrLength($sourceBody));
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
@@ -338,7 +355,9 @@ class TranslationService extends AppService
                 return false;
             }
             // Team must have translation language selected & remaining usage count to translate
-            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
+            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) &&
+                $TeamTranslationStatus->hasEntry($teamId) &&
+                !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
 
             if (!$translationFlg) {
                 return false;
@@ -431,8 +450,11 @@ class TranslationService extends AppService
      *
      * @throws Exception
      */
-    private function updateSourceBodyLanguage(TranslationContentType $contentType, int $contentId, string $sourceLanguage)
-    {
+    private function updateSourceBodyLanguage(
+        TranslationContentType $contentType,
+        int $contentId,
+        string $sourceLanguage
+    ) {
         switch ($contentType->getValue()) {
             case TranslationContentType::ACTION_POST:
             case TranslationContentType::CIRCLE_POST:

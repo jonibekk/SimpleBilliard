@@ -8,7 +8,6 @@ App::uses('TeamTranslationUsageLog', 'Model');
 App::import('Service', 'TeamTranslationStatusService');
 App::import('Service', 'PaymentService');
 
-use Goalous\Enum\Language as LanguageEnum;
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 class TeamTranslationStatusServiceTest extends GoalousTestCase
@@ -172,9 +171,9 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $queryResult = $TeamTranslationStatusService->findPaidTeamIdsToReset($currentTimeStamp);
         $this->assertEmpty($queryResult);
 
-        $this->insertTranslationLanguage($paidTeamWithTranslation, LanguageEnum::DE());
-        $this->insertTranslationLanguage($paidTeamWithTranslationAndLog, LanguageEnum::ZH_TW());
-        $this->insertTranslationLanguage($trialTeamWithTranslation, LanguageEnum::ES());
+        $this->insertTranslationLanguage($paidTeamWithTranslation, "de");
+        $this->insertTranslationLanguage($paidTeamWithTranslationAndLog, "zh-TW");
+        $this->insertTranslationLanguage($trialTeamWithTranslation, "es");
 
         $PaymentSetting->create();
         $PaymentSetting->save([
@@ -236,9 +235,9 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $Team->updatePaidPlan($teamWithDifferentDate, '2019-05-26');
         $Team->updatePaidPlan($teamWithMatchingDateAndLog, '2019-05-27');
 
-        $this->insertTranslationLanguage($teamWithMatchingDate, LanguageEnum::DE());
-        $this->insertTranslationLanguage($teamWithDifferentDate, LanguageEnum::ZH_TW());
-        $this->insertTranslationLanguage($teamWithMatchingDateAndLog, LanguageEnum::ES());
+        $this->insertTranslationLanguage($teamWithMatchingDate, "de");
+        $this->insertTranslationLanguage($teamWithDifferentDate, "zh-TW");
+        $this->insertTranslationLanguage($teamWithMatchingDateAndLog, "es");
 
         $PaymentSetting->create();
         $PaymentSetting->save([
