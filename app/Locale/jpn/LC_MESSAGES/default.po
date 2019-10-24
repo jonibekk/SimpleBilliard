@@ -6029,7 +6029,7 @@ msgid "Introducing “Goalous”<br class=\"spbr\"> the next generation OKR SNS"
 msgstr "コミュニケーション型<br class=\"spbr\">目標達成サービス「ゴーラス」"
 
 msgid "Your organization will change drastically."
-msgstr "組織が、<br>激変する。"
+msgstr "あなたの<br class=\"spbr\">組織が、<br>激変する。"
 
 msgid "Do you have these problems within your organization?<br class=\"spbr\">"
 msgstr "組織のこんなお悩み<br class=\"spbr\">ありませんか？"
@@ -6044,7 +6044,7 @@ msgid "Employees do their work seriously, but they are not pro-active. It is cau
 msgstr "与えられた仕事はまじめにこなすけれど、自分から動く事は少ない社員。その原因は会社のビジョンが浸透していない事にあります。社員の「経営理念の腹落ち化」が進めば何をすべきかが分かり自ら設定した目標へのアクションが自ずと生まれます。"
 
 msgid "Department"
-msgstr "組織"
+msgstr "部署"
 
 msgid "The team has no sense of unity"
 msgstr "チームに一体感が無い"
@@ -6160,6 +6160,9 @@ msgstr "経営層に聞かせたい面白い内容でした"
 
 msgid "I thought that the organization could change depending on the approach."
 msgstr "組織づくりって取り組み方で変わるなって思いました。"
+
+msgid "I thought it was nice to be able to hit the spotlight to all the employees."
+msgstr "全社員にスポットを当てることができるのがいいと思いました。"
 
 msgid "Free Goalous Seminar!"
 msgstr "無料の組織改革セミナー開催！"
