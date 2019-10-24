@@ -277,6 +277,7 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
                 <p><?= __("Goalous has features that can be evaluated by looking at the progress of the goal and all actions. If you look at the action, you can feel not only the efforts of the members but also the heat of the thoughts. Employees who are evaluated can obtain a more satisfactory evaluation.")?></p>
             </div>
         </div>
+    </div>
 </section>
 
 <section class="casestudy">
