@@ -195,7 +195,7 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
     </div>
     <div class="seminar_banner pcscreen">
         <a href="https://peatix.com/group/66244" target="_blank"><img src="<?=$bannerSeminarPath?>"
-                                                                      alt="<?= ('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>"
+                                                                      alt="<?= __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>"
                                                                       width="100%"></a>
     </div>
 </section>
@@ -204,10 +204,10 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
     <div class="cnt_container_gray">
         <div class="seminar_banner spscreen">
             <a href="https://peatix.com/group/66244" target="_blank">
-                <img src="/img/homepage/top/seminar_sp_img.jpg" alt="<?= ('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>" width="100%">
+                <img src="/img/homepage/top/seminar_sp_img.jpg" alt="<?= __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>" width="100%">
                 <h3 class="seminarTtl"><?= __('Free Goalous Seminar!')?></h3>
-                        <p class="seminarDetail"><?= ('Learn all of the ways you can improve your organization using Goalous.')?></p>
-                        <a href="https://peatix.com/group/66244" target="_blank" class="seminarLink"><?= ('View more details')?></a>
+                        <p class="seminarDetail"><?= __('Learn all of the ways you can improve your organization using Goalous.')?></p>
+                        <a href="https://peatix.com/group/66244" target="_blank" class="seminarLink"><?= __('View more details')?></a>
             </a>
         </div>
         <h3 class="borderttl fadein"><?= __("Do you have these problems within your organization?<br class=\"spbr\">")?></h3>
@@ -327,13 +327,13 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
         </ul>
         <div class="seminar_banner pcscreen fadein">
             <a href="https://peatix.com/group/66244" target="_blank"><img src="<?=$bannerSeminarPath?>"
-                                                                          alt="<?= ('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>"
+                                                                          alt="<?= __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>"
                                                                           width="100%"></a>
         </div>
     </div>
     <div class="seminar_banner spscreen fadein">
         <a href="https://peatix.com/group/66244" target="_blank">
-            <img src="/img/homepage/top/seminar_sp_img.jpg" alt="<?= ('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>" width="100%">
+            <img src="/img/homepage/top/seminar_sp_img.jpg" alt="<?= __('Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous.')?>" width="100%">
             <h3 class="seminarTtl"><?= __('Free Goalous Seminar!')?></h3>
             <p class="seminarDetail"><?= __('Learn all of the ways you can improve your organization using Goalous.')?></p>
             <a href="https://peatix.com/group/66244" target="_blank" class="seminarLink"><?= __('View more details')?></a>
