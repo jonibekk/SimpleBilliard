@@ -35,8 +35,6 @@ class TeamMemberBulkRegisterService
     const PASSWORD_LENGTH = 8;
     const PASSWORD_MAX_NUMBER_DIGITS = 4;
 
-    const COMPLETED_PER_COUNT = 10;
-
     /** @var int */
     private $teamId;
     /** @var string */
@@ -144,6 +142,7 @@ class TeamMemberBulkRegisterService
             $teamAllCircleId = $this->getTeamAllCircleId();
 
             $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
+            $this->addLog(str_repeat('-=', 30));
             $this->addAggregateLog();
             if (!$this->isDryRun()) {
                 $this->cleanCache();
@@ -172,9 +171,13 @@ class TeamMemberBulkRegisterService
         int $teamAllCircleId
     ) {
         foreach ($records as $index => $record) {
+            $lineNumber = $index + 2;
+            $this->addLog(str_repeat('-=', 30));
             if (empty($record)) {
+                $this->addLog('Line number ' . $lineNumber . ' skip because there is a blank line.');
                 continue;
             }
+
             try {
                 $this->validateRecord($record);
 
@@ -198,28 +201,18 @@ class TeamMemberBulkRegisterService
                 } else {
                     $this->TransactionManager->commit();
                 }
+                $this->addLog('Line number ' . $lineNumber . ' completed');
             } catch (\Throwable $e) {
+                $this->addLog('Line number ' . $lineNumber . ' failed with the following errors:');
+                $this->addLog($e->getMessage());
+
                 $this->TransactionManager->rollback();
                 if ($e instanceof ExcludeException) {
                     $this->getAggregate()->addExcludedCount();
                 } else {
                     $this->getAggregate()->addFailedCount();
                 }
-                $errorMessage = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
-                $this->addLog($errorMessage);
-            } finally {
-                $this->outputCompleteMessage($index + 1);
             }
-        }
-    }
-
-    /**
-     * @param int $completedCount
-     */
-    protected function outputCompleteMessage(int $completedCount)
-    {
-        if ($completedCount % self::COMPLETED_PER_COUNT === 0) {
-            CakeLog::notice($completedCount . ' completed');
         }
     }
 
@@ -500,21 +493,6 @@ class TeamMemberBulkRegisterService
     protected function getAggregate(): TeamMemberBulkRegisterAggregate
     {
         return $this->aggregate;
-    }
-
-    /**
-     * @param string $email
-     * @return string
-     */
-    protected function convertHiddenEmail(string $email): string
-    {
-        $prefix = substr($email, 0, 4);
-        $otherCount = count(str_split($email)) - 4;
-        if ($otherCount < 0) {
-            $otherCount = 0;
-        }
-
-        return $prefix . str_repeat('*', $otherCount);
     }
 
     /**
