@@ -52,9 +52,13 @@ class S3ReaderTest extends GoalousTestCase
                     [null],
                 ],
                 'expected' => [
+                    [],
                     ['hoge@isao.co.jp', 'Hoge', 'Yamada', 'on', 'jpn'],
+                    [],
                     ['fuga@isao.co.jp', 'Fuga', 'John', 'off', 'eng'],
+                    [],
                     ['piyo@isao.co.jp', 'Piyo', 'Cheng', 'off', 'chn'],
+                    [],
                 ],
             ],
             'normal: have header and ignore empty lines' => [
@@ -69,9 +73,13 @@ class S3ReaderTest extends GoalousTestCase
                     [null],
                 ],
                 'expected' => [
+                    [],
                     ['h1' => 'hoge@isao.co.jp', 'h2' => 'hoge', 'h3' => 'yamada', 'h4' => 'on', 'h5' => 'jpn'],
+                    [],
                     ['h1' => 'fuga@isao.co.jp', 'h2' => 'fuga', 'h3' => 'john', 'h4' => 'off', 'h5' => 'eng'],
+                    [],
                     ['h1' => 'piyo@isao.co.jp', 'h2' => 'piyo', 'h3' => 'cheng', 'h4' => 'on', 'h5' => 'chn'],
+                    [],
                 ],
             ],
         ];

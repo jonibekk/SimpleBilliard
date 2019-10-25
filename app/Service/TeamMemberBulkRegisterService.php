@@ -172,6 +172,9 @@ class TeamMemberBulkRegisterService
         int $teamAllCircleId
     ) {
         foreach ($records as $index => $record) {
+            if (empty($record)) {
+                continue;
+            }
             try {
                 $this->validateRecord($record);
 
