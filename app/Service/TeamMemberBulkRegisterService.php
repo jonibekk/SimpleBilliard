@@ -225,7 +225,16 @@ class TeamMemberBulkRegisterService
         try {
             TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
-            throw new $e('Validation error occurred in csv data.');
+            $result = $e->findMessages([
+                'email' => "{{name}}: The email format is incorrect",
+                'length' => "{{name}}: The character limit is not met",
+                'regex' => "{{name}}: The name format is incorrect",
+                'stringType' => "{{name}}: The value must be string",
+                'in' => "{{name}}: The value is incorrect",
+                'notEmpty' => "{{name}}: The value must not be empty",
+            ]);
+
+            throw new $e(implode("\n", array_filter(array_values($result))));
         }
     }
 
