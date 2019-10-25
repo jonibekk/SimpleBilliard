@@ -212,6 +212,10 @@ class TeamMemberBulkRegisterService
                 } else {
                     $this->getAggregate()->addFailedCount();
                 }
+            } finally {
+                if (($index + 1) % 100 === 0) {
+                    sleep(3);
+                }
             }
         }
     }
