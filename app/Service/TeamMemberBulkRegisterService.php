@@ -449,6 +449,7 @@ class TeamMemberBulkRegisterService
      */
     public function addLog(string $message): void
     {
+        CakeLog::notice($message);
         $this->log[] = $message;
     }
 
