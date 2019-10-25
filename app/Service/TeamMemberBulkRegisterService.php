@@ -444,7 +444,7 @@ class TeamMemberBulkRegisterService
     /**
      * @return array
      */
-    public function getLog(): array
+    private function getLog(): array
     {
         return $this->log;
     }
@@ -452,18 +452,10 @@ class TeamMemberBulkRegisterService
     /**
      * @param string $message
      */
-    public function addLog(string $message): void
+    private function addLog(string $message): void
     {
         CakeLog::notice($message);
         $this->log[] = $message;
-    }
-
-    /**
-     * @return string
-     */
-    public function outputLog(): string
-    {
-        return implode("\n", $this->getlog()) . "\n";
     }
 
     /**
@@ -471,15 +463,17 @@ class TeamMemberBulkRegisterService
      */
     protected function addAggregateLog(): void
     {
-        foreach ($this->getAggregateLog() as $log) {
-            $this->addLog($log);
-        }
+        $this->addLog('Success: ' . $this->getAggregate()->getSuccessCount());
+        $this->addLog('New User: ' . $this->getAggregate()->getNewUserCount());
+        $this->addLog('Exist User: ' . $this->getAggregate()->getExistUserCount());
+        $this->addLog('Failed: ' . $this->getAggregate()->getFailedCount());
+        $this->addLog('Excluded: ' . $this->getAggregate()->getExcludedCount());
     }
 
     /**
      * @return bool
      */
-    public function isDryRun(): bool
+    private function isDryRun(): bool
     {
         return $this->dryRun;
     }
@@ -492,7 +486,7 @@ class TeamMemberBulkRegisterService
         $this->s3Instance->putObject([
             'Bucket' => $this->getBucketName(),
             'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
-            'Body' => $this->outputLog()
+            'Body' => implode("\n", $this->getlog()) . "\n"
         ]);
     }
 
@@ -502,20 +496,6 @@ class TeamMemberBulkRegisterService
     protected function getAggregate(): TeamMemberBulkRegisterAggregate
     {
         return $this->aggregate;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAggregateLog(): array
-    {
-        return [
-            'Success: ' . $this->getAggregate()->getSuccessCount(),
-            'New User: ' . $this->getAggregate()->getNewUserCount(),
-            'Exist User: ' . $this->getAggregate()->getExistUserCount(),
-            'Failed: ' . $this->getAggregate()->getFailedCount(),
-            'Excluded: ' . $this->getAggregate()->getExcludedCount()
-        ];
     }
 
     /**
