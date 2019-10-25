@@ -6,12 +6,14 @@ use Goalous\Enum\Model\Team\ServiceUseStatus;
 App::uses('Email', 'Model');
 App::uses('Team', 'Model');
 App::uses('User', 'Model');
+App::uses('SendMail', 'Model');
+App::uses('SendMailToUser', 'Model');
 App::uses('TransactionManager', 'Model');
 App::uses('TeamMemberBulkRegisterValidator', 'Validator/Csv');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
-App::uses('GlEmailComponent', 'Controller/Component');
+App::uses('CakeEmail', 'Network/Email');
 App::import('Model/Csv', 'TeamMemberBulkRegisterAggregate');
 App::import('Model/User', 'UserSignUpFromCsv');
 App::import('Service/User/Team', 'UserTeamJoiningService');
@@ -47,6 +49,10 @@ class TeamMemberBulkRegisterService
     private $s3Instance;
     /** @var TransactionManager */
     private $TransactionManager;
+    /** @var SendMailToUser */
+    private $SendMailToUser;
+    /** @var SendMail */
+    private $SendMail;
     /** @var User */
     private $User;
     /** @var Email */
@@ -59,8 +65,6 @@ class TeamMemberBulkRegisterService
     private $userTeamJoiningService;
     /** @var UserCircleJoiningService */
     private $userCircleJoiningService;
-    /** @var GlEmailComponent */
-    private $GlEmail;
     /** * @var array */
     private $log = [];
 
@@ -78,12 +82,12 @@ class TeamMemberBulkRegisterService
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
         $this->userTeamJoiningService = new UserTeamJoiningService();
         $this->userCircleJoiningService = new UserCircleJoiningService();
+        $this->SendMailToUser = ClassRegistry::init('SendMailToUser');
+        $this->SendMail = ClassRegistry::init('SendMail');
         $this->User = ClassRegistry::init('User');
         $this->Email = ClassRegistry::init('Email');
         $this->Team = ClassRegistry::init('Team');
         $this->Circle = ClassRegistry::init('Circle');
-        $this->GlEmail = new GlEmailComponent(new ComponentCollection());
-        $this->GlEmail->startup(new AppController());
         $this->s3Instance = AwsClientFactory::createS3ClientForFileStorage();
     }
 
@@ -201,7 +205,6 @@ class TeamMemberBulkRegisterService
                 $this->addLog($errorMessage);
             } finally {
                 $this->outputCompleteMessage($index + 1);
-                usleep(500000);// 0.5sec
             }
         }
     }
@@ -278,8 +281,7 @@ class TeamMemberBulkRegisterService
         $this->joinCircle($userId, $teamId, $teamAllCircleId);
 
         if (!$this->isDryRun()) {
-            $this->getGlMail()
-                ->sendMailTeamMemberBulkRegistration($userId, $teamId, $teamName, $language, $email, $password);
+            $this->executeMailSend($email, $userId, $password, $teamId, $teamName, $language);
         }
 
         if ($isNewUser) {
@@ -288,6 +290,108 @@ class TeamMemberBulkRegisterService
         } else {
             $this->getAggregate()->addSuccessCount();
             $this->getAggregate()->addExistUserCount();
+        }
+    }
+
+    /**
+     * @param string $email
+     * @param int $userId
+     * @param string|null $password
+     * @param int $teamId
+     * @param string $teamName
+     * @param string $language
+     * @throws Exception
+     */
+    protected function executeMailSend(
+        string $email,
+        int $userId,
+        ?string $password,
+        int $teamId,
+        string $teamName,
+        string $language
+    ): void {
+        $item = [
+            'teamName' => $teamName,
+            'email' => $email,
+            'password' => $password,
+            'url' => 'https://' . ENV_NAME . '.goalous.com/users/agree_and_login?team_id=' . $teamId
+        ];
+
+        $newSendMailId = $this->createSendMailData($userId, $teamId, json_encode($item));
+
+        $this->sendMail($email, $item, $teamName, $language);
+
+        $this->updateSendMailDataTime($newSendMailId);
+    }
+
+    /**
+     * @param string $email
+     * @param array $viewVars
+     * @param string $teamName
+     * @param string $language
+     */
+    private function sendMail(string $email, array $viewVars, string $teamName, string $language): void
+    {
+        Configure::write('Config.language', $language);
+        $this->SendMail->_setTemplateSubject();
+        $options = SendMail::$TYPE_TMPL[SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION];
+        $subject = '[' . $teamName . '] ' . __('Invitation for team');
+
+        $config = (ENV_NAME === 'local') ? 'default' : 'amazon';
+        $Email = new CakeEmail($config);
+
+        $Email->config(['log' => false])
+            ->to($email)
+            ->subject($subject)
+            ->template($options['template'], $options['layout'])
+            ->viewVars($viewVars)
+            ->send();
+        $Email->reset();
+    }
+
+    /**
+     * @param int $userId
+     * @param int $teamId
+     * @param string $jsonEncodedItem
+     * @return int
+     * @throws Exception
+     */
+    private function createSendMailData(int $userId, int $teamId, string $jsonEncodedItem): int
+    {
+        $this->SendMail->create();
+        $result = $this->SendMail->save([
+            'team_id' => $teamId,
+            'template_type' => SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION,
+            'item' => $jsonEncodedItem
+        ]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to save send_mails data.');
+        }
+        $newSendMailId = $this->SendMail->id;
+
+        $this->SendMailToUser->create();
+        $result = $this->SendMailToUser->save([
+            'user_id'      => $userId,
+            'send_mail_id' => $newSendMailId,
+            'team_id'      => $teamId,
+        ]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to save send_mail_to_users data.');
+        }
+
+        return $newSendMailId;
+    }
+
+    /**
+     * @param int $sendMailId
+     * @throws Exception
+     */
+    private function updateSendMailDataTime(int $sendMailId): void
+    {
+        $this->SendMail->id = $sendMailId;
+        $result = $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to update sent_datetime.');
         }
     }
 
@@ -654,14 +758,6 @@ class TeamMemberBulkRegisterService
     protected function getTeamEntity(): Team
     {
         return $this->Team;
-    }
-
-    /**
-     * @return GlEmailComponent
-     */
-    protected function getGlMail(): GlEmailComponent
-    {
-        return $this->GlEmail;
     }
 
     /**
