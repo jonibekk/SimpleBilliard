@@ -122,11 +122,11 @@ class TeamMemberBulkRegisterService
     public function execute(): void
     {
         try {
-            $this->validParameter();
-
             if ($this->isDryRun()) {
                 $this->addLog('[INFO] This is dry-run');
             }
+
+            $this->validParameter();
 
             $teamId = $this->getTeamId();
             $team = $this->getTeamEntity()->findById($teamId);
