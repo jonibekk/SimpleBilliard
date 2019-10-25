@@ -42,13 +42,8 @@ class TeamMemberBulkRegisterShell extends AppShell
 
         try {
             $service->execute();
-            if (!$service->isDryRun()) {
-                $service->writeResult();
-            }
         } catch (Throwable $e) {
-            $service->addLog($e->getMessage());
-        } finally {
-            print_r($service->outputLog());
+            CakeLog::notice($e->getMessage());
         }
     }
 }

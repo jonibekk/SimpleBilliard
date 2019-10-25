@@ -196,6 +196,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         // Do not send email
         $serviceMock->shouldReceive('executeMailSend')->times(0);
+        $serviceMock->shouldReceive('writeResult')->times(0);
         $serviceMock->execute();
 
         $this->assertSame(count($records), $serviceMock->getAggregate()->getNewUserCount());
@@ -229,6 +230,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         // Send email to all CSV users
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         $serviceMock->shouldReceive('executeMailSend')->times(count($records));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame(count($records), $serviceMock->getAggregate()->getNewUserCount());
@@ -263,6 +265,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
                 )->once()
                 ->andThrow(\RuntimeException::class);
         }
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame(0, $serviceMock->getAggregate()->getNewUserCount());
@@ -306,6 +309,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
                 ->andThrow(\RuntimeException::class);
         }
         $serviceMock->shouldReceive('executeMailSend')->times(count($records) - $failCount);
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame(count($records) - $failCount, $serviceMock->getAggregate()->getNewUserCount());
@@ -335,12 +339,14 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $serviceMock = $this->createServiceMock($this->otherFreeTrialTeamId1, $fileName, $dryRun, $records);
         // Email all teams to all CSV users
         $serviceMock->shouldReceive('executeMailSend')->times(count($records));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         // Join the second team
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         // Email all teams to all CSV users
         $serviceMock->shouldReceive('executeMailSend')->times(count($records));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame(0, $serviceMock->getAggregate()->getNewUserCount());
@@ -365,12 +371,14 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         // Email first team to all CSV users
         $serviceMock->shouldReceive('executeMailSend')->times(count($records));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         // Join the first team again
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         // Do not send email to all CSV users
         $serviceMock->shouldReceive('executeMailSend')->times(0);
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame(0, $serviceMock->getAggregate()->getNewUserCount());
@@ -399,6 +407,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $serviceMock = $this->createServiceMock($this->otherFreeTrialTeamId1, $fileName, $dryRun, $preRegistryRecords);
         // Send email to 2 users registered in the first team
         $serviceMock->shouldReceive('executeMailSend')->times($preRegistryCount);
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $newRegistryCount = count($records) - $preRegistryCount;
@@ -407,6 +416,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $records);
         // Send email to the second team to all CSV users
         $serviceMock->shouldReceive('executeMailSend')->times($totalCsvUserCount);
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $this->assertSame($newRegistryCount, $serviceMock->getAggregate()->getNewUserCount());
@@ -434,11 +444,13 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
         // Join the first team
         $serviceMock = $this->createServiceMock($this->otherFreeTrialTeamId1, $fileName, $dryRun, $preRegistryRecords);
         $serviceMock->shouldReceive('executeMailSend')->times(count($preRegistryRecords));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         // Pre join the second team
         $serviceMock = $this->createServiceMock($this->freeTrialTeamId, $fileName, $dryRun, $preRegistrySameTeamRecords);
         $serviceMock->shouldReceive('executeMailSend')->times(count($preRegistrySameTeamRecords));
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $sendMailCount = count($records) - count($failRecords) - count($preRegistrySameTeamRecords);
@@ -457,6 +469,7 @@ class TeamMemberBulkRegisterServiceTest extends GoalousTestCase
                 ->andThrow(\RuntimeException::class);
         }
         $serviceMock->shouldReceive('executeMailSend')->times($sendMailCount);
+        $serviceMock->shouldReceive('writeResult')->once();
         $serviceMock->execute();
 
         $newUserCount = count($records) - count($failRecords) - count($preRegistrySameTeamRecords) - count($preRegistryRecords);

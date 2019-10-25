@@ -144,11 +144,12 @@ class TeamMemberBulkRegisterService
             $teamAllCircleId = $this->getTeamAllCircleId();
 
             $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
+            $this->addAggregateLog();
             if (!$this->isDryRun()) {
                 $this->cleanCache();
                 $this->addLog('Cleared cache.');
+                $this->writeResult();
             }
-            $this->addAggregateLog();
         } catch (\Throwable $e) {
             throw new $e($e->getMessage());
         }
@@ -480,7 +481,7 @@ class TeamMemberBulkRegisterService
     /**
      * @return void
      */
-    public function writeResult(): void
+    protected function writeResult(): void
     {
         $this->s3Instance->putObject([
             'Bucket' => $this->getBucketName(),
