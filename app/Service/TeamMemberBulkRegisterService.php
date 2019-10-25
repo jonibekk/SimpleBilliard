@@ -345,9 +345,11 @@ class TeamMemberBulkRegisterService
 
         $config = (ENV_NAME === 'local') ? 'default' : 'amazon';
         $Email = new CakeEmail($config);
+        if (ENV_NAME === 'local') {
+            $Email->config(['log' => false]);
+        }
 
-        $Email->config(['log' => false])
-            ->to($email)
+        $Email->to($email)
             ->subject($subject)
             ->template($options['template'], $options['layout'])
             ->viewVars($viewVars)
