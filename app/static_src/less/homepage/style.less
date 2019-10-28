@@ -1,7 +1,6 @@
 @import "../variables/all";
 
 
-
 /* ======= Base ======= */
 
 body {
@@ -15,21 +14,6 @@ h1, h2, h3, h4 h5, h6{
 html, body {
   height: 100%;
 }
-h1, h2, h3, h4{
-  margin: 0;
-  padding: 0;
-}
-/* フェードインモーション */
-.fadein {
-  opacity : 0.1;
-  transform : translate(0, 50px);
-  transition : all 500ms;
-}
-.fadein.scrollin {
-  opacity : 1;
-  transform : translate(0, 0);
-}
-
 .wrapper {
   min-height: 100%;
   margin-bottom: -296px;
@@ -2299,6 +2283,7 @@ body {
   list-style: none;
   text-align: right;
   padding: 0;
+  margin: 0;
 }
 .header .gnavisubmenu li{
   display: inline;
@@ -2313,7 +2298,7 @@ body {
 }
 
 
-@media(max-width:900px) {
+@media(max-width:1029px) {
   .pcscreen{
     display: none !important;
   }
@@ -2433,116 +2418,974 @@ body {
 
 /* ======= New LP Design 2019/10 ======= */
 // TODO: delete unnecessary past class ↑
-
-/*オプションclass*/
-.spbr{
-  display: none !important;
+@media (min-width: 1200px) {
+  .container {
+    width: 100% !important;
+  }
 }
 
-/*メインビジュアル*/
-.main_visual {
-  width: 100%;
-  height: auto;
-  background-image:
-    url("../../img/homepage/top/bg_triangle1.svg"),
-    url("../../img/homepage/top/bg_triangle_bottom1.svg");
-  background-repeat:
-    no-repeat, /* 最前面の背景レイヤーに対応 */
-    no-repeat;
-  background-position:
-    left top, /* 最前面の背景レイヤーに対応 */
-    right bottom;
-  padding-bottom: 90px;
-  position: relative;
-}
-.main_visual .visual_container {
-  padding: 10px 0 0;
-  height: 550px;
-}
-.main_visual .visual_container .main_img{
-  width: 450px;
-  right: 60%;
-  position: absolute;
-}
-.main_visual .visual_container .text_area{
-  width: 640px;
-  left: 43%;
-  position: absolute;
-}
-.main_visual .visual_container .team_amount{
-  font-size: 3rem;
-  color: #C20819;
-  font-weight: 600;
-  margin: 45px 0 0 140px;
-}
-.main_visual .visual_container .team_amount:before,
-.main_visual .visual_container .team_amount:after {
-  content: '';
-  display: inline-block;
-  width: 30px;
-  height: 3px;
-  background-color: #C20819;
-  margin-bottom: 5px;
-}
-.main_visual .visual_container .team_amount:before {
-  -webkit-transform: rotate(60deg);
-  transform: rotate(60deg);
-}
-.main_visual .visual_container .team_amount:after {
-  -webkit-transform: rotate(-60deg);
-  transform: rotate(-60deg);
-}
-.main_visual .visual_container .main_explain{
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-top: 30px;
-}
-.main_visual .visual_container h2{
-  font-size: 75px;
-  margin: 20px 0 45px;
-  line-height: 90px;
-  letter-spacing: 5px;
-}
-.main_visual .visual_container .inq_btn_cnt{
-  position: relative;
-  text-align: center;
-  margin-left: 40px;
-}
-.main_visual .visual_container .inq_btn_cnt .baloon{
-  position: absolute;
-  top: -50px;
-  right: 60px;
-  z-index: 100;
-}
-.main_visual .visual_container .inq_btn_cnt .inq_btn{
-  transition: all 0.4s ease-in-out;
-  display: block;
-  width: 500px;
-  background-color: #C20819;
-  padding: .7em 1em;
-  border-radius: 100px;
-  color: #FFF;
-  font-size: 2.5em;
-  font-weight: 500;
-  z-index: 1;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-}
-.main_visual .visual_container .inq_btn_cnt .inq_btn:hover{
-  background-color: #F26E7A;
-  transform: translate(0,-5px);
+#lpTop {
+  h1, h2, h3, h4{
+    margin: 0;
+    padding: 0;
+  }
+  /* フェードインモーション */
+  .fadein {
+    opacity : 0.1;
+    transform : translate(0, 50px);
+    transition : all 500ms;
+  }
+  .fadein.scrollin {
+    opacity : 1;
+    transform : translate(0, 0);
+  }
+
+
+  ul, li{
+    list-style-type : none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /*オプションclass*/
+  .spbr{
+    display: none !important;
+  }
+
+  /*メインビジュアル*/
+  .main_visual {
+    width: 100%;
+    height: auto;
+    background-image:
+      url("../../img/homepage/top/bg_triangle1.svg"),
+      url("../../img/homepage/top/bg_triangle_bottom1.svg");
+    background-repeat:
+      no-repeat, /* 最前面の背景レイヤーに対応 */
+      no-repeat;
+    background-position:
+      left top, /* 最前面の背景レイヤーに対応 */
+      right bottom;
+    padding-bottom: 90px;
+    position: relative;
+  }
+  .main_visual .visual_container {
+    padding: 10px 0 0;
+    height: 550px;
+  }
+  .main_visual .visual_container .main_img{
+    width: 450px;
+    right: 60%;
+    position: absolute;
+  }
+  .main_visual .visual_container .text_area{
+    width: 640px;
+    left: 43%;
+    position: absolute;
+  }
+  .main_visual .visual_container .team_amount{
+    font-size: 3rem;
+    color: #C20819;
+    font-weight: 600;
+    margin: 45px 0 0 140px;
+  }
+  .main_visual .visual_container .team_amount:before,
+  .main_visual .visual_container .team_amount:after {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 3px;
+    background-color: #C20819;
+    margin-bottom: 5px;
+  }
+  .main_visual .visual_container .team_amount:before {
+    -webkit-transform: rotate(60deg);
+    transform: rotate(60deg);
+  }
+  .main_visual .visual_container .team_amount:after {
+    -webkit-transform: rotate(-60deg);
+    transform: rotate(-60deg);
+  }
+  .main_visual .visual_container .main_explain{
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-top: 30px;
+  }
+  .main_visual .visual_container h2{
+    font-size: 75px;
+    margin: 20px 0 45px;
+    line-height: 90px;
+    letter-spacing: 5px;
+  }
+  .main_visual .visual_container .inq_btn_cnt{
+    position: relative;
+    text-align: center;
+    margin-left: 40px;
+  }
+  .main_visual .visual_container .inq_btn_cnt .baloon{
+    position: absolute;
+    top: -50px;
+    right: 60px;
+    z-index: 100;
+  }
+  .main_visual .visual_container .inq_btn_cnt .inq_btn{
+    transition: all 0.4s ease-in-out;
+    display: block;
+    width: 500px;
+    background-color: #C20819;
+    padding: .7em 1em;
+    border-radius: 100px;
+    color: #FFF;
+    font-size: 2.5em;
+    font-weight: 500;
+    z-index: 1;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  }
+  .main_visual .visual_container .inq_btn_cnt .inq_btn:hover{
+    background-color: #F26E7A;
+    transform: translate(0,-5px);
+  }
+
+  /*セミナーバナー*/
+  .seminar_banner{
+    width: 1030px;
+    margin: 55px auto 0;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  }
+  .seminar_banner a:hover{
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    -ms-filter: "alpha(opacity=70)";
+  }
+
+  /*コンテンツ灰色*/
+  .cnt_container_gray{
+    background: #F5F5F5;
+    text-align: center;
+    padding-bottom: 40px;
+    position: relative;
+  }
+  .cnt_container_gray h3.borderttl{
+    width: 720px;
+    font-size: 3.2em;
+    border-bottom: 4px solid #C20819;
+    padding: 60px 0 5px;
+    margin: 0 auto 60px;
+  }
+  .cnt_container_gray ul.intro_detail{
+    display:flex;
+    justify-content: center;
+    position: relative;
+    background: url("../../img/homepage/top/intro_progressbar.svg") no-repeat center top;
+  }
+  .cnt_container_gray span{
+    color: #FFF;
+    width: 100%;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 5px;
+    padding:10px 0 0 0;
+    display: block;
+  }
+  .cnt_container_gray li{
+    width:360px;
+    margin-right: 60px;
+  }
+  .cnt_container_gray li:last-child{
+    margin-right: 0;
+  }
+  .cnt_container_gray h4,.cnt_container_gray p{
+    text-align: left;
+  }
+  .cnt_container_gray h4{
+    margin: 30px 0;
+    font-size: 1.6em;
+    text-align: left;
+  }
+  .cnt_container_gray p{
+    line-height: 1.8;
+  }
+  .cnt_container_gray img.introart{
+    margin-top: 40px;
+  }
+
+  /*通常コンテンツBOX*/
+  .cnt_container{
+    width: 100%;
+    height: auto;
+    padding-bottom: 120px;
+    position: relative;
+  }
+  .cnt_container.pattern1{
+    background: url("../../img/homepage/top/bg_triangle2.svg") no-repeat left top;
+  }
+  .cnt_container.pattern2{
+    background: url("../../img/homepage/top/bg_triangle_bottom2.svg") no-repeat right bottom;
+  }
+  .cnt_container.pattern3{
+    background: url("../../img/homepage/top/bg_triangle3.svg") no-repeat left top;
+  }
+  .cnt_container h3{
+    padding: 90px 0 30px;
+    font-size: 2.8em;
+    text-align: center;
+  }
+
+  /*コンテンツ　イントロ*/
+  .cnt_container .introduction{
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .cnt_container .introduction h3{
+    width:50%;
+    padding: 215px 0 30px 60px;
+    text-align: left;
+    font-size: 2.8em;
+  }
+  .cnt_container .introduction p{
+    width:50%;
+    padding-left: 60px;
+    line-height: 1.8;
+    font-weight: 600;
+  }
+  .cnt_container .introduction p.supplement{
+    font-size: 12px;
+    padding-top: 15px;
+    line-height: 1.8;
+    font-weight: 400;
+  }
+  .cnt_container .introduction img{
+    position: absolute;
+    display: block;
+    top: 150px;
+    left: 50%;
+  }
+
+  /*コンテンツ　機能*/
+  .cnt_container .function{
+    width: 100%;
+    height: auto;
+    position: relative;
+    background: url("../../img/homepage/top/function_line.svg") no-repeat center top;
+  }
+  .cnt_container .function h4{
+    font-size: 1.6em;
+    color: #C20819;
+    margin-bottom: 15px;
+  }
+  .cnt_container .function p{
+    line-height: 1.8;
+  }
+  .cnt_container .function .detail1,
+  .cnt_container .function .detail3{
+    width: 100%;
+    height: 250px;
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-left: 52%;
+    padding-right: 30px;
+    position: relative;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .cnt_container .function .detail2,
+  .cnt_container .function .detail4{
+    width: 100%;
+    height: 250px;
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-right: 52%;
+    padding-left: 30px;
+    position: relative;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .cnt_container .function .detail1 img,
+  .cnt_container .function .detail3 img{
+    position: absolute;
+    top: 0;
+    right: 55%;
+    height: 230px;
+  }
+  .cnt_container .function .detail2 img,
+  .cnt_container .function .detail4 img{
+    position: absolute;
+    top: 0;
+    left: 55%;
+    height: 230px;
+  }
+
+  /*コンテンツ　事例*/
+  .cnt_container_gray h3.casestudy{
+    font-size: 2.8em;
+    margin: 0 auto;
+    padding: 60px 0 30px;
+  }
+  .cnt_container_gray ul.case_detail{
+    display:flex;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+  .cnt_container_gray ul.case_detail li{
+    width: 500px;
+    height: auto;
+    background-color: #FFF;
+    border-radius: 5px;
+    box-shadow: 1px 1px 20px rgba(0,0,0,0.1);
+    display:inline-block;
+  }
+  .cnt_container_gray ul.case_detail li a{
+    display:block;
+    width:100%;
+    padding: 40px 30px 30px;
+  }
+  .cnt_container_gray ul.case_detail li a:hover{
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    -ms-filter: "alpha(opacity=70)";
+    transform: translate(0,-5px);
+  }
+  .cnt_container_gray ul.case_detail li:first-child{
+    margin-right: 30px;
+  }
+  .cnt_container_gray h4.csttl{
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+  }
+  .cnt_container_gray ul.case_detail li p{
+    font-weight: 600;
+    font-size: 1.3em;
+    line-height: 1.5;
+    width: 100%;
+    display: block;
+    padding: 15px;
+    margin: 0;
+    background-image:
+      url("../../img/homepage/top/quotation_top.svg"),
+      url("../../img/homepage/top/quotation_bottom.svg");
+    background-repeat:
+      no-repeat, /* 最前面の背景レイヤーに対応 */
+      no-repeat;
+    background-position:
+      left top, /* 最前面の背景レイヤーに対応 */
+      right bottom;
+  }
+
+  /*コンテンツ　セミナー*/
+  .seminar_attended p{
+    text-align: center;
+    font-weight: 600;
+    line-height: 1.8;
+  }
+  .seminar_attended ul{
+    list-style-type : none;
+    margin: 0;
+    padding: 0;
+    width: 1030px;
+    margin: 40px auto 0;
+    display:-webkit-box;
+    display:-moz-box;
+    display:-ms-flexbox;
+    display:-webkit-flex;
+    display:-moz-flex;
+    display:flex;
+    -webkit-box-lines:multiple;
+    -moz-box-lines:multiple;
+    -webkit-flex-wrap:wrap;
+    -moz-flex-wrap:wrap;
+    -ms-flex-wrap:wrap;
+    flex-wrap:wrap;
+    justify-content: center;
+  }
+  .seminar_attended li{
+    width: 330px;
+    height: auto;
+    background-color: #F5F5F5;
+    border-radius: 5px;
+    padding: 15px;
+    text-decoration: none;
+    margin: 0;
+  }
+  .seminar_attended li:nth-child(1),
+  .seminar_attended li:nth-child(2),
+  .seminar_attended li:nth-child(4),
+  .seminar_attended li:nth-child(5){
+    margin: 0 20px 20px 0;
+  }
+  .seminar_attended li:nth-child(7),
+  .seminar_attended li:nth-child(8){
+    margin: 0 20px 0 0;
+  }
+  .seminar_attended li:nth-child(3),
+  .seminar_attended li:nth-child(6){
+    margin: 0 0 20px 0;
+  }
+  .seminar_attended li p{
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 400;
+    text-align: left;
+    padding: 15px;
+    background-image:
+      url("../../img/homepage/top/quotation_top.svg"),
+      url("../../img/homepage/top/quotation_bottom.svg");
+    background-repeat:
+      no-repeat, /* 最前面の背景レイヤーに対応 */
+      no-repeat;
+    background-position:
+      left top, /* 最前面の背景レイヤーに対応 */
+      right bottom;
+  }
+
+  /*コンテンツ黒*/
+  .cnt_container_black{
+    background: #333333;
+    text-align: center;
+    padding-bottom: 40px;
+  }
+  .cnt_container_black h3{
+    color: #FFF;
+    width: auto;
+    font-size: 2.8em;
+    padding: 60px 0 5px;
+    margin: 0 auto 50px;
+  }
+  .cnt_container_black dl{
+    width:400px;
+    margin: 0 auto 30px;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    flex-flow: column;
+    -webkit-box-pack:justify;
+    -ms-flex-pack:justify;
+    justify-content:space-between;
+  }
+  .cnt_container_black dl img{
+    border: 1px solid #D3D3D3;
+  }
+  .cnt_container_black dl a:hover{
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    -ms-filter: "alpha(opacity=70)";
+  }
+  .cnt_container_black dt{
+    font-size: 2rem;
+    font-weight: 400;
+    color: #FFF;
+    margin-top: 30px;
+  }
+
+  /*コンテンツ　インサートコンバージョン*/
+  .cnt_container_inq{
+    display:flex;
+    justify-content: center;
+    width: 100%;
+    height: 220px;
+    background: #C20819 url("../../img/homepage/top/innquiry_insert_bg.svg") no-repeat center top;
+  }
+  .cnt_container_inq h3{
+    text-align: right;
+    font-size: 2.4em;
+    color: #FFF;
+    margin: 100px 30px 0 0;
+  }
+  .cnt_container_inq .inq_btn_cnt{
+    position: relative;
+    text-align: center;
+    width: 500px;
+    margin-top: 70px;
+  }
+  .cnt_container_inq .inq_btn_cnt .baloon{
+    position: absolute;
+    top: -50px;
+    right: 20px;
+    z-index: 100;
+  }
+  .cnt_container_inq .inq_btn_cnt .inq_btn{
+    transition: all 0.4s ease-in-out;
+    display: block;
+    background-color: #FFF;
+    padding: .7em 1em;
+    border-radius: 100px;
+    color: #C20819;
+    font-size: 2.5em;
+    font-weight: 600;
+    z-index: 1;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  }
+  .cnt_container_inq .inq_btn_cnt .inq_btn:hover{
+    background-color: #FFFCB9;
+    transform: translate(0,-5px);
+  }
+
+  .cnt_container_inq_bigger{
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display:flex;
+    flex-flow: column;
+    -webkit-box-pack:justify;
+    -ms-flex-pack:justify;
+    justify-content: center;
+    width: 100%;
+    height: 500px;
+    background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center top;
+  }
+  .cnt_container_inq_bigger h3{
+    text-align: center;
+    font-size: 2.8em;
+    color: #FFF;
+    margin: 30px 0 0;
+  }
+  .cnt_container_inq_bigger .inq_btn_cnt{
+    position: relative;
+    text-align: center;
+    width: 500px;
+    margin: 80px auto 0;
+  }
+  .cnt_container_inq_bigger .inq_btn_cnt .baloon{
+    position: absolute;
+    top: -50px;
+    right: 20px;
+    z-index: 100;
+  }
+  .cnt_container_inq_bigger .inq_btn_cnt .inq_btn{
+    transition: all 0.4s ease-in-out;
+    display: block;
+    background-color: #FFF;
+    padding: .7em 1em;
+    border-radius: 100px;
+    color: #C20819;
+    font-size: 2.5em;
+    font-weight: 600;
+    z-index: 1;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+  }
+  .cnt_container_inq_bigger .inq_btn_cnt .inq_btn:hover{
+    background-color: #FFFCB9;
+    transform: translate(0,-5px);
+  }
+
+  /*スマホ*/
+  @media screen and (max-width:1029px) {
+    /*オプションclass*/
+    .spbr{
+      display: block !important;
+    }
+    /*メインビジュアル*/
+    .main_visual {
+      padding-bottom: 45px;
+      position: static;
+      background-size: auto 25vw;
+    }
+    .main_visual .visual_container {
+      padding: 25px 0 0;
+      height: auto;
+    }
+    .main_visual .visual_container .main_img_sp{
+      width: 50%;
+      min-height: 180px;
+    }
+    .main_visual .visual_container .text_area{
+      width: 100%;
+      position: static;
+      text-align: center;
+    }
+    .main_visual .visual_container .team_amount{
+      font-size: 5vw;
+      margin: 0 auto;
+    }
+    .main_visual .visual_container .main_explain{
+      font-size: 4vw;
+      margin-top: 10px;
+    }
+    .main_visual .visual_container h2{
+      width: 50%;
+      font-size: 8vw;
+      line-height: 10vw;
+      letter-spacing: 3px;
+      text-align: left;
+      padding-left: 10px;
+      margin: 0;
+    }
+    .main_visual .visual_container .spflex{
+      display:flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main_visual .visual_container .inq_btn_cnt{
+      margin: 15px auto 0;
+      width: 80%;
+    }
+    .main_visual .visual_container .inq_btn_cnt .baloon{
+      position: absolute;
+      top: -50px;
+      right: 0;
+      z-index: 100;
+      width: 70px;
+    }
+    .main_visual .visual_container .inq_btn_cnt .inq_btn{
+      display: block;
+      width: 100%;
+      background-color: #C20819;
+      padding: .6em 1em;
+      font-size: 1.8em;
+    }
+
+    /*セミナーバナー*/
+    .seminar_banner{
+      padding-bottom: 20px;
+      width: 95%;
+      margin: 0 auto 50px;
+      box-shadow: none;
+      background-color: #E0E0E0;
+      text-align: center;
+    }
+    .seminar_banner h3.seminarTtl{
+      font-size: 1.6em;
+      padding-top: 20px;
+      color: #000;
+    }
+    .seminar_banner p.seminarDetail{
+      font-size: 0.6em;
+      padding-top: 10px;
+      text-align: center;
+    }
+    .seminar_banner a.seminarLink{
+      font-size: 0.6em;
+      padding: 5px 50px;
+      color: #FFF;
+      background-color: #C20819;
+      border-radius: 5px;
+    }
+
+    /*コンテンツ灰色*/
+    .cnt_container_gray{
+      padding-top: 10px;
+    }
+    .cnt_container_gray h3.borderttl{
+      width: auto;
+      font-size: 2em;
+      border-bottom: none;
+      padding: 10px 0 5px;
+      margin: 50px auto 35px;
+      font-weight: bold;
+      background: -webkit-gradient(linear, left top, left bottom, color-stop(70%, transparent), color-stop(0%, #C20819));
+      background: linear-gradient(transparent 95%, #C20819 0%);
+      display: inline;
+      line-height: 50px;
+    }
+    .cnt_container_gray ul.intro_detail{
+      display:block;
+      padding: 80px 20px 0;
+      background: none;
+    }
+    .cnt_container_gray span{
+      color: #FFF;
+      background-color: #C20819;
+      width: auto;
+      text-align: center;
+      font-size: 1em;
+      letter-spacing: 5px;
+      padding:5px 10px;
+      box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
+      display: block;
+      position: absolute;
+      top: -50px;
+      left: 0;
+    }
+    .cnt_container_gray li{
+      width:auto;
+      margin-right: 0;
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .casestudy .cnt_container_gray li{
+      width:auto;
+      margin-right: 0;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .cnt_container_gray li:last-child{
+      margin-bottom: 0;
+    }
+    .cnt_container_gray h4{
+      margin: 15px 0;
+      font-size: 1.4em;
+      text-align: center;
+    }
+    .cnt_container_gray p{
+      line-height: 1.6;
+    }
+    .cnt_container_gray img.introart{
+      margin-top: 0;
+      height: 150px;
+    }
+
+    /*通常コンテンツBOX*/
+    .cnt_container{
+      width: 100%;
+      height: auto;
+      padding: 0 20px 60px;
+      position: relative;
+    }
+    .cnt_container.pattern1{
+      background-size: auto 18vw;
+    }
+    .cnt_container.pattern2{
+      background-size: auto 20vw;
+    }
+    .cnt_container.pattern3{
+      background-size: auto 20vw;
+    }
+    .cnt_container h3{
+      padding: 60px 0 25px;
+      font-size: 2em;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /*コンテンツ　イントロ*/
+    .cnt_container .introduction{
+      width: 100%;
+      height: auto;
+      position: static;
+    }
+    .cnt_container .introduction h3{
+      width:100%;
+      padding: 60px 0 15px 0;
+      text-align: left;
+      font-size: 2em;
+    }
+    .cnt_container .introduction p{
+      width:100%;
+      padding-left: 0;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+    .cnt_container .introduction p.supplement{
+      font-size: 1em;
+      padding-top: 0;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+    .cnt_container .introduction img{
+      position: static;
+      display: block;
+      width: 100%;
+      padding-bottom: 15px;
+    }
+    .cnt_container .introduction .textlink{
+      margin-top: 0;
+    }
+
+    /*コンテンツ　機能*/
+    .cnt_container .function{
+      width: 100%;
+      position: static;
+      background: none;
+      text-align: left;
+    }
+    .cnt_container h3.functionTtl{
+      text-align: left;
+      padding-bottom: 0;
+    }
+    .cnt_container .function h4{
+      font-size: 1.6em;
+      color: #C20819;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .cnt_container .function p{
+      line-height: 1.8;
+    }
+    .cnt_container .function .detail1,
+    .cnt_container .function .detail2,
+    .cnt_container .function .detail3,
+    .cnt_container .function .detail4{
+      width: 100%;
+      height: auto;
+      margin-top: 30px;
+      padding: 0;
+      position: static;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .cnt_container .function .detail1 img,
+    .cnt_container .function .detail2 img,
+    .cnt_container .function .detail3 img,
+    .cnt_container .function .detail4 img{
+      position: static;
+      height: 20%;
+    }
+    .cnt_container .function p{
+      text-align: left;
+    }
+
+    /*コンテンツ　事例*/
+    .cnt_container_gray h3.casestudy{
+      font-size: 2em;
+      margin: 0 auto;
+      padding: 30px 0 30px;
+    }
+    .cnt_container_gray ul.case_detail{
+      display:block;
+      margin-bottom: 30px;
+      padding: 0 20px;
+    }
+    .cnt_container_gray ul.case_detail li{
+      width: 100%;
+      height: auto;
+    }
+    .cnt_container_gray h4.csttl {
+      padding: 0 0 15px;
+    }
+    .cnt_container_gray ul.case_detail li a{
+      display:block;
+      width:100%;
+      padding: 20px 15px 15px;
+    }
+    .cnt_container_gray ul.case_detail li:first-child{
+      margin-right: 0;
+    }
+    .cnt_container_gray ul.case_detail li p{
+      font-size: 1.2em;
+    }
+    .cnt_container_gray ul.case_detail img{
+      height: 30px;
+    }
+
+    /*コンテンツ　セミナー*/
+    .seminar_attended p{
+      text-align: left;
+    }
+    .seminar_attended ul{
+      width: 100%;
+      margin: 30px auto 0;
+    }
+    .seminar_attended li{
+      width: 48%;
+      height: auto
+      padding: 10px;
+    }
+    .seminar_attended li:nth-child(1),
+    .seminar_attended li:nth-child(3),
+    .seminar_attended li:nth-child(5),
+    .seminar_attended li:nth-child(7){
+      margin: 0 10px 10px 0;
+    }
+    .seminar_attended li:nth-child(2),
+    .seminar_attended li:nth-child(4),
+    .seminar_attended li:nth-child(6),
+    .seminar_attended li:nth-child(8){
+      margin: 0 0 10px 0;
+    }
+    .seminar_attended li:nth-child(9){
+      width: 100%;
+      margin: 0;
+    }
+    .seminar_attended li p{
+      font-size: 1.4rem;
+      line-height: 1.4;
+      padding: 15px;
+      margin: 0;
+    }
+
+    /*コンテンツ黒*/
+    .cnt_container_black{
+      padding: 0 20px 45px;
+    }
+    .cnt_container_black h3{
+      color: #FFF;
+      width: auto;
+      font-size: 2em;
+      padding: 45px 0 5px;
+      margin: 0 auto 30px;
+    }
+    .cnt_container_black dl{
+      width:100%;
+      margin: 0 auto 0;
+    }
+    .cnt_container_black dl img{
+      width: 100%;
+    }
+    .cnt_container_black dt{
+      font-size: 1.2em;
+      margin-top: 15px;
+    }
+
+    /*コンテンツ　インサートコンバージョン*/
+    .cnt_container_inq{
+      display: block;
+      height: auto;
+      background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center bottom;
+      background-size: cover;
+      padding-bottom: 30px;
+    }
+    .cnt_container_inq h3{
+      text-align: center;
+      font-size: 2em;
+      padding: 30px 0 15px;
+      margin: 0;
+    }
+    .cnt_container_inq .inq_btn_cnt{
+      position: relative;
+      text-align: center;
+      width: 80%;
+      margin: 50px auto 0;
+    }
+    .cnt_container_inq .inq_btn_cnt .baloon{
+      position: absolute;
+      top: -50px;
+      right: 0px;
+      z-index: 100;
+      width: 70px;
+    }
+    .cnt_container_inq .inq_btn_cnt .inq_btn{
+      color: #C20819;
+      font-size: 1.8em;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .cnt_container_inq_bigger{
+      display: block;
+      height: auto;
+      background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center bottom;
+      background-size: cover;
+      padding-bottom: 30px;
+    }
+    .cnt_container_inq_bigger h3{
+      text-align: center;
+      font-size: 2em;
+      padding: 30px 0 15px;
+      margin: 0;
+    }
+    .cnt_container_inq_bigger .inq_btn_cnt{
+      position: relative;
+      text-align: center;
+      width: 80%;
+      margin: 50px auto 0;
+    }
+    .cnt_container_inq_bigger .inq_btn_cnt .baloon{
+      position: absolute;
+      top: -50px;
+      right: 0px;
+      z-index: 100;
+      width: 70px;
+    }
+    .cnt_container_inq_bigger .inq_btn_cnt .inq_btn{
+      color: #C20819;
+      font-size: 1.8em;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+  }
 }
 
-/*セミナーバナー*/
-.seminar_banner{
-  width: 1030px;
-  margin: 55px auto 0;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-}
-.seminar_banner a:hover{
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
-}
+
 
 /*テキストリンク*/
 .textlink{
@@ -2590,417 +3433,6 @@ body {
 .cnt_container_footer .textlink::after{
   border-top: 1px solid #717171;
   border-right: 1px solid #717171;
-}
-
-/*コンテンツ灰色*/
-.cnt_container_gray{
-  background: #F5F5F5;
-  text-align: center;
-  padding-bottom: 40px;
-  position: relative;
-}
-.cnt_container_gray h3.borderttl{
-  width: 720px;
-  font-size: 3.2em;
-  border-bottom: 4px solid #C20819;
-  padding: 60px 0 5px;
-  margin: 0 auto 60px;
-}
-.cnt_container_gray ul.intro_detail{
-  display:flex;
-  justify-content: center;
-  position: relative;
-  background: url("../../img/homepage/top/intro_progressbar.svg") no-repeat center top;
-}
-.cnt_container_gray span{
-  color: #FFF;
-  width: 100%;
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 400;
-  letter-spacing: 5px;
-  padding:10px 0 0 0;
-  display: block;
-}
-.cnt_container_gray li{
-  width:360px;
-  margin-right: 60px;
-}
-.cnt_container_gray li:last-child{
-  margin-right: 0;
-}
-.cnt_container_gray h4,.cnt_container_gray p{
-  text-align: left;
-}
-.cnt_container_gray h4{
-  margin: 30px 0;
-  font-size: 1.6em;
-  text-align: left;
-}
-.cnt_container_gray p{
-  line-height: 1.8;
-}
-.cnt_container_gray img.introart{
-  margin-top: 40px;
-}
-
-/*通常コンテンツBOX*/
-.cnt_container{
-  width: 100%;
-  height: auto;
-  padding-bottom: 120px;
-  position: relative;
-}
-.cnt_container.pattern1{
-  background: url("../../img/homepage/top/bg_triangle2.svg") no-repeat left top;
-}
-.cnt_container.pattern2{
-  background: url("../../img/homepage/top/bg_triangle_bottom2.svg") no-repeat right bottom;
-}
-.cnt_container.pattern3{
-  background: url("../../img/homepage/top/bg_triangle3.svg") no-repeat left top;
-}
-.cnt_container h3{
-  padding: 90px 0 30px;
-  font-size: 2.8em;
-  text-align: center;
-}
-
-/*コンテンツ　イントロ*/
-.cnt_container .introduction{
-  width: 100%;
-  height: auto;
-  position: relative;
-}
-.cnt_container .introduction h3{
-  width:50%;
-  padding: 215px 0 30px 60px;
-  text-align: left;
-  font-size: 2.8em;
-}
-.cnt_container .introduction p{
-  width:50%;
-  padding-left: 60px;
-  line-height: 1.8;
-  font-weight: 600;
-}
-.cnt_container .introduction p.supplement{
-  font-size: 12px;
-  padding-top: 15px;
-  line-height: 1.8;
-  font-weight: 400;
-}
-.cnt_container .introduction img{
-  position: absolute;
-  display: block;
-  top: 150px;
-  left: 50%;
-}
-
-/*コンテンツ　機能*/
-.cnt_container .function{
-  width: 100%;
-  height: auto;
-  position: relative;
-  background: url("../../img/homepage/top/function_line.svg") no-repeat center top;
-}
-.cnt_container .function h4{
-  font-size: 1.6em;
-  color: #C20819;
-  margin-bottom: 15px;
-}
-.cnt_container .function p{
-  line-height: 1.8;
-}
-.cnt_container .function .detail1,
-.cnt_container .function .detail3{
-  width: 100%;
-  height: 250px;
-  margin-top: 30px;
-  padding-top: 30px;
-  padding-left: 52%;
-  padding-right: 30px;
-  position: relative;
-  text-align: left;
-  vertical-align: middle;
-}
-.cnt_container .function .detail2,
-.cnt_container .function .detail4{
-  width: 100%;
-  height: 250px;
-  margin-top: 30px;
-  padding-top: 30px;
-  padding-right: 52%;
-  padding-left: 30px;
-  position: relative;
-  text-align: right;
-  vertical-align: middle;
-}
-.cnt_container .function .detail1 img,
-.cnt_container .function .detail3 img{
-  position: absolute;
-  top: 0;
-  right: 55%;
-  height: 230px;
-}
-.cnt_container .function .detail2 img,
-.cnt_container .function .detail4 img{
-  position: absolute;
-  top: 0;
-  left: 55%;
-  height: 230px;
-}
-
-/*コンテンツ　事例*/
-.cnt_container_gray h3.casestudy{
-  font-size: 2.8em;
-  margin: 0 auto;
-  padding: 60px 0 30px;
-}
-.cnt_container_gray ul.case_detail{
-  display:flex;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-.cnt_container_gray ul.case_detail li{
-  width: 500px;
-  height: auto;
-  background-color: #FFF;
-  border-radius: 5px;
-  box-shadow: 1px 1px 20px rgba(0,0,0,0.1);
-  display:inline-block;
-}
-.cnt_container_gray ul.case_detail li a{
-  display:block;
-  width:100%;
-  padding: 40px 30px 30px;
-}
-.cnt_container_gray ul.case_detail li a:hover{
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
-  transform: translate(0,-5px);
-}
-.cnt_container_gray ul.case_detail li:first-child{
-  margin-right: 30px;
-}
-.cnt_container_gray h4.csttl{
-  margin: 0;
-  padding: 0 0 20px;
-  text-align: center;
-}
-.cnt_container_gray ul.case_detail li p{
-  font-weight: 600;
-  font-size: 1.3em;
-  line-height: 1.5;
-  width: 100%;
-  display: block;
-  padding: 15px;
-  margin: 0;
-  background-image:
-    url("../../img/homepage/top/quotation_top.svg"),
-    url("../../img/homepage/top/quotation_bottom.svg");
-  background-repeat:
-    no-repeat, /* 最前面の背景レイヤーに対応 */
-    no-repeat;
-  background-position:
-    left top, /* 最前面の背景レイヤーに対応 */
-    right bottom;
-}
-
-/*コンテンツ　セミナー*/
-.seminar_attended p{
-  text-align: center;
-  font-weight: 600;
-  line-height: 1.8;
-}
-.seminar_attended ul{
-  list-style-type : none;
-  margin: 0;
-  padding: 0;
-  width: 1030px;
-  margin: 40px auto 0;
-  display:-webkit-box;
-  display:-moz-box;
-  display:-ms-flexbox;
-  display:-webkit-flex;
-  display:-moz-flex;
-  display:flex;
-  -webkit-box-lines:multiple;
-  -moz-box-lines:multiple;
-  -webkit-flex-wrap:wrap;
-  -moz-flex-wrap:wrap;
-  -ms-flex-wrap:wrap;
-  flex-wrap:wrap;
-  justify-content: center;
-}
-.seminar_attended li{
-  width: 330px;
-  height: auto;
-  background-color: #F5F5F5;
-  border-radius: 5px;
-  padding: 15px;
-  text-decoration: none;
-  margin: 0;
-}
-.seminar_attended li:nth-child(1),
-.seminar_attended li:nth-child(2),
-.seminar_attended li:nth-child(4),
-.seminar_attended li:nth-child(5){
-  margin: 0 20px 20px 0;
-}
-.seminar_attended li:nth-child(7),
-.seminar_attended li:nth-child(8){
-  margin: 0 20px 0 0;
-}
-.seminar_attended li:nth-child(3),
-.seminar_attended li:nth-child(6){
-  margin: 0 0 20px 0;
-}
-.seminar_attended li p{
-  font-size: 14px;
-  line-height: 1.6;
-  font-weight: 400;
-  text-align: left;
-  padding: 15px;
-  background-image:
-    url("../../img/homepage/top/quotation_top.svg"),
-    url("../../img/homepage/top/quotation_bottom.svg");
-  background-repeat:
-    no-repeat, /* 最前面の背景レイヤーに対応 */
-    no-repeat;
-  background-position:
-    left top, /* 最前面の背景レイヤーに対応 */
-    right bottom;
-}
-
-/*コンテンツ黒*/
-.cnt_container_black{
-  background: #333333;
-  text-align: center;
-  padding-bottom: 40px;
-}
-.cnt_container_black h3{
-  color: #FFF;
-  width: auto;
-  font-size: 2.8em;
-  padding: 60px 0 5px;
-  margin: 0 auto 50px;
-}
-.cnt_container_black dl{
-  width:400px;
-  margin: 0 auto 30px;
-  display:-webkit-box;
-  display:-ms-flexbox;
-  display:flex;
-  flex-flow: column;
-  -webkit-box-pack:justify;
-  -ms-flex-pack:justify;
-  justify-content:space-between;
-}
-.cnt_container_black dl img{
-  border: 1px solid #D3D3D3;
-}
-.cnt_container_black dl a:hover{
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  -ms-filter: "alpha(opacity=70)";
-}
-.cnt_container_black dt{
-  font-size: 2rem;
-  font-weight: 400;
-  color: #FFF;
-  margin-top: 30px;
-}
-
-/*コンテンツ　インサートコンバージョン*/
-.cnt_container_inq{
-  display:flex;
-  justify-content: center;
-  width: 100%;
-  height: 220px;
-  background: #C20819 url("../../img/homepage/top/innquiry_insert_bg.svg") no-repeat center top;
-}
-.cnt_container_inq h3{
-  text-align: right;
-  font-size: 2.4em;
-  color: #FFF;
-  margin: 100px 30px 0 0;
-}
-.cnt_container_inq .inq_btn_cnt{
-  position: relative;
-  text-align: center;
-  width: 500px;
-  margin-top: 70px;
-}
-.cnt_container_inq .inq_btn_cnt .baloon{
-  position: absolute;
-  top: -50px;
-  right: 20px;
-  z-index: 100;
-}
-.cnt_container_inq .inq_btn_cnt .inq_btn{
-  transition: all 0.4s ease-in-out;
-  display: block;
-  background-color: #FFF;
-  padding: .7em 1em;
-  border-radius: 100px;
-  color: #C20819;
-  font-size: 2.5em;
-  font-weight: 600;
-  z-index: 1;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-}
-.cnt_container_inq .inq_btn_cnt .inq_btn:hover{
-  background-color: #FFFCB9;
-  transform: translate(0,-5px);
-}
-
-.cnt_container_inq_bigger{
-  display:-webkit-box;
-  display:-ms-flexbox;
-  display:flex;
-  flex-flow: column;
-  -webkit-box-pack:justify;
-  -ms-flex-pack:justify;
-  justify-content: center;
-  width: 100%;
-  height: 500px;
-  background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center top;
-}
-.cnt_container_inq_bigger h3{
-  text-align: center;
-  font-size: 2.8em;
-  color: #FFF;
-  margin: 30px 0 0;
-}
-.cnt_container_inq_bigger .inq_btn_cnt{
-  position: relative;
-  text-align: center;
-  width: 500px;
-  margin: 80px auto 0;
-}
-.cnt_container_inq_bigger .inq_btn_cnt .baloon{
-  position: absolute;
-  top: -50px;
-  right: 20px;
-  z-index: 100;
-}
-.cnt_container_inq_bigger .inq_btn_cnt .inq_btn{
-  transition: all 0.4s ease-in-out;
-  display: block;
-  background-color: #FFF;
-  padding: .7em 1em;
-  border-radius: 100px;
-  color: #C20819;
-  font-size: 2.5em;
-  font-weight: 600;
-  z-index: 1;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-}
-.cnt_container_inq_bigger .inq_btn_cnt .inq_btn:hover{
-  background-color: #FFFCB9;
-  transform: translate(0,-5px);
 }
 
 /*フッター*/
@@ -3085,421 +3517,17 @@ body {
   filter: alpha(opacity=70);
   -ms-filter: "alpha(opacity=70)";
 }
-
-
-/*スマホ*/
-@media screen and (max-width:1029px) {
-  /*オプションclass*/
-  .spbr{
-    display: block !important;
-  }
-  /*メインビジュアル*/
-  .main_visual {
-    padding-bottom: 45px;
-    position: static;
-    background-size: auto 25vw;
-  }
-  .main_visual .visual_container {
-    padding: 25px 0 0;
-    height: auto;
-  }
-  .main_visual .visual_container .main_img_sp{
-    width: 50%;
-    min-height: 180px;
-  }
-  .main_visual .visual_container .text_area{
-    width: 100%;
-    position: static;
-    text-align: center;
-  }
-  .main_visual .visual_container .team_amount{
-    font-size: 5vw;
-    margin: 0 auto;
-  }
-  .main_visual .visual_container .main_explain{
-    font-size: 4vw;
-    margin-top: 10px;
-  }
-  .main_visual .visual_container h2{
-    width: 50%;
-    font-size: 5vw;
-    line-height: 10vw;
-    letter-spacing: 3px;
-    text-align: left;
-    padding-left: 10px;
-    margin: 0;
-  }
-  .main_visual .visual_container .spflex{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .main_visual .visual_container .inq_btn_cnt{
-    margin: 15px auto 0;
-    width: 80%;
-  }
-  .main_visual .visual_container .inq_btn_cnt .baloon{
-    position: absolute;
-    top: -50px;
-    right: 0;
-    z-index: 100;
-    width: 70px;
-  }
-  .main_visual .visual_container .inq_btn_cnt .inq_btn{
-    display: block;
-    width: 100%;
-    background-color: #C20819;
-    padding: .6em 1em;
-    font-size: 1.8em;
-  }
-
-  /*セミナーバナー*/
-  .seminar_banner{
-    padding-bottom: 20px;
-    width: 95%;
-    margin: 0 auto 50px;
-    box-shadow: none;
-    background-color: #E0E0E0;
-    text-align: center;
-  }
-  .seminar_banner h3.seminarTtl{
-    font-size: 1.6em;
-    padding-top: 20px;
-    color: #000;
-  }
-  .seminar_banner p.seminarDetail{
-    font-size: 0.6em;
-    padding-top: 10px;
-    text-align: center;
-  }
-  .seminar_banner a.seminarLink{
-    font-size: 0.6em;
-    padding: 5px 50px;
-    color: #FFF;
-    background-color: #C20819;
-    border-radius: 5px;
-  }
-
-  /*コンテンツ灰色*/
-  .cnt_container_gray{
-    padding-top: 10px;
-  }
-  .cnt_container_gray h3.borderttl{
-    width: auto;
-    font-size: 2em;
-    border-bottom: none;
-    padding: 10px 0 5px;
-    margin: 50px auto 35px;
-    font-weight: bold;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(70%, transparent), color-stop(0%, #C20819));
-    background: linear-gradient(transparent 95%, #C20819 0%);
-    display: inline;
-    line-height: 50px;
-  }
-  .cnt_container_gray ul.intro_detail{
-    display:block;
-    padding: 80px 20px 0;
-    background: none;
-  }
-  .cnt_container_gray span{
-    color: #FFF;
-    background-color: #C20819;
-    width: auto;
-    text-align: center;
-    font-size: 1em;
-    letter-spacing: 5px;
-    padding:5px 10px;
-    box-shadow: 5px 5px 0 rgba(0,0,0,0.1);
-    display: block;
-    position: absolute;
-    top: -50px;
-    left: 0;
-  }
-  .cnt_container_gray li{
-    width:auto;
-    margin-right: 0;
-    margin-bottom: 80px;
-    position: relative;
-  }
-
-  .casestudy .cnt_container_gray li{
-    width:auto;
-    margin-right: 0;
-    margin-bottom: 30px;
-    position: relative;
-  }
-  .cnt_container_gray li:last-child{
-    margin-bottom: 0;
-  }
-  .cnt_container_gray h4{
-    margin: 15px 0;
-    font-size: 1.4em;
-    text-align: center;
-  }
-  .cnt_container_gray p{
-    line-height: 1.6;
-  }
-  .cnt_container_gray img.introart{
-    margin-top: 0;
-    height: 150px;
-  }
-
-  /*通常コンテンツBOX*/
-  .cnt_container{
-    width: 100%;
-    height: auto;
-    padding: 0 20px 60px;
-    position: relative;
-  }
-  .cnt_container.pattern1{
-    background-size: auto 18vw;
-  }
-  .cnt_container.pattern2{
-    background-size: auto 20vw;
-  }
-  .cnt_container.pattern3{
-    background-size: auto 20vw;
-  }
-  .cnt_container h3{
-    padding: 60px 0 25px;
-    font-size: 2em;
-    text-align: center;
-    line-height: 1.4;
-  }
-
-  /*コンテンツ　イントロ*/
-  .cnt_container .introduction{
-    width: 100%;
-    height: auto;
-    position: static;
-  }
-  .cnt_container .introduction h3{
-    width:100%;
-    padding: 60px 0 15px 0;
-    text-align: left;
-    font-size: 2em;
-  }
-  .cnt_container .introduction p{
-    width:100%;
-    padding-left: 0;
-    line-height: 1.8;
-    font-weight: 600;
-  }
-  .cnt_container .introduction p.supplement{
-    font-size: 1em;
-    padding-top: 0;
-    line-height: 1.8;
-    font-weight: 400;
-  }
-  .cnt_container .introduction img{
-    position: static;
-    display: block;
-    width: 100%;
-    padding-bottom: 15px;
-  }
-  .cnt_container .introduction .textlink{
-    margin-top: 0;
-  }
-
-  /*コンテンツ　機能*/
-  .cnt_container .function{
-    width: 100%;
-    position: static;
-    background: none;
-    text-align: left;
-  }
-  .cnt_container h3.functionTtl{
-    text-align: left;
-    padding-bottom: 0;
-  }
-  .cnt_container .function h4{
-    font-size: 1.6em;
-    color: #C20819;
-    margin: 15px 0;
-    text-align: left;
-  }
-  .cnt_container .function p{
-    line-height: 1.8;
-  }
-  .cnt_container .function .detail1,
-  .cnt_container .function .detail2,
-  .cnt_container .function .detail3,
-  .cnt_container .function .detail4{
-    width: 100%;
-    height: auto;
-    margin-top: 30px;
+.cnt_container_footer ul{
+  list-style: none;
+  padding: 0;
+  margin:0;
+  li {
+    text-decoration: none;
     padding: 0;
-    position: static;
-    text-align: center;
-    vertical-align: middle;
+    margin:0;
   }
-  .cnt_container .function .detail1 img,
-  .cnt_container .function .detail2 img,
-  .cnt_container .function .detail3 img,
-  .cnt_container .function .detail4 img{
-    position: static;
-    height: 20%;
-  }
-  .cnt_container .function p{
-    text-align: left;
-  }
-
-  /*コンテンツ　事例*/
-  .cnt_container_gray h3.casestudy{
-    font-size: 2em;
-    margin: 0 auto;
-    padding: 30px 0 30px;
-  }
-  .cnt_container_gray ul.case_detail{
-    display:block;
-    margin-bottom: 30px;
-    padding: 0 20px;
-  }
-  .cnt_container_gray ul.case_detail li{
-    width: 100%;
-    height: auto;
-  }
-  .cnt_container_gray h4.csttl {
-    padding: 0 0 15px;
-  }
-  .cnt_container_gray ul.case_detail li a{
-    display:block;
-    width:100%;
-    padding: 20px 15px 15px;
-  }
-  .cnt_container_gray ul.case_detail li:first-child{
-    margin-right: 0;
-  }
-  .cnt_container_gray ul.case_detail li p{
-    font-size: 1.2em;
-  }
-  .cnt_container_gray ul.case_detail img{
-    height: 30px;
-  }
-
-  /*コンテンツ　セミナー*/
-  .seminar_attended p{
-    text-align: left;
-  }
-  .seminar_attended ul{
-    width: 100%;
-    margin: 30px auto 0;
-  }
-  .seminar_attended li{
-    width: 48%;
-    height: auto
-    padding: 10px;
-  }
-  .seminar_attended li:nth-child(1),
-  .seminar_attended li:nth-child(3),
-  .seminar_attended li:nth-child(5),
-  .seminar_attended li:nth-child(7){
-    margin: 0 10px 10px 0;
-  }
-  .seminar_attended li:nth-child(2),
-  .seminar_attended li:nth-child(4),
-  .seminar_attended li:nth-child(6),
-  .seminar_attended li:nth-child(8){
-    margin: 0 0 10px 0;
-  }
-  .seminar_attended li:nth-child(9){
-    width: 100%;
-    margin: 0;
-  }
-  .seminar_attended li p{
-    font-size: 1.4rem;
-    line-height: 1.4;
-    padding: 15px;
-    margin: 0;
-  }
-
-  /*コンテンツ黒*/
-  .cnt_container_black{
-    padding: 0 20px 45px;
-  }
-  .cnt_container_black h3{
-    color: #FFF;
-    width: auto;
-    font-size: 2em;
-    padding: 45px 0 5px;
-    margin: 0 auto 30px;
-  }
-  .cnt_container_black dl{
-    width:100%;
-    margin: 0 auto 0;
-  }
-  .cnt_container_black dl img{
-    width: 100%;
-  }
-  .cnt_container_black dt{
-    font-size: 1.2em;
-    margin-top: 15px;
-  }
-
-  /*コンテンツ　インサートコンバージョン*/
-  .cnt_container_inq{
-    display: block;
-    height: auto;
-    background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center bottom;
-    background-size: cover;
-    padding-bottom: 30px;
-  }
-  .cnt_container_inq h3{
-    text-align: center;
-    font-size: 2em;
-    padding: 30px 0 15px;
-    margin: 0;
-  }
-  .cnt_container_inq .inq_btn_cnt{
-    position: relative;
-    text-align: center;
-    width: 80%;
-    margin: 50px auto 0;
-  }
-  .cnt_container_inq .inq_btn_cnt .baloon{
-    position: absolute;
-    top: -50px;
-    right: 0px;
-    z-index: 100;
-    width: 70px;
-  }
-  .cnt_container_inq .inq_btn_cnt .inq_btn{
-    color: #C20819;
-    font-size: 1.8em;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-  }
-
-  .cnt_container_inq_bigger{
-    display: block;
-    height: auto;
-    background: #C20819 url("../../img/homepage/top/innquiry_insert_bg2.jpg") no-repeat center bottom;
-    background-size: cover;
-    padding-bottom: 30px;
-  }
-  .cnt_container_inq_bigger h3{
-    text-align: center;
-    font-size: 2em;
-    padding: 30px 0 15px;
-    margin: 0;
-  }
-  .cnt_container_inq_bigger .inq_btn_cnt{
-    position: relative;
-    text-align: center;
-    width: 80%;
-    margin: 50px auto 0;
-  }
-  .cnt_container_inq_bigger .inq_btn_cnt .baloon{
-    position: absolute;
-    top: -50px;
-    right: 0px;
-    z-index: 100;
-    width: 70px;
-  }
-  .cnt_container_inq_bigger .inq_btn_cnt .inq_btn{
-    color: #C20819;
-    font-size: 1.8em;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-  }
+}
+@media screen and (max-width:1029px) {
 
   /*フッター*/
   .cnt_container_footer{
@@ -3564,4 +3592,5 @@ body {
   .cnt_container_footer .footerCopy ul.sns li{
     margin-right: 30px;
   }
+
 }
