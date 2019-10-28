@@ -126,7 +126,7 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
         .main_visual .visual_container h2 {
             width: 50%;
             font-size: 5vw;
-            line-height: 8vw;
+            line-height: 5vw;
             letter-spacing: 3px;
             text-align: left;
             padding-left: 10px;
