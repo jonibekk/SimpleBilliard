@@ -115,16 +115,21 @@ class TeamsController extends AppController
             return $this->render();
         }
 
+        $userId = $this->Auth->user('id');
+
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init("TeamService");
 
-        if (!$TeamService->add($this->request->data, $this->Auth->user('id'))) {
+        if (!$TeamService->add($this->request->data, $userId)) {
             $this->Notification->outError(__("Failed to create a team."));
             return $this->render();
         }
-        $this->_refreshAuth($this->Auth->user('id'));
-        $this->Session->write('team_id', $this->Team->getLastInsertID());
-        $this->Session->write('current_team_id', $this->Team->getLastInsertID());
+        $newTeamId = $this->Team->getLastInsertID();
+
+        $this->_refreshAuth($userId);
+        $this->Session->write('team_id', $newTeamId);
+        $this->Session->write('current_team_id', $newTeamId);
+
         $this->Notification->outSuccess(__("Created a team."));
         $this->Session->delete('user_has_no_team');
         return $this->redirect(['action' => 'invite']);
