@@ -49,7 +49,7 @@
                        data-url="<?= $this->Html->url([
                            'controller' => 'goals',
                            'action'     => 'ajax_get_collabo_change_modal',
-                           'goal_id'    => $goal['Goal']['id']
+                           'goal_id'    => $member['GoalMember']['goal_id']
                        ]) ?>"><?= __('Edit') ?></a>
                 <?php endif ?>
             </div>
