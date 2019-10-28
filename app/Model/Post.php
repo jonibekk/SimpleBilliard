@@ -11,6 +11,7 @@ App::uses('Translation', 'Model');
 App::uses('Comment', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
+App::import('Service', 'ExperimentService');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');
@@ -348,7 +349,6 @@ class Post extends AppModel
      * Don't use this method when new implementation
      * this is too chaos and has too much a role
      * e.g. read post/comment. but as a major principle, one method has one role.
-     *
      */
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
@@ -397,12 +397,20 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            if (empty($params['no_circle_posts'])) {
+            // TODO: `show_for_all_feed_flg`  must be deleted for Goalous feature
+            // Originally, actions and circle posts should not be displayed as mix on top page
+            /** @var ExperimentService $ExperimentService */
+            $ExperimentService = ClassRegistry::init('ExperimentService');
+            $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON,
+                $this->current_team_id);
+
+            if ($showForAllFeedFlg) {
                 //自分の投稿
                 $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
                 //自分が共有範囲指定された投稿
                 $post_filter_conditions['OR'][] =
-                    $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start,
+                            $end) . ')');
                 //自分のサークルが共有範囲指定された投稿
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
@@ -737,10 +745,21 @@ class Post extends AppModel
             if (!empty($val['Comment'])) {
                 $res[$key]['Comment'] = array_reverse($res[$key]['Comment']);
             }
-            //Extend translation language in post
-            $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id, [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
-            //Extend translation language in comment
-            $res[$key]['Comment'] = $CommentExtender->extendMulti($res[$key]['Comment'], $this->my_uid, $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+            try {
+                //Extend translation language in post
+                $res[$key]['Post'] = $PostExtender->extend($res[$key]['Post'], $this->my_uid, $this->current_team_id,
+                    [PostExtender::EXTEND_TRANSLATION_LANGUAGE]);
+                //Extend translation language in comment
+                $res[$key]['Comment'] = $CommentExtender->extendMulti($res[$key]['Comment'], $this->my_uid,
+                    $this->current_team_id, [CommentExtender::EXTEND_TRANSLATION_LANGUAGE]);
+            } catch (Exception $exception) {
+                GoalousLog::error("Failed extending translation information in posts.", [
+                    'message' => $exception->getMessage(),
+                    'trace'   => $exception->getTraceAsString(),
+                    'user_id' => $this->my_uid,
+                    'team_id' => $this->current_team_id
+                ]);
+            }
         }
 
         //コメントを既読に
@@ -844,8 +863,7 @@ class Post extends AppModel
         $end,
         $my_circle_list = null,
         $share_type = null
-    )
-    {
+    ) {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
         }
@@ -996,8 +1014,7 @@ class Post extends AppModel
         $type,
         $start = null,
         $end = null
-    )
-    {
+    ) {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1036,8 +1053,7 @@ class Post extends AppModel
         $type = self::TYPE_ACTION,
         $start = null,
         $end = null
-    )
-    {
+    ) {
         $query = [
             'fields'     => ['Post.id'],
             'table'      => $db->fullTableName($this),
@@ -1443,8 +1459,7 @@ class Post extends AppModel
         $model_id = null,
         $share = null,
         $share_type = PostShareCircle::SHARE_TYPE_SHARED
-    )
-    {
+    ) {
         if (!$uid) {
             $uid = $this->my_uid;
         }
@@ -1707,8 +1722,7 @@ class Post extends AppModel
         $start = null,
         $end = null,
         $file_type = null
-    )
-    {
+    ) {
         $one_month = 60 * 60 * 24 * 31;
         $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
         $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
@@ -2074,7 +2088,7 @@ class Post extends AppModel
                     'type'       => 'INNER',
                     'conditions' => [
                         'Post.id = Comment.post_id',
-                        'Comment.id'      => $commentId,
+                        'Comment.id' => $commentId,
                     ]
                 ],
             ]

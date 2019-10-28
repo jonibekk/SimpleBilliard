@@ -12,6 +12,11 @@ trait TranslationNotificationTrait
     {
         /** @var TeamTranslationStatus $TeamTranslationStatus */
         $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+
+        if (!$TeamTranslationStatus->hasEntry($teamId)) {
+            return;
+        }
+
         $teamTranslationStatus = $TeamTranslationStatus->getUsageStatus($teamId);
 
         /** @var TeamMember $TeamMember */

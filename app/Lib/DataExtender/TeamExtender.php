@@ -18,6 +18,7 @@ class TeamExtender extends BaseExtender
         /** @var VideoStreamService $VideoStreamService */
         $VideoStreamService = ClassRegistry::init('VideoStreamService');
         $data['configs']['video_duration_max_seconds'] = $VideoStreamService->getTeamVideoDurationLimit($teamId);
+        $data['configs']['file_size_mb_max_upload_video'] = $VideoStreamService->getTeamVideoFileSizeMBMax($teamId);
 
         return $data;
     }

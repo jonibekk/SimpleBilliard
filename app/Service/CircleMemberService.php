@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::import('Service', 'CirclePinService');
 App::import('Service', 'SavedPostService');
+App::import('Service', 'ExperimentService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::import('Model/Entity', 'CircleEntity');
@@ -104,11 +105,18 @@ class CircleMemberService extends AppService
             throw new GlException\GoalousConflictException();
         }
 
+        // TODO: `show_for_all_feed_flg`  must be deleted for Goalous feature
+        // Originally, actions and circle posts should not be displayed as mix on top page
+        /** @var ExperimentService $ExperimentService */
+        $ExperimentService = ClassRegistry::init('ExperimentService');
+
+        $showForAllFeedFlg = $ExperimentService->isDefined(Experiment::NAME_CIRCLE_DEFAULT_SETTING_ON, $teamId);
         $newData = [
             'circle_id' => $circleId,
             'user_id'   => $userId,
             'team_id'   => $teamId,
             'admin_flg' => Enum\Model\CircleMember\CircleMember::NOT_ADMIN,
+            'show_for_all_feed_flg' => $showForAllFeedFlg,
             'created'   => GoalousDateTime::now()->getTimestamp(),
             'modified'  => GoalousDateTime::now()->getTimestamp()
         ];

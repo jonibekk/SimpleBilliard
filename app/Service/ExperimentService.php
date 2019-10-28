@@ -19,9 +19,10 @@ class ExperimentService extends AppService
      *
      * @param $name
      *
+     * @param int|null $teamId
      * @return bool
      */
-    function isDefined($name)
+    function isDefined($name, ?int $teamId = null)
     {
         if (defined('FORCE_DISABLE_ALL_EXPERIMENTS') && FORCE_DISABLE_ALL_EXPERIMENTS) {
             return false;
@@ -31,6 +32,9 @@ class ExperimentService extends AppService
         }
         /** @var  Experiment $Experiment */
         $Experiment = ClassRegistry::init('Experiment');
+        if (!empty($teamId)) {
+            $Experiment->current_team_id = $teamId;
+        }
         $res = Cache::read($Experiment->getCacheKey(CACHE_KEY_EXPERIMENT . ":" . $name), 'team_info');
         if ($res !== false) {
             return (bool)!empty($res);
