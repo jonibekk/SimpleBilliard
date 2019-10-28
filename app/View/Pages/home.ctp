@@ -90,91 +90,96 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
 <!-- ******PROMO****** -->
 <?php if ($isLangEn):?>
     <style>
-    .main_visual .visual_container .text_area {
-        width: 720px;
-        left: 43%;
-        position: absolute;
-    }
-
-    .main_visual .visual_container .team_amount {
-        font-size: 3rem;
-        color: #C20819;
-        font-weight: 600;
-        margin: 45px 0 0 90px;
-    }
-
-    @media screen and (max-width: 1029px) {
-        .main_visual .visual_container .text_area {
-            width: 100%;
-            position: static;
-            text-align: center;
+        #lpTop .main_visual .visual_container .text_area {
+            width: 720px;
+            left: 43%;
+            position: absolute;
         }
 
-        .main_visual .visual_container .team_amount {
-            font-size: 5vw;
-            margin: 0 auto;
+        #lpTop .main_visual .visual_container .team_amount {
+            font-size: 3rem;
+            color: #C20819;
+            font-weight: 600;
+            margin: 45px 0 0 90px;
         }
-    }
-    .main_visual .visual_container h2 {
-        font-size: 50px;
-        margin: 20px 0 45px;
-        line-height: 90px;
-        letter-spacing: 3px;
-    }
 
-    @media screen and (max-width: 1029px) {
-        .main_visual .visual_container h2 {
-            width: 50%;
-            font-size: 5vw;
-            line-height: 5vw;
+        @media screen and (max-width: 1029px) {
+            #lpTop .main_visual .visual_container .text_area {
+                width: 100%;
+                position: static;
+                text-align: center;
+            }
+
+            #lpTop .main_visual .visual_container .team_amount {
+                font-size: 5vw;
+                margin: 0 auto;
+            }
+        }
+
+        #lpTop .main_visual .visual_container h2 {
+            font-size: 50px;
+            margin: 20px 0 45px;
+            line-height: 90px;
             letter-spacing: 3px;
-            text-align: left;
-            padding-left: 10px;
-            margin: 0;
         }
-    }
-    .main_visual .visual_container .inq_btn_cnt .baloon {
-        position: absolute;
-        top: -50px;
-        right: 140px;
-        z-index: 100;
-    }
 
-    @media screen and (max-width: 1029px) {
-        .main_visual .visual_container .inq_btn_cnt .baloon {
+        @media screen and (max-width: 1029px) {
+            #lpTop .main_visual .visual_container h2 {
+                width: 50%;
+                font-size: 5vw;
+                line-height: 8vw;
+                letter-spacing: 3px;
+                text-align: left;
+                padding-left: 10px;
+                margin: 0;
+            }
+        }
+
+        #lpTop .main_visual .visual_container .inq_btn_cnt .baloon {
             position: absolute;
             top: -50px;
-            right: 0;
+            right: 140px;
             z-index: 100;
-            width: 70px;
         }
-    }
-    @media screen and (max-width: 1029px) {
-        .main_visual .visual_container .inq_btn_cnt .inq_btn {
-            display: block;
-            width: 100%;
-            background-color: #C20819;
-            padding: .6em 1em;
-            font-size: 1.5em;
-        }
-    }
-    @media screen and (max-width: 1029px) {
-        .cnt_container_gray h3.borderttl {
-            width: auto;
-            font-size: 1.8em;
-            border-bottom: none;
-            padding: 10px 0 5px;
-            margin: 50px auto 35px;
-            font-weight: bold;
-            background: -webkit-gradient(linear, left top, left bottom, color-stop(70%, transparent), color-stop(0%, #C20819));
-            background: linear-gradient(transparent 95%, #C20819 0%);
-            display: inline;
-            line-height: 50px;
-        }
-    }
 
-</style>
+        @media screen and (max-width: 1029px) {
+            #lpTop .main_visual .visual_container .inq_btn_cnt .baloon {
+                position: absolute;
+                top: -50px;
+                right: 0;
+                z-index: 100;
+                width: 70px;
+            }
+        }
+
+        @media screen and (max-width: 1029px) {
+            #lpTop .main_visual .visual_container .inq_btn_cnt .inq_btn {
+                display: block;
+                width: 100%;
+                background-color: #C20819;
+                padding: .6em 1em;
+                font-size: 1.5em;
+            }
+        }
+
+        @media screen and (max-width: 1029px) {
+            #lpTop .cnt_container_gray h3.borderttl {
+                width: auto;
+                font-size: 1.8em;
+                border-bottom: none;
+                padding: 10px 0 5px;
+                margin: 50px auto 35px;
+                font-weight: bold;
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(70%, transparent), color-stop(0%, #C20819));
+                background: linear-gradient(transparent 95%, #C20819 0%);
+                display: inline;
+                line-height: 50px;
+            }
+        }
+
+    </style>
 <?php endif;?>
+
 <div id="lpTop">
     <section class="main_visual">
         <div class="visual_container">
