@@ -288,12 +288,14 @@ class AppController extends BaseController
                 $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
-            $this->set('current_term', $this->Team->Term->getCurrentTermData());
-            $this->_setMyMemberStatus();
-            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
-            $this->_setAvailEvaluation();
-            $this->_setAllAlertCnt();
-            $this->setDefaultTranslationLanguage();
+            if ($this->Session->check('current_team_id')) {
+                $this->set('current_term', $this->Team->Term->getCurrentTermData());
+                $this->_setMyMemberStatus();
+                $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
+                $this->_setAvailEvaluation();
+                $this->_setAllAlertCnt();
+                $this->setDefaultTranslationLanguage();
+            }
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
