@@ -123,6 +123,7 @@ class TeamsController extends AppController
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
+        $this->Session->write('team_id', $this->Team->getLastInsertID());
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
         $this->Notification->outSuccess(__("Created a team."));
         $this->Session->delete('user_has_no_team');
