@@ -128,11 +128,3 @@ Please see [Set-up guild for development](docs/guidelines/development.md#setup_s
 ```
 sh ./etc/local/update_app.sh
 ```
-
-- browse-sync  
-すべてのファイル変更を検知して自動更新します。
-
-```
-browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
-```
-

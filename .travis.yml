@@ -4,7 +4,7 @@ sudo: false
 language: php
 
 php:
-  - 7.1.25
+  - 7.1.32
 
 env:
   global:
@@ -13,10 +13,7 @@ env:
     - TEST_TARGET=CIParallelTests1
     - TEST_TARGET=CIParallelTests2
 cache:
-  - bundler
-  - apt
-  - composer
-cache:
+  bundler : true
   directories:
   - $HOME/.composer/cache/files
 
@@ -30,7 +27,7 @@ before_script:
   - mkdir build
   - chmod -R 777 ./build
   - pecl channel-update pecl.php.net
-  - echo -ne '\n' | pecl install apcu
+  - echo -ne '\n' | pecl install -f apcu
   - echo "apc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - pecl channel-update pecl.php.net
   - pecl install msgpack channel://pecl.php.net/msgpack-2.0.3

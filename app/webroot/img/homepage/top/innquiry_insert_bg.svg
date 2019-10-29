@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1500" height="220" viewBox="0 0 1500 220">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="長方形_1080" data-name="長方形 1080" width="1500" height="220" transform="translate(1772 3829)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <rect id="長方形_156" data-name="長方形 156" width="1500" height="243" transform="translate(0 8082.38)" fill="#c20819"/>
+    </clipPath>
+  </defs>
+  <g id="マスクグループ_38" data-name="マスクグループ 38" transform="translate(-1772 -3829)" clip-path="url(#clip-path)">
+    <g id="グループ_6952" data-name="グループ 6952" transform="translate(133 -6026)">
+      <rect id="長方形_153" data-name="長方形 153" width="1500" height="220" transform="translate(1639 9855)" fill="#c20819"/>
+      <g id="マスクグループ_12" data-name="マスクグループ 12" transform="translate(1639 1749.62)" clip-path="url(#clip-path-2)">
+        <g id="グループ_48" data-name="グループ 48" transform="translate(-255.291 8101.74)" opacity="0.5">
+          <path id="合体_12" data-name="合体 12" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(665.56 172.313) rotate(45)" fill="#e23747"/>
+          <path id="合体_13" data-name="合体 13" d="M20.11,442.088l5.159-384.52-26.046.349L57.918-.777l57.14,57.14L89.7,56.7l-5.159,384.52Z" transform="translate(379.804 76.625) rotate(45)" fill="#ef5462"/>
+          <path id="合体_14" data-name="合体 14" d="M20.11,442.088l5.159-384.52-26.046.349L57.918-.777l57.14,57.14L89.7,56.7l-5.159,384.52Z" transform="translate(510.804 105.831) rotate(45)" fill="#a7000f"/>
+          <path id="合体_15" data-name="合体 15" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(540.56 0) rotate(45)" fill="#e23747"/>
+          <path id="合体_16" data-name="合体 16" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(1653.56 0) rotate(45)" fill="#ef5462"/>
+          <path id="合体_17" data-name="合体 17" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(1596.56 137.267) rotate(45)" fill="#e23747"/>
+          <path id="合体_18" data-name="合体 18" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(1536.56 29.206) rotate(45)" fill="#a7000f"/>
+          <path id="合体_19" data-name="合体 19" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(766.56 151.869) rotate(45)" fill="#a7000f"/>
+          <path id="合体_20" data-name="合体 20" d="M7.148,754.115,25.183,57.569l-25.96.348L57.918-.777l57.14,57.14L89.613,56.7,71.577,753.25Z" transform="translate(1640.56 300.818) rotate(45)" fill="#a7000f"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
