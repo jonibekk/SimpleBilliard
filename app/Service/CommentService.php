@@ -13,6 +13,7 @@ App::uses('CommentRead', 'Model');
 App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
 App::uses('Translation', 'Model');
+App::uses('PostShareCircle', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
@@ -152,6 +153,8 @@ class CommentService extends AppService
         $Comment = ClassRegistry::init('Comment');
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         if (!$Post->exists($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
@@ -192,7 +195,12 @@ class CommentService extends AppService
 
             //Saved attached files
             if (!empty($fileIDs)) {
-                $this->saveFiles($commentId, $userId, $teamId, $fileIDs);
+                //try to get the circle
+                $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = ( count( $circles ) > 0 ) ? $circles[0] : null; //before there could be multiple circles per post, now it is only one
+
+                //save files
+                $this->saveFiles($commentId, $userId, $teamId, $fileIDs, 0, $circleId, $postId);
             }
 
             $this->TransactionManager->commit();
@@ -411,7 +419,7 @@ class CommentService extends AppService
      * @return bool
      * @throws Exception
      */
-    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs, int $commentFileIndex = 0): bool
+    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs, int $commentFileIndex = 0, ?int $circleId = null, ?int $postId = null): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -419,6 +427,8 @@ class CommentService extends AppService
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
         /** @var CommentFileService $CommentFileService */
         $CommentFileService = ClassRegistry::init('CommentFileService');
+        /** @var SearchPostFileService $SearchPostFileService */
+        $SearchPostFileService = ClassRegistry::init('SearchPostFileService');
 
         $addedFiles = [];
 
@@ -440,6 +450,17 @@ class CommentService extends AppService
                 $addedFiles[] = $attachedFile['id'];
 
                 $CommentFileService->add($commentId, $attachedFile['id'], $teamId, $commentFileIndex++);
+
+                if( ( $circleId !== null ) && ( $postId !== null ) ) {
+                    $SearchPostFileService->addAttachedFile(
+                        $teamId,
+                        $userId,
+                        $circleId,
+                        $postId,
+                        $commentId,
+                        $attachedFile['id']
+                    );
+                }
 
                 $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
             }
