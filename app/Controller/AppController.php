@@ -1082,7 +1082,7 @@ class AppController extends BaseController
                 if (empty($team_id)) {
                     $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
                 } else {
-                    $oldToken = $this->GlRedis->getMapSesAndJwt($team_id, $this->Auth->user('id'), $sessionId);
+                    $oldToken = $this->GlRedis->getMapSesAndJwt($team_id, $userId, $sessionId);
                     $newJwtAuth = $this->resetAuth($userId, $newTeamId,
                         AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
                     $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
