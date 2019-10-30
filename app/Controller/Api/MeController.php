@@ -134,8 +134,7 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()
-                          ->withBody(compact('data'))->getResponse();
+        return ApiResponse::ok()->withBody(compact('data'))->getResponse();
     }
 
     /**
