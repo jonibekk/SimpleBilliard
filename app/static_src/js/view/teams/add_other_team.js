@@ -92,6 +92,9 @@ if (document.getElementById("addOtherTeam")) {
     },
     toDigit: function(number) {
       return ('00' + number).slice(-2);
+    },
+    submitButton: function() {
+      return document.getElementsByClassName("team-button")[0];
     }
   }
   addOtherTeam.init();
@@ -102,5 +105,8 @@ if (document.getElementById("addOtherTeam")) {
     var next_start_date = new Date(year, parseInt(month) - 1);
 
     addOtherTeam.updateNextTermList(next_start_date);
+  };
+  addOtherTeam.submitButton().onclick = function () {
+    localStorage.removeItem('token');
   };
 }

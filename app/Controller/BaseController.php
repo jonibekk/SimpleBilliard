@@ -3,6 +3,7 @@ App::uses('Controller', 'Controller');
 App::uses('UserAgent', 'Request');
 App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
+App::import('Service', 'AuthService');
 App::import('Service', 'TeamService');
 App::uses('Device', 'Model');
 
@@ -581,6 +582,19 @@ class BaseController extends Controller
         // Delete mapping jwt and session id
         $sesId = $this->Session->id();
         if ($this->current_team_id && $this->my_uid) {
+
+            $token = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
+            try {
+                $jwtAuth = AccessAuthenticator::verify($token);
+                if (!empty($jwtAuth->getUserId()) && !empty ($jwtAuth->getTeamId())) {
+                    /** @var AuthService $AuthService */
+                    $AuthService = ClassRegistry::init('AuthService');
+                    $AuthService->invalidateUser($jwtAuth->getJwtAuthentication());
+                }
+            } catch (Exception $e) {
+            }
+
             $this->GlRedis->delMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
         }
 

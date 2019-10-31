@@ -91,6 +91,7 @@ $(function () {
   $('#SwitchTeam, .js-switchTeam').change(function () {
     var val = $(this).val();
     var url = "/teams/ajax_switch_team/team_id:" + val;
+    window.localStorage.removeItem('token');
     $.get(url, function (data) {
       location.href = data;
     });
@@ -152,7 +153,7 @@ function instertSpaceTop(height){
       $spFeedAltSub = $('#SpFeedAltSub'),
       $sidebarSetting = $('#SidebarSetting'),
       $scrollSpyContents = $('#ScrollSpyContents > div');
-  
+
   $header.css('max-height', parseInt($header.css('max-height')) + height + 'px');
   $header.css('padding-top', parseInt($header.css('padding-top')) + height + 'px');
   $jsLeftSideContainer.css('top', parseInt($jsLeftSideContainer.css('top')) + height + 'px');
@@ -314,7 +315,7 @@ function updateMessageNotifyCnt() {
       }
 
       if (res != 0) {
-        setNotifyCntToMessageAndTitle(res);  
+        setNotifyCntToMessageAndTitle(res);
       }
     },
     error: function () {
@@ -347,7 +348,7 @@ function setNotifyCntToBellAndTitle(cnt) {
       displaySelectorFluffy($bellBox);
     }
   }
-  
+
   return;
 }
 
@@ -361,7 +362,7 @@ function setNotifyCntToMessageForMobileApp(cnt, appendFlg) {
 }
 function _setNotifyCntForMobileApp(cnt, appendFlg, $badgeCntParent) {
   if (!$badgeCntParent) return;
-  
+
   var $badgeCnt = $badgeCntParent.find('span');
   if (appendFlg) {
     cnt = cnt + parseInt($badgeCnt.text());

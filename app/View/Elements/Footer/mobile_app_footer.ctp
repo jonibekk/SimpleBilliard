@@ -33,6 +33,11 @@ $footerMenuList = [
     ],
 ];
 
+$new_notify_message_cnt = $new_notify_message_cnt ?? 0;
+$new_notify_cnt = $new_notify_cnt ?? 0;
+$circle_badge_cnt = $circle_badge_cnt ?? 0;
+$all_alert_cnt = $all_alert_cnt ?? 0;
+
 $badgeCounts = [
     'messages'      => $new_notify_message_cnt,
     'notifications' => Router::url() === '/notifications' ? 0 : $new_notify_cnt,
