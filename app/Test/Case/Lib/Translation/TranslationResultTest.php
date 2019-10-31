@@ -1,6 +1,6 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Lib/Translation', 'TranslationResultTest');
+App::import('Lib/Translation', 'TranslationResult');
 
 
 class TranslationResultTest extends GoalousTestCase
