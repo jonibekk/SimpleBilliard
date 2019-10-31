@@ -7,6 +7,8 @@ App::import('Service', 'CircleMemberService');
 App::import('Service/Paging', 'CirclePostPagingService');
 App::import('Service/Paging', 'CircleMemberPagingService');
 App::import('Service/Paging', 'PostDraftPagingService');
+App::import('Service/Paging', 'CircleFilesPagingService');
+App::import('Service/Paging', 'SearchPostFileExtender');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
@@ -89,6 +91,37 @@ class CirclesController extends BasePagingController
         }
 
         return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    public function get_files(int $circleId)
+    {
+        $error = $this->validateCircleAccess($circleId);
+
+        if (!empty($error)) {
+            return $error;
+        }
+
+        /** @var CircleFilesPagingService $circleFilesPagingService */
+        $circleFilesPagingService = ClassRegistry::init('CircleFilesPagingService');
+
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        try {
+            $responseData = $circleFilesPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(20),
+                [ SearchPostFileExtender::EXTEND_ALL ]
+            );
+        } catch (Exception $e) {
+            GoalousLog::error($e->getMessage(), $e->getTrace());
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($responseData)->getResponse();
     }
 
     public function post_joins(int $circleId)
