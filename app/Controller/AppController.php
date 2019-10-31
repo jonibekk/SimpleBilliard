@@ -288,12 +288,14 @@ class AppController extends BaseController
                 $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
-            $this->set('current_term', $this->Team->Term->getCurrentTermData());
-            $this->_setMyMemberStatus();
-            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
-            $this->_setAvailEvaluation();
-            $this->_setAllAlertCnt();
-            $this->setDefaultTranslationLanguage();
+            if ($this->Session->check('current_team_id')) {
+                $this->set('current_term', $this->Team->Term->getCurrentTermData());
+                $this->_setMyMemberStatus();
+                $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
+                $this->_setAvailEvaluation();
+                $this->_setAllAlertCnt();
+                $this->setDefaultTranslationLanguage();
+            }
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
@@ -1071,10 +1073,30 @@ class AppController extends BaseController
             $this->User->TeamMember->permissionCheck($team_id, $userId, $skipCheckUserStatus);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            GoalousLog::error("Error on setting user $userId default_team_id. " . $e->getMessage());
+            GoalousLog::info("Invalid default_team_id for user $userId " . $e->getMessage());
             $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
+
+            $sessionId = $this->Session->id();
+
+            try {
+                if (empty($team_id)) {
+                    $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
+                } else {
+                    $oldToken = $this->GlRedis->getMapSesAndJwt($team_id, $userId, $sessionId);
+                    $newJwtAuth = $this->resetAuth($userId, $newTeamId,
+                        AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
+                    $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
+                }
+                $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
+            } catch (Exception $e) {
+                $this->GlRedis->delMapSesAndJwt($team_id, $userId, $this->Session->id());
+                $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
+            } finally {
+                $this->set('jwt_token', $newJwtAuth->token());
+            }
+
             return false;
         }
         $this->Session->write('current_team_id', $team_id);

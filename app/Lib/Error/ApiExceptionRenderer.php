@@ -27,10 +27,10 @@ class ApiExceptionRenderer extends ExceptionRenderer
             $code = 500;
             $log_message = sprintf("[%s] %s\n%s",
                 get_class($error),
-                CakeLog::error($error->getMessage()),
-                CakeLog::error($error->getTraceAsString())
+                $error->getMessage(),
+                $error->getTraceAsString()
             );
-            CakeLog::write(LOG_ERR, $log_message);
+            GoalousLog::error($log_message);
         } else {
             $message = $error->getMessage();
             $code = $error->getCode();
@@ -38,13 +38,13 @@ class ApiExceptionRenderer extends ExceptionRenderer
         switch (get_class($error)) {
             case 'MissingActionException':
             case 'MissingControllerException':
-                $message = __('Api Endpoint not found.');
+                $message = 'Api Endpoint not found.';
                 //TODO GL-7836 In rare case, API endpoint is reported as missing
                 $errorData = [
                     'URI'   => $_SERVER['REQUEST_URI'],
                     'trace' => $error->getTrace()
                 ];
-                CakeLog::error($message, $errorData);
+                GoalousLog::error($message, $errorData);
                 break;
             case 'BadRequestException':
                 if ($message == 'The request has been black-holed') {
