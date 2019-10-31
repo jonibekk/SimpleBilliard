@@ -43,7 +43,7 @@ class TeamMemberBulkRegisterShell extends AppShell
         try {
             $service->execute();
         } catch (Throwable $e) {
-            CakeLog::notice($e->getMessage());
+            GoalousLog::notice($e->getMessage());
         }
     }
 }
