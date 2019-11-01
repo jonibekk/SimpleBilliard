@@ -79,7 +79,8 @@ class PostTest extends GoalousTestCase
         'app.team_translation_status',
         'app.team_translation_language',
         'app.mst_translation_language',
-        'app.translation'
+        'app.translation',
+        'app.experiment'
     );
 
     /**
@@ -151,7 +152,7 @@ class PostTest extends GoalousTestCase
         foreach ($rows as $v) {
             $ids[$v['Post']['id']] = true;
         }
-        $this->assertTrue(isset($ids[$post_id1]));
+        $this->assertFalse(isset($ids[$post_id1]));
     }
 
     public function testGetSinglePost()
@@ -195,7 +196,7 @@ class PostTest extends GoalousTestCase
 
         // 2ページ目のデータを読み込む
         $res1 = $this->Post->get(2, 1, "2014-01-01", "2014-01-31");
-        $this->assertNotEmpty($res1);
+        $this->assertEmpty($res1);
 
         // We stopped to use $post_time_before temporarily because of a hotfix bug
         // https://jira.goalous.com/browse/GL-6888

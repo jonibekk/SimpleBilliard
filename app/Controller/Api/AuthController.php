@@ -182,7 +182,7 @@ class AuthController extends BaseApiController
         $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
         try {
             $jwtAuth = AccessAuthenticator::verify($token);
-            if (empty($jwtAuth->getUserId() || empty ($jwtAuth->getTeamId()))) {
+            if (empty($jwtAuth->getUserId()) || empty ($jwtAuth->getTeamId())) {
                 throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
             }
         } catch (Exception $e) {

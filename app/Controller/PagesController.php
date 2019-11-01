@@ -52,11 +52,11 @@ class PagesController extends AppController
     /**
      * Displays a view
      *
-     * @throws NotFoundException
+     * @return $this->redirect('/') or void
      * @throws Exception
      * @throws MissingViewException
+     * @throws NotFoundException
      * @internal param \What $mixed page to display
-     * @return $this->redirect('/') or void
      */
     public function home()
     {
@@ -166,13 +166,17 @@ class PagesController extends AppController
 
         try {
             $paramsPostGet = $this->request->params;
-            // Ignore circle posts on home feed
-            $paramsPostGet["no_circle_posts"] = true;
             $this->set([
                 'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                     $paramsPostGet)
             ]);
         } catch (RuntimeException $e) {
+            GoalousLog::error("Error in showing home page.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'user_id' => $this->Auth->user('id'),
+                'team_id' => $current_team['Team']['id']
+            ]);
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }

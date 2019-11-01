@@ -3,7 +3,6 @@ App::import('Lib/Translation', 'TranslatorClientInterface');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Util', 'StringUtil');
 
-
 abstract class BaseTranslatorClient implements TranslatorClientInterface
 {
     /**
@@ -20,38 +19,13 @@ abstract class BaseTranslatorClient implements TranslatorClientInterface
 
     /**
      * Translate a single string using external API.
-     * Source string will be split to segments to conform with limitation with respective translation API.
      *
      * @param string $body
      * @param string $targetLanguage
      *
      * @return TranslationResult
      */
-    public function translate(string $body, string $targetLanguage): TranslationResult
-    {
-        // Check for string length
-        if (StringUtil::mbStrLength($body) > static::MAX_SEGMENT_CHAR_LENGTH) {
-            // Segment long string to conform with translator API limitation
-            $segmentedBody = StringUtil::splitStringToSegments($body, static::MAX_SEGMENT_CHAR_LENGTH);
-        } else {
-            $segmentedBody = [$body];
-        }
-
-        // Check for array length
-        if (count($segmentedBody) > static::MAX_BATCH_ARRAY_SIZE) {
-            $chunkedBody = array_chunk($segmentedBody, static::MAX_BATCH_ARRAY_SIZE);
-
-            $translatedResult = [];
-
-            foreach ($chunkedBody as $chunk) {
-                $translatedResult = array_merge($translatedResult, $this->requestTranslation($chunk, $targetLanguage));
-            }
-        } else {
-            $translatedResult = $this->requestTranslation($segmentedBody, $targetLanguage);
-        }
-
-        return $this->mergeTranslationResults($translatedResult);
-    }
+    abstract public function translate(string $body, string $targetLanguage): TranslationResult;
 
     /**
      * Request translation from external API

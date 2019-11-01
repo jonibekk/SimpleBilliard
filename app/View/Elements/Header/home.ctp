@@ -19,20 +19,21 @@ if (!isset($top_lang)) {
 $backBtn = isset($_GET['backBtn']);
 
 ?>
-<header id="header" class="header">
+<header id="header" class="header navbar-fixed-top">
     <div class="container">
         <?php if ($backBtn && $is_mb_app): ?>
             <?= $this->element('Header/back_btn'); ?><a class="back-btn-text" href="#" onclick="window.history.back();">Back</a>
         <?php else: ?>
-        <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
+            <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
                 <h1 class="logo pull-left">
-                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
+                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '50')); ?>
                 </h1>
             </a>
             <nav id="main-nav" class="main-nav navbar-right" role="navigation">
                 <div class="navbar-header">
                     <!-- モバイルサイズのハンバーガーメニュー -->
-                    <button class="navbar-toggle mobile-hamburger-button" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse"
+                            data-target="#navbar-collapse">
                         <span class="sr-only"><?= __('Toggle navigation') ?></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -41,66 +42,54 @@ $backBtn = isset($_GET['backBtn']);
                 </div><!-- //navbar-header -->
                 <div id="navbar-collapse" class="navbar-collapse collapse">
 
-                  <div class="header_top">
-                  <ul id="navigationWrapperHome" class="nav navbar-nav">
-                    <li class="nav-item" id="h-nav-case_study">
-                      <?php $langUrl = $this->Lang->getLangCode() == LangHelper::LANG_CODE_EN ? "en/" : ""; ?>
-                      <a href="/<?=$langUrl?>#app"><?=__('DOWNLOAD APP')?></a>
-                    </li>
+                    <ul id="navigationWrapperHome" class="gnavisubmenu">
+                        <?php if ($isLoggedIn): ?>
+                            <li class="nav-item" id="h-nav-contact">
+                                <?= $this->Html->link(__('Contact us'),
+                                    ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
+                            </li>
 
-                    <li class="nav-item hide-on-mobile" id="h-nav-case_study">
-                      <a href="/<?=$langUrl?>#faq"><?=__('Frequent questions')?></a>
-                    </li>
-
-                    <?php if($isLoggedIn): ?>
-                      <li class="nav-item" id="h-nav-contact">
-                          <?= $this->Html->link(__('Contact us'),
-                              ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
-                      </li>
-
-                        <li class="nav-item nav-item-cta last" id="h-nav-signup">
-                            <?= $this->Html->link(__('Go Your Team'),
-                                array('controller' => 'pages', 'action' => 'home'),
-                                array(
-                                    'class' => 'header-signup btn btn-cta btn-cta-primary',
-                                    'id'    => 'RegisterLinkHeader'
-                                )); ?>
-                        </li>
-                    <?php else: ?>
-                        <li class="nav-item hide-on-mobile" id="h-nav-login">
+                            <li class="nav-item nav-item-cta last" id="h-nav-signup">
+                                <?= $this->Html->link(__('Go Your Team'),
+                                    array('controller' => 'pages', 'action' => 'home'),
+                                    array(
+                                        'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                        'id' => 'RegisterLinkHeader'
+                                    )); ?>
+                            </li>
+                        <?php else: ?>
+                        <li class="nav-item" id="h-nav-login">
                             <?= $this->Html->link(__('Login'), array('controller' => 'users', 'action' => 'login')); ?>
                         </li>
-                      </ul>
-                    </div>
+                    </ul>
 
 
-                    <div class="header_bottom">
                     <ul id="navigationWrapperHome" class="nav navbar-nav txt-bold">
 
-                      <li class="nav-item" id="h-nav-case_study">
-                          <?= $this->Html->link(__('CASE STUDIES'), [
-                              'controller' => 'pages',
-                              'action'     => 'lp',
-                              'pagename'   => 'case_study',
-                              'lang'       => $top_lang,
-                          ]); ?>
-                      </li>
+                        <li class="nav-item" id="h-nav-case_study">
+                            <?= $this->Html->link(__('CASE STUDIES'), [
+                                'controller' => 'pages',
+                                'action' => 'lp',
+                                'pagename' => 'case_study',
+                                'lang' => $top_lang,
+                            ]); ?>
+                        </li>
 
                         <li class="nav-item" id="h-nav-features">
                             <?= $this->Html->link(__('Features'), [
                                 'controller' => 'pages',
-                                'action'     => 'lp',
-                                'pagename'   => 'features',
-                                'lang'       => $top_lang,
+                                'action' => 'lp',
+                                'pagename' => 'features',
+                                'lang' => $top_lang,
                             ]); ?>
                         </li>
 
                         <li class="nav-item" id="h-nav-pricing">
                             <?= $this->Html->link(__('Pricing'), [
                                 'controller' => 'pages',
-                                'action'     => 'lp',
-                                'pagename'   => 'pricing',
-                                'lang'       => $top_lang,
+                                'action' => 'lp',
+                                'pagename' => 'pricing',
+                                'lang' => $top_lang,
                             ]); ?>
                         </li>
 
@@ -112,24 +101,18 @@ $backBtn = isset($_GET['backBtn']);
                                     : "https://www.goalous.com/blog/",
                                 ['target' => '_blank']); ?>
                         </li>
-                            <!--
-                            <li class="nav-item nav-item-cta last" id="h-nav-signup">
-                                <?= $this->Html->link(__('Create New Team'),
-                                    ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>-->
-                            </li>
-
-                                <li class="nav-item" id="h-nav-contact">
-                                    <?= $this->Html->link('<img src="/img/homepage/top/mail_icon_w.svg" class="header_icon_mail">'.__('Contact us'),
-                                    array('controller' => 'pages',
+                        <li class="nav-item nav-item-cta last" id="h-nav-contact">
+                            <?= $this->Html->link('<img src="/img/homepage/top/mail_icon_w.svg" class="header_icon_mail">' . __('Contact us'),
+                                array('controller' => 'pages',
                                     'action' => 'contact',
                                     'lang' => $top_lang,
                                     '?' => ['type' => 'header']),
-                                    array(
-                                        'escape' => false,
-                                        'class' => 'header-signup btn btn-cta btn-cta-primary header-contact-button',
-                                        'id'    => 'RegisterLinkHeader'
-                                    )); ?>
-                            </li>
+                                array(
+                                    'escape' => false,
+                                    'class' => 'header-signup btn btn-cta btn-cta-primary',
+                                    'id' => 'RegisterLinkHeader'
+                                )); ?>
+                        </li>
                         <?php endif; ?>
                     </ul> <!-- //nav -->
                 </div> <!-- //navbar-collapse -->

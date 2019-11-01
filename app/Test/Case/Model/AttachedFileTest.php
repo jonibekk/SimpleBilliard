@@ -1,6 +1,7 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('AttachedFile', 'Model');
 App::import('Service', 'AttachedFileService');
+App::uses('Security', 'Utility');
 
 /**
  * AttachedFile Test Case

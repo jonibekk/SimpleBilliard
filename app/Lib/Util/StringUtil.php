@@ -1,6 +1,5 @@
 <?php
 
-
 class StringUtil
 {
     /**
@@ -18,14 +17,21 @@ class StringUtil
     /**
      * Split long string multiple segments, with each segment having maximum of specified char length
      *
-     * @param string $input         Base string
-     * @param int    $maxCharLength Maximum char length per segment.
-     * @param string $delimiter     Character used to split the string. By default, split by new line
+     * @param string $input                Base string
+     * @param int    $maxCharLength        Maximum char length per segment.
+     * @param string $delimiter            String used to split the string. By default, split by new line
+     * @param string $delimiterReplacement String used to replace previous delimiter. By default keep using new line
+     * @param bool   $forceSplit           Force splitting even though string is shorter than max char length
      *
      * @return array
      */
-    public static function splitStringToSegments(string $input, int $maxCharLength = 2000, string $delimiter = "\n"): array
-    {
+    public static function splitStringToSegments(
+        string $input,
+        int $maxCharLength = 2000,
+        string $delimiter = "\n",
+        string $delimiterReplacement = "\n",
+        bool $forceSplit = false
+    ): array {
         $segmentedString = [];
 
         if (empty($input)) {
@@ -35,12 +41,11 @@ class StringUtil
         $originalLocale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'C.UTF-8');
 
-        if (self::mbStrLength($input) < $maxCharLength) {
+        if (!$forceSplit && self::mbStrLength($input) < $maxCharLength) {
             return [$input];
         }
 
         $splitInput = mb_split($delimiter, $input);
-
 
         for ($splitInputIndex = 0, $segmentedStringIndex = 0; $splitInputIndex < count($splitInput);) {
 
@@ -50,8 +55,8 @@ class StringUtil
                 continue;
             }
 
-            if (self::mbStrLength($segmentedString[$segmentedStringIndex]) + self::mbStrLength($splitInput[$splitInputIndex]) <= $maxCharLength) {
-                $segmentedString[$segmentedStringIndex] .= $delimiter . $splitInput[$splitInputIndex];
+            if (self::mbStrLength($segmentedString[$segmentedStringIndex]) + self::mbStrLength($splitInput[$splitInputIndex]) + self::mbStrLength($delimiterReplacement) <= $maxCharLength) {
+                $segmentedString[$segmentedStringIndex] .= $delimiterReplacement . $splitInput[$splitInputIndex];
                 $splitInputIndex++;
             } else {
                 $segmentedStringIndex++;

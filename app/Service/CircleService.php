@@ -175,11 +175,16 @@ class CircleService extends AppService
             $this->isExperimentMode = $isExperimentMode;
         }
 
+        // TODO: `show_for_all_feed_flg`  must be deleted for Goalous feature
+        // Originally, actions and circle posts should not be displayed as mix on top page
+        $showForAllFeedFlg = $this->isExperimentMode ? true : false;
+
         $saveData = [
             'circle_id'             => $circleId,
             'team_id'               => $CircleMember->current_team_id,
             'user_id'               => $userId,
             'admin_flg'             => $isAdmin,
+            'show_for_all_feed_flg' => $showForAllFeedFlg,
             'get_notification_flg'  => true,
         ];
         return $saveData;
