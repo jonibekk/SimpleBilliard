@@ -1047,6 +1047,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         if (!$Post->exists($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
@@ -1083,9 +1085,14 @@ class PostService extends AppService
             $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
 
             if (!empty($newResources)) {
+                //get circle id, if possible
+                $postCircles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = ( count( $postCircles ) > 0 ) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
+
+                //save ressources
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
-                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1);
+                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {

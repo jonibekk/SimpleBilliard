@@ -315,14 +315,31 @@ class CommentService extends AppService
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        $commentId = $data->getId();
 
-        if (!$Comment->exists($data->getId())) {
+        if (!$Comment->exists($commentId)) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
         try {
             $this->TransactionManager->begin();
 
+            //try to get the post id
+            $postId = null;
+            $oldComment = $Comment->find( 'first', [ 'conditions' => [
+                'id' => $commentId,
+                'del_flg' => false,
+            ] ] );
+            if(
+                is_array( $oldComment )
+                && key_exists( 'Comment', $oldComment )
+                && key_exists( 'post_id', $oldComment['Comment'] )
+                && (!empty( $oldComment['Comment']['post_id'] ))
+            ) {
+                $postId = $oldComment['Comment']['post_id'];
+            }
+
+            //update the comment
             $newData = [
                 'body'      => $data->getBody(),
                 'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo()) : null,
@@ -330,14 +347,13 @@ class CommentService extends AppService
             ];
 
             $Comment->clear();
-            $commentId = $data->getId();
             $Comment->id = $commentId;
             if (!$Comment->save($newData, false)) {
                 throw new RuntimeException(sprintf("Failed to update comments table record. data: %s",
                     AppUtil::jsonOneLine(compact('newData', 'commentId'))
                 ));
             }
-            $this->updateAttachedFiles($data->getId(), $data->getUserId(), $data->getTeamId(), $data->getResources());
+            $this->updateAttachedFiles($commentId, $data->getUserId(), $data->getTeamId(), $data->getResources(), $postId);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -366,11 +382,12 @@ class CommentService extends AppService
      * @param int   $userId
      * @param int   $teamId
      * @param array $resources Existing resources
+     * @param int   $postId - optional
      *
      * @return PostResource[]
      * @throws Exception
      */
-    private function updateAttachedFiles(int $commentId, int $userId, int $teamId, array $resources)
+    private function updateAttachedFiles(int $commentId, int $userId, int $teamId, array $resources, ?int $postId = null)
     {
         /** @var CommentFile $CommentFile */
         $CommentFile = ClassRegistry::init('CommentFile');
@@ -401,8 +418,18 @@ class CommentService extends AppService
             $CommentFileService->deleteAllByAttachedFileIds($deleteFileIds);
         }
         if (!empty($newFileUuids)) {
+            //try to get the circle
+            $circleId = null;
+            if( $postId !== null ) {
+                /** @var PostShareCircle $PostShareCircle */
+                $PostShareCircle = ClassRegistry::init('PostShareCircle');
+                $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = ( count( $circles ) > 0 ) ? $circles[0] : null; //before there could be multiple circles per post, now it is only one
+            }
+            
+            //save files
             $existingFilesMaxOrder = $CommentFile->findMaxOrderOfComment($commentId);
-            $this->saveFiles($commentId, $userId, $teamId, $newFileUuids, $existingFilesMaxOrder + 1);
+            $this->saveFiles($commentId, $userId, $teamId, $newFileUuids, $existingFilesMaxOrder + 1, $circleId, $postId);
         }
     }
 
