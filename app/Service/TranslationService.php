@@ -57,7 +57,6 @@ class TranslationService extends AppService
 
         if ($Translation->hasTranslation($contentType, $contentId, $targetLanguage)) {
 
-
             $tryCount = 0;
 
             do {
@@ -325,6 +324,14 @@ class TranslationService extends AppService
                 $CommentService = ClassRegistry::init('CommentService');
                 return $CommentService->checkUserAccessToComment($userId, $contentId);
                 break;
+            case TranslationContentType::MESSAGE:
+                /** @var MessageService $MessageService */
+                $MessageService = ClassRegistry::init('MessageService');
+                return $MessageService->checkUserAccessToMessage($userId, $contentId);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
+                break;
         }
 
         return false;
@@ -432,6 +439,22 @@ class TranslationService extends AppService
                     'team_id'  => $comment['team_id']
                 ];
                 break;
+            case TranslationContentType::MESSAGE:
+                /** @var Message $Message */
+                $Message = ClassRegistry::init('Message');
+                $message = $Message->getById($contentId);
+                if (empty($message)) {
+                    break;
+                }
+                $originalModel = [
+                    'body'     => $message['body'],
+                    'language' => $message['language'] ?: "",
+                    'team_id'  => $message['team_id']
+                ];
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
+                break;
         }
 
         if (empty($originalModel)) {
@@ -467,6 +490,14 @@ class TranslationService extends AppService
                 /** @var Comment $Comment */
                 $Comment = ClassRegistry::init('Comment');
                 $Comment->updateLanguage($contentId, $sourceLanguage);
+                break;
+            case TranslationContentType::MESSAGE:
+                /** @var Message $Message */
+                $Message = ClassRegistry::init('Message');
+                $Message->updateLanguage($contentId, $sourceLanguage);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
                 break;
         }
     }

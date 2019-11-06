@@ -215,6 +215,11 @@ class TeamTranslationStatusService extends AppService
             case TranslationContentType::ACTION_POST_COMMENT:
                 $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
                 break;
+            case TranslationContentType::MESSAGE:
+                $TeamTranslationStatus->incrementMessageCount($teamId, $count);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation content type");
         }
     }
 }

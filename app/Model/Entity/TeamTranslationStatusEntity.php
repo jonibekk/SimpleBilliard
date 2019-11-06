@@ -57,6 +57,16 @@ class TeamTranslationStatusEntity extends BaseEntity
     }
 
     /**
+     * Get translation usage for message
+     *
+     * @return int
+     */
+    public function getMessageUsageCount(): int
+    {
+        return $this['message_total'] ?: 0;
+    }
+
+    /**
      * Get translation limit of the team
      *
      * @return int
