@@ -29,6 +29,7 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
+App::import('Controller/Traits', 'AuthTrait');
 
 use Goalous\Enum as Enum;
 
@@ -49,6 +50,7 @@ use Goalous\Enum as Enum;
  */
 class AppController extends BaseController
 {
+    use AuthTrait;
     /**
      * アクション件数 キャッシュ有効期限
      */
@@ -1094,6 +1096,9 @@ class AppController extends BaseController
                     $newJwtAuth = $this->resetAuth($userId, $newTeamId,
                         AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
                     $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
+                }
+                if (empty($newJwtAuth)) {
+                    throw new Exception("Failed to create new JWT Auth");
                 }
                 $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
             } catch (Exception $e) {
