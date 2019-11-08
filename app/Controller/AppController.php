@@ -1088,6 +1088,7 @@ class AppController extends BaseController
 
             $sessionId = $this->Session->id();
 
+            $newJwtAuth = null;
             try {
                 if (empty($team_id)) {
                     $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
@@ -1097,14 +1098,18 @@ class AppController extends BaseController
                         AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
                     $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
                 }
-                if (empty($newJwtAuth)) {
-                    throw new Exception("Failed to create new JWT Auth");
-                }
                 $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
             } catch (Exception $e) {
                 $this->GlRedis->delMapSesAndJwt($team_id, $userId, $this->Session->id());
                 $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
-            } finally {
+            }
+            if (empty($newJwtAuth)) {
+                GoalousLog::critical('Failed to create jwt_token', [
+                    'users.id' => $userId,
+                    'teams.id' => $team_id,
+                    'teams.id new' => $newTeamId,
+                ]);
+            } else {
                 $this->set('jwt_token', $newJwtAuth->token());
             }
 
