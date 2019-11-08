@@ -1075,6 +1075,12 @@ class AppController extends BaseController
             $this->Notification->outError($e->getMessage());
             GoalousLog::info("Invalid default_team_id for user $userId " . $e->getMessage());
             $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
+            if (empty($newTeamId)) {
+                // $newTeamId will be null when for 2 status of user
+                //  - Completely new user invite
+                //  - User not joined to any team
+                return false;
+            }
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
 
