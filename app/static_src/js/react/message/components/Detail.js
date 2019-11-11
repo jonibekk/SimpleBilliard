@@ -13,9 +13,11 @@ export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
+    this.handleTranslationToggle = this.handleTranslationToggle.bind(this);
     this.state = {
       back_url: '/topics',
-    }
+      message_translation_active: false
+    };
   }
 
   componentWillMount() {
@@ -121,6 +123,14 @@ export default class Detail extends Base {
     this.props.fetchLatestMessages(displayed_latest_message_id);
   }
 
+  handleTranslationToggle() {
+    if (this.state.message_translation_active) {
+      this.setState({message_translation_active: false});
+    } else {
+      this.setState({message_translation_active: true});
+    }
+  }
+
   render() {
     const {detail, file_upload} = this.props;
     return (
@@ -134,6 +144,9 @@ export default class Detail extends Base {
           leave_topic_status={detail.leave_topic_status}
           leave_topic_err_msg={detail.leave_topic_err_msg}
           back_url={this.state.back_url}
+          message_translation_enabled={detail.translation_enabled}
+          message_translation_active={this.state.message_translation_active}
+          onTranslationToggle={this.handleTranslationToggle}
         />
         <Body
           topic={detail.topic}
@@ -152,6 +165,7 @@ export default class Detail extends Base {
           fetching_read_count={detail.fetching_read_count}
           is_fetched_search={detail.is_fetched_search}
           is_old_direction={detail.is_old_direction}
+          message_translation_active={this.state.message_translation_active}
         />
         <Footer
           body={detail.input_data.body}

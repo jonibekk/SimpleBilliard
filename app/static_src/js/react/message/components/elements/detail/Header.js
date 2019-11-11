@@ -5,17 +5,16 @@ import * as actions from "~/message/actions/detail";
 import {LeaveTopicStatus, TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import * as KeyCode from "~/common/constants/KeyCode";
 import {Link} from "react-router";
-import {isIOSApp} from "~/util/base";
-import {PositionIOSApp} from "~/message/constants/Styles";
 
 class Header extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.cancelTopicTitleSetting = this.cancelTopicTitleSetting.bind(this)
     this.startTopicTitleSetting = this.startTopicTitleSetting.bind(this)
     this.leaveTopic = this.leaveTopic.bind(this)
     this.saveTopicTitle = this.saveTopicTitle.bind(this)
     this.onTouchMove = this.onTouchMove.bind(this)
+    this.onToggleTranslation = this.onToggleTranslation.bind(this);
   }
 
   componentDidUpdate() {
@@ -26,8 +25,8 @@ class Header extends React.Component {
     }
     if (this.props.leave_topic_status == LeaveTopicStatus.ERROR) {
       new Noty({
-          type: 'error',
-          text: '<h4>'+cake.word.error+'</h4>'+this.props.leave_topic_err_msg,
+        type: 'error',
+        text: '<h4>' + cake.word.error + '</h4>' + this.props.leave_topic_err_msg,
       }).show();
       this.props.dispatch(
         actions.resetLeaveTopicStatus()
@@ -53,9 +52,10 @@ class Header extends React.Component {
     if (this.props.topic_title_setting_status == TopicTitleSettingStatus.SAVING) {
       return;
     }
+    this.props.leave_topic_err_msg
     this.props.dispatch(
       actions.cancelTopicTitleSetting()
-    )
+    );
   }
 
   saveTopicTitle(e) {
@@ -78,6 +78,13 @@ class Header extends React.Component {
 
   onTouchMove(e) {
     e.preventDefault()
+  }
+
+  onToggleTranslation(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    this.props.onTranslationToggle();
   }
 
   render() {
@@ -138,7 +145,6 @@ class Header extends React.Component {
     }
 
     return (
-
       <div
         className={`topicDetail-header ${sp_class}`}
         onTouchMove={this.onTouchMove}
@@ -159,6 +165,13 @@ class Header extends React.Component {
           </a>
         </div>
         <div className="topicDetail-header-right">
+          {this.props.message_translation_enabled &&
+            <i id="topicHeaderTranslationButton" onClick={this.onToggleTranslation}
+               className={this.props.message_translation_active ? 'material-icons activated' : 'material-icons'}
+            >
+              g_translate
+            </i>
+          }
           <div className="dropdown">
             <a href="#" className="topicDetail-header-menuIcon dropdown-toggle" id="topicHeaderMenu"
                data-toggle="dropdown" aria-expanded="true">
@@ -202,6 +215,8 @@ Header.propTypes = {
   leave_topic_err_msg: React.PropTypes.string,
   is_mobile_app: React.PropTypes.bool,
   back_url: React.PropTypes.string,
+  message_translation_active: React.PropTypes.bool,
+  message_translation_enabled: React.PropTypes.bool
 };
 
 Header.defaultProps = {
@@ -212,5 +227,7 @@ Header.defaultProps = {
   leave_topic_err_msg: "",
   is_mobile_app: false,
   back_url: '',
+  message_translation_active: false,
+  message_translation_enabled: false
 };
 export default connect()(Header);

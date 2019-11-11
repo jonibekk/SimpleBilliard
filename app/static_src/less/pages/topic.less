@@ -343,8 +343,19 @@
     }
   }
   &-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     &.mod-setTitle {
       padding: 0 8px;
+    }
+    .material-icons {
+      color: @subColor3;
+      cursor: pointer;
+      font-size: 20px;
+      &.activated {
+        color: @color-00-black;
+      }
     }
   }
   &-icon {

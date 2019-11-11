@@ -6,10 +6,18 @@ import AttachedFile from "~/message/components/elements/detail/AttachedFile";
 import Loading from "~/message/components/elements/detail/Loading";
 import * as Model from "~/common/constants/Model";
 import {fetchReadCount} from "~/message/actions/detail";
+import {translateMessage} from "../../../modules/translation";
 
 class Message extends React.Component {
+
   constructor(props) {
     super(props);
+
+    this.updateMessageForTranslation = this.updateMessageForTranslation.bind(this);
+
+    this.state = {
+      message_body: this.props.message.body
+    };
   }
 
   onClickReadCount() {
@@ -17,8 +25,38 @@ class Message extends React.Component {
     dispatch(fetchReadCount(topic.id))
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.message_translation_active !== this.props.message_translation_active) {
+      if (nextProps.message_translation_active) {
+        this.updateMessageForTranslation();
+      } else {
+        this.setState({message_body: this.props.message.body});
+      }
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.message_translation_active) {
+      this.updateMessageForTranslation();
+    } else {
+      this.setState({message_body: this.props.message.body});
+    }
+  }
+
+  updateMessageForTranslation() {
+    translateMessage(this.props.message.id).then((result) => {
+      if (result !== undefined && result.length > 0) {
+        console.log(result);
+        this.setState({message_body: result});
+      } else {
+        this.setState({message_body: this.props.message.body});
+      }
+    });
+  }
+
   render() {
-    const {topic, message, fetching_read_count, is_active} = this.props
+    const {topic, message, fetching_read_count, is_active} = this.props;
+
     const read_mark_el = () => {
       if (topic.latest_message_id != message.id) {
         return null;
@@ -104,12 +142,12 @@ class Message extends React.Component {
             <span className="topicDetail-messages-item-userName">
               {message.user.display_username}
             </span>
-            <span className="topicDetail-messages-item-datetime">
+            <span className="topicDetail-messages-item-datetime" data-stat={this.props.message_translation_active}>
               {message.display_created}
             </span>
           </div>
           <Linkfy className="topicDetail-messages-item-content" properties={{target: '_blank'}}>
-            {nl2br(message.body)}
+            {nl2br(this.state.message_body)}
           </Linkfy>
           {attached_files()}
           {read_mark_el()}
@@ -122,12 +160,14 @@ Message.propTypes = {
   topic: React.PropTypes.object,
   message: React.PropTypes.object,
   is_active: React.PropTypes.bool,
+  message_translation_active: React.PropTypes.bool
 };
 
 Message.defaultProps = {
   topic: {},
   message: {},
-  is_active: false
+  is_active: false,
+  message_translation_active: false
 };
 
 export default connect()(Message);
