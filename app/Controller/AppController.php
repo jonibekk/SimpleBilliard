@@ -29,6 +29,7 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
+App::import('Controller/Traits', 'AuthTrait');
 
 use Goalous\Enum as Enum;
 
@@ -49,6 +50,7 @@ use Goalous\Enum as Enum;
  */
 class AppController extends BaseController
 {
+    use AuthTrait;
     /**
      * アクション件数 キャッシュ有効期限
      */
@@ -1075,11 +1077,18 @@ class AppController extends BaseController
             $this->Notification->outError($e->getMessage());
             GoalousLog::info("Invalid default_team_id for user $userId " . $e->getMessage());
             $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
+            if (empty($newTeamId)) {
+                // $newTeamId will be null when for 2 status of user
+                //  - Completely new user invite
+                //  - User not joined to any team
+                return false;
+            }
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
 
             $sessionId = $this->Session->id();
 
+            $newJwtAuth = null;
             try {
                 if (empty($team_id)) {
                     $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
@@ -1093,7 +1102,14 @@ class AppController extends BaseController
             } catch (Exception $e) {
                 $this->GlRedis->delMapSesAndJwt($team_id, $userId, $this->Session->id());
                 $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
-            } finally {
+            }
+            if (empty($newJwtAuth)) {
+                GoalousLog::critical('Failed to create jwt_token', [
+                    'users.id' => $userId,
+                    'teams.id' => $team_id,
+                    'teams.id new' => $newTeamId,
+                ]);
+            } else {
                 $this->set('jwt_token', $newJwtAuth->token());
             }
 
