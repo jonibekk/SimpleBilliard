@@ -545,7 +545,17 @@ class UsersController extends AppController
         }
         //ログイン
         $userId = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $userId;
-        $this->_autoLogin($userId, true);
+
+        try {
+            // If _autoLogin is failed, _joinTeam() will be failed after this process.
+            $this->_autoLogin($userId, true);
+        } catch (\Throwable $e) {
+            GoalousLog::critical('Failed auto login when after user register.', [
+                'users.id' => $userId,
+                'teams.id' => $team['Team']['id'],
+            ]);
+            throw $e;
+        }
         // flash削除
         // _authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする
