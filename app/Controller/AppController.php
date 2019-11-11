@@ -290,12 +290,14 @@ class AppController extends BaseController
                 $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
-            $this->set('current_term', $this->Team->Term->getCurrentTermData());
-            $this->_setMyMemberStatus();
-            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
-            $this->_setAvailEvaluation();
-            $this->_setAllAlertCnt();
-            $this->setDefaultTranslationLanguage();
+            if ($this->Session->check('current_team_id')) {
+                $this->set('current_term', $this->Team->Term->getCurrentTermData());
+                $this->_setMyMemberStatus();
+                $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
+                $this->_setAvailEvaluation();
+                $this->_setAllAlertCnt();
+                $this->setDefaultTranslationLanguage();
+            }
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
@@ -1075,11 +1077,18 @@ class AppController extends BaseController
             $this->Notification->outError($e->getMessage());
             GoalousLog::info("Invalid default_team_id for user $userId " . $e->getMessage());
             $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
+            if (empty($newTeamId)) {
+                // $newTeamId will be null when for 2 status of user
+                //  - Completely new user invite
+                //  - User not joined to any team
+                return false;
+            }
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
 
             $sessionId = $this->Session->id();
 
+            $newJwtAuth = null;
             try {
                 if (empty($team_id)) {
                     $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
@@ -1089,14 +1098,18 @@ class AppController extends BaseController
                         AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
                     $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
                 }
-                if (empty($newJwtAuth)) {
-                    throw new Exception("Failed to create new JWT Auth");
-                }
                 $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
             } catch (Exception $e) {
                 $this->GlRedis->delMapSesAndJwt($team_id, $userId, $this->Session->id());
                 $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
-            } finally {
+            }
+            if (empty($newJwtAuth)) {
+                GoalousLog::critical('Failed to create jwt_token', [
+                    'users.id' => $userId,
+                    'teams.id' => $team_id,
+                    'teams.id new' => $newTeamId,
+                ]);
+            } else {
                 $this->set('jwt_token', $newJwtAuth->token());
             }
 
