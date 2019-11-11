@@ -15,15 +15,13 @@ class AddMessageLanguage extends CakeMigration {
  */
 	public $migration = array(
 		'up' => array(
-            'alter_field' => array(
-                'team_translation_statuses' => array(
-                    'message_total' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated message'),
-                ),
-            ),
 			'create_field' => array(
 				'messages' => array(
 					'language' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 10, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Message body\'s detected language', 'charset' => 'utf8mb4', 'after' => 'body'),
 				),
+                'team_translation_statuses' => array(
+                    'message_total' => array('type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated message', 'after' => 'action_post_comment_total'),
+                ),
 			),
 		),
 		'down' => array(
