@@ -45,21 +45,26 @@ class Message extends React.Component {
   }
 
   updateMessageForTranslation() {
-    translateMessage(this.props.message.id).then((result) => {
-      if (this.props.message_translation_active && result !== undefined && result.length > 0) {
-        this.setState({message_body: result});
-      } else {
+    translateMessage(this.props.message.id)
+      .then((result) => {
+        if (this.props.message_translation_active && result !== undefined && result.length > 0) {
+          this.setState({message_body: result});
+        } else {
+          this.setState({message_body: this.props.message.body});
+        }
+      })
+      .catch(error => {
+        // Ignore client cancelled request error
+        if (error.code !== 'ECONNABORTED') {
+          new Noty({
+            type: 'error',
+            text: cake.word.message_translation_error,
+            timeout: 3000,
+            killer: true
+          }).show();
+        }
         this.setState({message_body: this.props.message.body});
-      }
-    }).catch(() => {
-      new Noty({
-        type: 'error',
-        text: cake.word.message_translation_error,
-        timeout: 3000,
-        killer: true
-       }).show();
-      this.setState({message_body: this.props.message.body});
-    });
+      });
   }
 
   render() {
