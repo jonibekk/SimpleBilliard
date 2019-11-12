@@ -1,5 +1,5 @@
 <?php
-class AddMessageLanguage extends CakeMigration {
+class AddMessageTranslation extends CakeMigration {
 
 /**
  * Migration description

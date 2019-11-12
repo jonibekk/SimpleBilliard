@@ -13,7 +13,8 @@ class TeamTranslationStatusEntity extends BaseEntity
         return $this->getCirclePostUsageCount()
             + $this->getCirclePostCommentUsageCount()
             + $this->getActionPostUsageCount()
-            + $this->getActionPostCommentUsageCount();
+            + $this->getActionPostCommentUsageCount()
+            + $this->getMessageUsageCount();
     }
 
     /**
