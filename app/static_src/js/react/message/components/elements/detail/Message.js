@@ -63,6 +63,8 @@ class Message extends React.Component {
             killer: true
           }).show();
         }
+        console.log(error.code);
+        console.log(error.message);
         this.setState({message_body: this.props.message.body});
       });
   }
