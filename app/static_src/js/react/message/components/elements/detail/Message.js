@@ -7,6 +7,7 @@ import Loading from "~/message/components/elements/detail/Loading";
 import * as Model from "~/common/constants/Model";
 import {fetchReadCount} from "~/message/actions/detail";
 import {translateMessage} from "../../../modules/translation";
+import Noty from "noty";
 
 class Message extends React.Component {
 
@@ -45,12 +46,19 @@ class Message extends React.Component {
 
   updateMessageForTranslation() {
     translateMessage(this.props.message.id).then((result) => {
-      if (result !== undefined && result.length > 0) {
-        console.log(result);
+      if (this.props.message_translation_active && result !== undefined && result.length > 0) {
         this.setState({message_body: result});
       } else {
         this.setState({message_body: this.props.message.body});
       }
+    }).catch(() => {
+      new Noty({
+        type: 'error',
+        text: cake.word.message_translation_error,
+        timeout: 3000,
+        killer: true
+       }).show();
+      this.setState({message_body: this.props.message.body});
     });
   }
 
@@ -81,14 +89,14 @@ class Message extends React.Component {
               <a href="#"
                  data-url={`/topics/ajax_get_read_members/${topic.id}`}
                  className={`topicDetail-messages-item-read-link modal-ajax-get ${fetching_read_count ? 'is-loading' : ''}`}
-                 onClick={ this.onClickReadCount.bind(this) }>
+                 onClick={this.onClickReadCount.bind(this)}>
                 <i className="fa fa-check mr_2px"/>
                 <span className={`topicDetail-messages-item-read-link-number`}>{topic.read_count}</span>
               </a>
             </div>
             <div className="topicDetail-messages-item-update">
               <a className="topicDetail-messages-item-update-link"
-                 onClick={ this.onClickReadCount.bind(this) }>
+                 onClick={this.onClickReadCount.bind(this)}>
                 <span className="ml_5px topicDetail-messages-item-read-update">{__("Update")}</span>
               </a>
             </div>
@@ -156,6 +164,7 @@ class Message extends React.Component {
     )
   }
 }
+
 Message.propTypes = {
   topic: React.PropTypes.object,
   message: React.PropTypes.object,

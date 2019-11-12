@@ -341,11 +341,12 @@ class TranslationService extends AppService
      * Check whether team can do translation.
      * Only trial or paid team with translation languages & remaining usage can translate.
      *
-     * @param int $teamId
+     * @param int  $teamId
+     * @param bool $checkUsage Check team's translation usage too
      *
      * @return bool
      */
-    public function canTranslate(int $teamId): bool
+    public function canTranslate(int $teamId, bool $checkUsage = true): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -363,14 +364,14 @@ class TranslationService extends AppService
             }
             // Team must have translation language selected & remaining usage count to translate
             $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) &&
-                $TeamTranslationStatus->hasEntry($teamId) &&
-                !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
+                $TeamTranslationStatus->hasEntry($teamId);
 
-            if (!$translationFlg) {
-                return false;
+            if ($checkUsage) {
+                $translationFlg = $translationFlg && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
             }
 
-            return true;
+            return $translationFlg;
+
         } catch (Exception $e) {
             GoalousLog::error("Error in checking translation availability of a team.", [
                 'message' => $e->getMessage(),

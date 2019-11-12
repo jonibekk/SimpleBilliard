@@ -12,7 +12,6 @@ import {
   JumpToLatest
 } from "~/message/constants/Statuses";
 import {isIOSApp} from "~/util/base";
-import {PositionIOSApp} from "~/message/constants/Styles";
 
 class Body extends React.Component {
 
@@ -22,10 +21,11 @@ class Body extends React.Component {
       init_scrolled_bottom: false,
       is_scrolled_bottom: false,
       before_scroll_height: 0,
+      message_translation_error_shown: false
     };
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {

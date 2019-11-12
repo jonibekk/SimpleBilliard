@@ -144,6 +144,16 @@ class Header extends React.Component {
 
     }
 
+    var translationButtonClasses = 'material-icons';
+    if ((this.props.message_translation_limit_reached === false) &&
+      (this.props.message_translation_active === true)
+    ) {
+      translationButtonClasses += ' activated';
+    }
+    if (this.props.message_translation_limit_reached === true) {
+      translationButtonClasses += ' limit_reached';
+    }
+
     return (
       <div
         className={`topicDetail-header ${sp_class}`}
@@ -155,22 +165,24 @@ class Header extends React.Component {
           </Link>
         </div>
         <div className="topicDetail-header-center">
+          <div className="topicDetail-header-title oneline-ellipsis">
           <a href="#"
              data-url={`/topics/ajax_get_members/${topic.id}`}
              className="topicDetail-header-center-link modal-ajax-get">
-            <div className="topicDetail-header-title oneline-ellipsis"><span>{topic.display_title}</span></div>
+           <span>{topic.display_title}</span>
             <div className="topicDetail-header-membersCnt">
               ({topic.members_count})
             </div>
           </a>
+          </div>
         </div>
         <div className="topicDetail-header-right">
           {this.props.message_translation_enabled &&
-            <i id="topicHeaderTranslationButton" onClick={this.onToggleTranslation}
-               className={this.props.message_translation_active ? 'material-icons activated' : 'material-icons'}
-            >
-              g_translate
-            </i>
+          <i id="topicHeaderTranslationButton" onClick={this.onToggleTranslation}
+             className={translationButtonClasses}
+          >
+            g_translate
+          </i>
           }
           <div className="dropdown">
             <a href="#" className="topicDetail-header-menuIcon dropdown-toggle" id="topicHeaderMenu"
@@ -216,7 +228,8 @@ Header.propTypes = {
   is_mobile_app: React.PropTypes.bool,
   back_url: React.PropTypes.string,
   message_translation_active: React.PropTypes.bool,
-  message_translation_enabled: React.PropTypes.bool
+  message_translation_enabled: React.PropTypes.bool,
+  message_translation_limit_reached: React.PropTypes.bool
 };
 
 Header.defaultProps = {
@@ -228,6 +241,7 @@ Header.defaultProps = {
   is_mobile_app: false,
   back_url: '',
   message_translation_active: false,
-  message_translation_enabled: false
+  message_translation_enabled: false,
+  message_translation_limit_reached: false
 };
 export default connect()(Header);

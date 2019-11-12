@@ -8,6 +8,7 @@ import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {LeaveTopicStatus} from "~/message/constants/Statuses";
 import queryString from "query-string";
+import Noty from "noty";
 
 export default class Detail extends Base {
   constructor(props) {
@@ -124,11 +125,28 @@ export default class Detail extends Base {
   }
 
   handleTranslationToggle() {
+    if (this.props.detail.translation_enabled !== true) {
+      return;
+    }
+
+    if (this.props.detail.translation_limit_reached === true) {
+      this.showLimitReachedPopup();
+      return;
+    }
+
     if (this.state.message_translation_active) {
       this.setState({message_translation_active: false});
     } else {
       this.setState({message_translation_active: true});
     }
+  }
+
+  showLimitReachedPopup() {
+    new Noty({
+      type: 'error',
+      text: cake.word.message_translation_limit_reached_message,
+      timeout: 2000
+    }).show();
   }
 
   render() {
@@ -145,6 +163,7 @@ export default class Detail extends Base {
           leave_topic_err_msg={detail.leave_topic_err_msg}
           back_url={this.state.back_url}
           message_translation_enabled={detail.translation_enabled}
+          message_translation_limit_reached={detail.translation_limit_reached}
           message_translation_active={this.state.message_translation_active}
           onTranslationToggle={this.handleTranslationToggle}
         />

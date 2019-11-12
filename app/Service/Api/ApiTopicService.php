@@ -6,6 +6,7 @@ App::import('Service', 'TranslationService');
 App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
 App::uses('Topic', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
 App::import('Service/Paging/Search', 'MessageSearchPagingService');
@@ -124,11 +125,16 @@ class ApiTopicService extends ApiService
 
         // Get translation status
         $translationStatus = false;
+        $translationLimitReached = false;
 
         try {
             /** @var TranslationService $TranslationService */
             $TranslationService = ClassRegistry::init('TranslationService');
-            $translationStatus = $TranslationService->canTranslate($topicDetail['team_id']);
+            $translationStatus = $TranslationService->canTranslate($topicDetail['team_id'], false);
+
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            $translationLimitReached = $TeamTranslationStatus->getUsageStatus($topicDetail['team_id'])->isLimitReached();
 
         } catch (Exception $e) {
             GoalousLog::error('Failed in getting translation status for message.', [
@@ -140,9 +146,10 @@ class ApiTopicService extends ApiService
         }
 
         $ret = [
-            'topic'               => $topicDetail,
-            'messages'            => $messageData,
-            'translation_enabled' => $translationStatus
+            'topic'                     => $topicDetail,
+            'messages'                  => $messageData,
+            'translation_enabled'       => $translationStatus,
+            'translation_limit_reached' => $translationLimitReached
         ];
 
         return $ret;
