@@ -155,7 +155,7 @@ class Message extends React.Component {
             <span className="topicDetail-messages-item-userName">
               {message.user.display_username}
             </span>
-            <span className="topicDetail-messages-item-datetime" data-stat={this.props.message_translation_active}>
+            <span className="topicDetail-messages-item-datetime">
               {message.display_created}
             </span>
           </div>
