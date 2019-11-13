@@ -4,6 +4,7 @@ import {setTopicOnDetail} from "~/message/actions/search";
 import {emptyTopicList} from "~/message/actions/index";
 import {Link} from "react-router";
 import {connect} from "react-redux";
+import { sentrySend } from '~/util/sentry';
 
 class Topic extends React.Component {
 
@@ -22,6 +23,11 @@ class Topic extends React.Component {
 
   tapLink(e) {
     this.setState({is_taped_item: true})
+  }
+
+  unstable_handleError(e) {
+    console.error('unstable_handleError');
+    sentrySend(e);
   }
 
   render() {
