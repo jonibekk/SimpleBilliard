@@ -169,7 +169,7 @@ class Header extends React.Component {
           <a href="#"
              data-url={`/topics/ajax_get_members/${topic.id}`}
              className="topicDetail-header-center-link modal-ajax-get">
-           <span>{topic.display_title}</span>
+           <span className="topicDetail-header-center-title">{topic.display_title}</span>
             <div className="topicDetail-header-membersCnt">
               ({topic.members_count})
             </div>
