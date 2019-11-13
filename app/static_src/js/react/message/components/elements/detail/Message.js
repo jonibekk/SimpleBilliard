@@ -45,6 +45,10 @@ class Message extends React.Component {
   }
 
   updateMessageForTranslation() {
+    // Skip system messages (topic change, member change, etc.)
+    if (this.props.message.type !== '1') {
+      return;
+    }
     translateMessage(this.props.message.id)
       .then((result) => {
         if (this.props.message_translation_active && result !== undefined && result.length > 0) {
@@ -63,8 +67,6 @@ class Message extends React.Component {
             killer: true
           }).show();
         }
-        console.log(error.code);
-        console.log(error.message);
         this.setState({message_body: this.props.message.body});
       });
   }

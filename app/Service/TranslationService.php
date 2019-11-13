@@ -22,7 +22,7 @@ use Goalous\Exception as GlException;
 
 class TranslationService extends AppService
 {
-    const MAX_TRY_COUNT = 8;
+    const MAX_TRY_COUNT = 3;
     const RETRY_SLEEP_SECS = 2;
 
     /**
@@ -227,7 +227,15 @@ class TranslationService extends AppService
         }
 
         $sourceModel = $this->getSourceModel($contentType, $contentId);
-        $sourceBody = $sourceModel['body'];
+
+        $sourceBody = Hash::get($sourceModel, 'body');
+
+        //If body is empty
+        if (empty($sourceModel['body'])) {
+            $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, "");
+            return;
+        }
+
         $teamId = $sourceModel['team_id'];
 
         /** @var TeamTranslationStatusService $TeamTranslationStatusService */
