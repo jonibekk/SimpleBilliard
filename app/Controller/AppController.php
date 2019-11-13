@@ -229,7 +229,6 @@ class AppController extends BaseController
                 $this->_setValsForAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
-                $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
                 // アクティブチームリストに current_team_id が入っていない場合はログアウト
                 // （チームが削除された場合）
@@ -266,14 +265,15 @@ class AppController extends BaseController
                 if (!$this->Auth->user('default_team_id') ||
                     !$this->User->TeamMember->isActive($login_uid)
                 ) {
-                    $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
-                    $this->Session->write('current_team_id', $set_default_team_id);
+                    $defaultTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($login_uid);
+                    $this->User->updateDefaultTeam($defaultTeamId, true, $login_uid);
+                    $this->Session->write('current_team_id', $defaultTeamId);
                     $this->_refreshAuth();
                     // すでにロード済みのモデルの current_team_id 等を更新する
                     foreach (ClassRegistry::keys() as $k) {
                         $obj = ClassRegistry::getObject($k);
                         if ($obj instanceof AppModel) {
-                            $obj->current_team_id = $set_default_team_id;
+                            $obj->current_team_id = $defaultTeamId;
                         }
                     }
                 }
@@ -1085,6 +1085,7 @@ class AppController extends BaseController
             }
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
+            $this->_refreshAuth();
 
             $sessionId = $this->Session->id();
 
