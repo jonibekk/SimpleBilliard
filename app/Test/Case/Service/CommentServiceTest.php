@@ -53,6 +53,7 @@ class CommentServiceTest extends GoalousTestCase
         'app.circle_member',
         'app.circle',
         'app.user',
+        'app.search_post_file',
         'app.team',
         'app.local_name',
         'app.translation',
@@ -336,5 +337,4 @@ class CommentServiceTest extends GoalousTestCase
         $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $otherCommentId, "ja"));
         $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::ACTION_POST_COMMENT(), $commentId, "de"));
     }
-
 }
