@@ -545,9 +545,36 @@ class GoalsController extends ApiController
         /** @var FollowService $FollowService */
         $FollowService = ClassRegistry::init("FollowService");
 
+        // Check if goal exists
+        if (!$this->Goal->exists($goalId)) {
+            return $this->_getResponseBadFail(__("The Goal doesn't exist."));
+        }
+
+        // Check if the goal is completed
+        if ($this->Goal->isCompleted($goalId)) {
+            return $this->_getResponseBadFail(__("You cannot follow or collaborate with a completed Goal."));
+        }
+
+        // Check if it is an old goal
+        if ($this->Goal->isFinished($goalId)) {
+            return $this->_getResponseBadFail(__("You cannot follow or collaborate with a past Goal."));
+        }
+
         // ゴール存在チェック
         if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
             return $this->_getResponseBadFail(__("The Goal doesn't exist."));
+        }
+
+        // Check participating in collaboration
+        $myCollaborationGoalIds = $this->Goal->GoalMember->getCollaborationGoalIds([$goalId], $this->Auth->user('id'));
+        if (in_array($goalId, $myCollaborationGoalIds, true)) {
+            return $this->_getResponseBadFail(__("You cannot follow because you are participating in collaboration."));
+        }
+
+        // Check coaching the goal.
+        $coachingGoalIds = $this->Team->TeamMember->getCoachingGoalList($this->Auth->user('id'));
+        if (isset($coachingGoalIds[$goalId])) {
+            return $this->_getResponseBadFail(__("You cannot follow because you are coaching this goal."));
         }
 
         // フォロー
