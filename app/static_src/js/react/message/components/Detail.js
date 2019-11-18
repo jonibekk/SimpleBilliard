@@ -8,14 +8,17 @@ import {isMobileApp, disableAsyncEvents} from "~/util/base";
 import {TopicTitleSettingStatus} from "~/message/constants/Statuses";
 import {LeaveTopicStatus} from "~/message/constants/Statuses";
 import queryString from "query-string";
+import Noty from "noty";
 
 export default class Detail extends Base {
   constructor(props) {
     super(props);
     this.fetchLatestMessages = this.fetchLatestMessages.bind(this);
+    this.handleTranslationToggle = this.handleTranslationToggle.bind(this);
     this.state = {
       back_url: '/topics',
-    }
+      message_translation_active: false
+    };
   }
 
   componentWillMount() {
@@ -121,6 +124,31 @@ export default class Detail extends Base {
     this.props.fetchLatestMessages(displayed_latest_message_id);
   }
 
+  handleTranslationToggle() {
+    if (this.props.detail.translation_enabled !== true) {
+      return;
+    }
+
+    if (this.props.detail.translation_limit_reached === true) {
+      this.showLimitReachedPopup();
+      return;
+    }
+
+    if (this.state.message_translation_active) {
+      this.setState({message_translation_active: false});
+    } else {
+      this.setState({message_translation_active: true});
+    }
+  }
+
+  showLimitReachedPopup() {
+    new Noty({
+      type: 'error',
+      text: cake.word.message_translation_limit_reached_message,
+      timeout: 2000
+    }).show();
+  }
+
   render() {
     const {detail, file_upload} = this.props;
     return (
@@ -134,6 +162,10 @@ export default class Detail extends Base {
           leave_topic_status={detail.leave_topic_status}
           leave_topic_err_msg={detail.leave_topic_err_msg}
           back_url={this.state.back_url}
+          message_translation_enabled={detail.translation_enabled}
+          message_translation_limit_reached={detail.translation_limit_reached}
+          message_translation_active={this.state.message_translation_active}
+          onTranslationToggle={this.handleTranslationToggle}
         />
         <Body
           topic={detail.topic}
@@ -152,6 +184,7 @@ export default class Detail extends Base {
           fetching_read_count={detail.fetching_read_count}
           is_fetched_search={detail.is_fetched_search}
           is_old_direction={detail.is_old_direction}
+          message_translation_active={this.state.message_translation_active}
         />
         <Footer
           body={detail.input_data.body}

@@ -144,6 +144,124 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
         $this->assertEquals('2020-01-31', $latestLog['start_date']);
         $this->assertEquals('2020-02-28', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(10, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-02-29', $latestLog['start_date']);
+        $this->assertEquals('2020-03-30', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(11, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-03-31', $latestLog['start_date']);
+        $this->assertEquals('2020-04-29', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(12, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-04-30', $latestLog['start_date']);
+        $this->assertEquals('2020-05-30', $latestLog['end_date']);
+    }
+
+    public function test_logAndResetTranslationStatusCheckEdgeDates_success()
+    {
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+        /** @var TeamTranslationStatus $TeamTranslationStatus */
+        $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+        /** @var TeamTranslationStatusService $TeamTranslationStatusService */
+        $TeamTranslationStatusService = ClassRegistry::init('TeamTranslationStatusService');
+        /** @var TeamTranslationUsageLog $TeamTranslationUsageLog */
+        $TeamTranslationUsageLog = ClassRegistry::init('TeamTranslationUsageLog');
+
+        GoalousDateTime::setTestNow("2019-06-01");
+        $currentTimeStamp = GoalousDateTime::now()->getTimestamp();
+        $teamId = 1;
+
+        $Team->updatePaidPlan($teamId, '2019-05-20');
+
+        $PaymentSetting->create();
+        $PaymentSetting->save([
+            'team_id'          => $teamId,
+            'payment_base_day' => 1
+        ], false);
+
+        $TeamTranslationStatus->createEntry($teamId);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(1, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-05-20', $latestLog['start_date']);
+        $this->assertEquals('2019-05-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(2, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-06-01', $latestLog['start_date']);
+        $this->assertEquals('2019-06-30', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(3, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-07-01', $latestLog['start_date']);
+        $this->assertEquals('2019-07-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(4, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-08-01', $latestLog['start_date']);
+        $this->assertEquals('2019-08-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(5, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-09-01', $latestLog['start_date']);
+        $this->assertEquals('2019-09-30', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(6, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-10-01', $latestLog['start_date']);
+        $this->assertEquals('2019-10-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(7, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-11-01', $latestLog['start_date']);
+        $this->assertEquals('2019-11-30', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(8, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2019-12-01', $latestLog['start_date']);
+        $this->assertEquals('2019-12-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(9, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-01-01', $latestLog['start_date']);
+        $this->assertEquals('2020-01-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(10, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-02-01', $latestLog['start_date']);
+        $this->assertEquals('2020-02-29', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(11, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-03-01', $latestLog['start_date']);
+        $this->assertEquals('2020-03-31', $latestLog['end_date']);
+
+        $TeamTranslationStatusService->logAndResetTranslationStatus($teamId, $currentTimeStamp);
+        $this->assertCount(12, $TeamTranslationUsageLog->find('all'));
+        $latestLog = $TeamTranslationUsageLog->getLatestLog($teamId);
+        $this->assertEquals('2020-04-01', $latestLog['start_date']);
+        $this->assertEquals('2020-04-30', $latestLog['end_date']);
     }
 
     public function test_findPaidTeamToReset_success()
@@ -322,11 +440,13 @@ class TeamTranslationStatusServiceTest extends GoalousTestCase
         $this->assertEquals(2002, $TeamTranslationStatus->getUsageStatus($teamId)->getActionPostUsageCount());
         $this->assertEquals(3003, $TeamTranslationStatus->getTotalUsageCount($teamId));
 
-        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::CIRCLE_POST_COMMENT(), 3003);
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::CIRCLE_POST_COMMENT(),
+            3003);
         $this->assertEquals(3003, $TeamTranslationStatus->getUsageStatus($teamId)->getCirclePostCommentUsageCount());
         $this->assertEquals(6006, $TeamTranslationStatus->getTotalUsageCount($teamId));
 
-        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::ACTION_POST_COMMENT(), 4004);
+        $TeamTranslationStatusService->incrementUsageCount($teamId, TranslationContentType::ACTION_POST_COMMENT(),
+            4004);
         $this->assertEquals(4004, $TeamTranslationStatus->getUsageStatus($teamId)->getActionPostCommentUsageCount());
         $this->assertEquals(10010, $TeamTranslationStatus->getTotalUsageCount($teamId));
     }

@@ -79,7 +79,7 @@ export const LeaveTopic = Object.freeze({
   SAVE_SUCCESS: 'LeaveTopic/SAVE_SUCCESS',
   SAVE_ERROR: 'LeaveTopic/SAVE_ERROR',
   RESET_STATUS: 'LeaveTopic/RESET_STATUS',
-})
+});
 
 export const SearchMessages = Object.freeze({
   INITIALIZE: 'SearchMessages/INITIALIZE',
