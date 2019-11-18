@@ -105,8 +105,12 @@ class FollowService extends AppService
         $TeamMember = ClassRegistry::init('TeamMember');
 
         // Check if goal exists
-        $checkDeleted = true;
-        if (!$Goal->exists($goalId, $checkDeleted, $teamId)) {
+        $goal = $Goal->findById($goalId);
+        if (
+            empty($goal) ||
+            (int) Hash::get($goal, 'Goal.team_id') !== (int) $teamId ||
+            (bool) Hash::get($goal, 'Goal.del_flg')
+        ) {
             throw new ValidationToFollowException(__("The Goal doesn't exist."));
         }
 
