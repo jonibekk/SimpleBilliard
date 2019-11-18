@@ -485,27 +485,4 @@ class GlEmailComponent extends Component
         $this->SendMail->saveMailData($toUid, $template, $item, null, $teamId);
         $this->execSendMailById($this->SendMail->id);
     }
-
-    /**
-     * @param int $userId
-     * @param int $teamId
-     * @param string $teamName
-     * @param string $language
-     * @param string $email
-     * @param string|null $password
-     */
-    public function sendMailTeamMemberBulkRegistration(
-        int $userId,
-        int $teamId,
-        string $teamName,
-        string $language,
-        string $email,
-        ?string $password
-    ): void {
-        $url = 'https://' . ENV_NAME . '.goalous.com/users/agree_and_login?team_id=' . $teamId;
-        $item = compact('teamName', 'email', 'password', 'url');
-        $this->SendMail->SendMailToUser->current_team_id = $teamId;
-        $this->SendMail->saveMailData($userId, SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION, $item, null, $teamId);
-        $this->execSendMailById($this->SendMail->id, 'send_mail_by_id', $language);
-    }
 }

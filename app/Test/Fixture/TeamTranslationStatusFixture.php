@@ -11,6 +11,7 @@ class TeamTranslationStatusFixture extends CakeTestFixtureEx
         'circle_post_comment_total' => ['type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated comment of circle post'],
         'action_post_total'         => ['type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated action post'],
         'action_post_comment_total' => ['type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated comment of action post'],
+        'message_total'             => ['type' => 'biginteger', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'Total char count of translated message'],
         'total_limit'               => ['type' => 'biginteger', 'null' => false, 'default' => '10000', 'unsigned' => true, 'comment' => 'Total translation limit of the team'],
         'del_flg'                   => ['type' => 'boolean', 'null' => false, 'default' => '0'],
         'deleted'                   => ['type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true],
