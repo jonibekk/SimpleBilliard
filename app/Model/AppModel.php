@@ -372,10 +372,11 @@ class AppModel extends Model
      *
      * @param null $id
      * @param bool $checkDeleted
+     * @param int|null $teamId
      *
      * @return bool
      */
-    public function exists($id = null, bool $checkDeleted = false)
+    public function exists($id = null, bool $checkDeleted = false, ?int $teamId = null)
     {
         if ($id === null) {
             $id = $this->getID();
@@ -395,6 +396,10 @@ class AppModel extends Model
 
         if (!empty($checkDeleted)) {
             $conditions['conditions']['del_flg'] = false;
+        }
+
+        if ($teamId !== null) {
+            $conditions['conditions']['team_id'] = $teamId;
         }
 
         return (bool)$this->find('count', $conditions);
