@@ -1044,6 +1044,22 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse($return);
         }
 
+        // Check participating in collaboration
+        $myCollaborationGoalIds = $this->Goal->GoalMember->getCollaborationGoalIds([$goalId], $this->Auth->user('id'));
+        if (in_array($goalId, $myCollaborationGoalIds, true)) {
+            $return['error'] = true;
+            $return['msg'] = __("You cannot follow because you are participating in collaboration.");
+            return $this->_ajaxGetResponse($return);
+        }
+
+        // Check coaching the goal.
+        $coachingGoalIds = $this->Team->TeamMember->getCoachingGoalList($this->Auth->user('id'));
+        if (isset($coachingGoalIds[$goalId])) {
+            $return['error'] = true;
+            $return['msg'] = __("You cannot follow because you are coaching this goal.");
+            return $this->_ajaxGetResponse($return);
+        }
+
         //既にフォローしているかどうかのチェック
         if ($this->Goal->Follower->isExists($goalId)) {
             $return['add'] = false;

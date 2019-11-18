@@ -855,6 +855,12 @@ msgstr "ゴールとトップKRを変更しました。"
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
 
+msgid "You cannot follow because you are participating in collaboration."
+msgstr "コラボに参加しているため、フォローできません。"
+
+msgid "You cannot follow because you are coaching this goal."
+msgstr "このゴールをコーチしているため、フォローできません。"
+
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
 
