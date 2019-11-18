@@ -20,6 +20,7 @@ class ContentType extends Enum
     const CIRCLE_POST_COMMENT = 2;
     const ACTION_POST = 3;
     const ACTION_POST_COMMENT = 4;
+    const MESSAGE = 5;
 
     public static function getEnumObj(int $value): self
     {

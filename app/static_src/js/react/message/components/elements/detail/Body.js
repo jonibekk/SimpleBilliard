@@ -12,7 +12,6 @@ import {
   JumpToLatest
 } from "~/message/constants/Statuses";
 import {isIOSApp} from "~/util/base";
-import {PositionIOSApp} from "~/message/constants/Styles";
 
 class Body extends React.Component {
 
@@ -22,10 +21,11 @@ class Body extends React.Component {
       init_scrolled_bottom: false,
       is_scrolled_bottom: false,
       before_scroll_height: 0,
+      message_translation_error_shown: false
     };
     this.scrollFunction = this.scrollListener.bind(this);
     this.scrollBottom = this.scrollBottom.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -255,6 +255,7 @@ class Body extends React.Component {
             message={message}
             key={message.id}
             fetching_read_count={fetching_read_count}
+            message_translation_active={this.props.message_translation_active}
           />
         )
       });
@@ -288,7 +289,8 @@ Body.propTypes = {
   is_fetched_initial: React.PropTypes.bool,
   is_mobile_app: React.PropTypes.bool,
   fetching_read_count: React.PropTypes.bool,
-  is_fetched_search: React.PropTypes.bool
+  is_fetched_search: React.PropTypes.bool,
+  message_translation_active: React.PropTypes.bool
 };
 
 Body.defaultProps = {
@@ -302,6 +304,7 @@ Body.defaultProps = {
   is_fetched_initial: false,
   is_mobile_app: false,
   fetching_read_count: false,
-  is_fetched_search: false
+  is_fetched_search: false,
+  message_translation_active: false
 };
 export default connect()(Body);

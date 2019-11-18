@@ -340,11 +340,31 @@
       cursor: pointer;
       color: @darkBlack;
       display: flex;
+      margin-right: 8px;
+    }
+    &-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
   &-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     &.mod-setTitle {
       padding: 0 8px;
+    }
+    .material-icons {
+      color: @subColor3;
+      cursor: pointer;
+      font-size: 20px;
+      user-select: none;
+      &.activated {
+        color: @color-00-black;
+      }
+      &.limit_reached {
+        color: @color-05-gray;
+      }
     }
   }
   &-icon {

@@ -199,7 +199,7 @@ export function sendMessage() {
         if (!isMobileApp()) {
           autosize.update(ta);
         }else{
-          ta.style.height = ""; 
+          ta.style.height = "";
         }
       },
       ({response}) => {
