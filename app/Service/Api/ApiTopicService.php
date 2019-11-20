@@ -2,9 +2,11 @@
 App::import('Service/Api', 'ApiService');
 App::import('Service', 'TopicService');
 App::import('Service', 'MessageService');
+App::import('Service', 'TranslationService');
 App::import('Service/Api', 'ApiMessageService');
 App::uses('TopicMember', 'Model');
 App::uses('Topic', 'Model');
+App::uses('TeamTranslationStatus', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
 App::import('Service/Paging/Search', 'MessageSearchPagingService');
@@ -86,8 +88,8 @@ class ApiTopicService extends ApiService
     /**
      * calc read count of latest message
      *
-     * @param  array $lastMessage
-     * @param  array $topicMembers
+     * @param array $lastMessage
+     * @param array $topicMembers
      *
      * @return int
      */
@@ -118,22 +120,49 @@ class ApiTopicService extends ApiService
         $limit = null;
         $direction = Enum\Model\Message\MessageDirection::OLD;
         $pagingType = ApiMessageService::PAGING_TYPE_BOTH;
-        $messageData = $ApiMessageService->findMessages($topicId, $loginUserId, $messageId, $limit, $direction, $pagingType);
+        $messageData = $ApiMessageService->findMessages($topicId, $loginUserId, $messageId, $limit, $direction,
+            $pagingType);
+
+        // Get translation status
+        $translationStatus = false;
+        $translationLimitReached = false;
+
+        try {
+            /** @var TranslationService $TranslationService */
+            $TranslationService = ClassRegistry::init('TranslationService');
+            $translationStatus = $TranslationService->canTranslate($topicDetail['team_id'], false);
+
+            /** @var TeamTranslationStatus $TeamTranslationStatus */
+            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+            $translationLimitReached = $TeamTranslationStatus->getUsageStatus($topicDetail['team_id'])->isLimitReached();
+
+        } catch (Exception $e) {
+            GoalousLog::error('Failed in getting translation status for message.', [
+                'message'  => $e->getMessage(),
+                'trace'    => $e->getTraceAsString(),
+                'topic_id' => $topicId,
+                'user_id'  => $loginUserId
+            ]);
+        }
 
         $ret = [
-            'topic'    => $topicDetail,
-            'messages' => $messageData,
+            'topic'                     => $topicDetail,
+            'messages'                  => $messageData,
+            'translation_enabled'       => $translationStatus,
+            'translation_limit_reached' => $translationLimitReached
         ];
+
         return $ret;
     }
 
     /**
      * Find topic detail including latest messages.
      *
-     * @param int $topicId
-     * @param int $loginUserId
-     * @param int $teamId
+     * @param int   $topicId
+     * @param int   $loginUserId
+     * @param int   $teamId
      * @param array $query
+     *
      * @return array
      */
     function findInitSearchMessages(int $topicId, int $loginUserId, int $teamId, array $query): array
@@ -165,7 +194,7 @@ class ApiTopicService extends ApiService
     /**
      * Find read members of latest message
      *
-     * @param  int $topicId
+     * @param int $topicId
      *
      * @return array
      */
@@ -184,7 +213,7 @@ class ApiTopicService extends ApiService
     /**
      * get topic with last message and members
      *
-     * @param  int $topicId
+     * @param int $topicId
      *
      * @return array
      */

@@ -13,7 +13,8 @@ class TeamTranslationStatusEntity extends BaseEntity
         return $this->getCirclePostUsageCount()
             + $this->getCirclePostCommentUsageCount()
             + $this->getActionPostUsageCount()
-            + $this->getActionPostCommentUsageCount();
+            + $this->getActionPostCommentUsageCount()
+            + $this->getMessageUsageCount();
     }
 
     /**
@@ -54,6 +55,16 @@ class TeamTranslationStatusEntity extends BaseEntity
     public function getActionPostCommentUsageCount(): int
     {
         return $this['action_post_comment_total'] ?: 0;
+    }
+
+    /**
+     * Get translation usage for message
+     *
+     * @return int
+     */
+    public function getMessageUsageCount(): int
+    {
+        return $this['message_total'] ?: 0;
     }
 
     /**

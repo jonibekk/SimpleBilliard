@@ -13,7 +13,6 @@ App::uses('TeamTranslationUsageLog', 'Model');
 App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagClient');
 App::import('Lib/Cache/Redis/NotificationFlag', 'NotificationFlagKey');
 
-
 class TeamTranslationStatusService extends AppService
 {
     /**
@@ -108,26 +107,28 @@ class TeamTranslationStatusService extends AppService
         $paidTeamIds = $Team->filterPaidTeam($teamIdsWithTranslation);
 
         // Get teams with payment base date of given timestamp, without any log for previous interval
-        $teamsToReset = array_filter($paidTeamIds, function ($paidTeamId) use ($PaymentService, $Team, $TeamTranslationUsageLog, $currentTimeStamp) {
+        $teamsToReset = array_filter($paidTeamIds,
+            function ($paidTeamId) use ($PaymentService, $Team, $TeamTranslationUsageLog, $currentTimeStamp) {
 
-            $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $currentTimeStamp)->format('Y-m-d');
+                $paymentBaseDate = $PaymentService->getCurrentMonthBaseDate($paidTeamId, $currentTimeStamp)
+                                                  ->format('Y-m-d');
 
-            $teamTimezone = Hash::get($Team->getById($paidTeamId), 'Team.timezone');
-            $localCurrentTs = $currentTimeStamp + ($teamTimezone * HOUR);
+                $teamTimezone = Hash::get($Team->getById($paidTeamId), 'Team.timezone');
+                $localCurrentTs = $currentTimeStamp + ($teamTimezone * HOUR);
 
-            if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
-                return false;
-            }
+                if ($paymentBaseDate != AppUtil::dateYmd($localCurrentTs)) {
+                    return false;
+                }
 
-            $latestLog = $TeamTranslationUsageLog->getLatestLog($paidTeamId);
+                $latestLog = $TeamTranslationUsageLog->getLatestLog($paidTeamId);
 
-            if (empty($latestLog)) {
-                return true;
-            }
+                if (empty($latestLog)) {
+                    return true;
+                }
 
-            return $latestLog['end_date'] !=
-                date_create($paymentBaseDate)->modify('-1 day')->format('Y-m-d');
-        });
+                return $latestLog['end_date'] !=
+                    date_create($paymentBaseDate)->modify('-1 day')->format('Y-m-d');
+            });
 
         // To reset array index
         return array_values($teamsToReset);
@@ -171,6 +172,8 @@ class TeamTranslationStatusService extends AppService
     {
         /** @var PaymentService $PaymentService */
         $PaymentService = ClassRegistry::init('PaymentService');
+        /** @var PaymentSetting $PaymentSetting */
+        $PaymentSetting = ClassRegistry::init('PaymentSetting');
         /** @var TeamTranslationUsageLog $TeamTranslationUsageLog */
         $TeamTranslationUsageLog = ClassRegistry::init('TeamTranslationUsageLog');
 
@@ -178,14 +181,32 @@ class TeamTranslationStatusService extends AppService
 
         $endDateTimeStamp = $currentTimeStamp;
 
+        $paymentSetting = $PaymentSetting->getUnique($teamId);
+        $paymentBaseDay = Hash::get($paymentSetting, 'payment_base_day');
+
         // If it's not the first log
         if (!empty($previousLog)) {
-            $endDateTimeStamp = strtotime($previousLog['end_date']) + MONTH;
+
+            $endDateTime = GoalousDateTime::createFromFormat("Y-m-d", $previousLog['end_date']);
+
+            // If payment_base_day is corrected from original date (e.g. Paid on 31 January will be corrected to 28 Feb)
+            if ($endDateTime->day === $endDateTime->daysInMonth && $endDateTime->addDay(1)->day === $paymentBaseDay) {
+                $endDateTime = clone($endDateTime)->modify("last day of next month");
+            } else {
+                $endDateTime = clone($endDateTime)->addMonthNoOverflow(1);
+            }
+
+            // Check if log end date is the same month
+            if ($endDateTime->day === $endDateTime->daysInMonth) {
+                return $endDateTime->subDay(1);
+            }
+
+            $endDateTimeStamp = $endDateTime->getTimestamp();
         }
 
         $endDate = $PaymentService->getCurrentMonthBaseDate($teamId, $endDateTimeStamp);
 
-        return $endDate->modify("-1 day");
+        return $endDate->subDay(1);
     }
 
     /**
@@ -215,6 +236,11 @@ class TeamTranslationStatusService extends AppService
             case TranslationContentType::ACTION_POST_COMMENT:
                 $TeamTranslationStatus->incrementActionCommentCount($teamId, $count);
                 break;
+            case TranslationContentType::MESSAGE:
+                $TeamTranslationStatus->incrementMessageCount($teamId, $count);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation content type");
         }
     }
 }

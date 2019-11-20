@@ -272,7 +272,6 @@ export default function detail(state = initialState, action) {
         leave_topic_err_msg: "",
         leave_topic_status: LeaveTopicStatus.NONE
       })
-
     default:
       return state;
   }

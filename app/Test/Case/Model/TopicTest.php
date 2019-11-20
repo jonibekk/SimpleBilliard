@@ -118,7 +118,8 @@ class TopicTest extends GoalousTestCase
         $expected = [
             'id'                => $topicId,
             'title'             => 'test',
-            'latest_message_id' => null
+            'latest_message_id' => null,
+            'team_id'           => 1
         ];
 
         $this->assertEquals($expected, $actual);

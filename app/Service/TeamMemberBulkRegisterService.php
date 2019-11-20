@@ -6,12 +6,14 @@ use Goalous\Enum\Model\Team\ServiceUseStatus;
 App::uses('Email', 'Model');
 App::uses('Team', 'Model');
 App::uses('User', 'Model');
+App::uses('SendMail', 'Model');
+App::uses('SendMailToUser', 'Model');
 App::uses('TransactionManager', 'Model');
 App::uses('TeamMemberBulkRegisterValidator', 'Validator/Csv');
 App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
-App::uses('GlEmailComponent', 'Controller/Component');
+App::uses('CakeEmail', 'Network/Email');
 App::import('Model/Csv', 'TeamMemberBulkRegisterAggregate');
 App::import('Model/User', 'UserSignUpFromCsv');
 App::import('Service/User/Team', 'UserTeamJoiningService');
@@ -33,8 +35,6 @@ class TeamMemberBulkRegisterService
     const PASSWORD_LENGTH = 8;
     const PASSWORD_MAX_NUMBER_DIGITS = 4;
 
-    const COMPLETED_PER_COUNT = 10;
-
     /** @var int */
     private $teamId;
     /** @var string */
@@ -47,6 +47,10 @@ class TeamMemberBulkRegisterService
     private $s3Instance;
     /** @var TransactionManager */
     private $TransactionManager;
+    /** @var SendMailToUser */
+    private $SendMailToUser;
+    /** @var SendMail */
+    private $SendMail;
     /** @var User */
     private $User;
     /** @var Email */
@@ -59,8 +63,6 @@ class TeamMemberBulkRegisterService
     private $userTeamJoiningService;
     /** @var UserCircleJoiningService */
     private $userCircleJoiningService;
-    /** @var GlEmailComponent */
-    private $GlEmail;
     /** * @var array */
     private $log = [];
 
@@ -78,12 +80,12 @@ class TeamMemberBulkRegisterService
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
         $this->userTeamJoiningService = new UserTeamJoiningService();
         $this->userCircleJoiningService = new UserCircleJoiningService();
+        $this->SendMailToUser = ClassRegistry::init('SendMailToUser');
+        $this->SendMail = ClassRegistry::init('SendMail');
         $this->User = ClassRegistry::init('User');
         $this->Email = ClassRegistry::init('Email');
         $this->Team = ClassRegistry::init('Team');
         $this->Circle = ClassRegistry::init('Circle');
-        $this->GlEmail = new GlEmailComponent(new ComponentCollection());
-        $this->GlEmail->startup(new AppController());
         $this->s3Instance = AwsClientFactory::createS3ClientForFileStorage();
     }
 
@@ -118,11 +120,11 @@ class TeamMemberBulkRegisterService
     public function execute(): void
     {
         try {
-            $this->validParameter();
-
             if ($this->isDryRun()) {
                 $this->addLog('[INFO] This is dry-run');
             }
+
+            $this->validParameter();
 
             $teamId = $this->getTeamId();
             $team = $this->getTeamEntity()->findById($teamId);
@@ -140,11 +142,13 @@ class TeamMemberBulkRegisterService
             $teamAllCircleId = $this->getTeamAllCircleId();
 
             $this->executeStart($records, $teamId, $teamName, $teamTimezone, $emailUserMap, $teamAllCircleId);
+            $this->addLog(str_repeat('-=', 30));
+            $this->addAggregateLog();
             if (!$this->isDryRun()) {
                 $this->cleanCache();
                 $this->addLog('Cleared cache.');
+                $this->writeResult();
             }
-            $this->addAggregateLog();
         } catch (\Throwable $e) {
             throw new $e($e->getMessage());
         }
@@ -167,6 +171,13 @@ class TeamMemberBulkRegisterService
         int $teamAllCircleId
     ) {
         foreach ($records as $index => $record) {
+            $lineNumber = $index + 2;
+            $this->addLog(str_repeat('-=', 30));
+            if (empty($record)) {
+                $this->addLog('Line number ' . $lineNumber . ' skip because there is a blank line.');
+                continue;
+            }
+
             try {
                 $this->validateRecord($record);
 
@@ -190,29 +201,22 @@ class TeamMemberBulkRegisterService
                 } else {
                     $this->TransactionManager->commit();
                 }
+                $this->addLog('Line number ' . $lineNumber . ' completed');
             } catch (\Throwable $e) {
+                $this->addLog('Line number ' . $lineNumber . ' failed with the following errors:');
+                $this->addLog($e->getMessage());
+
                 $this->TransactionManager->rollback();
                 if ($e instanceof ExcludeException) {
                     $this->getAggregate()->addExcludedCount();
                 } else {
                     $this->getAggregate()->addFailedCount();
                 }
-                $errorMessage = 'email: ' . $this->convertHiddenEmail($record['email']) . ': ' . $e->getMessage();
-                $this->addLog($errorMessage);
             } finally {
-                $this->outputCompleteMessage($index + 1);
-                usleep(500000);// 0.5sec
+                if (($index + 1) % 100 === 0) {
+                    sleep(3);
+                }
             }
-        }
-    }
-
-    /**
-     * @param int $completedCount
-     */
-    protected function outputCompleteMessage(int $completedCount)
-    {
-        if ($completedCount % self::COMPLETED_PER_COUNT === 0) {
-            CakeLog::notice($completedCount . ' completed');
         }
     }
 
@@ -225,7 +229,16 @@ class TeamMemberBulkRegisterService
         try {
             TeamMemberBulkRegisterValidator::createDefaultValidator()->validate($record);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
-            throw new $e('Validation error occurred in csv data.');
+            $result = $e->findMessages([
+                'email' => "{{name}}: The email format is incorrect",
+                'length' => "{{name}}: The character limit is not met",
+                'regex' => "{{name}}: The name format is incorrect",
+                'stringType' => "{{name}}: The value must be string",
+                'in' => "{{name}}: The value is incorrect",
+                'notEmpty' => "{{name}}: The value must not be empty",
+            ]);
+
+            throw new $e(implode("\n", array_filter(array_values($result))));
         }
     }
 
@@ -278,8 +291,7 @@ class TeamMemberBulkRegisterService
         $this->joinCircle($userId, $teamId, $teamAllCircleId);
 
         if (!$this->isDryRun()) {
-            $this->getGlMail()
-                ->sendMailTeamMemberBulkRegistration($userId, $teamId, $teamName, $language, $email, $password);
+            $this->executeMailSend($email, $userId, $password, $teamId, $teamName, $language);
         }
 
         if ($isNewUser) {
@@ -288,6 +300,110 @@ class TeamMemberBulkRegisterService
         } else {
             $this->getAggregate()->addSuccessCount();
             $this->getAggregate()->addExistUserCount();
+        }
+    }
+
+    /**
+     * @param string $email
+     * @param int $userId
+     * @param string|null $password
+     * @param int $teamId
+     * @param string $teamName
+     * @param string $language
+     * @throws Exception
+     */
+    protected function executeMailSend(
+        string $email,
+        int $userId,
+        ?string $password,
+        int $teamId,
+        string $teamName,
+        string $language
+    ): void {
+        $item = [
+            'teamName' => $teamName,
+            'email' => $email,
+            'password' => $password,
+            'url' => 'https://' . ENV_NAME . '.goalous.com/users/agree_and_login?team_id=' . $teamId
+        ];
+
+        $newSendMailId = $this->createSendMailData($userId, $teamId, json_encode($item));
+
+        $this->sendMail($email, $item, $teamName, $language);
+
+        $this->updateSendMailDataTime($newSendMailId);
+    }
+
+    /**
+     * @param string $email
+     * @param array $viewVars
+     * @param string $teamName
+     * @param string $language
+     */
+    private function sendMail(string $email, array $viewVars, string $teamName, string $language): void
+    {
+        Configure::write('Config.language', $language);
+        $this->SendMail->_setTemplateSubject();
+        $options = SendMail::$TYPE_TMPL[SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION];
+        $subject = '[' . $teamName . '] ' . __('Invitation for team');
+
+        $config = (ENV_NAME === 'local') ? 'default' : 'amazon';
+        $Email = new CakeEmail($config);
+        if (ENV_NAME === 'local') {
+            $Email->config(['log' => false]);
+        }
+
+        $Email->to($email)
+            ->subject($subject)
+            ->template($options['template'], $options['layout'])
+            ->viewVars($viewVars)
+            ->send();
+        $Email->reset();
+    }
+
+    /**
+     * @param int $userId
+     * @param int $teamId
+     * @param string $jsonEncodedItem
+     * @return int
+     * @throws Exception
+     */
+    private function createSendMailData(int $userId, int $teamId, string $jsonEncodedItem): int
+    {
+        $this->SendMail->create();
+        $result = $this->SendMail->save([
+            'team_id' => $teamId,
+            'template_type' => SendMail::TYPE_TMPL_TEAM_MEMBER_BULK_REGISTRATION,
+            'item' => $jsonEncodedItem
+        ]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to save send_mails data.');
+        }
+        $newSendMailId = $this->SendMail->id;
+
+        $this->SendMailToUser->create();
+        $result = $this->SendMailToUser->save([
+            'user_id'      => $userId,
+            'send_mail_id' => $newSendMailId,
+            'team_id'      => $teamId,
+        ]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to save send_mail_to_users data.');
+        }
+
+        return $newSendMailId;
+    }
+
+    /**
+     * @param int $sendMailId
+     * @throws Exception
+     */
+    private function updateSendMailDataTime(int $sendMailId): void
+    {
+        $this->SendMail->id = $sendMailId;
+        $result = $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
+        if (!$result) {
+            throw new \RuntimeException('Failed to update sent_datetime.');
         }
     }
 
@@ -334,7 +450,7 @@ class TeamMemberBulkRegisterService
     /**
      * @return array
      */
-    public function getLog(): array
+    private function getLog(): array
     {
         return $this->log;
     }
@@ -342,17 +458,10 @@ class TeamMemberBulkRegisterService
     /**
      * @param string $message
      */
-    public function addLog(string $message): void
+    private function addLog(string $message): void
     {
+        CakeLog::notice($message);
         $this->log[] = $message;
-    }
-
-    /**
-     * @return string
-     */
-    public function outputLog(): string
-    {
-        return implode("\n", $this->getlog()) . "\n";
     }
 
     /**
@@ -360,15 +469,17 @@ class TeamMemberBulkRegisterService
      */
     protected function addAggregateLog(): void
     {
-        foreach ($this->getAggregateLog() as $log) {
-            $this->addLog($log);
-        }
+        $this->addLog('Success: ' . $this->getAggregate()->getSuccessCount());
+        $this->addLog('New User: ' . $this->getAggregate()->getNewUserCount());
+        $this->addLog('Exist User: ' . $this->getAggregate()->getExistUserCount());
+        $this->addLog('Failed: ' . $this->getAggregate()->getFailedCount());
+        $this->addLog('Excluded: ' . $this->getAggregate()->getExcludedCount());
     }
 
     /**
      * @return bool
      */
-    public function isDryRun(): bool
+    private function isDryRun(): bool
     {
         return $this->dryRun;
     }
@@ -376,12 +487,12 @@ class TeamMemberBulkRegisterService
     /**
      * @return void
      */
-    public function writeResult(): void
+    protected function writeResult(): void
     {
         $this->s3Instance->putObject([
             'Bucket' => $this->getBucketName(),
             'Key' => self::CSV_LOG_PREFIX . $this->getLogFilename(),
-            'Body' => $this->outputLog()
+            'Body' => implode("\n", $this->getlog()) . "\n"
         ]);
     }
 
@@ -391,35 +502,6 @@ class TeamMemberBulkRegisterService
     protected function getAggregate(): TeamMemberBulkRegisterAggregate
     {
         return $this->aggregate;
-    }
-
-    /**
-     * @param string $email
-     * @return string
-     */
-    protected function convertHiddenEmail(string $email): string
-    {
-        $prefix = substr($email, 0, 4);
-        $otherCount = count(str_split($email)) - 4;
-        if ($otherCount < 0) {
-            $otherCount = 0;
-        }
-
-        return $prefix . str_repeat('*', $otherCount);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAggregateLog(): array
-    {
-        return [
-            'Success: ' . $this->getAggregate()->getSuccessCount(),
-            'New User: ' . $this->getAggregate()->getNewUserCount(),
-            'Exist User: ' . $this->getAggregate()->getExistUserCount(),
-            'Failed: ' . $this->getAggregate()->getFailedCount(),
-            'Excluded: ' . $this->getAggregate()->getExcludedCount()
-        ];
     }
 
     /**
@@ -654,14 +736,6 @@ class TeamMemberBulkRegisterService
     protected function getTeamEntity(): Team
     {
         return $this->Team;
-    }
-
-    /**
-     * @return GlEmailComponent
-     */
-    protected function getGlMail(): GlEmailComponent
-    {
-        return $this->GlEmail;
     }
 
     /**
