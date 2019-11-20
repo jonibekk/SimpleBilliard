@@ -4,6 +4,7 @@ import {setTopicOnDetail} from "~/message/actions/search";
 import {emptyTopicList} from "~/message/actions/index";
 import {Link} from "react-router";
 import {connect} from "react-redux";
+import { sentrySend } from '~/util/sentry';
 
 class Topic extends React.Component {
 
@@ -24,8 +25,14 @@ class Topic extends React.Component {
     this.setState({is_taped_item: true})
   }
 
+  unstable_handleError(e) {
+    console.error('unstable_handleError');
+    sentrySend(e);
+  }
+
   render() {
     const topic = this.props.topic
+    const latest_message = topic.latest_message || {};
 
     return (
       <li className="topicList-item" key={ topic.id }>
@@ -33,7 +40,7 @@ class Topic extends React.Component {
               className={`topicList-item-link ${topic.is_unread ? 'is-unread' : ''} ${this.state.is_taped_item ? "is-hover" : ""}`}
               onClick={ this.onClickLinkToDetail.bind(this) }
               onTouchTap={ this.tapLink.bind(this) }>
-          <AvatarsBox users={ topic.users }/>
+          <AvatarsBox users={ topic.users } />
           <div className="topicList-item-main">
             <div className="topicList-item-main-header">
               <div className={`topicList-item-main-header-title oneline-ellipsis ${topic.is_unread ? 'mod-bold' : ''}` }>
@@ -46,7 +53,7 @@ class Topic extends React.Component {
               </div>
             </div>
             <div className="topicList-item-main-body oneline-ellipsis">
-              { topic.latest_message.body }
+              { latest_message.body || '' }
             </div>
             <div className="topicList-item-main-footer">
               {(() => {
@@ -59,7 +66,7 @@ class Topic extends React.Component {
                   return <span><i className="fa fa-check"></i> { topic.read_count }・</span>
                 }
               })()}
-              { topic.latest_message.display_created }
+              { latest_message.display_created || '' }
             </div>
           </div>
         </Link>

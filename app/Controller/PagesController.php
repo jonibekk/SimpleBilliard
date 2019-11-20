@@ -248,31 +248,7 @@ class PagesController extends AppController
 
     public function contact($type = null)
     {
-        $this->layout = LAYOUT_HOMEPAGE;
-        $this->set('type_options', $this->_getContactTypeOption());
-        $this->set('selected_type', $type);
-
-        if ($this->request->is('get')) {
-            if (isset($this->request->params['named']['from_confirm']) &&
-                $this->Session->read('contact_form_data')
-            ) {
-                $this->request->data['Email'] = $this->Session->read('contact_form_data');
-            }
-            return $this->render();
-        }
-        /**
-         * @var Email $Email
-         */
-        $Email = ClassRegistry::init('Email');
-        $Email->validate = $Email->contact_validate;
-        $Email->set($this->request->data);
-        $data = Hash::extract($this->request->data, 'Email');
-        if ($Email->validates()) {
-            $this->Session->write('contact_form_data', $data);
-            $lang = $this->_getLangFromParam();
-            return $this->redirect(['action' => 'contact_confirm', 'lang' => $lang]);
-        }
-        return $this->render();
+        $this->redirectLp('contact');
     }
 
     private function _getContactTypeOption()
