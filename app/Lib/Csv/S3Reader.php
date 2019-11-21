@@ -51,6 +51,7 @@ class S3Reader
         foreach ($this->getOriginRecords() as $index => $record) {
             $data = [];
             if ($record === [null]) {
+                $records[] = [];
                 continue;
             }
 

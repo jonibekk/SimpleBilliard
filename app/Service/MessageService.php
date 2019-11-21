@@ -6,12 +6,12 @@ App::uses('Message', 'Model');
 App::uses('TopicMember', 'Model');
 App::uses('User', 'Model');
 App::uses('AttachedFile', 'Model');
-App::uses('Topic', 'Model');
 App::uses('AppUtil', 'Util');
 
 /**
  * Class MessageService
  */
+
 use Goalous\Enum as Enum;
 
 class MessageService extends AppService
@@ -216,7 +216,7 @@ class MessageService extends AppService
 
                 $imgUrl = $urls['thumbnail_url'];
                 if (ENV_NAME === 'local') {
-                    $imgUrl = WWW_ROOT.$urls['thumbnail_url'];
+                    $imgUrl = WWW_ROOT . $urls['thumbnail_url'];
                 }
                 list($imgWidth, $imgHeight) = getimagesize($imgUrl);
                 $urls['thumbnail_width'] = $imgWidth;
@@ -425,4 +425,23 @@ class MessageService extends AppService
         exec($allCmd);
     }
 
+    /**
+     * Check whether user can view the message
+     *
+     * @param int $userId
+     * @param int $messageId
+     *
+     * @return bool
+     */
+    public function checkUserAccessToMessage(int $userId, int $messageId): bool
+    {
+        /** @var Message $Message */
+        $Message = ClassRegistry::init('Message');
+        $message = $Message->getById($messageId);
+
+        /** @var TopicMember $TopicMember */
+        $TopicMember = ClassRegistry::init('TopicMember');
+
+        return $TopicMember->isMember($message['topic_id'], $userId);
+    }
 }

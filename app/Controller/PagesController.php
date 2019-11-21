@@ -52,18 +52,17 @@ class PagesController extends AppController
     /**
      * Displays a view
      *
-     * @throws NotFoundException
+     * @return $this->redirect('/') or void
      * @throws Exception
      * @throws MissingViewException
+     * @throws NotFoundException
      * @internal param \What $mixed page to display
-     * @return $this->redirect('/') or void
      */
     public function home()
     {
         // Display lp top page if not logged in
         if (!$this->_isLoggedIn()) {
-            $this->layout = LAYOUT_HOMEPAGE;
-            return $this->render('home');
+            $this->redirectLp();
         }
 
         // Define URL params for Google analytics.
@@ -77,6 +76,22 @@ class PagesController extends AppController
     }
 
     /**
+     * Get lang code
+     * @return string
+     */
+    private function redirectLp(string $page = "")
+    {
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $lang = $Lang->getLangCode();
+        $url = "/intl/${lang}/";
+        if (!empty($page)) {
+          $url .= $page.'/';
+        }
+        $this->redirect($url);
+    }
+
+    /**
      * Display lp pages other than top page
      *
      * @return void
@@ -85,26 +100,30 @@ class PagesController extends AppController
     {
         $path = func_get_args();
         $page = $path[0];
+        // Redirect new LP env `/intl/**`
+        $this->redirectLp($page);
 
-        if ($page === 'pricing') {
-            $this->_setPricingValues();
-        } elseif ($page === 'terms') {
-            $this->_setTerms();
-        } elseif ($page === 'campaign_terms') {
-            /** @var CampaignService $CampaignService */
-            $CampaignService = ClassRegistry::init('CampaignService');
-            if (!$this->_isLoggedIn() ||
-                !$CampaignService->isCampaignTeam($this->current_team_id)) {
-                throw new NotFoundException();
-            }
-        } elseif ($page === 'case_study') {
-            $company = $this->request->query('company') ?? 'witone';
-            $this->set('company', $company);
-        }
-
-        $this->set('is_mb_app', $this->is_mb_app);
-        $this->layout = LAYOUT_HOMEPAGE;
-        return $this->render(implode('/', $path));
+        // Old processing.
+        // TODO: delete all old lp pages and processing related after we released migrated lp (goalous-lp repo)
+//        if ($page === 'pricing') {
+//            $this->_setPricingValues();
+//        } elseif ($page === 'terms') {
+//            $this->_setTerms();
+//        } elseif ($page === 'campaign_terms') {
+//            /** @var CampaignService $CampaignService */
+//            $CampaignService = ClassRegistry::init('CampaignService');
+//            if (!$this->_isLoggedIn() ||
+//                !$CampaignService->isCampaignTeam($this->current_team_id)) {
+//                throw new NotFoundException();
+//            }
+//        } elseif ($page === 'case_study') {
+//            $company = $this->request->query('company') ?? 'witone';
+//            $this->set('company', $company);
+//        }
+//
+//        $this->set('is_mb_app', $this->is_mb_app);
+//        $this->layout = LAYOUT_HOMEPAGE;
+//        return $this->render(implode('/', $path));
     }
 
     /**
@@ -171,6 +190,12 @@ class PagesController extends AppController
                     $paramsPostGet)
             ]);
         } catch (RuntimeException $e) {
+            GoalousLog::error("Error in showing home page.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'user_id' => $this->Auth->user('id'),
+                'team_id' => $current_team['Team']['id']
+            ]);
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
@@ -223,31 +248,7 @@ class PagesController extends AppController
 
     public function contact($type = null)
     {
-        $this->layout = LAYOUT_HOMEPAGE;
-        $this->set('type_options', $this->_getContactTypeOption());
-        $this->set('selected_type', $type);
-
-        if ($this->request->is('get')) {
-            if (isset($this->request->params['named']['from_confirm']) &&
-                $this->Session->read('contact_form_data')
-            ) {
-                $this->request->data['Email'] = $this->Session->read('contact_form_data');
-            }
-            return $this->render();
-        }
-        /**
-         * @var Email $Email
-         */
-        $Email = ClassRegistry::init('Email');
-        $Email->validate = $Email->contact_validate;
-        $Email->set($this->request->data);
-        $data = Hash::extract($this->request->data, 'Email');
-        if ($Email->validates()) {
-            $this->Session->write('contact_form_data', $data);
-            $lang = $this->_getLangFromParam();
-            return $this->redirect(['action' => 'contact_confirm', 'lang' => $lang]);
-        }
-        return $this->render();
+        $this->redirectLp('contact');
     }
 
     private function _getContactTypeOption()

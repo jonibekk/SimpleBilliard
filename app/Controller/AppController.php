@@ -29,6 +29,7 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::import('Lib/Storage/Client', 'NewGoalousAssetsStorageClient');
+App::import('Controller/Traits', 'AuthTrait');
 
 use Goalous\Enum as Enum;
 
@@ -49,6 +50,7 @@ use Goalous\Enum as Enum;
  */
 class AppController extends BaseController
 {
+    use AuthTrait;
     /**
      * アクション件数 キャッシュ有効期限
      */
@@ -227,7 +229,6 @@ class AppController extends BaseController
                 $this->_setValsForAlert();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
-                $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
                 // アクティブチームリストに current_team_id が入っていない場合はログアウト
                 // （チームが削除された場合）
@@ -264,14 +265,15 @@ class AppController extends BaseController
                 if (!$this->Auth->user('default_team_id') ||
                     !$this->User->TeamMember->isActive($login_uid)
                 ) {
-                    $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
-                    $this->Session->write('current_team_id', $set_default_team_id);
+                    $defaultTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($login_uid);
+                    $this->User->updateDefaultTeam($defaultTeamId, true, $login_uid);
+                    $this->Session->write('current_team_id', $defaultTeamId);
                     $this->_refreshAuth();
                     // すでにロード済みのモデルの current_team_id 等を更新する
                     foreach (ClassRegistry::keys() as $k) {
                         $obj = ClassRegistry::getObject($k);
                         if ($obj instanceof AppModel) {
-                            $obj->current_team_id = $set_default_team_id;
+                            $obj->current_team_id = $defaultTeamId;
                         }
                     }
                 }
@@ -288,12 +290,14 @@ class AppController extends BaseController
                 $this->_setCircleBadgeCount();
                 $this->_setNewGoalousAssets();
             }
-            $this->set('current_term', $this->Team->Term->getCurrentTermData());
-            $this->_setMyMemberStatus();
-            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
-            $this->_setAvailEvaluation();
-            $this->_setAllAlertCnt();
-            $this->setDefaultTranslationLanguage();
+            if ($this->Session->check('current_team_id')) {
+                $this->set('current_term', $this->Team->Term->getCurrentTermData());
+                $this->_setMyMemberStatus();
+                $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
+                $this->_setAvailEvaluation();
+                $this->_setAllAlertCnt();
+                $this->setDefaultTranslationLanguage();
+            }
         }
         $this->set('current_global_menu', null);
         $this->set('my_id', $this->Auth->user('id'));
@@ -1071,10 +1075,45 @@ class AppController extends BaseController
             $this->User->TeamMember->permissionCheck($team_id, $userId, $skipCheckUserStatus);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());
-            GoalousLog::error("Error on setting user $userId default_team_id. " . $e->getMessage());
+            GoalousLog::info("Invalid default_team_id for user $userId " . $e->getMessage());
             $newTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($userId) ?: null;
+            if (empty($newTeamId)) {
+                // $newTeamId will be null when for 2 status of user
+                //  - Completely new user invite
+                //  - User not joined to any team
+                return false;
+            }
             $this->Session->write('current_team_id', $newTeamId);
             $this->User->updateDefaultTeam($newTeamId, true, $userId);
+            $this->_refreshAuth();
+
+            $sessionId = $this->Session->id();
+
+            $newJwtAuth = null;
+            try {
+                if (empty($team_id)) {
+                    $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
+                } else {
+                    $oldToken = $this->GlRedis->getMapSesAndJwt($team_id, $userId, $sessionId);
+                    $newJwtAuth = $this->resetAuth($userId, $newTeamId,
+                        AccessAuthenticator::verify($oldToken)->getJwtAuthentication());
+                    $this->GlRedis->delMapSesAndJwt($team_id, $userId, $sessionId);
+                }
+                $this->GlRedis->saveMapSesAndJwtWithToken($newTeamId, $userId, $newJwtAuth->token(), $sessionId);
+            } catch (Exception $e) {
+                $this->GlRedis->delMapSesAndJwt($team_id, $userId, $this->Session->id());
+                $newJwtAuth = $this->GlRedis->saveMapSesAndJwt($newTeamId, $userId, $sessionId);
+            }
+            if (empty($newJwtAuth)) {
+                GoalousLog::critical('Failed to create jwt_token', [
+                    'users.id' => $userId,
+                    'teams.id' => $team_id,
+                    'teams.id new' => $newTeamId,
+                ]);
+            } else {
+                $this->set('jwt_token', $newJwtAuth->token());
+            }
+
             return false;
         }
         $this->Session->write('current_team_id', $team_id);

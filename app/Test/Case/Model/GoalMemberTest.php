@@ -504,6 +504,24 @@ class GoalMemberTest extends GoalousTestCase
         $this->assertCount(2, $ret);
     }
 
+    /**
+     * @group getCollaborationGoalIds
+     */
+    public function testGetCollaborationGoalIds()
+    {
+        $this->setDefaultTeamIdAndUid();
+        $this->setupTerm();
+
+        $goalIds = [];
+        $goal_count = rand(0, 2);
+        for ($i = 1; $i <= $goal_count; $i++) {
+            $goalIds[] = $this->createGoalKrs(Term::TYPE_CURRENT, [0], 1, 1, GoalMember::TYPE_COLLABORATOR);
+        }
+        $actual = $this->GoalMember->getCollaborationGoalIds($goalIds, 1);
+
+        $this->assertSame($goalIds, $actual);
+    }
+
     function _setDefault()
     {
         $this->GoalMember->current_team_id = 1;

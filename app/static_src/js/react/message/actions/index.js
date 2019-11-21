@@ -1,6 +1,7 @@
 import * as types from "~/message/constants/ActionTypes";
 import { get } from "~/util/api";
 import {isMobileApp} from "~/util/base";
+import { sentrySend } from '~/util/sentry';
 
 export function fetchInitData() {
   return (dispatch) => {
@@ -20,10 +21,11 @@ export function fetchInitData() {
           }
         })
       })
-      .catch((response) => {
+      .catch((e) => {
         /* eslint-disable no-console */
-        console.log(response)
+        console.log(e);
         /* eslint-enable no-console */
+        sentrySend(e);
       })
   }
 }
@@ -45,10 +47,11 @@ export function fetchMore(url) {
           }
         })
       })
-      .catch((response) => {
+      .catch((e) => {
         /* eslint-disable no-console */
-        console.log(response)
+        console.log(e);
         /* eslint-enable no-console */
+        sentrySend(e);
       })
   }
 }

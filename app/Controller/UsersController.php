@@ -108,13 +108,13 @@ class UsersController extends AppController
         return $this->_afterAuthSessionStore();
     }
 
-    private function confirm2faAuth(array $userInfo, int $teamId)
+    private function confirm2faAuth(array $userInfo, ?int $teamId)
     {
         $is2faAuthEnabled = true;
         // 2要素認証設定OFFの場合
         // [Note]
         // Refer: https://jira.goalous.com/browse/GL-6874
-        if (is_null($userInfo['2fa_secret']) === true) {
+        if (is_null($userInfo['2fa_secret'])) {
             $is2faAuthEnabled = false;
         }
 
@@ -209,7 +209,6 @@ class UsersController extends AppController
             return $this->redirect('/users/agree_and_login');
         }
 
-
         $this->Session->write('preAuthPost', $this->request->data);
 
         //デバイス情報を保存する
@@ -236,7 +235,6 @@ class UsersController extends AppController
                 ]);
             }
         }
-
         $response = $this->confirm2faAuth($userInfo, $userInfo['DefaultTeam']['id']);
         if (!empty($response)) {
             return $response;
@@ -547,7 +545,17 @@ class UsersController extends AppController
         }
         //ログイン
         $userId = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $userId;
-        $this->_autoLogin($userId, true);
+
+        try {
+            // If _autoLogin is failed, _joinTeam() will be failed after this process.
+            $this->_autoLogin($userId, true);
+        } catch (\Throwable $e) {
+            GoalousLog::critical('Failed auto login when after user register.', [
+                'users.id' => $userId,
+                'teams.id' => $team['Team']['id'],
+            ]);
+            throw $e;
+        }
         // flash削除
         // _authLogin()の処理中に例外メッセージが吐かれるため、
         // 一旦ここで例外メッセージを表示させないためにFlashメッセージをremoveする

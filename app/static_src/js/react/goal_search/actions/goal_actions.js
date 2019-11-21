@@ -1,8 +1,10 @@
 import * as ActionTypes from "~/goal_search/constants/ActionTypes";
-import {post, del} from "~/util/api";
+import {post, del} from "../../util/api";
 import axios from "axios";
 import querystring from "querystring";
 import { saveAs } from 'file-saver';
+import Noty from "noty";
+import * as types from "../constants/ActionTypes";
 
 export function updateInputData(data, key) {
   return {
@@ -139,30 +141,55 @@ export function fetchMoreGoals(url) {
   }
 }
 
+export function invalid(error) {
+  return {
+    type: types.INVALID,
+    error
+  }
+}
+
 export function follow(goal_id) {
   return (dispatch, getState) => {
-    return post(`/api/v1/goals/${goal_id}/follow`)
-      .then((response) => {
+    return post(`/api/v1/goals/${goal_id}/follow`, {}, null,
+      (response) => {
         dispatch({
           type: ActionTypes.FOLLOW,
           goal_id
         })
-      })
-      .catch((response) => {
-      })
+      },
+      followErrorCallback()
+    )
   }
 }
 
 export function unfollow(goal_id) {
   return (dispatch, getState) => {
-    return del(`/api/v1/goals/${goal_id}/follow`)
-      .then((response) => {
+    return del(`/api/v1/goals/${goal_id}/follow`, {}, null,
+      (response) => {
         dispatch({
           type: ActionTypes.UNFOLLOW,
           goal_id
         })
-      })
-      .catch((response) => {
-      })
+      },
+      followErrorCallback()
+    )
+  }
+}
+
+export function followErrorCallback() {
+  return ({response}) => {
+    const data = response.data || {}
+    const message = data.message || ''
+    if (message !== '') {
+      new Noty({
+        theme: 'bootstrap-v3',
+        type: 'error',
+        killer: true,
+        timeout: 4000,
+        progressBar: false,
+        text: '<h4>' + cake.word.error + '</h4>' + message
+      }).show()
+    }
+    dispatch(invalid(data))
   }
 }

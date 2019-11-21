@@ -22,7 +22,7 @@ use Goalous\Exception as GlException;
 
 class TranslationService extends AppService
 {
-    const MAX_TRY_COUNT = 8;
+    const MAX_TRY_COUNT = 3;
     const RETRY_SLEEP_SECS = 2;
 
     /**
@@ -56,7 +56,6 @@ class TranslationService extends AppService
         $Translation = ClassRegistry::init('Translation');
 
         if ($Translation->hasTranslation($contentType, $contentId, $targetLanguage)) {
-
 
             $tryCount = 0;
 
@@ -228,7 +227,15 @@ class TranslationService extends AppService
         }
 
         $sourceModel = $this->getSourceModel($contentType, $contentId);
-        $sourceBody = $sourceModel['body'];
+
+        $sourceBody = Hash::get($sourceModel, 'body');
+
+        //If body is empty
+        if (empty($sourceModel['body'])) {
+            $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage, "");
+            return;
+        }
+
         $teamId = $sourceModel['team_id'];
 
         /** @var TeamTranslationStatusService $TeamTranslationStatusService */
@@ -325,6 +332,14 @@ class TranslationService extends AppService
                 $CommentService = ClassRegistry::init('CommentService');
                 return $CommentService->checkUserAccessToComment($userId, $contentId);
                 break;
+            case TranslationContentType::MESSAGE:
+                /** @var MessageService $MessageService */
+                $MessageService = ClassRegistry::init('MessageService');
+                return $MessageService->checkUserAccessToMessage($userId, $contentId);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
+                break;
         }
 
         return false;
@@ -334,11 +349,12 @@ class TranslationService extends AppService
      * Check whether team can do translation.
      * Only trial or paid team with translation languages & remaining usage can translate.
      *
-     * @param int $teamId
+     * @param int  $teamId
+     * @param bool $checkUsage Check team's translation usage too
      *
      * @return bool
      */
-    public function canTranslate(int $teamId): bool
+    public function canTranslate(int $teamId, bool $checkUsage = true): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -355,14 +371,15 @@ class TranslationService extends AppService
                 return false;
             }
             // Team must have translation language selected & remaining usage count to translate
-            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) && !$TeamTranslationStatus->getUsageStatus($teamId)
-                                                                                                       ->isLimitReached();
+            $translationFlg = $TeamTranslationLanguage->hasLanguage($teamId) &&
+                $TeamTranslationStatus->hasEntry($teamId);
 
-            if (!$translationFlg) {
-                return false;
+            if ($checkUsage) {
+                $translationFlg = $translationFlg && !$TeamTranslationStatus->getUsageStatus($teamId)->isLimitReached();
             }
 
-            return true;
+            return $translationFlg;
+
         } catch (Exception $e) {
             GoalousLog::error("Error in checking translation availability of a team.", [
                 'message' => $e->getMessage(),
@@ -431,6 +448,22 @@ class TranslationService extends AppService
                     'team_id'  => $comment['team_id']
                 ];
                 break;
+            case TranslationContentType::MESSAGE:
+                /** @var Message $Message */
+                $Message = ClassRegistry::init('Message');
+                $message = $Message->getById($contentId);
+                if (empty($message)) {
+                    break;
+                }
+                $originalModel = [
+                    'body'     => $message['body'],
+                    'language' => $message['language'] ?: "",
+                    'team_id'  => $message['team_id']
+                ];
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
+                break;
         }
 
         if (empty($originalModel)) {
@@ -466,6 +499,14 @@ class TranslationService extends AppService
                 /** @var Comment $Comment */
                 $Comment = ClassRegistry::init('Comment');
                 $Comment->updateLanguage($contentId, $sourceLanguage);
+                break;
+            case TranslationContentType::MESSAGE:
+                /** @var Message $Message */
+                $Message = ClassRegistry::init('Message');
+                $Message->updateLanguage($contentId, $sourceLanguage);
+                break;
+            default:
+                throw new UnexpectedValueException("Unknown translation model type.");
                 break;
         }
     }

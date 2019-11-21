@@ -11,7 +11,6 @@ App::uses('AppModel', 'Model');
 
 use Goalous\Enum\DataType\DataType as DataType;
 
-
 use Goalous\Enum as Enum;
 
 class Message extends AppModel
@@ -108,8 +107,12 @@ class Message extends AppModel
      *
      * @return array
      */
-    function findMessages(int $topicId, $cursor, int $limit, string $direction = Enum\Model\Message\MessageDirection::OLD): array
-    {
+    function findMessages(
+        int $topicId,
+        $cursor,
+        int $limit,
+        string $direction = Enum\Model\Message\MessageDirection::OLD
+    ): array {
         $options = [
             'conditions' => [
                 'Message.topic_id' => $topicId,
@@ -164,8 +167,10 @@ class Message extends AppModel
     /**
      * Return newer message.id in the topic.
      * If not existing, returning null.
+     *
      * @param int $topicId
      * @param int $messageId
+     *
      * @return int|null
      */
     function findNewerMessageId(int $topicId, int $messageId)
@@ -174,7 +179,7 @@ class Message extends AppModel
         $options = [
             'conditions' => [
                 'Message.topic_id' => $topicId,
-                'Message.id >' => $messageId,
+                'Message.id >'     => $messageId,
             ],
             'fields'     => [
                 'id',
@@ -462,6 +467,25 @@ class Message extends AppModel
             $count = $row[0]['cnt'];
         }
         return $count;
+    }
+
+    /**
+     * Update language of the message
+     *
+     * @param int    $messageId
+     * @param string $language
+     *
+     * @throws Exception
+     */
+    public function updateLanguage(int $messageId, string $language)
+    {
+        $this->id = $messageId;
+
+        $newData = [
+            'language' => $language
+        ];
+
+        $this->save($newData, false);
     }
 
 }

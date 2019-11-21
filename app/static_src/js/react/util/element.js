@@ -6,6 +6,9 @@ import React from "react";
  * @returns {*}
  */
 export function nl2br(text) {
+  if (text === undefined) {
+    return null;
+  }
   if (!text) {
     return null;
   }

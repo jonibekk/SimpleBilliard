@@ -298,6 +298,7 @@ class Topic extends AppModel
                 'id',
                 'title',
                 'latest_message_id',
+                'team_id'
             ],
         ];
         $ret = $this->find('first', $options);
@@ -447,8 +448,7 @@ class Topic extends AppModel
         int $topicId,
         int $userId,
         int $count = Topic::MAX_DISPLAYING_USER_PHOTO
-    ): array
-    {
+    ): array {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
