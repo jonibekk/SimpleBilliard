@@ -1852,6 +1852,11 @@ class GoalsController extends AppController
             'canAction'
         ));
 
+        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        // For HTTP/1.0 conforming clients
+        header('Pragma: no-cache');
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
