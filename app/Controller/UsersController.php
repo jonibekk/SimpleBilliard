@@ -1804,6 +1804,7 @@ class UsersController extends AppController
 
     /**
      * Browser back cache clear
+     * @see https://jira.goalous.com/browse/GL-8610
      */
     private function addHeaderBrowserBackCacheClear(): void
     {

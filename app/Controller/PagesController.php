@@ -80,6 +80,10 @@ class PagesController extends AppController
         $this->set(compact('page', 'subpage'));
         $this->_setTopAllContentIfLoggedIn();
 
+        /**
+         * Browser back cache clear
+         * @see https://jira.goalous.com/browse/GL-8610
+         */
         // For HTTP/1.1 conforming clients and the rest (MSIE 5)
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         // For HTTP/1.0 conforming clients
