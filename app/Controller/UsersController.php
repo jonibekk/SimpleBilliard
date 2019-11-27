@@ -1468,6 +1468,7 @@ class UsersController extends AppController
             'canCompleteGoalIds'   => $canCompleteGoalIds,
             'isAfterCurrentTerm'   => $isAfterCurrentTerm,
         ]);
+        $this->addHeaderBrowserBackCacheClear();
         return $this->render();
     }
 
@@ -1493,6 +1494,7 @@ class UsersController extends AppController
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1570,6 +1572,7 @@ class UsersController extends AppController
             'currentTermId',
             'canAction'
         ));
+        $this->addHeaderBrowserBackCacheClear();
         return $this->render();
     }
 
@@ -1720,6 +1723,7 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
 
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1796,5 +1800,16 @@ class UsersController extends AppController
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
+    }
+
+    /**
+     * Browser back cache clear
+     */
+    private function addHeaderBrowserBackCacheClear(): void
+    {
+        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        // For HTTP/1.0 conforming clients
+        header('Pragma: no-cache');
     }
 }
