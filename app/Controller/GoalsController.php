@@ -1734,6 +1734,7 @@ class GoalsController extends AppController
         ]);
         $this->set('followers', $followers);
         $this->set('goalTerm', $goalTerm);
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1782,6 +1783,7 @@ class GoalsController extends AppController
         $this->set('goalTerm', $goalTerm);
         $this->set('goal_term', $goalTerm);
 
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1852,11 +1854,7 @@ class GoalsController extends AppController
             'canAction'
         ));
 
-        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-        // For HTTP/1.0 conforming clients
-        header('Pragma: no-cache');
-
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1971,5 +1969,16 @@ class GoalsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * Browser back cache clear
+     */
+    private function addHeaderBrowserBackCacheClear(): void
+    {
+        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        // For HTTP/1.0 conforming clients
+        header('Pragma: no-cache');
     }
 }
