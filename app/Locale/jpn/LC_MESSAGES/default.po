@@ -426,6 +426,9 @@ msgstr "投稿しました。"
 msgid "This post no longer exist."
 msgstr "この投稿は存在しません。"
 
+msgid "There are no recent updates."
+msgstr "直近の更新はありません。"
+
 msgid "This isn't your post."
 msgstr "この投稿はあなたのものではありません。"
 
