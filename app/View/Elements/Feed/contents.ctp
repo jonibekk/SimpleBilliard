@@ -77,7 +77,7 @@ elseif ($displayBackButtonGoals): ?>
 <?php
     // 削除された投稿へのリクエストの場合
     if (!$posts): ?>
-        <?= $this->element("Feed/post_not_found") ?>
+        <?= $this->element("Feed/post_no_recent_updates") ?>
 <?php else: ?>
     <div id="app-view-elements-feed-posts">
         <?= $this->element("Feed/posts") ?>
