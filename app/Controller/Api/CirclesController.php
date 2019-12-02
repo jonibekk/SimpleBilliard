@@ -104,25 +104,16 @@ class CirclesController extends BasePagingController
         /** @var CircleFilesPagingService $circleFilesPagingService */
         $circleFilesPagingService = ClassRegistry::init('CircleFilesPagingService');
         $fileFilter = CircleFilesPagingService::FILTER_DOCUMENTS;
-
-        try {
-            $pagingRequest = $this->getPagingParameters();
-
-            if( !empty( $this->request ) ) {
-                $fileFilterRaw = $this->request->query['file_filter'];
-                if( is_string( $fileFilterRaw ) ) {
-                    if( $fileFilterRaw === 'images' ) {
-                        $fileFilter = CircleFilesPagingService::FILTER_IMAGES;
-                    } else if( $fileFilterRaw === 'videos' ) {
-                        $fileFilter = CircleFilesPagingService::FILTER_VIDEOS;
-                    } else {
-                        //keep default
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        $fileFilterRaw = $this->request->query('file_filter') ?? '';
+        if( $fileFilterRaw === 'images' ) {
+            $fileFilter = CircleFilesPagingService::FILTER_IMAGES;
+        } else if( $fileFilterRaw === 'videos' ) {
+            $fileFilter = CircleFilesPagingService::FILTER_VIDEOS;
+        } else {
+            //keep default
         }
+
+        $pagingRequest = $this->getPagingParameters();
 
         try {
             $circleFilesPagingService->setFilter( $fileFilter );

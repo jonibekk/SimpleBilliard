@@ -197,7 +197,7 @@ class CommentService extends AppService
             if (!empty($fileIDs)) {
                 //try to get the circle
                 $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
-                $circleId = ( count( $circles ) > 0 ) ? $circles[0] : null; //before there could be multiple circles per post, now it is only one
+                $circleId = Hash::get( $circles, '0' ); //before there could be multiple circles per post, now it is only one
 
                 //save files
                 $this->saveFiles($commentId, $userId, $teamId, $fileIDs, 0, $circleId, $postId);
@@ -330,13 +330,8 @@ class CommentService extends AppService
                 'id' => $commentId,
                 'del_flg' => false,
             ] ] );
-            if(
-                is_array( $oldComment )
-                && key_exists( 'Comment', $oldComment )
-                && key_exists( 'post_id', $oldComment['Comment'] )
-                && (!empty( $oldComment['Comment']['post_id'] ))
-            ) {
-                $postId = $oldComment['Comment']['post_id'];
+            if( is_array( $oldComment ) ) {
+                $postId = Hash::get( $oldComment, 'Comment.post_id' );
             }
 
             //update the comment
@@ -424,7 +419,7 @@ class CommentService extends AppService
                 /** @var PostShareCircle $PostShareCircle */
                 $PostShareCircle = ClassRegistry::init('PostShareCircle');
                 $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
-                $circleId = ( count( $circles ) > 0 ) ? $circles[0] : null; //before there could be multiple circles per post, now it is only one
+                $circleId = Hash::get( $circles, '0' ); //before there could be multiple circles per post, now it is only one
             }
             
             //save files

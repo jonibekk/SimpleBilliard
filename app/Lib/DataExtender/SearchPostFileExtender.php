@@ -4,6 +4,7 @@ App::import('Lib/DataExtender/Extension', "UserExtension");
 App::uses('AttachedFile', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 
+use Goalous\Enum\Model\AttachedFile\AttachedFileType;
 use \Goalous\Enum\Model\Post\PostResourceType;
 
 
@@ -54,7 +55,7 @@ class SearchPostFileExtender extends BaseExtender
                 }
 
                 $attachedFile =  $AttachedFileData['AttachedFile'];
-                $this->setupFileURLs( $attachedFile );
+                $attachedFile = $this->setupFileURLs( $attachedFile );
 
                 $searchPostFile['attached_file'] = $attachedFile;
             }
@@ -63,7 +64,7 @@ class SearchPostFileExtender extends BaseExtender
         return $data;
     }
 
-    private function setupFileURLs( array &$attachedFile ) {
+    private function setupFileURLs( array $attachedFile ) : array {
         // Joined table does not cast types even if using useEntity()
         $attachedFile['file_type'] = (int)$attachedFile['file_type'];
 
@@ -72,12 +73,14 @@ class SearchPostFileExtender extends BaseExtender
         $attachedFile['preview_url'] = '';
         $attachedFile['download_url'] = '/posts/attached_file_download/file_id:' . $attachedFile['id'];;
         
-        if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+        if ($attachedFile['file_type'] == AttachedFileType::TYPE_FILE_IMG) {
             $attachedFile['file_url'] = $this->ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile', 'attached');
             $attachedFile['resource_type'] = PostResourceType::IMAGE;
         } else {
             $attachedFile['preview_url'] = $this->UploadHelper->attachedFileUrl($attachedFile);
             $attachedFile['resource_type'] = PostResourceType::FILE;
         }
+
+        return $attachedFile;
     }
 }
