@@ -426,6 +426,9 @@ msgstr "投稿しました。"
 msgid "This post no longer exist."
 msgstr "この投稿は存在しません。"
 
+msgid "There are no recent updates."
+msgstr "直近の更新はありません。"
+
 msgid "This isn't your post."
 msgstr "この投稿はあなたのものではありません。"
 
@@ -854,6 +857,12 @@ msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
+
+msgid "You cannot follow because you are participating in collaboration."
+msgstr "コラボに参加しているため、フォローできません。"
+
+msgid "You cannot follow because you are coaching this goal."
+msgstr "このゴールをコーチしているため、フォローできません。"
 
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"

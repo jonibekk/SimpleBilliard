@@ -1,6 +1,7 @@
 <?php
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+use Goalous\Exception\Follow\ValidationToFollowException;
 
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
@@ -10,6 +11,7 @@ App::import('Service', 'KeyResultService');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'ActionService');
 App::import('Service', 'TranslationService');
+App::import('Service', 'FollowService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -1016,31 +1018,17 @@ class GoalsController extends AppController
             'add'   => true,
         ];
 
-        // Check if goal exists
-        if (!$this->Goal->exists($goalId)) {
+        /** @var FollowService $FollowService */
+        $FollowService = ClassRegistry::init("FollowService");
+        try {
+            $FollowService->validateToFollow(
+                $this->Session->read('current_team_id'),
+                $goalId,
+                $this->Auth->user('id')
+            );
+        } catch (ValidationToFollowException $e) {
             $return['error'] = true;
-            $return['msg'] = __("The Goal doesn't exist.");
-            return $this->_ajaxGetResponse($return);
-        }
-
-        // Check if the goal is completed
-        if ($this->Goal->isCompleted($goalId)) {
-            $return['error'] = true;
-            $return['msg'] = __("You cannot follow or collaborate with a completed Goal.");
-            return $this->_ajaxGetResponse($return);
-        }
-
-        // Check if it is an old goal
-        if ($this->Goal->isFinished($goalId)) {
-            $return['error'] = true;
-            $return['msg'] = __("You cannot follow or collaborate with a past Goal.");
-            return $this->_ajaxGetResponse($return);
-        }
-
-        //存在チェック
-        if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
-            $return['error'] = true;
-            $return['msg'] = __("The Goal doesn't exist.");
+            $return['msg'] = $e->getMessage();
             return $this->_ajaxGetResponse($return);
         }
 
@@ -1746,6 +1734,7 @@ class GoalsController extends AppController
         ]);
         $this->set('followers', $followers);
         $this->set('goalTerm', $goalTerm);
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1794,6 +1783,7 @@ class GoalsController extends AppController
         $this->set('goalTerm', $goalTerm);
         $this->set('goal_term', $goalTerm);
 
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1864,6 +1854,7 @@ class GoalsController extends AppController
             'canAction'
         ));
 
+        $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1978,5 +1969,17 @@ class GoalsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * Browser back cache clear
+     * @see https://jira.goalous.com/browse/GL-8610
+     */
+    private function addHeaderBrowserBackCacheClear(): void
+    {
+        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        // For HTTP/1.0 conforming clients
+        header('Pragma: no-cache');
     }
 }

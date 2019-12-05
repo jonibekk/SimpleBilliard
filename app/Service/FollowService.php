@@ -1,8 +1,12 @@
 <?php
+
+use Goalous\Exception\Follow\ValidationToFollowException;
+
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('Goal', 'Model');
 App::uses('Follow', 'Model');
+App::uses('TeamMember', 'Model');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
 
@@ -86,6 +90,51 @@ class FollowService extends AppService
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param int $teamId
+     * @param int $goalId
+     * @param int $userId
+     */
+    public function validateToFollow(int $teamId, int $goalId, int $userId): void
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        // Check if goal exists
+        $goal = $Goal->findById($goalId);
+        if (
+            empty($goal) ||
+            (int) Hash::get($goal, 'Goal.team_id') !== (int) $teamId ||
+            (bool) Hash::get($goal, 'Goal.del_flg')
+        ) {
+            throw new ValidationToFollowException(__("The Goal doesn't exist."));
+        }
+
+        // Check if the goal is completed
+        if ($Goal->isCompleted($goalId)) {
+            throw new ValidationToFollowException(__("You cannot follow or collaborate with a completed Goal."));
+        }
+
+        // Check if it is an old goal
+        if ($Goal->isFinished($goalId)) {
+            throw new ValidationToFollowException(__("You cannot follow or collaborate with a past Goal."));
+        }
+
+        // Check participating in collaboration
+        $myCollaborationGoalIds = $Goal->GoalMember->getCollaborationGoalIds([$goalId], $userId);
+        if (in_array($goalId, $myCollaborationGoalIds)) {
+            throw new ValidationToFollowException(__("You cannot follow because you are participating in collaboration."));
+        }
+
+        // Check coaching the goal.
+        $coachingGoalIds = $TeamMember->getCoachingGoalList($userId);
+        if (isset($coachingGoalIds[$goalId])) {
+            throw new ValidationToFollowException(__("You cannot follow because you are coaching this goal."));
+        }
     }
 
     /**
