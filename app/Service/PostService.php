@@ -6,6 +6,7 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'UploadService');
 App::import('Service', 'TranslationService');
 App::import('Service', 'VideoStreamService');
+App::import('Service', 'SearchPostFileService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
 App::uses('Circle', 'Model');
@@ -607,7 +608,7 @@ class PostService extends AppService
 
             //Save attached files
             if (!empty($files)) {
-                $this->saveFiles($postId, $userId, $teamId, $files);
+                $this->saveFiles($postId, $userId, $teamId, $files, false, 0, $circleId);
             }
 
             $this->TransactionManager->commit();
@@ -935,7 +936,7 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function saveFiles(int $postId, int $userId, int $teamId, array $files, bool $isDraft = false, int $postFileIndex = 0): bool
+    public function saveFiles(int $postId, int $userId, int $teamId, array $files, bool $isDraft = false, int $postFileIndex = 0, ?int $circleId = null): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -945,6 +946,8 @@ class PostService extends AppService
         $PostFileService = ClassRegistry::init('PostFileService');
         /** @var PostResourceService $PostResourceService */
         $PostResourceService = ClassRegistry::init('PostResourceService');
+        /** @var SearchPostFileService $SearchPostFileService */
+        $SearchPostFileService = ClassRegistry::init('SearchPostFileService');
 
         $addedFiles = [];
 
@@ -978,6 +981,17 @@ class PostService extends AppService
                                 $attachedFile['id'],
                                 $postFileIndex);
                             $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
+                        }
+
+                        if( ( !$isDraft ) && ( $circleId !== null ) ) {
+                            $SearchPostFileService->addAttachedFile(
+                                $teamId,
+                                $userId,
+                                $circleId,
+                                $postId,
+                                null,
+                                $attachedFile['id']
+                            );
                         }
 
                         $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
@@ -1033,6 +1047,8 @@ class PostService extends AppService
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         if (!$Post->exists($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
@@ -1069,9 +1085,14 @@ class PostService extends AppService
             $Translation->eraseAllTranslations(TranslationContentType::CIRCLE_POST(), $postId);
 
             if (!empty($newResources)) {
+                //get circle id, if possible
+                $postCircles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = ( count( $postCircles ) > 0 ) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
+
+                //save ressources
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
-                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1);
+                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
