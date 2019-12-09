@@ -101,6 +101,17 @@ class TeamTranslationStatus extends AppModel
     }
 
     /**
+     * Increment translation count in message in a team
+     *
+     * @param int $teamId
+     * @param int $count
+     */
+    public function incrementMessageCount(int $teamId, int $count)
+    {
+        $this->incrementTranslationCount('message_total', $teamId, $count);
+    }
+
+    /**
      * Increment a given column by given count in a team
      *
      * @param string $columnName Data to increment
@@ -133,6 +144,7 @@ class TeamTranslationStatus extends AppModel
             'circle_post_comment_total' => 0,
             'action_post_total'         => 0,
             'action_post_comment_total' => 0,
+            'message_total'             => 0,
             'modified'                  => GoalousDateTime::now()->getTimestamp()
         ];
 
@@ -229,6 +241,7 @@ class TeamTranslationStatus extends AppModel
             'circle_post_comment_total' => $data->getCirclePostCommentUsageCount(),
             'action_post_total'         => $data->getActionPostUsageCount(),
             'action_post_comment_total' => $data->getActionPostCommentUsageCount(),
+            'message_total'             => $data->getMessageUsageCount()
         ]);
     }
 

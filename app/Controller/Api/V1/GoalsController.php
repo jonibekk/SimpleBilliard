@@ -1,4 +1,7 @@
 <?php
+
+use Goalous\Exception\Follow\ValidationToFollowException;
+
 App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
@@ -544,10 +547,14 @@ class GoalsController extends ApiController
     {
         /** @var FollowService $FollowService */
         $FollowService = ClassRegistry::init("FollowService");
-
-        // ゴール存在チェック
-        if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
-            return $this->_getResponseBadFail(__("The Goal doesn't exist."));
+        try {
+            $FollowService->validateToFollow(
+                $this->Session->read('current_team_id'),
+                $goalId,
+                $this->Auth->user('id')
+            );
+        } catch (ValidationToFollowException $e) {
+            return $this->_getResponseBadFail($e->getMessage());
         }
 
         // フォロー

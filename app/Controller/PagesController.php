@@ -29,6 +29,8 @@ class PagesController extends AppController
 {
     public $uses = ['TermsOfService'];
     public $components = ['Mention'];
+    // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
+    private $newLpEnvs = ['stg', 'isao', 'www'];
 
     public function beforeFilter()
     {
@@ -62,8 +64,13 @@ class PagesController extends AppController
     {
         // Display lp top page if not logged in
         if (!$this->_isLoggedIn()) {
-            $this->layout = LAYOUT_HOMEPAGE;
-            return $this->render('home');
+            // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
+            if (in_array(ENV_NAME, $this->newLpEnvs, true)) {
+                return $this->redirectLp();
+            } else {
+                $this->layout = LAYOUT_HOMEPAGE;
+                return $this->render('home');
+            }
         }
 
         // Define URL params for Google analytics.
@@ -73,7 +80,32 @@ class PagesController extends AppController
         $this->set(compact('page', 'subpage'));
         $this->_setTopAllContentIfLoggedIn();
 
+        /**
+         * Browser back cache clear
+         * @see https://jira.goalous.com/browse/GL-8610
+         */
+        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
+        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        // For HTTP/1.0 conforming clients
+        header('Pragma: no-cache');
+
         return $this->render('logged_in_home');
+    }
+
+    /**
+     * Get lang code
+     * @return string
+     */
+    private function redirectLp(string $page = "")
+    {
+        App::uses('LangHelper', 'View/Helper');
+        $Lang = new LangHelper(new View());
+        $lang = $Lang->getLangCode();
+        $url = "/intl/${lang}/";
+        if (!empty($page)) {
+          $url .= $page.'/';
+        }
+        $this->redirect($url);
     }
 
     /**
@@ -85,7 +117,13 @@ class PagesController extends AppController
     {
         $path = func_get_args();
         $page = $path[0];
+        // Redirect new LP env `/intl/**`
+        if (in_array(ENV_NAME, $this->newLpEnvs, true)) {
+            return $this->redirectLp($page);
+        }
 
+        // Old processing.
+        // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
         if ($page === 'pricing') {
             $this->_setPricingValues();
         } elseif ($page === 'terms') {
@@ -229,6 +267,12 @@ class PagesController extends AppController
 
     public function contact($type = null)
     {
+        if (in_array(ENV_NAME, $this->newLpEnvs, true)) {
+            return $this->redirectLp('contact');
+        }
+
+        // Old processing.
+        // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
         $this->layout = LAYOUT_HOMEPAGE;
         $this->set('type_options', $this->_getContactTypeOption());
         $this->set('selected_type', $type);

@@ -147,6 +147,9 @@ class TeamTranslationStatusTest extends GoalousTestCase
 
         $TeamTranslationStatus->incrementCirclePostCount($teamId, 5000);
         $this->assertEquals(15000, $TeamTranslationStatus->getTotalUsageCount($teamId));
+
+        $TeamTranslationStatus->incrementMessageCount($teamId, 6000);
+        $this->assertEquals(21000, $TeamTranslationStatus->getTotalUsageCount($teamId));
     }
 
     public function test_resetAllTranslationCount_success()
@@ -162,8 +165,9 @@ class TeamTranslationStatusTest extends GoalousTestCase
         $TeamTranslationStatus->incrementCircleCommentCount($teamId, 2000);
         $TeamTranslationStatus->incrementActionPostCount($teamId, 3000);
         $TeamTranslationStatus->incrementActionCommentCount($teamId, 4000);
+        $TeamTranslationStatus->incrementMessageCount($teamId, 15000);
 
-        $this->assertEquals(10000, $TeamTranslationStatus->getTotalUsageCount($teamId));
+        $this->assertEquals(25000, $TeamTranslationStatus->getTotalUsageCount($teamId));
 
         $TeamTranslationStatus->resetAllTranslationCount($teamId);
 

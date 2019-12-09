@@ -46,17 +46,33 @@ class TopicsController extends ApiController
                 'next' => ''
             ]
         ];
-        $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
-        $topics = $ApiTopicService->process($topics, $userId);
-        // Set paging text
-        //       for unifying with other controller logic.
-        if (count($topics) > $limit) {
-            $basePath = '/api/v1/topics';
-            $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
-            array_pop($topics);
+
+        try {
+            $topics = $Topic->findLatest($userId, $offset, $limit + 1, $keyword);
+            $topics = $ApiTopicService->process($topics, $userId);
+            // Set paging text
+            //       for unifying with other controller logic.
+            if (count($topics) > $limit) {
+                $basePath = '/api/v1/topics';
+                $response['paging'] = $ApiTopicService->generatePaging($basePath, $limit, $offset, compact('keyword'));
+                array_pop($topics);
+            }
+            $response['data'] = $topics;
+            return $this->_getResponsePagingSuccess($response);
+        } catch (\Throwable $e) {
+            GoalousLog::error('Failed to return response on GET /api/v1/topics', [
+                'error' => [
+                    'message' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                ],
+                'users.id' => $userId,
+                'offset' => $offset,
+                'limit' => $limit,
+                'keyword' => $keyword,
+            ]);
+            return $this->_getResponseInternalServerError(__('An error occurred while processing.'));
         }
-        $response['data'] = $topics;
-        return $this->_getResponsePagingSuccess($response);
     }
 
     public function get_search()
@@ -128,7 +144,6 @@ class TopicsController extends ApiController
      *
      * @return CakeResponse
      * @link https://confluence.goalous.com/display/GOAL/%5BGET%5D+Topic+detail+page
-     * TODO: This is mock! We have to implement it!
      */
     function get_detail(int $topicId)
     {

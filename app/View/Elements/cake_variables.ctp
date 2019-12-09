@@ -116,6 +116,8 @@ App::uses('AttachedFile', 'Model');
             remaining: "<?= __("%d remaining") ?>",
             view_all: "<?= __("View All") ?>",
             close: "<?= __("Close") ?>",
+            message_translation_limit_reached_message: "<?= __('Because your team has reached the maximum number of translatable characters, the translation function is paused.') ?>",
+            message_translation_error: "<?= __("Translation Failed") ?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_select2_get_users'])?>",
