@@ -13,6 +13,7 @@ App::uses('CommentRead', 'Model');
 App::uses('CommentMention', 'Model');
 App::uses('Post', 'Model');
 App::uses('Translation', 'Model');
+App::uses('PostShareCircle', 'Model');
 App::import('Model/Entity', 'CommentEntity');
 App::import('Model/Entity', 'CommentFileEntity');
 App::import('Model/Entity', 'AttachedFileEntity');
@@ -152,6 +153,8 @@ class CommentService extends AppService
         $Comment = ClassRegistry::init('Comment');
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         if (!$Post->exists($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
@@ -192,7 +195,12 @@ class CommentService extends AppService
 
             //Saved attached files
             if (!empty($fileIDs)) {
-                $this->saveFiles($commentId, $userId, $teamId, $fileIDs);
+                //try to get the circle
+                $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = Hash::get( $circles, '0' ); //before there could be multiple circles per post, now it is only one
+
+                //save files
+                $this->saveFiles($commentId, $userId, $teamId, $fileIDs, 0, $circleId, $postId);
             }
 
             $this->TransactionManager->commit();
@@ -307,14 +315,26 @@ class CommentService extends AppService
     {
         /** @var Comment $Comment */
         $Comment = ClassRegistry::init('Comment');
+        $commentId = $data->getId();
 
-        if (!$Comment->exists($data->getId())) {
+        if (!$Comment->exists($commentId)) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
         try {
             $this->TransactionManager->begin();
 
+            //try to get the post id
+            $postId = null;
+            $oldComment = $Comment->find( 'first', [ 'conditions' => [
+                'id' => $commentId,
+                'del_flg' => false,
+            ] ] );
+            if( is_array( $oldComment ) ) {
+                $postId = Hash::get( $oldComment, 'Comment.post_id' );
+            }
+
+            //update the comment
             $newData = [
                 'body'      => $data->getBody(),
                 'site_info' => !empty($data->getSiteInfo()) ? json_encode($data->getSiteInfo()) : null,
@@ -322,14 +342,13 @@ class CommentService extends AppService
             ];
 
             $Comment->clear();
-            $commentId = $data->getId();
             $Comment->id = $commentId;
             if (!$Comment->save($newData, false)) {
                 throw new RuntimeException(sprintf("Failed to update comments table record. data: %s",
                     AppUtil::jsonOneLine(compact('newData', 'commentId'))
                 ));
             }
-            $this->updateAttachedFiles($data->getId(), $data->getUserId(), $data->getTeamId(), $data->getResources());
+            $this->updateAttachedFiles($commentId, $data->getUserId(), $data->getTeamId(), $data->getResources(), $postId);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -358,11 +377,12 @@ class CommentService extends AppService
      * @param int   $userId
      * @param int   $teamId
      * @param array $resources Existing resources
+     * @param int   $postId - optional
      *
      * @return PostResource[]
      * @throws Exception
      */
-    private function updateAttachedFiles(int $commentId, int $userId, int $teamId, array $resources)
+    private function updateAttachedFiles(int $commentId, int $userId, int $teamId, array $resources, ?int $postId = null)
     {
         /** @var CommentFile $CommentFile */
         $CommentFile = ClassRegistry::init('CommentFile');
@@ -393,8 +413,18 @@ class CommentService extends AppService
             $CommentFileService->deleteAllByAttachedFileIds($deleteFileIds);
         }
         if (!empty($newFileUuids)) {
+            //try to get the circle
+            $circleId = null;
+            if( $postId !== null ) {
+                /** @var PostShareCircle $PostShareCircle */
+                $PostShareCircle = ClassRegistry::init('PostShareCircle');
+                $circles = $PostShareCircle->getShareCircleList( $postId, $teamId );
+                $circleId = Hash::get( $circles, '0' ); //before there could be multiple circles per post, now it is only one
+            }
+            
+            //save files
             $existingFilesMaxOrder = $CommentFile->findMaxOrderOfComment($commentId);
-            $this->saveFiles($commentId, $userId, $teamId, $newFileUuids, $existingFilesMaxOrder + 1);
+            $this->saveFiles($commentId, $userId, $teamId, $newFileUuids, $existingFilesMaxOrder + 1, $circleId, $postId);
         }
     }
 
@@ -411,7 +441,7 @@ class CommentService extends AppService
      * @return bool
      * @throws Exception
      */
-    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs, int $commentFileIndex = 0): bool
+    private function saveFiles(int $commentId, int $userId, int $teamId, array $fileIDs, int $commentFileIndex = 0, ?int $circleId = null, ?int $postId = null): bool
     {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
@@ -419,6 +449,8 @@ class CommentService extends AppService
         $AttachedFileService = ClassRegistry::init('AttachedFileService');
         /** @var CommentFileService $CommentFileService */
         $CommentFileService = ClassRegistry::init('CommentFileService');
+        /** @var SearchPostFileService $SearchPostFileService */
+        $SearchPostFileService = ClassRegistry::init('SearchPostFileService');
 
         $addedFiles = [];
 
@@ -440,6 +472,17 @@ class CommentService extends AppService
                 $addedFiles[] = $attachedFile['id'];
 
                 $CommentFileService->add($commentId, $attachedFile['id'], $teamId, $commentFileIndex++);
+
+                if( ( $circleId !== null ) && ( $postId !== null ) ) {
+                    $SearchPostFileService->addAttachedFile(
+                        $teamId,
+                        $userId,
+                        $circleId,
+                        $postId,
+                        $commentId,
+                        $attachedFile['id']
+                    );
+                }
 
                 $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
             }
