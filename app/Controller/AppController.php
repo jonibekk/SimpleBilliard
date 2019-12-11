@@ -759,18 +759,15 @@ class AppController extends BaseController
             } else {
                 //チームを切り替え
                 $this->_switchTeam($request_team_id);
-                GoalousLog::info('switch team', [
-                   'team_id' => $request_team_id,
-                ]);
+
+                // Store "set_jwt_token" key into session for new Goalous local storage session
                 $sessionId = $this->Session->id();
                 $tokenJwt = $this->GlRedis->getMapSesAndJwt($request_team_id, $this->my_uid, $sessionId);
                 if (!empty($tokenJwt)) {
-                    GoalousLog::info('set_jwt_token getMapSesAndJwt:', ['token' => $tokenJwt, 'here' => $this->request->here,]);
                     $this->Session->write('set_jwt_token', $tokenJwt);
                 } else {
                     $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sessionId);
                     $this->Session->write('set_jwt_token', $jwt->token());
-                    GoalousLog::info('set_jwt_token saveMapSesAndJwt:', ['token' => $jwt->token(), 'here' => $this->request->here,]);
                 }
                 $this->redirect($this->request->here);
             }
@@ -1306,15 +1303,9 @@ class AppController extends BaseController
      */
     public function render($view = null, $layout = null)
     {
-        GoalousLog::info('render', [
-            '$view' => $view,
-        ]);
+        // Set "set_jwt_token" for new Goalous local storage session
         $setJwtToken = $this->Session->read('set_jwt_token');
         if (!empty($setJwtToken)) {
-            GoalousLog::info('$setJwtToken', [
-                '$setJwtToken' => $setJwtToken,
-                'url' => $_SERVER['REQUEST_URI']
-            ]);
             $this->set('jwt_token', $setJwtToken);
             $this->Session->delete('set_jwt_token');
         }
