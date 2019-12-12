@@ -12,6 +12,7 @@ App::import('Service', 'CircleService');
 App::import('Service', 'TermService');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'ExperimentService');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 
@@ -433,6 +434,7 @@ class UsersController extends AppController
      */
     public function register_with_invite()
     {
+
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
         if (!($step === 1 or $step === 2)) {
             $this->Notification->outError(__('Invalid access'));
@@ -569,6 +571,8 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
+        
+        
         // Message of team joining
         $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
@@ -1317,6 +1321,29 @@ class UsersController extends AppController
 
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
+
+            
+            /* get payment flag */
+            $teamId = $currentTeamId;
+            $paymentTiming = new PaymentTiming();
+            if ($paymentTiming->checkIfPaymentTiming($teamId)){
+                /* Charge if paid plan */
+                /** @var Team $Team */
+                $Team = ClassRegistry::init("Team");
+                /** @var PaymentService $PaymentService */
+                $PaymentService = ClassRegistry::init('PaymentService');
+                /** @var CampaignService $CampaignService */
+                $CampaignService = ClassRegistry::init('CampaignService');
+                if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId)) {
+                    // [Important] Transaction commit in this method
+                    $PaymentService->charge(
+                        $teamId,
+                        Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                        1,
+                        $invite->from_user_id
+                    );
+                }
+            }
         } catch (Exception $e) {
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());

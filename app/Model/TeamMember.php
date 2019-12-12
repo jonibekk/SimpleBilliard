@@ -6,6 +6,7 @@ App::uses('TransactionManager', 'Model');
 App::uses('TranslationLanguage', 'Model');
 App::import('Service', 'UserService');
 App::import('Model/Entity', 'TeamMemberEntity');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 
@@ -433,12 +434,92 @@ class TeamMember extends AppModel
      */
     public function countChargeTargetUsers(int $teamId): int
     {
+        /* get payment flag */
+        $paymentTiming = new PaymentTiming();
+        if ($paymentTiming->checkIfPaymentTiming($teamId)){
+            $options = [
+                'conditions' => [
+                    'team_id' => $teamId,
+                    'status'  => [
+                        // self::USER_STATUS_INVITED,
+                        self::USER_STATUS_ACTIVE,
+                    ],
+                ],
+            ];
+        } else {
+            $options = [
+                'conditions' => [
+                    'team_id' => $teamId,
+                    'status'  => [
+                        self::USER_STATUS_INVITED,
+                        self::USER_STATUS_ACTIVE,
+                    ],
+                ],
+            ];
+
+        }
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
+    }
+
+        /**
+         * Count active and invited users
+         *
+         * @param int $teamId
+         *
+         * @return int
+     */
+    public function countHeadCount(int $teamId): int
+    {
         $options = [
             'conditions' => [
                 'team_id' => $teamId,
                 'status'  => [
                     self::USER_STATUS_INVITED,
                     self::USER_STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
+    }
+
+    /**
+     * Count active users
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function countActiveUsers(int $teamId): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'status'  => [
+                    // self::USER_STATUS_INVITED,
+                    self::USER_STATUS_ACTIVE,
+                ],
+            ],
+        ];
+        $cnt = (int)$this->find('count', $options);
+        return $cnt;
+    }
+
+    /**
+     * Count invited users
+     *
+     * @param int $teamId
+     *
+     * @return int
+     */
+    public function countInvitedUsers(int $teamId): int
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'status'  => [
+                    self::USER_STATUS_INVITED,
                 ],
             ],
         ];
