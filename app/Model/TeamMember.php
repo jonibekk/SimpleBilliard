@@ -462,12 +462,12 @@ class TeamMember extends AppModel
         return $cnt;
     }
 
-        /**
-         * Count active and invited users
-         *
-         * @param int $teamId
-         *
-         * @return int
+    /**
+     * Count active and invited users
+     *
+     * @param int $teamId
+     *
+     * @return int
      */
     public function countHeadCount(int $teamId): int
     {
@@ -552,7 +552,7 @@ class TeamMember extends AppModel
             'conditions' => [
                 'team_id' => $teamIds,
                 'status'  => [
-                    self::USER_STATUS_INVITED,
+                    // self::USER_STATUS_INVITED,
                     self::USER_STATUS_ACTIVE,
                 ],
             ],

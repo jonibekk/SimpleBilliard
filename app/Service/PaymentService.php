@@ -1010,8 +1010,7 @@ class PaymentService extends AppService
             /* Create charge history */
             // [Note]
             // ChargeHistory result_type will be updated after charge
-            $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
-            $membersCount = $membersCount[$teamId];
+            $membersCount = $TeamMember->countChargeTargetUsers($teamId);
 
             // If campaign team, pay as campaign price
             $pricePlanPurchaseId = null;
