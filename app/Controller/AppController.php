@@ -17,6 +17,7 @@ App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
 App::uses('UrlUtil', 'Util');
+App::uses('Goal', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
@@ -849,6 +850,13 @@ class AppController extends BaseController
 
         $canActionGoals = $GoalService->findActionables();
         $this->set(compact('canActionGoals'));
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));
+        $this->set([
+            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm
+        ]);
     }
 
     /**
