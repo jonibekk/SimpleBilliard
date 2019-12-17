@@ -66,9 +66,6 @@ class SetChargeTimingStartDateShell extends AppShell
             }
 
             $paymentKeyFlagClient = new PaymentFlagClient();
-            $paymentTiming = new PaymentTiming();
-            $res = $paymentTiming->checkIfPaymentTiming(67);
-            var_dump($res);
 
             $paymentFlagKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_START_DATE_NAME);
             switch ($op) {

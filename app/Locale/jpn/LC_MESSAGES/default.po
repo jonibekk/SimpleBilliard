@@ -6181,3 +6181,12 @@ msgstr "動画で見るGoalous"
 
 msgid "Introduction video for Goalous"
 msgstr "サービス紹介動画"
+
+msgid "Goalous will automatically change the amount charged to your account whenever active members are added to your team."
+msgstr "Goalous では、メンバーがチームへ追加されたことによってアクティブメンバー数に変更があった場合、自動的にアカウントへの請求額が調整されます。"
+
+msgid "Goalous will automatically change the amount charged to your account whenever"
+msgstr "Goalous では、メンバーがチームへ追加されたことによってアクティブメンバー数に変更があった場合、"
+
+msgid "active members are added to your team."
+msgstr "自動的にアカウントへの請求額が調整されます。"

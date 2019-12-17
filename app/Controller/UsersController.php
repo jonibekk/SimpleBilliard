@@ -1340,7 +1340,7 @@ class UsersController extends AppController
                         $teamId,
                         Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
                         1,
-                        $invite->from_user_id
+                        Hash::get($invite, 'Invite.from_user_id')
                     );
                 }
             }

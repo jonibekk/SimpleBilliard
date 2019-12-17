@@ -74,6 +74,11 @@ export default class Confirm extends Base {
               {emails_el}
             </ul>
           </div>
+          <div className="inviteCfmBlock mod-bdt">
+            <div className="ml_5px">
+                {__("Goalous will automatically change the amount charged to your account whenever active members are added to your team.")}
+            </div>
+          </div>
           {display_charge &&
           <div className="inviteCfmBlock mod-bdt">
             <h2 className="title">{__("Billing")}</h2>
