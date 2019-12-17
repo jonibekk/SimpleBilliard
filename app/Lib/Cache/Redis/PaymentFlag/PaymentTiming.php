@@ -12,6 +12,11 @@ class PaymentTiming
         $switchStartDateKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_START_DATE_NAME);
         $switchFlag = $redisClient->read($switchFlagKey);
         $switchStartDate = $redisClient->read($switchStartDateKey);
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        if (!$Team->isPaidPlan($teamId)) {
+            return True;
+        }
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
         $paymentSetting = $PaymentSetting->getUnique($teamId);
