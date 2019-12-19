@@ -853,7 +853,7 @@ class AppController extends BaseController
 
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        $isGoalCreatedInCurrentTerm = $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));;
+        $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));;
         $showGuidanceGoalCreate = false;
         $countCurrentTermGoalUnachieved = 0;
         if (!$canActionGoals) {
