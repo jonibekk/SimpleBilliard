@@ -17,6 +17,7 @@ App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
 App::uses('UrlUtil', 'Util');
+App::uses('Goal', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
@@ -849,6 +850,25 @@ class AppController extends BaseController
 
         $canActionGoals = $GoalService->findActionables();
         $this->set(compact('canActionGoals'));
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));;
+        $showGuidanceGoalCreate = false;
+        $countCurrentTermGoalUnachieved = 0;
+        if (!$canActionGoals) {
+            $hideGoalCreateGuidance = $this->Session->read('hide_goal_create_guidance') ?? false;
+            $showGuidanceGoalCreate = !$hideGoalCreateGuidance;
+            $countCurrentTermGoalUnachieved = $Goal->countSearch([
+                'term' => 'present',
+                'progress' => 'unachieved',
+            ]);
+        }
+        $this->set([
+            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm,
+            'showGuidanceGoalCreate'     => $showGuidanceGoalCreate,
+            'countCurrentTermGoalUnachieved' => $countCurrentTermGoalUnachieved,
+        ]);
     }
 
     /**

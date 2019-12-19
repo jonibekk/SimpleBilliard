@@ -107,11 +107,9 @@ export default class KrColumn extends React.Component {
 
     if (this.state.kr_count == 0) {
       return (
-        <a href="/goals/create/step1"
-           className="font_gargoyleGray-brownRed btn-goals-column-plus">
-          <i className="fa fa-plus-circle font_brownRed"></i>
-          {__('Create a goal')}
-        </a>
+         <div className="placeholder-no-goal">
+           <img src="/img/placeholder-no-goal.png" />
+         </div>
       );
     }
 
