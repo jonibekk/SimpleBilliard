@@ -104,7 +104,7 @@ $hasPostResources = !empty($this->request->data['PostResources']);
         </div>
         <div class="panel-body hide-on-guidance-goal-create-close">
             <p class="text-center">
-                <?= __('See more <a href="%s">Goalous help</a>', 'https://intercom.help/goalous/') ?>
+                <?= __('See more <a href="%s" target="_blank">Goalous help</a>', 'https://intercom.help/goalous/') ?>
             </p>
         </div>
         <?php endif; ?>

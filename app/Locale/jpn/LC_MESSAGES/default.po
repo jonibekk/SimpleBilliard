@@ -6185,8 +6185,8 @@ msgstr "サービス紹介動画"
 msgid "Now, create Goal, share it, and get together.<br />Let's be a little more specific<br />about what your project wants to accomplish."
 msgstr "さあ、ゴールをつくって、シェアして、みんなで進もう。<br />あなたのプロジェクトが成し遂げたいことを<br />少しだけ具体的にしてみましょう。"
 
-msgid "See more <a href=\"%s\">Goalous help</a>"
-msgstr "Goalousのヘルプを<a href=\"%s\">もっと見る</a>"
+msgid "See more <a href=\"%s\" target=\"_blank\">Goalous help</a>"
+msgstr "Goalousのヘルプを<a href=\"%s\" target=\"_blank\">もっと見る</a>"
 
 msgid "View Goals created by members (%s)"
 msgstr "他のメンバーがつくったゴールを見る (%s)"
