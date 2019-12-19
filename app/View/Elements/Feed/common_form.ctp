@@ -11,6 +11,8 @@
  * @var string             $common_form_mode     新規登録 or 編集(edit)
  * @var string             $common_form_only_tab フォームのタブ表示を１つに絞る (action, post, message)
  * @var bool               $isGoalCreatedInCurrentTerm True if goal has created in current term
+ * @var integer            $countCurrentTermGoalUnachieved
+ * @var bool               $showGuidanceGoalCreate
  */
 
 // 編集時に true
@@ -63,64 +65,52 @@ $hasPostResources = !empty($this->request->data['PostResources']);
             </div>
         <?php endforeach; ?>
     <?php endif; ?>
-    <?php if (false === $isGoalCreatedInCurrentTerm): ?>
+    <?php if (empty($canActionGoals)): ?>
     <div class="panel panel-default">
-        <div class="panel-body">
+        <?php if ($showGuidanceGoalCreate): ?>
+        <div class="panel-body hide-on-guidance-goal-create-close">
+            <button type="button" id="guidance-goal-create-close" class="close" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
             <h3 class="text-center" style="font-weight: 400;">
-                Let's create Goal
+                <?= __("Let's create Goal") ?>
             </h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body hide-on-guidance-goal-create-close">
             <p class="text-center">
-                Now, create Goal, share it, and get together.<br>
-                Let's be a little more specific<br>
-                about what your project wants to accomplish.
+                <?= __("Now, create Goal, share it, and get together.<br />Let's be a little more specific<br />about what your project wants to accomplish.") ?>
             </p>
         </div>
+        <?php endif; ?>
         <div class="panel-body">
-            <a class="btn btn-primary btn-block" href="/goals/create/step1">Create Goal</a>
+            <a class="btn btn-primary btn-block" href="/goals/create/step1">
+                <?= __("Create Goal") ?>
+            </a>
         </div>
         <div class="panel-body">
             <p class="text-center">
-                <a class="" href="/goals?keyword=&category=&progress=unachieved&term=present">Check the goals created by members</a>
+                <a class="" href="/goals?keyword=&category=&progress=unachieved&term=present">
+                    <?= __('View Goals created by members (%s)', $countCurrentTermGoalUnachieved) ?>
+                </a>
             </p>
         </div>
+        <?php if ($showGuidanceGoalCreate): ?>
+        <div class="panel-body hide-on-guidance-goal-create-close">
+            <div id="youtube_create_goal">
+                <iframe type="text/html" width="640" height="360"
+                        src="https://www.youtube.com/embed/gPCmJFeqPBo?autoplay=0&controls=1&rel=0&showinfo=0"
+                        frameborder="0"></iframe>
+            </div>
+        </div>
+        <div class="panel-body hide-on-guidance-goal-create-close">
+            <p class="text-center">
+                <?= __('See more <a href="%s">Goalous help</a>', 'https://intercom.help/goalous/') ?>
+            </p>
+        </div>
+        <?php endif; ?>
     </div>
-    <div style="width:100%;padding-bottom: 56.25%;height:0px;position: relative;margin-bottom: 10px;" id="ytvideo">
-        <style>
-            #ytvideo iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-        <div id="ytplayer"></div>
-    </div>
-    <script>
-        // Load the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/player_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // Replace the 'ytplayer' element with an <iframe> and
-        // YouTube player after the API code downloads.
-        var player;
-        function onYouTubePlayerAPIReady() {
-            player = new YT.Player('ytplayer', {
-                playerVars: {
-                    'autoplay':       0,
-                    'controls':       1,
-                    'rel':            0,
-                    'showinfo':       0,
-                },
-                videoId: 'gPCmJFeqPBo'
-            });
-        }
-    </script>
     <?php endif; ?>
+    <?php if (0 < count($canActionGoals)): ?>
     <div class="panel panel-default global-form" id="GlobalForms">
         <div class="post-panel-heading ptb_7px plr_11px">
             <!-- Nav tabs -->
@@ -285,6 +275,7 @@ $hasPostResources = !empty($this->request->data['PostResources']);
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </div>
 <?= $this->element('file_upload_form') ?>
 <?= $this->App->viewEndComment() ?>

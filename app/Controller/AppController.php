@@ -853,9 +853,21 @@ class AppController extends BaseController
 
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
-        $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));
+        $isGoalCreatedInCurrentTerm = $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));;
+        $showGuidanceGoalCreate = false;
+        $countCurrentTermGoalUnachieved = 0;
+        if (!$canActionGoals) {
+            $hideGoalCreateGuidance = $this->Session->read('hide_goal_create_guidance') ?? false;
+            $showGuidanceGoalCreate = !$hideGoalCreateGuidance;
+            $countCurrentTermGoalUnachieved = $Goal->countSearch([
+                'term' => 'present',
+                'progress' => 'unachieved',
+            ]);
+        }
         $this->set([
-            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm
+            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm,
+            'showGuidanceGoalCreate'     => $showGuidanceGoalCreate,
+            'countCurrentTermGoalUnachieved' => $countCurrentTermGoalUnachieved,
         ]);
     }
 
