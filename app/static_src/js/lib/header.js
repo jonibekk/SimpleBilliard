@@ -437,6 +437,9 @@ function displaySelectorFluffy(selector) {
     i = i + 0.2;
     if (i > 1) {
       clearInterval(roop);
+      if (getMessageNotifyCnt() === 0) {
+        setNotifyCntToMessageAndTitle(0);
+      }
     }
   }, 100);
 }

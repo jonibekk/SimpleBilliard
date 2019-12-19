@@ -2226,6 +2226,31 @@ class Goal extends AppModel
     }
 
     /**
+     * Return true if user has created goal in current term.
+     * @param int $userId
+     * @return bool
+     */
+    public function isGoalCreatedInCurrentTerm(int $userId): bool
+    {
+        $startDate = $this->Team->Term->getCurrentTermData()['start_date'];
+        $endDate = $this->Team->Term->getCurrentTermData()['end_date'];
+        $options = [
+            'conditions' => [
+                'Goal.user_id'     => $userId,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $startDate,
+                'Goal.end_date <=' => $endDate,
+            ],
+            'fields'     => [
+                'Goal.id',
+                'Goal.name',
+                'Goal.photo_file_name'
+            ]
+        ];
+        return !empty($this->find('first', $options));
+    }
+
+    /**
      * POSTされたゴールのバリデーション
      * - バリデーションokの場合はtrueを、そうでない場合はバリデーションメッセージを返却
      * - $fieldsに配列で対象フィールドを指定。空の場合はすべてのフィールドをvalidateする
