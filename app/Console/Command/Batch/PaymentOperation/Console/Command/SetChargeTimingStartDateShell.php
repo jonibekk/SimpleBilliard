@@ -2,7 +2,6 @@
 App::uses('AppUtil', 'Util');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
-App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 

@@ -15,7 +15,7 @@ class PaymentTiming
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         if (!$Team->isPaidPlan($teamId)) {
-            return True;
+            return true;
         }
         /** @var PaymentSetting $PaymentSetting */
         $PaymentSetting = ClassRegistry::init('PaymentSetting');
@@ -28,10 +28,10 @@ class PaymentTiming
                 $inviteTeamId, var_export($validationErrors, true)));
         }
 
-        if (intval($switchFlag) == 2 or intval($switchFlag) == 1 and !empty($switchStartDate) and PaymentFlagClient::is_in_period($paymentBaseDay, $switchStartDate, $teamId)) {
-            return True;
+        if (intval($switchFlag) == 2 or intval($switchFlag) == 1 and !empty($switchStartDate) and PaymentFlagClient::isInPeriod($paymentBaseDay, $switchStartDate, $teamId)) {
+            return true;
         }
-        return False;
+        return false;
 
     }
 
