@@ -15,7 +15,7 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
     {
         $returnValue = $this->getRedis()->get($key->toRedisKey());
 
-        return $returnValue ?? -1;
+        return $returnValue ?? '';
     }
 
     /**
@@ -41,7 +41,7 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
     {
         $returnValue = $this->getRedis()->smembers($key->toRedisKey());
 
-        return $returnValue ?? -1;
+        return $returnValue ?? array();
     }
 
     /**
@@ -87,31 +87,32 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
      *
      * @return bool
      */
-    public function is_in_period(int $baseDay, string $startDate, int $teamId): bool
+    public function isInPeriod(int $baseDay, string $startDate, int $teamId): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->findById($teamId)['Team']['timezone'];
-        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Ymd');
+        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone);
 
-        $res = False;
-        $startDateDay = date('d', strtotime($startDate));
-        $startDateDate = date('Ymd', strtotime($startDate));
-        $startDateMonth = date('Ym01', strtotime($startDate));
+        $res = false;
+        $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate);
+        $startDateDay = $startDateTime->day;
+        $firstDayThisMonth = $startDateTime->copy()->modify("first day of this  month");
+        $firstDayNextMonth = $startDateTime->copy()->modify("first day of next  month");
         if ($startDateDay == $baseDay)
         {
-            $res = True;
-            $endDay = $startDateDate;
+            $res = true;
+            $endDay = $startDateTime;
         } elseif (intval($startDateDay) < $baseDay)
         {
-            $endDay = date('Ymd', strtotime($startDateMonth . "+" .($baseDay-1). " days"));
+            $endDay = $firstDayThisMonth->copy()->addDay($baseDay-1);
 
         }else {
-            $endDay = date('Ymd', strtotime($startDateMonth . "+" .($baseDay - 1). " days"));
-            $endDay = date('Ymd', strtotime($endDay . "+1 month"));
+            $endDay = $firstDayNextMonth->copy()->addDay($baseDay-1);
         }
-        if ($endDay <= $date){
-            $res = True;
+
+        if ($endDay->diffInDays($date, false) >= 0){
+            $res = true;
         }
 
         return $res;
