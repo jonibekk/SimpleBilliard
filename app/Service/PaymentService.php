@@ -1882,35 +1882,7 @@ class PaymentService extends AppService
         return true;
     }
 
-    /*
-     *
-     * do charge() with Transaction
-     *
-     * @param int                                     $teamId
-     * @param Enum\Model\ChargeHistory\ChargeType|int $chargeType
-     * @param int                                     $usersCount
-     * @param int                                     $opeUserId
-     *
-     * @return array
-     * @throws Exception
-     */
-    public function doChargeWithTransaction(
-        int $teamId,
-        Enum\Model\ChargeHistory\ChargeType $chargeType,
-        int $usersCount = 1,
-        int $opeUserId
-    ){
-        $this->TransactionManager->begin();
-        $this->charge(
-            $teamId,
-            $chargeType,
-            $usersCount,
-            $opeUserId
-        );
-
-        $this->TransactionManager->commit();
-
-    }
+    
     /**
      * Charge single
      * [Important]
