@@ -92,10 +92,43 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->findById($teamId)['Team']['timezone'];
-        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone);
+        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->startOfDay();
 
+        return self::checkDateInPeriod($baseDay, $startDate, $date);
+    }
+
+    /**
+     * check if now is in the peroid for charge on signup
+     * can only be called from app with request->current_team_id
+     *
+     * @param $baseDay team payment base day, $startDate period start date
+     *
+     * @return bool
+     */
+    public function isAfterPeriod(int $inviteCreatedTime, int $baseDay, string $startDate, $teamId): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+        $timezone = $Team->findById($teamId)['Team']['timezone'];
+        $localCurrentTs = $inviteCreatedTime + ($timezone * HOUR);
+        $date = GoalousDateTime::createFromTimestamp($localCurrentTs)->startOfDay();
+
+        return self::checkDateInPeriod($baseDay, $startDate, $date);
+
+    }
+
+
+    /**
+     * check if date is in the peroid for charge on signup
+     *
+     * @param $baseDay team payment base day, $startDate period start date
+     *
+     * @return bool
+     */
+    private function checkDateInPeriod(int $baseDay, string $startDate, GoalousDateTime $date): bool
+    {
         $res = false;
-        $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate);
+        $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate)->startOfDay();
         $startDateDay = $startDateTime->day;
         $firstDayThisMonth = $startDateTime->copy()->modify("first day of this  month");
         $firstDayNextMonth = $startDateTime->copy()->modify("first day of next  month");
@@ -117,4 +150,5 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
 
         return $res;
     }
+
 }
