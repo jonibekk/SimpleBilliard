@@ -134,7 +134,6 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
         $firstDayNextMonth = $startDateTime->copy()->modify("first day of next  month");
         if ($startDateDay == $baseDay)
         {
-            $res = true;
             $endDay = $startDateTime;
         } elseif (intval($startDateDay) < $baseDay)
         {
