@@ -1,4 +1,7 @@
 <?php
+
+use Goalous\Exception\Follow\ValidationToFollowException;
+
 App::uses('ApiController', 'Controller/Api');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('UploadHelper', 'View/Helper');
@@ -188,6 +191,18 @@ class GoalsController extends ApiController
         $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
 
         return $this->_getResponseSuccess($res);
+    }
+
+    /**
+     * Call this /api/v1/goals/hide_goal_create_guidance from
+     * goal crete guidance close button.
+     * Guidance displayed when user does not have any goal.
+     * @return CakeResponse
+     */
+    function post_hide_goal_create_guidance()
+    {
+        $this->Session->write('hide_goal_create_guidance', true);
+        return $this->_getResponseSuccess();
     }
 
     /**
@@ -544,10 +559,14 @@ class GoalsController extends ApiController
     {
         /** @var FollowService $FollowService */
         $FollowService = ClassRegistry::init("FollowService");
-
-        // ゴール存在チェック
-        if (!$this->Goal->isBelongCurrentTeam($goalId, $this->Session->read('current_team_id'))) {
-            return $this->_getResponseBadFail(__("The Goal doesn't exist."));
+        try {
+            $FollowService->validateToFollow(
+                $this->Session->read('current_team_id'),
+                $goalId,
+                $this->Auth->user('id')
+            );
+        } catch (ValidationToFollowException $e) {
+            return $this->_getResponseBadFail($e->getMessage());
         }
 
         // フォロー

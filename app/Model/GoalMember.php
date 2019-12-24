@@ -963,6 +963,30 @@ class GoalMember extends AppModel
     }
 
     /**
+     * @param array $goalIds
+     * @param int $userId
+     * @return array
+     */
+    public function getCollaborationGoalIds(array $goalIds, int $userId): array
+    {
+        $options = [
+            'fields' => ['goal_id'],
+            'conditions' => [
+                'goal_id' => $goalIds,
+                'user_id' => $userId,
+                'type' => self::TYPE_COLLABORATOR,
+                'del_flg' => false
+            ]
+        ];
+        $res = $this->find('all', $options);
+        if (!$res) {
+            return [];
+        }
+
+        return array_unique(Hash::extract($res, '{n}.GoalMember.goal_id'));
+    }
+
+    /**
      * ゴールメンバーが認定希望かどうか判定
      *
      * @param  $goalMemberId

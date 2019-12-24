@@ -80,6 +80,8 @@ class ApiGoalService extends ApiService
         // UploadHelper内で行っているUploadBehaviorを認識しない問題がある。
         // (そもそもHelperでBehaviorを使用しているのが間違い)
 
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
         /** @var GoalMember $GoalMember */
@@ -127,8 +129,21 @@ class ApiGoalService extends ApiService
         }
 
         $followConditionGoalIds = [];
+        $myCoachingGoalIds = $TeamMember->getCoachingGoalList($loginUserId);
+        $myCollaborationGoalIds = $GoalMember->getCollaborationGoalIds($goalIds, $loginUserId);
         // フォローのアクションを無効にするか
         foreach ($goals as &$goal) {
+            $goalId = $goal['id'];
+            if (isset($myCoachingGoalIds[$goalId])) {
+                // 閲覧者がコーチしているゴールの場合
+                $goal['can_follow'] = false;
+                continue;
+            }
+            if (in_array($goalId, $myCollaborationGoalIds, true)) {
+                // ログインユーザーがコラボに参加している場合
+                $goal['can_follow'] = false;
+                continue;
+            }
             if ($isCurrentTerm === false) {
                 $goal['can_follow'] = false;
                 continue;

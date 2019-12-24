@@ -9,6 +9,11 @@ $(document).ready(function () {
     localStorage.removeItem('token');
   }
 
+  $('#guidance-goal-create-close').on('click', function (e) {
+    $('.hide-on-guidance-goal-create-close').hide();
+    $.post('/api/v1/goals/hide_goal_create_guidance');
+  });
+
   window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
 
   //アップロード画像選択時にトリムして表示
