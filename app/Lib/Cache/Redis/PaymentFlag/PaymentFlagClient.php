@@ -98,27 +98,6 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
     }
 
     /**
-     * check if now is in the peroid for charge on signup
-     * can only be called from app with request->current_team_id
-     *
-     * @param $baseDay team payment base day, $startDate period start date
-     *
-     * @return bool
-     */
-    public function isAfterPeriod(int $inviteCreatedTime, int $baseDay, string $startDate, $teamId): bool
-    {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        $timezone = $Team->findById($teamId)['Team']['timezone'];
-        $localCurrentTs = $inviteCreatedTime + ($timezone * HOUR);
-        $date = GoalousDateTime::createFromTimestamp($localCurrentTs)->startOfDay();
-
-        return self::checkDateInPeriod($baseDay, $startDate, $date);
-
-    }
-
-
-    /**
      * check if date is in the peroid for charge on signup
      *
      * @param $baseDay team payment base day, $startDate period start date

@@ -1287,7 +1287,6 @@ class UsersController extends AppController
             $invite = $this->Invite->verify($token, $userId);
 
             $inviteTeamId = Hash::get($invite, 'Invite.team_id');
-            $inviteCreatedTime = Hash::get($invite, 'Invite.created');
 
             //チーム参加
             if (!$this->User->TeamMember->add($userId, $inviteTeamId)) {
@@ -1327,7 +1326,7 @@ class UsersController extends AppController
             /* get payment flag */
             $teamId = $currentTeamId;
             $paymentTiming = new PaymentTiming();
-            if ($paymentTiming->checkIfPaymentTiming($teamId) and $paymentTiming->checkUserAlreadyCharged($inviteCreatedTime, $teamId)){
+            if ($paymentTiming->checkIfPaymentTiming($teamId)){
                 /* Charge if paid plan */
                 /** @var Team $Team */
                 $Team = ClassRegistry::init("Team");
