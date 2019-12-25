@@ -555,12 +555,13 @@ class CircleService extends AppService
      * @param int      $teamId
      * @param int      $userId
      * @param int      $limit
-     * @param int|null $postId : Affection range by post (especially post is in secret circle, search range is only
+     * @param int|null $resourceId : Affection range by post (especially post is in secret circle, search range is only
      *                         secret circle)
+     * @param int      $resourceType: 1, comment; 2, post;
      *
      * @return array
      */
-    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $postId): array
+    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $resourceId = null, $resourceType = 1): array
     {
         $keyword = trim($keyword);
         if (strlen($keyword) == 0) {
@@ -574,6 +575,41 @@ class CircleService extends AppService
 
         $filterCircleIds = [];
         $publicFlg = true;
+
+        switch ($resourceType) {
+            case 1:
+                $postId = $resourceId;
+                if (!empty($postId)) {
+                    $circle = $Circle->getSharedSecretCircleByPostId($postId);
+                    if (!empty($circle) && $circle['public_flg'] === false) {
+                        $filterCircleIds = [$circle['id']];
+                        $publicFlg = false;
+                    }
+                }
+                if (empty($filterCircleIds)) {
+                    $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
+                }
+                break;
+            case 2:
+                $circleId = $resourceId;
+                if (!empty($circleId)) {
+                    $circle = $Circle->getById($circleId);
+                    if (!empty($circle) && $circle['public_flg'] === false) {
+                        $filterCircleIds = [$circle['id']];
+                        $publicFlg = false;
+                    }
+                }
+                if (empty($filterCircleIds)) {
+                    $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
+                }
+                $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
+                break;
+            default:
+                $filterCircleIds = null;
+                break;
+
+        }
+        /*
         if (!empty($postId)) {
             $circle = $Circle->getSharedSecretCircleByPostId($postId);
             if (!empty($circle) && $circle['public_flg'] === false) {
@@ -584,9 +620,47 @@ class CircleService extends AppService
         if (empty($filterCircleIds)) {
             $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
         }
+         */
 
         $circles = $Circle->findByKeyword($keyword, $limit, $filterCircleIds, $publicFlg);
         return $circles;
+    }
+
+    /**
+     * Check whether the user can view the circle
+     *
+     * @param int  $userId
+     * @param int  $circleId
+     *
+     * @return bool
+     */
+    public function checkUserAccessToCircle(int $userId, int $circleId): bool
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init("CircleMember");
+
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $circle = $Circle->findById($circleId);
+        if (empty($circle)) {
+            throw new GlException\GoalousNotFoundException(__("This circle doesn't exist."));
+        }
+
+        $circleMemberOption = [
+            'conditions' => [
+                'CircleMember.circle_id' => [$circleId],
+                'CircleMember.user_id'   => $userId,
+                'CircleMember.del_flg'   => false
+            ],
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember',
+            'fields'     => 'CircleMember.circle_id'
+        ];
+
+        $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
+
+        return $circleList > 0;
     }
 
 }
