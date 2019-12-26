@@ -170,6 +170,10 @@ class NotifyBizComponent extends Component
                 $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
                     $model_id, $sub_model_id, $to_user_list);
                 break;
+            case NotifySetting::TYPE_FEED_MENTIONED_IN_POST:
+                $this->_setFeedMentionedOption(NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
+                    $model_id, $sub_model_id, $to_user_list);
+                break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
                 break;
@@ -1567,6 +1571,9 @@ class NotifyBizComponent extends Component
      */
     private function _setFeedMentionedOption($notify_type, $post_id, $comment_id, $to_user_ids)
     {
+        if (!in_array($notify_type, [NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT, NotifySetting::TYPE_FEED_MENTIONED_IN_POST])){
+            return;
+        }
         if (empty($to_user_ids)) return;
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
@@ -1578,10 +1585,13 @@ class NotifyBizComponent extends Component
         foreach ($to_user_ids as $toUserId) {
             $this->notify_settings[$toUserId]['app'] = true;
         }
-        if (!is_null($comment_id)) {
-            $comment = Hash::get($this->Post->Comment->read(null, $comment_id), 'Comment') ?? [];
-        }
 
+        if ($type = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
+            if (!is_null($comment_id)) {
+                $comment = Hash::get($this->Post->Comment->read(null, $comment_id), 'Comment') ?? [];
+            }
+        }
+        
         $this->notify_option['count_num'] = count($to_user_ids);
         if ($post['Post']['type'] == Post::TYPE_NORMAL) {
             $this->notify_option['url_data'] = [
@@ -1596,19 +1606,29 @@ class NotifyBizComponent extends Component
                 'post_id'    => $post['Post']['id']
             ];
         }
-        $this->notify_option['model_id'] = $post_id;
-        $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
-        if (!empty($post['Post']['action_result_id'])) {
-            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
-            $actionResult = $this->Post->ActionResult->findById($post['Post']['action_result_id']);
-        } else if (!empty($post['Post']['key_result_id'])) {
-            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
+        if ($type = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
+            $this->notify_option['model_id'] = $post_id;
+            $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
+            if (!empty($post['Post']['action_result_id'])) {
+                $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
+                $actionResult = $this->Post->ActionResult->findById($post['Post']['action_result_id']);
+            } else if (!empty($post['Post']['key_result_id'])) {
+                $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION;
+            } else {
+                $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT;
+            }
+            $mentionReplacedBody = MentionComponent::replaceMentionToSimpleReadable($comment['body']);
+            $this->notify_option['item_name'] = json_encode([$mentionReplacedBody]);
+            $this->notify_option['options']['mention_targets'] = $this->Mention->getTargetIdsEachType($comment['body'], $comment['team_id']);
         } else {
-            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT;
+            $this->notify_option['model_id'] = $post_id;
+            $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
+            $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MENTIONED_IN_POST;
+            $mentionReplacedBody = MentionComponent::replaceMentionToSimpleReadable($post['Post']['body']);
+            $this->notify_option['item_name'] = json_encode([$mentionReplacedBody]);
+            $this->notify_option['options']['mention_targets'] = $this->Mention->getTargetIdsEachType($post['Post']['body'], $post['Post']['team_id']);
+
         }
-        $mentionReplacedBody = MentionComponent::replaceMentionToSimpleReadable($comment['body']);
-        $this->notify_option['item_name'] = json_encode([$mentionReplacedBody]);
-        $this->notify_option['options']['mention_targets'] = $this->Mention->getTargetIdsEachType($comment['body'], $comment['team_id']);
 
         $this->notify_option['force_notify'] = true;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_ids);
