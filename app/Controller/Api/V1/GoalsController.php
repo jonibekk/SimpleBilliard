@@ -194,6 +194,18 @@ class GoalsController extends ApiController
     }
 
     /**
+     * Call this /api/v1/goals/hide_goal_create_guidance from
+     * goal crete guidance close button.
+     * Guidance displayed when user does not have any goal.
+     * @return CakeResponse
+     */
+    function post_hide_goal_create_guidance()
+    {
+        $this->Session->write('hide_goal_create_guidance', true);
+        return $this->_getResponseSuccess();
+    }
+
+    /**
      * ゴール更新のバリデーションAPI
      * 成功(Status Code:200)、失敗(Status Code:400)
      *

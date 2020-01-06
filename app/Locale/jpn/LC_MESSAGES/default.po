@@ -6184,3 +6184,18 @@ msgstr "サービス紹介動画"
 
 msgid "Goalous will automatically change the amount charged to your account whenever active members are added to your team."
 msgstr "Goalous では、メンバーがチームへ追加されたことによってアクティブメンバー数に変更があった場合、自動的にアカウントへの請求額が調整されます。"
+
+msgid "Now, create Goal, share it, and get together.<br />Let's be a little more specific<br />about what your project wants to accomplish."
+msgstr "さあ、ゴールをつくって、シェアして、みんなで進もう。<br />あなたのプロジェクトが成し遂げたいことを<br />少しだけ具体的にしてみましょう。"
+
+msgid "See more <a href=\"%s\" target=\"_blank\">Goalous help</a>"
+msgstr "Goalousのヘルプを<a href=\"%s\" target=\"_blank\">もっと見る</a>"
+
+msgid "View Goals created by members (%s)"
+msgstr "他のメンバーがつくったゴールを見る (%s)"
+
+msgid "Let's create Goal"
+msgstr "ゴールをつくりましょう"
+
+msgid "Create Goal"
+msgstr "ゴールをつくる"

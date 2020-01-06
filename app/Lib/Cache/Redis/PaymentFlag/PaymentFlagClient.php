@@ -108,11 +108,13 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
     {
         $res = false;
         $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate)->startOfDay();
+
         $startDateDay = $startDateTime->day;
         $firstDayThisMonth = $startDateTime->copy()->modify("first day of this  month");
         $firstDayNextMonth = $startDateTime->copy()->modify("first day of next  month");
         if ($startDateDay == $baseDay)
         {
+
             $endDay = $startDateTime;
         } elseif (intval($startDateDay) < $baseDay)
         {

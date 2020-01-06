@@ -8,6 +8,7 @@ class PaymentTiming
      * check if it is in new payment peroid
      *
      */
+
     public function checkIfPaymentTiming(int $teamId): bool 
     {
         /* get payment flag */

@@ -17,6 +17,7 @@ App::uses('GoalousDateTime', 'DateTime');
 App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
 App::uses('UrlUtil', 'Util');
+App::uses('Goal', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
@@ -759,6 +760,16 @@ class AppController extends BaseController
             } else {
                 //チームを切り替え
                 $this->_switchTeam($request_team_id);
+
+                // Store "set_jwt_token" key into session for new Goalous local storage session
+                $sessionId = $this->Session->id();
+                $tokenJwt = $this->GlRedis->getMapSesAndJwt($request_team_id, $this->my_uid, $sessionId);
+                if (!empty($tokenJwt)) {
+                    $this->Session->write('set_jwt_token', $tokenJwt);
+                } else {
+                    $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sessionId);
+                    $this->Session->write('set_jwt_token', $jwt->token());
+                }
                 $this->redirect($this->request->here);
             }
         }
@@ -839,6 +850,25 @@ class AppController extends BaseController
 
         $canActionGoals = $GoalService->findActionables();
         $this->set(compact('canActionGoals'));
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+        $isGoalCreatedInCurrentTerm = $Goal->isGoalCreatedInCurrentTerm($this->Auth->user('id'));;
+        $showGuidanceGoalCreate = false;
+        $countCurrentTermGoalUnachieved = 0;
+        if (!$canActionGoals) {
+            $hideGoalCreateGuidance = $this->Session->read('hide_goal_create_guidance') ?? false;
+            $showGuidanceGoalCreate = !$hideGoalCreateGuidance;
+            $countCurrentTermGoalUnachieved = $Goal->countSearch([
+                'term' => 'present',
+                'progress' => 'unachieved',
+            ]);
+        }
+        $this->set([
+            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm,
+            'showGuidanceGoalCreate'     => $showGuidanceGoalCreate,
+            'countCurrentTermGoalUnachieved' => $countCurrentTermGoalUnachieved,
+        ]);
     }
 
     /**
@@ -1281,6 +1311,25 @@ class AppController extends BaseController
         }
 
         $this->set('my_notifying_circles', $circleIds);
+    }
+
+    /**
+     * This before render function is needed for flash data.
+     * PagesController::_setUrlParams() is redirecting and will erase the flash data.
+     *
+     * @param null $view
+     * @param null $layout
+     * @return CakeResponse
+     */
+    public function render($view = null, $layout = null)
+    {
+        // Set "set_jwt_token" for new Goalous local storage session
+        $setJwtToken = $this->Session->read('set_jwt_token');
+        if (!empty($setJwtToken)) {
+            $this->set('jwt_token', $setJwtToken);
+            $this->Session->delete('set_jwt_token');
+        }
+        return parent::render($view, $layout);
     }
 
 }
