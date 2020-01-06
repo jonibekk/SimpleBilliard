@@ -7,6 +7,7 @@ App::uses('AppController', 'Controller');
 App::uses('ComponentCollection', 'Controller');
 App::uses('Component', 'Controller');
 App::uses('GlEmailComponent', 'Controller/Component');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 
@@ -213,17 +214,23 @@ class InvitationService extends AppService
                 );
             }
 
-            /* Charge if paid plan */
-            // TODO.payment: Should we store $addUserCnt to DB?
-            $addUserCnt = count($targetUserIds);
-            if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $chargeUserCnt > 0) {
-                // [Important] Transaction commit in this method
-                $PaymentService->charge(
-                    $teamId,
-                    Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
-                    $chargeUserCnt,
-                    $fromUserId
-                );
+
+            /* get payment flag */
+            $paymentTiming = new PaymentTiming();
+            if (!$paymentTiming->checkIfPaymentTiming($teamId)){
+
+                /* Charge if paid plan */
+                // TODO.payment: Should we store $addUserCnt to DB?
+                $addUserCnt = count($targetUserIds);
+                if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $chargeUserCnt > 0) {
+                    // [Important] Transaction commit in this method
+                    $PaymentService->charge(
+                        $teamId,
+                        Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                        $chargeUserCnt,
+                        $fromUserId
+                    );
+                }
             }
             $this->TransactionManager->commit();
         } catch (CreditCardStatusException $e) {

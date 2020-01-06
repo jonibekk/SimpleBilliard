@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('GoalousDateTime', 'DateTime');
 App::import('Service', 'InvitationService');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
 
 use Goalous\Enum as Enum;
 
@@ -49,6 +51,13 @@ class InvitationServiceTest extends GoalousTestCase
         $this->Email = ClassRegistry::init('Email');
         $this->TeamMember = ClassRegistry::init('TeamMember');
         $this->Invite = ClassRegistry::init('Invite');
+        $this->PaymentSetting = ClassRegistry::init('PaymentSetting');
+        $paymentKeyFlagClient = new PaymentFlagClient();
+
+        $paymentFlagKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_FLAG_NAME);
+        $paymentKeyFlagClient->write($paymentFlagKey, 1);
+        $paymentDateKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_START_DATE_NAME);
+        $paymentKeyFlagClient->write($paymentDateKey, '20191217');
     }
 
     /**
@@ -184,6 +193,7 @@ class InvitationServiceTest extends GoalousTestCase
         $teamId = $this->createTeam([
             'service_use_status' => Enum\Model\Team\ServiceUseStatus::FREE_TRIAL
         ]);
+
         $email = 'test1@company.com';
         $res = $this->InvitationService->invite($teamId, 1, [$email]);
         $this->assertFalse($res['error']);
@@ -241,6 +251,13 @@ class InvitationServiceTest extends GoalousTestCase
         $teamId = $this->createTeam([
             'service_use_status' => Enum\Model\Team\ServiceUseStatus::PAID
         ]);
+        /*
+         * set payment setting data
+         */
+        $createData = $this->createTestPaymentData(['team_id' => $teamId, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
         $userId = $this->createActiveUser($teamId);
         $this->createCampaignTeam($teamId, $campaignType = 0, $pricePlanGroupId = 1);
         $this->createPurchasedTeam($teamId, $pricePlanCode = '1-1');
@@ -352,5 +369,28 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(false, $reInviteData['del_flg']);
         $this->assertEquals($email, $reInviteData['email']);
         $this->assertNull($reInviteData['deleted']);
+    }
+
+    private function createTestPaymentData(array $data): array
+    {
+        $default = [
+            'type'                           => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+            'amount_per_user'                => PaymentService::AMOUNT_PER_USER_JPY,
+            'company_name'                   => 'ISAO',
+            'company_country'                => 'JP',
+            'company_post_code'              => '1110111',
+            'company_region'                 => 'Tokyo',
+            'company_city'                   => 'Taitou-ku',
+            'company_street'                 => '*** ****',
+            'contact_person_first_name'      => '太郎',
+            'contact_person_first_name_kana' => 'タロウ',
+            'contact_person_last_name'       => '東京',
+            'contact_person_last_name_kana'  => 'トウキョウ',
+            'contact_person_tel'             => '123456789',
+            'contact_person_email'           => 'test@example.com',
+            'payment_base_day'               => 15,
+            'currency'                       => Enum\Model\PaymentSetting\Currency::JPY
+        ];
+        return am($default, $data);
     }
 }

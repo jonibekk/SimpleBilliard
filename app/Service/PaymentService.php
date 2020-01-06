@@ -1010,8 +1010,7 @@ class PaymentService extends AppService
             /* Create charge history */
             // [Note]
             // ChargeHistory result_type will be updated after charge
-            $membersCount = $TeamMember->countChargeTargetUsersEachTeam([$teamId]);
-            $membersCount = $membersCount[$teamId];
+            $membersCount = $TeamMember->countChargeTargetUsers($teamId);
 
             // If campaign team, pay as campaign price
             $pricePlanPurchaseId = null;
@@ -1183,13 +1182,6 @@ class PaymentService extends AppService
         /** @var CampaignService $CampaignService */
         $CampaignService = ClassRegistry::init('CampaignService');
 
-        $membersCount = $TeamMember->countChargeTargetUsers($teamId);
-        // Count should never be zero.
-        if ($membersCount == 0) {
-            CakeLog::emergency(sprintf("[%s] Invalid member count for teamId: %s", __METHOD__, $teamId));
-            return false;
-        }
-
         // Check if already registered.
         if (!empty($PaymentSetting->getByTeamId($teamId))) {
             CakeLog::error(sprintf("[%s] Payment setting has already been registered. teamId: %s", __METHOD__,
@@ -1246,6 +1238,13 @@ class PaymentService extends AppService
                     throw new Exception(sprintf("Failed create PricePlanPurchaseTeam. teamId: %s, pricePlanCode: %s",
                         $teamId, $pricePlanCode));
                 }
+            }
+
+            $membersCount = $TeamMember->countChargeTargetUsers($teamId);
+            // Count should never be zero.
+            if ($membersCount == 0) {
+                CakeLog::emergency(sprintf("[%s] Invalid member count for teamId: %s", __METHOD__, $teamId));
+                return false;
             }
 
             $res = $this->registerInvoice($teamId, $membersCount, REQUEST_TIMESTAMP, $userId, $checkSentInvoice);
@@ -1883,6 +1882,7 @@ class PaymentService extends AppService
         return true;
     }
 
+    
     /**
      * Charge single
      * [Important]
@@ -2283,6 +2283,9 @@ class PaymentService extends AppService
         }
 
         $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
+        if ($chargeUserCnt <= 0){
+            $chargeUserCnt = $TeamMember->countHeadCount($teamId) + $addUserCnt - $maxChargedUserCnt;
+        }
         return $chargeUserCnt;
     }
 

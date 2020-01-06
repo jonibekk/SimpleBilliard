@@ -2,6 +2,8 @@
 App::uses('GoalousTestCase', 'Test');
 App::uses('AtobaraiResponseTraits', 'Test/Case/Service/Traits');
 App::import('Service', 'PaymentService');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
 
 use Goalous\Enum as Enum;
 
@@ -68,6 +70,12 @@ class PaymentServiceTest extends GoalousTestCase
         $this->CampaignService = ClassRegistry::init('CampaignService');
         $this->TeamMember = $this->TeamMember ?? ClassRegistry::init('TeamMember');
         $this->InvoiceHistoriesChargeHistory = ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $paymentKeyFlagClient = new PaymentFlagClient();
+
+        $paymentFlagKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_FLAG_NAME);
+        $paymentKeyFlagClient->write($paymentFlagKey, 1);
+        $paymentDateKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_START_DATE_NAME);
+        $paymentKeyFlagClient->write($paymentDateKey, '20191217');
     }
 
     function test_get_single()
@@ -633,6 +641,7 @@ class PaymentServiceTest extends GoalousTestCase
 
     public function test_calcRelatedTotalChargeByAddUsers_exception()
     {
+
         $teamId = 1;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, 0);
         $this->assertEquals($res['sub_total_charge'], 0);
@@ -3134,6 +3143,14 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $teamId = $this->createTeam();
         $this->createActiveUser($teamId);
+
+        /*
+         * set team payment setting
+         */
+        $createData = $this->createTestPaymentData(['team_id' => $teamId, 'payment_base_day' => 31]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
         $res = $this->PaymentService->calcChargeUserCount($teamId, 1);
         $this->assertEquals($res, 1);
 
@@ -4712,6 +4729,12 @@ class PaymentServiceTest extends GoalousTestCase
      */
     public function tearDown()
     {
+        $paymentKeyFlagClient = new PaymentFlagClient();
+
+        $paymentFlagKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_FLAG_NAME);
+        $paymentDateKey = new PaymentFlagKey(PaymentFlagKey::SWITCH_START_DATE_NAME);
+        $paymentKeyFlagClient->del($paymentFlagKey);
+        $paymentKeyFlagClient->del($paymentDateKey);
         unset($this->PaymentService);
         parent::tearDown();
     }

@@ -178,7 +178,7 @@ class CampaignService extends AppService
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $currentUserCount = $TeamMember->countChargeTargetUsers($teamId);
+        $currentUserCount = $TeamMember->countHeadCount($teamId);
         $campaignMaximumUsers = CampaignService::getMaxAllowedUsers($teamId);
 
         return $campaignMaximumUsers < ($currentUserCount + $additionalUsersCount);
@@ -226,7 +226,7 @@ class CampaignService extends AppService
 
         $res = [];
         $campaignTeam = $this->getCampaignTeam($teamId);
-        $chargeUserCnt = $TeamMember->countChargeTargetUsers($teamId);
+        $chargeUserCnt = $TeamMember->countHeadCount($teamId);
         $pricePlans = $this->findAllPlansByGroupId($campaignTeam['price_plan_group_id']);
         foreach ($pricePlans as $plan) {
             $currencyType = $plan['currency'];
@@ -410,7 +410,7 @@ class CampaignService extends AppService
         if (empty($pricePlan)) {
             return false;
         }
-        $chargeUserCount = $TeamMember->countChargeTargetUsers($teamId);
+        $chargeUserCount = $TeamMember->countHeadCount($teamId);
         if ($pricePlan['max_members'] < $chargeUserCount) {
             return false;
         }
