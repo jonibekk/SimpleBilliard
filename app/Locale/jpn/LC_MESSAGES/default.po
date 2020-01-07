@@ -6199,3 +6199,10 @@ msgstr "ゴールをつくりましょう"
 
 msgid "Create Goal"
 msgstr "ゴールをつくる"
+
+msgid "Arabic"
+msgstr "アラビア語"
+
+msgid "Bengali"
+msgstr "ベンガル語"
+
