@@ -6206,3 +6206,6 @@ msgstr "アラビア語"
 msgid "Bengali"
 msgstr "ベンガル語"
 
+msgid "Korean"
+msgstr "韓国語"
+
