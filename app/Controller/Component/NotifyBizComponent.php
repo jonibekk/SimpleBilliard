@@ -545,6 +545,12 @@ class NotifyBizComponent extends Component
         //exclude inactive users
         $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
+        // exclude mentioned
+        $members = $this->_fixReceiver($this->Team->current_team_id, $members, $post['Post']['body']);
+        if (!count($members)){
+            return;
+        } 
+
         // 共有した個人一覧
         $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
         //exclude inactive users
@@ -589,7 +595,7 @@ class NotifyBizComponent extends Component
 
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
-            json_encode([trim($post['Post']['body'])]) : null;
+            json_encode([MentionComponent::replaceMentionToSimpleReadable($post['Post']['body'])]) : null;
         $this->notify_option['options']['share_user_list'] = $share_user_list;
         $this->notify_option['options']['share_circle_list'] = $share_circle_list;
 
@@ -1586,7 +1592,7 @@ class NotifyBizComponent extends Component
             $this->notify_settings[$toUserId]['app'] = true;
         }
 
-        if ($type = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
+        if ($notify_type == NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
             if (!is_null($comment_id)) {
                 $comment = Hash::get($this->Post->Comment->read(null, $comment_id), 'Comment') ?? [];
             }
@@ -1606,7 +1612,7 @@ class NotifyBizComponent extends Component
                 'post_id'    => $post['Post']['id']
             ];
         }
-        if ($type = NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
+        if ($notify_type == NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
             $this->notify_option['model_id'] = $post_id;
             $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
             if (!empty($post['Post']['action_result_id'])) {
@@ -1903,6 +1909,7 @@ class NotifyBizComponent extends Component
         $cmd .= " -o " . ($this->Session->read('current_team_id') ?? $teamId);
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+
 
         exec($all_cmd);
     }
