@@ -1,9 +1,9 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
-App::import('Service/Paging', 'UnreadCircleListPagingService');
+App::import('Service/Paging', 'RecentCircleListPagingService');
 App::import('Lib/Paging', 'PagingRequest');
 
-class UnreadCircleListPagingServiceTest extends GoalousTestCase
+class RecentCircleListPagingServiceTest extends GoalousTestCase
 {
     public $fixtures = [
         'app.team',
@@ -18,10 +18,10 @@ class UnreadCircleListPagingServiceTest extends GoalousTestCase
         $pagingRequest->setCurrentTeamId(1);
         $pagingRequest->setCurrentUserId(1);
 
-        /** @var UnreadCircleListPagingService $UnreadCircleListPagingService */
-        $UnreadCircleListPagingService = ClassRegistry::init('UnreadCircleListPagingService');
+        /** @var RecentCircleListPagingService $RecentCircleListPagingService */
+        $RecentCircleListPagingService = ClassRegistry::init('RecentCircleListPagingService');
 
-        $res = $UnreadCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
+        $res = $RecentCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
         $this->assertCount(1, $res['data']);
         $this->assertEquals(2, $res['data'][0]['id']);
 
@@ -29,7 +29,7 @@ class UnreadCircleListPagingServiceTest extends GoalousTestCase
         $pagingRequest->setCurrentTeamId( 1);
         $pagingRequest->setCurrentUserId(1);
 
-        $res = $UnreadCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
+        $res = $RecentCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
 
         $this->assertCount(1, $res['data']);
         $this->assertEquals(1, $res['data'][0]['id']);
