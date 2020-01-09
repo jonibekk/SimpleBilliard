@@ -734,6 +734,7 @@ App::uses('AttachedFile', 'Model');
             "Comments": "<?= __("Comments") ?>",
             "Download CSV": "<?= __("Download CSV") ?>",
             "Downloading CSV...": "<?= __("Downloading CSV...") ?>",
+            "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

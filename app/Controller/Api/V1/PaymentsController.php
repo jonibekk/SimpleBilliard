@@ -332,7 +332,7 @@ class PaymentsController extends ApiController
 
         // Get campaign plan list
         $res['price_plans'] = $CampaignService->findPlansForUpgrading($teamId, $currentPricePlan);
-        $res['charge_users_count'] = $TeamMember->countChargeTargetUsers($teamId);
+        $res['charge_users_count'] = $TeamMember->countHeadCount($teamId);
         $res['current_price_plan_code'] = $currentPricePlan['code'];
         return $this->_getResponseSuccess($res);
     }
@@ -411,7 +411,7 @@ class PaymentsController extends ApiController
         }
 
         // Check if charge members don't over max members of upgrading plan
-        $chargeMemberCount = $TeamMember->countChargeTargetUsers($teamId);
+        $chargeMemberCount = $TeamMember->countHeadCount($teamId);
         if ($chargeMemberCount > $upgradePlan['max_members']) {
             return $this->_getResponseForbidden();
         }
