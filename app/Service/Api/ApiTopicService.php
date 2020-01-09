@@ -132,9 +132,11 @@ class ApiTopicService extends ApiService
             $TranslationService = ClassRegistry::init('TranslationService');
             $translationStatus = $TranslationService->canTranslate($topicDetail['team_id'], false);
 
-            /** @var TeamTranslationStatus $TeamTranslationStatus */
-            $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
-            $translationLimitReached = $TeamTranslationStatus->getUsageStatus($topicDetail['team_id'])->isLimitReached();
+            if ($translationStatus){
+                /** @var TeamTranslationStatus $TeamTranslationStatus */
+                $TeamTranslationStatus = ClassRegistry::init('TeamTranslationStatus');
+                $translationLimitReached = $TeamTranslationStatus->getUsageStatus($topicDetail['team_id'])->isLimitReached();
+            }
 
         } catch (Exception $e) {
             GoalousLog::error('Failed in getting translation status for message.', [
