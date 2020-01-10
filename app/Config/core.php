@@ -209,7 +209,8 @@ if (REDIS_SESSION_HOST) {
         ],
         'ini' => [
             'session.cookie_domain' => 'goalous.com',
-            'session.cookie_secure' => false
+            'session.cookie_secure' => false,
+            'session.cookie_path' => '/;  SameSite=Lax',
         ]
     ];
     $session_ini = [];
