@@ -23,7 +23,7 @@ class RecentCircleListPagingServiceTest extends GoalousTestCase
 
         $res = $RecentCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
         $this->assertCount(1, $res['data']);
-        $this->assertEquals(2, $res['data'][0]['id']);
+        $this->assertEquals(4, $res['data'][0]['id']);
 
         $pagingRequest = PagingRequest::decodeCursorToObject($res['cursor']);
         $pagingRequest->setCurrentTeamId( 1);
@@ -32,7 +32,7 @@ class RecentCircleListPagingServiceTest extends GoalousTestCase
         $res = $RecentCircleListPagingService->getDataWithPaging($pagingRequest, 1, [CircleExtender::EXTEND_MEMBER_INFO]);
 
         $this->assertCount(1, $res['data']);
-        $this->assertEquals(1, $res['data'][0]['id']);
-        $this->assertEmpty($res['cursor']);
+        $this->assertEquals(3, $res['data'][0]['id']);
+        $this->assertNotEmpty($res['cursor']);
     }
 }
