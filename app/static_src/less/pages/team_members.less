@@ -153,6 +153,7 @@
 
 .revoke-modal {
   &-wrapper {
+    z-index: 999;
     position: fixed;
     top: 0;
     left: 0;
@@ -162,16 +163,19 @@
   }
 
   &-area {
-    z-index: 999;
     border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 50%;
+    width: 90%;
     height: auto;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     background: #ffffff;
+
+    @media @small {
+      width: 50%;
+    }
   }
 
   &-close {
