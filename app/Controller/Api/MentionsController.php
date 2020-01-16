@@ -28,7 +28,6 @@ class MentionsController extends BasePagingController
                 break;
 
         }
-        // $error = $this->validatePostAccess($postId);
 
         if (!empty($error)) {
             return $error;
@@ -109,7 +108,6 @@ class MentionsController extends BasePagingController
         /** @var PostService $PostService */
         $CircleService = ClassRegistry::init('CircleService');
 
-        GoalousLog::error('enter');
         try {
             $access = $CircleService->checkUserAccessToCircle($this->getUserId(), (int)$circleId);
         } catch (GlException\GoalousNotFoundException $notFoundException) {

@@ -609,18 +609,6 @@ class CircleService extends AppService
                 break;
 
         }
-        /*
-        if (!empty($postId)) {
-            $circle = $Circle->getSharedSecretCircleByPostId($postId);
-            if (!empty($circle) && $circle['public_flg'] === false) {
-                $filterCircleIds = [$circle['id']];
-                $publicFlg = false;
-            }
-        }
-        if (empty($filterCircleIds)) {
-            $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
-        }
-         */
 
         $circles = $Circle->findByKeyword($keyword, $limit, $filterCircleIds, $publicFlg);
         return $circles;

@@ -16,7 +16,6 @@ class MentionPagingService extends BaseGetAllService
     {
         $conditions = $pagingRequest->getConditions();
         $keyword = Hash::get($conditions, 'keyword') ?? "";
-        // $postId = Hash::get($conditions, 'post_id');
 
         $teamId = $pagingRequest->getCurrentTeamId();
         $userId = $pagingRequest->getCurrentUserId();
