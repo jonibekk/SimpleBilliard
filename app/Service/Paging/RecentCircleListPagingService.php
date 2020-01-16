@@ -4,7 +4,7 @@ App::import('Lib/Paging', 'PagingRequest');
 App::uses('Circle', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
 
-class UnreadCircleListPagingService extends BasePagingService
+class RecentCircleListPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Circle';
 
@@ -68,6 +68,7 @@ class UnreadCircleListPagingService extends BasePagingService
     private function createCondition(PagingRequest $pagingRequest): array
     {
         $userId = $pagingRequest->getCurrentUserId();
+        $teamId = $pagingRequest->getCurrentTeamId();
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -77,9 +78,9 @@ class UnreadCircleListPagingService extends BasePagingService
         $subQuery = $db->buildStatement([
             'conditions' => [
                 'CircleMember.user_id' => $userId,
+                'CircleMember.team_id' => $teamId,
                 'CircleMember.del_flg' => false,
-                'CircleMember.get_notification_flg' => true,
-                'CircleMember.unread_count > 0'
+                'CircleMember.get_notification_flg' => true
             ],
             'fields'     => [
                 'CircleMember.circle_id'
