@@ -291,4 +291,52 @@ class InvitationsController extends ApiController
             'message' => $messageSuccess,
         ]);
     }
+
+    /**
+     * Revoke user invitation.
+     * This API takes email of target user.
+     *
+     * @return CakeResponse
+     */
+    public function post_revokeInvitation()
+    {
+
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
+        /** @var TeamMember $TeamMember */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        // request parameter
+        $email  = $this->request->data('email');
+
+        // validate
+        if (empty($email)) {
+            return $this->_getResponseBadFail(__('Param is invalid'));
+        }
+
+        //update Invites table
+        try {
+            $InvitationService->revokeInvitation($this->current_team_id, $email);
+        }
+        catch(RuntimeExcepttion $e) {
+            return $this->_getResponseBadFail('Error, ' . $e->getMessage());
+        }
+
+        //update TeamMembers table
+        try {
+            $TeamMemberService->updateDelFlgToRevoke($this->current_team_id, $email);
+        }
+        catch(RuntimeExcepttion $e) {
+            return $this->_getResponseBadFail('Error, ' . $e->getMessage());
+        }
+
+        $messageSuccess = __("Revoked %s people.", 1);
+        $this->Notification->outSuccess($messageSuccess);
+
+        return $this->_getResponseSuccess([
+            'message' => $messageSuccess,
+        ]);
+
+    }
+
 }

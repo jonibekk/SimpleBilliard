@@ -314,4 +314,58 @@ class TeamMemberService extends AppService
 
         $this->updateDefaultTranslationLanguage($teamId, $userId, $browserLanguages, false);
     }
+
+
+    /**
+     * Update del_flg to delete user.
+     *
+     * Usecase example
+     *  - Revoke inivitation
+     *
+     * - Update DB
+     *  - team_members
+     *
+     * @param int    $teamId
+     * @param string $emails
+     */
+    function updateDelFlgToRevoke(int $teamId, string $email)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Email $Invite */
+        $Email = ClassRegistry::init("Email");
+
+        $emailObj = $Email->find('first', [
+                'fields'     => [
+                    'user_id'
+                ],
+                'conditions' => [
+                    'email' => $email
+                ]
+            ]
+        );
+        $userId = Hash::get($emailObj,'Email.user_id');
+
+        if (empty($userId)) {
+            throw new GlException\GoalousNotFoundException("UserId not found");
+        }
+
+        $this->TransactionManager->begin();
+
+        try{
+            $TeamMember->deleteTeamMember($teamId, $userId);
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to delete team_members record to revoke invitation.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team_id' => $teamId,
+                'user_id' => $userId,
+                'email'   => $email
+            ]);
+            throw $e;
+        }
+
+        $this->TransactionManager->commit();
+    }
 }

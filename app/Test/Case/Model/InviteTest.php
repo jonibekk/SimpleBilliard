@@ -232,4 +232,73 @@ class InviteTest extends GoalousTestCase
         $result = $this->Invite->getUnverifiedWithEmailByUserId(100, 100);
         $this->assertEquals([], $result);
     }
+
+    function test_deleteInvite_success()
+    {
+
+        // regist test data
+        $teamId = 1000;
+        $email  = 'tester1000@isao.co.jp';
+        $userId = 25;
+
+        $this->Invite->save([
+            'team_id' => $teamId,
+            'email'   => $email,
+        ]);
+        $this->Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        $res1 = $this->Invite->find('first',[
+                'conditions' => [
+                    'team_id' => $teamId,
+                    'email'   => $email,
+                    'del_flg' => false
+                ]
+            ]
+        );
+        $this->assertEquals(count($res1), 1);
+
+        // exeute target function
+        $this->Invite->deleteInvite($teamId, $email);
+
+        $res2 = $this->Invite->find('first',[
+                'conditions' => [
+                    'team_id' => $teamId,
+                    'email'   => $email,
+                    'del_flg' => false
+                ]
+            ]
+        );
+
+        $this->assertEquals(count($res2), 0);
+    }
+
+    function test_deleteInvite_failure()
+    {
+        // regist test data
+        $teamId = '999';
+        $email  = 'tester999@isao.co.jp';
+        $userId = '25';
+        $this->Invite->save([
+            'team_id' => $teamId,
+            'email'   => $email,
+        ]);
+        $this->Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        $notExistEmail = 'tester000@isao.co.jp';
+        $errorMessage  = "Invite not found";
+
+        try{
+            // exeute target function
+            $this->Invite->deleteInvite($teamId, $notExistEmail);
+        }
+        catch(RuntimeException $e) {
+            $this->assertEquals($errorMessage, $e->getMessage());
+        }
+    }
 }

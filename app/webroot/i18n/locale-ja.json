@@ -49,7 +49,12 @@
     "TO_CHANGE_TO_NOT_ADMIN": "管理者から外す",
     "TO_CHANGE_TO_EVALUATEE": "評価対象者にする",
     "TO_CHANGE_TO_NOT_EVALUATEE": "評価対象者から外す",
-    "INVITE_AGAIN": "再招待する"
+    "INVITE_AGAIN": "再招待する",
+    "INVITE_REVOKE": "取り消す",
+    "INVITE_REVOKE_MODAL_TITLE": "招待を取り消す",
+    "INVITE_REVOKE_MODAL_TEXT": "本当に招待を取り消しますか？",
+    "INVITE_REVOKE_MODAL_TEXT_QUESTION": "",
+    "INVITE_REVOKE_CANCEL": "キャンセル"
   },
   "ACCESS_MESSAGE_DETAIL_MESSAGE": "メッセージが存在しないか、権限がありません。",
   "PUT_MESSAGE_FAIL": "メッセージの送信に失敗しました。",

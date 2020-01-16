@@ -322,6 +322,39 @@ class InvitationService extends AppService
     }
 
     /**
+     * Revoke users
+     * - Update DB
+     *  - invites
+     *
+     * @param int    $teamId
+     * @param string $emails
+     *
+     */
+    function revokeInvitation(int $teamId, string $email)
+    {
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init("Invite");
+
+        $this->TransactionManager->begin();
+
+        try {
+            $Invite->deleteInvite($teamId, $email);
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to delete invites record to revoke invitation.", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team_id' => $teamId,
+                'email'   => $email
+            ]);
+            throw $e;
+        }
+
+        $this->TransactionManager->commit();
+    }
+
+
+    /**
      * validate email string
      * return array for {Controller}->_getResponseValidationFail()
      *

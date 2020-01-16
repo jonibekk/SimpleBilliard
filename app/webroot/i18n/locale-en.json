@@ -49,7 +49,12 @@
     "TO_CHANGE_TO_NOT_ADMIN": "Remove admin",
     "TO_CHANGE_TO_EVALUATEE": "Add in evaluatee",
     "TO_CHANGE_TO_NOT_EVALUATEE": "Remove from the evaluation",
-    "INVITE_AGAIN": "Invite again"
+    "INVITE_AGAIN": "Invite again",
+    "INVITE_REVOKE": "Revoke",
+    "INVITE_REVOKE_MODAL_TITLE": "Delete invite",
+    "INVITE_REVOKE_MODAL_TEXT": "Are you sure you want to delete the invite for ",
+    "INVITE_REVOKE_MODAL_TEXT_QUESTION": "?",
+    "INVITE_REVOKE_CANCEL": "Cancel"
   },
   "ACCESS_MESSAGE_DETAIL_MESSAGE": "Access Failed.",
   "PUT_MESSAGE_FAIL": "Failed to send message.",

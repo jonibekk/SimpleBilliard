@@ -1288,6 +1288,17 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    function ajax_get_check_if_payment_timing() {
+        $this->_ajaxPreProcess();
+        $team_id = $this->Session->read('current_team_id');
+
+        $payment_timing_flag = PaymentTiming::checkIfPaymentTiming($team_id);
+        $res = [
+            'payment_timing_flag' => $payment_timing_flag,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
     /**
      * チームビジョンを追加
      */

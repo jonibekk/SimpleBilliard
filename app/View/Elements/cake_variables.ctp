@@ -163,6 +163,8 @@ App::uses('AttachedFile', 'Model');
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
             am: "/api/v1/invitations/reInvite",
+            revoke_invitation: "/api/v1/invitations/revokeInvitation",
+            check_if_payment_timing: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_check_if_payment_timing'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
