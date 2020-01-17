@@ -2,6 +2,7 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
+App::import('Service/Paging', 'UnreadCircleListPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
 App::import('Service', 'UserService');
@@ -146,6 +147,25 @@ class MeController extends BasePagingController
         $unreadPostsClient = new UnreadPostsClient();
 
         $data = $unreadPostsClient->read($unreadPostsKey)->get(true);
+
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    public function get_all_unread_circles()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var UnreadCircleListPagingService $UnreadCircleListPagingService */
+        $UnreadCircleListPagingService = ClassRegistry::init('UnreadCircleListPagingService');
+
+        $data = $UnreadCircleListPagingService->getDataWithPaging(
+            $pagingRequest,
+            $this->getPagingLimit(15),
+            [CircleExtender::EXTEND_MEMBER_INFO]);
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }

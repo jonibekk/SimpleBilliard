@@ -209,7 +209,11 @@ if (REDIS_SESSION_HOST) {
         ],
         'ini' => [
             'session.cookie_domain' => 'goalous.com',
-            'session.cookie_secure' => false
+            'session.cookie_secure' => false,
+            // setCookie SameSite hack for php under 7.3
+            // https://stackoverflow.com/a/46971326
+            // session handler running with app/Model/Datasource/Session/RedisSession.php
+            'session.cookie_path' => '/;  SameSite=Lax',
         ]
     ];
     $session_ini = [];

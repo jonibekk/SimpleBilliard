@@ -16,18 +16,20 @@ class MentionPagingService extends BaseGetAllService
     {
         $conditions = $pagingRequest->getConditions();
         $keyword = Hash::get($conditions, 'keyword') ?? "";
-        $postId = Hash::get($conditions, 'post_id');
+
         $teamId = $pagingRequest->getCurrentTeamId();
         $userId = $pagingRequest->getCurrentUserId();
+        $resourceId = Hash::get($conditions, 'resource_id');
+        $resourceType = Hash::get($conditions, 'resource_type');
 
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init('UserService');
-        $users = $UserService->findMentionItems($keyword, $teamId, $userId, $limit, $postId);
+        $users = $UserService->findMentionItems($keyword, $teamId, $userId, $limit, $resourceId, $resourceType);
         $processedUsers = $this->processUsers($users);
 
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
-        $circles = $CircleService->findMentionItems($keyword, $teamId, $userId, $limit, $postId);
+        $circles = $CircleService->findMentionItems($keyword, $teamId, $userId, $limit, $resourceId, $resourceType);
         $processedCircles = $this->processCircles($circles);
 
         return $this->mixAndSortResult($processedUsers, $processedCircles);;

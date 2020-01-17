@@ -15,6 +15,7 @@ App::import('Service', 'ExperimentService');
 App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');
+App::import('Model', 'HavingMentionTrait');
 
 /**
  * Post Model
@@ -45,6 +46,8 @@ use Goalous\Enum\Model\Post\PostResourceType as PostResourceType;
 
 class Post extends AppModel
 {
+    use HavingMentionTrait;
+    public $bodyProperty = 'body';
     /**
      * post type
      */

@@ -12,8 +12,22 @@ class MentionsController extends BasePagingController
 {
     public function get_search()
     {
-        $postId = $this->request->query('post_id');
-        $error = $this->validatePostAccess($postId);
+        $resourceId = $this->request->query('resource_id');
+        $resourceType = $this->request->query('resource_type');
+        switch ($resourceType) {
+            case 1:
+                $postId = $resourceId;
+                $error = $this->validatePostAccess($postId);
+                break;
+            case 2:
+                $circleId = $resourceId;
+                $error = $this->validateCircleAccess($circleId);
+                break;
+            default:
+                return null; 
+                break;
+
+        }
 
         if (!empty($error)) {
             return $error;
@@ -70,6 +84,41 @@ class MentionsController extends BasePagingController
         //Check if user belongs to a circle where the post is shared to
         if (!$access) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
+                ->getResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate access to post
+     *
+     * @param int  $postId
+     * @return CakeResponse|null
+     */
+    private function validateCircleAccess($circleId)
+    {
+        if (empty($circleId)) {
+            return null;
+        }
+        if (!AppUtil::isInt($circleId)) {
+            return ErrorResponse::badRequest()->getResponse();
+        }
+
+        /** @var PostService $PostService */
+        $CircleService = ClassRegistry::init('CircleService');
+
+        try {
+            $access = $CircleService->checkUserAccessToCircle($this->getUserId(), (int)$circleId);
+        } catch (GlException\GoalousNotFoundException $notFoundException) {
+            return ErrorResponse::notFound()->withException($notFoundException)->getResponse();
+        } catch (Exception $exception) {
+            return ErrorResponse::internalServerError()->withException($exception)->getResponse();
+        }
+
+        //Check if user belongs to a circle where the post is shared to
+        if (!$access) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this circle"))
                 ->getResponse();
         }
 
