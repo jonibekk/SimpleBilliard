@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Model/Entity', 'PostReadEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
@@ -73,6 +74,10 @@ class PostRead extends AppModel
             return;
         }
         $res = false;
+
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+
         try {
             $res = $this->bulkInsert($post_data, true, ['post_id']);
         } catch (PDOException $e) {
@@ -83,6 +88,7 @@ class PostRead extends AppModel
                 try {
                     $row = $this->save($data);
                     $res = $row ? true : false;
+                    $UnreadCirclePost->deleteSinglePost();
                 } catch (PDOException $e2) {
                     // 最低１件は例外発生するが無視する
                 }

@@ -4,6 +4,13 @@ App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
 App::uses('UnreadPostsKey', 'Model/Redis/UnreadPosts');
 App::uses('UnreadPostsData', 'Model/Redis/UnreadPosts');
 
+/**
+ * @deprecated Use UnreadCirclePost instead
+ *
+ * Class UnreadPostsClient
+ *
+ * TODO: Delete after releasing UnreadCirclePost
+ */
 class UnreadPostsClient extends BaseRedisClient implements InterfaceRedisClient
 {
     /**
@@ -11,7 +18,7 @@ class UnreadPostsClient extends BaseRedisClient implements InterfaceRedisClient
      *
      * @param UnreadPostsKey $key
      *
-     * @return UnreadPostsData r
+     * @return UnreadPostsData
      */
     public function read(UnreadPostsKey $key): UnreadPostsData
     {
@@ -43,7 +50,7 @@ class UnreadPostsClient extends BaseRedisClient implements InterfaceRedisClient
     /**
      * Delete the specified keys
      *
-     * @param SampleRedisKey $key
+     * @param UnreadPostsKey $key
      *
      * @return int deleted caches
      */

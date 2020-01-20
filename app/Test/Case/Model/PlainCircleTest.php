@@ -9,10 +9,10 @@ use Goalous\Enum as Enum;
 /**
  * PlainCircle Test Case
  *
- * @property PlainCircle $PlainCircle
+ * @property PlainCircle  $PlainCircle
  * @property CircleMember $CircleMember
- * @property TeamMember $TeamMember
- * @property User $User
+ * @property TeamMember   $TeamMember
+ * @property User         $User
  */
 class PlainCircleTest extends GoalousTestCase
 {
@@ -60,7 +60,7 @@ class PlainCircleTest extends GoalousTestCase
     {
         $teamId = 1;
         $allMemberIds = $this->CircleMember->find('all', [
-            'fields' => ['circle_id', 'user_id'],
+            'fields'     => ['circle_id', 'user_id'],
             'conditions' => ['team_id' => $teamId]
         ]);
 //print_r($allMemberIds);
@@ -80,7 +80,6 @@ class PlainCircleTest extends GoalousTestCase
             ['status' => Enum\Model\TeamMember\Status::INACTIVE],
             ['user_id' => 1, 'team_id' => 1]
         );
-
 
         // Public circle
         $circleId = 1;
@@ -123,7 +122,6 @@ class PlainCircleTest extends GoalousTestCase
         $circleId = 4;
         $res = $this->PlainCircle->getMembers($circleId);
         $this->assertEquals($res, [2]);
-
 
         /* User is not active */
         $this->User->updateAll(

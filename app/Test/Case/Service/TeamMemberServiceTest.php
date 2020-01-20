@@ -23,7 +23,8 @@ class TeamMemberServiceTest extends GoalousTestCase
         'app.team',
         'app.team_member',
         'app.team_translation_language',
-        'app.mst_translation_language'
+        'app.mst_translation_language',
+        'app.cache_unread_circle_post'
     );
 
     /**
@@ -185,7 +186,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertEquals("en", $defaultLanguage);
     }
 
-
     public function test_setDefaultTranslationLanguage_success()
     {
         /** @var TeamMember $TeamMember */
@@ -205,7 +205,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, "ms", false);
         $this->assertEquals("id", $TeamMember->getDefaultTranslationLanguage($teamId, $userId));
     }
-
 
     /**
      * @expectedException \Goalous\Exception\GoalousNotFoundException

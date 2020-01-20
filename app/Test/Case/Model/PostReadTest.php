@@ -272,9 +272,7 @@ class PostReadTest extends GoalousTestCase
         $result = $PostRead->filterUnreadPost($postIds, $circleId, $userId, true);
         $this->assertCount(1, $result);
         $this->assertEquals([6], $result);
-
     }
-
 
     private function insertNewPostRead(int $postId, int $userId, int $teamId)
     {

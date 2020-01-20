@@ -249,25 +249,6 @@ class PostShareCircleTest extends GoalousTestCase
         $this->assertContains(999, $result[2]);
     }
 
-    public function test_getPostInCirclesByPostId_success()
-    {
-        $this->insertNewData(999, 1, 1);
-        $this->insertNewData(999, 2, 1);
-
-        /** @var PostShareCircle $PostShareCircle */
-        $PostShareCircle = ClassRegistry::init('PostShareCircle');
-
-        $postIds = [999, 1];
-
-        $result = $PostShareCircle->getListOfPostByPostId($postIds);
-
-        $this->assertCount(2, $result);
-        $this->assertContains(1, $result[1]);
-        $this->assertContains(101, $result[1]);
-        $this->assertContains(999, $result[1]);
-        $this->assertContains(999, $result[2]);
-    }
-
     public function test_getShareCirclesAndMembers_success()
     {
         /** @var PostShareCircle $PostShareCircle */

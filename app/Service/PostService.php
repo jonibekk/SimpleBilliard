@@ -9,6 +9,7 @@ App::import('Service', 'VideoStreamService');
 App::import('Service', 'SearchPostFileService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
+App::import('Service', 'UnreadCirclePostService');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -509,8 +510,7 @@ class PostService extends AppService
         int $userId,
         int $teamId,
         array $files = []
-    ): PostEntity
-    {
+    ): PostEntity {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
@@ -610,6 +610,9 @@ class PostService extends AppService
             if (!empty($files)) {
                 $this->saveFiles($postId, $userId, $teamId, $files, false, 0, $circleId);
             }
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->addUnread($teamId, $circleId, $postId, $userId);
 
             $this->TransactionManager->commit();
 
@@ -623,10 +626,6 @@ class PostService extends AppService
         if ($TranslationService->canTranslate($teamId)) {
             $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
         }
-
-        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
-        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
-        $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
 
         return $savedPost;
     }
@@ -875,13 +874,14 @@ class PostService extends AppService
         }
 
         $modelsToDelete = [
-            'PostDraft'       => 'post_id',
-            'PostLike'        => 'post_id',
-            'PostMention'     => 'post_id',
-            'PostRead'        => 'post_id',
-            'PostShareCircle' => 'post_id',
-            'PostShareUser'   => 'post_id',
-            'Post'            => 'Post.id'
+            'PostDraft'        => 'post_id',
+            'PostLike'         => 'post_id',
+            'PostMention'      => 'post_id',
+            'PostRead'         => 'post_id',
+            'PostShareCircle'  => 'post_id',
+            'PostShareUser'    => 'post_id',
+            'UnreadCirclePost' => 'post_id',
+            'Post'             => 'Post.id'
         ];
 
         try {
@@ -936,8 +936,15 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function saveFiles(int $postId, int $userId, int $teamId, array $files, bool $isDraft = false, int $postFileIndex = 0, ?int $circleId = null): bool
-    {
+    public function saveFiles(
+        int $postId,
+        int $userId,
+        int $teamId,
+        array $files,
+        bool $isDraft = false,
+        int $postFileIndex = 0,
+        ?int $circleId = null
+    ): bool {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
         /** @var AttachedFileService $AttachedFileService */
@@ -983,7 +990,7 @@ class PostService extends AppService
                             $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
                         }
 
-                        if( ( !$isDraft ) && ( $circleId !== null ) ) {
+                        if ((!$isDraft) && ($circleId !== null)) {
                             $SearchPostFileService->addAttachedFile(
                                 $teamId,
                                 $userId,
@@ -994,28 +1001,31 @@ class PostService extends AppService
                             );
                         }
 
-                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached',
+                            $uploadedFile);
                     }
-                } else if (isset($file['is_video'])) {
-                    // VideoStream (file is already in transcode)
-                    /** @var VideoStreamService $VideoStreamService */
-                    $VideoStreamService = ClassRegistry::init('VideoStreamService');
-                    if (!$VideoStreamService->isVideoStreamBelongsToTeam($file['video_stream_id'], $teamId)) {
-                        // If video_stream is not belongs to team, skip adding to resource.
-                        continue;
-                    }
-                    if ($isDraft) {
-                        $postResource = $PostResourceService->addResourceDraft(
-                            $postId,
-                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
-                            $file['video_stream_id'],
-                            $postFileIndex);
-                    } else {
-                        $PostResourceService->addResourcePost(
-                            $postId,
-                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
-                            $file['video_stream_id'],
-                            $postFileIndex);
+                } else {
+                    if (isset($file['is_video'])) {
+                        // VideoStream (file is already in transcode)
+                        /** @var VideoStreamService $VideoStreamService */
+                        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+                        if (!$VideoStreamService->isVideoStreamBelongsToTeam($file['video_stream_id'], $teamId)) {
+                            // If video_stream is not belongs to team, skip adding to resource.
+                            continue;
+                        }
+                        if ($isDraft) {
+                            $postResource = $PostResourceService->addResourceDraft(
+                                $postId,
+                                Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                                $file['video_stream_id'],
+                                $postFileIndex);
+                        } else {
+                            $PostResourceService->addResourcePost(
+                                $postId,
+                                Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                                $file['video_stream_id'],
+                                $postFileIndex);
+                        }
                     }
                 }
                 $postFileIndex++;
@@ -1086,13 +1096,14 @@ class PostService extends AppService
 
             if (!empty($newResources)) {
                 //get circle id, if possible
-                $postCircles = $PostShareCircle->getShareCircleList( $postId, $teamId );
-                $circleId = ( count( $postCircles ) > 0 ) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
+                $postCircles = $PostShareCircle->getShareCircleList($postId, $teamId);
+                $circleId = (count($postCircles) > 0) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
 
                 //save ressources
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
-                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
+                $this->saveFiles($postId, $userId, $teamId, $newResources, false,
+                    $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -1221,7 +1232,9 @@ class PostService extends AppService
             if (isset($resource['is_video']) && $resource['is_video']) {
                 $groupedResource[Enum\Model\Post\PostResourceType::VIDEO_STREAM][] = $resource['video_stream_id'];
             }
-            if (!array_key_exists('resource_type', $resource)) continue;
+            if (!array_key_exists('resource_type', $resource)) {
+                continue;
+            }
             $groupedResource[$resource['resource_type']][] = $resource['id'];
         }
 

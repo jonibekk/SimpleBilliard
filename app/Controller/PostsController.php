@@ -6,6 +6,7 @@ App::import('Service', 'PostDraftService');
 App::import('Service', 'TranslationService');
 App::uses('TeamStatus', 'Lib/Status');
 App::uses('Translation', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::uses('Video', 'Model');
 App::uses('VideoStream', 'Model');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -326,6 +327,10 @@ class PostsController extends AppController
 
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
             AttachedFile::TYPE_MODEL_POST);
+
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+        $UnreadCirclePost->deleteAllByPost($this->Post->id);
 
         // Delete translations
         /** @var Translation $Translation */
