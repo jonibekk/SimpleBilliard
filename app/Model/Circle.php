@@ -237,6 +237,7 @@ class Circle extends AppModel
             ],
             'limit'      => $limit,
         ];
+    
         $res = $this->useType()->find('all', $options);
         return Hash::extract($res, '{n}.Circle') ?? [];
     }
