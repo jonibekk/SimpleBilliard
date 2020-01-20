@@ -19,8 +19,8 @@ class MentionPagingService extends BaseGetAllService
 
         $teamId = $pagingRequest->getCurrentTeamId();
         $userId = $pagingRequest->getCurrentUserId();
-        $resourceId = Hash::get($conditions, 'resource_id');
-        $resourceType = Hash::get($conditions, 'resource_type');
+        $resourceId = $pagingRequest->getQuery('resource_id');
+        $resourceType = $pagingRequest->getQuery('resource_type');
 
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init('UserService');
