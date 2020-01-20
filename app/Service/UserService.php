@@ -7,6 +7,7 @@ App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 
+use Goalous\Enum as Enum;
 /**
  * Class UserService
  */
@@ -150,7 +151,7 @@ class UserService extends AppService
         /** @var User $User */
         $User = ClassRegistry::init('User');
         switch ($resourceType) {
-            case 1:
+            case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
                 if (!empty($postId)) {
                     $circle = $Circle->getSharedSecretCircleByPostId($postId);
@@ -159,7 +160,7 @@ class UserService extends AppService
                     $secretCircleId = null;
                 }
                 break;
-            case 2:
+            case Enum\MentionSearchType::POST:
                 $circleId = $resourceId;
                 if (!empty($circleId)) {
                     $circle = $Circle->getById($circleId);
