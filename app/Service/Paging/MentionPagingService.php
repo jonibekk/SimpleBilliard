@@ -20,7 +20,7 @@ class MentionPagingService extends BaseGetAllService
         $teamId = $pagingRequest->getCurrentTeamId();
         $userId = $pagingRequest->getCurrentUserId();
         $resourceId = $pagingRequest->getQuery('resource_id');
-        $resourceType = $pagingRequest->getQuery('resource_type');
+        $resourceType = $pagingRequest->getQuery('resource_type') ?? Enum\MentionSearchType::COMMENT;
 
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init('UserService');
