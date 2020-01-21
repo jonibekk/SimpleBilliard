@@ -3,6 +3,8 @@ App::uses('AppModel', 'Model');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('View', 'View');
 
+use Goalous\Exception as GlException;
+
 /**
  * Invite Model
  *
@@ -391,5 +393,39 @@ class Invite extends AppModel
                 ]
             ]
         ]);
+    }
+
+
+    /**
+     * Delete Invite.
+     * Update del_flg and deleted.
+     *
+     * @param int $teamId
+     * @param string $email
+     *
+     */
+    public function deleteInvite(int $teamId, string $email)
+    {
+        $invite = $this->find('first',[
+                'conditions' => [
+                    'team_id' => $teamId,
+                    'email'   => $email,
+                    'del_flg' => false
+                ]
+            ]
+        );
+
+        if (empty($invite)) {
+            throw new GlException\GoalousNotFoundException("Invite not found");
+        }
+
+        $this->id = $invite["Invite"]["id"];
+
+        $newData = [
+            'del_flg' => true,
+            'deleted' => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $this->save($newData, false);
     }
 }

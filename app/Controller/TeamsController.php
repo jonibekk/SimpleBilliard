@@ -14,6 +14,7 @@ App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::import('Controller/Traits', 'AuthTrait');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 use Goalous\Exception as GlException;
@@ -1284,6 +1285,19 @@ class TeamsController extends AppController
         $invite_member_list = $this->Team->Invite->getInviteUserList($team_id);
         $res = [
             'user_info' => $invite_member_list,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    function ajax_get_check_if_payment_timing() {
+        $this->_ajaxPreProcess();
+        $team_id = $this->Session->read('current_team_id');
+
+        /** @var PaymentTiming $PaymentTiming */
+        $PaymentTiming = ClassRegistry::init("PaymentTiming");
+        $paymentTimingFlag = $PaymentTiming->checkIfPaymentTiming($team_id);
+        $res = [
+            'payment_timing_flag' => $paymentTimingFlag,
         ];
         return $this->_ajaxGetResponse($res);
     }

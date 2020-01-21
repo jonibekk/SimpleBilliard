@@ -196,14 +196,33 @@
                                     <a role="menuitem" tabindex="-1"
                                        ng-click="editInviteEmail('reinviteUser'+$index, $index)">{{ 'TEAM_MEMBER_LIST.INVITE_AGAIN' | translate}}</a>
                                 </li>
-
+                                <li role="presentation" ng-if="paymentTimingFlag">
+                                    <a role="menuitem" tabindex="-1" class="js-modal-open"
+                                    ng-click="modalShow($index, item.Invite.email )">{{ 'TEAM_MEMBER_LIST.INVITE_REVOKE' | translate}}</a>
+                                </li>
                             </ul>
                         </div>
-
                     </div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
+<div class="revoke-modal-wrapper" ng-show="revokeModalShowFlag">
+    <div class="revoke-modal-area">
+        <button type="button" class="close font_33px close-design revoke-modal-close" ng-click="modalHide()">
+            <span class="close-icon">&times;</span></button>
+        <h3 class="revoke-modal-title">{{ 'TEAM_MEMBER_LIST.INVITE_REVOKE_MODAL_TITLE' | translate }}</h3>
+        <p class="revoke-modal-text">
+            {{ 'TEAM_MEMBER_LIST.INVITE_REVOKE_MODAL_TEXT' | translate }}<br>
+            {{ revokeTargetEmail }} {{ 'TEAM_MEMBER_LIST.INVITE_REVOKE_MODAL_TEXT_QUESTION' | translate }}
+        </p>
+        <hr>
+        <div class="col-xs-12 revoke-modal-button">
+            <button type="button" class="btn revoke-modal-button-cancel" ng-click="modalHide()">{{ 'TEAM_MEMBER_LIST.INVITE_REVOKE_CANCEL' | translate }}</button>
+            <button type="button" class="btn revoke-modal-button-execute" ng-click="revokeInvitation(revokeTargetIndex, revokeTargetEmail);modalHide()">{{ 'TEAM_MEMBER_LIST.INVITE_REVOKE_MODAL_TITLE' | translate }}</button>
+        </div>
+    </div>
+</div>
+
 <!-- end app/webroot/template/team_member_list.html -->

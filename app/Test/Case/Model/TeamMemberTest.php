@@ -2339,6 +2339,38 @@ class TeamMemberTest extends GoalousTestCase
         $TeamMember->getDefaultTranslationLanguage($teamId, $userId);
     }
 
+    public function test_deleteTeamMember_success()
+    {
+        $userId = 1;
+        $teamId = 1;
+
+        $res1 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNotNull($res1);
+
+        // exeute target function
+        $this->TeamMember->deleteTeamMember($teamId, $userId);
+
+        $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNull($res2);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_deleteTeamMember_failure()
+    {
+        $userId = 1;
+        $teamId = 2;
+
+        $res1 = $this->TeamMember->getAllMemberUserIdList();
+
+        // exeute target function
+        $this->TeamMember->deleteTeamMember($teamId, $userId);
+
+        $res2 = $this->TeamMember->getAllMemberUserIdList();
+        $this->assertCount($res1, $res2);
+    }
+
     public function test_getUnique()
     {
         $res = $this->TeamMember->getUnique(1, 1);

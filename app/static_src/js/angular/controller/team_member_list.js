@@ -1,4 +1,4 @@
-app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
+app.controller("TeamMemberMainController", function ($scope, $http, $sce, $modal) {
 
         var url_list = cake.url;
         var active_member_list = [];
@@ -39,6 +39,9 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             $scope.invite_msg = [];
             $scope.invite_loader = [];
             $scope.isDisabled = true;
+            $scope.revokeModalShowFlag = false;
+            $scope.revokeTargetIndex = null;
+            $scope.revokeTargetEmail = '';
         };
         init();
 
@@ -87,6 +90,9 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                         invite_list[key].Invite.result = '';
                     });
                     $scope.invite_list = invite_list;
+                });
+                $http.get(url_list.check_if_payment_timing).success(function (data) {
+                    $scope.paymentTimingFlag = data.payment_timing_flag;
                 });
             } else {
                 init();
@@ -153,6 +159,37 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             document[form].username.focus();
             document.getElementsByClassName("dropdown-toggle-"+index)[0].classList.add('remove');
         };
+
+        $scope.revokeInvitation = function(index, email) {
+            var revokeData = {'email':email, 'data[_Token][key]': cake.data.csrf_token.key};
+            $http({
+                url: url_list.revoke_invitation,
+                method: "POST",
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: $.param(revokeData)
+            }).then(function successCallback(response) {
+                document.getElementsByClassName("dropdown-toggle-"+index)[0].classList.add('remove');
+                $scope.invite_list[index].Invite.result = 'success_revoke';
+                $scope.invite_list[index].Invite.feedback = "Revoke "+email;
+            },function errorCallback(response){
+                document.getElementsByClassName("dropdown-toggle-"+index)[0].classList.add('remove');
+                $scope.invite_list[index].Invite.result = 'error';
+                $scope.invite_list[index].Invite.feedback = response.data.message;
+            });
+        };
+
+        // モーダル表示
+        $scope.modalShow = function(index, email) {
+            $scope.revokeModalShowFlag = true;
+            $scope.revokeTargetIndex = index;
+            $scope.revokeTargetEmail = email;
+        }
+        // モーダル非表示
+        $scope.modalHide = function() {
+            $scope.revokeModalShowFlag = false;
+            $scope.revokeTargetIndex = null;
+            $scope.revokeTargetEmail = '';
+        }
 
         $scope.setAdminUserFlag = function (index, member_id, admin_flg) {
             var change_admin_user_flag_url = url_list.p + member_id + '/' + admin_flg;
