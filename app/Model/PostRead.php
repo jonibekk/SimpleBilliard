@@ -75,8 +75,8 @@ class PostRead extends AppModel
         }
         $res = false;
 
-        /** @var UnreadCirclePost $UnreadCirclePost */
-        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
 
         try {
             $res = $this->bulkInsert($post_data, true, ['post_id']);
@@ -88,7 +88,7 @@ class PostRead extends AppModel
                 try {
                     $row = $this->save($data);
                     $res = $row ? true : false;
-                    $UnreadCirclePost->deleteSinglePost();
+                    $UnreadCirclePostService->deletePostCache($data['post_id']);
                 } catch (PDOException $e2) {
                     // 最低１件は例外発生するが無視する
                 }

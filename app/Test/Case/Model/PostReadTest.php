@@ -27,6 +27,7 @@ class PostReadTest extends GoalousTestCase
         'app.circle',
         'app.circle_member',
         'app.team',
+        'app.cache_unread_circle_post'
     );
 
     /**

@@ -114,7 +114,7 @@ class UnreadCirclePostTest extends GoalousTestCase
         $this->assertEquals(2, $count);
 
         $count = $UnreadCirclePost->countUserUnreadInCircle(2, 2);
-        $this->assertEquals(2, $count);
+        $this->assertEquals(1, $count);
 
         $count = $UnreadCirclePost->countPostUnread(1, 1);
         $this->assertEquals(4, $count);
