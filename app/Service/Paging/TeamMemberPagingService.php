@@ -65,11 +65,7 @@ class TeamMemberPagingService extends BasePagingService
 
     protected function extendPagingResult(array &$resultArray, PagingRequest $request, array $options = [])
     {
-        if ($this->includeExt($options, self::EXTEND_USER)) {
-            /** @var UserDataExtender $UserDataExtender */
-            $UserDataExtender = ClassRegistry::init('UserDataExtender');
-            $resultArray = $UserDataExtender->extend($resultArray, "{n}.user_id");
-        }
+        //TODO
     }
 
     private function createSearchCondition(PagingRequest $request): array

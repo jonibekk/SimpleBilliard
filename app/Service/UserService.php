@@ -7,6 +7,7 @@ App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 
+use Goalous\Enum as Enum;
 /**
  * Class UserService
  */
@@ -135,9 +136,10 @@ class UserService extends AppService
      * @param int $userId
      * @param int $limit
      * @param int|null $postId: Affection range by post (especially post is in secret circle, search range is only target secret circle members)
+     * @param int      $resourceType: 1, comment; 2, post;
      * @return array
      */
-    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $postId = null) : array
+    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $resourceId = null, $resourceType = 1) : array
     {
         $keyword = trim($keyword);
         if (strlen($keyword) == 0) {
@@ -148,15 +150,41 @@ class UserService extends AppService
         $Circle = ClassRegistry::init('Circle');
         /** @var User $User */
         $User = ClassRegistry::init('User');
+        switch ($resourceType) {
+            case Enum\MentionSearchType::COMMENT:
+                $postId = $resourceId;
+                if (!empty($postId)) {
+                    $circle = $Circle->getSharedSecretCircleByPostId($postId);
+                    $secretCircleId = !empty($circle) && $circle['public_flg'] === false ? $circle['id'] : null;
+                } else {
+                    $secretCircleId = null;
+                }
+                break;
+            case Enum\MentionSearchType::POST:
+                $circleId = $resourceId;
+                if (!empty($circleId)) {
+                    $circle = $Circle->getById($circleId);
+                    $secretCircleId = !empty($circle) && $circle['public_flg'] === false ? $circle['id'] : null;
+                } else {
+                    $secretCircleId = null;
+                }
+                break;
+            default:
+                $secretCircleId = null;
+                break;
 
+        }
+        /*
         if (!empty($postId)) {
             $circle = $Circle->getSharedSecretCircleByPostId($postId);
             $secretCircleId = !empty($circle) && $circle['public_flg'] === false ? $circle['id'] : null;
         } else {
             $secretCircleId = null;
         }
+         */
 
         $users = $User->findByKeywordRangeCircle($keyword, $teamId, $userId, $limit, true, $secretCircleId);
+
         return $users;
     }
 }

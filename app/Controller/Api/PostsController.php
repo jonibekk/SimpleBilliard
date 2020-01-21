@@ -87,8 +87,9 @@ class PostsController extends BasePagingController
             }
 
             $res = $PostService->addCirclePost($post, $circleId, $this->getUserId(), $this->getTeamId(), $files);
+            $mentionedUserIds = $this->Mention->getUserList($post['body'], $this->getTeamId(), $this->getUserId());
 
-            $this->notifyNewPost($res, $circleId);
+            $this->notifyNewPost($res, $circleId, $mentionedUserIds);
 
             /** @var TeamTranslationLanguage $TeamTranslationLanguage */
             $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
@@ -129,7 +130,7 @@ class PostsController extends BasePagingController
      * @param PostEntity $newPost
      * @param int        $circleId
      */
-    private function notifyNewPost(PostEntity $newPost, int $circleId)
+    private function notifyNewPost(PostEntity $newPost, int $circleId, array $mentionedUserIds = [])
     {
         // Notify to other members
         $postedPostId = $newPost['id'];
@@ -137,11 +138,39 @@ class PostsController extends BasePagingController
 
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
+        
+        $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
+                    $postedPostId,
+                    null,
+                    $mentionedUserIds,
+                    $newPost['team_id'],
+                    $newPost['user_id']
+                );
+         
 
         /** @var PostPusherService $PostPusherService */
         $PostPusherService = ClassRegistry::init('PostPusherService');
         $PostPusherService->setSocketId($this->getSocketId());
         $PostPusherService->sendFeedNotification($circleId, $newPost);
+    }
+
+    /**
+     * Notify updated post to mentioned members
+     *
+     * @param PostEntity $newPost
+     * @param int        $circleId
+     */
+    private function notifyUpdatePost(int $postId, int $userId, int $teamId, array $mentionedUserIds = [])
+    {
+        $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
+                    $postId,
+                    null,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
     }
 
 
@@ -297,7 +326,11 @@ class PostsController extends BasePagingController
 
         try {
             /** @var PostEntity $newPost */
-            $newPost = $PostService->editPost($newBody, $postId, $this->getUserId(), $this->getTeamId(), $resources);
+            $teamId = $this->getTeamId();
+            $userId = $this->getUserId();
+            $newPost = $PostService->editPost($newBody, $postId, $userId, $teamId, $resources);
+            $mentionedUserIds = $this->Mention->getUserList($newPost['body'], $teamId, $userId);
+            $this->notifyUpdatePost($postId, $userId, $teamId, $mentionedUserIds);
         } catch (GlException\GoalousNotFoundException $exception) {
             return ErrorResponse::notFound()->withException($exception)->getResponse();
         } catch (Exception $e) {
