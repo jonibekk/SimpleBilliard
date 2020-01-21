@@ -382,6 +382,7 @@ class CircleService extends AppService
                     sprintf("The circle doesn't exist. circle_id:%d", $circleId)
                 );
             }
+            $this->TransactionManager->begin();
             // Remove circle member
             if (!$CircleMember->remove($circleId, $userId)) {
                 throw new Exception(
@@ -420,7 +421,9 @@ class CircleService extends AppService
             /** @var UnreadCirclePost $UnreadCirclePost */
             $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
             $UnreadCirclePost->deleteCircleUser($circleId, $userId);
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
+            $this->TransactionManager->rollback();
             CakeLog::error($e->getMessage());
             CakeLog::error($e->getTraceAsString());
             return false;

@@ -51,7 +51,7 @@ class UnreadCirclePostService extends AppService
      * @param int $postId
      * @param int $excludedUserId
      */
-    public function addUnread(int $teamId, int $circleId, int $postId, int $excludedUserId)
+    public function addUnread(int $teamId, int $circleId, int $postId, int $excludedUserId): void
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
@@ -68,7 +68,10 @@ class UnreadCirclePostService extends AppService
 
         try {
             $this->TransactionManager->begin();
+
             $UnreadCirclePost->addMany($teamId, $circleId, $userIds, $postId);
+            $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $excludedUserId);
+
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
@@ -89,6 +92,8 @@ class UnreadCirclePostService extends AppService
      */
     public function deleteUserCacheInTeam(int $teamId, int $userId): void
     {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
         /** @var UnreadCirclePost $UnreadCirclePost */
         $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
 
@@ -96,6 +101,7 @@ class UnreadCirclePostService extends AppService
             $this->TransactionManager->begin();
 
             $UnreadCirclePost->deleteByTeamUser($teamId, $userId);
+            $CircleMember->resetUnreadCountInAllCircles($teamId, $userId);
 
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
@@ -132,6 +138,40 @@ class UnreadCirclePostService extends AppService
                 'message' => $exception->getMessage(),
                 'trace'   => $exception->getTraceAsString(),
                 'team_id' => $teamId
+            ]);
+        }
+    }
+
+    /**
+     * Delete all entries of a post, and update relevant data
+     *
+     * @param int $postId
+     */
+    public function deletePostCache(int $postId): void
+    {
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+
+        $entries = $UnreadCirclePost->getPostCache($postId);
+
+        try {
+            $this->TransactionManager->begin();
+
+            foreach ($entries as $entry) {
+                $CircleMember->decrementUnreadCount($entry['circle_id'], $entry['user_id']);
+            }
+
+            $UnreadCirclePost->deleteAllByPost($postId);
+
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Error in deleting post cache.', [
+                'message' => $exception->getMessage(),
+                'trace'   => $exception->getTraceAsString(),
+                'post_id' => $postId
             ]);
         }
     }

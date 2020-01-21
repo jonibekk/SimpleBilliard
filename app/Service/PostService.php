@@ -587,15 +587,6 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
-            // Update unread post numbers if specified sharing circle
-            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId)) {
-                GoalousLog::error($errorMessage = 'failed increment unread count', [
-                    'post.id'    => $postId,
-                    'circles.id' => $circleId,
-                    'teams.id'   => $teamId,
-                ]);
-                throw new RuntimeException('Error on adding post: ' . $errorMessage);
-            }
             // Update last_post_created in circle
             if (false === $Circle->updateLatestPosted($circleId)) {
                 GoalousLog::error($errorMessage = 'failed updating last post created', [
@@ -880,7 +871,6 @@ class PostService extends AppService
             'PostRead'         => 'post_id',
             'PostShareCircle'  => 'post_id',
             'PostShareUser'    => 'post_id',
-            'UnreadCirclePost' => 'post_id',
             'Post'             => 'Post.id'
         ];
 
@@ -912,6 +902,11 @@ class PostService extends AppService
                 $PostResourceService = ClassRegistry::init('PostResourceService');
                 $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
             }
+
+            //Delete cache and update unread count
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->deletePostCache($postId);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {

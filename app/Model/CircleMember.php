@@ -993,4 +993,40 @@ class CircleMember extends AppModel
 
         return array_values($users);
     }
+
+    /**
+     * Decrement unread count of a circle member
+     *
+     * @param int $circleId
+     * @param int $userId
+     */
+    public function decrementUnreadCount(int $circleId, int $userId): void
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circleId,
+            'CircleMember.user_id'   => $userId,
+        ];
+
+        $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count - 1'], $conditions);
+    }
+
+    /**
+     * Reset all unread counts in all joined circles in a team
+     *
+     * @param int $teamId
+     * @param int $userId
+     */
+    public function resetUnreadCountInAllCircles(int $teamId, int $userId): void
+    {
+        $conditions = [
+            'CircleMember.team_id' => $teamId,
+            'CircleMember.user_id' => $userId
+        ];
+
+        $newData = [
+            'CircleMember.unread_count' => 0
+        ];
+
+        $this->updateAll($newData, $conditions);
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppModel', 'Model');
+App::import('Model/Entity', 'UnreadCirclePostEntity');
 
 use Goalous\Enum\DataType\DataType as DataType;
 
@@ -105,6 +106,24 @@ class UnreadCirclePost extends AppModel
     }
 
     /**
+     * Get all cache of a post
+     *
+     * @param int $postId
+     *
+     * @return UnreadCirclePostEntity[]
+     */
+    public function getPostCache(int $postId): array
+    {
+        $option = [
+            'conditions' => [
+                'post_id' => $postId,
+            ],
+        ];
+
+        return $this->useType()->useEntity()->find('all', $option);
+    }
+
+    /**
      * Add single new unread information
      *
      * @param int $teamId
@@ -116,15 +135,7 @@ class UnreadCirclePost extends AppModel
      */
     public function add(int $teamId, int $circleId, int $userId, int $postId): void
     {
-        $newData = [
-            'team_id'   => $teamId,
-            'circle_id' => $circleId,
-            'user_id'   => $userId,
-            'post_id'   => $postId
-        ];
-
-        $this->create();
-        $this->save($newData, false);
+        $this->addMany($teamId, $circleId, [$userId], $postId);
     }
 
     /**
