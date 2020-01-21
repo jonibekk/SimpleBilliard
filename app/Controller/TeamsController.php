@@ -1297,7 +1297,7 @@ class TeamsController extends AppController
         $PaymentTiming = ClassRegistry::init("PaymentTiming");
         $paymentTimingFlag = $PaymentTiming->checkIfPaymentTiming($team_id);
         $res = [
-            'paymentTimingFlag' => $paymentTimingFlag,
+            'payment_timing_flag' => $paymentTimingFlag,
         ];
         return $this->_ajaxGetResponse($res);
     }
