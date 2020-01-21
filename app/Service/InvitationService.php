@@ -330,7 +330,7 @@ class InvitationService extends AppService
      * @param string $emails
      *
      */
-    function revokeInvitation(int $teamId, string $email)
+    public function revokeInvitation(int $teamId, string $email)
     {
         /** @var Invite $Invite */
         $Invite = ClassRegistry::init("Invite");

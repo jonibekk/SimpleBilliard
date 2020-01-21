@@ -3,6 +3,8 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'TeamMemberService');
 App::uses('TeamMember', 'Model');;
 App::uses('User', 'Model');
+App::uses('Email', 'Model');
+
 
 /**
  * @property TeamMemberService $TeamMemberService
@@ -259,14 +261,13 @@ class TeamMemberServiceTest extends GoalousTestCase
         ]);
 
         $res1 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertEquals(count($res1), 1);
+        $this->assertNotNull($res1);
 
         // excute target function
         $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
 
         $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertEquals(count($res2), 0);
-
+        $this->assertNull($res2);
     }
 
     public function test_updateDelFlgToRevokeOnlyCurrentTeam_success()
@@ -304,7 +305,7 @@ class TeamMemberServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res1), 2);
+        $this->assertCount(2, $res1);
 
         // excute target function
         $this->TeamMemberService->updateDelFlgToRevoke($teamId1, $email);
@@ -316,9 +317,12 @@ class TeamMemberServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res2), 1);
+        $this->assertCount(1, $res2);
     }
 
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
     public function test_updateDelFlgToRevokeNotFoundUserId_failure()
     {
 
@@ -333,8 +337,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $userIdFailure = 998;
         $emailFailure  = 'test998@isao.co.jp';
 
-        $errorMessage = "UserId not found";
-
         $this->TeamMember->create();
         $this->TeamMember->save([
             'user_id'    => $userId,
@@ -347,20 +349,18 @@ class TeamMemberServiceTest extends GoalousTestCase
         ]);
 
         $res1 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertEquals(count($res1), 1);
+        $this->assertNotNull($res1);
 
-        try {
-            $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
-        }
-        catch(RuntimeException $e) {
-            // exeute target function
-            $this->assertEqual($errorMessage, $e->getMessage());
-        }
+        // exeute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
 
         $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertEquals(count($res1), count($res2));
+        $this->assertNotNull($res2);
     }
 
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
     public function test_updateDelFlgToRevokeAlreadyDeleted_failure()
     {
 
@@ -371,8 +371,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $teamId = 999;
         $userId = 999;
         $email  = 'test999@isao.co.jp';
-
-        $errorMessage = "Team member not found";
 
         $this->TeamMember->create();
         $this->TeamMember->save([
@@ -386,13 +384,7 @@ class TeamMemberServiceTest extends GoalousTestCase
             'user_id' => $userId,
         ]);
 
-        try {
-            // excute target function
-            $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
-        }
-        catch(RuntimeException $e) {
-            // exeute target function
-            $this->assertEqual($errorMessage, $e->getMessage());
-        }
+        // excute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
     }
 }

@@ -233,7 +233,7 @@ class InviteTest extends GoalousTestCase
         $this->assertEquals([], $result);
     }
 
-    function test_deleteInvite_success()
+    public function test_deleteInvite_success()
     {
 
         // regist test data
@@ -258,7 +258,7 @@ class InviteTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res1), 1);
+        $this->assertCount(1, $res1);
 
         // exeute target function
         $this->Invite->deleteInvite($teamId, $email);
@@ -272,10 +272,13 @@ class InviteTest extends GoalousTestCase
             ]
         );
 
-        $this->assertEquals(count($res2), 0);
+        $this->assertCount(0, $res2);
     }
 
-    function test_deleteInvite_failure()
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_deleteInvite_failure()
     {
         // regist test data
         $teamId = '999';
@@ -291,14 +294,8 @@ class InviteTest extends GoalousTestCase
         ]);
 
         $notExistEmail = 'tester000@isao.co.jp';
-        $errorMessage  = "Invite not found";
 
-        try{
-            // exeute target function
-            $this->Invite->deleteInvite($teamId, $notExistEmail);
-        }
-        catch(RuntimeException $e) {
-            $this->assertEquals($errorMessage, $e->getMessage());
-        }
+        // exeute target function
+        $this->Invite->deleteInvite($teamId, $notExistEmail);
     }
 }

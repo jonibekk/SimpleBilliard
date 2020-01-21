@@ -3,6 +3,7 @@ App::uses('ApiController', 'Controller/Api');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::import('Service', 'InvitationService');
+App::import('Service', 'TeamMemberService');
 App::import('Service', 'PaymentService');
 App::import('Service', 'CampaignService');
 
@@ -314,19 +315,14 @@ class InvitationsController extends ApiController
             return $this->_getResponseBadFail(__('Param is invalid'));
         }
 
-        //update Invites table
         try {
+            //update Invites table
             $InvitationService->revokeInvitation($this->current_team_id, $email);
-        }
-        catch(RuntimeExcepttion $e) {
-            return $this->_getResponseBadFail('Error, ' . $e->getMessage());
-        }
 
-        //update TeamMembers table
-        try {
+            //update TeamMembers table
             $TeamMemberService->updateDelFlgToRevoke($this->current_team_id, $email);
         }
-        catch(RuntimeExcepttion $e) {
+        catch(RuntimeException $e) {
             return $this->_getResponseBadFail('Error, ' . $e->getMessage());
         }
 

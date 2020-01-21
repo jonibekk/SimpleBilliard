@@ -404,9 +404,9 @@ class Invite extends AppModel
      * @param string $email
      *
      */
-    function deleteInvite(int $teamId, string $email)
+    public function deleteInvite(int $teamId, string $email)
     {
-        $inviteId = $this->find('first',[
+        $invite = $this->find('first',[
                 'conditions' => [
                     'team_id' => $teamId,
                     'email'   => $email,
@@ -415,15 +415,15 @@ class Invite extends AppModel
             ]
         );
 
-        if (empty($inviteId)) {
+        if (empty($invite)) {
             throw new GlException\GoalousNotFoundException("Invite not found");
         }
 
-        $this->id = $inviteId;
+        $this->id = $invite["Invite"]["id"];
 
         $newData = [
             'del_flg' => true,
-            'deleted' => REQUEST_TIMESTAMP
+            'deleted' => GoalousDateTime::now()->getTimestamp()
         ];
 
         $this->save($newData, false);

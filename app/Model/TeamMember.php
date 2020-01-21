@@ -2599,7 +2599,7 @@ class TeamMember extends AppModel
      * @param int    $userId
      *
      */
-    function deleteTeamMember(int $teamId, int $userId)
+    public function deleteTeamMember(int $teamId, int $userId)
     {
         $teamMemberId = $this->getIdByTeamAndUserId($teamId, $userId);
 
@@ -2611,7 +2611,7 @@ class TeamMember extends AppModel
 
         $newData = [
             'del_flg' => true,
-            'deleted' => REQUEST_TIMESTAMP
+            'deleted' => GoalousDateTime::now()->getTimestamp()
         ];
 
         $this->save($newData, false);

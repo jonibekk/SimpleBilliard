@@ -4,6 +4,7 @@ App::import('Service', 'TeamTranslationLanguageService');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
+App::uses('Email', 'Model');
 
 use Goalous\Enum as Enum;
 use Goalous\Exception as GlException;
@@ -328,7 +329,7 @@ class TeamMemberService extends AppService
      * @param int    $teamId
      * @param string $emails
      */
-    function updateDelFlgToRevoke(int $teamId, string $email)
+    public function updateDelFlgToRevoke(int $teamId, string $email)
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
@@ -354,7 +355,7 @@ class TeamMemberService extends AppService
 
         try{
             $TeamMember->deleteTeamMember($teamId, $userId);
-        } catch (Exception $e) {
+        } catch (RuntimeException $e) {
             $this->TransactionManager->rollback();
             GoalousLog::error("Failed to delete team_members record to revoke invitation.", [
                 'message' => $e->getMessage(),

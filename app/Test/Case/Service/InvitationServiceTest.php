@@ -371,13 +371,13 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertNull($reInviteData['deleted']);
     }
 
-    function test_revokeInvitation_success()
+    public function test_revokeInvitation_success()
     {
         // regist test data
         $userIdFrom = 1;
         $userId = 1;
         $teamId = 1;
-        $email = 'revokeTest@example.com';
+        $email = 'reInviteTest@example.com';
         $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $email));
         $insertedInviteId = $inviteData['Invite']['id'];
         $emailData = $this->Email->save($this->createDataEmail($userId, $email));
@@ -391,7 +391,7 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res1), 1);
+        $this->assertCount(1, $res1);
 
         // excute target function
         $result = $this->InvitationService->revokeInvitation($teamId, $email);
@@ -404,10 +404,10 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res2), 0);
+        $this->assertCount(0, $res2);
     }
 
-    function test_revokeInvitationOnlyCurrentTeam_success()
+    public function test_revokeInvitationOnlyCurrentTeam_success()
     {
         // regist test data
         $userIdFrom = 1;
@@ -429,7 +429,7 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res1), 2);
+        $this->assertCount(2, $res1);
 
         // excute target function
         $result = $this->InvitationService->revokeInvitation($teamId1, $email);
@@ -441,16 +441,16 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res2), 1);
+        $this->assertCount(1, $res2);
     }
 
-    function test_revokeInvitation_failure()
+    public function test_revokeInvitation_failure()
     {
         // regist test data
         $userIdFrom = 1;
         $userId = 1;
         $teamId = 1;
-        $email = 'reInviteTest@example.com';
+        $email = 'revokeTest@example.com';
         $inviteData = $this->Invite->save($this->createDataInvite($userIdFrom, $teamId, $email));
         $insertedInviteId = $inviteData['Invite']['id'];
         $emailData = $this->Email->save($this->createDataEmail($userId, $email));
@@ -464,7 +464,7 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res1), 1);
+        $this->assertCount(1, $res1);
 
         // excute target function
         $result = $this->InvitationService->revokeInvitation($teamId, $email);
@@ -477,7 +477,7 @@ class InvitationServiceTest extends GoalousTestCase
                 ]
             ]
         );
-        $this->assertEquals(count($res2), 0);
+        $this->assertCount(0, $res2);
     }
 
     private function createTestPaymentData(array $data): array
