@@ -92,7 +92,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce, $modal
                     $scope.invite_list = invite_list;
                 });
                 $http.get(url_list.check_if_payment_timing).success(function (data) {
-                    $scope.paymentTimingFlag = data.payment_timing_flag;
+                    $scope.paymentTimingFlag = data.paymentTimingFlag;
                 });
             } else {
                 init();

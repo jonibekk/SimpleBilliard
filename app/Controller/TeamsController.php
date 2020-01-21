@@ -10,11 +10,11 @@ App::import('Service', 'TermService');
 App::import('Service', 'TeamService');
 App::import('Service', 'EvaluationService');
 App::import('Service', 'PaymentService');
-App::import('Service', 'PaymentTiming');
 App::import('Service', 'TeamMemberService');
 App::import('Service', 'CampaignService');
 App::import('Service', 'TeamTranslationLanguageService');
 App::import('Controller/Traits', 'AuthTrait');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 use Goalous\Exception as GlException;
@@ -1293,10 +1293,11 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
 
+        /** @var PaymentTiming $PaymentTiming */
         $PaymentTiming = ClassRegistry::init("PaymentTiming");
-        $payment_timing_flag = $PaymentTiming->checkIfPaymentTiming($team_id);
+        $paymentTimingFlag = $PaymentTiming->checkIfPaymentTiming($team_id);
         $res = [
-            'payment_timing_flag' => $payment_timing_flag,
+            'paymentTimingFlag' => $paymentTimingFlag,
         ];
         return $this->_ajaxGetResponse($res);
     }
