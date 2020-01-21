@@ -210,6 +210,7 @@ class AppSchema extends CakeSchema {
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'circle_user'      => array('column' => array('circle_id', 'user_id'), 'unique' => 0),
             'circle_post'      => array('column' => array('circle_id', 'post_id'), 'unique' => 0),
+            'paging_index'     => array('column' => array('team_id', 'user_id', 'id'), 'unique' => 0),
             'tuple' => array(
                 'column' => array('team_id', 'circle_id', 'user_id', 'post_id'),
                 'unique' => 1

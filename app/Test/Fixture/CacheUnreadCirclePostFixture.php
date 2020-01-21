@@ -45,10 +45,11 @@ class CacheUnreadCirclePostFixture extends CakeTestFixtureEx
         'created'         => ['type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true],
         'modified'        => ['type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true],
         'indexes'         => [
-            'PRIMARY'     => ['column' => 'id', 'unique' => 1],
-            'circle_user' => ['column' => ['circle_id', 'user_id'], 'unique' => 0],
-            'circle_post' => ['column' => ['circle_id', 'post_id'], 'unique' => 0],
-            'tuple'       => [
+            'PRIMARY'      => ['column' => 'id', 'unique' => 1],
+            'circle_user'  => ['column' => ['circle_id', 'user_id'], 'unique' => 0],
+            'circle_post'  => ['column' => ['circle_id', 'post_id'], 'unique' => 0],
+            'paging_index' => ['column' => ['team_id', 'user_id', 'id'], 'unique' => 0],
+            'tuple'        => [
                 'column' => ['team_id', 'circle_id', 'user_id', 'post_id'],
                 'unique' => 1
             ],
