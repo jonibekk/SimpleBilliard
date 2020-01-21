@@ -3,6 +3,8 @@ App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'TeamMemberService');
 App::uses('TeamMember', 'Model');;
 App::uses('User', 'Model');
+App::uses('Email', 'Model');
+
 
 /**
  * @property TeamMemberService $TeamMemberService
@@ -235,5 +237,154 @@ class TeamMemberServiceTest extends GoalousTestCase
         $userId = 1;
 
         $TeamMemberService->getDefaultTranslationLanguage($teamId, $userId);
+    }
+
+    public function test_updateDelFlgToRevoke_success()
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        // regist test data
+        $teamId = 999;
+        $userId = 999;
+        $email  = 'test999@isao.co.jp';
+
+        $this->TeamMember->create();
+        $this->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId
+        ]);
+
+        $Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        $res1 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNotNull($res1);
+
+        // excute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
+
+        $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNull($res2);
+    }
+
+    public function test_updateDelFlgToRevokeOnlyCurrentTeam_success()
+    {
+
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        // regist test data
+        $teamId1 = 999;
+        $teamId2 = 1000;
+        $userId = 999;
+        $email  = 'test999@isao.co.jp';
+
+        $this->TeamMember->create();
+        $this->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId1
+        ]);
+        $this->TeamMember->create();
+        $this->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId2
+        ]);
+
+        $Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        $res1 = $this->TeamMember->find('all', [
+                'conditions' => [
+                    'user_id' => $userId,
+                    'del_flg' => false
+                ]
+            ]
+        );
+        $this->assertCount(2, $res1);
+
+        // excute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamId1, $email);
+
+        $res2 = $this->TeamMember->find('all', [
+                'conditions' => [
+                    'user_id' => $userId,
+                    'del_flg' => false
+                ]
+            ]
+        );
+        $this->assertCount(1, $res2);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_updateDelFlgToRevokeNotFoundUserId_failure()
+    {
+
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        // regist test data
+        $teamId = 999;
+        $userId = 999;
+        $email  = 'test999@isao.co.jp';
+        $teamIdFailure = 998;
+        $userIdFailure = 998;
+        $emailFailure  = 'test998@isao.co.jp';
+
+        $this->TeamMember->create();
+        $this->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId
+        ]);
+
+        $Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        $res1 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNotNull($res1);
+
+        // exeute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
+
+        $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
+        $this->assertNotNull($res2);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_updateDelFlgToRevokeAlreadyDeleted_failure()
+    {
+
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        // regist test data
+        $teamId = 999;
+        $userId = 999;
+        $email  = 'test999@isao.co.jp';
+
+        $this->TeamMember->create();
+        $this->TeamMember->save([
+            'user_id'    => $userId,
+            'team_id'    => $teamId,
+            'del_flg'    => true
+        ]);
+
+        $Email->save([
+            'email'   => $email,
+            'user_id' => $userId,
+        ]);
+
+        // excute target function
+        $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
     }
 }
