@@ -2,6 +2,7 @@
 App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
 App::import('Service', 'CirclePinService');
+App::uses('UnreadCirclePost', 'Model');
 
 /**
  * Circles Controller
@@ -248,7 +249,13 @@ class CirclesController extends AppController
             $this->Notification->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+
         $this->request->allowMethod('post');
+
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+        $UnreadCirclePost->deleteAllByCircle($this->Circle->id);
+
         $this->Circle->delete();
         //サークル削除時はユーザ数によってキャッシュ削除の処理が重くなるため、user_data全て削除
         Cache::clear(false, 'user_data');

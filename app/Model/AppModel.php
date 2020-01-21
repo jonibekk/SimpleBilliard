@@ -18,7 +18,6 @@ use Goalous\Enum\DataType\DataType as DataType;
 
 class AppModel extends Model
 {
-
     var $actsAs = [
         'ExtAddValidationRule',
         'ExtValidationErrorI18n',
