@@ -7,6 +7,7 @@ App::import('Service/Paging', 'MentionPagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 class MentionsController extends BasePagingController
 {
@@ -15,11 +16,11 @@ class MentionsController extends BasePagingController
         $resourceId = $this->request->query('resource_id');
         $resourceType = $this->request->query('resource_type');
         switch ($resourceType) {
-            case 1:
+            case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
                 $error = $this->validatePostAccess($postId);
                 break;
-            case 2:
+            case Enum\MentionSearchType::POST:
                 $circleId = $resourceId;
                 $error = $this->validateCircleAccess($circleId);
                 break;

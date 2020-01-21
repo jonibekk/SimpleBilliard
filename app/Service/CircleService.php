@@ -11,6 +11,7 @@ App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Model/Entity', 'CircleEntity');
 App::uses('GlRedis', 'Model');
 
+use Goalous\Enum as Enum;
 /**
  * Class CircleService
  */
@@ -577,7 +578,7 @@ class CircleService extends AppService
         $publicFlg = true;
 
         switch ($resourceType) {
-            case 1:
+            case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
                 if (!empty($postId)) {
                     $circle = $Circle->getSharedSecretCircleByPostId($postId);
@@ -590,7 +591,7 @@ class CircleService extends AppService
                     $filterCircleIds = array_values($CircleMember->getMyCircleList(null, $userId, $teamId));
                 }
                 break;
-            case 2:
+            case Enum\MentionSearchType::POST:
                 $circleId = $resourceId;
                 if (!empty($circleId)) {
                     $circle = $Circle->getById($circleId);
