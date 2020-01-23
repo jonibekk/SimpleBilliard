@@ -2590,4 +2590,30 @@ class TeamMember extends AppModel
 
         $this->save($newData, false);
     }
+
+    /**
+     * Delete team_member.
+     * Update del_flg and deleted.
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     *
+     */
+    public function deleteTeamMember(int $teamId, int $userId)
+    {
+        $teamMemberId = $this->getIdByTeamAndUserId($teamId, $userId);
+
+        if (empty($teamMemberId)) {
+            throw new GlException\GoalousNotFoundException("Team member not found");
+        }
+
+        $this->id = $teamMemberId;
+
+        $newData = [
+            'del_flg' => true,
+            'deleted' => GoalousDateTime::now()->getTimestamp()
+        ];
+
+        $this->save($newData, false);
+    }
 }

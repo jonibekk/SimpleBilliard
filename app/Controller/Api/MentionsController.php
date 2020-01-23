@@ -14,7 +14,7 @@ class MentionsController extends BasePagingController
     public function get_search()
     {
         $resourceId = $this->request->query('resource_id');
-        $resourceType = $this->request->query('resource_type');
+        $resourceType = $this->request->query('resource_type') ?? Enum\MentionSearchType::COMMENT;
         switch ($resourceType) {
             case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
