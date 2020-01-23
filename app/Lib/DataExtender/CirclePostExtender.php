@@ -69,15 +69,15 @@ class CirclePostExtender extends BaseExtender
         }
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
 
-            foreach ($data as &$entry) {
-                switch ((int)$data['type']) {
+            foreach ($data as $i => $entry) {
+                switch ((int)$entry['type']) {
                     case Post::TYPE_NORMAL:
                         // TODO: depends on spec
                         break;
                     case Post::TYPE_CREATE_CIRCLE:
                         /** @var CircleExtension $CircleExtension */
                         $CircleExtension = ClassRegistry::init('CircleExtension');
-                        $entry = $CircleExtension->extend($entry, "circle_id");
+                        $data[$i] = $CircleExtension->extend($entry, "circle_id");
                         break;
                     case Post::TYPE_ACTION:
                     case Post::TYPE_KR_COMPLETE:
@@ -85,15 +85,15 @@ class CirclePostExtender extends BaseExtender
                     case Post::TYPE_GOAL_COMPLETE:
                         /** @var ActionExtension $ActionExtension */
                         $ActionExtension = ClassRegistry::init('ActionExtension');
-                        $entry = $ActionExtension->extend($entry, "action_result_id");
+                        $data[$i] = $ActionExtension->extend($entry, "action_result_id");
 
                         /** @var KeyResultExtension $KeyResultExtension */
                         $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
-                        $entry = $KeyResultExtension->extend($entry, "action_result.key_result_id");
+                        $data[$i] = $KeyResultExtension->extend($entry, "action_result.key_result_id");
 
                         /** @var GoalExtension $GoalExtension */
                         $GoalExtension = ClassRegistry::init('GoalExtension');
-                        $entry = $GoalExtension->extend($entry, "action_result.goal_id");
+                        $data[$i] = $GoalExtension->extend($entry, "action_result.goal_id");
                         break;
                 }
             }
