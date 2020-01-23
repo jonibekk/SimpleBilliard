@@ -124,6 +124,27 @@ class UnreadCirclePost extends AppModel
     }
 
     /**
+     * @param int $teamId
+     * @param int $userId
+     * @return array
+     */
+    public function getPostsCacheByTeamIdAndUserId(int $teamId, int $userId): array
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId,
+            ],
+            'limit'      => 8,
+            'order'      => [
+                'id' => 'desc'
+            ],
+        ];
+
+        return $this->find('all', $option);
+    }
+
+    /**
      * Add single new unread information
      *
      * @param int $teamId
@@ -173,7 +194,7 @@ class UnreadCirclePost extends AppModel
      */
     public function deleteSinglePost(int $circleId, int $postId, int $userId): void
     {
-        $this->deleteManyPosts($circleId, [$postId], $userId);
+        //$this->deleteManyPosts($circleId, [$postId], $userId);
     }
 
     /**
@@ -185,13 +206,13 @@ class UnreadCirclePost extends AppModel
      */
     public function deleteManyPosts(int $circleId, array $postIds, int $userId): void
     {
-        $condition = [
-            'circle_id' => $circleId,
-            'post_id'   => $postIds,
-            'user_id'   => $userId
-        ];
-
-        $this->deleteAll($condition);
+//        $condition = [
+//            'circle_id' => $circleId,
+//            'post_id'   => $postIds,
+//            'user_id'   => $userId
+//        ];
+//
+//        $this->deleteAll($condition);
     }
 
     /**
