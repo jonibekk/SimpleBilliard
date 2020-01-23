@@ -2,6 +2,7 @@
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
 App::import('Lib/DataExtender/Extension', 'UserExtension');
+App::import('Lib/DataExtender/Extension', 'CircleIdExtension');
 App::import('Lib/DataExtender/Extension', 'CircleExtension');
 App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
@@ -21,6 +22,7 @@ class CirclePostExtender extends BaseExtender
 {
     const EXTEND_ALL = "ext:circle_post:all";
     const EXTEND_USER = "ext:circle_post:user";
+    const EXTEND_CIRCLE_ID = "ext:circle_post:circle_id";
     const EXTEND_CIRCLE = "ext:circle_post:circle";
     const EXTEND_COMMENTS = "ext:circle_post:comments";
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
@@ -45,6 +47,11 @@ class CirclePostExtender extends BaseExtender
             /** @var UserExtension $UserExtension */
             $UserExtension = ClassRegistry::init('UserExtension');
             $data = $UserExtension->extendMulti($data, "{n}.user_id");
+        }
+        if ($this->includeExt($extensions, self::EXTEND_CIRCLE_ID)) {
+            /** @var CircleIdExtension $CircleIdExtension */
+            $CircleIdExtension = ClassRegistry::init('CircleIdExtension');
+            $data = $CircleIdExtension->extendMulti($data, '');
         }
         if ($this->includeExt($extensions, self::EXTEND_CIRCLE)) {
             /** @var CircleExtension $CircleExtension */
