@@ -40,6 +40,22 @@ class CirclePostUnreadPagingService
         $pagingRequestForCursor = new PagingRequest();
 
         if (empty($posts)) {
+            if ($circleNotificationFlg) {
+                $pagingRequestForCursor->addCondition([
+                    'unread_id' => null,
+                    'noti' => false,
+                ]);
+                return [
+                    'data'   => [
+                        // TODO: return all caught up data
+                        [
+                            'type' => 1,
+                        ]
+                    ],
+                    'cursor' => $pagingRequestForCursor->returnCursor(),
+                    'count'  => 0
+                ];
+            }
             return [
                 'data'   => [],
                 'cursor' => '',
