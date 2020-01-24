@@ -194,7 +194,7 @@ class UnreadCirclePost extends AppModel
      */
     public function deleteSinglePost(int $circleId, int $postId, int $userId): void
     {
-        //$this->deleteManyPosts($circleId, [$postId], $userId);
+        $this->deleteManyPosts($circleId, [$postId], $userId);
     }
 
     /**
@@ -206,13 +206,13 @@ class UnreadCirclePost extends AppModel
      */
     public function deleteManyPosts(int $circleId, array $postIds, int $userId): void
     {
-//        $condition = [
-//            'circle_id' => $circleId,
-//            'post_id'   => $postIds,
-//            'user_id'   => $userId
-//        ];
-//
-//        $this->deleteAll($condition);
+        $condition = [
+            'circle_id' => $circleId,
+            'post_id'   => $postIds,
+            'user_id'   => $userId
+        ];
+
+        $this->deleteAll($condition);
     }
 
     /**
