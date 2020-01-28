@@ -124,6 +124,27 @@ class UnreadCirclePost extends AppModel
     }
 
     /**
+     * @param int $teamId
+     * @param int $userId
+     * @return array
+     */
+    public function getPostsCacheByTeamIdAndUserId(int $teamId, int $userId): array
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId,
+            ],
+            'limit'      => 8,
+            'order'      => [
+                'id' => 'desc'
+            ],
+        ];
+
+        return $this->find('all', $option);
+    }
+
+    /**
      * Add single new unread information
      *
      * @param int $teamId
