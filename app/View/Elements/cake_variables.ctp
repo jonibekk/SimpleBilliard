@@ -163,6 +163,8 @@ App::uses('AttachedFile', 'Model');
             an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
             notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
             am: "/api/v1/invitations/reInvite",
+            revoke_invitation: "/api/v1/invitations/revokeInvitation",
+            check_if_payment_timing: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_check_if_payment_timing'])?>/",
             add_member_on_message: "<?=$this->Html->url([
                 'controller' => 'users',
                 'action'     => 'ajax_select_add_members_on_message'
@@ -734,6 +736,7 @@ App::uses('AttachedFile', 'Model');
             "Comments": "<?= __("Comments") ?>",
             "Download CSV": "<?= __("Download CSV") ?>",
             "Downloading CSV...": "<?= __("Downloading CSV...") ?>",
+            "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

@@ -1125,6 +1125,9 @@ msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class=\"
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしました。"
 
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a post. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにメンションしました。"
+
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しました。"
 
@@ -6182,6 +6185,9 @@ msgstr "動画で見るGoalous"
 msgid "Introduction video for Goalous"
 msgstr "サービス紹介動画"
 
+msgid "Goalous will automatically change the amount charged to your account whenever active members are added to your team."
+msgstr "Goalous では、メンバーがチームへ追加されたことによってアクティブメンバー数に変更があった場合、自動的にアカウントへの請求額が調整されます。"
+
 msgid "Now, create Goal, share it, and get together.<br />Let's be a little more specific<br />about what your project wants to accomplish."
 msgstr "さあ、ゴールをつくって、シェアして、みんなで進もう。<br />あなたのプロジェクトが成し遂げたいことを<br />少しだけ具体的にしてみましょう。"
 
@@ -6196,3 +6202,13 @@ msgstr "ゴールをつくりましょう"
 
 msgid "Create Goal"
 msgstr "ゴールをつくる"
+
+msgid "Arabic"
+msgstr "アラビア語"
+
+msgid "Bengali"
+msgstr "ベンガル語"
+
+msgid "Korean"
+msgstr "韓国語"
+

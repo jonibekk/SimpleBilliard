@@ -61,6 +61,7 @@ class NotifySetting extends AppModel
     const TYPE_FEED_MENTIONED_IN_COMMENT_IN_ACTION = 45;
     const TYPE_TRANSLATION_LIMIT_REACHED = 46;
     const TYPE_TRANSLATION_LIMIT_CLOSING = 47;
+    const TYPE_FEED_MENTIONED_IN_POST = 48;
 
     /**
      * @var array
@@ -120,6 +121,13 @@ class NotifySetting extends AppModel
             'field_real_name' => null,
             'field_prefix'    => 'feed_mentioned_in',
             'icon_class'      => 'forum',
+            'groups'          => ['all', 'primary']
+        ],
+        self::TYPE_FEED_MENTIONED_IN_POST                 => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_mentioned_in',
+            'icon_class'      => 'group_work',
             'groups'          => ['all', 'primary']
         ],
         self::TYPE_CIRCLE_USER_JOIN                          => [
@@ -867,6 +875,17 @@ class NotifySetting extends AppModel
                     $word = '<span class="notify-card-head-target">%1$s</span> mentioned you in a comment. ';
                 } else {
                     $word = '<span class="notify-card-head-target">%1$s</span> mentioned the circle includes you in a comment. ';
+                }
+
+                $title = $is_plain_mode ? __($word, $user_text) : __($word, h($user_text));
+                break;
+            case self::TYPE_FEED_MENTIONED_IN_POST:
+                $options['to_user_id'] = !empty($options['to_user_id']) ? $options['to_user_id']: [];
+                $options['mention_targets'] = !empty($options['mention_targets']['user']) ? $options['mention_targets'] : ['user' => [], 'circle' => []];
+                if (in_array($options['to_user_id'], $options['mention_targets']['user'])) {
+                    $word = '<span class="notify-card-head-target">%1$s</span> mentioned you in a post. ';
+                } else {
+                    $word = '<span class="notify-card-head-target">%1$s</span> mentioned the circle includes you in a post. ';
                 }
 
                 $title = $is_plain_mode ? __($word, $user_text) : __($word, h($user_text));

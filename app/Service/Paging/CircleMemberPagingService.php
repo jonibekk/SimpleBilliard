@@ -95,8 +95,6 @@ class CircleMemberPagingService extends BasePagingService
         return $pagingRequest;
     }
 
-
-
     protected function createPointer(
         array $lastElement,
         array $headNextElement = [],
@@ -126,6 +124,5 @@ class CircleMemberPagingService extends BasePagingService
         }
 
         return $subCondition;
-
     }
 }

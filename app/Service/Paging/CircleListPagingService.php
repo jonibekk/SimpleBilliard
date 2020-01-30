@@ -37,7 +37,6 @@ class CircleListPagingService extends BasePagingService
         return (int)$Circle->find('count', $options);
     }
 
-
     private function createSearchCondition(PagingRequest $pagingRequest)
     {
         $conditions = $pagingRequest->getConditions(true);
@@ -77,8 +76,8 @@ class CircleListPagingService extends BasePagingService
      * Add condition for pinned circles
      *
      * @param array $searchConditions
-     * @param int $userId
-     * @param int $teamId
+     * @param int   $userId
+     * @param int   $teamId
      *
      * @return array
      */
@@ -96,9 +95,9 @@ class CircleListPagingService extends BasePagingService
      * Add condition for joined circles
      *
      * @param array $searchConditions
-     * @param int $userId
-     * @param int $teamId
-     * @param bool $joinedFlag
+     * @param int   $userId
+     * @param int   $teamId
+     * @param bool  $joinedFlag
      *
      * @return array
      */
@@ -107,8 +106,7 @@ class CircleListPagingService extends BasePagingService
         int $userId,
         int $teamId,
         bool $joinedFlag
-    ): array
-    {
+    ): array {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
 
@@ -119,11 +117,11 @@ class CircleListPagingService extends BasePagingService
                 'CircleMember.user_id' => $userId,
                 'CircleMember.del_flg' => false,
             ],
-            'fields' => [
+            'fields'     => [
                 'CircleMember.circle_id'
             ],
-            'table' => 'circle_members',
-            'alias' => 'CircleMember'
+            'table'      => 'circle_members',
+            'alias'      => 'CircleMember'
         ], $CircleMember);
         $subQuery = 'Circle.id ' . (($joinedFlag) ? 'IN' : 'NOT IN') . ' (' . $subQuery . ') ';
         $subQueryExpression = $db->expression($subQuery);

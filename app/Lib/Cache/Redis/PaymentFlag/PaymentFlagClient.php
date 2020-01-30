@@ -92,16 +92,29 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
         $timezone = $Team->findById($teamId)['Team']['timezone'];
-        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone);
+        $date = GoalousDateTime::now()->setTimeZoneByHour($timezone)->startOfDay();
 
+        return self::checkDateInPeriod($baseDay, $startDate, $date);
+    }
+
+    /**
+     * check if date is in the peroid for charge on signup
+     *
+     * @param $baseDay team payment base day, $startDate period start date
+     *
+     * @return bool
+     */
+    private function checkDateInPeriod(int $baseDay, string $startDate, GoalousDateTime $date): bool
+    {
         $res = false;
-        $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate);
+        $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate)->startOfDay();
+
         $startDateDay = $startDateTime->day;
         $firstDayThisMonth = $startDateTime->copy()->modify("first day of this  month");
         $firstDayNextMonth = $startDateTime->copy()->modify("first day of next  month");
         if ($startDateDay == $baseDay)
         {
-            $res = true;
+
             $endDay = $startDateTime;
         } elseif (intval($startDateDay) < $baseDay)
         {
@@ -117,4 +130,5 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
 
         return $res;
     }
+
 }
