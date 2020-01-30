@@ -729,7 +729,7 @@ class GoalousTestCase extends CakeTestCase
             [
                 'team_id'          => $teamId,
                 'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
-                'payment_base_day' => 1,
+                'payment_base_day' => 15,
                 'payment_skip_flg' => ($skipPayment) ? 1 : 0,
                 'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
                 'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,

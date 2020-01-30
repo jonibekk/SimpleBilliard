@@ -2290,7 +2290,8 @@ class PaymentServiceTest extends GoalousTestCase
     {
         $this->Team->deleteAll(['del_flg' => false]);
         $team = ['timezone' => 0];
-        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam($team);
+        $paymentSetting = ['payment_base_day' => 1];
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam($team, $paymentSetting);
         // Data count: 1
         // timezone: 0.0
         $time = strtotime('2016-01-01 23:59:59');
