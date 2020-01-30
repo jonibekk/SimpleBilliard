@@ -3215,58 +3215,58 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥69');
+        $this->assertEquals($res, '¥42');
 
         GoalousDateTime::setTestNow('2017-01-31 14:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥139');
+        $this->assertEquals($res, '¥86');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥2,178');
+        $this->assertEquals($res, '¥1,347');
 
         GoalousDateTime::setTestNow('2017-01-31 15:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥6,534');
+        $this->assertEquals($res, '¥4,042');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-28 23:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥77');
+        $this->assertEquals($res, '¥47');
 
         GoalousDateTime::setTestNow('2017-03-01 00:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥2,178');
+        $this->assertEquals($res, '¥1,347');
 
         $this->Team->saveField('timezone', -3.5);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-04-01 03:29:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥69');
+        $this->assertEquals($res, '¥42');
 
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥2,178');
+        $this->assertEquals($res, '¥1,347');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-09-01 11:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥69');
+        $this->assertEquals($res, '¥42');
 
         GoalousDateTime::setTestNow('2017-09-01 12:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::JPY());
-        $this->assertEquals($res, '¥2,178');
+        $this->assertEquals($res, '¥1,347');
 
     }
 
@@ -3296,12 +3296,12 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$0.61');
+        $this->assertEquals($res, '$0.38');
 
         GoalousDateTime::setTestNow('2017-01-30 14:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 2,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$1.22');
+        $this->assertEquals($res, '$0.77');
 
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
@@ -3311,14 +3311,14 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-01-30 15:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 3,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$57.00');
+        $this->assertEquals($res, '$36.00');
 
         $this->Team->saveField('timezone', 0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-02-27 23:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$0.67');
+        $this->assertEquals($res, '$0.42');
 
         GoalousDateTime::setTestNow('2017-02-28 00:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
@@ -3330,7 +3330,7 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-03-31 03:29:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$0.61');
+        $this->assertEquals($res, '$0.38');
 
         GoalousDateTime::setTestNow('2017-03-31 03:30:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
@@ -3340,14 +3340,14 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-04-01 03:30:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$18.36');
+        $this->assertEquals($res, '$11.60');
 
         $this->Team->saveField('timezone', -12.0);
         $this->Team->resetCurrentTeam();
         GoalousDateTime::setTestNow('2017-08-31 11:59:59');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$0.61');
+        $this->assertEquals($res, '$0.38');
 
         GoalousDateTime::setTestNow('2017-08-31 12:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 1,
@@ -3357,7 +3357,7 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow('2017-09-10 12:00:00');
         $res = $this->PaymentService->formatTotalChargeByAddUsers($teamId, 12,
             Enum\Model\PaymentSetting\Currency::USD());
-        $this->assertEquals($res, '$152.00');
+        $this->assertEquals($res, '$96.00');
 
     }
 
@@ -4441,7 +4441,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($newChargeHistory['team_id'], $teamId);
         $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
         $this->assertEquals($newChargeHistory['charge_type'], Enum\Model\ChargeHistory\ChargeType::RECHARGE);
-        $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
+        $this->assertEquals($newChargeHistory['amount_per_user'], 1225);
         $this->assertEquals($newChargeHistory['total_amount'], 3960);
         $this->assertEquals($newChargeHistory['tax'], 310);
         $this->assertEquals($newChargeHistory['charge_users'], 0);
@@ -4518,7 +4518,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($newChargeHistory['team_id'], $teamId);
         $this->assertEquals($newChargeHistory['charge_datetime'], $newInvoiceHistory['order_datetime']);
         $this->assertEquals($newChargeHistory['charge_type'], Enum\Model\ChargeHistory\ChargeType::RECHARGE);
-        $this->assertEquals($newChargeHistory['amount_per_user'], 1980);
+        $this->assertEquals($newChargeHistory['amount_per_user'], 1225);
         $subTotal = 0;
         $tax = 0;
         foreach ($saveHistories as $v) {
