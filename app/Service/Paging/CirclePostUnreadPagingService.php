@@ -79,7 +79,9 @@ class CirclePostUnreadPagingService
                 'cursor' => $pagingRequestForCursor->returnCursor(),
                 'count'  => -1
             ];
-        } else if ($circleNotificationFlg) {
+        }
+
+        if ($circleNotificationFlg) {
             // Reading off notification circle post from next cursor
             $pagingRequestForCursor->addCondition([
                 'unread_id' => null,
@@ -96,9 +98,14 @@ class CirclePostUnreadPagingService
                 'count'  => -1
             ];
         }
-
+        // Reading off notification circle post from next cursor
+        $pagingRequestForCursor->addCondition([
+            'unread_id' => null,
+            'noti' => false,
+        ]);
+        $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
         return [
-            'data'   => [],
+            'data'   => $posts,
             'cursor' => '',
             'count'  => -1
         ];
@@ -137,7 +144,7 @@ class CirclePostUnreadPagingService
             'conditions' => [
                 'UnreadCirclePost.team_id' => $teamId,
                 'UnreadCirclePost.user_id' => $userId,
-                'UnreadCirclePost.circle_id' => $circleIds,
+                'UnreadCirclePost.circle_id' => array_values($circleIds),
             ],
             'limit'      => self::POST_LIMIT,
             'order'      => [
