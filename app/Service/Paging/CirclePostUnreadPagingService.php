@@ -82,11 +82,14 @@ class CirclePostUnreadPagingService
         }
 
         if ($circleNotificationFlg) {
+            // Returning notify circle's unread post
+
             // Reading off notification circle post from next cursor
             $pagingRequestForCursor->addCondition([
                 'unread_id' => null,
                 'noti' => false,
             ]);
+
             $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
             // TODO: return all caught up data
             array_push($posts, [
@@ -98,11 +101,8 @@ class CirclePostUnreadPagingService
                 'count'  => -1
             ];
         }
-        // Reading off notification circle post from next cursor
-        $pagingRequestForCursor->addCondition([
-            'unread_id' => null,
-            'noti' => false,
-        ]);
+
+        // Returning NOT notify circle's unread post
         $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
         return [
             'data'   => $posts,
