@@ -469,9 +469,11 @@ class UsersController extends AppController
         $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
+        $this->set('birthday_class', '');
 
         if (!$this->request->is('post')) {
             if ($step === 2) {
+                
                 return $this->render($passwordTemplate);
             }
             return $this->render($profileTemplate);

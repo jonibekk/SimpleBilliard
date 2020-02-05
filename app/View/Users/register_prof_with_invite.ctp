@@ -101,6 +101,7 @@
 
                 ]);
         ?>
+        <div class="<?= $birthday_class?> signup-invalid-message-box"><small class="help-block"><?= __('You must be at least 16 years old to register Goalous.')?></small></div>
 
         <?php $tosLink = $this->Html->link(__('Terms of Use'),
             '/terms',
