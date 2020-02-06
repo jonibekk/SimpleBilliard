@@ -69,7 +69,7 @@
         ]);
         ?>
 
-        <div class="panel-heading signup-itemtitle"><?= __('Your date of birth') ?></div>
+        <div class="panel-heading signup-itemtitle"><?= __('Birthday(Optional)') ?></div>
         <?=
         $this->Form
             ->input('birth_day',

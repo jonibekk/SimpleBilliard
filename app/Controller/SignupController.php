@@ -187,6 +187,7 @@ class SignupController extends AppController
             $this->_emailValidate($email);
             $code = $this->Email->generateToken(6, '123456789');
             $formatted_code = number_format($code, 0, '.', '-');
+            GoalousLog::Error($code);
             $this->Session->write('email_verify_code', $code);
             $this->Session->write('email_verify_start_time', REQUEST_TIMESTAMP);
             $this->Session->write('data.Email.email', $email);
@@ -345,6 +346,8 @@ class SignupController extends AppController
 
         try {
             $data = $this->_filterWhiteList($this->request->data);
+            GoalousLog::error(serialize($this->request->data));
+            GoalousLog::error(serialize($data));
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
             }
@@ -353,6 +356,21 @@ class SignupController extends AppController
                 $res['validation_msg'] = $validation_msg;
                 throw new RuntimeException(__('Invalid Data'));
             }
+
+            $birthdayArray = explode('-', $data['User']['birth_day']);
+            $birthday = array(
+                'year' => $birthdayArray[0], 
+                'month' => $birthdayArray[1], 
+                'day' => $birthdayArray[2] 
+            );
+
+            if (!$this->checkAge(16, $birthday, $data['User']['local_date']))
+            {
+                $validation_msg['data[User][age]'] = __('You must be at least 16 years old to register Goalous.'); 
+                $res['validation_msg'] = $validation_msg;
+                throw new RuntimeException(__('Invalid Data'));
+            }
+            
             //store session
             if ($this->Session->read('data')) {
                 $data = Hash::merge($this->Session->read('data'), $data);
@@ -537,6 +555,28 @@ class SignupController extends AppController
             }
         }
         return true;
+    }
+
+    /**
+     * check Age
+     * 
+     */
+    private function checkAge(int $age, array $birthday, string $localDate): bool
+    {
+        $year = $birthday['year'];
+        $month = $birthday['month'];
+        $day = $birthday['day'];
+        if (empty($year) || empty($month) || empty($day)){
+            return true;
+        }
+        $birthDate = GoalousDateTime::createFromFormat("Ymd", $year.$month.$day)->startOfDay();
+        $userLocalDate = GoalousDateTime::parse($localDate)->startOfDay();
+        $age = $userLocalDate->diffInYears($birthDate);
+        if ($age < 16) {
+            return false;
+        }
+        return true;
+
     }
 
 }

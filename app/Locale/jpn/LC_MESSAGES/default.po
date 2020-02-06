@@ -2260,7 +2260,7 @@ msgid "Choose your team's (company's) term"
 msgstr "チーム(会社)の期間を選択しよう"
 
 msgid "Your name"
-msgstr "お名前"
+msgstr "お名前（ローマ字）"
 
 msgid "Birthday(Optional)"
 msgstr "誕生日(オプション)"
