@@ -56,6 +56,7 @@ class CirclePostExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_CIRCLE)) {
             /** @var CircleExtension $CircleExtension */
             $CircleExtension = ClassRegistry::init('CircleExtension');
+            $CircleExtension->setUserId($userId);
             $data = $CircleExtension->extendMulti($data, "{n}.circle_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
