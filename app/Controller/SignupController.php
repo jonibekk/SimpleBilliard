@@ -187,7 +187,6 @@ class SignupController extends AppController
             $this->_emailValidate($email);
             $code = $this->Email->generateToken(6, '123456789');
             $formatted_code = number_format($code, 0, '.', '-');
-            GoalousLog::Error($code);
             $this->Session->write('email_verify_code', $code);
             $this->Session->write('email_verify_start_time', REQUEST_TIMESTAMP);
             $this->Session->write('data.Email.email', $email);
@@ -346,8 +345,6 @@ class SignupController extends AppController
 
         try {
             $data = $this->_filterWhiteList($this->request->data);
-            GoalousLog::error(serialize($this->request->data));
-            GoalousLog::error(serialize($data));
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
             }

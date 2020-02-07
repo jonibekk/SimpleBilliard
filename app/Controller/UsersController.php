@@ -473,7 +473,6 @@ class UsersController extends AppController
 
         if (!$this->request->is('post')) {
             if ($step === 2) {
-                
                 return $this->render($passwordTemplate);
             }
             return $this->render($profileTemplate);
