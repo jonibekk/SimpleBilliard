@@ -1860,6 +1860,13 @@ class UsersController extends AppController
         if (empty($year) || empty($month) || empty($day)){
             return true;
         }
+        /*
+        if (GoalousDateTime::createFromDate($year, $month, $day)->age < 16)
+        {
+            return false;
+        }
+        */
+        // use local_date to calculate the birthday
         $birthDate = GoalousDateTime::createFromFormat("Ymd", $year.$month.$day)->startOfDay();
         $userLocalDate = GoalousDateTime::parse($localDate)->startOfDay();
         $age = $userLocalDate->diffInYears($birthDate);
