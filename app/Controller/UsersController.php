@@ -486,7 +486,6 @@ class UsersController extends AppController
             if ($this->User->validates($this->request->data)) {
                 if (!$this->checkAge(16, $this->request->data['User']['birth_day'], $this->request->data['User']['local_date']))
                 {
-                    $this->Notification->outError(__('You must be at least 16 years old to register Goalous.'));
                     $this->set('birthday_class', 'has-error');
                     return $this->render($profileTemplate);
                 }

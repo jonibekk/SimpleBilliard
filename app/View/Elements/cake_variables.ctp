@@ -420,6 +420,7 @@ App::uses('AttachedFile', 'Model');
             "We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.": "<?= __("We've sent a six-digit confirmation code to %s. Enter it below to confirm your email address.",
                 $signup_inputed_email = isset($signup_inputed_email) ? $signup_inputed_email : '')?>",
             "What's your name?": "<?= __("What's your name?") ?>",
+            "You must be at least 16 years old to register Goalous.": "<?= __("You must be at least 16 years old to register Goalous.") ?>",
             "Your name will only be displayed to your team on Goalous.": "<?= __("Your name will only be displayed to your team on Goalous.") ?>",
             "I want to receive news and updates by email from Goalous.": "<?= __("I want to receive news and updates by email from Goalous.") ?>",
             "Set your password": "<?= __("Set your password") ?>",

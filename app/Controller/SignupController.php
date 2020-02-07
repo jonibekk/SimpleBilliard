@@ -357,20 +357,22 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Invalid Data'));
             }
 
-            $birthdayArray = explode('-', $data['User']['birth_day']);
-            $birthday = array(
-                'year' => $birthdayArray[0], 
-                'month' => $birthdayArray[1], 
-                'day' => $birthdayArray[2] 
-            );
+            if (!is_null($data['User']['local_date']) && !is_null($data['User']['birth_day'])){
+                $birthdayArray = explode('-', $data['User']['birth_day']);
+                $birthday = array(
+                    'year' => $birthdayArray[0], 
+                    'month' => strlen($birthdayArray[1]) == 2 ? $birthdayArray[1] : '0' . $birthdayArray[1],
+                    'day' => strlen($birthdayArray[2]) == 2 ? $birthdayArray[2] : '0' . $birthdayArray[2]
+                );
 
-            if (!$this->checkAge(16, $birthday, $data['User']['local_date']))
-            {
-                $validation_msg['data[User][age]'] = __('You must be at least 16 years old to register Goalous.'); 
-                $res['validation_msg'] = $validation_msg;
-                throw new RuntimeException(__('Invalid Data'));
+                if (!$this->checkAge(16, $birthday, $data['User']['local_date']))
+                {
+                    $validation_msg['data[User][age]'] = __('You must be at least 16 years old to register Goalous.'); 
+                    $res['validation_msg'] = $validation_msg;
+                    throw new RuntimeException(__('Invalid Data'));
+                }
             }
-            
+
             //store session
             if ($this->Session->read('data')) {
                 $data = Hash::merge($this->Session->read('data'), $data);
