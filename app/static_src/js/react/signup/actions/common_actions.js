@@ -54,7 +54,8 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][last_name]': 'last_name',
     'data[User][local_date]': 'local_date',
     'data[User][birth_day]': 'birth_day',
-    'data[User][privacy_policy]': 'privacy_policy'
+    'data[User][privacy_policy]': 'privacy_policy',
+    'data[User][age]': 'age'
   }
 
   for (const key in map) {

@@ -14,7 +14,8 @@ const initialState = {
   password: defParams,
   team_name: defParams,
   term: defParams,
-  next_start_ym: defParams
+  next_start_ym: defParams,
+  age: defParams
 }
 
 export default function validate(state = initialState, action) {

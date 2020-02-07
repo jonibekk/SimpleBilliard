@@ -2260,7 +2260,7 @@ msgid "Choose your team's (company's) term"
 msgstr "チーム(会社)の期間を選択しよう"
 
 msgid "Your name"
-msgstr "お名前"
+msgstr "お名前（ローマ字）"
 
 msgid "Birthday(Optional)"
 msgstr "誕生日(オプション)"
@@ -5379,6 +5379,9 @@ msgstr "あなたの名前はGoalous内のあなたのゴール、あなたの�
 
 msgid "Your date of birth"
 msgstr "あなたの誕生日"
+
+msgid "You must be at least 16 years old to register Goalous."
+msgstr "16歳以上の方がGoalousに登録できます。"
 
 msgid "User Authentication"
 msgstr "ユーザ認証"

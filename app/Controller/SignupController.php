@@ -353,6 +353,23 @@ class SignupController extends AppController
                 $res['validation_msg'] = $validation_msg;
                 throw new RuntimeException(__('Invalid Data'));
             }
+
+            if (!is_null($data['User']['local_date']) && !is_null($data['User']['birth_day'])){
+                $birthdayArray = explode('-', $data['User']['birth_day']);
+                $birthday = array(
+                    'year' => $birthdayArray[0], 
+                    'month' => strlen($birthdayArray[1]) == 2 ? $birthdayArray[1] : '0' . $birthdayArray[1],
+                    'day' => strlen($birthdayArray[2]) == 2 ? $birthdayArray[2] : '0' . $birthdayArray[2]
+                );
+
+                if (!$this->checkAge(16, $birthday, $data['User']['local_date']))
+                {
+                    $validation_msg['data[User][age]'] = __('You must be at least 16 years old to register Goalous.'); 
+                    $res['validation_msg'] = $validation_msg;
+                    throw new RuntimeException(__('Invalid Data'));
+                }
+            }
+
             //store session
             if ($this->Session->read('data')) {
                 $data = Hash::merge($this->Session->read('data'), $data);
@@ -537,6 +554,35 @@ class SignupController extends AppController
             }
         }
         return true;
+    }
+
+    /**
+     * check Age
+     * 
+     */
+    private function checkAge(int $age, array $birthday, string $localDate): bool
+    {
+        $year = $birthday['year'];
+        $month = $birthday['month'];
+        $day = $birthday['day'];
+        if (empty($year) || empty($month) || empty($day)){
+            return true;
+        }
+        /* 
+        if (GoalousDateTime::createFromDate($year, $month, $day)->age < 16)
+        {
+            return false;
+        }
+         */
+        // use local_date to calculate the birthday
+        $birthDate = GoalousDateTime::createFromFormat("Ymd", $year.$month.$day)->startOfDay();
+        $userLocalDate = GoalousDateTime::parse($localDate)->startOfDay();
+        $age = $userLocalDate->diffInYears($birthDate);
+        if ($age < 16) {
+            return false;
+        }
+        return true;
+
     }
 
 }
