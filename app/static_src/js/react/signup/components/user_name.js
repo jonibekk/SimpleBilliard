@@ -150,7 +150,13 @@ export default class UserName extends React.Component {
                            })}
                         </select>
                         </span>
+                        <span className={(this.props.validate.age.invalid) ? 'has-error signup-invalid-message-box' : 'signup-invalid-message-box'} >
+                        <small className="help-block">
+                            {__('You must be at least 16 years old to register Goalous.')}
+                        </small>
+                        </span>
                     </div>
+
 
                     <InvalidMessageBox is_invalid={this.props.validate.birth_year.invalid || this.props.validate.birth_month.invalid || this.props.validate.birth_day.invalid}
                                        message={birthday_error_message} />
