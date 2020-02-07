@@ -469,6 +469,7 @@ class UsersController extends AppController
         $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
         $team = $this->Team->findById($invite['Invite']['team_id']);
         $this->set('team_name', $team['Team']['name']);
+        $this->set('birthday_class', '');
 
         if (!$this->request->is('post')) {
             if ($step === 2) {
@@ -482,6 +483,12 @@ class UsersController extends AppController
             //プロフィール入力画面の場合
             //validation
             if ($this->User->validates($this->request->data)) {
+                if (!$this->checkAge(16, $this->request->data['User']['birth_day'], $this->request->data['User']['local_date']))
+                {
+                    $this->set('birthday_class', 'has-error');
+                    return $this->render($profileTemplate);
+                }
+
                 //store to session
                 $this->Session->write('data', $this->request->data);
                 //パスワード入力画面にリダイレクト
@@ -1839,5 +1846,34 @@ class UsersController extends AppController
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
+    }
+    
+    /**
+     * check Age
+     * 
+     */
+    private function checkAge(int $age, array $birthday, string $localDate): bool
+    {
+        $year = $birthday['year'];
+        $month = $birthday['month'];
+        $day = $birthday['day'];
+        if (empty($year) || empty($month) || empty($day)){
+            return true;
+        }
+        /*
+        if (GoalousDateTime::createFromDate($year, $month, $day)->age < 16)
+        {
+            return false;
+        }
+        */
+        // use local_date to calculate the birthday
+        $birthDate = GoalousDateTime::createFromFormat("Ymd", $year.$month.$day)->startOfDay();
+        $userLocalDate = GoalousDateTime::parse($localDate)->startOfDay();
+        $age = $userLocalDate->diffInYears($birthDate);
+        if ($age < 16) {
+            return false;
+        }
+        return true;
+
     }
 }
