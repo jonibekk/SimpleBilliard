@@ -47,9 +47,8 @@ class CirclePostUnreadPagingService
                 ]);
                 return [
                     'data'   => [
-                        // TODO: return all caught up data
                         [
-                            'type' => 1,
+                            'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
                         ]
                     ],
                     'cursor' => $pagingRequestForCursor->returnCursor(),
@@ -74,8 +73,9 @@ class CirclePostUnreadPagingService
                 'unread_id' => $this->getUnreadCirclePostId($teamId, $userId, $lastPost['id']),
                 'noti' => $circleNotificationFlg,
             ]);
+            $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
             return [
-                'data'   => $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]),
+                'data'   => $this->addTypeToPostArray($posts),
                 'cursor' => $pagingRequestForCursor->returnCursor(),
                 'count'  => -1
             ];
@@ -91,12 +91,15 @@ class CirclePostUnreadPagingService
             ]);
 
             $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
-            // TODO: return all caught up data
-            array_push($posts, [
-                'type' => 1,
-            ]);
             return [
-                'data'   => $posts,
+                'data'   => array_merge(
+                    $this->addTypeToPostArray($posts),
+                    [
+                        [
+                            'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
+                        ]
+                    ]
+                ),
                 'cursor' => $pagingRequestForCursor->returnCursor(),
                 'count'  => -1
             ];
@@ -105,10 +108,20 @@ class CirclePostUnreadPagingService
         // Returning NOT notify circle's unread post
         $posts = $CirclePostExtender->extendMulti($posts, $userId, $teamId, [CirclePostExtender::EXTEND_ALL]);
         return [
-            'data'   => $posts,
+            'data'   => $this->addTypeToPostArray($posts),
             'cursor' => '',
             'count'  => -1
         ];
+    }
+
+    private function addTypeToPostArray(array $posts): array
+    {
+        return array_map(function (array $post) {
+            return [
+                'type' => \Goalous\Enum\FeedContent\FeedContent::CIRCLE_POST,
+                'data' => $post,
+            ];
+        }, $posts);
     }
 
     private function getUnreadCirclePostId($teamId, $userId, $postId): int
