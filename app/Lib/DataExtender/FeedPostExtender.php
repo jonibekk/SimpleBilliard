@@ -12,6 +12,7 @@ App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::import('Service', 'TeamMemberService');
 App::uses('AttachedFile', 'Model');
+App::uses('GoalMember', 'Model');
 App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
@@ -86,11 +87,21 @@ class FeedPostExtender extends BaseExtender
 
                 if ($entry['type'] == Enum\Model\Post\Type::CREATE_GOAL) {
 
+                    /** @var GoalMember $GoalMember */
+                    $GoalMember = ClassRegistry::init('GoalMember');
+                    $goalMember = $GoalMember->getUnique($userId, $entry['goal_id']);
+
+                    $isLeader = !empty($goalMember) && $goalMember['GoalMember']['type'] == GoalMember::TYPE_OWNER;
+                    $isCollaborating = !empty($goalMember);
+
                     $startDate = GoalousDateTime::createFromFormat('Y-m-d', $entry['goal']['start_date']);
                     $endDate = GoalousDateTime::createFromFormat('Y-m-d', $entry['goal']['end_date']);
 
-                    //If now is within goal's period, user can collaborate
-                    $data[$index]['can_collaborate'] = GoalousDateTime::now()->between($startDate, $endDate);
+                    $data[$index]['is_leader'] = $isLeader;
+                    //If now is within goal's period and goal is not made by current user, current user can collaborate
+                    $data[$index]['can_collaborate'] = !$isLeader &&
+                        GoalousDateTime::now()->between($startDate, $endDate);
+                    $data[$index]['is_collaborating'] = $isCollaborating;
                 }
 
                 if (empty($entry['action_result_id'])) {
@@ -193,6 +204,11 @@ class FeedPostExtender extends BaseExtender
                     $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
 
                     foreach ($data as &$entry) {
+
+                        if ($entry['type'] == Post::TYPE_CREATE_GOAL) {
+                            continue;
+                        }
+
                         $postLanguage = Hash::get($entry, 'language');
 
                         $entry['translation_limit_reached'] = false;
