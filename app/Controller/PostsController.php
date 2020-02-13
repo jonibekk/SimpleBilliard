@@ -4,6 +4,7 @@ App::import('Service', 'AttachedFileService');
 App::import('Service', 'PostService');
 App::import('Service', 'PostDraftService');
 App::import('Service', 'TranslationService');
+App::import('Service', 'UnreadCirclePostService');
 App::uses('TeamStatus', 'Lib/Status');
 App::uses('Translation', 'Model');
 App::uses('Video', 'Model');
@@ -164,7 +165,7 @@ class PostsController extends AppController
                         $teamId,
                         [
                             [
-                                'is_video' => true,
+                                'is_video'        => true,
                                 'video_stream_id' => $videoStream['id'],
                             ]
                         ]
@@ -292,7 +293,8 @@ class PostsController extends AppController
 
         if ($TranslationService->canTranslate($teamId)) {
             try {
-                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postedPostId);
+                $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(),
+                    $postedPostId);
                 // I need to write Email send process here, NotifyBizComponent Can't call from Service class.
                 $this->sendTranslationUsageNotification($teamId);
             } catch (Exception $e) {
@@ -326,6 +328,10 @@ class PostsController extends AppController
 
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
             AttachedFile::TYPE_MODEL_POST);
+
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+        $UnreadCirclePostService->deletePostCache($this->Post->id);
 
         // Delete translations
         /** @var Translation $Translation */
@@ -730,8 +736,10 @@ class PostsController extends AppController
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->Term->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['Term'])) {
-                $start = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['start_date'])->startOfDay()->format('Y-m-d H:i:s');
-                $end = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['end_date'])->endOfDay()->format('Y-m-d H:i:s');
+                $start = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['start_date'])->startOfDay()
+                                        ->format('Y-m-d H:i:s');
+                $end = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['end_date'])->endOfDay()
+                                      ->format('Y-m-d H:i:s');
             }
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
@@ -1025,7 +1033,7 @@ class PostsController extends AppController
             $circleId = $this->request->params['circle_id'];
             $urlCircleFeed = sprintf('/circles/%s/posts', $circleId);
             if (ENV_NAME == 'local') {
-                $urlCircleFeed = "http://local.goalous.com:5790".$urlCircleFeed;
+                $urlCircleFeed = "http://local.goalous.com:5790" . $urlCircleFeed;
             }
             $this->redirect($urlCircleFeed);
             return;
@@ -1039,7 +1047,7 @@ class PostsController extends AppController
             $post = $Post->findById($postId);
             $url = sprintf('/posts/%s?%s', $postId, http_build_query($this->request->query));
             if (ENV_NAME == 'local') {
-                $url = "http://local.goalous.com:5790".$url;
+                $url = "http://local.goalous.com:5790" . $url;
             }
             do {
                 if (empty($post)) {
@@ -1371,7 +1379,6 @@ class PostsController extends AppController
      * @return CakeResponse
      * @deprecated
      * OGP のデータを取得する
-     *
      */
     public function ajax_get_ogp_info()
     {

@@ -373,7 +373,7 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
-                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
+                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY), false);
                 if ($this->nextTerm && $withCache) {
                     $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
                     Cache::set('duration', $duration, 'team_info');

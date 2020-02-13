@@ -2,14 +2,14 @@
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
 
-class PaymentTiming 
+class PaymentTiming
 {
     /*
      * check if it is in new payment peroid
      *
      */
 
-    public function checkIfPaymentTiming(int $teamId): bool 
+    public function checkIfPaymentTiming(int $teamId): bool
     {
         /* get payment flag */
         $redisClient = new PaymentFlagClient();
@@ -29,8 +29,8 @@ class PaymentTiming
 
         if (empty($switchFlag) or intval($switchFlag) == 1 and empty($switchStartDate)){
             $validationErrors = 'Switch Value Error!';
-            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s", 
-                $inviteTeamId, var_export($validationErrors, true)));
+            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s",
+                $teamId, var_export($validationErrors, true)));
         }
 
         if (intval($switchFlag) == 2 or intval($switchFlag) == 1 and !empty($switchStartDate) and PaymentFlagClient::isInPeriod($paymentBaseDay, $switchStartDate, $teamId)) {

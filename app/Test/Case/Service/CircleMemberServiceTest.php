@@ -27,7 +27,8 @@ class CircleMemberServiceTest extends GoalousTestCase
         'app.team',
         'app.team_member',
         'app.post_share_circle',
-        'app.experiment'
+        'app.experiment',
+        'app.cache_unread_circle_post'
     ];
 
     public function test_fetchCircles_success()
@@ -317,8 +318,7 @@ class CircleMemberServiceTest extends GoalousTestCase
         /** @var CircleMemberService $CircleMemberService */
         $CircleMemberService = ClassRegistry::init('CircleMemberService');
 
-        $res = $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
-
+        $CircleMemberService->multipleAdd($newUserId, $teamId, $circleId);
     }
 
 }

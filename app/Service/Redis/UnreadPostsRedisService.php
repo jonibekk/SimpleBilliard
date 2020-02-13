@@ -4,36 +4,19 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
 App::uses('CircleMember', 'Model');
 
+/**
+ * Class for managing cache about unread post data
+ *
+ * @deprecated Use UnreadCirclePost instead.
+ *
+ * Class UnreadPostsRedisService
+ */
 class UnreadPostsRedisService
 {
     /**
-     * Add circle badge status to all users in the same circle as author
-     *
-     * @param int $circleId
-     * @param int $postId
-     * @param int $postAuthorUserId
-     */
-    public function addToAllCircleMembers(int $circleId, int $postId, int $postAuthorUserId)
-    {
-        $UnreadPostsClient = new UnreadPostsClient();
-        /** @var CircleMember $CircleMember */
-        $CircleMember = ClassRegistry::init('CircleMember');
-
-        $members = $CircleMember->getMembersWithNotificationFlg($circleId, true);
-
-        foreach ($members as $member) {
-            if ($member['user_id'] === $postAuthorUserId) {
-                continue;
-            }
-            $UnreadPostsKey = new UnreadPostsKey($member['user_id'], $member['team_id']);
-            $unreadData = $UnreadPostsClient->read($UnreadPostsKey);
-            $unreadData->add($circleId, $postId);
-            $UnreadPostsClient->write($UnreadPostsKey, $unreadData);
-        }
-    }
-
-    /**
      * Remove all unreads in a circle
+     *
+     * @deprecated Use UnreadCirclePost instead.
      *
      * @param int $userId
      * @param int $teamId
@@ -57,6 +40,8 @@ class UnreadPostsRedisService
 
     /**
      * Remove multiple unreads by post ids
+     *
+     * @deprecated Use UnreadCirclePost instead.
      *
      * @param int   $userId
      * @param int   $teamId

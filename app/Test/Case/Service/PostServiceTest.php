@@ -14,6 +14,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('TestVideoTrait', 'Test/Trait');
 App::uses('TestPostDraftTrait', 'Test/Trait');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Service/Request/Resource', 'PostResourceRequest');
 
@@ -69,7 +70,8 @@ class PostServiceTest extends GoalousTestCase
         'app.team_translation_language',
         'app.team_translation_status',
         'app.mst_translation_language',
-        'app.translation'
+        'app.translation',
+        'app.cache_unread_circle_post'
     ];
 
     /**
@@ -156,8 +158,8 @@ class PostServiceTest extends GoalousTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         $mock->expects($this->any())
-            ->method('saveRelatedFiles')
-            ->will($this->returnValue(true));
+             ->method('saveRelatedFiles')
+             ->will($this->returnValue(true));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -182,8 +184,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('saveRelatedFiles')
-            ->will($this->returnValue(false));
+             ->method('saveRelatedFiles')
+             ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -214,8 +216,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('saveRelatedFiles')
-            ->will($this->returnValue(false));
+             ->method('saveRelatedFiles')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post'    => [
@@ -447,8 +449,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('saveRelatedFiles')
-            ->will($this->returnValue(true));
+             ->method('saveRelatedFiles')
+             ->will($this->returnValue(true));
 
         $userId = 1;
         $teamId = 1;
@@ -489,8 +491,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('AttachedFile', ['saveRelatedFiles']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('saveRelatedFiles')
-            ->will($this->returnValue(false));
+             ->method('saveRelatedFiles')
+             ->will($this->returnValue(false));
         $body = sprintf('body text %s', time());
         $postData = [
             'Post'    => [
@@ -515,8 +517,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostShareUser', ['add']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('add')
-            ->will($this->returnValue(false));
+             ->method('add')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -536,8 +538,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostShareCircle', ['add']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('add')
-            ->will($this->returnValue(false));
+             ->method('add')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -557,8 +559,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('CircleMember', ['incrementUnreadCount']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('incrementUnreadCount')
-            ->will($this->returnValue(false));
+             ->method('incrementUnreadCount')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -578,8 +580,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('CircleMember', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('updateModified')
-            ->will($this->returnValue(false));
+             ->method('updateModified')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -599,8 +601,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('Circle', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('updateModified')
-            ->will($this->returnValue(false));
+             ->method('updateModified')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -616,8 +618,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('Circle', ['updateModified']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('updateModified')
-            ->will($this->returnValue(false));
+             ->method('updateModified')
+             ->will($this->returnValue(false));
 
         $postData = [
             'Post' => [
@@ -677,8 +679,8 @@ class PostServiceTest extends GoalousTestCase
         $mock = $this->getMockForModel('PostDraft', ['save']);
         /** @noinspection PhpUndefinedMethodInspection */
         $mock->expects($this->any())
-            ->method('save')
-            ->will($this->returnValue(false));
+             ->method('save')
+             ->will($this->returnValue(false));
 
         $bodyText = sprintf('body text: %s', time());
         $videoStreamId = 11;
@@ -818,16 +820,16 @@ class PostServiceTest extends GoalousTestCase
         //Mock storage clients
         $bufferClient = mock::mock('BufferStorageClient');
         $bufferClient->shouldReceive('bulkGet')->withAnyArgs()
-            ->atLeast()->once()
-            ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
+                     ->atLeast()->once()
+                     ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
         $bufferClient->shouldReceive('save')->withAnyArgs()
-            ->atLeast()->once()
-            ->andReturn("1234567890abcd.12345678");
+                     ->atLeast()->once()
+                     ->andReturn("1234567890abcd.12345678");
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
         $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
-            ->atLeast()->once()->andReturn(true);
+                     ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
         /** @var UploadService $UploadService */
@@ -903,7 +905,8 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($newBody['body'], $editedPost['body']);
         $this->assertEquals(2, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
         $this->assertNotEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
-        $this->assertNotEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+        $this->assertNotEmpty($AttachedFile->find('first',
+            ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
         $this->assertNotEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
         $this->assertNotEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
     }
@@ -916,7 +919,8 @@ class PostServiceTest extends GoalousTestCase
 
         $postUserId = 1;
         $circleId = 1;
-        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId,
+            $postUserId, $teamId);
         $postIds = [$post['id']];
 
         $msg = "";
@@ -930,7 +934,8 @@ class PostServiceTest extends GoalousTestCase
         /* Other member's circle post and login user belongs to the circle */
         $postUserId = 2;
         $circleId = 1;
-        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId,
+            $postUserId, $teamId);
         $postIds[] = $post['id'];
 
         $msg = "";
@@ -958,7 +963,8 @@ class PostServiceTest extends GoalousTestCase
 
         /* Other member's circle post and login user doesn't belong to the circle */
         $circleId = 3;
-        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId,
+            $postUserId, $teamId);
         $postIds[] = $post['id'];
 
         $msg = "";
@@ -973,7 +979,8 @@ class PostServiceTest extends GoalousTestCase
         $circleId = 4;
         $postUserId = 1;
         $userId = 9999;
-        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId, $postUserId, $teamId);
+        $post = $this->PostService->addCirclePost(['body' => 'test', 'type' => Post::TYPE_NORMAL], $circleId,
+            $postUserId, $teamId);
         $postIds = [$post['id']];
 
         $msg = "";
@@ -1024,6 +1031,12 @@ class PostServiceTest extends GoalousTestCase
 
         $this->assertLessThan($updatedCircle['latest_post_created'], $initialCircle['latest_post_created']);
         $this->assertLessThan($updatedCircle['modified'], $initialCircle['modified']);
+
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+
+        $count = $UnreadCirclePost->countPostUnread($circleId, $newPost['id']);
+        $this->assertEquals(2, $count);
     }
 
     public function test_get()
@@ -1126,7 +1139,8 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($newBody['body'], $editedPost['body']);
         $this->assertEquals(1, $PostResource->find('count', ['conditions' => ['post_id' => $newPostId]]));
         $this->assertNotEmpty($PostFile->find('first', ['conditions' => ['id' => $newFiles[0]['id']]]));
-        $this->assertNotEmpty($AttachedFile->find('first', ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
+        $this->assertNotEmpty($AttachedFile->find('first',
+            ['conditions' => ['id' => $newFiles[0]['attached_file_id']]]));
         $this->assertEmpty($VideoStream->find('first', ['conditions' => ['id' => $newVideos[0]['id']]]));
         $this->assertEmpty($Video->find('first', ['conditions' => ['id' => $newVideos[0]['video_id']]]));
 
@@ -1169,16 +1183,16 @@ class PostServiceTest extends GoalousTestCase
         //Mock storage clients
         $bufferClient = mock::mock('BufferStorageClient');
         $bufferClient->shouldReceive('bulkGet')->withAnyArgs()
-            ->atLeast()->once()
-            ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
+                     ->atLeast()->once()
+                     ->andReturn([new UploadedFile("eyJkYXRhIjoiaGFoYSJ9", "a")]);
         $bufferClient->shouldReceive('save')->withAnyArgs()
-            ->atLeast()->once()
-            ->andReturn("1234567890abcd.12345678");
+                     ->atLeast()->once()
+                     ->andReturn("1234567890abcd.12345678");
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
         $assetsClient = mock::mock('AssetsStorageClient');
         $assetsClient->shouldReceive('bulkSave')->withAnyArgs()
-            ->atLeast()->once()->andReturn(true);
+                     ->atLeast()->once()->andReturn(true);
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
 
         /** @var UploadService $UploadService */
@@ -1257,7 +1271,8 @@ class PostServiceTest extends GoalousTestCase
 
         $newPostEntity = $PostService->addCirclePost($newBody, $circleId, $userId, $teamId);
 
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'], "ja"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $newPostEntity['id'],
+            "ja"));
         $this->assertEquals("en", $Post->getById($newPostEntity['id'])['language']);
     }
 
@@ -1294,7 +1309,8 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "de"));
         $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "ja"));
         $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja"));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId,
+            "de"));
     }
 
     public function test_deleteCirclePostWithTranslation_success()
@@ -1325,6 +1341,7 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "de"));
         $this->assertEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $postId, "ja"));
         $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST(), $otherPostId, "ja"));
-        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId, "de"));
+        $this->assertNotEmpty($Translation->getTranslation(TranslationContentType::CIRCLE_POST_COMMENT(), $postId,
+            "de"));
     }
 }
