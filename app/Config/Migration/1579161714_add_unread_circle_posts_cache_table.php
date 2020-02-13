@@ -3,6 +3,7 @@
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('UnreadCirclePost', 'Model');
+App::uses('CircleMember', 'Model');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsData');
@@ -138,6 +139,10 @@ class AddUnreadCirclePostsCacheTable extends CakeMigration
             return true;
         }
 
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $CircleMember->updateAll(['unread_count' => 0]);
+
         $teamIds = $this->getRelevantTeamIds();
 
         if (empty($teamIds)) {
@@ -146,8 +151,6 @@ class AddUnreadCirclePostsCacheTable extends CakeMigration
 
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        /** @var UnreadCirclePost $UnreadCirclePost */
-        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
 
         foreach ($teamIds as $teamId) {
 
@@ -157,39 +160,11 @@ class AddUnreadCirclePostsCacheTable extends CakeMigration
                 continue;
             }
 
-            $importedUnreadData = [];
-
             foreach ($teamMembers as $teamMember) {
                 $unreadPostsKey = new UnreadPostsKey($teamMember['user_id'], $teamId);
                 $unreadPostsClient = new UnreadPostsClient();
-
-                $data = $unreadPostsClient->read($unreadPostsKey)->get();
-
-                if (empty($data)) {
-                    continue;
-                }
-
-                foreach ($data as $circleId => $postIds) {
-                    foreach ($postIds as $postId) {
-                        $importedUnreadData[] =
-                            [
-                                'team_id'   => $teamId,
-                                'circle_id' => $circleId,
-                                'user_id'   => $teamMember['user_id'],
-                                'post_id'   => $postId
-                            ];
-                    }
-                }
-
                 $unreadPostsClient->del($unreadPostsKey);
             }
-
-            if (empty($importedUnreadData)) {
-                continue;
-            }
-
-            $UnreadCirclePost->create();
-            $UnreadCirclePost->saveMany($importedUnreadData, ['validate' => false]);
         }
 
         return true;
