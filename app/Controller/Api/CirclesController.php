@@ -532,6 +532,7 @@ class CirclesController extends BasePagingController
     private function getDefaultPostExtension()
     {
         return [
+            CirclePostExtender::EXTEND_CIRCLE_ID,
             CirclePostExtender::EXTEND_CIRCLE,
             CirclePostExtender::EXTEND_LIKE,
             CirclePostExtender::EXTEND_SAVED,

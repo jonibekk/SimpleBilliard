@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
+App::import('Service', 'UnreadCirclePostService');
 App::uses('NotifyBizComponent', 'Controller/Component');
 App::import('Lib/DataExtender', 'TeamExtender');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
@@ -15,6 +16,7 @@ App::uses('CampaignTeam', 'Model');
 App::uses('CreditCard', 'Model');
 App::uses('Invoice', 'Model');
 App::uses('PricePlanPurchaseTeam', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -145,8 +147,12 @@ class TeamService extends AppService
      *
      * @return bool
      */
-    public function changeStatusAllTeamExpired(string $targetExpireDate, int $currentStatus, int $nextStatus, array $targetTeamIds = []): bool
-    {
+    public function changeStatusAllTeamExpired(
+        string $targetExpireDate,
+        int $currentStatus,
+        int $nextStatus,
+        array $targetTeamIds = []
+    ): bool {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
@@ -174,7 +180,14 @@ class TeamService extends AppService
         // delete all team cache
         foreach ($targetTeamIds as $teamId) {
             $GlRedis->dellKeys("*current_team:team:{$teamId}");
+
+            if ($nextStatus === Enum\Model\Team\ServiceUseStatus::CANNOT_USE) {
+                /** @var UnreadCirclePostService $UnreadCirclePostService */
+                $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+                $UnreadCirclePostService->deleteAllInTeam($teamId);
+            }
         }
+
         return $ret;
     }
 
@@ -266,6 +279,11 @@ class TeamService extends AppService
             if (!$TeamMember->softDeleteAll(['TeamMember.team_id' => $teamId], false)) {
                 throw new Exception(sprintf('Failed to delete all team members. team_id:%s', $teamId));
             }
+
+            // Delete unread circle post cache
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->deleteAllInTeam($teamId);
 
             // Update team member's default team id
             $this->updateDefaultTeamOnDeletion($teamId);
@@ -456,7 +474,9 @@ class TeamService extends AppService
 
         $targetTeamIds = $Team->findTeamIdsStatusExpired(Enum\Model\Team\ServiceUseStatus::PAID, $targetDate);
 
-        if (empty($targetTeamIds)) return;
+        if (empty($targetTeamIds)) {
+            return;
+        }
 
         try {
             $this->TransactionManager->begin();
@@ -492,7 +512,7 @@ class TeamService extends AppService
      *
      * @return array
      */
-    public function get(TeamResourceRequest $request):array
+    public function get(TeamResourceRequest $request): array
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -501,6 +521,7 @@ class TeamService extends AppService
 
         $team = $Team->getEntity($request->getId());
 
-        return $TeamExtender->extend($team->toArray(), $request->getUserId(), $request->getTeamId(), [TeamExtender::EXTEND_ALL]);
+        return $TeamExtender->extend($team->toArray(), $request->getUserId(), $request->getTeamId(),
+            [TeamExtender::EXTEND_ALL]);
     }
 }
