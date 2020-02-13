@@ -139,6 +139,30 @@ class AddUnreadCirclePostsCacheTable extends CakeMigration
             return true;
         }
 
+        $teamIds = $this->getRelevantTeamIds();
+
+        if (empty($teamIds)) {
+            return true;
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        foreach ($teamIds as $teamId) {
+
+            $teamMembers = $TeamMember->getMemberList($teamId);
+
+            if (empty($teamMembers)) {
+                continue;
+            }
+
+            foreach ($teamMembers as $teamMember) {
+                $unreadPostsKey = new UnreadPostsKey($teamMember['user_id'], $teamId);
+                $unreadPostsClient = new UnreadPostsClient();
+                $unreadPostsClient->del($unreadPostsKey);
+            }
+        }
+
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
         $CircleMember->updateAll(['unread_count' => 0]);
