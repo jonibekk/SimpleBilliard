@@ -57,7 +57,7 @@ abstract class DataExtension
 
             //Remove header {n} from path
             $separatorIndex = strpos($path, '.');
-            if ($separatorIndex > 0 && $separatorIndex + 1 <= strlen($path)) {
+            if ($separatorIndex > 0 && $separatorIndex + 1 < strlen($path)) {
                 $parentKey = substr($path, $separatorIndex + 1);
             } else {
                 //Since extract path is split with '.' , tokenize string by it and get the last element
