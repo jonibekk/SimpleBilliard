@@ -299,8 +299,7 @@ class AppModel extends Model
     public function generateToken(
         $length = 22,
         $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    )
-    {
+    ) {
         $token = "";
         $i = 0;
 
@@ -454,8 +453,7 @@ class AppModel extends Model
         bool $addDate = true,
         array $updateCounterCacheFields = [],
         int $chunkSize = 100
-    ): bool
-    {
+    ): bool {
         if (empty($data) || empty($data[0])) {
             return false;
         }
@@ -735,8 +733,8 @@ class AppModel extends Model
     /**
      * Override saveAll() function. Do post-processing
      *
-     * @param array  $data
-     * @param array  $opotions
+     * @param array $data
+     * @param array $opotions
      *
      * @return bool
      * @throws Exception
@@ -755,6 +753,7 @@ class AppModel extends Model
 
         return $result;
     }
+
     /**
      * Override afterFind(). Will process find() result
      *
@@ -860,6 +859,9 @@ class AppModel extends Model
                     case (DataType::INT):
                         $data[$key] = intval($value);
                         break;
+                    case (DataType::FLOAT):
+                        $data[$key] = floatval($value);
+                        break;
                     case (DataType::BOOL):
                         $data[$key] = boolval($value);
                         break;
@@ -947,7 +949,9 @@ class AppModel extends Model
         /** @var BaseEntity $return */
         $return = $this->useType()->useEntity()->find('first', $conditions);
 
-        if (empty($return)) return null;
+        if (empty($return)) {
+            return null;
+        }
 
         return $return;
     }

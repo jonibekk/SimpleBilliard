@@ -10,7 +10,6 @@ App::uses('AppModel', 'Model');
  */
 class ActionResultFile extends AppModel
 {
-
     /**
      * Validation rules
      *

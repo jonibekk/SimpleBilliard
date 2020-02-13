@@ -11,7 +11,7 @@ abstract class DataExtension
     /**
      * Method for extending a object array
      *
-     * @param  array $data        The array to be extended
+     * @param array  $data        The array to be extended
      * @param string $parentKey
      * @param string $extKeyName
      * @param string $extEntryKey Custom array key for data extension in the resulting array. Default to model name.
@@ -36,7 +36,7 @@ abstract class DataExtension
     /**
      * Method for extending a object array
      *
-     * @param  array      $data        The array to be extended
+     * @param array       $data        The array to be extended
      * @param string|null $path        Hash::Extract() Path to the ID
      * @param string      $extKeyName  Key name for the extended data. Insert if necessary
      * @param string      $extEntryKey Custom array key for data extension in the resulting array. Default to model name.
@@ -52,11 +52,18 @@ abstract class DataExtension
         $keys = $this->getKeys($data, $path);
 
         if (!empty($keys)) {
+
             $dataExtension = $this->fetchData($keys);
 
-            //Since extract path is split with '.' , tokenize string by it and get the last element
-            $tokens = explode('.', $path);
-            $parentKey = end($tokens);
+            //Remove header {n} from path
+            $separatorIndex = strpos($path, '.');
+            if ($separatorIndex > 0 && $separatorIndex + 1 <= strlen($path)) {
+                $parentKey = substr($path, $separatorIndex + 1);
+            } else {
+                //Since extract path is split with '.' , tokenize string by it and get the last element
+                $tokens = explode('.', $path);
+                $parentKey = end($tokens);
+            }
 
             return $this->connectData($data, $parentKey, $dataExtension, $extKeyName, $extEntryKey);
         }
