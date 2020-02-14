@@ -267,7 +267,11 @@ class PostsController extends BasePagingController
         $PostReadService = ClassRegistry::init('PostReadService');
 
         try {
-            $res = $PostReadService->multipleAdd($postsIds, $this->getUserId(), $this->getTeamId());
+            $res = $PostReadService->readPosts(
+                $postsIds,
+                $this->getUserId(),
+                $this->getTeamId()
+            );
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
