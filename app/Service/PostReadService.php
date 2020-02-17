@@ -173,6 +173,7 @@ class PostReadService extends AppService
 
     /**
      * Add multiple
+     * @deprecated use readPosts()
      *
      * @param int[] $postIds Target post's ID
      * @param int   $userId  User ID who who reads the post
@@ -183,55 +184,7 @@ class PostReadService extends AppService
      */
     public function multipleAdd(array $postIds, int $userId, int $teamId)
     {
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
-
-        $query = [
-            'conditions' => [
-                'PostRead.post_id' => $postIds,
-                'PostRead.user_id' => $userId,
-            ],
-            'fields'     => 'PostRead.post_id'
-        ];
-        $readPosts = $PostRead->find('all', $query);
-
-        $readPostIds = Hash::extract($readPosts, "{n}.PostRead.post_id");
-        $unreadPostIds = array_diff($postIds, $readPostIds);
-
-        if (!empty($unreadPostIds)) {
-            try {
-                $this->TransactionManager->begin();
-                $PostRead->create();
-                $newData = [];
-                foreach ($unreadPostIds as $unreadPostId) {
-                    $data = [
-                        'post_id' => $unreadPostId,
-                        'user_id' => $userId,
-                        'team_id' => $teamId
-                    ];
-                    array_push($newData, $data);
-                }
-
-                /** @var PostReadEntity $result */
-                $PostRead->useType()->useEntity()->bulkInsert($newData);
-
-                $PostRead->updateReadersCountMultiplePost($unreadPostIds);
-
-                $this->updateCircleUnreadInformation($teamId, $userId, $unreadPostIds);
-
-                $this->TransactionManager->commit();
-            } catch (Exception $e) {
-                $this->TransactionManager->rollback();
-                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
-                throw $e;
-            }
-
-            /** @var UnreadPostsRedisService $UnreadPostsRedisService */
-            $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
-            $UnreadPostsRedisService->removeManyByPostIds($userId, $teamId, $unreadPostIds);
-        }
-
-        return $unreadPostIds;
+        return $this->readPosts($postIds, $userId, $teamId);
     }
 
     /**
