@@ -7,21 +7,23 @@ App::uses('CircleMember', 'Model');
 App::uses('UnreadCirclePost', 'Model');
 App::import('Service/Redis', 'UnreadPostsRedisService');
 
-/**
- * User: Marti Floriach
- * Date: 2018/09/19
- */
-
 use Goalous\Exception as GlException;
 
 class PostReadService extends AppService
 {
     /**
-     * Read specified post ids
+     * Function of post read.
+     * Doing 4 things.
+     * - Delete record from cache_unread_circle_posts table
+     * - Decreasing circle_members.unread_count
+     * - Insert post_reads table
+     * - Increasing posts.post_read_count
+     * To make reading post process more atomic, this function is not using CakePHP2 model class.
      *
      * @param array $postIds
      * @param int $userId
      * @param int $teamId
+     * @return array
      */
     public function readPosts(array $postIds, int $userId, int $teamId)
     {
@@ -30,72 +32,41 @@ class PostReadService extends AppService
         try {
             $pdo->beginTransaction();
 
-            // Create string of ?,?,?,? ...
-            $postIdsIn = implode(',', array_fill(0, count($postIds), '?'));
-            $stateSelectRead = $pdo->prepare('select post_id from post_reads where post_id in ('.$postIdsIn.') and user_id = ?');
+            $rawString = function (int $count, string $str) {
+                return implode(',', array_fill(0, $count, $str));
+            };
+
+            // Select post_id that have already read.
+            $query = sprintf(
+                'select post_id from post_reads where post_id in (%s) and user_id = ?',
+                $rawString(count($postIds), '?')
+            );
+            $stateSelectRead = $pdo->prepare($query);
             $stateSelectRead->execute(array_merge($postIds, [$userId]));
             $alreadyReadPostIds = $stateSelectRead->fetchAll(PDO::FETCH_COLUMN);
-            //var_dump($alreadyReadPostIds);
             $postIdsToRead = array_diff($postIds, $alreadyReadPostIds);
-//            GoalousLog::info('post id read filtering', [
-//                '$postIdsToRead' => $postIdsToRead,
-//                '$alreadyReadPostIds' => $alreadyReadPostIds,
-//                '$postIds' => $postIds,
-//            ]);
 
-            // for each
-
-            //// insert post read (Move to the end)
-            $valuesString = implode(',', array_fill(0, count($postIdsToRead), '(?, ?, ?, unix_timestamp(), unix_timestamp())'));
-            $query = sprintf('insert into post_reads (post_id, user_id, team_id, created, modified) values %s', $valuesString);
-            $stateInsertPostRead = $pdo->prepare($query);
-            $place = 1;
-            foreach ($postIdsToRead as $postIdToRead) {
-                $stateInsertPostRead->bindValue($place++, $postIdToRead, PDO::PARAM_INT);
-                $stateInsertPostRead->bindValue($place++, $userId, PDO::PARAM_INT);
-                $stateInsertPostRead->bindValue($place++, $teamId, PDO::PARAM_INT);
-            }
-            $insertResult = $stateInsertPostRead->execute();
-//            GoalousLog::info('$insertResult', [$insertResult]);
-
-            // select circle id that will influence
-            $valuesString = implode(',', array_fill(0, count($postIdsToRead), '?'));
+            // Select circle id that will influence
             $query = sprintf('
             select distinct S.circle_id 
-            from post_reads as R 
+            from posts as P 
             inner join post_share_circles as S 
-                on R.post_id = S.post_id 
-            where 
-                R.user_id = ? 
-                and R.post_id in (%s)
-            ', $valuesString);
+                on P.id = S.post_id 
+            where P.id in (%s)
+            ', $rawString(count($postIdsToRead), '?'));
             $stateSelectCircleIdOfUpdating = $pdo->prepare($query);
-            $stateSelectCircleIdOfUpdating->execute(array_merge([$userId], $postIdsToRead));
+            $stateSelectCircleIdOfUpdating->execute($postIdsToRead);
             $circleIdsUpdating = $stateSelectCircleIdOfUpdating->fetchAll(PDO::FETCH_COLUMN);
-//            GoalousLog::info('$circleIdsUpdating', $circleIdsUpdating);
 
-            //// remove post read cache
-            $valuesString = implode(',', array_fill(0, count($postIdsToRead), '?'));
-            $query = sprintf('delete from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);', $valuesString);
+            // Delete record from cache_unread_circle_posts table
+            $query = sprintf(
+                'delete from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);',
+                $rawString(count($postIdsToRead), '?')
+            );
             $stateDeleteCacheUnread = $pdo->prepare($query);
             $stateDeleteCacheUnread->execute(array_merge([$userId], [$teamId], $postIdsToRead));
 
-            //// count unread count for each circle
-            ////// fetch count of unread each circle
-
-            $valuesString = implode(',', array_fill(0, count($circleIdsUpdating), '?'));
-//            $query = sprintf('
-//         select
-//            circle_id, count(circle_id) as count
-//         from post_reads as R
-//         inner join post_share_circles as S
-//              on R.post_id = S.post_id
-//         where R.user_id = ?
-//              and circle_id in (%s)
-//         group by circle_id;', $valuesString);
-//            $stateSelectCircle = $pdo->prepare($query);
-
-            $valuesString = implode(',', array_fill(0, count($circleIdsUpdating), '?'));
+            // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
             $query = sprintf('
                 select 
                     C.circle_id, count(C.circle_id) as count 
@@ -105,14 +76,18 @@ class PostReadService extends AppService
                 where U.user_id = ? 
                     and U.team_id = ? 
                     and C.circle_id in (%s)
-                group by C.circle_id;', $valuesString);
+                group by C.circle_id;',
+                $rawString(count($circleIdsUpdating), '?')
+            );
             $stateSelectRestOfUnreadCount = $pdo->prepare($query);
             $stateSelectRestOfUnreadCount->execute(array_merge([$userId], [$teamId], $circleIdsUpdating));
             $circleUnreadCounts = $stateSelectRestOfUnreadCount->fetchAll(PDO::FETCH_ASSOC);
-            //var_dump($circleIdsUpdating);
-            //var_dump($circleUnreadCounts);
 
-            $mapKeyCircleIdValueUnreadCount = [];
+            // Prepare array of circle id with unread count valued.
+            $mapKeyCircleIdValueUnreadCount = [
+                // 'circles.id' => unread count
+            ];
+            // Because the mysql count() doesn't return 0 if there is no record, set default value as 0.
             foreach ($circleIdsUpdating as $circleId) {
                 $mapKeyCircleIdValueUnreadCount[$circleId] = 0;
             }
@@ -129,9 +104,6 @@ class PostReadService extends AppService
                     circle_id = ? 
                     and team_id = ? 
                     and user_id = ?;');
-            GoalousLog::info('$postIdsToRead', $postIdsToRead);
-            GoalousLog::info('$circleUnreadCounts', $circleUnreadCounts);
-            GoalousLog::info('$mapKeyCircleIdValueUnreadCount', [$mapKeyCircleIdValueUnreadCount]);
             foreach ($mapKeyCircleIdValueUnreadCount as $circleId => $unreadCount) {
                 $stateUpdateCircleMemberUnreadCount->execute([
                     $unreadCount,
@@ -141,7 +113,29 @@ class PostReadService extends AppService
                 ]);
             }
 
-            // Update post read count
+            // Insert post read
+            $query = sprintf(
+                'insert into post_reads (post_id, user_id, team_id, created, modified) values %s',
+                $rawString(count($postIdsToRead), '(?, ?, ?, unix_timestamp(), unix_timestamp())')
+            );
+            $stateInsertPostRead = $pdo->prepare($query);
+            $place = 1;
+            foreach ($postIdsToRead as $postIdToRead) {
+                $stateInsertPostRead->bindValue($place++, $postIdToRead, PDO::PARAM_INT);
+                $stateInsertPostRead->bindValue($place++, $userId, PDO::PARAM_INT);
+                $stateInsertPostRead->bindValue($place++, $teamId, PDO::PARAM_INT);
+            }
+            $stateInsertPostRead->execute();
+            $countInsertRecord = $stateInsertPostRead->rowCount();
+            if (count($postIdsToRead) !== $stateInsertPostRead->rowCount()) {
+                throw new RuntimeException(sprintf(
+                    'Unexpected post_reads record insert amount expected: %d, actual: %d',
+                    count($postIdsToRead),
+                    $countInsertRecord
+                ));
+            }
+
+            // Update post read count of post
             $stateUpdatePostReadCount = $pdo->prepare('
                 update posts
                 set post_read_count = (select count(id) from post_reads where post_id = :post_id)
@@ -153,10 +147,14 @@ class PostReadService extends AppService
 
             $pdo->commit();
         } catch (\Throwable $e) {
-            GoalousLog::error('pdo catch error', [
-                'message' => $e->getMessage(),
-            ]);
             $pdo->rollBack();
+            GoalousLog::error('Failed read post', [
+                'message' => $e->getMessage(),
+                'post.ids' => $postIds,
+                'users.id' => $userId,
+                'teams.id' => $teamId
+            ]);
+            throw new RuntimeException('Failed read post');
         }
 
         return $postIdsToRead;
@@ -165,9 +163,12 @@ class PostReadService extends AppService
     private function createPdoConnection()
     {
         $db = new DATABASE_CONFIG();
-        return new PDO('mysql:host='.$db->default['host'].';dbname='.
+        $pdo = new PDO('mysql:host='.$db->default['host'].';dbname='.
             $db->default['database'].';charset=utf8',
             $db->default['login'], $db->default['password']);
+        // Make throwing exception when pdo failed on query.
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
     }
 
     /**
@@ -184,7 +185,6 @@ class PostReadService extends AppService
     {
         /** @var PostRead $PostRead */
         $PostRead = ClassRegistry::init('PostRead');
-        GoalousLog::info('$postIds', $postIds);
 
         $query = [
             'conditions' => [
@@ -197,9 +197,6 @@ class PostReadService extends AppService
 
         $readPostIds = Hash::extract($readPosts, "{n}.PostRead.post_id");
         $unreadPostIds = array_diff($postIds, $readPostIds);
-
-        GoalousLog::info('$readPostIds', $readPostIds);
-        GoalousLog::info('$unreadPostIds', $unreadPostIds);
 
         if (!empty($unreadPostIds)) {
             try {
