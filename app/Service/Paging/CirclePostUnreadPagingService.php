@@ -24,7 +24,7 @@ class CirclePostUnreadPagingService
         $extendFlags = []
     ): array
     {
-        $UnreadCirclePostId = $pagingRequest->getCondition('unread_id');
+        $unreadCirclePostId = $pagingRequest->getCondition('unread_id');
         $circleNotificationFlg = boolval($pagingRequest->getCondition('noti') ?? true);
 
         $teamId = $pagingRequest->getCurrentTeamId();
@@ -34,7 +34,8 @@ class CirclePostUnreadPagingService
             $teamId,
             $userId,
             $circleNotificationFlg,
-            $UnreadCirclePostId
+            $unreadCirclePostId,
+            self::POST_LIMIT
         );
 
         $pagingRequestForCursor = new PagingRequest();
@@ -45,13 +46,21 @@ class CirclePostUnreadPagingService
                     'unread_id' => null,
                     'noti' => false,
                 ]);
+                // There is no post of notification on circle's.
+                $hasUnreadPostNotificationOff = !empty($this->getPostsInCircleNotifyFromUnreadId(
+                    $teamId,
+                    $userId,
+                    false,
+                    $unreadCirclePostId,
+                    1
+                ));
                 return [
                     'data'   => [
                         [
                             'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
                         ]
                     ],
-                    'cursor' => $pagingRequestForCursor->returnCursor(),
+                    'cursor' => $hasUnreadPostNotificationOff ? $pagingRequestForCursor->returnCursor() : '',
                     'count'  => 0
                 ];
             }
@@ -145,7 +154,8 @@ class CirclePostUnreadPagingService
         int $teamId,
         int $userId,
         bool $flagCircleNotification,
-        $unreadCirclePostId
+        $unreadCirclePostId = null,
+        int $limit = self::POST_LIMIT
     ): array
     {
         /** @var CircleMember $CircleMember */
@@ -159,7 +169,7 @@ class CirclePostUnreadPagingService
                 'UnreadCirclePost.user_id' => $userId,
                 'UnreadCirclePost.circle_id' => array_values($circleIds),
             ],
-            'limit'      => self::POST_LIMIT,
+            'limit'      => $limit,
             'order'      => [
                 'UnreadCirclePost.id' => 'desc'
             ],
