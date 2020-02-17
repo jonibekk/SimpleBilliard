@@ -138,7 +138,7 @@ class PostsController extends BasePagingController
 
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
-        
+
         $this->NotifyBiz->execSendNotify(
                     NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
                     $postedPostId,
@@ -147,7 +147,7 @@ class PostsController extends BasePagingController
                     $newPost['team_id'],
                     $newPost['user_id']
                 );
-         
+
 
         /** @var PostPusherService $PostPusherService */
         $PostPusherService = ClassRegistry::init('PostPusherService');
@@ -374,10 +374,6 @@ class PostsController extends BasePagingController
             /** @var PostReadService $PostReadService */
             $PostReadService = ClassRegistry::init('PostReadService');
             $PostReadService->multipleAdd([$postId], $this->getUserId(), $this->getTeamId());
-            /** @var CircleMemberService $CircleMemberService */
-            $CircleMemberService = ClassRegistry::init('CircleMemberService');
-            $firstSharedCircle = reset($post['shared_circles']);
-            $CircleMemberService->decreaseCircleUnreadCount($firstSharedCircle['id'], $this->getUserId(), $this->getTeamId(), 1);
         }
 
 
