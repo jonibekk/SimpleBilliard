@@ -54,13 +54,19 @@ class CirclePostUnreadPagingService
                     $unreadCirclePostId,
                     1
                 ));
+                $cursor = '';
+                $data = [
+                    [
+                        'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
+                    ]
+                ];
+                if ($hasUnreadPostNotificationOff) {
+                    $cursor = $pagingRequestForCursor->returnCursor();
+                    $data = [];
+                }
                 return [
-                    'data'   => [
-                        [
-                            'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
-                        ]
-                    ],
-                    'cursor' => $hasUnreadPostNotificationOff ? $pagingRequestForCursor->returnCursor() : '',
+                    'data'   => $data,
+                    'cursor' => $cursor,
                     'count'  => 0
                 ];
             }
