@@ -1331,7 +1331,7 @@ class UsersController extends AppController
 
             
             /* get payment flag */
-            $teamId = $currentTeamId;
+            $teamId = $inviteTeamId;
             $paymentTiming = new PaymentTiming();
             if ($paymentTiming->checkIfPaymentTiming($teamId)){
                 /* Charge if paid plan */
