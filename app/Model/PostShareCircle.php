@@ -196,6 +196,17 @@ class PostShareCircle extends AppModel
         return $this->find('count', $options);
     }
 
+    public function getFirstSharedCircleId(int $postId): int
+    {
+        $options = [
+            'conditions' => [
+                'post_id' => $postId,
+            ],
+        ];
+
+        return $this->find('first', $options)['PostShareCircle']['circle_id'];
+    }
+
     /**
      * サークルへの投稿の現在までの既読数合計を返す
      *

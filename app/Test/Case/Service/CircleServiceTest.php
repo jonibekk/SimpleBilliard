@@ -33,6 +33,7 @@ class CircleServiceTest extends GoalousTestCase
         'app.post_share_circle',
         'app.local_name',
         'app.experiment',
+        'app.cache_unread_circle_post'
     ];
 
     /**

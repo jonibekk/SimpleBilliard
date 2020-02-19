@@ -99,7 +99,7 @@ class MeExtender extends BaseExtender
             $CircleMember = ClassRegistry::init('CircleMember');
             $circleIds = [];
 
-            $circles = $CircleMember->getCirclesWithNotificationFlg($userId, true);
+            $circles = $CircleMember->getCirclesWithNotificationFlg($currentTeamId, $userId, true);
             foreach ($circles as $circle) {
                 $circleIds[] = (string)$circle['circle_id'];
             }

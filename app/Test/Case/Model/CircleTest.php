@@ -590,7 +590,6 @@ class CircleTest extends GoalousTestCase
         $this->assertTrue($newTime < $circle['latest_post_created']);
     }
 
-
     function test_getSharedSecretCircleByPostId()
     {
         // Exist
@@ -612,8 +611,8 @@ class CircleTest extends GoalousTestCase
         $this->assertEquals($res, []);
     }
 
-    public function test_getEntity_success(){
-
+    public function test_getEntity_success()
+    {
         $id = 1;
 
         /** @var Circle $Circle */
@@ -625,7 +624,7 @@ class CircleTest extends GoalousTestCase
 
         $arrayForm = $result->toArray();
 
-        $this->assertInternalType('array',$arrayForm);
+        $this->assertInternalType('array', $arrayForm);
 
         $this->assertEquals($id, $arrayForm['id']);
         $this->assertNotEmpty($arrayForm['name']);

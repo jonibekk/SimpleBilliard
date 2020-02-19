@@ -58,7 +58,6 @@ class CircleExtender extends BaseExtender
         }
 
         if ($this->includeExt($extensions, self::EXTEND_MEMBER_INFO)) {
-
             /** @var CircleMemberInfoExtension $CircleMemberInfoExtension */
             $CircleMemberInfoExtension = ClassRegistry::init('CircleMemberInfoExtension');
 
