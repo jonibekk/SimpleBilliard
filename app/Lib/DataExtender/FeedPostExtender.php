@@ -99,7 +99,7 @@ class FeedPostExtender extends BaseExtender
 
                     $data[$index]['is_leader'] = $isLeader;
                     //If now is within goal's period and goal is not made by current user, current user can collaborate
-                    $data[$index]['can_collaborate'] = !$isLeader &&
+                    $data[$index]['can_collaborate'] = !$isLeader && !$isCollaborating &&
                         GoalousDateTime::now()->between($startDate, $endDate);
                     $data[$index]['is_collaborating'] = $isCollaborating;
                 }
