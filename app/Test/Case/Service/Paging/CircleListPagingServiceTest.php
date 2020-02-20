@@ -224,4 +224,12 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $this->assertEquals(7, $res['count']);
     }
 
+    /**
+     * filter new created circle from unjoined circle
+     */
+    public function test_getCircleListWithCursor_newCreated()
+    {
+        //TODO: test書く
+    }
+
 }

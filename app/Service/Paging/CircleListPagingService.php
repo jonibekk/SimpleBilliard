@@ -12,18 +12,12 @@ class CircleListPagingService extends BasePagingService
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
-
-        foreach($pagingRequest as $cond => $val) {
-            CakeLog::info(sprintf('page: %s , %s', $cond, $val));
-        }
         $options = $this->createSearchCondition($pagingRequest);
 
         if ($limit) {
             $options['limit'] = $limit;
         }
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
-
-        GoalousLog::info("options: ", $options);
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -50,11 +44,6 @@ class CircleListPagingService extends BasePagingService
         //Get user ID from given resource ID. If not exist, use current user's ID
         $userId = $pagingRequest->getResourceId() ?: $pagingRequest->getCurrentUserId();
         $teamId = $pagingRequest->getCurrentTeamId();
-
-
-        foreach($conditions as $cond => $val) {
-            CakeLog::info(sprintf('cond: %s , %s', $cond, $val));
-        }
 
         $searchConditions = [
             'conditions' => [
@@ -83,11 +72,29 @@ class CircleListPagingService extends BasePagingService
         /* filter new created */
         $newcreatedFlag = boolval(Hash::get($conditions, 'newcreated', false));
         if ($newcreatedFlag) {
-            GoalousLog::info("newcreatedFlag: ");
             return $this->addSearchConditionForNewCreated($searchConditions);
+        }
+
+        /* filter new created circle from unjoined circles */
+        if(!$joinedFlag && !$newcreatedFlag) {
+            return $this->addSearchConditionForUnJoined($searchConditions);
         }
         return $searchConditions;
     }
+
+    /**
+     * Add condition for filter new created circle from unjoined circles
+     *
+     * @param array $searchConditions
+     *
+     * @return array
+     */
+    private function addSearchConditionForUnJoined(array $searchConditions): array
+    {
+        $searchConditions['conditions']['Circle.created <'] = GoalousDateTime::now()->subDays(30)->getTimestamp();
+        return $searchConditions;
+    }
+
 
     /**
      * Add condition for filter new created circle
