@@ -48,6 +48,10 @@ class MeController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
+        foreach($pagingRequest as $cond => $val) {
+            CakeLog::info(sprintf('cond: %s , %s', $cond, $val));
+        }
+
         /** @var CircleListPagingService $CircleListPagingService */
         $CircleListPagingService = ClassRegistry::init('CircleListPagingService');
 

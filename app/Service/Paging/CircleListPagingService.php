@@ -12,12 +12,18 @@ class CircleListPagingService extends BasePagingService
 
     protected function readData(PagingRequest $pagingRequest, int $limit): array
     {
+
+        foreach($pagingRequest as $cond => $val) {
+            CakeLog::info(sprintf('page: %s , %s', $cond, $val));
+        }
         $options = $this->createSearchCondition($pagingRequest);
 
         if ($limit) {
             $options['limit'] = $limit;
         }
         $options['conditions'][] = $pagingRequest->getPointersAsQueryOption();
+
+        GoalousLog::info("options: ", $options);
 
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -45,6 +51,11 @@ class CircleListPagingService extends BasePagingService
         $userId = $pagingRequest->getResourceId() ?: $pagingRequest->getCurrentUserId();
         $teamId = $pagingRequest->getCurrentTeamId();
 
+
+        foreach($conditions as $cond => $val) {
+            CakeLog::info(sprintf('cond: %s , %s', $cond, $val));
+        }
+
         $searchConditions = [
             'conditions' => [
                 'Circle.team_id' => $teamId,
@@ -69,6 +80,25 @@ class CircleListPagingService extends BasePagingService
         $searchConditions = $this->addSearchConditionForJoined($searchConditions, $userId, $teamId, $joinedFlag);
         $searchConditions['order'] = $pagingRequest->getOrders();
 
+        /* filter new created */
+        $newcreatedFlag = boolval(Hash::get($conditions, 'newcreated', false));
+        if ($newcreatedFlag) {
+            GoalousLog::info("newcreatedFlag: ");
+            return $this->addSearchConditionForNewCreated($searchConditions);
+        }
+        return $searchConditions;
+    }
+
+    /**
+     * Add condition for filter new created circle
+     *
+     * @param array $searchConditions
+     *
+     * @return array
+     */
+    private function addSearchConditionForNewCreated(array $searchConditions): array
+    {
+        $searchConditions['conditions']['Circle.created >'] = GoalousDateTime::now()->subDays(30)->getTimestamp();
         return $searchConditions;
     }
 
@@ -158,7 +188,7 @@ class CircleListPagingService extends BasePagingService
 
     protected function beforeRead(PagingRequest $pagingRequest)
     {
-        $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
+        $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned', 'newcreated']);
         return $pagingRequest;
     }
 
