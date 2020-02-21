@@ -30,7 +30,7 @@ class PaymentTiming
         if (empty($switchFlag) or intval($switchFlag) == 1 and empty($switchStartDate)){
             $validationErrors = 'Switch Value Error!';
             throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s", 
-                $inviteTeamId, var_export($validationErrors, true)));
+                $teamId, var_export($validationErrors, true)));
         }
 
         if (intval($switchFlag) == 2 or intval($switchFlag) == 1 and !empty($switchStartDate) and PaymentFlagClient::isInPeriod($paymentBaseDay, $switchStartDate, $teamId)) {
@@ -66,7 +66,7 @@ class PaymentTiming
         if (empty($switchFlag) or intval($switchFlag) == 1 and empty($switchStartDate)){
             $validationErrors = 'Switch Value Error!';
             throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s", 
-                $inviteTeamId, var_export($validationErrors, true)));
+                $teamId, var_export($validationErrors, true)));
         }
 
         $paymentTimingDay = PaymentFlagClient::getPaymentTimingDay($paymentBaseDay, $switchStartDate);
