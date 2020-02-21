@@ -1279,6 +1279,8 @@ class UsersController extends AppController
         $ExperimentService = ClassRegistry::init('ExperimentService');
         /** @var CircleService $CircleService */
         $CircleService = ClassRegistry::init('CircleService');
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
 
         try {
             $this->User->begin();
@@ -1294,6 +1296,7 @@ class UsersController extends AppController
             $invite = $this->Invite->verify($token, $userId);
 
             $inviteTeamId = Hash::get($invite, 'Invite.team_id');
+            $isCharge = $PaymentService->calcChargeUserCount($inviteTeamId, 1) === 1;
 
             //チーム参加
             if (!$this->User->TeamMember->add($userId, $inviteTeamId)) {
@@ -1337,11 +1340,9 @@ class UsersController extends AppController
                 /* Charge if paid plan */
                 /** @var Team $Team */
                 $Team = ClassRegistry::init("Team");
-                /** @var PaymentService $PaymentService */
-                $PaymentService = ClassRegistry::init('PaymentService');
                 /** @var CampaignService $CampaignService */
                 $CampaignService = ClassRegistry::init('CampaignService');
-                if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId)) {
+                if ($Team->isPaidPlan($teamId) && !$CampaignService->purchased($teamId) && $isCharge) {
                     // [Important] Transaction commit in this method
                     $PaymentService->charge(
                         $teamId,

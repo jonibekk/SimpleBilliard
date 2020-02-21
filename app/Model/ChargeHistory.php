@@ -472,4 +472,30 @@ class ChargeHistory extends AppModel
         }
         return Hash::extract($res, '{n}.ChargeHistory');
     }
+    /**
+     * Get monthly charge history after ts 
+     *
+     * @param int $startTimestamp
+     * @param int $endTimestamp
+     *
+     * @return array
+     */
+    public function getRecordAfterTs(int $timestamp): array
+    {
+        $options = [
+            'conditions' => [
+                'charge_datetime >=' => $timestamp,
+                'charge_type ='      => Enum\Model\ChargeHistory\ChargeType::MONTHLY_FEE,
+                'result_type !='     => Enum\Model\ChargeHistory\ResultType::ERROR,
+                'del_flg ='         => false,
+                // TODO: Remove this condition and add checking for inconsistency of campaign team's charge in DetectInconsistentChargeShell.
+                // 'campaign_team_id'   => null
+            ],
+        ];
+        $res =  $this->find('first', $options);
+        if (empty($res)) {
+            return [];
+        }
+        return $res;
+    }
 }
