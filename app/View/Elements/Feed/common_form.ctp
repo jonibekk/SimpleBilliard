@@ -95,10 +95,22 @@ $hasPostResources = !empty($this->request->data['PostResources']);
             </p>
         </div>
         <?php if ($showGuidanceGoalCreate): ?>
+        
         <div class="panel-body hide-on-guidance-goal-create-close">
+            <p class="text-left">
+                <?= __("Japanese") ?>
+            </p>
             <div id="youtube_create_goal">
                 <iframe type="text/html" width="640" height="360"
                         src="https://www.youtube.com/embed/gPCmJFeqPBo?autoplay=0&controls=1&rel=0&showinfo=0"
+                        frameborder="0"></iframe>
+            </div>
+            <p class="text-left">
+                <?= __("English") ?>
+            </p>
+            <div id="youtube_create_goal">
+                <iframe type="text/html" width="640" height="360"
+                        src="https://www.youtube.com/embed/dszew-4QAvA?autoplay=0&controls=1&rel=0&showinfo=0"
                         frameborder="0"></iframe>
             </div>
         </div>
