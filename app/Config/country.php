@@ -20,4 +20,8 @@ $config['countries'] = [
         "code" => "US",
         "name" => "United States",
     ],
+    [
+        "code" => "BR",
+        "name" => "Brazil",
+    ],
 ];
