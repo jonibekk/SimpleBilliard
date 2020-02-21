@@ -105,6 +105,7 @@ $hasPostResources = !empty($this->request->data['PostResources']);
                         src="https://www.youtube.com/embed/gPCmJFeqPBo?autoplay=0&controls=1&rel=0&showinfo=0"
                         frameborder="0"></iframe>
             </div>
+            <br>
             <p class="text-left">
                 <?= __("English") ?>
             </p>
