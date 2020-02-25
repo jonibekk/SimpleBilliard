@@ -26,8 +26,8 @@ use Goalous\Enum as Enum;
  */
 class PaymentService extends AppService
 {
-    const AMOUNT_PER_USER_JPY = 1980;
-    const AMOUNT_PER_USER_USD = 19;
+    const AMOUNT_PER_USER_JPY = 1225;
+    const AMOUNT_PER_USER_USD = 12;
 
     /**
      * Get payment setting by team id
