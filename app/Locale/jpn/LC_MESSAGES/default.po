@@ -2655,6 +2655,9 @@ msgstr "タイ"
 msgid "United States"
 msgstr "アメリカ合衆国"
 
+msgid "Brazil"
+msgstr "ブラジル"
+
 msgid "%d members"
 msgstr "%dメンバー"
 

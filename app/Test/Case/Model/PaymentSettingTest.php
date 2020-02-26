@@ -60,7 +60,8 @@ class PaymentSettingTest extends GoalousTestCase
     public function test_findMonthlyChargeCcTeams_basic()
     {
         $this->Team->deleteAll(['del_flg' => false]);
-        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        $paymentSetting = ['payment_base_day' => 1];
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam([], $paymentSetting);
 
         // data_count: 1
         $res = $this->PaymentSetting->findMonthlyChargeTeams(Enum\Model\PaymentSetting\Type::CREDIT_CARD());
@@ -78,7 +79,7 @@ class PaymentSettingTest extends GoalousTestCase
         ]);
 
         // data_count: multi
-        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam();
+        list ($teamId, $paymentSettingId) = $this->createCcPaidTeam([], $paymentSetting);
         $res = $this->PaymentSetting->findMonthlyChargeTeams(Enum\Model\PaymentSetting\Type::CREDIT_CARD());
         $this->assertEquals(count($res), 2);
         $this->assertNotEquals($res[0]['PaymentSetting']['team_id'], $res[1]['PaymentSetting']['team_id']);

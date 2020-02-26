@@ -18,6 +18,7 @@ App::uses('PricePlanPurchaseTeam', 'Model');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('GoalousDateTime', 'DateTime');
+App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
 
@@ -26,8 +27,8 @@ use Goalous\Enum as Enum;
  */
 class PaymentService extends AppService
 {
-    const AMOUNT_PER_USER_JPY = 1980;
-    const AMOUNT_PER_USER_USD = 19;
+    const AMOUNT_PER_USER_JPY = 1225;
+    const AMOUNT_PER_USER_USD = 12;
 
     /**
      * Get payment setting by team id
@@ -2282,9 +2283,22 @@ class PaymentService extends AppService
             return $addUserCnt;
         }
 
+        /*
         $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         if ($chargeUserCnt <= 0){
             $chargeUserCnt = $TeamMember->countHeadCount($teamId) + $addUserCnt - $maxChargedUserCnt;
+            
+        }
+         */
+        /** @var ChargeHistory $ChargeHistory */
+        $ChargeHistory = ClassRegistry::init("ChargeHistory");
+
+        $paymentTiming = new PaymentTiming();
+        $paymentTimingDay = $paymentTiming->getPaymentTimingDay($teamId);
+        if ($paymentTiming->checkIfPaymentTiming($teamId) && empty($ChargeHistory->getRecordAfterTs($paymentTimingDay))){
+            $chargeUserCnt = $TeamMember->countHeadCount($teamId) + $addUserCnt - $maxChargedUserCnt;
+        }else {
+            $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         }
         return $chargeUserCnt;
     }
