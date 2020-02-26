@@ -2,14 +2,14 @@
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
 
-class PaymentTiming 
+class PaymentTiming
 {
     /*
      * check if it is in new payment peroid
      *
      */
 
-    public function checkIfPaymentTiming(int $teamId): bool 
+    public function checkIfPaymentTiming(int $teamId): bool
     {
         /* get payment flag */
         $redisClient = new PaymentFlagClient();

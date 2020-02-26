@@ -4,78 +4,178 @@ App::uses('PostRead', 'Model');
 App::uses('Post', 'Model');
 App::uses('PostShareCircle', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Service/Redis', 'UnreadPostsRedisService');
-
-/**
- * User: Marti Floriach
- * Date: 2018/09/19
- */
 
 use Goalous\Exception as GlException;
 
 class PostReadService extends AppService
 {
     /**
-     * Add user read a post
+     * Function of post read.
+     * Doing 4 things.
+     * - Delete record from cache_unread_circle_posts table
+     * - Decreasing circle_members.unread_count
+     * - Insert post_reads table
+     * - Increasing posts.post_read_count
+     * To make reading post process more atomic, this function is not using CakePHP2 model class.
      *
-     * @param int $postId Target post's ID
-     * @param int $userId User ID who who reads the post
-     * @param int $teamId The team ID where this happens
-     *
-     * @throws Exception
-     * @return PostReadEntity
+     * @param array $postIds
+     * @param int $userId
+     * @param int $teamId
+     * @return array
      */
-    public function add(int $postId, int $userId, int $teamId): PostReadEntity
+    public function readPosts(array $postIds, int $userId, int $teamId)
     {
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
+        $pdo = $this->createPdoConnection();
+        $postIdsToRead = [];
+        try {
+            $pdo->beginTransaction();
 
-        $condition = [
-            'conditions' => [
-                'post_id' => $postId,
-                'user_id' => $userId,
-                'team_id' => $teamId
-            ],
-            'fields'     => [
-                'id'
-            ]
-        ];
+            $rawString = function (int $count, string $str) {
+                return implode(',', array_fill(0, $count, $str));
+            };
 
-        //Check whether user read that post already
-        if (empty($PostRead->find('first', $condition))) {
-            try {
-                $this->TransactionManager->begin();
-                $PostRead->create();
-                $newData = [
-                    'post_id' => $postId,
-                    'user_id' => $userId,
-                    'team_id' => $teamId
-                ];
-                /** @var PostReadEntity $result */
-                $result = $PostRead->useType()->useEntity()->save($newData, false);
+            // Select post_id that have already read.
+            $query = sprintf(
+                'select post_id from post_reads where post_id in (%s) and user_id = ?',
+                $rawString(count($postIds), '?')
+            );
+            $stateSelectRead = $pdo->prepare($query);
+            $stateSelectRead->execute(array_merge($postIds, [$userId]));
+            $alreadyReadPostIds = $stateSelectRead->fetchAll(PDO::FETCH_COLUMN);
+            $postIdsToRead = array_diff($postIds, $alreadyReadPostIds);
 
-                $PostRead->updateReadersCount($postId);
+            // Select circle id that will influence
+            $query = sprintf('
+            select distinct S.circle_id 
+            from posts as P 
+            inner join post_share_circles as S 
+                on P.id = S.post_id 
+            where P.id in (%s)
+            ', $rawString(count($postIdsToRead), '?'));
+            $stateSelectCircleIdOfUpdating = $pdo->prepare($query);
+            $stateSelectCircleIdOfUpdating->execute($postIdsToRead);
+            $circleIdsUpdating = $stateSelectCircleIdOfUpdating->fetchAll(PDO::FETCH_COLUMN);
 
-                $this->updateCircleUnreadCount([$postId], $userId, $teamId);
+            // Delete record from cache_unread_circle_posts table
+            $query = sprintf(
+                'delete from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);',
+                $rawString(count($postIdsToRead), '?')
+            );
+            $stateDeleteCacheUnread = $pdo->prepare($query);
+            $stateDeleteCacheUnread->execute(array_merge([$userId], [$teamId], $postIdsToRead));
 
-                $this->TransactionManager->commit();
+            // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
+            $query = sprintf('
+                select 
+                    C.circle_id, count(C.circle_id) as count 
+                from cache_unread_circle_posts as U 
+                inner join post_share_circles as C 
+                    on U.post_id = C.post_id 
+                where U.user_id = ? 
+                    and U.team_id = ? 
+                    and C.circle_id in (%s)
+                group by C.circle_id;',
+                $rawString(count($circleIdsUpdating), '?')
+            );
+            $stateSelectRestOfUnreadCount = $pdo->prepare($query);
+            $stateSelectRestOfUnreadCount->execute(array_merge([$userId], [$teamId], $circleIdsUpdating));
+            $circleUnreadCounts = $stateSelectRestOfUnreadCount->fetchAll(PDO::FETCH_ASSOC);
 
-            } catch (Exception $e) {
-                $this->TransactionManager->rollback();
-                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
-                throw $e;
+            // Prepare array of circle id with unread count valued.
+            $mapKeyCircleIdValueUnreadCount = [
+                // 'circles.id' => unread count
+            ];
+            // Because the mysql count() doesn't return 0 if there is no record, set default value as 0.
+            foreach ($circleIdsUpdating as $circleId) {
+                $mapKeyCircleIdValueUnreadCount[$circleId] = 0;
             }
-        } else {
-            throw new GlException\GoalousConflictException(__("You already read this post."));
+            foreach ($circleUnreadCounts as $circleUnreadCount) {
+                $circleId = intval($circleUnreadCount['circle_id']);
+                $mapKeyCircleIdValueUnreadCount[$circleId] = intval($circleUnreadCount['count']);
+            }
+
+            // Update circle member unread count
+            $stateUpdateCircleMemberUnreadCount = $pdo->prepare('
+                update circle_members 
+                set unread_count = ? 
+                where 
+                    circle_id = ? 
+                    and team_id = ? 
+                    and user_id = ?;');
+            foreach ($mapKeyCircleIdValueUnreadCount as $circleId => $unreadCount) {
+                $stateUpdateCircleMemberUnreadCount->execute([
+                    $unreadCount,
+                    $circleId,
+                    $teamId,
+                    $userId
+                ]);
+            }
+
+            // Insert post read
+            $query = sprintf(
+                'insert into post_reads (post_id, user_id, team_id, created, modified) values %s',
+                $rawString(count($postIdsToRead), '(?, ?, ?, unix_timestamp(), unix_timestamp())')
+            );
+            $stateInsertPostRead = $pdo->prepare($query);
+            $place = 1;
+            foreach ($postIdsToRead as $postIdToRead) {
+                $stateInsertPostRead->bindValue($place++, $postIdToRead, PDO::PARAM_INT);
+                $stateInsertPostRead->bindValue($place++, $userId, PDO::PARAM_INT);
+                $stateInsertPostRead->bindValue($place++, $teamId, PDO::PARAM_INT);
+            }
+            $stateInsertPostRead->execute();
+            $countInsertRecord = $stateInsertPostRead->rowCount();
+            if (count($postIdsToRead) !== $stateInsertPostRead->rowCount()) {
+                throw new RuntimeException(sprintf(
+                    'Unexpected post_reads record insert amount expected: %d, actual: %d',
+                    count($postIdsToRead),
+                    $countInsertRecord
+                ));
+            }
+
+            // Update post read count of post
+            $stateUpdatePostReadCount = $pdo->prepare('
+                update posts
+                set post_read_count = (select count(id) from post_reads where post_id = :post_id)
+                where id = :post_id;');
+            foreach ($postIdsToRead as $postId) {
+                $stateUpdatePostReadCount->bindValue(':post_id', $postId);
+                $stateUpdatePostReadCount->execute();
+            }
+
+            $pdo->commit();
+        } catch (\Throwable $e) {
+            $pdo->rollBack();
+            GoalousLog::error('Failed read post', [
+                'message' => $e->getMessage(),
+                'post.ids' => $postIds,
+                'users.id' => $userId,
+                'teams.id' => $teamId
+            ]);
+            throw new RuntimeException('Failed read post');
         }
 
-        return $result;
+        return $postIdsToRead;
+    }
+
+    private function createPdoConnection()
+    {
+        $db = new DATABASE_CONFIG();
+        $pdo = new PDO('mysql:host='.$db->default['host'].';dbname='.
+            $db->default['database'].';charset=utf8',
+            $db->default['login'], $db->default['password']);
+        // Make throwing exception when pdo failed on query.
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
     }
 
     /**
      * Add multiple
+     * @deprecated use readPosts()
      *
-     * @param array $postIds Target post's ID
+     * @param int[] $postIds Target post's ID
      * @param int   $userId  User ID who who reads the post
      * @param int   $teamId  The team ID where this happens
      *
@@ -84,79 +184,44 @@ class PostReadService extends AppService
      */
     public function multipleAdd(array $postIds, int $userId, int $teamId)
     {
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
-
-        $query = [
-            'conditions' => [
-                'PostRead.post_id' => $postIds,
-                'PostRead.user_id' => $userId,
-            ],
-            'fields'     => 'PostRead.post_id'
-        ];
-        $readPosts = $PostRead->find('all', $query);
-
-        $readPostIds = Hash::extract($readPosts, "{n}.PostRead.post_id");
-        $unreadPostIds = array_diff($postIds, $readPostIds);
-
-        if (!empty($unreadPostIds)) {
-            try {
-                $this->TransactionManager->begin();
-                $PostRead->create();
-                $newData = [];
-                foreach ($unreadPostIds as $unreadPostId) {
-                    $data = [
-                        'post_id' => $unreadPostId,
-                        'user_id' => $userId,
-                        'team_id' => $teamId
-                    ];
-                    array_push($newData, $data);
-                }
-
-                /** @var PostReadEntity $result */
-                $PostRead->useType()->useEntity()->bulkInsert($newData);
-
-                $PostRead->updateReadersCountMultiplePost($unreadPostIds);
-
-                // Deal unread count as unrelated post_reads record
-//                $this->updateCircleUnreadCount($unreadPostIds, $userId, $teamId);
-
-                $this->TransactionManager->commit();
-
-            } catch (Exception $e) {
-                $this->TransactionManager->rollback();
-                GoalousLog::error(sprintf("[%s]%s", __METHOD__, $e->getMessage()), $e->getTrace());
-                throw $e;
-            }
-
-            /** @var UnreadPostsRedisService $UnreadPostsRedisService */
-            $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
-            $UnreadPostsRedisService->removeManyByPostIds($userId, $teamId, $unreadPostIds);
-        }
-
-        return $unreadPostIds;
+        return $this->readPosts($postIds, $userId, $teamId);
     }
 
     /**
-     * Update unread count in each circle_member where the user is joined to
+     * Update unread information in each circle_member where the user is joined to
      *
-     * @param int[] $unreadPostIds Array of ids of unread posts
-     * @param int   $userId
      * @param int   $teamId
+     * @param int   $userId
+     * @param int[] $unreadPostIds Array of ids of unread posts
      *
      * @throws Exception
      */
-    public function updateCircleUnreadCount(array $unreadPostIds, int $userId, int $teamId)
+    public function updateCircleUnreadInformation(int $teamId, int $userId, array $unreadPostIds)
     {
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
 
         try {
             $this->TransactionManager->begin();
 
-            $unreadCountList = $this->countUnreadInCircles($unreadPostIds, $userId);
+            $groupedPostIds = $this->groupPostByCircle($teamId, $unreadPostIds);
 
-            foreach ($unreadCountList as $circleId => $unreadCount) {
+            GoalousLog::info(__FILE__, [
+                'teams.id' => $teamId,
+                'users.id' => $userId,
+                '$unreadPostIds' => $unreadPostIds,
+                '$groupedPostIds' => $groupedPostIds,
+            ]);
+
+            foreach ($groupedPostIds as $circleId => $postIds) {
+                $UnreadCirclePost->deleteManyPosts($circleId, $postIds, $userId);
+
+                $unreadCount = $UnreadCirclePost->countUserUnreadInCircle($circleId, $userId);
+
                 $CircleMember->updateUnreadCount($circleId, $unreadCount, $userId, $teamId);
             }
             $this->TransactionManager->commit();
@@ -172,30 +237,30 @@ class PostReadService extends AppService
     }
 
     /**
-     * Count unread count in each circle
+     * Group post ids to their respective circles.
+     * This is to handle old spec where a post can be shared to multiple circles.
      *
-     * @param int[] $unreadPostIds Array of ids of unread posts
-     * @param int   $userId
+     * @param int   $teamId
+     * @param int[] $postIds
      *
-     * @return array
-     *              [circle_id => unread_count]
+     * @return array Grouped post ids
+     *               [circle_id => [post_id, post_id, ...]]
      */
-    private function countUnreadInCircles(array $unreadPostIds, int $userId): array
+    private function groupPostByCircle(int $teamId, array $postIds): array
     {
+        $groupedPostIds = [];
+
         /** @var PostShareCircle $PostShareCircle */
         $PostShareCircle = ClassRegistry::init('PostShareCircle');
-        /** @var PostRead $PostRead */
-        $PostRead = ClassRegistry::init('PostRead');
 
-        $postList = $PostShareCircle->getListOfPostByPostId($unreadPostIds);
+        foreach ($postIds as $postId) {
+            $circleIds = $PostShareCircle->getShareCircleList($postId, $teamId);
 
-        $result = [];
-
-        foreach ($postList as $circleId => $sharedPostList) {
-            $unreadPostList = $PostRead->filterUnreadPost($sharedPostList, $circleId, $userId, true);
-            $result[$circleId] = count($unreadPostList);
+            foreach ($circleIds as $circleId) {
+                $groupedPostIds[$circleId][] = $postId;
+            }
         }
 
-        return $result;
+        return $groupedPostIds;
     }
 }

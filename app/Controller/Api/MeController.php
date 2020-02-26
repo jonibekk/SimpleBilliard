@@ -2,9 +2,11 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
-App::import('Service/Paging', 'UnreadCircleListPagingService');
+App::import('Service/Paging', 'RecentCircleListPagingService');
+App::import('Service/Paging', 'CirclePostUnreadPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
+App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
@@ -143,15 +145,14 @@ class MeController extends BasePagingController
      */
     public function get_all_unread_posts()
     {
-        $unreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
-        $unreadPostsClient = new UnreadPostsClient();
-
-        $data = $unreadPostsClient->read($unreadPostsKey)->get(true);
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+        $data = $UnreadCirclePostService->getGrouped($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
 
-    public function get_all_unread_circles()
+    public function get_recent_circles()
     {
         try {
             $pagingRequest = $this->getPagingParameters();
@@ -159,15 +160,30 @@ class MeController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        /** @var UnreadCircleListPagingService $UnreadCircleListPagingService */
-        $UnreadCircleListPagingService = ClassRegistry::init('UnreadCircleListPagingService');
+        /** @var RecentCircleListPagingService $RecentCircleListPagingService */
+        $RecentCircleListPagingService = ClassRegistry::init('RecentCircleListPagingService');
 
-        $data = $UnreadCircleListPagingService->getDataWithPaging(
+        $data = $RecentCircleListPagingService->getDataWithPaging(
             $pagingRequest,
             $this->getPagingLimit(15),
             [CircleExtender::EXTEND_MEMBER_INFO]);
 
-        return ApiResponse::ok()->withData($data)->getResponse();
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    public function get_unread_posts()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var CirclePostUnreadPagingService $CirclePostUnreadPagingService */
+        $CirclePostUnreadPagingService = ClassRegistry::init('CirclePostUnreadPagingService');
+        $data = $CirclePostUnreadPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
     /**
@@ -175,10 +191,10 @@ class MeController extends BasePagingController
      */
     public function delete_all_unread_posts()
     {
-        $UnreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
-        $UnreadPostsClient = new UnreadPostsClient();
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
 
-        $UnreadPostsClient->del($UnreadPostsKey);
+        $UnreadCirclePostService->deleteUserCacheInTeam($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()->getResponse();
     }

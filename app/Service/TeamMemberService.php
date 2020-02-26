@@ -1,6 +1,7 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'TeamTranslationLanguageService');
+App::import('Service', 'UnreadCirclePostService');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
@@ -150,6 +151,11 @@ class TeamMemberService extends AppService
                 $User->updateDefaultTeam($newTeamId, true, $teamMember['user_id']);
             }
 
+            // Delete unread post cache
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->deleteUserCacheInTeam($teamMember['team_id'], $teamMember['user_id']);
+
             $this->TransactionManager->commit();
 
             return true;
@@ -169,7 +175,6 @@ class TeamMemberService extends AppService
      *
      * @return array
      *              ["en" => "English"]
-     *
      * @throws Exception
      */
     public function getDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages = []): array
@@ -206,7 +211,6 @@ class TeamMemberService extends AppService
      * @param array $browserLanguages Languages supported by user's browser.
      *
      * @return string ISO 639-1 Language Code
-     *
      * @throws Exception
      */
     public function getDefaultTranslationLanguageCode(int $teamId, int $userId, array $browserLanguages = []): string
@@ -262,16 +266,20 @@ class TeamMemberService extends AppService
      *                                language
      *
      * @return string Team member's new language
-     *
      * @throws Exception
      */
-    public function updateDefaultTranslationLanguage(int $teamId, int $userId, array $browserLanguages, bool $overwriteFlg = true): string
-    {
+    public function updateDefaultTranslationLanguage(
+        int $teamId,
+        int $userId,
+        array $browserLanguages,
+        bool $overwriteFlg = true
+    ): string {
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
 
         if (!empty($browserLanguages)) {
-            $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId, $browserLanguages);
+            $topBrowserLanguage = $TeamTranslationLanguageService->selectFirstSupportedLanguage($teamId,
+                $browserLanguages);
         }
 
         if (empty($topBrowserLanguage)) {
