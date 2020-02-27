@@ -1,15 +1,10 @@
 <?php
+
+App::uses('CakeTestFixtureEx', 'Test/Fixture');
 /**
  * CheckedCircle Fixture
  */
-class CheckedCircleFixture extends CakeTestFixture {
-
-/**
- * Table name
- *
- * @var string
- */
-	public $table = 'checked_circles';
+class CheckedCircleFixture extends CakeTestFixtureEx {
 
 /**
  * Fields
@@ -43,6 +38,16 @@ class CheckedCircleFixture extends CakeTestFixture {
 		array(
 			'id' => '1',
 			'circle_id' => '1',
+			'user_id' => '1',
+			'team_id' => '1',
+			'del_flg' => 0,
+			'deleted' => null,
+			'created' => 1,
+			'modified' => 1
+		),
+		array(
+			'id' => '2',
+			'circle_id' => '2',
 			'user_id' => '1',
 			'team_id' => '1',
 			'del_flg' => 0,

@@ -13,9 +13,6 @@ class CheckedCircleTest extends CakeTestCase {
 	 */
 	public $fixtures = array(
 		'app.checked_circle',
-		// 'app.circle',
-		// 'app.user',
-		// 'app.team_member',
 	);
 
 	/**
@@ -42,49 +39,60 @@ class CheckedCircleTest extends CakeTestCase {
 
 	public function test_getCheckedCircle_success() {
 
+		$userId = 1;
+		$teamId = 1;
+		$circleId1 = 1;
+		$circleId2 = 999;
+
 		// search exist record
-		$res1 = $this->CheckedCircle->getCheckedCircle(1, 1, 1);
+		$res1 = $this->CheckedCircle->getCheckedCircle($userId, $teamId, $circleId1);
 		$this->assertCount(1, $res1);
 
 		// search doesn't exist record
-		$res2 = $this->CheckedCircle->getCheckedCircle(1, 1, 2);
-		$this->assertEqual(false, $res2);
+		$res2 = $this->CheckedCircle->getCheckedCircle($userId, $teamId, $circleId2);
+		$this->assertFalse($res2);
 
 	}
 
 	public function test_add_success() {
 
-		// $res1 = $this->CheckedCircle->getCheckedCircle(1, 1, 2);
+		$userId = 1;
+		$teamId = 1;
+		$circleId = 3;
 
-		// $this->assertEqual(false, $res1);
+		// search doesn't exist record
+		$res1 = $this->CheckedCircle->getCheckedCircle($userId, $teamId, $circleId);
+		$this->assertFalse($res1);
 
-		$resres = $this->CheckedCircle->add(1, 1, 2);
+		// add new record
+		$res2 = $this->CheckedCircle->add($userId, $teamId, $circleId);
+		$this->assertEqual(3, $res2);
 
-		// $data = [
-		// 	'user_id' =>1,
-		// 	'team_id' =>1,
-		// 	'circle_id' => 2
-		// ];
+		// search new record
+		$res3 = $this->CheckedCircle->getCheckedCircle($userId, $teamId, $circleId);
+		$this->assertCount(1, $res3);
+	}
 
-		// $resres = $this->CheckedCircle->save($data);
+	public function test_isExistUncheckedCircle_true() {
 
+		$userId = 1;
+		$teamId = 1;
+		$circleIds = ["1"];
 
-		// print_r($this->CheckedCircle->getDataSource()->getLog());
-		// GoalousLog::info('SQL', $this->CheckedCircle->getDataSource()->getLog());
-		// GoalousLog::info('SQL', array_pop($this->CheckedCircle->getDataSource()->getLog()['log']));
+		$res1 = $this->CheckedCircle->isExistUncheckedCircle($userId, $teamId, $circleIds);
 
-		
-		// $this->assertEqual(false, $resres);
+		$this->assertTrue($res1);
+	}
 
-		// $res2 = $this->CheckedCircle->getCheckedCircle(1, 1, 2);
+	public function test_isExistUncheckedCircle_false() {
 
-		// $this->assertCount(1, $res2);
+		$userId = 1;
+		$teamId = 1;
+		$circleIds = ["1", "2"];
 
-		// $this->CheckedCircle->add(1, 1, 3);
+		$res1 = $this->CheckedCircle->isExistUncheckedCircle($userId, $teamId, $circleIds);
 
-		// $res2 = $this->CheckedCircle->getCheckedCircle(1, 1, 3);
-
-		// $this->assertCount(1, $res2);
+		$this->assertFalse($res1);
 	}
 
 }
