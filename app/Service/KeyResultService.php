@@ -448,7 +448,7 @@ class KeyResultService extends AppService
             // TKRかつ紐づくゴールが認定対象の場合、再申請のステータスに変更
             $goalId = Hash::get($kr, 'goal_id');
             if (Hash::get($kr, 'tkr_flg') && $GoalMemberService->isApprovableByGoalId($goalId, $userId)) {
-                $goalMemberId = Hash::get($GoalMember->getUnique($userId, $goalId, false), 'GoalMember.id');
+                $goalMemberId = Hash::get($GoalMember->getUnique($userId, $goalId), 'GoalMember.id');
                 if (empty($goalMemberId)) {
                     throw new Exception(sprintf("Not exist goal_member. data:%s"
                         , var_export(compact('goalId', 'userId'), true)));
