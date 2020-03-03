@@ -12,6 +12,7 @@ App::import('Service/Paging', 'SearchPostFileExtender');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::uses('CheckedCircle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Service/Redis', 'UnreadPostsRedisService');
@@ -619,6 +620,34 @@ class CirclesController extends BasePagingController
         return [
             PostDraftExtender::EXTEND_USER
         ];
+    }
+
+    /**
+     * Endpoint for disabling notification setting for an user in a circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_checkCircle(int $circleId)
+    {
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        $data = [
+			'user_id' => $userId,
+			'team_id' => $teamId,
+			'circle_id' => $circleId
+		];
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        $CheckedCircle->add($userId, $teamId, $circleId);
+
+        return ApiResponse::ok()->getResponse();
+
     }
 
 }

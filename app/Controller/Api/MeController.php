@@ -280,4 +280,22 @@ class MeController extends BasePagingController
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
+
+    /**
+     * Get checked circle ids
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_checkedCircleIds()
+    {
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        $CheckedCircleIds = $CheckedCircle->getCheckedCircleIds($userId, $teamId);
+
+        return ApiResponse::ok()->withData($CheckedCircleIds)->getResponse();
+    }
 }
