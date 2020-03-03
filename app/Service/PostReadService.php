@@ -45,6 +45,9 @@ class PostReadService extends AppService
             $stateSelectRead->execute(array_merge($postIds, [$userId]));
             $alreadyReadPostIds = $stateSelectRead->fetchAll(PDO::FETCH_COLUMN);
             $postIdsToRead = array_diff($postIds, $alreadyReadPostIds);
+            if (empty($postIdsToRead)) {
+                return [];
+            }
 
             // Select circle id that will influence
             $query = sprintf('
@@ -65,6 +68,14 @@ class PostReadService extends AppService
             );
             $stateDeleteCacheUnread = $pdo->prepare($query);
             $stateDeleteCacheUnread->execute(array_merge([$userId], [$teamId], $postIdsToRead));
+            $countDeletedCache = $stateDeleteCacheUnread->rowCount();
+            if ($countDeletedCache !== count($postIdsToRead)) {
+                throw new RuntimeException(sprintf(
+                    'Unexpected cache_unread_circle_posts record deleted amount. expected : %d, actual: %d',
+                    count($postIdsToRead),
+                    $countDeletedCache
+                ));
+            }
 
             // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
             $query = sprintf('
@@ -129,7 +140,7 @@ class PostReadService extends AppService
             $countInsertRecord = $stateInsertPostRead->rowCount();
             if (count($postIdsToRead) !== $stateInsertPostRead->rowCount()) {
                 throw new RuntimeException(sprintf(
-                    'Unexpected post_reads record insert amount expected: %d, actual: %d',
+                    'Unexpected post_reads record insert amount. expected: %d, actual: %d',
                     count($postIdsToRead),
                     $countInsertRecord
                 ));
