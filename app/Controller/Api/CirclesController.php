@@ -623,7 +623,7 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Endpoint for disabling notification setting for an user in a circle
+     * Regist a checked circle
      *
      * @param int $circleId
      *
@@ -644,7 +644,18 @@ class CirclesController extends BasePagingController
         /** @var CheckedCircle $CheckedCircle */
         $CheckedCircle = ClassRegistry::init('CheckedCircle');
 
-        $CheckedCircle->add($userId, $teamId, $circleId);
+        try {
+            $CheckedCircle->add($userId, $teamId, $circleId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to regist checked circle record.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
+                'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
 
         return ApiResponse::ok()->getResponse();
 

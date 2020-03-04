@@ -95,4 +95,22 @@ class CheckedCircleTest extends CakeTestCase {
 		$this->assertFalse($res1);
 	}
 
+	public function test_getCheckedCircleIds_success() {
+		$userId = 1;
+		$teamId = 1;
+
+		$res1 = $this->CheckedCircle->getCheckedCircleIds($userId, $teamId);
+
+		$this->assertCount(2, $res1);
+	}
+
+	public function test_getCheckedCircleIds_resultEmpty() {
+		$userId = 2;
+		$teamId = 2;
+
+		$res1 = $this->CheckedCircle->getCheckedCircleIds($userId, $teamId);
+
+		$this->assertCount(0, $res1);
+	}
+
 }

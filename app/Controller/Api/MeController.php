@@ -294,7 +294,18 @@ class MeController extends BasePagingController
         /** @var CheckedCircle $CheckedCircle */
         $CheckedCircle = ClassRegistry::init('CheckedCircle');
 
-        $CheckedCircleIds = $CheckedCircle->getCheckedCircleIds($userId, $teamId);
+        try {
+            $CheckedCircleIds = $CheckedCircle->getCheckedCircleIds($userId, $teamId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to get checked circle ids.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
+                'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
 
         return ApiResponse::ok()->withData($CheckedCircleIds)->getResponse();
     }

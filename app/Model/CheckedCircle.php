@@ -70,6 +70,10 @@ class CheckedCircle extends AppModel {
      */
     public function add($userId, $teamId, $circleId) {
 
+        if(empty($userId) || empty($teamId) || empty($circleId)) {
+            return false;
+        }
+
         $fields = array('user_id', 'team_id', 'circle_id');
 
         $data = [
@@ -94,9 +98,13 @@ class CheckedCircle extends AppModel {
      * @param int $teamId
      * @param int $circleId
      *
-     * @return mixed
+     * @return mixed|false
      */
     public function getCheckedCircle($userId, $teamId, $circleId) {
+
+        if(empty($userId) || empty($teamId) || empty($circleId)) {
+            return false;
+        }
 
         $checkedCircle = $this->find('first', array(
             'conditions' => array(
@@ -124,6 +132,10 @@ class CheckedCircle extends AppModel {
      * @return boolean
      */
     public function isExistUncheckedCircle($userId, $teamId, $circleIds) {
+
+        if(empty($userId) || empty($teamId) || empty($circleIds)) {
+            return false;
+        }
 
         // search circle_ids by user_id & team_id
         $checkedCircles = $this->find('list', array(
@@ -157,6 +169,10 @@ class CheckedCircle extends AppModel {
      * @return array
      */
     public function getCheckedCircleIds($userId, $teamId) {
+
+        if(empty($userId) || empty($teamId)) {
+            return false;
+        }
 
         // search circle_ids by user_id & team_id
         $checkedCircles = $this->find('all', array(
