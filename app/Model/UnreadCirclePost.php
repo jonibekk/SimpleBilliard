@@ -182,7 +182,9 @@ class UnreadCirclePost extends AppModel
             ];
         }
 
-        $this->saveMany($newData, ['validate' => false]);
+        if (!empty($newData)) {
+            $this->saveMany($newData, ['validate' => false]);
+        }
     }
 
     /**
