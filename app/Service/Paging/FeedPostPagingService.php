@@ -2,12 +2,10 @@
 App::import('Lib/Paging', 'BasePagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
-App::uses('Circle', 'Model');
-App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
-App::import('Lib/DataExtender', 'CirclePostExtender');
+App::import('Lib/DataExtender', 'FeedPostExtender');
 
-class CirclePostPagingService extends BasePagingService
+class FeedPostPagingService extends BasePagingService
 {
     const MAIN_MODEL = 'Post';
 
@@ -43,9 +41,9 @@ class CirclePostPagingService extends BasePagingService
         $userId = $request->getCurrentUserId();
         $teamId = $request->getCurrentTeamId();
 
-        /** @var CirclePostExtender $CirclePostExtender */
-        $CirclePostExtender = ClassRegistry::init('CirclePostExtender');
-        $data = $CirclePostExtender->extendMulti($data, $userId, $teamId, $options);
+        /** @var FeedPostExtender $FeedPostExtender */
+        $FeedPostExtender = ClassRegistry::init('FeedPostExtender');
+        $data = $FeedPostExtender->extendMulti($data, $userId, $teamId, $options);
     }
 
     /**
@@ -57,34 +55,14 @@ class CirclePostPagingService extends BasePagingService
      */
     private function createSearchCondition(PagingRequest $request): array
     {
-        $conditions = $request->getConditions(true);
-
-        $circleId = $request->getResourceId();
         $teamId = $request->getCurrentTeamId();
-
-        if (empty($circleId)) {
-            GoalousLog::error("Missing circle ID for post paging", $conditions);
-            throw new InvalidArgumentException("Missing circle ID");
-        }
 
         $options = [
             'conditions' => [
                 'Post.del_flg' => false,
                 'Post.team_id' => $teamId,
-                'Post.type'    => [Post::TYPE_NORMAL, ]
+                'Post.type'    => [Post::TYPE_CREATE_GOAL, Post::TYPE_ACTION]
             ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'post_share_circles',
-                    'alias'      => 'PostShareCircle',
-                    'conditions' => [
-                        'PostShareCircle.post_id = Post.id',
-                        'PostShareCircle.del_flg'   => false,
-                        'PostShareCircle.circle_id' => $circleId
-                    ]
-                ]
-            ]
         ];
 
         return $options;
@@ -97,4 +75,27 @@ class CirclePostPagingService extends BasePagingService
     ): PointerTree {
         return new PointerTree([static::MAIN_MODEL . '.id', "<", $lastElement['id']]);
     }
+
+    /**
+     * Change array structure
+     *
+     * @param array         $queryResult
+     * @param PagingRequest $pagingRequest
+     *
+     * @return array
+     */
+    protected function afterRead(array $queryResult, PagingRequest $pagingRequest): array
+    {
+        $returnArray = [];
+
+        foreach ($queryResult as $result) {
+            $entry['type'] = $result['type'];
+            $entry['data'] = $result;
+
+            $returnArray[] = $entry;
+        }
+
+        return $returnArray;
+    }
+
 }
