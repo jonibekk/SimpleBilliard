@@ -334,7 +334,7 @@ class ChargeHistoryServiceTest extends GoalousTestCase
         $baseCorrectData = [
             'payment_type'                => Enum\Model\PaymentSetting\Type::INVOICE,
             'charge_type'                 => Enum\Model\ChargeHistory\ChargeType::RECHARGE,
-            'amount_per_user'             => 1980,
+            'amount_per_user'             => 1225,
             'charge_users'                => 0,
             'currency'                    => Enum\Model\PaymentSetting\Currency::JPY,
             'result_type'                 => Enum\Model\ChargeHistory\ResultType::SUCCESS,

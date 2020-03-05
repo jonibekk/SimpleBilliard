@@ -628,6 +628,7 @@ App::uses('AttachedFile', 'Model');
             "Japan": "<?= __("Japan") ?>",
             "Thailand": "<?= __("Thailand") ?>",
             "United States": "<?= __("United States") ?>",
+            "Brazil": "<?= __("Brazil") ?>",
             // Select campaign
             "%d members": "<?= __("%d members") ?>",
             "max members": "<?= __("max members") ?>",

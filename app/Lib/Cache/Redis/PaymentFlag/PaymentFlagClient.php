@@ -107,6 +107,35 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
     private function checkDateInPeriod(int $baseDay, string $startDate, GoalousDateTime $date): bool
     {
         $res = false;
+        $endDay = self::paymentTimingDay($baseDay, $startDate);
+
+        if ($endDay->diffInDays($date, false) >= 0){
+            $res = true;
+        }
+
+        return $res;
+    }
+    /**
+     * get payment timing day
+     *
+     * @param $baseDay team payment base day, $startDate period start date
+     *
+     * @return bool
+     */
+    public function getPaymentTimingDay(int $baseDay, string $startDate): GoalousDateTime
+    {
+        return self::paymentTimingDay($baseDay, $startDate);
+    }
+
+    /**
+     * get payment timing day
+     *
+     * @param $baseDay team payment base day, $startDate period start date
+     *
+     * @return bool
+     */
+    private function paymentTimingDay(int $baseDay, string $startDate): GoalousDateTime
+    {
         $startDateTime = GoalousDateTime::createFromFormat("Ymd", $startDate)->startOfDay();
 
         $startDateDay = $startDateTime->day;
@@ -124,11 +153,7 @@ class PaymentFlagClient extends BaseRedisClient implements InterfaceRedisClient
             $endDay = $firstDayNextMonth->copy()->addDay($baseDay-1);
         }
 
-        if ($endDay->diffInDays($date, false) >= 0){
-            $res = true;
-        }
-
-        return $res;
+        return $endDay;
     }
 
 }
