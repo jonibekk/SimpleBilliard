@@ -14,7 +14,7 @@ App::uses('AttachedFile', 'Model');
         lang: "<?= Configure::read('Config.language') ?>",
         sentry_dsn: "<?= SENTRY_DSN ?>",
         stripe_publishable_key: "<?= STRIPE_PUBLISHABLE_KEY ?>",
-        jwt_token: "<?= empty($jwt_token) ? "" : $jwt_token ?>",
+        //jwt_token: "<?= empty($jwt_token) ? "" : $jwt_token ?>",
         require_banner_notification: "<?=
             (isset($serviceUseStatus) && in_array($serviceUseStatus, [Team::SERVICE_USE_STATUS_FREE_TRIAL,Team::SERVICE_USE_STATUS_READ_ONLY]))
             || (isset($teamCreditCardStatus) && in_array($teamCreditCardStatus, [Team::STATUS_CREDIT_CARD_EXPIRED, Team::STATUS_CREDIT_CARD_EXPIRE_SOON]))
