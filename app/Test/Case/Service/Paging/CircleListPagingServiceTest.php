@@ -229,7 +229,16 @@ class CircleListPagingServiceTest extends GoalousTestCase
      */
     public function test_getCircleListWithCursor_newCreated()
     {
-        //TODO: test書く
+        $userId = 13;
+        $teamId = 1;
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->setCurrentTeamId($teamId);
+        $pagingRequest->setCurrentUserId($userId);
+        $pagingRequest->addQueries(['joined' => false]);
+        $pagingRequest->addQueries(['newcreated' => true]);
+        $res = $this->CircleListPagingService->getDataWithPaging($pagingRequest, 2);
+
+        $this->assertCount(0, $res['data']);
     }
 
 }
