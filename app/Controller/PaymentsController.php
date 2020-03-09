@@ -200,7 +200,9 @@ class PaymentsController extends AppController
         $histories = Hash::extract($this->ChargeHistory->find('all', ['order' => 'id DESC']), '{n}.ChargeHistory');
         $paymentSetting = $PaymentService->get($this->current_team_id);
         foreach ($histories as &$v) {
-            $v['total'] = $PaymentService->formatCharge($v['total_amount'] + $v['tax'], $paymentSetting['currency']);
+            if ($v['result_type'] != Enum\Model\ChargeHistory\ResultType::NOCHARGE){
+                $v['total'] = $PaymentService->formatCharge($v['total_amount'] + $v['tax'], $paymentSetting['currency']);
+            }
         }
         $this->set(compact('histories'));
     }
