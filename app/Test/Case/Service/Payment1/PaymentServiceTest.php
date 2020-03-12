@@ -1123,6 +1123,76 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($chargeInfo['total_charge'] * 100, $stripeCharge['amount']);
     }
 
+    public function test_applyCreditCardCharge_stripeMinimumAmount()
+    {
+        $this->Team->resetCurrentTeam();
+        $this->PaymentService->clearCachePaymentSettings();
+        $companyCountry = 'JP';
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => 9.0], [
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+            'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+            'company_country'  => $companyCountry,
+            'payment_base_day' => 31
+        ]);
+        $userId = $this->createActiveUser($teamId);
+
+        /* Daily payment: JPY */
+        // payment_base_day:31
+        $this->Team->current_team_id = $teamId;
+
+        GoalousDateTime::setTestNow('2017-12-30 14:59:59');
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
+        $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
+        $this->assertEquals($res['tax'], $chargeInfo['tax']);
+        $this->assertEquals($res['result_type'], Enum\Model\ChargeHistory\ResultType::NOCHARGE);
+
+        $this->Team->resetCurrentTeam();
+        $this->PaymentService->clearCachePaymentSettings();
+        $companyCountry = 'JP';
+        list($teamId, $paymentSettingId) = $this->createCcPaidTeam(['timezone' => 9.0], [
+            'amount_per_user'  => PaymentService::AMOUNT_PER_USER_USD,
+            'currency'         => Enum\Model\PaymentSetting\Currency::USD,
+            'company_country'  => $companyCountry,
+            'payment_base_day' => 31
+        ]);
+        $userId = $this->createActiveUser($teamId);
+
+        /* Daily payment: JPY */
+        // payment_base_day:31
+        $this->Team->current_team_id = $teamId;
+
+        GoalousDateTime::setTestNow('2017-12-30 14:59:59');
+        $res = "";
+        try {
+            $chargeUserCnt = 1;
+            $this->PaymentService->applyCreditCardCharge($teamId,
+                Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                $chargeUserCnt, $userId);
+        } catch (Exception $e) {
+            $res = $e->getMessage();
+        }
+        $this->assertEmpty($res);
+
+        $res = $this->ChargeHistory->getLastChargeHistoryByTeamId($teamId, 'id');
+        $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
+        $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
+        $this->assertEquals($res['tax'], $chargeInfo['tax']);
+        $this->assertEquals($res['result_type'], Enum\Model\ChargeHistory\ResultType::NOCHARGE);
+
+    }
+
     public function test_applyCreditCardCharge_campaign()
     {
         // Activation

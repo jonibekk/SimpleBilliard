@@ -786,7 +786,7 @@ class PaymentService extends AppService
 
             $updateHistory = [];
             if ($chargeRes['success']) {
-                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['result_type'] = isset($chargeRes['noCharge']) ? Enum\Model\ChargeHistory\ResultType::NOCHARGE : Enum\Model\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeRes['paymentId'];
 
                 // If this charging is reordering, set reorder_charge_history_id to the new record
@@ -1128,7 +1128,7 @@ class PaymentService extends AppService
             // Save history
             $updateHistory = [];
             if ($chargeResult['success']) {
-                $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::SUCCESS;
+                $updateHistory['result_type'] = isset($chargeResult['noCharge']) ? Enum\Model\ChargeHistory\ResultType::NOCHARGE : Enum\Model\ChargeHistory\ResultType::SUCCESS;
                 $updateHistory['stripe_payment_code'] = $chargeResult['paymentId'];
             } else {
                 $updateHistory['result_type'] = Enum\Model\ChargeHistory\ResultType::FAIL;
