@@ -69,6 +69,43 @@ class CircleListPagingService extends BasePagingService
         $searchConditions = $this->addSearchConditionForJoined($searchConditions, $userId, $teamId, $joinedFlag);
         $searchConditions['order'] = $pagingRequest->getOrders();
 
+        /* filter new created */
+        $newcreatedFlag = boolval(Hash::get($conditions, 'newcreated', false));
+        if ($newcreatedFlag) {
+            return $this->addSearchConditionForNewCreated($searchConditions);
+        }
+
+        /* filter new created circle from unjoined circles */
+        if(!$joinedFlag && !$newcreatedFlag) {
+            return $this->addSearchConditionForUnJoined($searchConditions);
+        }
+        return $searchConditions;
+    }
+
+    /**
+     * Add condition for filter new created circle from unjoined circles
+     *
+     * @param array $searchConditions
+     *
+     * @return array
+     */
+    private function addSearchConditionForUnJoined(array $searchConditions): array
+    {
+        $searchConditions['conditions']['Circle.created <'] = GoalousDateTime::now()->subDays(30)->getTimestamp();
+        return $searchConditions;
+    }
+
+
+    /**
+     * Add condition for filter new created circle
+     *
+     * @param array $searchConditions
+     *
+     * @return array
+     */
+    private function addSearchConditionForNewCreated(array $searchConditions): array
+    {
+        $searchConditions['conditions']['Circle.created >'] = GoalousDateTime::now()->subDays(30)->getTimestamp();
         return $searchConditions;
     }
 
@@ -158,7 +195,7 @@ class CircleListPagingService extends BasePagingService
 
     protected function beforeRead(PagingRequest $pagingRequest)
     {
-        $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned']);
+        $pagingRequest->addQueriesToCondition(['joined', 'public_only', 'pinned', 'newcreated']);
         return $pagingRequest;
     }
 
