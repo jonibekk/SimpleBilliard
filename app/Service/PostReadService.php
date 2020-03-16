@@ -61,20 +61,31 @@ class PostReadService extends AppService
             $stateSelectCircleIdOfUpdating->execute($postIdsToRead);
             $circleIdsUpdating = $stateSelectCircleIdOfUpdating->fetchAll(PDO::FETCH_COLUMN);
 
-            // Delete record from cache_unread_circle_posts table
+            // Select from cache_unread_circle_posts existing
             $query = sprintf(
-                'delete from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);',
+                'select post_id from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);',
                 $rawString(count($postIdsToRead), '?')
             );
-            $stateDeleteCacheUnread = $pdo->prepare($query);
-            $stateDeleteCacheUnread->execute(array_merge([$userId], [$teamId], $postIdsToRead));
-            $countDeletedCache = $stateDeleteCacheUnread->rowCount();
-            if ($countDeletedCache !== count($postIdsToRead)) {
-                throw new RuntimeException(sprintf(
-                    'Unexpected cache_unread_circle_posts record deleted amount. expected : %d, actual: %d',
-                    count($postIdsToRead),
-                    $countDeletedCache
-                ));
+            $stateSelectRead = $pdo->prepare($query);
+            $stateSelectRead->execute(array_merge([$userId, $teamId], $postIds));
+            $postIdsCached = $stateSelectRead->fetchAll(PDO::FETCH_COLUMN);
+
+            if (!empty($postIdsCached)) {
+                // Delete record from cache_unread_circle_posts table
+                $query = sprintf(
+                    'delete from cache_unread_circle_posts where user_id = ? and team_id = ? and post_id in (%s);',
+                    $rawString(count($postIdsCached), '?')
+                );
+                $stateDeleteCacheUnread = $pdo->prepare($query);
+                $stateDeleteCacheUnread->execute(array_merge([$userId], [$teamId], $postIdsCached));
+                $countDeletedCache = $stateDeleteCacheUnread->rowCount();
+                if ($countDeletedCache !== count($postIdsCached)) {
+                    throw new RuntimeException(sprintf(
+                        'Unexpected cache_unread_circle_posts record deleted amount. expected : %d, actual: %d',
+                        count($postIdsCached),
+                        $countDeletedCache
+                    ));
+                }
             }
 
             // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
