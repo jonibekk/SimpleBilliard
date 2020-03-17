@@ -68,7 +68,6 @@ class FeedPostExtender extends BaseExtender
 
             /** @var KeyResultExtension $KeyResultExtension */
             $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
-            $data = $KeyResultExtension->extendMulti($data, "{n}.action_result.key_result_id");
 
             /** @var GoalExtension $GoalExtension */
             $GoalExtension = ClassRegistry::init('GoalExtension');
@@ -84,8 +83,15 @@ class FeedPostExtender extends BaseExtender
             $KrProgressLog = ClassRegistry::init('KrProgressLog');
 
             foreach ($data as $index => $entry) {
+                if ($entry['type'] == Enum\Model\Post\Type::ACTION) {
+                    $data[$index] = $KeyResultExtension->extend($data[$index], "action_result.key_result_id");
+                }
 
                 if ($entry['type'] == Enum\Model\Post\Type::CREATE_GOAL) {
+                    /** @var KeyResult $KeyResult */
+                    $KeyResult = ClassRegistry::init('KeyResult');
+                    $topKr = $KeyResult->getTkr($data[$index]['goal']['id']);
+                    $data[$index]['key_result'] = $topKr['KeyResult'];
 
                     /** @var GoalMember $GoalMember */
                     $GoalMember = ClassRegistry::init('GoalMember');
