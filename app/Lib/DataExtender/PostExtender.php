@@ -207,7 +207,7 @@ class PostExtender extends BaseExtender
             $data = $PostSavedExtension->extend($data, "id", "post_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_READ)) {
-            /** @var PostSavedExtension $PostSavedExtension */
+            /** @var PostReadExtension $PostReadExtension */
             $PostReadExtension = ClassRegistry::init('PostReadExtension');
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extend($data, "id", "post_id");
