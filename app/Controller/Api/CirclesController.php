@@ -12,6 +12,7 @@ App::import('Service/Paging', 'SearchPostFileExtender');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::uses('CheckedCircle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Service/Redis', 'UnreadPostsRedisService');
@@ -619,6 +620,45 @@ class CirclesController extends BasePagingController
         return [
             PostDraftExtender::EXTEND_USER
         ];
+    }
+
+    /**
+     * Regist a checked circle
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_checkCircle(int $circleId)
+    {
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        $data = [
+			'user_id' => $userId,
+			'team_id' => $teamId,
+			'circle_id' => $circleId
+		];
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        try {
+            $CheckedCircle->add($userId, $teamId, $circleId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to regist checked circle record.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
+                'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
+
+        return ApiResponse::ok()->getResponse();
+
     }
 
 }

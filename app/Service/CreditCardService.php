@@ -334,6 +334,16 @@ class CreditCardService extends AppService
             return $result;
         }
 
+        // check if need charge
+        if ($this->checkIfNotNeedCharge($amount, $currencyName)){
+            $result["error"] = false;
+            $result["isApiRequestSucceed"] = true;
+            $result["success"] = true;
+            $result["paymentId"] = null;
+            $result["noCharge"] = true;
+            return $result;
+        }
+
         \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
 
         // Stripe specification
@@ -626,5 +636,28 @@ class CreditCardService extends AppService
             throw $e;
         }
         return $response->data;
+    }
+
+    /*
+     * check if amount need to be charged
+     * Documentation about the returned data can be found on
+     * https://stripe.com/docs/currencies
+     *
+     * @return bool
+     */
+    /**
+     * @param float  $amount
+     * @param string $currencyName
+     *
+     * @return bool
+     */
+    public function checkIfNotNeedCharge(float $amount, string $currencyName) : bool
+    {
+        $currencyMap = array(
+            PaymentSetting::CURRENCY_JPY => 50,
+            PaymentSetting::CURRENCY_USD => 0.5,
+        );
+
+        return $amount < $currencyMap[$currencyName];
     }
 }
