@@ -17,6 +17,7 @@ App::uses('Team', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TranslationLanguage', 'Model');
+App::uses('Follower', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -108,6 +109,10 @@ class FeedPostExtender extends BaseExtender
                     $data[$index]['can_collaborate'] = !$isLeader && !$isCollaborating &&
                         GoalousDateTime::now()->between($startDate, $endDate);
                     $data[$index]['is_collaborating'] = $isCollaborating;
+
+                    /** @var Follower $Follower */
+                    $Follower = ClassRegistry::init('Follower');
+                    $data[$index]['is_following'] = !empty($Follower->isExists($data[$index]['goal']['id'], $userId, $teamId));
                 }
 
                 if (empty($entry['action_result_id'])) {

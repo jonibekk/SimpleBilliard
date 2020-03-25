@@ -2113,30 +2113,32 @@ class Goal extends AppModel
     /**
      * ゴールが属している評価期間のデータを返す
      *
-     * @param $goal_id
+     * @param $goalId
+     * @param $teamId
      *
      * @return false|array|null
      */
-    public function getGoalTermData($goal_id)
+    public function getGoalTermData($goalId, $teamId = null)
     {
-        $goal = $this->findById($goal_id);
+        $goal = $this->findById($goalId);
         if (!$goal) {
             return false;
         }
 
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
-        return $Term->getTermDataByDate($goal['Goal']['end_date']);
+        return $Term->getTermDataByDate($goal['Goal']['end_date'], true, $teamId);
     }
 
     /**
      * Tells if the goal end date already passed.
      *
      * @param $goalId
+     * @param $teamId
      *
      * @return bool
      */
-    public function isFinished($goalId)
+    public function isFinished($goalId, $teamId = null)
     {
         if (empty($goalId)) {
             return true;
@@ -2147,7 +2149,7 @@ class Goal extends AppModel
         ];
         $res = $this->find('first', $options);
         $endDate = Hash::get($res, 'Goal.end_date');
-        $goalTerm = $this->getGoalTermData($goalId);
+        $goalTerm = $this->getGoalTermData($goalId, $teamId);
         $today = AppUtil::todayDateYmdLocal(Hash::get($goalTerm, 'timezone'));
 
         if ($today > $endDate) {
