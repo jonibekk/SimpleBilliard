@@ -11,6 +11,7 @@ App::uses('Goal', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
 App::import('Service', 'SetupService');
+App::import('Service', 'SavedPostService');
 App::uses('LangUtil', 'Util');
 
 App::uses('GlRedis', 'Model');
@@ -33,6 +34,7 @@ class MeExtender extends BaseExtender
     const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
     const EXTEND_SETUP_REST_COUNT = "ext:user:setup_rest_count";
     const EXTEND_ACTION_COUNT = "ext:user:action_count";
+    const EXTEND_SAVED_ITEM_COUNT = "ext:user:saved_item_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -146,6 +148,13 @@ class MeExtender extends BaseExtender
                     return $res;
                 }, 'user_data');
             $data['action_count'] = $action_count;
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_SAVED_ITEM_COUNT)) {
+            /** @var SavedPostService $SavedPostService */
+            $SavedPostService = ClassRegistry::init("SavedPostService");
+            $savedItemCountEachType = $SavedPostService->countSavedPostEachType($currentTeamId, $userId);
+            $data['saved_item_count'] = $savedItemCountEachType['all'];
         }
 
         return $data;
