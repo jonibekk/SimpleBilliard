@@ -6,9 +6,12 @@ App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
 App::uses('Email', 'Model');
 App::uses('User', 'Model');
+App::uses('Team', 'Model');
+App::uses('Goal', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'TeamService');
 App::import('Service', 'SetupService');
+App::import('Service', 'SavedPostService');
 App::uses('LangUtil', 'Util');
 
 App::uses('GlRedis', 'Model');
@@ -30,6 +33,8 @@ class MeExtender extends BaseExtender
     const EXTEND_EMAIL = "ext:user:email";
     const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
     const EXTEND_SETUP_REST_COUNT = "ext:user:setup_rest_count";
+    const EXTEND_ACTION_COUNT = "ext:user:action_count";
+    const EXTEND_SAVED_ITEM_COUNT = "ext:user:saved_item_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -123,6 +128,33 @@ class MeExtender extends BaseExtender
             $setupResolved = $SetupService->resolveSetupCompleteAndRest($data['id'], $data['setup_complete_flg']);
             $data['setup_complete_flg'] = $setupResolved['complete'];
             $data['setup_rest_count'] = $setupResolved['rest_count'];
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_ACTION_COUNT)) {
+            /** @var Team $Team */
+            $Team = ClassRegistry::init('Team');
+            /** @var Goal $Goal */
+            $Goal = ClassRegistry::init('Goal');
+
+            $expire = 60 * 60 * 24;
+            $currentTerm = $Team->Term->getCurrentTermData();
+            Cache::set('duration', $expire, 'user_data');
+            $action_count = Cache::remember($Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
+                function () use ($currentTerm) {
+                    $timezone = $Team->getTimezone();
+                    $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
+                    $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
+                    $res = $Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
+                    return $res;
+                }, 'user_data');
+            $data['action_count'] = $action_count;
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_SAVED_ITEM_COUNT)) {
+            /** @var SavedPostService $SavedPostService */
+            $SavedPostService = ClassRegistry::init("SavedPostService");
+            $savedItemCountEachType = $SavedPostService->countSavedPostEachType($currentTeamId, $userId);
+            $data['saved_item_count'] = $savedItemCountEachType['all'];
         }
 
         return $data;
