@@ -14,6 +14,7 @@ App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('CheckedCircle', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
@@ -299,5 +300,34 @@ class MeController extends BasePagingController
         ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    /**
+     * Get checked circle ids
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_checkedCircleIds()
+    {
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        try {
+            $CheckedCircleIds = $CheckedCircle->getCheckedCircleIds($userId, $teamId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to get checked circle ids.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
+                'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
+
+        return ApiResponse::ok()->withData($CheckedCircleIds)->getResponse();
     }
 }
