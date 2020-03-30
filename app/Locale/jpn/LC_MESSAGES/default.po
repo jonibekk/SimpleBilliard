@@ -5947,6 +5947,9 @@ msgstr "この動画は現在は投稿できません。"
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルにコメントしました。"
 
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a post. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルに投稿しました。"
+
 msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
 
