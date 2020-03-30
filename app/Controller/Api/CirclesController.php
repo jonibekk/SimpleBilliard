@@ -13,6 +13,7 @@ App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CheckedCircle', 'Model');
+App::uses('CircleDiscoverTabOpenedUser', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Service/Redis', 'UnreadPostsRedisService');
@@ -653,6 +654,41 @@ class CirclesController extends BasePagingController
                 'trace'     => $e->getTraceAsString(),
                 'team_id'   => $teamId,
                 'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
+
+        return ApiResponse::ok()->getResponse();
+
+    }
+
+    /**
+     * Regist a circle_discover_tab_opend_users reord
+     *
+     * @return BaseApiResponse
+     */
+    public function post_addCircleDiscoverTabOpenedUser()
+    {
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        $data = [
+			'user_id' => $userId,
+			'team_id' => $teamId,
+		];
+
+        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
+        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+
+        try {
+            $CircleDiscoverTabOpenedUser->add($userId, $teamId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to regist CircleDiscoverTabOpenedUser record.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
             ]);
             throw $e;
         }
