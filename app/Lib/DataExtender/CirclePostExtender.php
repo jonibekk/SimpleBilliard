@@ -233,8 +233,10 @@ class CirclePostExtender extends BaseExtender
         }
 
         if ($this->includeExt($extensions, self::EXTEND_SITE_INFO)) {
-            foreach ($data as &$entry) {
-                $entry['site_info'] = json_decode($entry['site_info'], true);
+            foreach ($data as $key => $entry) {
+                if (!is_null($entry['site_info'])){
+                    $data[$key]['site_info'] = json_decode($entry['site_info'], true);
+                }
             }
         }
 
