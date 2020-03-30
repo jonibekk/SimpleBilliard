@@ -33,6 +33,7 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_READ = "ext:circle_post:read";
     const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
     const EXTEND_RELATED_TYPE = "ext:circle_post:related_type";
+    const EXTEND_SITE_INFO = "ext:circle_post:site_info";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -228,6 +229,12 @@ class CirclePostExtender extends BaseExtender
                         }
                     }
                 }
+            }
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_SITE_INFO)) {
+            foreach ($data as &$entry) {
+                $entry['site_info'] = json_decode($entry['site_info'], true);
             }
         }
 
