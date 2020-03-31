@@ -109,21 +109,23 @@ class CircleDiscoverTabOpenedUser extends AppModel {
     }
 
     /**
-     * Delete records by teamid.
+     * Delete records by teamid without first circle members.
      *
      * @param int $teamId
+     * @param int[] $memberIds
      *
      * @return boolean
      */
-    public function deleteByTeamId($teamId) {
+    public function deleteByTeamIdWithoutMembers($teamId, $memberIds) {
 
-        if(empty($teamId)) {
+        if(empty($teamId) || empty($memberIds)) {
             return false;
         }
 
         $deletedResult = $this->deleteAll(
             array(
                 'team_id' => $teamId,
+                'user_id !=' => $memberIds
             ),
             false
         );

@@ -681,6 +681,11 @@ class CirclesController extends BasePagingController
         /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
         $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
 
+        $resultGetCircleDiscoverTabOpendUser = $CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+        if($resultGetCircleDiscoverTabOpendUser !== false) {
+            return ErrorResponse::badRequest()->withMessage(__("This user already opened circle discover tab."))->getResponse();
+        }
+
         try {
             $CircleDiscoverTabOpenedUser->add($userId, $teamId);
         }
@@ -689,12 +694,35 @@ class CirclesController extends BasePagingController
                 'message'   => $e->getMessage(),
                 'trace'     => $e->getTraceAsString(),
                 'team_id'   => $teamId,
+                'user_id'   => $userId
             ]);
             throw $e;
         }
 
         return ApiResponse::ok()->getResponse();
-
     }
 
+    /**
+     * Get circle discover tab opend user
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_isExistCircleDiscoverTabOpenedUser()
+    {
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
+        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+        $CircleDiscoverTabOpenedUserResult = $CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+
+        if (!$CircleDiscoverTabOpenedUserResult) {
+            $data['result'] = false;
+        }
+        else {
+            $data['result'] = true;
+        }
+
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
 }

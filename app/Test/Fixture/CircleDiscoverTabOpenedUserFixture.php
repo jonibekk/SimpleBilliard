@@ -60,6 +60,15 @@ class CircleDiscoverTabOpenedUserFixture extends CakeTestFixtureEx {
 			'created' => 1,
 			'modified' => 1
 		),
+		array(
+			'id' => '4',
+			'user_id' => '3',
+			'team_id' => '1',
+			'del_flg' => 0,
+			'deleted' => null,
+			'created' => 1,
+			'modified' => 1
+		),
 	);
 
 }

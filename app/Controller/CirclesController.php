@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
 App::import('Service', 'CirclePinService');
 App::uses('UnreadCirclePost', 'Model');
+App::uses('CircleDiscoverTabOpenedUser', 'Model');
 
 /**
  * Circles Controller
@@ -74,6 +75,15 @@ class CirclesController extends AppController
             $this->Notification->outError(__("Failed to create a circle."));
             return $this->redirect($this->referer());
         }
+
+        $circleMembersWithMe = [];
+        $circleMembersWithMe = $memberIds;
+        $circleMembersWithMe[] = $userId;
+
+        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
+        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+
+        $CircleDiscoverTabOpenedUser->deleteByTeamIdWithoutMembers($this->current_team_id, $circleMembersWithMe);
 
         $circleId = $this->Circle->getLastInsertID();
         // Notification

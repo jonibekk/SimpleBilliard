@@ -3,7 +3,6 @@ App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
 App::uses("Circle", 'Model');
-App::uses("CircleDiscoverTabOpenedUser", 'Model');
 App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
@@ -35,17 +34,6 @@ class UserService extends AppService
         $data = $this->_getWithCache($userId, 'User', $fields);
         if (empty($data)) {
             return [];
-        }
-
-        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
-        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
-        $CircleDiscoverTabOpenedUserResult = $CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
-
-        if (!$CircleDiscoverTabOpenedUserResult) {
-            $data['circle_discover_tab_opened'] = "false";
-        }
-        else {
-            $data['circle_discover_tab_opened'] = "true";
         }
 
         if ($req->isMe()) {

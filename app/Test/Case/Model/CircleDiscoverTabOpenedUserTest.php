@@ -66,7 +66,7 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 
 		// add new record
 		$res2 = $this->CircleDiscoverTabOpenedUser->add($userId, $teamId);
-		$this->assertEqual(4, $res2);
+		$this->assertEqual(5, $res2);
 
 		// search new record
 		$res3 = $this->CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
@@ -75,6 +75,7 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 
 	public function test_deleteByTeamId_success() {
 		$teamId = 1;
+		$userIds = [1, 2];
 
 		$res1 = $this->CircleDiscoverTabOpenedUser->find('all',[
 				'conditions' => [
@@ -83,9 +84,9 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 				]
 			]
 		);
-		$this->assertCount(2, $res1);
+		$this->assertCount(3, $res1);
 
-		$res2 = $this->CircleDiscoverTabOpenedUser->deleteByTeamId($teamId);
+		$res2 = $this->CircleDiscoverTabOpenedUser->deleteByTeamIdWithoutMembers($teamId, $userIds);
 		$this->assertTrue($res2);
 
 		$res3 = $this->CircleDiscoverTabOpenedUser->find('all',[
@@ -95,7 +96,6 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 				]
 			]
 		);
-		$this->assertCount(0, $res3);
+		$this->assertCount(2, $res3);
 	}
-
 }
