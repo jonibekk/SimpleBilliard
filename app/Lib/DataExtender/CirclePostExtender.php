@@ -213,8 +213,8 @@ class CirclePostExtender extends BaseExtender
 
                         $postLanguage = Hash::get($entry, 'language');
 
-                        $entry['translation_limit_reached'] = false;
-                        $entry['translation_languages'] = [];
+                        $data[$key]['translation_limit_reached'] = false;
+                        $data[$key]['translation_languages'] = [];
 
                         if ($userDefaultLanguage !== $postLanguage) {
 
@@ -224,7 +224,7 @@ class CirclePostExtender extends BaseExtender
                                 if ($postLanguage === $availableLanguage['language']) {
                                     continue;
                                 }
-                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                                $data[$key]['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
                             }
                         }
                     }
