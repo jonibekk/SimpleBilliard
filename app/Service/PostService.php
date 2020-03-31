@@ -645,61 +645,67 @@ class PostService extends AppService
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
-        $circleOption = [
-            'conditions' => [
-                'PostShareCircle.post_id' => $postId,
-            ],
-            'fields'     => [
-                'Circle.id',
-                'Circle.public_flg',
-                'Circle.team_all_flg'
-            ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'conditions' => [
-                        'Circle.id = PostShareCircle.circle_id',
-                    ],
-                    'table'      => 'post_share_circles',
-                    'alias'      => 'PostShareCircle',
-                    'field'      => 'PostShareCircle.circle_id'
-                ]
-            ]
-        ];
-
-        /** @var CircleEntity[] $circles */
-        $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
-
-        if (empty($circles)) {
-            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
-        }
-
-        $circleArray = [];
-
-        foreach ($circles as $circle) {
-            $circleArray[] = $circle['id'];
-            //If circle is public or team_all, return true
-            if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+        switch ($post['Post']['type']) {
+            case Enum\Model\Post\Type::ACTION:
+            case Enum\Model\Post\Type::CREATE_GOAL:
                 return true;
-            }
+            case Enum\Model\Post\Type::NORMAL:
+                $circleOption = [
+                    'conditions' => [
+                        'PostShareCircle.post_id' => $postId,
+                    ],
+                    'fields'     => [
+                        'Circle.id',
+                        'Circle.public_flg',
+                        'Circle.team_all_flg'
+                    ],
+                    'table'      => 'circles',
+                    'alias'      => 'Circle',
+                    'joins'      => [
+                        [
+                            'type'       => 'INNER',
+                            'conditions' => [
+                                'Circle.id = PostShareCircle.circle_id',
+                            ],
+                            'table'      => 'post_share_circles',
+                            'alias'      => 'PostShareCircle',
+                            'field'      => 'PostShareCircle.circle_id'
+                        ]
+                    ]
+                ];
+
+                /** @var CircleEntity[] $circles */
+                $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
+
+                if (empty($circles)) {
+                    throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+                }
+
+                $circleArray = [];
+
+                foreach ($circles as $circle) {
+                    $circleArray[] = $circle['id'];
+                    //If circle is public or team_all, return true
+                    if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+                        return true;
+                    }
+                }
+
+                $circleMemberOption = [
+                    'conditions' => [
+                        'CircleMember.circle_id' => $circleArray,
+                        'CircleMember.user_id'   => $userId,
+                        'CircleMember.del_flg'   => false
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
+                    'fields'     => 'CircleMember.circle_id'
+                ];
+
+                $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
+
+                return $circleList > 0;
         }
-
-        $circleMemberOption = [
-            'conditions' => [
-                'CircleMember.circle_id' => $circleArray,
-                'CircleMember.user_id'   => $userId,
-                'CircleMember.del_flg'   => false
-            ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember',
-            'fields'     => 'CircleMember.circle_id'
-        ];
-
-        $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
-
-        return $circleList > 0;
     }
 
     /**
