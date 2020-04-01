@@ -60,8 +60,29 @@ class PostExtender extends BaseExtender
                     $data = $CircleExtension->extend($data, "circle_id");
                     break;
                 case Post::TYPE_ACTION:
+                    /** @var KrProgressLog $KrProgressLog */
+                    $KrProgressLog = ClassRegistry::init('KrProgressLog');
+                    $krProgressLog = $KrProgressLog->getByActionResultId($data['action_result_id']);
+                    $data['kr_progress_log'] = !empty($krProgressLog) ? $KrProgressLog->getByActionResultId($data['action_result_id'])
+                        ->toArray() : null;
+
+                    /** @var AttachedFile $AttachedFile */
+                    $AttachedFile = ClassRegistry::init('AttachedFile');
+                    $attachedFiles = $AttachedFile->getActionResultResources($data['action_result_id']);
+                    /** @var ImageStorageService $ImageStorageService */
+                    $ImageStorageService = ClassRegistry::init('ImageStorageService');
+                    $data['action_img_url'] = $ImageStorageService->getImgUrlEachSize($attachedFiles[0]->toArray(),
+                        'AttachedFile',
+                        'attached');
                 case Post::TYPE_KR_COMPLETE:
                 case Post::TYPE_CREATE_GOAL:
+                    /** @var GoalExtension $GoalExtension */
+                    $GoalExtension = ClassRegistry::init('GoalExtension');
+                    $data = $GoalExtension->extend($data, "goal_id");
+                    /** @var KeyResult $KeyResult */
+                    $KeyResult = ClassRegistry::init('KeyResult');
+                    $topKr = $KeyResult->getTkr($data['goal']['id']);
+                    $data['key_result'] = $topKr['KeyResult'];
                 case Post::TYPE_GOAL_COMPLETE:
                     /** @var ActionExtension $ActionExtension */
                     $ActionExtension = ClassRegistry::init('ActionExtension');

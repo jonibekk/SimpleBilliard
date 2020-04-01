@@ -377,7 +377,10 @@ class PostsController extends BasePagingController
         }
 
 
-        return ApiResponse::ok()->withData($post)->getResponse();
+        return ApiResponse::ok()->withData([
+            'type' => $post['type'],
+            'data' => $post
+        ])->getResponse();
     }
 
     public function post_likes(int $postId): CakeResponse
