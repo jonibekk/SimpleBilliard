@@ -139,6 +139,7 @@ class MeExtender extends BaseExtender
             $expire = 60 * 60 * 24;
             $Team->current_team_id = $currentTeamId;
             $Team->Term->current_team_id = $currentTeamId;
+            $Team->Term->Team->current_team_id = $currentTeamId;
             $currentTerm = $Team->Term->getCurrentTermData();
             Cache::set('duration', $expire, 'user_data');
             $action_count = Cache::remember($Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
