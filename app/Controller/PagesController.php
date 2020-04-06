@@ -52,6 +52,31 @@ class PagesController extends AppController
     }
 
     /**
+     * Displays a view
+     *
+     * @return $this->redirect('/') or void
+     * @throws Exception
+     * @throws MissingViewException
+     * @throws NotFoundException
+     * @internal param \What $mixed page to display
+     */
+    public function home()
+    {
+        // Display lp top page if not logged in
+        if (!$this->_isLoggedIn()) {
+            // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
+            if (in_array(ENV_NAME, $this->newLpEnvs, true)) {
+                return $this->redirectLp();
+            } else {
+                $this->layout = LAYOUT_HOMEPAGE;
+                return $this->render('home');
+            }
+        }
+        $newHome = '/index.html';
+        $this->redirect($newHome);
+    }
+
+    /**
      * Get lang code
      * @return string
      */
