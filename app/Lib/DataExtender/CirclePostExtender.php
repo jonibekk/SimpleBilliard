@@ -33,6 +33,7 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_READ = "ext:circle_post:read";
     const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
     const EXTEND_RELATED_TYPE = "ext:circle_post:related_type";
+    const EXTEND_SITE_INFO = "ext:circle_post:site_info";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -63,7 +64,7 @@ class CirclePostExtender extends BaseExtender
             /** @var CommentPagingService $CommentPagingService */
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
-            foreach ($data as &$result) {
+            foreach ($data as $key => $result) {
                 $commentPagingRequest = new PagingRequest();
                 $commentPagingRequest->setResourceId(Hash::get($result, 'id'));
                 $commentPagingRequest->setCurrentUserId($userId);
@@ -72,7 +73,7 @@ class CirclePostExtender extends BaseExtender
                 $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
                     CommentExtender::EXTEND_ALL);
 
-                $result['comments'] = $comments;
+                $data[$key]['comments'] = $comments;
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
@@ -182,9 +183,9 @@ class CirclePostExtender extends BaseExtender
                 $TeamTranslationStatus->hasEntry($teamId) &&
                 ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
                 if ($TeamTranslationStatus->isLimitReached($teamId)) {
-                    foreach ($data as &$entry) {
-                        $entry['translation_limit_reached'] = true;
-                        $entry['translation_languages'] = [];
+                    foreach ($data as $key => $entry) {
+                        $data[$key]['translation_limit_reached'] = true;
+                        $data[$key]['translation_languages'] = [];
                     }
                 } else {
                     /** @var TeamMemberService $TeamMemberService */
@@ -194,12 +195,12 @@ class CirclePostExtender extends BaseExtender
 
                     $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
 
-                    foreach ($data as &$entry) {
+                    foreach ($data as $key => $entry) {
 
                         $postLanguage = Hash::get($entry, 'language');
 
-                        $entry['translation_limit_reached'] = false;
-                        $entry['translation_languages'] = [];
+                        $data[$key]['translation_limit_reached'] = false;
+                        $data[$key]['translation_languages'] = [];
 
                         if ($userDefaultLanguage !== $postLanguage) {
 
@@ -209,11 +210,18 @@ class CirclePostExtender extends BaseExtender
                                 if ($postLanguage === $availableLanguage['language']) {
                                     continue;
                                 }
-                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])
-                                                                                        ->toLanguageArray();
+                                $data[$key]['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
                             }
                         }
                     }
+                }
+            }
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_SITE_INFO)) {
+            foreach ($data as $key => $entry) {
+                if (!is_null($entry['site_info'])){
+                    $data[$key]['site_info'] = json_decode($entry['site_info'], true);
                 }
             }
         }
