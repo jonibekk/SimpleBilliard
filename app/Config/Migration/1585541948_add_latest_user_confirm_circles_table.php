@@ -1,12 +1,12 @@
 <?php
-class AddCircleDiscoverTabOpenedUsersTable extends CakeMigration {
+class AddLatestUserConfirmCirclesTable extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'addCircleDiscoverTabOpenedUsersTbl';
+	public $description = 'addLatestUserConfirmCirclesTbl';
 
 /**
  * Actions to be performed
@@ -16,7 +16,7 @@ class AddCircleDiscoverTabOpenedUsersTable extends CakeMigration {
 	public $migration = array(
 		'up' => array(
 			'create_table' => array(
-				'circle_discover_tab_opened_users' => array(
+				'latest_user_confirm_circles' => array(
 					'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 					'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= users.id'),
 					'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => '= teams.id'),
@@ -34,7 +34,7 @@ class AddCircleDiscoverTabOpenedUsersTable extends CakeMigration {
 			),
 		),
 		'down' => array(
-			'circle_discover_tab_opened_users'
+			'latest_user_confirm_circles'
 		),
 	);
 

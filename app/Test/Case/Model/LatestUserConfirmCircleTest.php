@@ -1,10 +1,10 @@
 <?php
-App::uses('CircleDiscoverTabOpenedUser', 'Model');
+App::uses('LatestUserConfirmCircle', 'Model');
 
 /**
- * CircleDiscoverTabOpenedUser Test Case
+ * LatestUserConfirmCircle Test Case
  */
-class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
+class LatestUserConfirmCircleTest extends CakeTestCase {
 
 	/**
 	 * Fixtures
@@ -12,7 +12,7 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 	 * @var array
 	 */
 	public $fixtures = array(
-		'app.circle_discover_tab_opened_user',
+		'app.latest_user_confirm_circle',
 	);
 
 	/**
@@ -22,7 +22,7 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 	 */
 	public function setUp() {
 		parent::setUp();
-		$this->CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+		$this->LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
 	}
 
 	/**
@@ -31,13 +31,13 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function tearDown() {
-		unset($this->CircleDiscoverTabOpenedUser);
+		unset($this->LatestUserConfirmCircle);
 
 		parent::tearDown();
 	}
 
 
-	public function test_getCircleDiscoverTabOpenedUser_success() {
+	public function test_getLatestUserConfirmCircle_success() {
 
 		$existUserId = 1;
 		$existTeamId = 2;
@@ -46,11 +46,11 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 		$notExistTeamId = 2;
 
 		// search exist record
-		$res1 = $this->CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($existUserId, $existTeamId);
+		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($existUserId, $existTeamId);
 		$this->assertCount(1, $res1);
 
 		// search doesn't exist record
-		$res2 = $this->CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($notExistUserId, $notExistTeamId);
+		$res2 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($notExistUserId, $notExistTeamId);
 		$this->assertFalse($res2);
 
 	}
@@ -61,15 +61,15 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 		$teamId = 3;
 
 		// search doesn't exist record
-		$res1 = $this->CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
 		$this->assertFalse($res1);
 
 		// add new record
-		$res2 = $this->CircleDiscoverTabOpenedUser->add($userId, $teamId);
+		$res2 = $this->LatestUserConfirmCircle->add($userId, $teamId);
 		$this->assertEqual(5, $res2);
 
 		// search new record
-		$res3 = $this->CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+		$res3 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
 		$this->assertCount(1, $res3);
 	}
 
@@ -77,7 +77,7 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 		$teamId = 1;
 		$userIds = [1, 2];
 
-		$res1 = $this->CircleDiscoverTabOpenedUser->find('all',[
+		$res1 = $this->LatestUserConfirmCircle->find('all',[
 				'conditions' => [
 					'team_id' => $teamId,
 					'del_flg' => false
@@ -86,10 +86,10 @@ class CircleDiscoverTabOpenedUserTest extends CakeTestCase {
 		);
 		$this->assertCount(3, $res1);
 
-		$res2 = $this->CircleDiscoverTabOpenedUser->deleteByTeamIdWithoutMembers($teamId, $userIds);
+		$res2 = $this->LatestUserConfirmCircle->deleteByTeamIdWithoutMembers($teamId, $userIds);
 		$this->assertTrue($res2);
 
-		$res3 = $this->CircleDiscoverTabOpenedUser->find('all',[
+		$res3 = $this->LatestUserConfirmCircle->find('all',[
 				'conditions' => [
 					'team_id' => $teamId,
 					'del_flg' => false

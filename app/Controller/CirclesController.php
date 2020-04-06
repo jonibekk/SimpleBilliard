@@ -3,7 +3,7 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
 App::import('Service', 'CirclePinService');
 App::uses('UnreadCirclePost', 'Model');
-App::uses('CircleDiscoverTabOpenedUser', 'Model');
+App::uses('LatestUserConfirmCircle', 'Model');
 
 /**
  * Circles Controller
@@ -80,10 +80,10 @@ class CirclesController extends AppController
         $circleMembersWithMe = $memberIds;
         $circleMembersWithMe[] = $userId;
 
-        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
-        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+        /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
+        $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
 
-        $CircleDiscoverTabOpenedUser->deleteByTeamIdWithoutMembers($this->current_team_id, $circleMembersWithMe);
+        $LatestUserConfirmCircle->deleteByTeamIdWithoutMembers($this->current_team_id, $circleMembersWithMe);
 
         $circleId = $this->Circle->getLastInsertID();
         // Notification

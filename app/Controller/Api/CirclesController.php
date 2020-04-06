@@ -13,7 +13,7 @@ App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
 App::uses('CheckedCircle', 'Model');
-App::uses('CircleDiscoverTabOpenedUser', 'Model');
+App::uses('LatestUserConfirmCircle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Service/Redis', 'UnreadPostsRedisService');
@@ -667,7 +667,7 @@ class CirclesController extends BasePagingController
      *
      * @return BaseApiResponse
      */
-    public function post_addCircleDiscoverTabOpenedUser()
+    public function post_addLatestUserConfirmCircle()
     {
 
         $userId = $this->getUserId();
@@ -678,19 +678,19 @@ class CirclesController extends BasePagingController
 			'team_id' => $teamId,
 		];
 
-        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
-        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
+        /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
+        $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
 
-        $resultGetCircleDiscoverTabOpendUser = $CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+        $resultGetCircleDiscoverTabOpendUser = $LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
         if($resultGetCircleDiscoverTabOpendUser !== false) {
             return ErrorResponse::badRequest()->withMessage(__("This user already opened circle discover tab."))->getResponse();
         }
 
         try {
-            $CircleDiscoverTabOpenedUser->add($userId, $teamId);
+            $LatestUserConfirmCircle->add($userId, $teamId);
         }
         catch (Exception $e) {
-            GoalousLog::error("Faild to regist CircleDiscoverTabOpenedUser record.", [
+            GoalousLog::error("Faild to regist LatestUserConfirmCircle record.", [
                 'message'   => $e->getMessage(),
                 'trace'     => $e->getTraceAsString(),
                 'team_id'   => $teamId,
@@ -707,16 +707,16 @@ class CirclesController extends BasePagingController
      *
      * @return ApiResponse|BaseApiResponse
      */
-    public function get_isExistCircleDiscoverTabOpenedUser()
+    public function get_isExistLatestUserConfirmCircle()
     {
         $userId = $this->getUserId();
         $teamId = $this->getTeamId();
 
-        /** @var CircleDiscoverTabOpenedUser $CircleDiscoverTabOpenedUser */
-        $CircleDiscoverTabOpenedUser = ClassRegistry::init('CircleDiscoverTabOpenedUser');
-        $CircleDiscoverTabOpenedUserResult = $CircleDiscoverTabOpenedUser->getCircleDiscoverTabOpenedUser($userId, $teamId);
+        /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
+        $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
+        $LatestUserConfirmCircleResult = $LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
 
-        if (!$CircleDiscoverTabOpenedUserResult) {
+        if (!$LatestUserConfirmCircleResult) {
             $data['result'] = false;
         }
         else {

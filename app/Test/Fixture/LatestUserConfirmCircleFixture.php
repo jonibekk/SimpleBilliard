@@ -4,7 +4,7 @@ App::uses('CakeTestFixtureEx', 'Test/Fixture');
 /**
  * CheckedCircle Fixture
  */
-class CircleDiscoverTabOpenedUserFixture extends CakeTestFixtureEx {
+class LatestUserConfirmCircleFixture extends CakeTestFixtureEx {
 
 /**
  * Fields

@@ -4,12 +4,12 @@ App::uses('User', 'Model');
 App::uses('Team', 'Model');
 
 /**
- * CircleDiscoverTabOpenedUser Model
+ * LatestUserConfirmCircle Model
  *
  * @property User $User
  * @property Team $Team
  */
-class CircleDiscoverTabOpenedUser extends AppModel {
+class LatestUserConfirmCircle extends AppModel {
 
     public $actsAs = [
         'SoftDeletable' => [
@@ -76,8 +76,8 @@ class CircleDiscoverTabOpenedUser extends AppModel {
             return false;
         }
 
-        $newCircleDiscoverTabOpenedUserId = $this->getLastInsertID();
-        return $newCircleDiscoverTabOpenedUserId;
+        $newLatestUserConfirmCircleId = $this->getLastInsertID();
+        return $newLatestUserConfirmCircleId;
     }
 
     /**
@@ -88,24 +88,24 @@ class CircleDiscoverTabOpenedUser extends AppModel {
      *
      * @return mixed|false
      */
-    public function getCircleDiscoverTabOpenedUser($userId, $teamId) {
+    public function getLatestUserConfirmCircle($userId, $teamId) {
 
         if(empty($userId) || empty($teamId)) {
             return false;
         }
 
-        $CircleDiscoverTabOpenedUser = $this->find('first', array(
+        $LatestUserConfirmCircle = $this->find('first', array(
             'conditions' => array(
                 'user_id' => $userId,
                 'team_id' => $teamId,
             )
         ));
 
-        if($CircleDiscoverTabOpenedUser == null) {
+        if($LatestUserConfirmCircle == null) {
             return false;
         }
 
-        return $CircleDiscoverTabOpenedUser;
+        return $LatestUserConfirmCircle;
     }
 
     /**
