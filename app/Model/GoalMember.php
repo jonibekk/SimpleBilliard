@@ -199,8 +199,7 @@ class GoalMember extends AppModel
         $page = 1,
         $with_owner = false,
         $approval_status = null
-    )
-    {
+    ) {
         $is_default = false;
         if ($user_id == $this->my_uid && $with_owner === true && $limit === null && $page === 1 && $approval_status === null) {
             $is_default = true;
@@ -354,15 +353,23 @@ class GoalMember extends AppModel
         return $res;
     }
 
-    function isCollaborated($goal_id, $uid = null)
+    /**
+     * Check whether is collaborating in a goal
+     *
+     * @param int      $goalId
+     * @param int|null $userId
+     *
+     * @return bool
+     */
+    public function isCollaborated(int $goalId, ?int $userId = null): bool
     {
-        if (!$uid) {
-            $uid = $this->my_uid;
+        if (!$userId) {
+            $userId = $this->my_uid;
         }
         $options = [
             'conditions' => [
-                'GoalMember.goal_id' => $goal_id,
-                'GoalMember.user_id' => $uid,
+                'GoalMember.goal_id' => $goalId,
+                'GoalMember.user_id' => $userId,
             ],
         ];
         $res = $this->find('first', $options);
@@ -378,8 +385,7 @@ class GoalMember extends AppModel
         $approvalStatus = null,
         $is_include_priority_0 = true,
         $term_type = null
-    )
-    {
+    ) {
         $conditions = [
             'GoalMember.team_id' => $team_id,
             'GoalMember.user_id' => $goal_user_id,
@@ -504,7 +510,9 @@ class GoalMember extends AppModel
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
-        if (empty($currentTerm)) return 0;
+        if (empty($currentTerm)) {
+            return 0;
+        }
 
         $options = [
             'fields'     => ['GoalMember.id'],
@@ -747,20 +755,19 @@ class GoalMember extends AppModel
     }
 
     /**
-     * ユニークのレコード取得
+     * Get a unique record
      *
-     * @param      $user_id
-     * @param      $goal_id
+     * @param int $userId
+     * @param int $goalId
      *
      * @return array
      */
-    function getUnique($user_id, $goal_id): array
+    public function getUnique(int $userId, int $goalId): array
     {
         $options = [
             'conditions' => [
-                'team_id' => $this->current_team_id,
-                'user_id' => $user_id,
-                'goal_id' => $goal_id,
+                'user_id' => $userId,
+                'goal_id' => $goalId,
             ],
         ];
         $res = $this->find('first', $options);
@@ -964,17 +971,18 @@ class GoalMember extends AppModel
 
     /**
      * @param array $goalIds
-     * @param int $userId
+     * @param int   $userId
+     *
      * @return array
      */
     public function getCollaborationGoalIds(array $goalIds, int $userId): array
     {
         $options = [
-            'fields' => ['goal_id'],
+            'fields'     => ['goal_id'],
             'conditions' => [
                 'goal_id' => $goalIds,
                 'user_id' => $userId,
-                'type' => self::TYPE_COLLABORATOR,
+                'type'    => self::TYPE_COLLABORATOR,
                 'del_flg' => false
             ]
         ];
@@ -1055,7 +1063,7 @@ class GoalMember extends AppModel
                 'type'    => self::TYPE_OWNER
             ],
         ]);
-        return $cnt == 1;
+        return $cnt > 0;
     }
 
     /**
@@ -1076,13 +1084,13 @@ class GoalMember extends AppModel
             ],
         ]);
 
-        return (bool)$res;
+        return $res > 0;
     }
 
     /**
      * アクティブなゴールリーダーを取得.
      *
-     * @param  int $goalId
+     * @param int $goalId
      *
      * @return array || null
      */
@@ -1130,7 +1138,7 @@ class GoalMember extends AppModel
     /**
      * ゴールメンバーがアクティブかどうか判定
      *
-     * @param  int $goalMemberId
+     * @param int $goalMemberId
      *
      * @return bool
      */
@@ -1186,7 +1194,7 @@ class GoalMember extends AppModel
     /**
      * アクティブなコラボレーター一覧をリスト形式で返す
      *
-     * @param  int $goalId
+     * @param int $goalId
      *
      * @return array
      */
@@ -1236,7 +1244,7 @@ class GoalMember extends AppModel
     /**
      * GoalMemberIdよりGoalIdを取得する
      *
-     * @param  int $id
+     * @param int $id
      *
      * @return int|null
      */

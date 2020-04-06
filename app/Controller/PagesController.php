@@ -52,47 +52,6 @@ class PagesController extends AppController
     }
 
     /**
-     * Displays a view
-     *
-     * @return $this->redirect('/') or void
-     * @throws Exception
-     * @throws MissingViewException
-     * @throws NotFoundException
-     * @internal param \What $mixed page to display
-     */
-    public function home()
-    {
-        // Display lp top page if not logged in
-        if (!$this->_isLoggedIn()) {
-            // TODO: delete all old lp pages and processing related after we migrated lp (goalous-lp repo) for all envs
-            if (in_array(ENV_NAME, $this->newLpEnvs, true)) {
-                return $this->redirectLp();
-            } else {
-                $this->layout = LAYOUT_HOMEPAGE;
-                return $this->render('home');
-            }
-        }
-
-        // Define URL params for Google analytics.
-        $this->_setUrlParams();
-
-        //title_for_layoutはAppControllerで設定
-        $this->set(compact('page', 'subpage'));
-        $this->_setTopAllContentIfLoggedIn();
-
-        /**
-         * Browser back cache clear
-         * @see https://jira.goalous.com/browse/GL-8610
-         */
-        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-        // For HTTP/1.0 conforming clients
-        header('Pragma: no-cache');
-
-        return $this->render('logged_in_home');
-    }
-
-    /**
      * Get lang code
      * @return string
      */

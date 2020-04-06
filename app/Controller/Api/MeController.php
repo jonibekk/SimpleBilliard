@@ -4,6 +4,8 @@ App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
 App::import('Service/Paging', 'RecentCircleListPagingService');
 App::import('Service/Paging', 'CirclePostUnreadPagingService');
+App::import('Service/Paging', 'UnreadCircleListPagingService');
+App::import('Service/Paging', 'FeedPostPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
 App::import('Service', 'UnreadCirclePostService');
@@ -198,6 +200,28 @@ class MeController extends BasePagingController
         $UnreadCirclePostService->deleteUserCacheInTeam($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()->getResponse();
+    }
+
+    /**
+     * Get action & goal feed for homepage
+     */
+    public function get_feed()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var FeedPostPagingService $FeedPostPagingService */
+        $FeedPostPagingService = ClassRegistry::init('FeedPostPagingService');
+
+        $data = $FeedPostPagingService->getDataWithPaging(
+            $pagingRequest,
+            $this->getPagingLimit(),
+            [FeedPostExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
     /**

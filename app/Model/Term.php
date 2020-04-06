@@ -712,17 +712,20 @@ class Term extends AppModel
     /**
      * return term data from date string
      *
-     * @param string $date
-     * @param bool   $enableErrorLog
+     * @param string  $date
+     * @param bool    $enableErrorLog
+     * @param integer $teamId
      *
      * @return array|null
      */
-    public function getTermDataByDate(string $date, bool $enableErrorLog = true)
+    public function getTermDataByDate(string $date, bool $enableErrorLog = true, $teamId = null)
     {
+        $currentTeamId = $teamId ? $teamId : $this->current_team_id;
+        $this->Team->current_team_id = $teamId;
         $timezone = $this->Team->getTimezone();
         $options = [
             'conditions' => [
-                'team_id'       => $this->current_team_id,
+                'team_id'       => $currentTeamId,
                 'start_date <=' => $date,
                 'end_date >='   => $date,
             ]

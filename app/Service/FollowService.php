@@ -21,10 +21,11 @@ class FollowService extends AppService
      *
      * @param $goalId
      * @param $userId
+     * @param $teamId
      *
      * @return bool|int
      */
-    function add($goalId, $userId)
+    function add($goalId, $userId, $teamId = null)
     {
         /** @var Follower $Follower */
         $Follower = ClassRegistry::init("Follower");
@@ -36,11 +37,14 @@ class FollowService extends AppService
             }
 
             // フォローする
+            if ($teamId) {
+                $Follower->current_team_id = $teamId;
+            }
             if (!$Follower->add($goalId, $userId)) {
                 $data = [
                     'goal_id' => $goalId,
                     'user_id' => $userId,
-                    'team_id' => $Follower->current_team_id,
+                    'team_id' => $teamId ? $teamId : $Follower->current_team_id,
                 ];
                 throw new Exception(sprintf("Failed follow. data:%s"
                     , var_export($data, true)));
@@ -120,7 +124,7 @@ class FollowService extends AppService
         }
 
         // Check if it is an old goal
-        if ($Goal->isFinished($goalId)) {
+        if ($Goal->isFinished($goalId, $teamId)) {
             throw new ValidationToFollowException(__("You cannot follow or collaborate with a past Goal."));
         }
 

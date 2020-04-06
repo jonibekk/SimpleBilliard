@@ -649,7 +649,6 @@ class GoalsController extends ApiController
         } catch (Exception $e) {
             return $this->_getResponseBadFail($e->getMessage());
         }
-        /** @noinspection PhpUndefinedVariableInspection */
         return $this->_getResponsePagingSuccess($response);
     }
 
