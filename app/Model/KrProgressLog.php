@@ -26,7 +26,7 @@ class KrProgressLog extends AppModel
         'user_id'          => DataType::INT,
         'key_result_id'    => DataType::INT,
         'action_result_id' => DataType::INT,
-        'value_unit'       => DataType::BOOL,
+        'value_unit'       => DataType::INT,
         'before_value'     => DataType::FLOAT,
         'change_value'     => DataType::FLOAT,
         'target_value'     => DataType::FLOAT,
