@@ -80,12 +80,47 @@ class CirclesController extends AppController
         $circleMembersWithMe = $memberIds;
         $circleMembersWithMe[] = $userId;
 
+        $circleId = $this->Circle->getLastInsertID();
+
+        $teamId = $this->current_team_id;
+
         /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
         $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
 
-        $LatestUserConfirmCircle->deleteByTeamIdWithoutMembers($this->current_team_id, $circleMembersWithMe);
-
-        $circleId = $this->Circle->getLastInsertID();
+        foreach($circleMembersWithMe as $circleMeberId) {
+            $resultGetCircleDiscoverTabOpendUser = $LatestUserConfirmCircle->getLatestUserConfirmCircleId($circleMeberId, $teamId);
+            if($resultGetCircleDiscoverTabOpendUser !== false) {
+                // this user already have a record
+                try {
+                    $LatestUserConfirmCircle->update($circleMeberId, $teamId, $circleId);
+                }
+                catch (Exception $e) {
+                    GoalousLog::error("Faild to update LatestUserConfirmCircle record.", [
+                        'message'   => $e->getMessage(),
+                        'trace'     => $e->getTraceAsString(),
+                        'team_id'   => $teamId,
+                        'user_id'   => $circleMeberId,
+                        'latestUserConfirmCircleId' => $circleId
+                    ]);
+                    throw $e;
+                }
+            }
+            else {
+                try {
+                    $LatestUserConfirmCircle->add($circleMeberId, $teamId, $circleId);
+                }
+                catch (Exception $e) {
+                    GoalousLog::error("Faild to add LatestUserConfirmCircle record.", [
+                        'message'   => $e->getMessage(),
+                        'trace'     => $e->getTraceAsString(),
+                        'team_id'   => $teamId,
+                        'user_id'   => $circleMeberId,
+                        'latestUserConfirmCircleId' => $circleId
+                    ]);
+                    throw $e;
+                }
+            }
+        }
         // Notification
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);

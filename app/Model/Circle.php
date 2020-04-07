@@ -665,6 +665,31 @@ class Circle extends AppModel
     }
 
     /**
+     * Get the lastet created circle ID of this team
+     *
+     * @param int $teamid
+     *
+     * @return int circleId of latest created on the team
+     */
+    public function getLatestCreatedCircleId(int $teamid): int
+    {
+        $condition = [
+            'conditions' => [
+                'team_id' => $teamid
+            ],
+            'fields'     => [
+                'id'
+            ],
+            'order' => [
+                'id' => 'desc'
+            ]
+        ];
+
+        $circleId = Hash::extract($this->useType()->find('first', $condition), '{*}.id');
+        return $circleId[0];
+    }
+
+    /**
      * Follow latest spec
      * Get the team ID of this circle
      *

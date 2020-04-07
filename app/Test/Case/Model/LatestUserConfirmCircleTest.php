@@ -37,7 +37,7 @@ class LatestUserConfirmCircleTest extends CakeTestCase {
 	}
 
 
-	public function test_getLatestUserConfirmCircle_success() {
+	public function test_getLatestUserConfirmCircleId_success() {
 
 		$existUserId = 1;
 		$existTeamId = 2;
@@ -46,11 +46,11 @@ class LatestUserConfirmCircleTest extends CakeTestCase {
 		$notExistTeamId = 2;
 
 		// search exist record
-		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($existUserId, $existTeamId);
-		$this->assertCount(1, $res1);
+		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($existUserId, $existTeamId);
+		$this->assertEqual(1, $res1);
 
 		// search doesn't exist record
-		$res2 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($notExistUserId, $notExistTeamId);
+		$res2 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($notExistUserId, $notExistTeamId);
 		$this->assertFalse($res2);
 
 	}
@@ -59,43 +59,38 @@ class LatestUserConfirmCircleTest extends CakeTestCase {
 
 		$userId = 1;
 		$teamId = 3;
+		$circleId = 1;
 
 		// search doesn't exist record
-		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
+		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
 		$this->assertFalse($res1);
 
 		// add new record
-		$res2 = $this->LatestUserConfirmCircle->add($userId, $teamId);
+		$res2 = $this->LatestUserConfirmCircle->add($userId, $teamId, $circleId);
 		$this->assertEqual(5, $res2);
 
 		// search new record
-		$res3 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircle($userId, $teamId);
-		$this->assertCount(1, $res3);
+		$res3 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
+		$this->assertEqual(1, $res3);
 	}
 
-	public function test_deleteByTeamId_success() {
+
+	public function test_update_success() {
+
+		$userId = 1;
 		$teamId = 1;
-		$userIds = [1, 2];
+		$circleId = 2;
 
-		$res1 = $this->LatestUserConfirmCircle->find('all',[
-				'conditions' => [
-					'team_id' => $teamId,
-					'del_flg' => false
-				]
-			]
-		);
-		$this->assertCount(3, $res1);
+		// search record
+		$res1 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
+		$this->assertEqual(1, $res1);
 
-		$res2 = $this->LatestUserConfirmCircle->deleteByTeamIdWithoutMembers($teamId, $userIds);
-		$this->assertTrue($res2);
+		// update record
+		$res2 = $this->LatestUserConfirmCircle->update($userId, $teamId, $circleId);
+		$this->assertFalse(!$res2);
 
-		$res3 = $this->LatestUserConfirmCircle->find('all',[
-				'conditions' => [
-					'team_id' => $teamId,
-					'del_flg' => false
-				]
-			]
-		);
-		$this->assertCount(2, $res3);
+		// search updated record
+		$res3 = $this->LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
+		$this->assertEqual(2, $res3);
 	}
 }

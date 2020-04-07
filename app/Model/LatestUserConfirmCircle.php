@@ -55,20 +55,22 @@ class LatestUserConfirmCircle extends AppModel {
      *
      * @param int $userId
      * @param int $teamId
+     * @param int $latestConfirmCircleId
      *
      * @return int|false
      */
-    public function add($userId, $teamId) {
+    public function add($userId, $teamId, $latestConfirmCircleId) {
 
-        if(empty($userId) || empty($teamId)) {
+        if(empty($userId) || empty($teamId) || empty($latestConfirmCircleId)) {
             return false;
         }
 
-        $fields = array('user_id', 'team_id');
+        $fields = array('user_id', 'team_id', 'latest_confirm_circle_id');
 
         $data = [
             'user_id' => $userId,
             'team_id' => $teamId,
+            'latest_confirm_circle_id' => $latestConfirmCircleId,
         ];
 
         $this->create();
@@ -81,55 +83,72 @@ class LatestUserConfirmCircle extends AppModel {
     }
 
     /**
-     * Get a record.
+     * Update a record.
      *
      * @param int $userId
      * @param int $teamId
+     * @param int $latestConfirmCircleId
      *
-     * @return mixed|false
+     * @return boolean
      */
-    public function getLatestUserConfirmCircle($userId, $teamId) {
+    public function update($userId, $teamId, $latestConfirmCircleId) {
 
-        if(empty($userId) || empty($teamId)) {
+        if(empty($userId) || empty($teamId) || empty($latestConfirmCircleId)) {
             return false;
         }
+
+        $fields = array('user_id', 'team_id', 'latest_confirm_circle_id');
 
         $LatestUserConfirmCircle = $this->find('first', array(
             'conditions' => array(
                 'user_id' => $userId,
                 'team_id' => $teamId,
-            )
+            ),
         ));
 
         if($LatestUserConfirmCircle == null) {
             return false;
         }
 
-        return $LatestUserConfirmCircle;
-    }
+        $this->id = $LatestUserConfirmCircle["LatestUserConfirmCircle"]["id"];
 
-    /**
-     * Delete records by teamid without first circle members.
-     *
-     * @param int $teamId
-     * @param int[] $memberIds
-     *
-     * @return boolean
-     */
-    public function deleteByTeamIdWithoutMembers($teamId, $memberIds) {
+        $result = $this->saveField('latest_confirm_circle_id', $latestConfirmCircleId);
 
-        if(empty($teamId) || empty($memberIds)) {
+        if (!$result) {
             return false;
         }
 
-        $deletedResult = $this->deleteAll(
-            array(
-                'team_id' => $teamId,
-                'user_id !=' => $memberIds
-            ),
-            false
-        );
+        return true;
+    }
 
-        return $deletedResult;
+    /**
+     * Get a circle id that latest user confirmed.
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return mixed|false
+     */
+    public function getLatestUserConfirmCircleId($userId, $teamId) {
+
+        if(empty($userId) || empty($teamId)) {
+            return false;
+        }
+
+        $res = $this->find('first', array(
+            'conditions' => array(
+                'user_id' => $userId,
+                'team_id' => $teamId,
+            ),
+            'fields' => array(
+                'latest_confirm_circle_id'
+            )
+        ));
+
+        if($res == null) {
+            return false;
+        }
+
+        return $res["LatestUserConfirmCircle"]["latest_confirm_circle_id"];
     }
 }

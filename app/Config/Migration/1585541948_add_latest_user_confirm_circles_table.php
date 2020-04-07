@@ -20,6 +20,7 @@ class AddLatestUserConfirmCirclesTable extends CakeMigration {
 					'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
 					'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '= users.id'),
 					'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => '= teams.id'),
+					'latest_confirm_circle_id'  => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => '= circles.id'),
 					'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 					'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
 					'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
