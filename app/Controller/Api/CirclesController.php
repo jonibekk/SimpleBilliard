@@ -669,7 +669,7 @@ class CirclesController extends BasePagingController
      * 
      * @return BaseApiResponse
      */
-    public function post_registLatestUserConfirmCircle($latestUserConfirmCircleId)
+    public function post_registerLatestUserConfirmCircle($latestUserConfirmCircleId)
     {
 
         $userId = $this->getUserId();
