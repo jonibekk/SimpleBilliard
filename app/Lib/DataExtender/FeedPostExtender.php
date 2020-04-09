@@ -91,7 +91,7 @@ class FeedPostExtender extends BaseExtender
                 if ($entry['type'] == Enum\Model\Post\Type::CREATE_GOAL) {
                     /** @var KeyResult $KeyResult */
                     $KeyResult = ClassRegistry::init('KeyResult');
-                    $topKr = $KeyResult->getTkr($data[$index]['goal']['id']);
+                    $topKr = $KeyResult->getTkrWithTyped($data[$index]['goal']['id']);
                     $data[$index]['key_result'] = $topKr['KeyResult'];
 
                     /** @var GoalMember $GoalMember */

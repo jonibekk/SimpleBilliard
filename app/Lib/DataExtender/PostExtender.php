@@ -83,7 +83,7 @@ class PostExtender extends BaseExtender
                     $data = $GoalExtension->extend($data, "goal_id");
                     /** @var KeyResult $KeyResult */
                     $KeyResult = ClassRegistry::init('KeyResult');
-                    $topKr = $KeyResult->getTkr($data['goal']['id']);
+                    $topKr = $KeyResult->getTkrWithTyped($data['goal']['id']);
                     $data['key_result'] = $topKr['KeyResult'];
                     /** @var ActionExtension $ActionExtension */
                     $ActionExtension = ClassRegistry::init('ActionExtension');
