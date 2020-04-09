@@ -733,9 +733,9 @@ class CirclesController extends BasePagingController
             $data['result'] = false;
             return ApiResponse::ok()->withData($data)->getResponse();
         } else {
-            /** @var Circle $Circle */
-            $Circle = ClassRegistry::init('Circle');
-            $latestCircleId = $Circle->getLatestCreatedCircleId($teamId);
+            /** @var CircleService $CircleService */
+            $CircleService = ClassRegistry::init('CircleService');
+            $latestCircleId = $CircleService->getLatestCreatedCircleIdWithUnJoined($userId, $teamId);
 
             if($latestCircleId != $LatestUserConfirmCircleResult) {
                 //this user have unconfirmed circle yet.
