@@ -279,7 +279,14 @@ class PostsController extends BasePagingController
                 ->getResponse();
         }
 
-        return ApiResponse::ok()->withData(["posts_ids" => $res])->getResponse();
+        // Returning post model for mixpanel read data
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $Post->current_team_id = $this->getTeamId();
+        $posts = $Post->getPostsById($res);
+        $posts = Hash::extract($posts, '{n}.Post');
+
+        return ApiResponse::ok()->withData(["posts" => $posts])->getResponse();
     }
 
     /**
@@ -367,15 +374,6 @@ class PostsController extends BasePagingController
             PostExtender::EXTEND_COMMENTS_ALL,
             PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
-
-        // Make user read this post
-        // Decreasing unread count if this post haven't read yet.
-        if (!$post['is_read']) {
-            /** @var PostReadService $PostReadService */
-            $PostReadService = ClassRegistry::init('PostReadService');
-            $PostReadService->multipleAdd([$postId], $this->getUserId(), $this->getTeamId());
-        }
-
 
         return ApiResponse::ok()->withData([
             'type' => $post['type'],
