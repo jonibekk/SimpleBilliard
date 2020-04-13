@@ -22,6 +22,7 @@ App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
 App::import('Service/Pusher', 'PostPusherService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
+App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
 
@@ -827,11 +828,21 @@ class PostsController extends BasePagingController
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         $type = $Post->getPostType($postId);
 
         switch ($type) {
             case Post::TYPE_NORMAL:
+                $postCircles = $PostShareCircle->getShareCircleList($postId, $teamId);
+                $circleId = $postCircles[0];
+                if ($GlRedis->checkCircleInBlackList($circleId) == 1){
+                    break;
+                }
+
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(
