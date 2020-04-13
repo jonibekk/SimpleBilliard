@@ -110,8 +110,9 @@ class PostExtender extends BaseExtender
 
                         $data['is_leader'] = $isLeader;
                         //If now is within goal's period and goal is not made by current user, current user can collaborate
-                        $data['can_collaborate'] = !$isLeader && !$isCollaborating &&
-                            GoalousDateTime::now()->between($startDate, $endDate);
+                        $inThisTerm = GoalousDateTime::now()->between($startDate, $endDate);
+                        $data['can_collaborate'] = !$isLeader && !$isCollaborating && $inThisTerm;
+                        $data['is_goal_current_term'] = $inThisTerm;
                         $data['is_collaborating'] = $isCollaborating;
 
                         /** @var Follower $Follower */
