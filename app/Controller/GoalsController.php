@@ -1391,11 +1391,10 @@ class GoalsController extends AppController
             $this->Goal->Post->clearLanguage($post['Post']['id']);
 
             if ($post) {
-                $url = [
-                    'controller' => 'posts',
-                    'action'     => 'feed',
-                    'post_id'    => $post['Post']['id']
-                ];
+                $url = sprintf('/posts/%s', $post['Post']['id']);
+                if (ENV_NAME == 'local') {
+                    $url = "http://local.goalous.com:5790" . $url;
+                }
             }
             return $this->redirect($url);
         }

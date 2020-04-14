@@ -331,9 +331,34 @@ class UsersController extends AppController
         return $this->_afterAuthSessionStore();
     }
 
-    function _afterAuthSessionStore()
+    function set_session()
     {
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        $this->set('redirect_url', $redirect_url);
+
+        $teamId = $this->Auth->user('default_team_id');
+        $userId = $this->Auth->user('id');
+        $sesId = $this->Session->id();
+
+        $this->set('team', $teamId);
+        $this->set('user', $userId);
+        $this->set('ses', $sesId);
+
+        $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($teamId, $userId, $sesId);
+        if (empty($mapSesAndJwt)) {
+            $jwt = $this->GlRedis->saveMapSesAndJwt($teamId, $userId, $sesId);
+            $this->set('jwt_token', $jwt->token());
+        } else {
+            $this->set('jwt_token', $mapSesAndJwt);
+        }
+
+        $this->layout = false;
+        return $this->render();
+    }
+
+    function _afterAuthSessionStore()
+    {
+        $redirect_url = "/users/set_session";
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');

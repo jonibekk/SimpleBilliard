@@ -217,6 +217,7 @@ class KeyResult extends AppModel
         'team_id'             => DataType::INT,
         'user_id'             => DataType::INT,
         'goal_id'             => DataType::INT,
+        'value_unit'          => DataType::INT,
         'priority'            => DataType::INT,
         'action_result_count' => DataType::INT,
         'tkr_flg'             => DataType::BOOL,
@@ -680,6 +681,27 @@ class KeyResult extends AppModel
     function getTkr(int $goalId)
     {
         $res = $this->find('first', [
+            'conditions' => [
+                'goal_id' => $goalId,
+                'tkr_flg' => true,
+            ],
+        ]);
+        if (!$res) {
+            return null;
+        }
+        return $res;
+    }
+
+    /**
+     * TKR取得
+     *
+     * @param  int $goalId
+     *
+     * @return null|array
+     */
+    function getTkrWithTyped(int $goalId)
+    {
+        $res = $this->useType()->find('first', [
             'conditions' => [
                 'goal_id' => $goalId,
                 'tkr_flg' => true,

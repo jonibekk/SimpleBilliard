@@ -72,24 +72,8 @@ class PagesController extends AppController
                 return $this->render('home');
             }
         }
-
-        // Define URL params for Google analytics.
-        $this->_setUrlParams();
-
-        //title_for_layoutはAppControllerで設定
-        $this->set(compact('page', 'subpage'));
-        $this->_setTopAllContentIfLoggedIn();
-
-        /**
-         * Browser back cache clear
-         * @see https://jira.goalous.com/browse/GL-8610
-         */
-        // For HTTP/1.1 conforming clients and the rest (MSIE 5)
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-        // For HTTP/1.0 conforming clients
-        header('Pragma: no-cache');
-
-        return $this->render('logged_in_home');
+        $newHome = '/index.html';
+        $this->redirect($newHome);
     }
 
     /**
