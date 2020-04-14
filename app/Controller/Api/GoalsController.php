@@ -115,6 +115,9 @@ class GoalsController extends BasePagingController
             Hash::get($body, 'description'),
             Hash::get($body, 'priority')
         );
+        if (Hash::get($body, 'requestGoalApproval')) {
+            $request->setApprovalStatus(\Goalous\Enum\Model\GoalMember\ApprovalStatus::NEW());
+        }
         $request->setNotifyBiz($this->NotifyBiz);
 
         try {
