@@ -88,8 +88,9 @@ class PostReadService extends AppService
                 }
             }
 
-            // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
-            $query = sprintf('
+            if ($circleIdsUpdating) {
+                // Get the unread count in updating circles (Counting from cache_unread_circle_posts table)
+                $query = sprintf('
                 select 
                     C.circle_id, count(C.circle_id) as count 
                 from cache_unread_circle_posts as U 
@@ -99,40 +100,41 @@ class PostReadService extends AppService
                     and U.team_id = ? 
                     and C.circle_id in (%s)
                 group by C.circle_id;',
-                $rawString(count($circleIdsUpdating), '?')
-            );
-            $stateSelectRestOfUnreadCount = $pdo->prepare($query);
-            $stateSelectRestOfUnreadCount->execute(array_merge([$userId], [$teamId], $circleIdsUpdating));
-            $circleUnreadCounts = $stateSelectRestOfUnreadCount->fetchAll(PDO::FETCH_ASSOC);
+                    $rawString(count($circleIdsUpdating), '?')
+                );
+                $stateSelectRestOfUnreadCount = $pdo->prepare($query);
+                $stateSelectRestOfUnreadCount->execute(array_merge([$userId], [$teamId], $circleIdsUpdating));
+                $circleUnreadCounts = $stateSelectRestOfUnreadCount->fetchAll(PDO::FETCH_ASSOC);
 
-            // Prepare array of circle id with unread count valued.
-            $mapKeyCircleIdValueUnreadCount = [
-                // 'circles.id' => unread count
-            ];
-            // Because the mysql count() doesn't return 0 if there is no record, set default value as 0.
-            foreach ($circleIdsUpdating as $circleId) {
-                $mapKeyCircleIdValueUnreadCount[$circleId] = 0;
-            }
-            foreach ($circleUnreadCounts as $circleUnreadCount) {
-                $circleId = intval($circleUnreadCount['circle_id']);
-                $mapKeyCircleIdValueUnreadCount[$circleId] = intval($circleUnreadCount['count']);
-            }
+                // Prepare array of circle id with unread count valued.
+                $mapKeyCircleIdValueUnreadCount = [
+                    // 'circles.id' => unread count
+                ];
+                // Because the mysql count() doesn't return 0 if there is no record, set default value as 0.
+                foreach ($circleIdsUpdating as $circleId) {
+                    $mapKeyCircleIdValueUnreadCount[$circleId] = 0;
+                }
+                foreach ($circleUnreadCounts as $circleUnreadCount) {
+                    $circleId = intval($circleUnreadCount['circle_id']);
+                    $mapKeyCircleIdValueUnreadCount[$circleId] = intval($circleUnreadCount['count']);
+                }
 
-            // Update circle member unread count
-            $stateUpdateCircleMemberUnreadCount = $pdo->prepare('
+                // Update circle member unread count
+                $stateUpdateCircleMemberUnreadCount = $pdo->prepare('
                 update circle_members 
                 set unread_count = ? 
                 where 
                     circle_id = ? 
                     and team_id = ? 
                     and user_id = ?;');
-            foreach ($mapKeyCircleIdValueUnreadCount as $circleId => $unreadCount) {
-                $stateUpdateCircleMemberUnreadCount->execute([
-                    $unreadCount,
-                    $circleId,
-                    $teamId,
-                    $userId
-                ]);
+                foreach ($mapKeyCircleIdValueUnreadCount as $circleId => $unreadCount) {
+                    $stateUpdateCircleMemberUnreadCount->execute([
+                        $unreadCount,
+                        $circleId,
+                        $teamId,
+                        $userId
+                    ]);
+                }
             }
 
             // Insert post read
@@ -172,6 +174,8 @@ class PostReadService extends AppService
             $pdo->rollBack();
             GoalousLog::error('Failed read post', [
                 'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
                 'post.ids' => $postIds,
                 'users.id' => $userId,
                 'teams.id' => $teamId

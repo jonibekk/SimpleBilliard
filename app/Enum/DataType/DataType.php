@@ -15,6 +15,7 @@ use MyCLabs\Enum\Enum;
 class DataType extends Enum
 {
     const INT = "int";
+    const FLOAT = "float";
     const BOOL = "bool";
     const JSON = "json";
 }

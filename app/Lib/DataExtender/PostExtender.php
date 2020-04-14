@@ -50,7 +50,8 @@ class PostExtender extends BaseExtender
             $data = $UserExtension->extend($data, "user_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
-            switch ((int)$data['type']) {
+            $postType = (int)$data['type'];
+            switch ($postType) {
                 case Post::TYPE_NORMAL:
                     // TODO: depends on spec
                     break;
@@ -60,9 +61,30 @@ class PostExtender extends BaseExtender
                     $data = $CircleExtension->extend($data, "circle_id");
                     break;
                 case Post::TYPE_ACTION:
-                case Post::TYPE_KR_COMPLETE:
                 case Post::TYPE_CREATE_GOAL:
-                case Post::TYPE_GOAL_COMPLETE:
+                    if ($postType === Post::TYPE_ACTION) {
+                        /** @var KrProgressLog $KrProgressLog */
+                        $KrProgressLog = ClassRegistry::init('KrProgressLog');
+                        $krProgressLog = $KrProgressLog->getByActionResultId($data['action_result_id']);
+                        $data['kr_progress_log'] = !empty($krProgressLog) ? $KrProgressLog->getByActionResultId($data['action_result_id'])
+                            ->toArray() : null;
+
+                        /** @var AttachedFile $AttachedFile */
+                        $AttachedFile = ClassRegistry::init('AttachedFile');
+                        $attachedFiles = $AttachedFile->getActionResultResources($data['action_result_id']);
+                        /** @var ImageStorageService $ImageStorageService */
+                        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+                        $data['action_img_url'] = $ImageStorageService->getImgUrlEachSize($attachedFiles[0]->toArray(),
+                            'AttachedFile',
+                            'attached');
+                    }
+                    /** @var GoalExtension $GoalExtension */
+                    $GoalExtension = ClassRegistry::init('GoalExtension');
+                    $data = $GoalExtension->extend($data, "goal_id");
+                    /** @var KeyResult $KeyResult */
+                    $KeyResult = ClassRegistry::init('KeyResult');
+                    $topKr = $KeyResult->getTkrWithTyped($data['goal']['id']);
+                    $data['key_result'] = $topKr['KeyResult'];
                     /** @var ActionExtension $ActionExtension */
                     $ActionExtension = ClassRegistry::init('ActionExtension');
                     $data = $ActionExtension->extend($data, "action_result_id");
@@ -74,7 +96,34 @@ class PostExtender extends BaseExtender
                     /** @var GoalExtension $GoalExtension */
                     $GoalExtension = ClassRegistry::init('GoalExtension');
                     $data = $GoalExtension->extend($data, "action_result.goal_id");
+
+                    if ($postType == Enum\Model\Post\Type::CREATE_GOAL) {
+                        /** @var GoalMember $GoalMember */
+                        $GoalMember = ClassRegistry::init('GoalMember');
+                        $goalMember = $GoalMember->getUnique($userId, $data['goal_id']);
+
+                        $isLeader = !empty($goalMember) && $goalMember['GoalMember']['type'] == GoalMember::TYPE_OWNER;
+                        $isCollaborating = !empty($goalMember);
+
+                        $startDate = GoalousDateTime::createFromFormat('Y-m-d', $data['goal']['start_date']);
+                        $endDate = GoalousDateTime::createFromFormat('Y-m-d', $data['goal']['end_date']);
+
+                        $data['is_leader'] = $isLeader;
+                        //If now is within goal's period and goal is not made by current user, current user can collaborate
+                        $inThisTerm = GoalousDateTime::now()->between($startDate, $endDate);
+                        $data['can_collaborate'] = !$isLeader && !$isCollaborating && $inThisTerm;
+                        $data['is_goal_current_term'] = $inThisTerm;
+                        $data['is_collaborating'] = $isCollaborating;
+
+                        /** @var Follower $Follower */
+                        $Follower = ClassRegistry::init('Follower');
+                        $data['is_following'] = !empty($Follower->isExists($data['goal']['id'], $userId, $teamId));
+                    }
                     break;
+                    // These post types are not implemented yet
+//                case Post::TYPE_KR_COMPLETE:
+//                case Post::TYPE_GOAL_COMPLETE:
+//                    break;
             }
         }
         $isExtendingAllComment = in_array(self::EXTEND_COMMENTS_ALL, $extensions);

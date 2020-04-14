@@ -71,7 +71,8 @@ class PostServiceTest extends GoalousTestCase
         'app.team_translation_status',
         'app.mst_translation_language',
         'app.translation',
-        'app.cache_unread_circle_post'
+        'app.cache_unread_circle_post',
+        'app.kr_progress_log'
     ];
 
     /**

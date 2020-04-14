@@ -382,7 +382,6 @@ class AttachedFile extends AppModel
                 $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
                     [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
 
-
                 if ($model_type === self::TYPE_MODEL_POST) {
                     $PostResourceService->updatePostResourceIndex($foreign_key_id, $id_or_hash, $i);
                 }
@@ -428,7 +427,8 @@ class AttachedFile extends AppModel
 
                 $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
 
-                if ($PostResourceService->isPostResourceExists($foreign_key_id, $attachedFile['id'], $postResourceType->getValue())) {
+                if ($PostResourceService->isPostResourceExists($foreign_key_id, $attachedFile['id'],
+                    $postResourceType->getValue())) {
                     continue;
                 }
 
@@ -492,8 +492,8 @@ class AttachedFile extends AppModel
      * 共通のファイル削除処理(全ての紐付いた画像)
      * $model_type should be in self::$TYPE_FILE
      *
-     * @param  integer $foreign_key_id
-     * @param  integer $model_type
+     * @param integer $foreign_key_id
+     * @param integer $model_type
      *
      * @return bool
      */
@@ -512,7 +512,6 @@ class AttachedFile extends AppModel
             $this->{$model['intermediateModel']}->delete($related_file[$model['intermediateModel']]['id']);
             $this->delete($related_file[$model['intermediateModel']]['attached_file_id']);
         }
-
 
         /** @var PostResourceService $PostResourceService */
         $PostResourceService = ClassRegistry::init('PostResourceService');
@@ -559,9 +558,9 @@ class AttachedFile extends AppModel
      * ファイルが閲覧/ダウンロード可能か確認
      *
      * @param int $fileId 添付ファイルのID
-     *
      * @param int $userId
      * @param int $teamId
+     *
      * @return bool
      */
     public function isReadable(int $fileId, $userId = null, $teamId = null)
@@ -668,13 +667,12 @@ class AttachedFile extends AppModel
     }
 
     /**
-     * @deprecated
-     * Already this method moved to AttachedFileService.getFileUrl.
-     * ファイルのURLを返す
-     *
      * @param $file_id
      *
      * @return bool|null|string
+     * @deprecated
+     * Already this method moved to AttachedFileService.getFileUrl.
+     * ファイルのURLを返す
      */
     public function getFileUrl($file_id)
     {
@@ -888,4 +886,37 @@ class AttachedFile extends AppModel
         return $options;
     }
 
+    /**
+     * Get list of files attached to an action result
+     *
+     * @param int $actionResultId
+     *
+     * @return AttachedFileEntity[]
+     */
+    public function getActionResultResources(int $actionResultId): array
+    {
+        $option = [
+            'conditions' => [
+                'AttachedFile.model_type' => Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_ACTION_RESULT,
+                'AttachedFile.del_flg'    => false
+            ],
+            'order'      => [
+                'AttachedFile.id' => "ASC"
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'action_result_files',
+                    'alias'      => 'ActionResultFile',
+                    'conditions' => [
+                        'ActionResultFile.attached_file_id = AttachedFile.id',
+                        'ActionResultFile.action_result_id' => $actionResultId,
+                        'ActionResultFile.del_flg'          => false
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->useType()->useEntity()->find('all', $option);
+    }
 }
