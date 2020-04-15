@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::import('Service', 'CircleService');
 App::import('Service', 'CirclePinService');
 App::uses('UnreadCirclePost', 'Model');
+App::uses('LatestUserConfirmCircle', 'Model');
 
 /**
  * Circles Controller
@@ -76,6 +77,7 @@ class CirclesController extends AppController
         }
 
         $circleId = $this->Circle->getLastInsertID();
+
         // Notification
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $circleId,
             null, $memberIds);

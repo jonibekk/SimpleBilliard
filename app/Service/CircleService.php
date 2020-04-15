@@ -661,4 +661,46 @@ class CircleService extends AppService
         return $circleList > 0;
     }
 
+    /**
+     * Get the lastet created circle ID of this team with user unjoined
+     *
+     * @param int $teamid
+     * @param int $userId
+     *
+     * @return int circleId of latest created on the team
+     */
+    public function getLatestCreatedCircleIdWithUnJoined(int $userId, int $teamid): int
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $condition = [
+            'conditions' => [
+                'Circle.team_id' => $teamid,
+                'CircleMembers.user_id is null'
+            ],
+            'fields' => [
+                'Circle.id'
+            ],
+            'order' => [
+                'Circle.id' => 'desc'
+            ],
+            'joins' => [
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'circle_members',
+                    'alias' => 'CircleMembers',
+                    'field' => 'Circle.id',
+                    'conditions' => [
+                        'CircleMembers.circle_id = Circle.id',
+                        'CircleMembers.user_id' => $userId,
+                    ],
+                ]
+            ],
+        ];
+
+        $circleId = Hash::extract($Circle->find('first', $condition), '{*}.id');
+
+        return $circleId[0];
+    }
 }
