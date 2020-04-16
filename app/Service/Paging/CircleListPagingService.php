@@ -202,7 +202,11 @@ class CircleListPagingService extends BasePagingService
     protected function addDefaultValues(PagingRequest $pagingRequest): PagingRequest
     {
         $conditions = $pagingRequest->getConditions();
-        if (empty(Hash::get($conditions, 'pinned'))) {
+        if (boolval(Hash::get($conditions, 'newcreated', false))) {
+            $pagingRequest->addOrder('Circle.created');
+            $pagingRequest->addOrder('Circle.id');
+        }
+        else if (empty(Hash::get($conditions, 'pinned'))) {
             $pagingRequest->addOrder('Circle.latest_post_created');
             $pagingRequest->addOrder('Circle.id');
         }
