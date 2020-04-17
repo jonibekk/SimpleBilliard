@@ -3,7 +3,7 @@ App::uses('AccessTokenClient', 'Lib/Cache/Redis/AccessToken');
 
 class AuthenticationSessionDataService
 {
-    public function read(string $userId, string $teamId, string $jwtId): AccessTokenData
+    public function read(string $userId, string $teamId, string $jwtId): ?AccessTokenData
     {
         $cacheClient = new AccessTokenClient();
         $cacheKey = new AccessTokenKey($userId, $teamId, $jwtId);

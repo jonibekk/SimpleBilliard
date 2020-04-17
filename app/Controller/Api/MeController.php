@@ -165,6 +165,9 @@ class MeController extends BasePagingController
         /** @var AuthenticationSessionDataService $AuthenticationSessionDataService */
         $AuthenticationSessionDataService = ClassRegistry::init("AuthenticationSessionDataService");
         $sessionData = $AuthenticationSessionDataService->read($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId());
+        if (empty($sessionData)) {
+            $sessionData = new AccessTokenData();
+        }
 
         $countCurrentTermGoalUnachieved = $Goal->countSearch([
             'term'     => 'present',
@@ -175,8 +178,7 @@ class MeController extends BasePagingController
                 'data' => [
                     'can_action' => $canActionGoals,
                     'show_goal_create_guidance' => !$sessionData->isHideGoalCreateGuidance(),
-                    'count_current_term_goals' => $countCurrentTermGoalUnachieved,
-                    '$sessionData' => $sessionData->toArray()
+                    'count_current_term_goals' => $countCurrentTermGoalUnachieved
                 ]
             ])->getResponse();
     }
