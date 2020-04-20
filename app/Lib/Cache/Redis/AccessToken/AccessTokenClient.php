@@ -19,8 +19,7 @@ class AccessTokenClient extends BaseRedisClient implements InterfaceRedisClient
         }
         $data = msgpack_unpack($readData);
 
-        return (new AccessTokenData)
-            ->withUserAgent($data['user_agent'] ?? '');
+        return AccessTokenData::parseFromArray($data);
     }
 
     /**
@@ -31,9 +30,7 @@ class AccessTokenClient extends BaseRedisClient implements InterfaceRedisClient
      */
     public function write(AccessTokenKey $key, AccessTokenData $data): bool
     {
-        $cacheValue = msgpack_pack([
-            'user_agent' => $data->getUserAgent(),
-        ]);
+        $cacheValue = msgpack_pack($data->toArray());
         return $this->getRedis()->set($key->get(), $cacheValue, $data->getTimeToLive());
     }
 

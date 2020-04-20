@@ -1510,7 +1510,7 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function findActionables(): array
+    function findActionables(int $userId = null): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -1522,7 +1522,7 @@ class GoalService extends AppService
 //        }
 
         // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
-        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = $Goal->findActionables($userId ?? $Goal->my_uid);
         $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
 
 //        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
