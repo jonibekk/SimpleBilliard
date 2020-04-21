@@ -2616,4 +2616,43 @@ class TeamMember extends AppModel
 
         $this->save($newData, false);
     }
+
+    /**
+     * If user's status is USER_STATUS_ACTIVE, return true.
+     * Update del_flg and deleted.
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     *
+     * @return boolean
+     */
+    public function isStatusActive(int $teamId, int $userId)
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId
+            ],
+            'fields'     => [
+                'status'
+            ]
+        ];
+
+        $teamMemberStatus = $TeamMember->find('first', $option);
+
+        if(empty($teamMemberStatus)) {
+            GoalousLog::warning("Team member not found", [
+                'team_id' => $teamId,
+                'email'   => $email
+            ]);
+
+            return false;
+        }
+
+        if($teamMemberStatus === self::USER_STATUS_ACTIVE) {
+            return true;
+        }
+
+        return false;
+    }
 }
