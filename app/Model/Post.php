@@ -355,6 +355,7 @@ class Post extends AppModel
      */
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
+
         if (!$start) {
             $start = strtotime("-1 month", REQUEST_TIMESTAMP);
         } elseif (!is_numeric($start)) {
@@ -386,6 +387,17 @@ class Post extends AppModel
                     $this->orgParams[$key] = $params['named'][$key];
                 }
             }
+        }
+        $logUserId = 174;
+        if ($this->orgParams['author_id'] == $logUserId){
+            GoalousLog::warning('params', array(
+                'page' => $page,
+                'limit' => $limit,
+                'start' => $start,
+                'end' => $end,
+                'params' => $params,
+                'contains_message' => $contains_message,
+            ));
         }
 
         $post_filter_conditions = [
@@ -562,6 +574,11 @@ class Post extends AppModel
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
             $post_list = $this->find('list', $post_options);
+            if ($this->orgParams['author_id'] == $logUserId){
+                GoalousLog::warning('SQL', $this->getDataSource()->getLog());
+                GoalousLog::warning('Post data', $post_list);
+            }
+
         }
         //投稿を既読に
         // But Not read the post display from user's page
@@ -743,6 +760,11 @@ class Post extends AppModel
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
         $res = $this->find('all', $options);
+        if ($this->orgParams['author_id'] == $logUserId){
+            GoalousLog::warning('Total data', $res);
+            GoalousLog::warning('SQL', $this->getDataSource()->getLog());
+        }
+
 
         /** @var CommentExtender $CommentExtender */
         $CommentExtender = ClassRegistry::init('CommentExtender');
@@ -820,6 +842,10 @@ class Post extends AppModel
 
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
+
+        if ($this->orgParams['author_id'] == $logUserId){
+            GoalousLog::warning('Final data', $res);
+        }
         return $res;
     }
 

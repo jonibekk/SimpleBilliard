@@ -41,9 +41,6 @@ class ApiResponse extends BaseApiResponse
      */
     public function withData($data, bool $appendFlag = false): ApiResponse
     {
-        if (empty($data)) {
-            return $this;
-        }
         if (!$appendFlag) {
             if (is_array($data)) {
                 $data = $this->convertElementsToString($data);
