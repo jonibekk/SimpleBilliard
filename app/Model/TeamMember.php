@@ -2619,7 +2619,6 @@ class TeamMember extends AppModel
 
     /**
      * If user's status is USER_STATUS_ACTIVE, return true.
-     * Update del_flg and deleted.
      *
      * @param int    $teamId
      * @param int    $userId
