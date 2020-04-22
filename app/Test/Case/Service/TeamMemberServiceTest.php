@@ -26,7 +26,8 @@ class TeamMemberServiceTest extends GoalousTestCase
         'app.team_member',
         'app.team_translation_language',
         'app.mst_translation_language',
-        'app.cache_unread_circle_post'
+        'app.cache_unread_circle_post',
+        'app.circle_member'
     );
 
     /**
