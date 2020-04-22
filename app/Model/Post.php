@@ -388,7 +388,7 @@ class Post extends AppModel
                 }
             }
         }
-        $logUserId = 614;
+        $logUserId = 174;
         if ($this->orgParams['author_id'] == $logUserId){
             GoalousLog::warning('params', array(
                 'page' => $page,
