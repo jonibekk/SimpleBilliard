@@ -320,9 +320,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertCount(1, $res2);
     }
 
-    /**
-     * @expectedException \Goalous\Exception\GoalousNotFoundException
-     */
     public function test_updateDelFlgToRevokeNotFoundUserId_failure()
     {
 
@@ -352,10 +349,9 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertNotNull($res1);
 
         // exeute target function
-        $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
+        $res2 = $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
 
-        $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertNotNull($res2);
+        $this->assertFalse($res2);
     }
 
     /**
