@@ -1672,16 +1672,17 @@ class Goal extends AppModel
      * ゴール件数取得
      *
      * @param $conditions
+     * @param $teamId
      *
      * @return array|int|null
      */
-    function countSearch($conditions)
+    function countSearch($conditions, $teamId = null)
     {
         $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
         $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
         $options = [
             'conditions' => [
-                'Goal.team_id'     => $this->current_team_id,
+                'Goal.team_id'     => $teamId ?? $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
