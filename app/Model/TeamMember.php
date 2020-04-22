@@ -2631,28 +2631,20 @@ class TeamMember extends AppModel
         $option = [
             'conditions' => [
                 'team_id' => $teamId,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'status'  => self::USER_STATUS_ACTIVE
             ],
             'fields'     => [
                 'status'
             ]
         ];
 
-        $teamMemberStatus = $TeamMember->find('first', $option);
+        $teamMemberStatus = $this->find('first', $option);
 
         if(empty($teamMemberStatus)) {
-            GoalousLog::warning("Team member not found", [
-                'team_id' => $teamId,
-                'email'   => $email
-            ]);
-
             return false;
         }
 
-        if($teamMemberStatus === self::USER_STATUS_ACTIVE) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

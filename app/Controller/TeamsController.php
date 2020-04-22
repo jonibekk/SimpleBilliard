@@ -1283,8 +1283,16 @@ class TeamsController extends AppController
         $this->_ajaxPreProcess();
         $team_id = $this->Session->read('current_team_id');
         $invite_member_list = $this->Team->Invite->getInviteUserList($team_id);
+
+        $invite_member_list_exclude_active_user = [];
+        foreach($invite_member_list as $invite_member) {
+            if(!($this->Team->TeamMember->isStatusActive($team_id, $invite_member['Email']['user_id']))) {
+                $invite_member_list_exclude_active_user[] = $invite_member;
+            }
+        }
+
         $res = [
-            'user_info' => $invite_member_list,
+            'user_info' => $invite_member_list_exclude_active_user,
         ];
         return $this->_ajaxGetResponse($res);
     }
