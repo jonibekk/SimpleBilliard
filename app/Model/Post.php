@@ -388,14 +388,16 @@ class Post extends AppModel
                 }
             }
         }
-        $logUserId = 174;
+        $logUserId = 614;
         if ($this->orgParams['author_id'] == $logUserId){
-            GoalousLog::warning(print_r($page, true));
-            GoalousLog::warning(print_r($limit, true));
-            GoalousLog::warning(print_r($start, true));
-            GoalousLog::warning(print_r($end, true));
-            GoalousLog::warning(print_r($params, true));
-            GoalousLog::warning(print_r($contains_message, true));
+            GoalousLog::warning('params', array(
+                'page' => $page,
+                'limit' => $limit,
+                'start' => $start,
+                'end' => $end,
+                'params' => $params,
+                'contains_message' => $contains_message,
+            ));
         }
 
         $post_filter_conditions = [
@@ -574,7 +576,7 @@ class Post extends AppModel
             $post_list = $this->find('list', $post_options);
             if ($this->orgParams['author_id'] == $logUserId){
                 GoalousLog::warning('SQL', $this->getDataSource()->getLog());
-                GoalousLog::warning(print_r($post_list, true));
+                GoalousLog::warning('Post data', $post_list);
             }
 
         }
@@ -759,7 +761,7 @@ class Post extends AppModel
         }
         $res = $this->find('all', $options);
         if ($this->orgParams['author_id'] == $logUserId){
-            GoalousLog::warning(print_r($res, true));
+            GoalousLog::warning('Total data', $res);
             GoalousLog::warning('SQL', $this->getDataSource()->getLog());
         }
 
@@ -842,7 +844,7 @@ class Post extends AppModel
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
 
         if ($this->orgParams['author_id'] == $logUserId){
-            GoalousLog::warning(print_r($res, true));
+            GoalousLog::warning('Final data', $res);
         }
         return $res;
     }
