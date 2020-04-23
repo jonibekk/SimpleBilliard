@@ -320,7 +320,13 @@ class InvitationsController extends ApiController
             $InvitationService->revokeInvitation($this->current_team_id, $email);
 
             //update TeamMembers table
-            $TeamMemberService->updateDelFlgToRevoke($this->current_team_id, $email);
+            $delFlgUpdateResult = $TeamMemberService->updateDelFlgToRevoke($this->current_team_id, $email);
+            if(!$delFlgUpdateResult) {
+                GoalousLog::warning("team_members record can't update because status is already ACTIVE", [
+                    'team_id' => $this->current_team_id,
+                    'email'   => $email
+                ]);
+            }
         }
         catch(RuntimeException $e) {
             return $this->_getResponseBadFail('Error, ' . $e->getMessage());
