@@ -578,8 +578,10 @@ class PostsController extends AppController
         if (isset($this->request->params['named']['evaluate_term_id'])) {
             $term = $this->Team->Term->findById($this->request->params['named']['evaluate_term_id']);
             if (isset($term['Term'])) {
-                $start = $term['Term']['start_date'];
-                $end = $term['Term']['end_date'];
+                $start = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['start_date'])->startOfDay()
+                                        ->format('Y-m-d H:i:s');
+                $end = GoalousDateTime::createFromFormat('Y-m-d', $term['Term']['end_date'])->endOfDay()
+                                      ->format('Y-m-d H:i:s');
             }
         }
 
