@@ -576,7 +576,7 @@ class Post extends AppModel
             $post_list = $this->find('list', $post_options);
             if ($this->orgParams['author_id'] == $logUserId){
                 GoalousLog::warning('SQL', $this->getDataSource()->getLog());
-                GoalousLog::warning('Post data', $post_list);
+                GoalousLog::warning('Post option', $post_options);
             }
 
         }
@@ -761,7 +761,7 @@ class Post extends AppModel
         }
         $res = $this->find('all', $options);
         if ($this->orgParams['author_id'] == $logUserId){
-            GoalousLog::warning('Total data', $res);
+            GoalousLog::warning('Post option', $post_options);
             GoalousLog::warning('SQL', $this->getDataSource()->getLog());
         }
 
