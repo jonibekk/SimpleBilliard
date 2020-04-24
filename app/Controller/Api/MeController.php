@@ -34,6 +34,7 @@ class MeController extends BasePagingController
     use AuthTrait;
 
     public $components = [
+        'Session',
         'Flash',
         'Notification',
     ];
