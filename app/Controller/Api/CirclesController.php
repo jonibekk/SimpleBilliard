@@ -624,7 +624,7 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Regist a checked circle
+     * Regist a checked circle, if record don't exists.
      *
      * @param int $circleId
      *
@@ -645,21 +645,24 @@ class CirclesController extends BasePagingController
         /** @var CheckedCircle $CheckedCircle */
         $CheckedCircle = ClassRegistry::init('CheckedCircle');
 
-        try {
-            $CheckedCircle->add($userId, $teamId, $circleId);
-        }
-        catch (Exception $e) {
-            GoalousLog::error("Faild to regist checked circle record.", [
-                'message'   => $e->getMessage(),
-                'trace'     => $e->getTraceAsString(),
-                'team_id'   => $teamId,
-                'circle_id' => $circleId
-            ]);
-            throw $e;
+        $getCheckedCircleResult = $CheckedCircle->getCheckedCircle($userId, $teamId, $circleId);
+        if($getCheckedCircleResult === false) {
+            try {
+                $CheckedCircle->add($userId, $teamId, $circleId);
+            }
+            catch (Exception $e) {
+                GoalousLog::error("Faild to regist checked circle record.", [
+                    'message'   => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'user_id'   => $userId,
+                    'team_id'   => $teamId,
+                    'circle_id' => $circleId
+                ]);
+                throw $e;
+            }
         }
 
         return ApiResponse::ok()->getResponse();
-
     }
 
     /**
