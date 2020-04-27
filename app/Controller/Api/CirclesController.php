@@ -624,7 +624,7 @@ class CirclesController extends BasePagingController
     }
 
     /**
-     * Regist a checked circle
+     * Regist a checked circle, if record don't exists.
      *
      * @param int $circleId
      *
@@ -658,13 +658,11 @@ class CirclesController extends BasePagingController
                     'team_id'   => $teamId,
                     'circle_id' => $circleId
                 ]);
-
                 throw $e;
             }
         }
 
         return ApiResponse::ok()->getResponse();
-
     }
 
     /**
