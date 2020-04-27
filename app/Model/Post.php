@@ -355,6 +355,7 @@ class Post extends AppModel
      */
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
+
         if (!$start) {
             $start = strtotime("-1 month", REQUEST_TIMESTAMP);
         } elseif (!is_numeric($start)) {
@@ -562,6 +563,7 @@ class Post extends AppModel
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
             $post_list = $this->find('list', $post_options);
+
         }
         //投稿を既読に
         // But Not read the post display from user's page
@@ -744,6 +746,7 @@ class Post extends AppModel
         }
         $res = $this->find('all', $options);
 
+
         /** @var CommentExtender $CommentExtender */
         $CommentExtender = ClassRegistry::init('CommentExtender');
         /** @var PostExtender $PostExtender */
@@ -820,6 +823,7 @@ class Post extends AppModel
 
         //Set whether login user saved favorite post
         $res = $this->setIsSavedItemEachPost($res, $this->my_uid);
+
         return $res;
     }
 

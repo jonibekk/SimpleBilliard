@@ -10,6 +10,8 @@ App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
 App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
+App::import('Service', 'AuthenticationSessionDataService');
+App::import('Service', 'GoalService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
@@ -24,10 +26,18 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * User: StephenRaharja
  * Date: 2018/06/29
  * Time: 11:47
+ * @property NotificationComponent $Notification
+ * @property FlashComponent $Flash
  */
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
+    public $components = [
+        'Session',
+        'Flash',
+        'Notification',
+    ];
 
     /**
      * Get list of circles that an user is joined in
@@ -140,7 +150,74 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(compact('data'))->getResponse();
+        $flashMessage = $this->Notification->readFlash();
+        $data['flash'] = [];
+        if (!empty($flashMessage)) {
+            switch ($flashMessage['params']['type'] ?? 'error') {
+                case 'success':
+                    $data['flash']['success'] = $flashMessage['message'];
+                    break;
+                case 'error':
+                    $data['flash']['error'] = $flashMessage['message'];
+                    break;
+            }
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => $data,
+        ])->getResponse();
+    }
+
+    public function get_goal_status()
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        $canActionGoals = !empty($GoalService->findActionables($this->getUserId()));
+        if ($canActionGoals) {
+            return ApiResponse::ok()
+                ->withBody([
+                    'data' => [
+                        'can_action' => true,
+                    ]
+                ])->getResponse();
+        }
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        /** @var AuthenticationSessionDataService $AuthenticationSessionDataService */
+        $AuthenticationSessionDataService = ClassRegistry::init("AuthenticationSessionDataService");
+        $sessionData = $AuthenticationSessionDataService->read($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId());
+        if (empty($sessionData)) {
+            $sessionData = new AccessTokenData();
+        }
+
+        $countCurrentTermGoalUnachieved = $Goal->countSearch([
+            'term'     => 'present',
+            'progress' => 'unachieved',
+        ], $this->getTeamId());
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'can_action' => $canActionGoals,
+                    'show_goal_create_guidance' => !$sessionData->isHideGoalCreateGuidance(),
+                    'count_current_term_goals' => $countCurrentTermGoalUnachieved
+                ]
+            ])->getResponse();
+    }
+
+    /**
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function put_hide_goal_create_guidance()
+    {
+        /** @var AuthenticationSessionDataService $AuthenticationSessionDataService */
+        $AuthenticationSessionDataService = ClassRegistry::init("AuthenticationSessionDataService");
+        $sessionData = $AuthenticationSessionDataService->read($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId());
+        $sessionData->withHideGoalCreateGuidance(true);
+        $AuthenticationSessionDataService->write($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId(), $sessionData);
+
+        return ApiResponse::ok()->withBody([])->getResponse();
     }
 
     /**

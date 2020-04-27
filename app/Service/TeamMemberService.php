@@ -336,6 +336,8 @@ class TeamMemberService extends AppService
      *
      * @param int    $teamId
      * @param string $emails
+     * 
+     * @return boolean
      */
     public function updateDelFlgToRevoke(int $teamId, string $email)
     {
@@ -356,7 +358,21 @@ class TeamMemberService extends AppService
         $userId = Hash::get($emailObj,'Email.user_id');
 
         if (empty($userId)) {
-            throw new GlException\GoalousNotFoundException("UserId not found");
+            GoalousLog::warning("UserId not found", [
+                'team_id' => $teamId,
+                'email'   => $email
+            ]);
+
+            return false;
+        }
+
+        if($TeamMember->isStatusActive($teamId, $userId)) {
+            GoalousLog::warning("UserId is already ACTIVE", [
+                'team_id' => $teamId,
+                'email'   => $email
+            ]);
+
+            return false;
         }
 
         $this->TransactionManager->begin();
@@ -376,5 +392,7 @@ class TeamMemberService extends AppService
         }
 
         $this->TransactionManager->commit();
+
+        return true;
     }
 }
