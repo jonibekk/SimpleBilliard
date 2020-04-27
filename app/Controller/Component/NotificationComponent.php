@@ -132,4 +132,12 @@ class NotificationComponent extends Component
         $this->Flash->set($message,['element'=>'flash_noty', 'params'=>$merged_option, 'key'=>'noty']);
     }
 
+    public function readFlash()
+    {
+        $flash = CakeSession::read('Message.noty');
+        if (!empty($flash)) {
+            CakeSession::delete('Message.noty');
+        }
+        return $flash;
+    }
 }

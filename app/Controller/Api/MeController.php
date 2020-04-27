@@ -26,10 +26,18 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * User: StephenRaharja
  * Date: 2018/06/29
  * Time: 11:47
+ * @property NotificationComponent $Notification
+ * @property FlashComponent $Flash
  */
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
+    public $components = [
+        'Session',
+        'Flash',
+        'Notification',
+    ];
 
     /**
      * Get list of circles that an user is joined in
@@ -142,7 +150,22 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(compact('data'))->getResponse();
+        $flashMessage = $this->Notification->readFlash();
+        $data['flash'] = [];
+        if (!empty($flashMessage)) {
+            switch ($flashMessage['params']['type'] ?? 'error') {
+                case 'success':
+                    $data['flash']['success'] = $flashMessage['message'];
+                    break;
+                case 'error':
+                    $data['flash']['error'] = $flashMessage['message'];
+                    break;
+            }
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => $data,
+        ])->getResponse();
     }
 
     public function get_goal_status()
