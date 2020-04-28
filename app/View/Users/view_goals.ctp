@@ -186,6 +186,8 @@
                                             ];//TODO urlはマイページのアクションリストが完成したら差し替え
                                         }
                                         ?>
+                                        <?php if (Hash::get($action, 'Post.0.id') or $last_many): ?>
+
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
                                                 <?php if (Hash::get($action, 'ActionResultFile.0.AttachedFile')): ?>
@@ -228,6 +230,7 @@
                                                 <?php endif; ?>
                                             </a>
                                         </li>
+                                        <?php endif; ?>
                                     <?php endforeach ?>
                                 </ul>
                             </div>

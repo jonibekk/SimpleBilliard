@@ -26,6 +26,7 @@ App::uses('User', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
+App::uses('ActionResult', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -866,7 +867,8 @@ class PostService extends AppService
                 'del_flg' => false
             ]
         ];
-        if (empty($Post->find('first', $postCondition))) {
+        $post = $Post->find('first', $postCondition);
+        if (empty($post)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
@@ -894,6 +896,17 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+            
+            // Delete action results
+            /** @var ActionResult $ActionResult*/
+            if ($post['Post']['type'] == $Post::TYPE_ACTION && $post['Post']['action_result_id']){
+                $ActionResult = ClassRegistry::init('ActionResult');
+                $res = $ActionResult->softDelete($post['Post']['action_result_id']);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting action result for post $postId: failed action soft delete");
+                }
+            }
+
 
             // Delete translations
             /** @var Translation $Translation */
