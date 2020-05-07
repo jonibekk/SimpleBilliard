@@ -206,6 +206,107 @@ class MeController extends BasePagingController
             ])->getResponse();
     }
 
+    public function get_kr_progress()
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $Term->Team->current_team_id = $this->getTeamId();
+        $Term->Team->my_uid = $this->getUserId();
+        $Term->current_team_id = $this->getTeamId();
+        $Term->my_uid = $this->getUserId();
+
+        $currentTerm = $Term->getCurrentTermData();
+
+        $now = GoalousDateTime::now();
+
+        // TODO: 整理する
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id'    => $this->getUserId(),
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'KeyResult.completed'   => null,
+                'GoalMember.del_flg'    => false,
+                'Goal.end_date >='      => $now->format('Y-m-d')
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'limit'      => 10,
+            'offset'     => 0,
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*',
+                'GoalMember.priority'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'conditions' => [
+                        'ActionResult.created >=' => $now->copy()->subDays(7)->format('Y-m-d'),
+                        'ActionResult.created <=' => $now->format('Y-m-d')
+                    ],
+                    'fields'     => ['user_id'],
+                    'order'      => [
+                        'ActionResult.created' => 'desc'
+                    ],
+                    'User'
+                ]
+            ]
+        ];
+
+        $keyResults = $KeyResult->find('all', $options);
+
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init('KrProgressLog');
+
+        $krs = [];
+        foreach ($keyResults as $index => $keyResult) {
+            $logs = $KrProgressLog->getByKeyResultId($keyResult['KeyResult']['id']);
+
+            $changeValueTotal = 0;
+            foreach ($logs as $log) {
+                $changeValueTotal += $log['change_value'];
+            }
+
+            array_push($krs, array_merge(
+                $keyResult['KeyResult'],
+                [
+                    'goal' => $keyResult['Goal'],
+                    'progress_log_recent_total' => [
+                        'change_value' => $changeValueTotal,
+                    ],
+                    'kr_progress_logs' => $logs,
+                ]
+            ));
+        }
+
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'krs' => $krs
+                ],
+            ])->getResponse();
+    }
+
     /**
      * @return ApiResponse|BaseApiResponse
      */

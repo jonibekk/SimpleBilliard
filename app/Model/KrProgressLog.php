@@ -69,4 +69,21 @@ class KrProgressLog extends AppModel
 
         return $result;
     }
+
+    // TODO: change name
+    public function getByKeyResultId(int $keyResultId): array
+    {
+        $now = GoalousDateTime::now();
+        $option = [
+            'conditions' => [
+                'key_result_id' => $keyResultId,
+                'created >=' => $now->copy()->subDays(7)->format('Y-m-d'),
+            ],
+            'order' => ['created' => 'DESC']
+        ];
+
+        $result = $this->useType()->find('all', $option);
+
+        return Hash::extract($result, "{n}.KrProgressLog");
+    }
 }
