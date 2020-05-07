@@ -206,8 +206,10 @@ class MentionComponent extends Component
                     ));
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
+
                     if ($replacement) {
                         $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+
                     }
                 }
             }
@@ -398,6 +400,12 @@ class MentionComponent extends Component
 
     static public function filterAsMentionableCircle(int $postId, array $list = [])
     {
+        //Check if post exists & not deleted
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+
+        $postType = $Post->getPostType($postId);
+
         $post = self::getPostWithShared($postId);
         $publicCircles = [];
         $secretCircles = [];
@@ -412,7 +420,7 @@ class MentionComponent extends Component
                 $secretCircles[] = $circleId;
             }
         }
-        if (count($publicCircles) > 0) {
+        if (count($publicCircles) > 0 || $postType == $Post::TYPE_ACTION) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function ($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX . self::$ID_DELIMITER, '', $l['id']);
