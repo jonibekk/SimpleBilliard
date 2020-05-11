@@ -1026,7 +1026,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    public function countMine($goalId = null, bool $includeComplete = false): int
+    public function countMine($goalId = null, bool $includeComplete = false, $userId = null): int
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
@@ -1035,7 +1035,7 @@ class KeyResult extends AppModel
         $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
-                'GoalMember.user_id'    => $this->my_uid,
+                'GoalMember.user_id'    => $userId ?? $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
                 'GoalMember.del_flg'    => false

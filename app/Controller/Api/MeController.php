@@ -233,7 +233,7 @@ class MeController extends BasePagingController
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
                 'KeyResult.completed'   => null,
                 'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $now->format('Y-m-d')
+                'Goal.end_date >='      => $now->format('Y-m-d'),
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -273,36 +273,67 @@ class MeController extends BasePagingController
             ]
         ];
 
+        $goalIdSelected = intval($this->request->query('goal_id'));
+        if ($goalIdSelected) {
+            $options['conditions']['Goal.id'] = $goalIdSelected;
+        }
+        $limit = intval($this->request->query('limit'));
+        if ($limit) {
+            $options['limit'] = $limit;
+        }
+
         $keyResults = $KeyResult->find('all', $options);
 
         /** @var KrProgressLog $KrProgressLog */
         $KrProgressLog = ClassRegistry::init('KrProgressLog');
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        /** @var GoalExtension $UserExtension */
+        $GoalExtension = ClassRegistry::init('GoalExtension');
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
 
         $krs = [];
         foreach ($keyResults as $index => $keyResult) {
-            $logs = $KrProgressLog->getByKeyResultId($keyResult['KeyResult']['id']);
+            $actionResults = $ActionResult->getByKrId($keyResult['KeyResult']['id']);
 
+            $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
             $changeValueTotal = 0;
-            foreach ($logs as $log) {
-                $changeValueTotal += $log['change_value'];
+            foreach ($actionResults as $i => $actionResult) {
+                $krProgressLog = $KrProgressLog->getByActionResultId($actionResult['id'])->toArray();
+                $changeValueTotal += $krProgressLog['change_value'];
+                $actionResults[$i]['kr_progress_log'] = $krProgressLog;
+                $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
             }
+
+            $keyResult['KeyResult'] = $GoalExtension->extend($keyResult['KeyResult'], 'goal_id');
 
             array_push($krs, array_merge(
                 $keyResult['KeyResult'],
                 [
-                    'goal' => $keyResult['Goal'],
                     'progress_log_recent_total' => [
-                        'change_value' => $changeValueTotal,
+                        'change_value' => (string)$changeValueTotal,
                     ],
-                    'kr_progress_logs' => $logs,
+                    'action_results' => $actionResults,
                 ]
             ));
         }
 
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
         return ApiResponse::ok()
             ->withBody([
                 'data' => [
-                    'krs' => $krs
+                    'period_kr_collection' => [
+                        'from' => GoalousDateTime::now()->subDays(7)->getTimestamp(),
+                        'to' => GoalousDateTime::now()->getTimestamp(),
+                    ],
+                    'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
+                    'krs' => $krs,
+                    'goals' => $GoalService->findNameListAsMember($this->getUserId(), $currentTerm['start_date'], $currentTerm['end_date']),
                 ],
             ])->getResponse();
     }

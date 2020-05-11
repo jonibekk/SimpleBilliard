@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
@@ -391,6 +391,16 @@ class ActionResult extends AppModel
         ];
         $res = $this->find('count', $options);
         return (int)$res;
+    }
+
+    function getByKrId($krId): array
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $krId,
+            ]
+        ];
+        return $this->find('all', $options);
     }
 
     function actionEdit($data)

@@ -2648,6 +2648,7 @@ class Goal extends AppModel
                 ]
             ]
         ];
+        GoalousLog::info('option', $options);
         $ret = $this->find('all', $options);
         if (empty($ret)) {
             return $ret;
