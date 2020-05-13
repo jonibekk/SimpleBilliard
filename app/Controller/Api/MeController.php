@@ -240,7 +240,6 @@ class MeController extends BasePagingController
                 'KeyResult.priority'        => 'desc',
                 'KeyResult.created'         => 'desc'
             ],
-            'limit'      => 10,
             'offset'     => 0,
             'fields'     => [
                 'KeyResult.*',
