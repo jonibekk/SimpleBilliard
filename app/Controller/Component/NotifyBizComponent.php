@@ -588,9 +588,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => $post_id,
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
             ];
-            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = null;
@@ -1500,9 +1500,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => $post_id,
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
             ];
-            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = $post_id;
@@ -1556,9 +1556,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => $post_id,
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
             ];
-            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = $post_id;
@@ -1608,9 +1608,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => $post_id,
+                'action'     => 'feed',
+                'post_id'    => $post['Post']['id']
             ];
-            $this->notify_option['old_gl'] = false;
         }
         if ($notify_type == NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
             $this->notify_option['model_id'] = $post_id;
