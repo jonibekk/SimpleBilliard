@@ -740,7 +740,7 @@ class CirclesController extends BasePagingController
             $CircleService = ClassRegistry::init('CircleService');
             $latestCircleId = $CircleService->getLatestCreatedCircleIdWithUnJoined($userId, $teamId);
 
-            if($latestCircleId >= $LatestUserConfirmCircleResult) {
+            if($latestCircleId > $LatestUserConfirmCircleResult) {
                 //this user have unconfirmed circle yet.
                 $data['result'] = false;
             }
