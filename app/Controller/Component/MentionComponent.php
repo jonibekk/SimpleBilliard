@@ -343,7 +343,7 @@ class MentionComponent extends Component
                 ],
             ],
             'fields'     => [
-                'PlainPost.id',
+                'PlainPost.type',
                 'PostShareCircle.circle_id'
             ]
         ]);
@@ -374,7 +374,7 @@ class MentionComponent extends Component
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
             $PlainPost = ClassRegistry::init('Post');
-            if ($post['PlainPost']['type'] == $PlainPost::TYPE_ACTION){
+            if ($circle['PlainPost']['type'] == $PlainPost::TYPE_ACTION){
                 return $list;
             }
             if (is_null($circleId)){
@@ -425,7 +425,7 @@ class MentionComponent extends Component
             }
         }
         $PlainPost = ClassRegistry::init('Post');
-        if (count($publicCircles) > 0 || $post['PlainPost']['type'] == $PlainPost::TYPE_ACTION) {
+        if (count($publicCircles) > 0 || $circle['PlainPost']['type'] == $PlainPost::TYPE_ACTION) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function ($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX . self::$ID_DELIMITER, '', $l['id']);
