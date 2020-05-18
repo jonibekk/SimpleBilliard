@@ -373,8 +373,8 @@ class MentionComponent extends Component
         foreach ($post['PostShareCircles'] as $circle) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
-            $PlainPost = ClassRegistry::init('Post');
-            $actionRelated = [$PlainPost::TYPE_CREATE_GOAL, $PlainPost::TYPE_ACTION, $PlainPost::TYPE_KR_COMPLETE, $PlainPost::TYPE_GOAL_COMPLETE];
+            $Post = ClassRegistry::init('Post');
+            $actionRelated = [$Post::TYPE_CREATE_GOAL, $Post::TYPE_ACTION, $Post::TYPE_KR_COMPLETE, $Post::TYPE_GOAL_COMPLETE];
             if (in_array($circle['PlainPost']['type'], $actionRelated)){
                 return $list;
             }
@@ -416,8 +416,8 @@ class MentionComponent extends Component
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
 
-            $PlainPost = ClassRegistry::init('Post');
-            $actionRelated = [$PlainPost::TYPE_CREATE_GOAL, $PlainPost::TYPE_ACTION, $PlainPost::TYPE_KR_COMPLETE, $PlainPost::TYPE_GOAL_COMPLETE];
+            $Post = ClassRegistry::init('Post');
+            $actionRelated = [$Post::TYPE_CREATE_GOAL, $Post::TYPE_ACTION, $Post::TYPE_KR_COMPLETE, $Post::TYPE_GOAL_COMPLETE];
             if (in_array($circle['PlainPost']['type'], $actionRelated)){
                 $isActionRelated = true;
                 break;
