@@ -374,7 +374,8 @@ class MentionComponent extends Component
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
             $PlainPost = ClassRegistry::init('Post');
-            if ($circle['PlainPost']['type'] == $PlainPost::TYPE_ACTION){
+            $actionRelated = [$PlainPost::TYPE_CREATE_GOAL, $PlainPost::TYPE_ACTION, $PlainPost::TYPE_KR_COMPLETE, $PlainPost::TYPE_GOAL_COMPLETE];
+            if (in_array($circle['PlainPost']['type'], $actionRelated)){
                 return $list;
             }
             if (is_null($circleId)){
@@ -410,9 +411,17 @@ class MentionComponent extends Component
         $post = self::getPostWithShared($postId);
         $publicCircles = [];
         $secretCircles = [];
+        $isActionRelated = false;
         foreach ($post['PostShareCircles'] as $circle) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
+
+            $PlainPost = ClassRegistry::init('Post');
+            $actionRelated = [$PlainPost::TYPE_CREATE_GOAL, $PlainPost::TYPE_ACTION, $PlainPost::TYPE_KR_COMPLETE, $PlainPost::TYPE_GOAL_COMPLETE];
+            if (in_array($circle['PlainPost']['type'], $actionRelated)){
+                $isActionRelated = true;
+                break;
+            }
             if (is_null($circleId)){
                 continue;
             }
@@ -424,8 +433,7 @@ class MentionComponent extends Component
                 $secretCircles[] = $circleId;
             }
         }
-        $PlainPost = ClassRegistry::init('Post');
-        if (count($publicCircles) > 0 || $circle['PlainPost']['type'] == $PlainPost::TYPE_ACTION) {
+        if (count($publicCircles) > 0 || $isActionRelated) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function ($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX . self::$ID_DELIMITER, '', $l['id']);
