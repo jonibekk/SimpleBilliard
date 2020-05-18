@@ -1,6 +1,7 @@
  <?php
 
-use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+ use Goalous\Enum\DataType\DataType as DataType;
+ use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 App::uses('AppModel', 'Model');
 App::uses('Translation', 'Model');
@@ -173,6 +174,11 @@ class ActionResult extends AppModel
                 'rule' => ['validateKrProgress'],
             ],
         ],
+    ];
+
+    public $modelConversionTable = [
+        'team_id'          => DataType::INT,
+        'goal_id'          => DataType::INT,
     ];
 
     /**
@@ -400,7 +406,7 @@ class ActionResult extends AppModel
                 'key_result_id' => $krId,
             ]
         ];
-        return $this->find('all', $options);
+        return $this->useType()->find('all', $options);
     }
 
     function actionEdit($data)

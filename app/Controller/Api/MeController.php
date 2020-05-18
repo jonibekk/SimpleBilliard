@@ -281,7 +281,7 @@ class MeController extends BasePagingController
             $options['limit'] = $limit;
         }
 
-        $keyResults = $KeyResult->find('all', $options);
+        $keyResults = $KeyResult->useType()->find('all', $options);
 
         /** @var KrProgressLog $KrProgressLog */
         $KrProgressLog = ClassRegistry::init('KrProgressLog');
@@ -291,6 +291,8 @@ class MeController extends BasePagingController
         $GoalExtension = ClassRegistry::init('GoalExtension');
         /** @var ActionResult $ActionResult */
         $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
 
         $krs = [];
         foreach ($keyResults as $index => $keyResult) {
@@ -302,6 +304,9 @@ class MeController extends BasePagingController
                 $krProgressLog = $KrProgressLog->getByActionResultId($actionResult['id'])->toArray();
                 $changeValueTotal += $krProgressLog['change_value'];
                 $actionResults[$i]['kr_progress_log'] = $krProgressLog;
+
+                $post = $Post->getByActionResultId($actionResult['id'], $this->getTeamId());
+                $actionResults[$i]['post_id'] = $post['Post']['id'];
                 $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
             }
 
@@ -311,7 +316,7 @@ class MeController extends BasePagingController
                 $keyResult['KeyResult'],
                 [
                     'progress_log_recent_total' => [
-                        'change_value' => (string)$changeValueTotal,
+                        'change_value' => $changeValueTotal,
                     ],
                     'action_results' => $actionResults,
                 ]
