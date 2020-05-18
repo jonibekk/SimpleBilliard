@@ -206,10 +206,8 @@ class MentionComponent extends Component
                     ));
                     $obj = $data[$model->alias];
                     $replacement = $obj[$replacementName];
-
                     if ($replacement) {
                         $body = self::replaceAndAddNameToMention($key, $replacement, $body);
-
                     }
                 }
             }
@@ -336,6 +334,7 @@ class MentionComponent extends Component
             'joins'      => [
                 [
                     'table'      => 'post_share_circles',
+                    'type'       => 'LEFT',
                     'alias'      => 'PostShareCircle',
                     'foreignKey' => false,
                     'conditions' => [
@@ -344,6 +343,7 @@ class MentionComponent extends Component
                 ],
             ],
             'fields'     => [
+                'PlainPost.type',
                 'PostShareCircle.circle_id'
             ]
         ]);
@@ -373,6 +373,14 @@ class MentionComponent extends Component
         foreach ($post['PostShareCircles'] as $circle) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
+            $Post = ClassRegistry::init('Post');
+            $actionRelated = [$Post::TYPE_CREATE_GOAL, $Post::TYPE_ACTION, $Post::TYPE_KR_COMPLETE, $Post::TYPE_GOAL_COMPLETE];
+            if (in_array($circle['PlainPost']['type'], $actionRelated)){
+                return $list;
+            }
+            if (is_null($circleId)){
+                continue;
+            }
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
             // in public circle comments, we can show everyone.
@@ -400,18 +408,23 @@ class MentionComponent extends Component
 
     static public function filterAsMentionableCircle(int $postId, array $list = [])
     {
-        //Check if post exists & not deleted
-        /** @var Post $Post */
-        $Post = ClassRegistry::init('Post');
-
-        $postType = $Post->getPostType($postId);
-
         $post = self::getPostWithShared($postId);
         $publicCircles = [];
         $secretCircles = [];
+        $isActionRelated = false;
         foreach ($post['PostShareCircles'] as $circle) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $circleId = $circle['PostShareCircle']['circle_id'];
+
+            $Post = ClassRegistry::init('Post');
+            $actionRelated = [$Post::TYPE_CREATE_GOAL, $Post::TYPE_ACTION, $Post::TYPE_KR_COMPLETE, $Post::TYPE_GOAL_COMPLETE];
+            if (in_array($circle['PlainPost']['type'], $actionRelated)){
+                $isActionRelated = true;
+                break;
+            }
+            if (is_null($circleId)){
+                continue;
+            }
             $circleData = $circleModel->findById($circleId);
             $isPublic = $circleData['PlainCircle']['public_flg'];
             if ($isPublic) {
@@ -420,7 +433,7 @@ class MentionComponent extends Component
                 $secretCircles[] = $circleId;
             }
         }
-        if (count($publicCircles) > 0 || $postType == $Post::TYPE_ACTION) {
+        if (count($publicCircles) > 0 || $isActionRelated) {
             $circleModel = ClassRegistry::init('PlainCircle');
             $ids = array_map(function ($l) {
                 return str_replace(self::$CIRCLE_ID_PREFIX . self::$ID_DELIMITER, '', $l['id']);
