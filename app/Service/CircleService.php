@@ -677,6 +677,8 @@ class CircleService extends AppService
         $condition = [
             'conditions' => [
                 'Circle.team_id' => $teamid,
+                'Circle.public_flg' => 1,
+                'Circle.del_flg' => 0,
                 'CircleMembers.user_id is null'
             ],
             'fields' => [
