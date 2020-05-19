@@ -588,9 +588,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => 'feed',
-                'post_id'    => $post['Post']['id']
+                'action'     => $post_id,
             ];
+            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = null;
@@ -715,11 +715,13 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_CAN_SEE_ACTION;
+
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $post['Post']['id']
+            'action'     => $post['Post']['id']
         ];
+        $this->notify_option['old_gl'] = false;
+
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
             json_encode([trim($action['ActionResult']['name'])]) : null;
@@ -1077,11 +1079,13 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
             NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL;
+
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $postId
+            'action'     => $postId
         ];
+        $this->notify_option['old_gl'] = false;
+
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode(['']);
         $this->notify_option['force_notify'] = true;
@@ -1108,11 +1112,13 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
             NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
+
         $this->notify_option['url_data'] = [
             'controller' => 'posts',
-            'action'     => 'feed',
-            'post_id'    => $postId
+            'action'     => $postId
         ];
+        $this->notify_option['old_gl'] = false;
+
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode(['']);
         $this->notify_option['force_notify'] = true;
@@ -1500,9 +1506,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => 'feed',
-                'post_id'    => $post['Post']['id']
+                'action'     => $post_id,
             ];
+            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = $post_id;
@@ -1556,9 +1562,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => 'feed',
-                'post_id'    => $post['Post']['id']
+                'action'     => $post_id,
             ];
+            $this->notify_option['old_gl'] = false;
         }
 
         $this->notify_option['model_id'] = $post_id;
@@ -1608,9 +1614,9 @@ class NotifyBizComponent extends Component
         } else {
             $this->notify_option['url_data'] = [
                 'controller' => 'posts',
-                'action'     => 'feed',
-                'post_id'    => $post['Post']['id']
+                'action'     => $post_id,
             ];
+            $this->notify_option['old_gl'] = false;
         }
         if ($notify_type == NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT){
             $this->notify_option['model_id'] = $post_id;
