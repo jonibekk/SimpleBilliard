@@ -1,4 +1,4 @@
- <?php
+<?php
 
  use Goalous\Enum\DataType\DataType as DataType;
  use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
