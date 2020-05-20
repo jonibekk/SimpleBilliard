@@ -224,6 +224,8 @@ class MeController extends BasePagingController
         $currentTerm = $Term->getCurrentTermData();
 
         $now = GoalousDateTime::now();
+        $periodFrom = $now->copy()->startOfDay()->subDays(7);
+        $periodTo = $now->copy()->endOfDay();
 
         // TODO: 整理する
         $options = [
@@ -259,10 +261,6 @@ class MeController extends BasePagingController
             'contain'    => [
                 'Goal',
                 'ActionResult' => [
-                    'conditions' => [
-                        'ActionResult.created >=' => $now->copy()->subDays(7)->format('Y-m-d'),
-                        'ActionResult.created <=' => $now->format('Y-m-d')
-                    ],
                     'fields'     => ['user_id'],
                     'order'      => [
                         'ActionResult.created' => 'desc'
@@ -296,7 +294,7 @@ class MeController extends BasePagingController
 
         $krs = [];
         foreach ($keyResults as $index => $keyResult) {
-            $actionResults = $ActionResult->getByKrId($keyResult['KeyResult']['id']);
+            $actionResults = $ActionResult->getByKrId($keyResult['KeyResult']['id'], $periodFrom);
 
             $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
             $changeValueTotal = 0;

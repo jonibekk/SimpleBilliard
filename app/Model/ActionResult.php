@@ -399,12 +399,16 @@ class ActionResult extends AppModel
         return (int)$res;
     }
 
-    function getByKrId($krId): array
+    function getByKrId($krId,\Carbon\Carbon $periodFrom): array
     {
         $options = [
             'conditions' => [
                 'key_result_id' => $krId,
-            ]
+                'ActionResult.created >=' => $periodFrom->getTimestamp()
+            ],
+            'order'      => [
+                'created' => 'desc'
+            ],
         ];
         return $this->useType()->find('all', $options);
     }
