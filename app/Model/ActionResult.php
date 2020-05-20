@@ -399,7 +399,7 @@ class ActionResult extends AppModel
         return (int)$res;
     }
 
-    function getByKrId($krId,\Carbon\Carbon $periodFrom): array
+    function getByKrIdAndCreatedFrom($krId, \Carbon\Carbon $periodFrom): array
     {
         $options = [
             'conditions' => [

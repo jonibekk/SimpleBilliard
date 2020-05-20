@@ -210,77 +210,6 @@ class MeController extends BasePagingController
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
-
-        /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->getTeamId();
-        $Term->Team->my_uid = $this->getUserId();
-        $Term->current_team_id = $this->getTeamId();
-        $Term->my_uid = $this->getUserId();
-
-        $currentTerm = $Term->getCurrentTermData();
-
-        $now = GoalousDateTime::now();
-        $periodFrom = $now->copy()->startOfDay()->subDays(7);
-        $periodTo = $now->copy()->endOfDay();
-
-        // TODO: 整理する
-        $options = [
-            'conditions' => [
-                'GoalMember.user_id'    => $this->getUserId(),
-                'KeyResult.end_date >=' => $currentTerm['start_date'],
-                'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'KeyResult.completed'   => null,
-                'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $now->format('Y-m-d'),
-            ],
-            'order'      => [
-                'KeyResult.latest_actioned' => 'desc',
-                'KeyResult.priority'        => 'desc',
-                'KeyResult.created'         => 'desc'
-            ],
-            'offset'     => 0,
-            'fields'     => [
-                'KeyResult.*',
-                'Goal.*',
-                'GoalMember.priority'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'goal_members',
-                    'alias'      => 'GoalMember',
-                    'conditions' => [
-                        'GoalMember.goal_id = KeyResult.goal_id'
-                    ]
-                ],
-            ],
-            'contain'    => [
-                'Goal',
-                'ActionResult' => [
-                    'fields'     => ['user_id'],
-                    'order'      => [
-                        'ActionResult.created' => 'desc'
-                    ],
-                    'User'
-                ]
-            ]
-        ];
-
-        $goalIdSelected = intval($this->request->query('goal_id'));
-        if ($goalIdSelected) {
-            $options['conditions']['Goal.id'] = $goalIdSelected;
-        }
-        $limit = intval($this->request->query('limit'));
-        if ($limit) {
-            $options['limit'] = $limit;
-        }
-
-        $keyResults = $KeyResult->useType()->find('all', $options);
-
         /** @var KrProgressLog $KrProgressLog */
         $KrProgressLog = ClassRegistry::init('KrProgressLog');
         /** @var UserExtension $UserExtension */
@@ -292,17 +221,44 @@ class MeController extends BasePagingController
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $Term->Team->current_team_id = $this->getTeamId();
+        $Term->Team->my_uid = $this->getUserId();
+        $Term->current_team_id = $this->getTeamId();
+        $Term->my_uid = $this->getUserId();
+        $currentTerm = $Term->getCurrentTermData();
+
+        $now = GoalousDateTime::now();
+        $periodFrom = $now->copy()->startOfDay()->subDays(6);
+        $periodTo = $now->copy()->startOfDay();
+
+        $goalIdSelected = intval($this->request->query('goal_id'));
+        $limit = intval($this->request->query('limit'));
+
+        // Find KeyResult ordered by actioned in recent
+        $keyResults = $KeyResult->findForKeyResultList(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $currentTerm,
+            $goalIdSelected,
+            $limit
+        );
+
         $krs = [];
         foreach ($keyResults as $index => $keyResult) {
-            $actionResults = $ActionResult->getByKrId($keyResult['KeyResult']['id'], $periodFrom);
-
+            // Find action that has filtered by period
+            $actionResults = $ActionResult->getByKrIdAndCreatedFrom($keyResult['KeyResult']['id'], $periodFrom);
             $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
+
+            // Total action progress in period
             $changeValueTotal = 0;
             foreach ($actionResults as $i => $actionResult) {
                 $krProgressLog = $KrProgressLog->getByActionResultId($actionResult['id'])->toArray();
-                $changeValueTotal += $krProgressLog['change_value'];
                 $actionResults[$i]['kr_progress_log'] = $krProgressLog;
+                $changeValueTotal += $krProgressLog['change_value'];
 
+                // Need a post_id to make link to action detail post.
                 $post = $Post->getByActionResultId($actionResult['id'], $this->getTeamId());
                 $actionResults[$i]['post_id'] = $post['Post']['id'];
                 $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
@@ -330,8 +286,8 @@ class MeController extends BasePagingController
             ->withBody([
                 'data' => [
                     'period_kr_collection' => [
-                        'from' => GoalousDateTime::now()->subDays(7)->getTimestamp(),
-                        'to' => GoalousDateTime::now()->getTimestamp(),
+                        'from' => $periodFrom->getTimestamp(),
+                        'to' => $periodTo->getTimestamp(),
                     ],
                     'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
                     'krs' => $krs,
