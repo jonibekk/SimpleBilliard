@@ -914,6 +914,62 @@ class KeyResult extends AppModel
         return $krs;
     }
 
+    public function findForKeyResultList(int $userId, int $teamId, array $currentTerm, int $goalIdSelected, int $limit): array
+    {
+        $now = GoalousDateTime::now();
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id'    => $userId,
+                'KeyResult.end_date >=' => $currentTerm['start_date'],
+                'KeyResult.end_date <=' => $currentTerm['end_date'],
+                'KeyResult.team_id'     => $teamId,
+                'KeyResult.completed'   => null,
+                'GoalMember.del_flg'    => false,
+                'Goal.end_date >='      => $now->format('Y-m-d'),
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*',
+                'GoalMember.priority'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
+                        'ActionResult.created' => 'desc'
+                    ],
+                    'User'
+                ]
+            ]
+        ];
+        if ($goalIdSelected) {
+            $options['conditions']['Goal.id'] = $goalIdSelected;
+        }
+        if ($limit) {
+            $options['limit'] = $limit;
+        }
+
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        return $KeyResult->useType()->find('all', $options);
+    }
+
     /**
      * フィードページの右カラム用にKR一覧を取得
      * # 取得条件
@@ -1026,7 +1082,7 @@ class KeyResult extends AppModel
      *
      * @return int
      */
-    public function countMine($goalId = null, bool $includeComplete = false): int
+    public function countMine($goalId = null, bool $includeComplete = false, $userId = null): int
     {
         $currentTerm = $this->Team->Term->getCurrentTermData();
 
@@ -1035,7 +1091,7 @@ class KeyResult extends AppModel
         $today = AppUtil::todayDateYmdLocal($timezone);
         $options = [
             'conditions' => [
-                'GoalMember.user_id'    => $this->my_uid,
+                'GoalMember.user_id'    => $userId ?? $this->my_uid,
                 'KeyResult.end_date >=' => $currentTerm['start_date'],
                 'KeyResult.end_date <=' => $currentTerm['end_date'],
                 'GoalMember.del_flg'    => false

@@ -1802,14 +1802,15 @@ class Post extends AppModel
      * $action_result_id に紐づく投稿を取得
      *
      * @param $action_result_id
+     * @param $team_id
      *
      * @return array|null
      */
-    public function getByActionResultId($action_result_id)
+    public function getByActionResultId($action_result_id, $team_id = null)
     {
         $options = [
             'conditions' => [
-                'team_id'          => $this->current_team_id,
+                'team_id'          => $team_id ?? $this->current_team_id,
                 'action_result_id' => $action_result_id,
                 'type'             => self::TYPE_ACTION,
             ]
