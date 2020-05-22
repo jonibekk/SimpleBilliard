@@ -230,8 +230,8 @@ class MeController extends BasePagingController
         $currentTerm = $Term->getCurrentTermData();
 
         $now = GoalousDateTime::now();
-        $periodFrom = $now->copy()->startOfDay()->subDays(6);
-        $periodTo = $now->copy()->startOfDay();
+        $periodFrom = $now->copy()->startOfDay()->subDays(7);
+        $periodTo = $now->copy();
 
         $goalIdSelected = intval($this->request->query('goal_id'));
         $limit = intval($this->request->query('limit'));
