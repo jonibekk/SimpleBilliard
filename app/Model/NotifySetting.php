@@ -379,7 +379,6 @@ class NotifySetting extends AppModel
             'field_prefix'    => '',
             'icon_class'      => 'videocam',
             'groups'          => ['all'],
-            'force_notify'    => true,
         ],
         self::TYPE_TRANSCODE_FAILED                          => [
             'mail_template'   => "notify_basic",
@@ -411,7 +410,6 @@ class NotifySetting extends AppModel
             'field_prefix'    => '',
             'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
-            'force_notify'    => true,
         ],
         self::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL          => [
             'mail_template'   => "notify_basic",
@@ -419,7 +417,6 @@ class NotifySetting extends AppModel
             'field_prefix'    => '',
             'icon_class'      => 'flag',
             'groups'          => ['all', 'primary'],
-            'force_notify'    => true,
         ],
         self::TYPE_TRANSLATION_LIMIT_REACHED => [
             'mail_template'   => "translation_limit_reached",
@@ -647,6 +644,20 @@ class NotifySetting extends AppModel
         if (!is_array($user_ids)) {
             $user_ids = [$user_ids];
         }
+        // avoid notification on user id that is same with $this->my_uid (notification to himself)
+        if (isset($this->my_uid) && $delete = array_search($this->my_uid, $user_ids) !== false){
+            unset($user_ids[$delete]);
+        }
+        if (count($user_ids) == 0){
+            return array(
+                $this->my_uid => array(
+                    'app'    => false,
+                    'email'  => false,
+                    'mobile' => false,
+                )
+            );
+
+        }
         // email と mobile のデフォルトは「すべて」
         $default_data = [
             'app'    => true,
@@ -667,15 +678,34 @@ class NotifySetting extends AppModel
         }
         if (!empty($result)) {
             foreach ($result as $val) {
+                $appStatus = true;
+                $emailStatus = in_array($val['NotifySetting']['email_status'], self::$TYPE[$type]['groups']);
+                $mobileStatus = in_array($val['NotifySetting']['mobile_status'], self::$TYPE[$type]['groups']);
+
                 // アプリ
-                $res_data[$val['NotifySetting']['user_id']]['app'] =
-                    $val['NotifySetting'][$field_prefix . '_app_flg'] ? true : false;
+                if (isset($val['NotifySetting'][$field_prefix . '_app_flg'])){
+                    $res_data[$val['NotifySetting']['user_id']]['app'] =
+                        $val['NotifySetting'][$field_prefix . '_app_flg'] ? true : false;
+                } else {
+                    $res_data[$val['NotifySetting']['user_id']]['app'] = $appStatus;
+                }
+
                 // メール
-                $res_data[$val['NotifySetting']['user_id']]['email'] =
-                    $val['NotifySetting'][$field_prefix . '_email_flg'] ? true : false;
+                if (isset($val['NotifySetting'][$field_prefix . '_email_flg'])) {
+                    $res_data[$val['NotifySetting']['user_id']]['email'] =
+                        $val['NotifySetting'][$field_prefix . '_email_flg'] ? true : false;
+                } else {
+                    $res_data[$val['NotifySetting']['user_id']]['email'] = $emailStatus;
+                }
+
                 // モバイル
-                $res_data[$val['NotifySetting']['user_id']]['mobile'] =
-                    $val['NotifySetting'][$field_prefix . '_mobile_flg'] ? true : false;
+                if (isset($val['NotifySetting'][$field_prefix . '_mobile_flg'])) {
+                    $res_data[$val['NotifySetting']['user_id']]['mobile'] =
+                        $val['NotifySetting'][$field_prefix . '_mobile_flg'] ? true : false;
+                } else {
+                    $res_data[$val['NotifySetting']['user_id']]['mobile'] = $mobileStatus;
+                }
+
                 //引数のユーザリストから除去
                 if (($array_key = array_search($val['NotifySetting']['user_id'], $user_ids)) !== false) {
                     unset($user_ids[$array_key]);
