@@ -242,7 +242,7 @@ class CommentsController extends ApiController
         $postOwnerUserId = $postData['Post']['user_id'];
 
         //If commenter is not post owner, send notification to owner
-        if ($commenterUserId !== $postOwnerUserId) {
+        if ($commenterUserId !== intval($postOwnerUserId)) {
             $this->NotifyBiz->sendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL, null, null,
                 [$postOwnerUserId], $commenterUserId, $postData['Post']['team_id'], $postId);
         }
