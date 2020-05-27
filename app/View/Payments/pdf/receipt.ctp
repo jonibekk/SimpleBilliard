@@ -117,7 +117,7 @@ body {
     </div>
     <div class="invoice-contact">
         <address>
-            <?= __('ISAO Corporation'); ?> <br/><br/>
+            <?= __('Colorkrew Inc.'); ?> <br/><br/>
             <?= __('5-20-8 Asakusabashi CS Tower, 7th Floor'); ?><br/>
             <?= __('Taito-ku, Tokyo 111-0053 Japan'); ?>
         </address>

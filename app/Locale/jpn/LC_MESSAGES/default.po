@@ -390,7 +390,7 @@ msgstr "詳しく知りたい"
 msgid "Get documentation"
 msgstr "資料がほしい"
 
-msgid "Collaborate with ISAO"
+msgid "Collaborate with Colorkrew"
 msgstr "協業したい"
 
 msgid "Give us an interview"
@@ -2679,8 +2679,8 @@ msgstr "会社住所"
 msgid "Company Name"
 msgstr "会社名"
 
-msgid "ISAO Corporation"
-msgstr "株式会社ISAO"
+msgid "Colorkrew Inc."
+msgstr "株式会社Colorkrew"
 
 msgid "Post Code"
 msgstr "郵便番号"
@@ -2940,8 +2940,8 @@ msgstr "ブログ"
 msgid "About Us"
 msgstr "About Us"
 
-msgid "ISAO Corporation, An IT corporation located in Akihabara, Tokyo."
-msgstr "東京・秋葉原にあるIT企業、株式会社ISAO。"
+msgid "Colorkrew Inc., An IT corporation located in Akihabara, Tokyo."
+msgstr "東京・秋葉原にあるIT企業、株式会社Colorkrew。"
 
 msgid "Our mid-term vision to be “a visionary company that brings joy to work around the world”,"
 msgstr "”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げています。"
@@ -3584,8 +3584,8 @@ msgstr "ログイン後に利用できるサポートツールでお問い合わ
 msgid "What company manages Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
 
-msgid "ISAO, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
-msgstr "\"たのしい！\"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。"
+msgid "Colorkrew, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
+msgstr "\"たのしい！\"をうみだしとどける企業、Colorkrew（カラクル）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。"
 
 msgid "Frequent questions"
 msgstr "よくあるご質問"
@@ -6151,15 +6151,15 @@ msgstr "セミナー参加者の声"
 
 msgid "We hold Organizational reform seminars regularly. This seminar is very popular every time for <br>CEO’s, upper / lower management, HR Team, team management and those who want to improve their organizational capabilities.<br> Please feel free to join us at our next seminar!"
 msgstr ""
-"運営会社・株式会社ISAO (イサオ) による組織改革セミナーを定期開催しております。<br>"
+"運営会社・株式会社Colorkrew (カラクル) による組織改革セミナーを定期開催しております。<br>"
 "        経営者・人事・チームマネジメントや組織力を上げたい方に、毎回大好評のセミナーです。<br>"
 "        お気軽にご参加ください！"
 
 msgid "I felt that it was ideal to go from fairness to a fun world and apply that mind to business."
 msgstr "フェアネスから楽しい世界に進まれていて、そのマインドをビジネスにも応用されているのは理想的だと感じました。"
 
-msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that ISAO has achieved that ideal, I would like to observe how ISAO grows with this ideal moving forward."
-msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、ISAOは実現できているということで今後も展開を見守りたいと思いました。"
+msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
+msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、Colorkrewは実現できているということで今後も展開を見守りたいと思いました。"
 
 msgid "I started visualizing our evaluations at my company, so I would like to consider using Goalous for that as well."
 msgstr "自分の会社で評価の見える化をスタートしたので、Goalousの利用も検討してみたい。"

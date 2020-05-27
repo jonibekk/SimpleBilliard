@@ -14,7 +14,7 @@
                 <label for="company_name" class="circle-create-label"><?= __("Company Name") ?></label>
                 <input type="text" id="company_name" name="company_name" value="<?= h($setting['company_name']) ?>"
                        required class="form-control"
-                       placeholder="<?= __("ISAO Corporation") ?>" maxlength="255">
+                       placeholder="<?= __("Colorkrew Inc.") ?>" maxlength="255">
             </div>
             <fieldset class="company-info-fieldset">
                 <legend class="company-info-legend"><?= __("Company Address") ?></legend>
