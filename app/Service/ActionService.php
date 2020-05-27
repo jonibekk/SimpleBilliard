@@ -187,20 +187,20 @@ class ActionService extends AppService
         return (int) $newActionId;
     }
 
-    public function createAngular(array $data)
+    public function createAngular(array $data): int
     {
         try {
             $this->TransactionManager->begin();
-            $newAction = $this->createAction($data);
-            $this->updateKrAndProgress($newAction['id'], $data);
-            $this->createGoalPost($newAction['id'], $data);
-            $this->createAttachedFiles($newAction['id'], $data);
+            $newActionId = $this->createAction($data);
+            $this->updateKrAndProgress($newActionId, $data);
+            $this->createGoalPost($newActionId, $data);
+            $this->createAttachedFiles($newActionId, $data);
             $this->refreshKrCache($data['goal_id']);
             $this->TransactionManager->commit();
 
             $this->refreshKrCache($data['goal_id']);
-            $this->translateActionPost($data['team_id'], $newAction['id']);
-            return $newAction;
+            $this->translateActionPost($data['team_id'], $newActionId);
+            return $newActionId;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             throw $e;
@@ -259,7 +259,7 @@ class ActionService extends AppService
 
         $ActionResult->create();
         $result = $ActionResult->useType()->useEntity()->save($actionSaveData, false);
-        return $result;
+        return $result['id'];
     }
 
     private function updateKrAndProgress(int $newActionId, array $data)

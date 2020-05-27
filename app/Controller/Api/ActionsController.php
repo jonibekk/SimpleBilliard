@@ -1,7 +1,8 @@
 <?php
-App::import('Service', 'ActionService');
 App::uses('BasePagingController', 'Controller/Api');
+App::import('Service', 'ActionService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
+App::import('Lib/DataExtender', 'FeedPostExtender');
 
 class ActionsController extends BasePagingController
 {
@@ -23,13 +24,15 @@ class ActionsController extends BasePagingController
             $data = $requestData;
             $data['user_id'] = $this->getUserId();
             $data['team_id'] = $this->getTeamId();
-            $newAction = $ActionService->createAngular($data);
-            return ApiResponse::ok()->withData($newAction)->getResponse();
+            $newActionId = $ActionService->createAngular($data);
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()
                 ->withMessage(__($e->getMessage()))
                 ->getResponse();
         }
+
+        $ret = $this->formatCreateResp($newActionId);
+        return ApiResponse::ok()->withData($ret)->getResponse();
     }
 
     private function validateCreate($data)
@@ -106,5 +109,25 @@ class ActionsController extends BasePagingController
         if ($krBeforeValue != $krCurrentValue) {
             throw new Exception("KR has been updated by another user");
         }
+    }
+
+    // format into a response similar to api/me/get_feed
+    private function formatCreateResp(int $actionId): array
+    {
+        /** @var FeedPostExtender $FeedPostExtender **/
+        $FeedPostExtender = ClassRegistry::init('FeedPostExtender');
+        $this->loadModel("Post");
+        $post = $this->Post->find('first', [
+            'conditions' => [
+                'action_result_id' => $actionId
+            ]
+        ]);
+        $formattedData =  $FeedPostExtender->extendMulti(
+            [$post["Post"]],
+            $this->getUserId(),
+            $this->getTeamId(),
+            [FeedPostExtender::EXTEND_ALL]
+        );
+        return $formattedData[0];
     }
 }
