@@ -1,4 +1,5 @@
 <?php
+App::import('Service', 'ActionService');
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 
@@ -9,6 +10,8 @@ class ActionsController extends BasePagingController
     public function post()
     {
         $this->loadModel("Goal");
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
         $requestData = $this->getRequestJsonBody();
 
         $validationError = $this->validateCreate($requestData);
@@ -20,6 +23,7 @@ class ActionsController extends BasePagingController
             $data = $requestData;
             $data['user_id'] = $this->getUserId();
             $data['team_id'] = $this->getTeamId();
+            $newAction = $ActionService->createAngular($data);
             return ApiResponse::ok()->withData($newAction)->getResponse();
         } catch (Exception $e) {
             return ErrorResponse::internalServerError()
