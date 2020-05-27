@@ -194,6 +194,7 @@ class ActionService extends AppService
             $newAction = $this->createAction($data);
             $this->updateKrAndProgress($newAction['id'], $data);
             $this->createGoalPost($newAction['id'], $data);
+            $this->createAttachedFiles($newAction['id'], $data);
             $this->refreshKrCache($data['goal_id']);
             $this->TransactionManager->commit();
 
@@ -333,6 +334,50 @@ class ActionService extends AppService
         }
     }
 
+    private function createAttachedFiles(int $newActionId, array $data)
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init("UploadService");
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init("AttachedFileService");
+        /** @var ActionResultFile $ActionResultFile */
+        $ActionResultFile = ClassRegistry::init('ActionResultFile');
+
+        $userId = $data['user_id'];
+        $teamId = $data['team_id'];
+        $fileIds = $data['file_ids'];
+        $addedFiles = [];
+        $actionFileIdx = 0;
+
+        try {
+            foreach ($fileIds as $id) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+                $addedFiles[] = $attachedFile['id'];
+                $newData = [
+                    'action_result_id' => $newActionId,
+                    'attached_file_id' => $attachedFile['id'],
+                    'team_id'          => $teamId,
+                    'index_num'        => $actionFileIdx,
+                    'del_flag'         => false,
+                    'created'          => GoalousDateTime::now()->getTimestamp()
+                ];
+                $ActionResultFile->create();
+                $ActionResultFile->useType()->useEntity()->save($newData, false);
+                $actionFileIdx += 1;
+                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+            }
+        } catch (Exception $e) {
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+
+            throw new Exception("Failed to save attached files.");
+        }
+    }
 
     private function refreshKrCache(int $goalId)
     {
