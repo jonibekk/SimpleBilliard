@@ -1,5 +1,6 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
+App::uses('TeamTranslationLanguage', 'Model');
 App::import('Service', 'ActionService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Lib/DataExtender', 'FeedPostExtender');
@@ -7,6 +8,10 @@ App::import('Lib/DataExtender', 'FeedPostExtender');
 class ActionsController extends BasePagingController
 {
     use TranslationNotificationTrait;
+
+    public $components = [
+        'NotifyBiz',
+    ];
 
     public function post()
     {
@@ -31,6 +36,7 @@ class ActionsController extends BasePagingController
                 ->getResponse();
         }
 
+        $this->postCreateNotifications($newActionId);
         $ret = $this->formatCreateResp($newActionId);
         return ApiResponse::ok()->withData($ret)->getResponse();
     }
@@ -83,12 +89,13 @@ class ActionsController extends BasePagingController
 
     private function validateActionParams(array $data): void
     {
-        $this->Goal->ActionResult->validate = $this->Goal->ActionResult->postValidate;
-        $this->Goal->ActionResult->set($data);
+        $ActionResult = $this->Goal->ActionResult;
+        $ActionResult->validate = $ActionResult->postValidate;
+        $ActionResult->set($data);
 
-        if (!$this->Goal->ActionResult->validates()) {
+        if (!$ActionResult->validates()) {
             $errMsgs = [];
-            foreach ($this->Goal->ActionResult->validationErrors as $field => $errors) {
+            foreach ($ActionResult->validationErrors as $field => $errors) {
                 $errMsgs[$field] = array_shift($errors);
             }
             GoalousLog::error("Invalid action paramters", $errMsgs);
@@ -129,5 +136,16 @@ class ActionsController extends BasePagingController
             [FeedPostExtender::EXTEND_ALL]
         );
         return $formattedData[0];
+    }
+
+    private function postCreateNotifications(int $actionId): void
+    {
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION, $actionId);
+
+        /** @var TeamTranslationLanguage $TeamTranslationLanguage */
+        $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
+        if ($TeamTranslationLanguage->hasLanguage($this->getTeamId())) {
+            $this->sendTranslationUsageNotification($this->getTeamId());
+        }
     }
 }

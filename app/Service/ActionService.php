@@ -334,6 +334,7 @@ class ActionService extends AppService
         }
     }
 
+    // TODO: Exceptions that occur in this function will not cause transaction rollback
     private function createAttachedFiles(int $newActionId, array $data)
     {
         /** @var UploadService $UploadService */
