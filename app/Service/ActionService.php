@@ -83,7 +83,7 @@ class ActionService extends AppService
 
             // アクション保存
             $actionSaveData = [
-
+                'goal_id'       => $goalId,
                 'team_id'       => $teamId,
                 'user_id'       => $userId,
                 'type'          => ActionResult::TYPE_KR,
