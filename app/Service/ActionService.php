@@ -271,8 +271,9 @@ class ActionService extends AppService
 
         $krId = $data['key_result_id'];
         $kr = $KeyResult->getById($krId);
-        $krCurrentVal = $data['key_result_current_value'];
-        $krChangeVal = $krCurrentVal - Hash::get($kr, 'current_value');
+        $newCurrentVal = $data['key_result_current_value'];
+        $oldCurrentVal = Hash::get($kr, 'current_value');
+        $krChangeVal = bcsub($newCurrentVal, $oldCurrentVal, 3);
 
         $progressLogSaveData = [
             'goal_id'          => $data['goal_id'],
@@ -281,7 +282,7 @@ class ActionService extends AppService
             'key_result_id'    => $krId,
             'action_result_id' => $newActionId,
             'value_unit'       => Hash::get($kr, 'value_unit'),
-            'before_value'     => Hash::get($kr, 'current_value'),
+            'before_value'     => $oldCurrentVal,
             'change_value'     => $krChangeVal,
             'target_value'     => Hash::get($kr, 'target_value'),
         ];
@@ -295,11 +296,11 @@ class ActionService extends AppService
 
         $updateKr = [
             'id'              => $krId,
-            'current_value'   => $krCurrentVal,
+            'current_value'   => $newCurrentVal,
             'latest_actioned' => REQUEST_TIMESTAMP
         ];
 
-        if ($krCurrentVal == Hash::get($kr, 'target_value')) {
+        if ($newCurrentVal == Hash::get($kr, 'target_value')) {
             $updateKr['completed'] = REQUEST_TIMESTAMP;
         }
 
