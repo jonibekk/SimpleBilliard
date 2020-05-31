@@ -22,12 +22,12 @@ if (!isset($top_lang)) {
         <dl class="footerLink">
             <div class="aboutus">
                 <dt class="first"><?= __('About Us') ?></dt>
-                <dd><?= __('ISAO Corporation, An IT corporation located in Akihabara, Tokyo.') ?><br>
+                <dd><?= __('Colorkrew Inc., An IT corporation located in Akihabara, Tokyo.') ?><br>
                     <?= __('Our mid-term vision to be “a visionary company that brings joy to work around the world”,') ?>
                     <br>
                     <?= __('introduced the first Super Flat model to Japan. No management, No hierarchy, but infinite team strength.') ?>
                 </dd>
-                <dd><a href="http://www.isao.co.jp/" class="arrow textlink" target="_blank"><?= __('Check our website') ?></a></dd>
+                <dd><a href="https://www.colorkrew.com/" class="arrow textlink" target="_blank"><?= __('Check our website') ?></a></dd>
             </div>
             <div class="otherlinks">
                 <dt><?= __('Other Links') ?></dt>
@@ -61,7 +61,7 @@ if (!isset($top_lang)) {
             </div>
         </dl>
         <div class="footerCopy">
-            <p>© 2017 ISAO</p>
+            <p>© 2020 Colorkrew</p>
             <ul class="language">
                 <li><a href="<?= $this->Html->url('/en/') ?>">English(US)</a></li>
                 <li><a href="<?= $this->Html->url('/ja/') ?>">日本語</a></li>

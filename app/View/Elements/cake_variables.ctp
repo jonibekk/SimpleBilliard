@@ -638,7 +638,7 @@ App::uses('AttachedFile', 'Model');
             "Enter Company Information": "<?= __("Enter Company Information") ?>",
             "Company Address": "<?= __("Company Address") ?>",
             "Company Name": "<?= __("Company Name") ?>",
-            "ISAO Corporation": "<?= __("ISAO Corporation") ?>",
+            "Colorkrew Inc.": "<?= __("Colorkrew Inc.") ?>",
             "Post Code": "<?= __("Post Code") ?>",
             "12345 ": "<?= __("12345 ") ?>",
             "State/Province/Region": "<?= __("State/Province/Region") ?>",
