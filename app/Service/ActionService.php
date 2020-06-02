@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: yoshidam2
@@ -19,10 +20,18 @@ App::uses('AttachedFile', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
+App::uses('ActionResultFile', 'Model');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
+App::uses('Service', 'UploadService');
+App::uses('Service', 'AttachedFileService');
 App::import('View', 'Helper/TimeExHelper');
 App::import('View', 'Helper/UploadHelper');
+App::import('Model/Entity', 'ActionResultEntity');
+App::import('Model/Entity', 'ActionResultFileEntity');
+
+use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
+use Guzzle\Common\ToArrayInterface;
 
 /**
  * Class ActionService
@@ -83,8 +92,10 @@ class ActionService extends AppService
                 'completed'     => $now
             ];
             if (!$ActionResult->save($actionSaveData, false)) {
-                throw new Exception(sprintf("Failed create action. data:%s"
-                    , var_export($actionSaveData, true)));
+                throw new Exception(sprintf(
+                    "Failed create action. data:%s",
+                    var_export($actionSaveData, true)
+                ));
             }
             $newActionId = $ActionResult->getLastInsertID();
 
@@ -101,22 +112,34 @@ class ActionService extends AppService
                 'target_value'     => Hash::get($kr, 'target_value'),
             ];
             if (!$KrProgressLog->save($progressLogSaveData)) {
-                throw new Exception(sprintf("Failed save kr progress log. data:%s"
-                    , var_export($progressLogSaveData, true)));
+                throw new Exception(sprintf(
+                    "Failed save kr progress log. data:%s",
+                    var_export($progressLogSaveData, true)
+                ));
             }
 
             // アクションとしての投稿
-            if (!$Post->addGoalPost(Post::TYPE_ACTION, $goalId, $userId, false,
-                $newActionId, $share, PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
-            ) {
-                throw new Exception(sprintf("Failed create post. data:%s"
-                    , var_export(compact('newActionId', 'goalId', 'userId'), false)));
+            if (!$Post->addGoalPost(
+                Post::TYPE_ACTION,
+                $goalId,
+                $userId,
+                false,
+                $newActionId,
+                $share,
+                PostShareCircle::SHARE_TYPE_ONLY_NOTIFY
+            )) {
+                throw new Exception(sprintf(
+                    "Failed create post. data:%s",
+                    var_export(compact('newActionId', 'goalId', 'userId'), false)
+                ));
             }
 
             // アクション画像保存
             if (!$AttachedFile->saveRelatedFiles($newActionId, AttachedFile::TYPE_MODEL_ACTION_RESULT, $fileIds)) {
-                throw new Exception(sprintf("Failed save attached files. data:%s"
-                    , var_export(compact('newActionId', 'fileIds'), false)));
+                throw new Exception(sprintf(
+                    "Failed save attached files. data:%s",
+                    var_export(compact('newActionId', 'fileIds'), false)
+                ));
             }
 
             // KR進捗&最新アクション日時更新
@@ -129,8 +152,10 @@ class ActionService extends AppService
                 $updateKr['completed'] = $now;
             }
             if (!$KeyResult->save($updateKr, false)) {
-                throw new Exception(sprintf("Failed update kr progress. data:%s"
-                    , var_export($updateKr, false)));
+                throw new Exception(sprintf(
+                    "Failed update kr progress. data:%s",
+                    var_export($updateKr, false)
+                ));
             }
 
             // ダッシュボードのKRキャッシュ削除
@@ -142,7 +167,7 @@ class ActionService extends AppService
             $this->log(sprintf("[%s]%s", __METHOD__, $e->getMessage()));
             $this->log($e->getTraceAsString());
             $ActionResult->rollback();
-//            $AttachedFile->deleteAllRelatedFiles($newActionId, AttachedFile::TYPE_MODEL_ACTION_RESULT);
+            //            $AttachedFile->deleteAllRelatedFiles($newActionId, AttachedFile::TYPE_MODEL_ACTION_RESULT);
             return false;
         }
 
@@ -159,7 +184,27 @@ class ActionService extends AppService
             $TranslationService->createDefaultTranslation($teamId, TranslationContentType::ACTION_POST(), $postId);
         }
 
-        return (int)$newActionId;
+        return (int) $newActionId;
+    }
+
+    public function createAngular(array $data): int
+    {
+        try {
+            $this->TransactionManager->begin();
+            $newActionId = $this->createAction($data);
+            $this->updateKrAndProgress($newActionId, $data);
+            $this->createGoalPost($newActionId, $data);
+            $this->createAttachedFiles($newActionId, $data);
+            $this->refreshKrCache($data['goal_id']);
+            $this->TransactionManager->commit();
+
+            $this->refreshKrCache($data['goal_id']);
+            $this->translateActionPost($data['team_id'], $newActionId);
+            return $newActionId;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -195,5 +240,175 @@ class ActionService extends AppService
         $teamId = Hash::get($actionPost, 'team_id');
 
         return ($postType == Post::TYPE_ACTION) && (!empty($TeamMember->getIdByTeamAndUserId($teamId, $userId)));
+    }
+
+    private function createAction(array $data)
+    {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+
+        $actionSaveData = [
+            'goal_id'       => $data['goal_id'],
+            'team_id'       => $data['team_id'],
+            'user_id'       => $data['user_id'],
+            'type'          => ActionResult::TYPE_KR,
+            'name'          => $data['name'],
+            'key_result_id' => $data['key_result_id'],
+            'completed'     => REQUEST_TIMESTAMP
+        ];
+
+        $ActionResult->create();
+        $result = $ActionResult->useType()->useEntity()->save($actionSaveData, false);
+        return $result['id'];
+    }
+
+    private function updateKrAndProgress(int $newActionId, array $data)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init("KrProgressLog");
+
+        $krId = $data['key_result_id'];
+        $kr = $KeyResult->getById($krId);
+        $newCurrentVal = $data['key_result_current_value'];
+        $oldCurrentVal = Hash::get($kr, 'current_value');
+        $krChangeVal = bcsub($newCurrentVal, $oldCurrentVal, 3);
+
+        $progressLogSaveData = [
+            'goal_id'          => $data['goal_id'],
+            'team_id'          => $data['team_id'],
+            'user_id'          => $data['user_id'],
+            'key_result_id'    => $krId,
+            'action_result_id' => $newActionId,
+            'value_unit'       => Hash::get($kr, 'value_unit'),
+            'before_value'     => $oldCurrentVal,
+            'change_value'     => $krChangeVal,
+            'target_value'     => Hash::get($kr, 'target_value'),
+        ];
+
+        if (!$KrProgressLog->save($progressLogSaveData)) {
+            throw new Exception(sprintf(
+                "Failed save kr progress log. data:%s",
+                var_export($progressLogSaveData, true)
+            ));
+        }
+
+        $updateKr = [
+            'id'              => $krId,
+            'current_value'   => $newCurrentVal,
+            'latest_actioned' => REQUEST_TIMESTAMP
+        ];
+
+        if ($newCurrentVal == Hash::get($kr, 'target_value')) {
+            $updateKr['completed'] = REQUEST_TIMESTAMP;
+        }
+
+        if (!$KeyResult->save($updateKr, false)) {
+            throw new Exception(sprintf(
+                "Failed update kr progress. data:%s",
+                var_export($updateKr, false)
+            ));
+        }
+    }
+
+    private function createGoalPost(int $newActionId, array $data)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        $goalPost = $Post->addGoalPost(
+            Post::TYPE_ACTION,
+            $data['goal_id'],
+            $data['user_id'],
+            false,
+            $newActionId,
+            [],
+            PostShareCircle::SHARE_TYPE_ONLY_NOTIFY
+        );
+
+        if (!$goalPost) {
+            throw new Exception(sprintf(
+                "Failed create post. data:%s",
+                var_export(compact('newActionId', 'goalId', 'userId'), false)
+            ));
+        }
+    }
+
+    // TODO: Exceptions that occur in this function will not cause transaction rollback
+    private function createAttachedFiles(int $newActionId, array $data)
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init("UploadService");
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init("AttachedFileService");
+        /** @var ActionResultFile $ActionResultFile */
+        $ActionResultFile = ClassRegistry::init('ActionResultFile');
+
+        $userId = $data['user_id'];
+        $teamId = $data['team_id'];
+        $fileIds = $data['file_ids'];
+        $addedFiles = [];
+        $actionFileIdx = 0;
+
+        try {
+            foreach ($fileIds as $id) {
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+
+                /** @var AttachedFileEntity $attachedFile */
+                $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+                $addedFiles[] = $attachedFile['id'];
+                $newData = [
+                    'action_result_id' => $newActionId,
+                    'attached_file_id' => $attachedFile['id'],
+                    'team_id'          => $teamId,
+                    'index_num'        => $actionFileIdx,
+                    'del_flag'         => false,
+                    'created'          => GoalousDateTime::now()->getTimestamp()
+                ];
+                $ActionResultFile->create();
+                $ActionResultFile->useType()->useEntity()->save($newData, false);
+                $actionFileIdx += 1;
+                $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+            }
+        } catch (Exception $e) {
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+
+            throw new Exception("Failed to save attached files.");
+        }
+    }
+
+    private function refreshKrCache(int $goalId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
+        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+    }
+
+    private function translateActionPost(int $teamId, int $newActionId)
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+
+        $postId = $Post->getByActionResultId($newActionId)['Post']['id'];
+
+        /** @var TranslationService $TranslationService */
+        $TranslationService = ClassRegistry::init('TranslationService');
+        if ($TranslationService->canTranslate($teamId)) {
+            $TranslationService->createDefaultTranslation(
+                $teamId,
+                TranslationContentType::ACTION_POST(),
+                $postId
+            );
+        }
     }
 }
