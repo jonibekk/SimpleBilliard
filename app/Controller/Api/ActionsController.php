@@ -4,6 +4,8 @@ App::uses('TeamTranslationLanguage', 'Model');
 App::import('Service', 'ActionService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Lib/DataExtender', 'FeedPostExtender');
+App::import('Service', 'PusherService');
+App::import('Lib/Pusher', 'NewPostNotifiable');
 
 class ActionsController extends BasePagingController
 {
@@ -16,6 +18,7 @@ class ActionsController extends BasePagingController
     public function post()
     {
         $this->loadModel("Goal");
+        $this->loadModel("Post");
         /** @var ActionService $ActionService */
         $ActionService = ClassRegistry::init("ActionService");
         $requestData = $this->getRequestJsonBody();
@@ -123,7 +126,6 @@ class ActionsController extends BasePagingController
     {
         /** @var FeedPostExtender $FeedPostExtender **/
         $FeedPostExtender = ClassRegistry::init('FeedPostExtender');
-        $this->loadModel("Post");
         $post = $this->Post->find('first', [
             'conditions' => [
                 'action_result_id' => $actionId
@@ -147,5 +149,18 @@ class ActionsController extends BasePagingController
         if ($TeamTranslationLanguage->hasLanguage($this->getTeamId())) {
             $this->sendTranslationUsageNotification($this->getTeamId());
         }
+
+        $post = $this->Post->useEntity()->find('first', [
+            'conditions' => [
+                'action_result_id' => $actionId
+            ]
+        ]);
+
+        /** @var PusherService $PusherService */
+        $PusherService = ClassRegistry::init("PusherService");
+        /** @var NewPostNotifiable $NewPostNotifiable */
+        $NewPostNotifiable = ClassRegistry::init("NewPostNotifiable");
+        $NewPostNotifiable->build($post, 0);
+        $PusherService->notify($this->getSocketId(), $NewPostNotifiable);
     }
 }
