@@ -1958,7 +1958,6 @@ class NotifyBizComponent extends Component
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
 
-        GoalousLog::error($all_cmd);
         exec($all_cmd);
     }
 
