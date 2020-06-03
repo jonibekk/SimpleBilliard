@@ -55,11 +55,7 @@ class CirclePostUnreadPagingService
                     1
                 ));
                 $cursor = '';
-                $data = [
-                    [
-                        'type' => \Goalous\Enum\FeedContent\FeedContent::FEED_ALL_CAUGHT_UP,
-                    ]
-                ];
+                $data = [];
                 if ($hasUnreadPostNotificationOff) {
                     $cursor = $pagingRequestForCursor->returnCursor();
                     $data = [];
