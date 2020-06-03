@@ -1104,7 +1104,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['old_gl'] = false;
 
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = !empty($comment['Comment']['body']) ?
+            json_encode([MentionComponent::replaceMentionToSimpleReadable($comment['Comment']['body'])]) : json_encode(['']);
         $this->notify_option['force_notify'] = true;
         $this->notify_option['options'] = [
             'commenter_user_id' => $commenterUserId,
@@ -1133,7 +1134,7 @@ class NotifyBizComponent extends Component
         }
 
         // exclude inactive users
-        $commentedUserList = array_intersect($commented_user_list,
+        $commentedUserList = array_intersect($commentedUserList,
             $this->Team->TeamMember->getActiveTeamMembersList());
         $post = $this->Post->findById($postId);
         if (empty($post)) {
@@ -1159,7 +1160,9 @@ class NotifyBizComponent extends Component
         $this->notify_option['old_gl'] = false;
 
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = !empty($comment['Comment']['body']) ?
+            json_encode([MentionComponent::replaceMentionToSimpleReadable($comment['Comment']['body'])]) : json_encode(['']);
+
         $this->notify_option['force_notify'] = true;
 
         /** @var Post $Post */
@@ -1169,7 +1172,7 @@ class NotifyBizComponent extends Component
             'post_owner_user_id' => $Post->getById($postId)['user_id']
         ];
         $this->NotifySetting->current_team_id = $teamId;
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commentedUserList);
     }
 
     private function _setTranslationLimitReached(int $teamId, array $toUserList) {
@@ -1955,7 +1958,7 @@ class NotifyBizComponent extends Component
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
 
-
+        GoalousLog::error($all_cmd);
         exec($all_cmd);
     }
 
