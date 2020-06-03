@@ -889,7 +889,31 @@ class PostsController extends BasePagingController
                 );
                 break;
             case Post::TYPE_CREATE_GOAL:
-                $this->notifyUserOfGoalComment($userId, $postId);
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL,
+                    $postId,
+                    $commentId,
+                    [],
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
         }
 
