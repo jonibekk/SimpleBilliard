@@ -273,10 +273,10 @@ class NotifyBizComponent extends Component
                 $this->_setAddedEvaluatorToEvaluatee($team_id, $to_user_list, $user_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL:
-                $this->_setFeedCommentedOnGoal($team_id, $user_id, $to_user_list, $postId);
+                $this->_setFeedCommentedOnGoal($team_id, $user_id, $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL:
-                $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $to_user_list, $postId);
+                $this->_setFeedCommentedOnCommentedGoal($team_id, $user_id, $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_TRANSLATION_LIMIT_REACHED:
                 $this->_setTranslationLimitReached($team_id, $to_user_list);
@@ -549,7 +549,7 @@ class NotifyBizComponent extends Component
         $members = $this->_fixReceiver($this->Team->current_team_id, $members, $post['Post']['body']);
         if (!count($members)){
             return;
-        } 
+        }
 
         // 共有した個人一覧
         $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
@@ -1074,9 +1074,26 @@ class NotifyBizComponent extends Component
      * @param array $toUserList
      * @param int   $postId
      */
-    private function _setFeedCommentedOnGoal(int $teamId, int $commenterUserId, array $toUserList, int $postId)
+    private function _setFeedCommentedOnGoal(int $teamId, int $commenterUserId, int $postId, int $commentId)
     {
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+        $post = $this->Post->findById($postId);
+        if (empty($post)) {
+            return;
+        }
+        if ($post['Post']['user_id'] == $commenterUserId) {
+            return;
+        }
+
+        if (!$this->Team->TeamMember->isActive($post['Post']['user_id'])) {
+            return;
+        }
+
+        $comment = $this->Post->Comment->read(null, $commentId);
+        $members = array($post['Post']['user_id']);
+        $members = $this->_fixReceiver($teamId, $members, $comment['Comment']['body']);
+        if (!count($members)) return;
+
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
             NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL;
 
@@ -1087,13 +1104,14 @@ class NotifyBizComponent extends Component
         $this->notify_option['old_gl'] = false;
 
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = !empty($comment['Comment']['body']) ?
+            json_encode([MentionComponent::replaceMentionToSimpleReadable($comment['Comment']['body'])]) : json_encode(['']);
         $this->notify_option['force_notify'] = true;
         $this->notify_option['options'] = [
             'commenter_user_id' => $commenterUserId,
         ];
         $this->NotifySetting->current_team_id = $teamId;
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
     }
 
     /**
@@ -1105,11 +1123,33 @@ class NotifyBizComponent extends Component
     private function _setFeedCommentedOnCommentedGoal(
         int $teamId,
         int $commenterUserId,
-        array $toUserList,
-        int $postId
+        int $postId,
+        int $commentId
     )
     {
-        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($toUserList,
+        // get unique users in comments
+        $commentedUserList = $this->Post->Comment->getCommentedUniqueUsersList($postId);
+        if (empty($commentedUserList)) {
+            return;
+        }
+
+        // exclude inactive users
+        $commentedUserList = array_intersect($commentedUserList,
+            $this->Team->TeamMember->getActiveTeamMembersList());
+        $post = $this->Post->findById($postId);
+        if (empty($post)) {
+            return;
+        }
+
+        // exclude post onwer
+        unset($commentedUserList[$post['Post']['user_id']]);
+        if (empty($commentedUserList)) {
+            return;
+        }
+        $comment = $this->Post->Comment->read(null, $commentId);
+        $commentedUserList = $this->_fixReceiver($teamId, $commentedUserList, $comment['Comment']['body']);
+        if (!count($commentedUserList)) return;
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commentedUserList,
             NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL;
 
@@ -1120,7 +1160,9 @@ class NotifyBizComponent extends Component
         $this->notify_option['old_gl'] = false;
 
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(['']);
+        $this->notify_option['item_name'] = !empty($comment['Comment']['body']) ?
+            json_encode([MentionComponent::replaceMentionToSimpleReadable($comment['Comment']['body'])]) : json_encode(['']);
+
         $this->notify_option['force_notify'] = true;
 
         /** @var Post $Post */
@@ -1130,7 +1172,7 @@ class NotifyBizComponent extends Component
             'post_owner_user_id' => $Post->getById($postId)['user_id']
         ];
         $this->NotifySetting->current_team_id = $teamId;
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $toUserList);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commentedUserList);
     }
 
     private function _setTranslationLimitReached(int $teamId, array $toUserList) {
@@ -1603,7 +1645,7 @@ class NotifyBizComponent extends Component
                 $comment = Hash::get($this->Post->Comment->read(null, $comment_id), 'Comment') ?? [];
             }
         }
-        
+
         $this->notify_option['count_num'] = count($to_user_ids);
         if ($post['Post']['type'] == Post::TYPE_NORMAL) {
             $this->notify_option['url_data'] = [
@@ -1915,7 +1957,6 @@ class NotifyBizComponent extends Component
         $cmd .= " -o " . ($this->Session->read('current_team_id') ?? $teamId);
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
-
 
         exec($all_cmd);
     }
