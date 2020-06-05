@@ -903,19 +903,22 @@ class CircleMember extends AppModel
         return $res['CircleMember']['unread_count'];
     }
 
-    public function getJoinedCircleIds(int $teamId, int $userId, bool $notificationFlag): array
+    public function getJoinedCircleIds(int $teamId, int $userId, bool $notificationFlag = null): array
     {
         $condition = [
             'conditions' => [
                 'team_id'   => $teamId,
                 'user_id'   => $userId,
-                'get_notification_flg'   => $notificationFlag,
                 'del_flg'   => false
             ],
             'fields'     => [
                 'circle_id'
             ]
         ];
+
+        if (is_bool($notificationFlag)) {
+            $condition['conditions']['get_notification_flg'] = $notificationFlag;
+        }
 
         return $this->find('list', $condition);
     }

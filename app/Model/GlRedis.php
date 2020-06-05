@@ -60,6 +60,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_CHANGED_TERM = 'changed_term';
     const KEY_TYPE_MST_CAMPAIGN_PLANS = 'mst_campaign_plans';
     const KEY_TYPE_MAP_SES_AND_JWT = 'map_ses_and_jwt';
+    const KEY_TYPE_CIRCLE_NOTIFICATION_BLACKLIST = 'circle_notification_blacklist';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
     const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
@@ -86,7 +87,9 @@ class GlRedis extends AppModel
         self::KEY_TYPE_FAIL_EMAIL_VERIFY_DIGIT_CODE,
         self::KEY_TYPE_CHANGED_TERM,
         self::KEY_TYPE_MST_CAMPAIGN_PLANS,
-        self::KEY_TYPE_MAP_SES_AND_JWT
+        self::KEY_TYPE_MAP_SES_AND_JWT,
+        self::KEY_TYPE_CIRCLE_NOTIFICATION_BLACKLIST
+
     ];
 
     /**
@@ -336,6 +339,14 @@ class GlRedis extends AppModel
         'team'            => null,
         'user'            => null,
         'map_ses_and_jwt' => null,
+    ];
+
+    /**
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $circle_notification_blacklist = [
+        'circle_notification_blacklist' => null,
     ];
 
     public function changeDbSource($config_name = "redis_test")
@@ -1729,4 +1740,15 @@ class GlRedis extends AppModel
         $pipe->exec();
     }
 
+    /**
+     * Delete circle member count as multiple
+     *
+     * @param  $circleId
+     *
+     * @return bool
+     */
+    function checkCircleInBlackList(int $circleId)
+    {
+        return $this->Db->sIsMember($this->getKeyName(self::KEY_TYPE_CIRCLE_NOTIFICATION_BLACKLIST), $circleId);
+    }
 }

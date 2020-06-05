@@ -4,6 +4,7 @@ App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
 App::import('Service/Paging', 'RecentCircleListPagingService');
 App::import('Service/Paging', 'CirclePostUnreadPagingService');
+App::import('Service/Paging', 'JoinedCirclePostPagingService');
 App::import('Service/Paging', 'UnreadCircleListPagingService');
 App::import('Service/Paging', 'FeedPostPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
@@ -352,6 +353,21 @@ class MeController extends BasePagingController
         /** @var CirclePostUnreadPagingService $CirclePostUnreadPagingService */
         $CirclePostUnreadPagingService = ClassRegistry::init('CirclePostUnreadPagingService');
         $data = $CirclePostUnreadPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    public function get_posts()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var JoinedCirclePostPagingService $JoinedCirclePostPagingService */
+        $JoinedCirclePostPagingService = ClassRegistry::init('JoinedCirclePostPagingService');
+        $data = $JoinedCirclePostPagingService->getDataWithPaging($pagingRequest, 15, [CirclePostExtender::EXTEND_ALL]);
 
         return ApiResponse::ok()->withBody($data)->getResponse();
     }

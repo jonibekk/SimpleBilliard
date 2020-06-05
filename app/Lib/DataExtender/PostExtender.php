@@ -277,6 +277,9 @@ class PostExtender extends BaseExtender
         $Upload = new UploadHelper(new View());
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
+
+        $data['resources'] = [];
+
         for ($fileIndex = 1; $fileIndex < count($data['attached_files']); $fileIndex++) {
             $attachedFile = $data['attached_files'][$fileIndex];
             // Fetch data from attached_files
