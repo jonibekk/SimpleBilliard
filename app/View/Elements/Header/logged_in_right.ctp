@@ -55,15 +55,17 @@
                         </a>
                     </li>
                 <?php endif; ?>
-                <li class="glHeader-nav-dropdown-menu">
-                    <a class="glHeader-nav-dropdown-menu-link"
-                       href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
-                        <div class="glHeader-nav-dropdown-menu-link-left">
-                            <i class="material-icons">people</i>
-                        </div>
-                        <p class=""><?= __('Create a team') ?></p>
-                    </a>
-                </li>
+                <?php if (IS_DEMO != true): ?>
+                    <li class="glHeader-nav-dropdown-menu">
+                        <a class="glHeader-nav-dropdown-menu-link"
+                        href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
+                            <div class="glHeader-nav-dropdown-menu-link-left">
+                                <i class="material-icons">people</i>
+                            </div>
+                            <p class=""><?= __('Create a team') ?></p>
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
 
         </li>
