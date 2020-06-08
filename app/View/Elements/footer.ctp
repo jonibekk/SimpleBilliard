@@ -50,7 +50,7 @@
                     )
                     ?></li>
             </ul>
-            <p>&copy; <?php echo date("Y"); ?> ISAO</p>
+            <p>&copy; <?php echo date("Y"); ?> Colorkrew</p>
         </div>
     </div>
 </footer>

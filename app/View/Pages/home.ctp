@@ -322,7 +322,7 @@ $contactPageUrl = ($isLangEn ? '/en' : '').'/contact';
             <p><?= __("We hold Organizational reform seminars regularly. This seminar is very popular every time for <br>CEO’s, upper / lower management, HR Team, team management and those who want to improve their organizational capabilities.<br> Please feel free to join us at our next seminar!")?></p>
             <ul>
                 <li class="fadein"><p><?= __("I felt that it was ideal to go from fairness to a fun world and apply that mind to business.")?></p></li>
-                <li class="fadein"><p><?= __("The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that ISAO has achieved that ideal, I would like to observe how ISAO grows with this ideal moving forward.")?></p></li>
+                <li class="fadein"><p><?= __("The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward.")?></p></li>
                 <li class="fadein"><p><?= __("I started visualizing our evaluations at my company, so I would like to consider using Goalous for that as well.")?></p></li>
                 <li class="fadein"><p><?= __("It was very interesting! A lot of keywords came to mind that applied to my company as well.")?></p></li>
                 <li class="fadein"><p><?= __("I thought about our current internal corporate plans and personnel goal management and it made me want to make that process more enjoyable for all parties involved.")?></p></li>

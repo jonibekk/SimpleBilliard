@@ -4,7 +4,7 @@
 
 ## Overview
 
-ISAO Corporation (hereafter referred to as “the Company”), based on the recognition of the network solutions business, application services business, mobile service planning and operations, based on the fact that runs a network game management business, etc., is one of the most important issues on the management and on the business, to the appropriate management and thorough protection of information, we will implement the following initiatives.
+Colorkrew Inc. (hereafter referred to as “the Company”), based on the recognition of the network solutions business, application services business, mobile service planning and operations, based on the fact that runs a network game management business, etc., is one of the most important issues on the management and on the business, to the appropriate management and thorough protection of information, we will implement the following initiatives.
 
 1. Establishment of personal information protection management system
 the Company, JIS Q 15001: compliant personal information protection management system in 2006 to establish a (policy for the protection of personal information, system, planning, implementation, management system, including the identification and review of the operation), to carry out this, to maintain, we will continue to improve.
@@ -29,7 +29,7 @@ Enactment Date: October 01, 2004
 
 Last Revision Date : July 06, 2018   
 
-ISAO Corporation Representative Director　Keiji Nakamura
+Colorkrew Inc. Representative Director　Keiji Nakamura
 
 ----
 
@@ -150,7 +150,7 @@ Personal information supervising officer Masahiro Harasaki (Contact: similar to 
 
 CS Tower 7th Floor, 5-20-8 Asakusabashi, Taito-ku, Tokyo 111-0053, Japan    
 
-Ltd. ISAO personal information consultation
+Colorkrew Inc. personal information consultation
 
 Mail: contact@goalous.com
 
