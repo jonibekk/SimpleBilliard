@@ -53,7 +53,7 @@
     ],
     [
         'question' => __('What company manages Goalous?'),
-        'answer'   => __('ISAO, make and deliver "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
+        'answer'   => __('Colorkrew, make and deliver "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
     ],
 ]
 ?>

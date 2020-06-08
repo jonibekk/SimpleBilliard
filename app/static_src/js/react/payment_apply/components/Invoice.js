@@ -76,7 +76,7 @@ export default class Invoice extends Base {
               name="company_name"
               value={invoice.company_name}
               label={__("Company Name")}
-              placeholder={__("ISAO Corporation")}
+              placeholder={__("Colorkrew Inc.")}
               disabled={is_same_as_company_info}
               err_msg={errors_invoice.company_name}
               onChange={(e) => this.onChange(e, "invoice")}

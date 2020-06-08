@@ -290,7 +290,7 @@ class PagesController extends AppController
             null => __('Please select'),
             1    => __('Get more information'),
             2    => __('Get documentation'),
-            3    => __('Collaborate with ISAO'),
+            3    => __('Collaborate with Colorkrew'),
             4    => __('Give us an interview'),
             5    => __('Others'),
         ];

@@ -14,7 +14,7 @@
                 <input
                     type="text" id="PaymentsCompanyName" name="company_name" value="<?= h($invoice['company_name']) ?>"
                     required class="form-control"
-                    placeholder="<?= __("ISAO Corporation") ?>" maxlength="255">
+                    placeholder="<?= __("Colorkrew Inc.") ?>" maxlength="255">
             </div>
             <fieldset class="company-info-fieldset">
                 <legend class="company-info-legend"><?= __("Company Address") ?></legend>
