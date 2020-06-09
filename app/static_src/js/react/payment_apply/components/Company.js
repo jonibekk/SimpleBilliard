@@ -89,7 +89,7 @@ export default class Company extends Base {
             name="company_name"
             value={payment_setting.company_name}
             label={__("Company Name")}
-            placeholder={__("ISAO Corporation")}
+            placeholder={__("Colorkrew Inc.")}
             err_msg={errors_payment_setting.company_name}
             onChange={(e) => this.onChange(e, "payment_setting")}
           />
