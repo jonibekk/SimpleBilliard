@@ -178,8 +178,10 @@ class UsersController extends AppController
 
             if ($lang === LangHelper::LANG_CODE_JP) {
                 $this->request->data['User'] = [
-                    'email'           => 'demo.goalous@gmail.com',
-                    'password'        => 'DemoDemo01',
+                    // 'email'           => 'demo.goalous@gmail.com',
+                    // 'password'        => 'DemoDemo01',
+                    'email'           => 'fukuharan@isao.co.jp',
+                    'password'        => 'remiremi0407',
                     'installation_id' => 'no_value',
                     'app_version'     => 'no_value'
                 ];
