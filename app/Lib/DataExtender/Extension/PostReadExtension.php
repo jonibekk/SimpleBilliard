@@ -23,7 +23,6 @@ class PostReadExtension extends DataExtension
             throw new RuntimeException("Missing user ID");
         }
 
-
         $postIds = $this->filterKeys($keys);
 
         /** @var Post $Post */
@@ -32,10 +31,10 @@ class PostReadExtension extends DataExtension
         /* Deal as post is read if post creator is logged in user */
         $options = [
             'conditions' => [
-                'id' => $postIds,
+                'id'      => $postIds,
                 'user_id' => $this->userId,
             ],
-            'fields' => [
+            'fields'     => [
                 'id'
             ],
         ];
@@ -43,7 +42,7 @@ class PostReadExtension extends DataExtension
         $createdPostIds = Hash::extract($posts, '{n}.Post.id');
         $notCreatedPostIds = array_diff($postIds, $createdPostIds);
         // All posts are created by logged in user, finish processing
-        if(empty($notCreatedPostIds)) {
+        if (empty($notCreatedPostIds)) {
             return $createdPostIds;
         }
 
@@ -56,7 +55,7 @@ class PostReadExtension extends DataExtension
                 'post_id' => $notCreatedPostIds,
                 'user_id' => $this->userId,
             ],
-            'fields' => [
+            'fields'     => [
                 'post_id'
             ],
         ];
@@ -71,8 +70,7 @@ class PostReadExtension extends DataExtension
         array $extData,
         string $extDataKey,
         string $extEntryKey = ""
-    ): array
-    {
+    ): array {
         foreach ($parentData as $key => &$parentElement) {
             if (!is_int($key)) {
                 $parentData['is_read'] = in_array(Hash::get($parentData, $parentKeyName), $extData);

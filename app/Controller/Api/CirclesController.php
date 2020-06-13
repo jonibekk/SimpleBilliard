@@ -12,6 +12,8 @@ App::import('Service/Paging', 'SearchPostFileExtender');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('CircleMember', 'Model');
 App::uses('Circle', 'Model');
+App::uses('CheckedCircle', 'Model');
+App::uses('LatestUserConfirmCircle', 'Model');
 App::import('Service', 'PostDraftService');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Service/Redis', 'UnreadPostsRedisService');
@@ -532,6 +534,7 @@ class CirclesController extends BasePagingController
     private function getDefaultPostExtension()
     {
         return [
+            CirclePostExtender::EXTEND_CIRCLE_ID,
             CirclePostExtender::EXTEND_CIRCLE,
             CirclePostExtender::EXTEND_LIKE,
             CirclePostExtender::EXTEND_SAVED,
@@ -620,4 +623,131 @@ class CirclesController extends BasePagingController
         ];
     }
 
+    /**
+     * Regist a checked circle, if record don't exists.
+     *
+     * @param int $circleId
+     *
+     * @return BaseApiResponse
+     */
+    public function post_checkCircle(int $circleId)
+    {
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        $data = [
+			'user_id' => $userId,
+			'team_id' => $teamId,
+			'circle_id' => $circleId
+		];
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        $getCheckedCircleResult = $CheckedCircle->getCheckedCircle($userId, $teamId, $circleId);
+        if($getCheckedCircleResult === false) {
+            try {
+                $CheckedCircle->add($userId, $teamId, $circleId);
+            }
+            catch (Exception $e) {
+                GoalousLog::error("Faild to regist checked circle record.", [
+                    'message'   => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'user_id'   => $userId,
+                    'team_id'   => $teamId,
+                    'circle_id' => $circleId
+                ]);
+                throw $e;
+            }
+        }
+
+        return ApiResponse::ok()->getResponse();
+    }
+
+    /**
+     * Regist a latest_user_confirm_circles reord
+     *
+     * @param int $latestUserConfirmCircleId
+     * 
+     * @return BaseApiResponse
+     */
+    public function post_registerLatestUserConfirmCircle($latestUserConfirmCircleId)
+    {
+
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
+        $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
+
+        $resultGetCircleDiscoverTabOpendUser = $LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
+        if($resultGetCircleDiscoverTabOpendUser !== false) {
+            // this user already have a record
+            try {
+                $LatestUserConfirmCircle->update($userId, $teamId, $latestUserConfirmCircleId);
+            }
+            catch (Exception $e) {
+                GoalousLog::error("Faild to update LatestUserConfirmCircle record.", [
+                    'message'   => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'team_id'   => $teamId,
+                    'user_id'   => $userId,
+                    'latestUserConfirmCircleId' => $latestUserConfirmCircleId
+                ]);
+                throw $e;
+            }
+        }
+        else {
+            try {
+                $LatestUserConfirmCircle->add($userId, $teamId, $latestUserConfirmCircleId);
+            }
+            catch (Exception $e) {
+                GoalousLog::error("Faild to add LatestUserConfirmCircle record.", [
+                    'message'   => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'team_id'   => $teamId,
+                    'user_id'   => $userId,
+                    'latestUserConfirmCircleId' => $latestUserConfirmCircleId
+                ]);
+                throw $e;
+            }
+        }
+
+        return ApiResponse::ok()->getResponse();
+    }
+
+    /**
+     * Get bool about user's latest confirmed circle id.
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_isLaterLatestUserConfirmCircleId()
+    {
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var LatestUserConfirmCircle $LatestUserConfirmCircle */
+        $LatestUserConfirmCircle = ClassRegistry::init('LatestUserConfirmCircle');
+        $LatestUserConfirmCircleResult = $LatestUserConfirmCircle->getLatestUserConfirmCircleId($userId, $teamId);
+
+        if (!$LatestUserConfirmCircleResult) {
+            // this user don't have opened circle discover yet.
+            $data['result'] = false;
+            return ApiResponse::ok()->withData($data)->getResponse();
+        } else {
+            /** @var CircleService $CircleService */
+            $CircleService = ClassRegistry::init('CircleService');
+            $latestCircleId = $CircleService->getLatestCreatedCircleIdWithUnJoined($userId, $teamId);
+
+            if($latestCircleId > $LatestUserConfirmCircleResult) {
+                //this user have unconfirmed circle yet.
+                $data['result'] = false;
+            }
+            else {
+                $data['result'] = true;
+            }
+        }
+        return ApiResponse::ok()->withData($data)->getResponse();
+    }
 }

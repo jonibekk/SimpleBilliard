@@ -5,6 +5,7 @@ App::import('Service', 'SavedPostService');
 App::import('Service', 'ExperimentService');
 App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Model/Entity', 'CircleEntity');
 App::import('Model/Entity', 'CircleMemberEntity');
 App::uses('NotifyBiz', 'Controller/Component');
@@ -31,7 +32,7 @@ class CircleMemberService extends AppService
      *
      * @return array Array of circle models
      */
-    public function getUserCircles(int $userId, int $teamId, bool $publicOnlyFlag = true): array
+    public function getUserCircles(int $teamId, int $userId, bool $publicOnlyFlag = true): array
     {
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
@@ -56,7 +57,7 @@ class CircleMemberService extends AppService
         ];
 
         if ($publicOnlyFlag) {
-            $conditions['conditions']['Circle.public_flg'] = $publicOnlyFlag;
+            $conditions['conditions']['Circle.public_flg'] = true;
         }
 
         return Hash::extract($Circle->find('all', $conditions), "{n}.Circle");
@@ -324,6 +325,11 @@ class CircleMemberService extends AppService
             /** @var GlRedis $GlRedis */
             $GlRedis = ClassRegistry::init("GlRedis");
             $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
+            // Delete unread post cache
+            /** @var UnreadCirclePost $UnreadCirclePost */
+            $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+            $UnreadCirclePost->deleteCircleUser($circleId, $userId);
 
             $this->TransactionManager->commit();
         } catch (Exception $exception) {

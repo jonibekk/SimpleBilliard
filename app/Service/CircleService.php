@@ -6,6 +6,7 @@ App::uses('Circle', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('User', 'Model');
 App::uses('Post', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Lib/DataExtender', 'CircleExtender');
 App::import('Service/Request/Resource', 'CircleResourceRequest');
 App::import('Model/Entity', 'CircleEntity');
@@ -23,9 +24,9 @@ class CircleService extends AppService
     /**
      * Create circle
      *
-     * @param  array $data
-     * @param int    $myUserId
-     * @param array  $memberUserIds
+     * @param array $data
+     * @param int   $myUserId
+     * @param array $memberUserIds
      *
      * @return bool
      */
@@ -95,7 +96,7 @@ class CircleService extends AppService
     /**
      * Validate add member to circle
      *
-     * @param  int  $circleId
+     * @param int   $circleId
      * @param int   $myUserId
      * @param array $memberUserIds
      * @param bool  $isCreate
@@ -158,9 +159,9 @@ class CircleService extends AppService
      * - define experiment mode or not
      * - if exist this cache, use cache
      *
-     * @param  int     $circleId
-     * @param  int     $userId
-     * @param  boolean $isAdmin
+     * @param int     $circleId
+     * @param int     $userId
+     * @param boolean $isAdmin
      *
      * @return array
      */
@@ -209,8 +210,8 @@ class CircleService extends AppService
     /**
      * Validate create circle
      *
-     * @param  array $circle
-     * @param int    $userId
+     * @param array $circle
+     * @param int   $userId
      *
      * @return true|string
      */
@@ -238,7 +239,7 @@ class CircleService extends AppService
      * - Delete my circles cache
      *
      * @param int  $circleId
-     * @param  int $userId
+     * @param int  $userId
      * @param bool $isAdmin
      *
      * @return bool
@@ -302,8 +303,8 @@ class CircleService extends AppService
     /**
      * Join multiple circles
      *
-     * @param  array $circleIds
-     * @param  int   $userId
+     * @param array $circleIds
+     * @param int   $userId
      *
      * @return bool
      */
@@ -379,9 +380,10 @@ class CircleService extends AppService
             $circle = $Circle->getById($circleId);
             if (empty($circle)) {
                 throw new Exception(
-                    sprintf("The circle doesn't exit. circle_id:%d", $circleId)
+                    sprintf("The circle doesn't exist. circle_id:%d", $circleId)
                 );
             }
+            $this->TransactionManager->begin();
             // Remove circle member
             if (!$CircleMember->remove($circleId, $userId)) {
                 throw new Exception(
@@ -415,7 +417,14 @@ class CircleService extends AppService
             /** @var GlRedis $GlRedis */
             $GlRedis = ClassRegistry::init("GlRedis");
             $GlRedis->deleteMultiCircleMemberCount([$circleId]);
+
+            // Delete unread post cache
+            /** @var UnreadCirclePost $UnreadCirclePost */
+            $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
+            $UnreadCirclePost->deleteCircleUser($circleId, $userId);
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
+            $this->TransactionManager->rollback();
             CakeLog::error($e->getMessage());
             CakeLog::error($e->getTraceAsString());
             return false;
@@ -428,8 +437,8 @@ class CircleService extends AppService
      * Add members to circle
      * - bulk insert
      *
-     * @param  int   $circleId
-     * @param  array $memberUserIds
+     * @param int   $circleId
+     * @param array $memberUserIds
      *
      * @return bool
      */
@@ -506,22 +515,23 @@ class CircleService extends AppService
             ]
         ];
 
-        $circle = Hash::get($Circle->useType()->find('first', $condition),'Circle');
+        $circle = Hash::get($Circle->useType()->find('first', $condition), 'Circle');
 
         if (empty($circle)) {
             return [];
         }
 
-        $circle = $CircleExtender->extend($circle, $request->getUserId(), $request->getTeamId(), [CircleExtender::EXTEND_ALL]);
+        $circle = $CircleExtender->extend($circle, $request->getUserId(), $request->getTeamId(),
+            [CircleExtender::EXTEND_ALL]);
 
         return $circle;
     }
-
 
     /**
      * Get circle member count each circle
      *
      * @param array $circleIds
+     *
      * @return array
      */
     function getMemberCountEachCircle(array $circleIds): array
@@ -547,7 +557,6 @@ class CircleService extends AppService
 
         return $res;
     }
-
 
     /**
      * Search circles for mention by keyword
@@ -652,4 +661,48 @@ class CircleService extends AppService
         return $circleList > 0;
     }
 
+    /**
+     * Get the lastet created circle ID of this team with user unjoined
+     *
+     * @param int $teamid
+     * @param int $userId
+     *
+     * @return int circleId of latest created on the team
+     */
+    public function getLatestCreatedCircleIdWithUnJoined(int $userId, int $teamid): int
+    {
+        /** @var Circle $Circle */
+        $Circle = ClassRegistry::init('Circle');
+
+        $condition = [
+            'conditions' => [
+                'Circle.team_id' => $teamid,
+                'Circle.public_flg' => 1,
+                'Circle.del_flg' => 0,
+                'CircleMembers.user_id is null'
+            ],
+            'fields' => [
+                'Circle.id'
+            ],
+            'order' => [
+                'Circle.id' => 'desc'
+            ],
+            'joins' => [
+                [
+                    'type'  => 'LEFT',
+                    'table' => 'circle_members',
+                    'alias' => 'CircleMembers',
+                    'field' => 'Circle.id',
+                    'conditions' => [
+                        'CircleMembers.circle_id = Circle.id',
+                        'CircleMembers.user_id' => $userId,
+                    ],
+                ]
+            ],
+        ];
+
+        $circleId = Hash::extract($Circle->find('first', $condition), '{*}.id');
+
+        return $circleId[0];
+    }
 }

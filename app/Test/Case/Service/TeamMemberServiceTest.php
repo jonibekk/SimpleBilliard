@@ -25,7 +25,9 @@ class TeamMemberServiceTest extends GoalousTestCase
         'app.team',
         'app.team_member',
         'app.team_translation_language',
-        'app.mst_translation_language'
+        'app.mst_translation_language',
+        'app.cache_unread_circle_post',
+        'app.circle_member'
     );
 
     /**
@@ -187,7 +189,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertEquals("en", $defaultLanguage);
     }
 
-
     public function test_setDefaultTranslationLanguage_success()
     {
         /** @var TeamMember $TeamMember */
@@ -207,7 +208,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $TeamMemberService->setDefaultTranslationLanguage($teamId, $userId, "ms", false);
         $this->assertEquals("id", $TeamMember->getDefaultTranslationLanguage($teamId, $userId));
     }
-
 
     /**
      * @expectedException \Goalous\Exception\GoalousNotFoundException
@@ -320,9 +320,6 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertCount(1, $res2);
     }
 
-    /**
-     * @expectedException \Goalous\Exception\GoalousNotFoundException
-     */
     public function test_updateDelFlgToRevokeNotFoundUserId_failure()
     {
 
@@ -352,10 +349,9 @@ class TeamMemberServiceTest extends GoalousTestCase
         $this->assertNotNull($res1);
 
         // exeute target function
-        $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
+        $res2 = $this->TeamMemberService->updateDelFlgToRevoke($teamIdFailure, $emailFailure);
 
-        $res2 = $this->TeamMember->getIdByTeamAndUserId($teamId, $userId);
-        $this->assertNotNull($res2);
+        $this->assertFalse($res2);
     }
 
     /**

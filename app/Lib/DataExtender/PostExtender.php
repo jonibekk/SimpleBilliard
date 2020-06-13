@@ -50,7 +50,8 @@ class PostExtender extends BaseExtender
             $data = $UserExtension->extend($data, "user_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
-            switch ((int)$data['type']) {
+            $postType = (int)$data['type'];
+            switch ($postType) {
                 case Post::TYPE_NORMAL:
                     // TODO: depends on spec
                     break;
@@ -60,9 +61,30 @@ class PostExtender extends BaseExtender
                     $data = $CircleExtension->extend($data, "circle_id");
                     break;
                 case Post::TYPE_ACTION:
-                case Post::TYPE_KR_COMPLETE:
                 case Post::TYPE_CREATE_GOAL:
-                case Post::TYPE_GOAL_COMPLETE:
+                    if ($postType === Post::TYPE_ACTION) {
+                        /** @var KrProgressLog $KrProgressLog */
+                        $KrProgressLog = ClassRegistry::init('KrProgressLog');
+                        $krProgressLog = $KrProgressLog->getByActionResultId($data['action_result_id']);
+                        $data['kr_progress_log'] = !empty($krProgressLog) ? $KrProgressLog->getByActionResultId($data['action_result_id'])
+                            ->toArray() : null;
+
+                        /** @var AttachedFile $AttachedFile */
+                        $AttachedFile = ClassRegistry::init('AttachedFile');
+                        $attachedFiles = $AttachedFile->getActionResultResources($data['action_result_id']);
+                        /** @var ImageStorageService $ImageStorageService */
+                        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+                        $data['action_img_url'] = $ImageStorageService->getImgUrlEachSize($attachedFiles[0]->toArray(),
+                            'AttachedFile',
+                            'attached');
+                    }
+                    /** @var GoalExtension $GoalExtension */
+                    $GoalExtension = ClassRegistry::init('GoalExtension');
+                    $data = $GoalExtension->extend($data, "goal_id");
+                    /** @var KeyResult $KeyResult */
+                    $KeyResult = ClassRegistry::init('KeyResult');
+                    $topKr = $KeyResult->getTkrWithTyped($data['goal']['id']);
+                    $data['key_result'] = $topKr['KeyResult'];
                     /** @var ActionExtension $ActionExtension */
                     $ActionExtension = ClassRegistry::init('ActionExtension');
                     $data = $ActionExtension->extend($data, "action_result_id");
@@ -74,7 +96,34 @@ class PostExtender extends BaseExtender
                     /** @var GoalExtension $GoalExtension */
                     $GoalExtension = ClassRegistry::init('GoalExtension');
                     $data = $GoalExtension->extend($data, "action_result.goal_id");
+
+                    if ($postType == Enum\Model\Post\Type::CREATE_GOAL) {
+                        /** @var GoalMember $GoalMember */
+                        $GoalMember = ClassRegistry::init('GoalMember');
+                        $goalMember = $GoalMember->getUnique($userId, $data['goal_id']);
+
+                        $isLeader = !empty($goalMember) && $goalMember['GoalMember']['type'] == GoalMember::TYPE_OWNER;
+                        $isCollaborating = !empty($goalMember);
+
+                        $startDate = GoalousDateTime::createFromFormat('Y-m-d', $data['goal']['start_date']);
+                        $endDate = GoalousDateTime::createFromFormat('Y-m-d', $data['goal']['end_date']);
+
+                        $data['is_leader'] = $isLeader;
+                        //If now is within goal's period and goal is not made by current user, current user can collaborate
+                        $inThisTerm = GoalousDateTime::now()->between($startDate, $endDate);
+                        $data['can_collaborate'] = !$isLeader && !$isCollaborating && $inThisTerm;
+                        $data['is_goal_current_term'] = $inThisTerm;
+                        $data['is_collaborating'] = $isCollaborating;
+
+                        /** @var Follower $Follower */
+                        $Follower = ClassRegistry::init('Follower');
+                        $data['is_following'] = !empty($Follower->isExists($data['goal']['id'], $userId, $teamId));
+                    }
                     break;
+                    // These post types are not implemented yet
+//                case Post::TYPE_KR_COMPLETE:
+//                case Post::TYPE_GOAL_COMPLETE:
+//                    break;
             }
         }
         $isExtendingAllComment = in_array(self::EXTEND_COMMENTS_ALL, $extensions);
@@ -136,62 +185,10 @@ class PostExtender extends BaseExtender
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_POST_RESOURCES)) {
-
-            $data['resources'] = [];
-
-            /** @var PostService $PostService */
-            $PostService = ClassRegistry::init('PostService');
-
-            /** @var ImageStorageService $ImageStorageService */
-            $ImageStorageService = ClassRegistry::init('ImageStorageService');
-            /** @var VideoStreamService $VideoStreamService */
-            $VideoStreamService = ClassRegistry::init('VideoStreamService');
-
-            $Upload = new UploadHelper(new View());
-
-            $resources = $PostService->getResourcesByPostId($data['id']);
-
-            foreach ($resources as $resource) {
-                /** @var PostResourceEntity $resource */
-                $postResource = $resource->offsetGet('PostResource');
-                $attachedFile = $resource->offsetGet('AttachedFile');
-
-                // Joined table does not cast types even if using useEntity()
-                $attachedFile['file_type'] = (int)$attachedFile['file_type'];
-
-                // Fetch data from attached_files
-                if (in_array($postResource['resource_type'], [
-                    Enum\Model\Post\PostResourceType::IMAGE,
-                    Enum\Model\Post\PostResourceType::FILE,
-                    Enum\Model\Post\PostResourceType::FILE_VIDEO,
-                ])) {
-                    $attachedFile['file_url'] = '';
-                    $attachedFile['preview_url'] = '';
-                    // download url is common.
-                    // TODO: We should consider to preapare new API or using old processe;
-                    //  $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
-                    $attachedFile['download_url'] = '';
-
-                    if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
-                        $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile',
-                            'attached');
-                        $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::IMAGE;
-                        $data['resources'][] = $attachedFile;
-                    } else {
-                        $attachedFile['preview_url'] = $Upload->attachedFileUrl($attachedFile);
-                        $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::FILE;
-                        $data['resources'][] = $attachedFile;
-                    }
-                    continue;
-                };
-
-                // Fetch data from video stream
-                if ((int)$postResource['resource_type'] === Enum\Model\Post\PostResourceType::VIDEO_STREAM) {
-                    $isUserAgentSupportManifestRedirect = $VideoStreamService->isBrowserSupportManifestRedirects();
-                    $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'], !$isUserAgentSupportManifestRedirect);
-                    $data['resources'][] = $resourceVideoStream;
-                }
-
+            if ($data['type'] == Enum\Model\Post\Type::ACTION) {
+                $data = $this->extendResourceFromAttachedFiles($data);
+            } else {
+                $data = $this->extendResource($data);
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_LIKE)) {
@@ -207,7 +204,7 @@ class PostExtender extends BaseExtender
             $data = $PostSavedExtension->extend($data, "id", "post_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_READ)) {
-            /** @var PostSavedExtension $PostSavedExtension */
+            /** @var PostReadExtension $PostReadExtension */
             $PostReadExtension = ClassRegistry::init('PostReadExtension');
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extend($data, "id", "post_id");
@@ -273,5 +270,106 @@ class PostExtender extends BaseExtender
     public function extendMulti(array $data, int $userId, int $teamId, array $extensions = []): array
     {
         throw new RuntimeException("Please implement " . __METHOD__);
+    }
+
+    private function extendResourceFromAttachedFiles(array $data): array
+    {
+        $Upload = new UploadHelper(new View());
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+
+        $data['resources'] = [];
+
+        for ($fileIndex = 1; $fileIndex < count($data['attached_files']); $fileIndex++) {
+            $attachedFile = $data['attached_files'][$fileIndex];
+            // Fetch data from attached_files
+            if (in_array($attachedFile['file_type'], [
+                Enum\Model\Post\PostResourceType::IMAGE,
+                Enum\Model\Post\PostResourceType::FILE,
+                Enum\Model\Post\PostResourceType::FILE_VIDEO,
+            ])) {
+                $attachedFile['file_url'] = '';
+                $attachedFile['preview_url'] = '';
+                // download url is common.
+                // TODO: We should consider to preapare new API or using old processe;
+                //  $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
+                $attachedFile['download_url'] = '';
+
+                if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG && empty($attachedFile['display_file_list_flg'])) {
+                    $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile,
+                        'AttachedFile',
+                        'attached');
+                    $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::IMAGE;
+                    $data['resources'][] = $attachedFile;
+                } else {
+                    $attachedFile['preview_url'] = $Upload->attachedFileUrl($attachedFile);
+                    $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::FILE;
+                    $data['resources'][] = $attachedFile;
+                }
+                continue;
+            }
+        }
+        return $data;
+    }
+
+    private function extendResource(array $data): array
+    {
+        $data['resources'] = [];
+
+        /** @var PostService $PostService */
+        $PostService = ClassRegistry::init('PostService');
+
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        /** @var VideoStreamService $VideoStreamService */
+        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+
+        $Upload = new UploadHelper(new View());
+
+        $resources = $PostService->getResourcesByPostId($data['id']);
+
+        foreach ($resources as $resource) {
+            /** @var PostResourceEntity $resource */
+            $postResource = $resource->offsetGet('PostResource');
+            $attachedFile = $resource->offsetGet('AttachedFile');
+
+            // Joined table does not cast types even if using useEntity()
+            $attachedFile['file_type'] = (int)$attachedFile['file_type'];
+
+            // Fetch data from attached_files
+            if (in_array($postResource['resource_type'], [
+                Enum\Model\Post\PostResourceType::IMAGE,
+                Enum\Model\Post\PostResourceType::FILE,
+                Enum\Model\Post\PostResourceType::FILE_VIDEO,
+            ])) {
+                $attachedFile['file_url'] = '';
+                $attachedFile['preview_url'] = '';
+                // download url is common.
+                // TODO: We should consider to preapare new API or using old processe;
+                //  $file['download_url'] = '/posts/attached_file_download/file_id:' . $file['id'];
+                $attachedFile['download_url'] = '';
+
+                if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                    $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile',
+                        'attached');
+                    $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::IMAGE;
+                    $data['resources'][] = $attachedFile;
+                } else {
+                    $attachedFile['preview_url'] = $Upload->attachedFileUrl($attachedFile);
+                    $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::FILE;
+                    $data['resources'][] = $attachedFile;
+                }
+                continue;
+            };
+
+            // Fetch data from video stream
+            if ((int)$postResource['resource_type'] === Enum\Model\Post\PostResourceType::VIDEO_STREAM) {
+                $isUserAgentSupportManifestRedirect = $VideoStreamService->isBrowserSupportManifestRedirects();
+                $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'], !$isUserAgentSupportManifestRedirect);
+                $data['resources'][] = $resourceVideoStream;
+            }
+
+        }
+        return $data;
     }
 }

@@ -22,6 +22,7 @@ App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
 App::import('Service/Pusher', 'PostPusherService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
+App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
 
@@ -138,7 +139,7 @@ class PostsController extends BasePagingController
 
         /** @var NotifyBizComponent $NotifyBiz */
         $this->NotifyBiz->execSendNotify($notifyType, $postedPostId, null, null, $newPost['team_id'], $newPost['user_id']);
-        
+
         $this->NotifyBiz->execSendNotify(
                     NotifySetting::TYPE_FEED_MENTIONED_IN_POST,
                     $postedPostId,
@@ -147,7 +148,7 @@ class PostsController extends BasePagingController
                     $newPost['team_id'],
                     $newPost['user_id']
                 );
-         
+
 
         /** @var PostPusherService $PostPusherService */
         $PostPusherService = ClassRegistry::init('PostPusherService');
@@ -267,7 +268,11 @@ class PostsController extends BasePagingController
         $PostReadService = ClassRegistry::init('PostReadService');
 
         try {
-            $res = $PostReadService->multipleAdd($postsIds, $this->getUserId(), $this->getTeamId());
+            $res = $PostReadService->readPosts(
+                $postsIds,
+                $this->getUserId(),
+                $this->getTeamId()
+            );
         } catch (InvalidArgumentException $e) {
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         } catch (Exception $e) {
@@ -275,7 +280,14 @@ class PostsController extends BasePagingController
                 ->getResponse();
         }
 
-        return ApiResponse::ok()->withData(["posts_ids" => $res])->getResponse();
+        // Returning post model for mixpanel read data
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
+        $Post->current_team_id = $this->getTeamId();
+        $posts = $Post->getPostsById($res);
+        $posts = Hash::extract($posts, '{n}.Post');
+
+        return ApiResponse::ok()->withData(["posts" => $posts])->getResponse();
     }
 
     /**
@@ -364,20 +376,10 @@ class PostsController extends BasePagingController
             PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
 
-        // Make user read this post
-        // Decreasing unread count if this post haven't read yet.
-        if (!$post['is_read']) {
-            /** @var PostReadService $PostReadService */
-            $PostReadService = ClassRegistry::init('PostReadService');
-            $PostReadService->multipleAdd([$postId], $this->getUserId(), $this->getTeamId());
-            /** @var CircleMemberService $CircleMemberService */
-            $CircleMemberService = ClassRegistry::init('CircleMemberService');
-            $firstSharedCircle = reset($post['shared_circles']);
-            $CircleMemberService->decreaseCircleUnreadCount($firstSharedCircle['id'], $this->getUserId(), $this->getTeamId(), 1);
-        }
-
-
-        return ApiResponse::ok()->withData($post)->getResponse();
+        return ApiResponse::ok()->withData([
+            'type' => $post['type'],
+            'data' => $post
+        ])->getResponse();
     }
 
     public function post_likes(int $postId): CakeResponse
@@ -827,11 +829,21 @@ class PostsController extends BasePagingController
     {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
 
         $type = $Post->getPostType($postId);
 
         switch ($type) {
             case Post::TYPE_NORMAL:
+                $postCircles = $PostShareCircle->getShareCircleList($postId, $teamId);
+                $circleId = $postCircles[0];
+                if ($GlRedis->checkCircleInBlackList($circleId) == 1){
+                    break;
+                }
+
                 // This notification must not be sent to those who mentioned
                 // because we exlude them in NotifyBiz#execSendNotify.
                 $this->NotifyBiz->execSendNotify(
@@ -888,7 +900,31 @@ class PostsController extends BasePagingController
                 );
                 break;
             case Post::TYPE_CREATE_GOAL:
-                $this->notifyUserOfGoalComment($userId, $postId);
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_GOAL,
+                    $postId,
+                    $commentId,
+                    [],
+                    $teamId,
+                    $userId
+                );
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_COMMENTED_ON_COMMENTED_GOAL,
+                    $postId,
+                    $commentId,
+                    null,
+                    $teamId,
+                    $userId
+                );
+                
+                $this->NotifyBiz->execSendNotify(
+                    NotifySetting::TYPE_FEED_MENTIONED_IN_COMMENT,
+                    $postId,
+                    $commentId,
+                    $mentionedUserIds,
+                    $teamId,
+                    $userId
+                );
                 break;
         }
 

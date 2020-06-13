@@ -178,8 +178,6 @@ class Circle extends AppModel
 
     /**
      * Use findByKeyword method since API v2
-     * @deprecated
-     * $keyword にマッチする公開サークル一覧を返す
      *
      * @param       $keyword
      * @param int   $limit
@@ -187,6 +185,8 @@ class Circle extends AppModel
      *  'public_flg' 指定した場合は公開状態で絞り込む: default null
      *
      * @return array|null
+     * @deprecated
+     * $keyword にマッチする公開サークル一覧を返す
      */
     public function getCirclesByKeyword($keyword, $limit = 10, array $params = [])
     {
@@ -218,13 +218,18 @@ class Circle extends AppModel
      * $keyword にマッチする公開サークル一覧を返す
      *
      * @param string $keyword
-     * @param int $limit
-     * @param array $filterCircleIds
-     * @param bool $publicFlg
+     * @param int    $limit
+     * @param array  $filterCircleIds
+     * @param bool   $publicFlg
+     *
      * @return array
      */
-    public function findByKeyword(string $keyword, int $limit = 10, $filterCircleIds = [], bool $publicFlg = true) : array
-    {
+    public function findByKeyword(
+        string $keyword,
+        int $limit = 10,
+        $filterCircleIds = [],
+        bool $publicFlg = true
+    ): array {
         $keyword = trim($keyword);
         if (strlen($keyword) == 0) {
             return [];
@@ -243,13 +248,13 @@ class Circle extends AppModel
 
     /**
      * Use findByKeyword method since API v2
-     * @deprecated
-     * $keyword にマッチする公開サークル一覧を返す
      *
      * @param     $keyword
      * @param int $limit
      *
      * @return array|null
+     * @deprecated
+     * $keyword にマッチする公開サークル一覧を返す
      */
     public function getPublicCirclesByKeyword($keyword, $limit = 10)
     {
@@ -258,12 +263,12 @@ class Circle extends AppModel
 
     /**
      * Use findByKeyword method since API v2
-     * @deprecated
      *
      * @param     $keyword
      * @param int $limit
      *
      * @return array|null
+     * @deprecated
      */
     public function getSecretCirclesByKeyword($keyword, $limit = 10)
     {
@@ -664,12 +669,13 @@ class Circle extends AppModel
      * Get the team ID of this circle
      *
      * @param int $postId
+     *
      * @return int Team ID of the circle
      */
     public function getSharedSecretCircleByPostId(int $postId): array
     {
         $conditions = [
-            'joins'      => [
+            'joins' => [
                 [
                     'type'       => 'INNER',
                     'table'      => 'post_share_circles',
@@ -678,7 +684,7 @@ class Circle extends AppModel
                     'conditions' => [
                         'Circle.id = PostShareCircle.circle_id',
                         'PostShareCircle.post_id' => $postId,
-                        'Circle.public_flg' => false,
+                        'Circle.public_flg'       => false,
                         'PostShareCircle.del_flg' => false,
                     ],
                 ]

@@ -1,6 +1,7 @@
 <?php
 
-use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
+ use Goalous\Enum\DataType\DataType as DataType;
+ use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 
 App::uses('AppModel', 'Model');
 App::uses('Translation', 'Model');
@@ -173,6 +174,11 @@ class ActionResult extends AppModel
                 'rule' => ['validateKrProgress'],
             ],
         ],
+    ];
+
+    public $modelConversionTable = [
+        'team_id'          => DataType::INT,
+        'goal_id'          => DataType::INT,
     ];
 
     /**
@@ -391,6 +397,20 @@ class ActionResult extends AppModel
         ];
         $res = $this->find('count', $options);
         return (int)$res;
+    }
+
+    function getByKrIdAndCreatedFrom($krId, \Carbon\Carbon $periodFrom): array
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $krId,
+                'ActionResult.created >=' => $periodFrom->getTimestamp()
+            ],
+            'order'      => [
+                'created' => 'desc'
+            ],
+        ];
+        return $this->useType()->find('all', $options);
     }
 
     function actionEdit($data)

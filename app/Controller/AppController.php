@@ -18,6 +18,7 @@ App::uses('MobileAppVersion', 'Request');
 App::uses('UserAgent', 'Request');
 App::uses('UrlUtil', 'Util');
 App::uses('Goal', 'Model');
+App::uses('UnreadCirclePost', 'Model');
 App::import('Service', 'GoalApprovalService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TeamService');
@@ -542,10 +543,8 @@ class AppController extends BaseController
         $CirclePinService = ClassRegistry::init('CirclePinService');
         $myCircles = $CirclePinService->getMyCircleSortedList($this->Auth->user('id'), $this->current_team_id);
         $defaultCircle = $myCircles['default_circle'];
-        $regularCircles = $myCircles['regular_circle'];
 
         $this->set('defaultCircle', $defaultCircle);
-        $this->set('my_circles', $regularCircles);
     }
 
     public function _setCurrentCircle()
@@ -860,13 +859,13 @@ class AppController extends BaseController
             $hideGoalCreateGuidance = $this->Session->read('hide_goal_create_guidance') ?? false;
             $showGuidanceGoalCreate = !$hideGoalCreateGuidance;
             $countCurrentTermGoalUnachieved = $Goal->countSearch([
-                'term' => 'present',
+                'term'     => 'present',
                 'progress' => 'unachieved',
             ]);
         }
         $this->set([
-            'isGoalCreatedInCurrentTerm' => $isGoalCreatedInCurrentTerm,
-            'showGuidanceGoalCreate'     => $showGuidanceGoalCreate,
+            'isGoalCreatedInCurrentTerm'     => $isGoalCreatedInCurrentTerm,
+            'showGuidanceGoalCreate'         => $showGuidanceGoalCreate,
             'countCurrentTermGoalUnachieved' => $countCurrentTermGoalUnachieved,
         ]);
     }
@@ -907,12 +906,15 @@ class AppController extends BaseController
 
     public function _setCircleBadgeCount()
     {
-        $UnreadPostsKey = new UnreadPostsKey($this->Auth->user('id'), $this->current_team_id);
-        $UnreadPostsClient = new UnreadPostsClient();
+        /** @var UnreadCirclePost $UnreadCirclePost */
+        $UnreadCirclePost = ClassRegistry::init('UnreadCirclePost');
 
-        $UnreadPostsCount = count($UnreadPostsClient->read($UnreadPostsKey)->get());
+        $teamId = $this->current_team_id;
+        $userId = $this->Auth->user('id');
 
-        $this->set('circle_badge_cnt', $UnreadPostsCount);
+        $count = $UnreadCirclePost->countUserUnreadInTeam($teamId, $userId);
+
+        $this->set('circle_badge_cnt', $count);
     }
 
     function _getRedirectUrl()
@@ -1136,8 +1138,8 @@ class AppController extends BaseController
             }
             if (empty($newJwtAuth)) {
                 GoalousLog::critical('Failed to create jwt_token', [
-                    'users.id' => $userId,
-                    'teams.id' => $team_id,
+                    'users.id'     => $userId,
+                    'teams.id'     => $team_id,
                     'teams.id new' => $newTeamId,
                 ]);
             } else {
@@ -1298,13 +1300,16 @@ class AppController extends BaseController
     /**
      * Set list of joined circles with enabled notification for this user
      */
-    protected function _setNotifyingCircleList(){
+    protected function _setNotifyingCircleList()
+    {
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
         $circleIds = [];
 
-        $circles = $CircleMember->getCirclesWithNotificationFlg($this->Auth->user('id'), true);
+        $currentTeamId = $this->Session->read('current_team_id');
+
+        $circles = $CircleMember->getCirclesWithNotificationFlg($currentTeamId, $this->Auth->user('id'), true);
         /** @var CircleMemberEntity $circle */
         foreach ($circles as $circle) {
             $circleIds[] = strval($circle['circle_id']);
@@ -1319,6 +1324,7 @@ class AppController extends BaseController
      *
      * @param null $view
      * @param null $layout
+     *
      * @return CakeResponse
      */
     public function render($view = null, $layout = null)

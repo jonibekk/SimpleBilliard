@@ -373,7 +373,7 @@ class Term extends AppModel
                 }
             }
             if (isset($this->currentTerm['end_date']) && !empty($this->currentTerm['end_date'])) {
-                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY));
+                $this->nextTerm = $this->getTermDataByDate(AppUtil::dateYmd(strtotime($this->currentTerm['end_date']) + DAY), false);
                 if ($this->nextTerm && $withCache) {
                     $duration = $this->makeDurationOfCache($this->currentTerm['end_date'], $timezone);
                     Cache::set('duration', $duration, 'team_info');
@@ -712,17 +712,20 @@ class Term extends AppModel
     /**
      * return term data from date string
      *
-     * @param string $date
-     * @param bool   $enableErrorLog
+     * @param string  $date
+     * @param bool    $enableErrorLog
+     * @param integer $teamId
      *
      * @return array|null
      */
-    public function getTermDataByDate(string $date, bool $enableErrorLog = true)
+    public function getTermDataByDate(string $date, bool $enableErrorLog = true, $teamId = null)
     {
+        $currentTeamId = $teamId ? $teamId : $this->current_team_id;
+        $this->Team->current_team_id = $teamId;
         $timezone = $this->Team->getTimezone();
         $options = [
             'conditions' => [
-                'team_id'       => $this->current_team_id,
+                'team_id'       => $currentTeamId,
                 'start_date <=' => $date,
                 'end_date >='   => $date,
             ]

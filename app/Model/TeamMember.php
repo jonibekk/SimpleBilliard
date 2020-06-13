@@ -2616,4 +2616,34 @@ class TeamMember extends AppModel
 
         $this->save($newData, false);
     }
+
+    /**
+     * If user's status is USER_STATUS_ACTIVE, return true.
+     *
+     * @param int    $teamId
+     * @param int    $userId
+     *
+     * @return boolean
+     */
+    public function isStatusActive(int $teamId, int $userId)
+    {
+        $option = [
+            'conditions' => [
+                'team_id' => $teamId,
+                'user_id' => $userId,
+                'status'  => self::USER_STATUS_ACTIVE
+            ],
+            'fields'     => [
+                'status'
+            ]
+        ];
+
+        $teamMemberStatus = $this->find('first', $option);
+
+        if(empty($teamMemberStatus)) {
+            return false;
+        }
+
+        return true;
+    }
 }

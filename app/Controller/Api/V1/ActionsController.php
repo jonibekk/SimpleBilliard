@@ -102,16 +102,19 @@ class ActionsController extends ApiController
         $goalId = Hash::get($data, 'ActionResult.goal_id');
         $goal = $GoalService->get($goalId);
         if (empty($goal)) {
+            GoalousLog::warning('Goal not exists', $data);
             return $this->_getResponseBadFail(__("Not exist"));
         }
 
         // 画像アップロードチェック
         $fileIds = $this->request->data('file_id');
         if (empty($fileIds) || !is_array($fileIds)) {
+            GoalousLog::warning('File id not exists in data', $data);
             return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         $file = $this->GlRedis->getPreUploadedFile($this->current_team_id, $this->my_uid, reset($fileIds));
         if (empty($file)) {
+            GoalousLog::warning('File id not exists in redis', $data);
             return $this->_getResponseBadFail(__("Please reselect an image."));
         }
         //バリデーションの為に一時的に保存する
@@ -121,6 +124,8 @@ class ActionsController extends ApiController
         unlink($file['info']['tmp_name']);
 
         if ($imgValidateRes['error']) {
+            GoalousLog::warning('image validate error', $imgValidateRes);
+            GoalousLog::warning('request data', $data);
             return $this->_getResponseBadFail($imgValidateRes['msg']);
         }
 
@@ -134,6 +139,8 @@ class ActionsController extends ApiController
                 $errMsgs[$field] = array_shift($errors);
             }
 
+            GoalousLog::warning('image validate error', $errMsgs);
+            GoalousLog::warning('request data', $data);
             return $this->_getResponseValidationFail($errMsgs);
         }
 
@@ -142,6 +149,8 @@ class ActionsController extends ApiController
         $krId = Hash::get($data, 'ActionResult.key_result_id');
         $kr = $KeyResultService->get($krId);
         if ($krBeforeValue != Security::hash(Hash::get($kr, 'current_value'))) {
+            GoalousLog::warning('KR progress error', $kr);
+            GoalousLog::warning('request data', $data);
             return $this->_getResponseConflict("KR progress has been updated by another user. Please try again.");
         }
 

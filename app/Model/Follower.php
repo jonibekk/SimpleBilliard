@@ -148,13 +148,13 @@ class Follower extends AppModel
         return $res;
     }
 
-    function isExists($goal_id)
+    function isExists($goal_id, $user_id = null, $team_id = null)
     {
         $options = [
             'conditions' => [
-                'user_id' => $this->my_uid,
+                'user_id' => $user_id ? $user_id : $this->my_uid,
                 'goal_id' => $goal_id,
-                'team_id' => $this->current_team_id,
+                'team_id' => $team_id ? $team_id : $this->current_team_id,
             ],
             'fields'     => [
                 'id'

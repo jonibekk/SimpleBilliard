@@ -448,7 +448,7 @@ class KeyResultService extends AppService
             // TKRかつ紐づくゴールが認定対象の場合、再申請のステータスに変更
             $goalId = Hash::get($kr, 'goal_id');
             if (Hash::get($kr, 'tkr_flg') && $GoalMemberService->isApprovableByGoalId($goalId, $userId)) {
-                $goalMemberId = Hash::get($GoalMember->getUnique($userId, $goalId, false), 'GoalMember.id');
+                $goalMemberId = Hash::get($GoalMember->getUnique($userId, $goalId), 'GoalMember.id');
                 if (empty($goalMemberId)) {
                     throw new Exception(sprintf("Not exist goal_member. data:%s"
                         , var_export(compact('goalId', 'userId'), true)));
@@ -491,12 +491,12 @@ class KeyResultService extends AppService
      *
      * @return int
      */
-    function countMine(): int
+    function countMine($goalId = null, bool $includeComplete = false, $userId = null): int
     {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
-        $resCount = $KeyResult->countMine();
+        $resCount = $KeyResult->countMine($goalId, $includeComplete, $userId);
         return $resCount;
 
         // キャッシュ管理がなされてないためコメントアウト

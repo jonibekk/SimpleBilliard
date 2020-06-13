@@ -2,14 +2,22 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
+App::import('Service/Paging', 'RecentCircleListPagingService');
+App::import('Service/Paging', 'CirclePostUnreadPagingService');
+App::import('Service/Paging', 'JoinedCirclePostPagingService');
 App::import('Service/Paging', 'UnreadCircleListPagingService');
+App::import('Service/Paging', 'FeedPostPagingService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
+App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
+App::import('Service', 'AuthenticationSessionDataService');
+App::import('Service', 'GoalService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
+App::uses('CheckedCircle', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
@@ -19,10 +27,18 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * User: StephenRaharja
  * Date: 2018/06/29
  * Time: 11:47
+ * @property NotificationComponent $Notification
+ * @property FlashComponent $Flash
  */
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
+    public $components = [
+        'Session',
+        'Flash',
+        'Notification',
+    ];
 
     /**
      * Get list of circles that an user is joined in
@@ -135,7 +151,164 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(compact('data'))->getResponse();
+        $flashMessage = $this->Notification->readFlash();
+        $data['flash'] = [];
+        if (!empty($flashMessage)) {
+            switch ($flashMessage['params']['type'] ?? 'error') {
+                case 'success':
+                    $data['flash']['success'] = $flashMessage['message'];
+                    break;
+                case 'error':
+                    $data['flash']['error'] = $flashMessage['message'];
+                    break;
+            }
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => $data,
+        ])->getResponse();
+    }
+
+    public function get_goal_status()
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init("GoalService");
+        $canActionGoals = !empty($GoalService->findActionables($this->getUserId()));
+        if ($canActionGoals) {
+            return ApiResponse::ok()
+                ->withBody([
+                    'data' => [
+                        'can_action' => true,
+                    ]
+                ])->getResponse();
+        }
+
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        /** @var AuthenticationSessionDataService $AuthenticationSessionDataService */
+        $AuthenticationSessionDataService = ClassRegistry::init("AuthenticationSessionDataService");
+        $sessionData = $AuthenticationSessionDataService->read($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId());
+        if (empty($sessionData)) {
+            $sessionData = new AccessTokenData();
+        }
+
+        $countCurrentTermGoalUnachieved = $Goal->countSearch([
+            'term'     => 'present',
+            'progress' => 'unachieved',
+        ], $this->getTeamId());
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'can_action' => $canActionGoals,
+                    'show_goal_create_guidance' => !$sessionData->isHideGoalCreateGuidance(),
+                    'count_current_term_goals' => $countCurrentTermGoalUnachieved
+                ]
+            ])->getResponse();
+    }
+
+    public function get_kr_progress()
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init('KrProgressLog');
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        /** @var GoalExtension $UserExtension */
+        $GoalExtension = ClassRegistry::init('GoalExtension');
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $Term->Team->current_team_id = $this->getTeamId();
+        $Term->Team->my_uid = $this->getUserId();
+        $Term->current_team_id = $this->getTeamId();
+        $Term->my_uid = $this->getUserId();
+        $currentTerm = $Term->getCurrentTermData();
+
+        $now = GoalousDateTime::now();
+        $periodFrom = $now->copy()->startOfDay()->subDays(7);
+        $periodTo = $now->copy();
+
+        $goalIdSelected = intval($this->request->query('goal_id'));
+        $limit = intval($this->request->query('limit'));
+
+        // Find KeyResult ordered by actioned in recent
+        $keyResults = $KeyResult->findForKeyResultList(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $currentTerm,
+            $goalIdSelected,
+            $limit
+        );
+
+        $krs = [];
+        foreach ($keyResults as $index => $keyResult) {
+            // Find action that has filtered by period
+            $actionResults = $ActionResult->getByKrIdAndCreatedFrom($keyResult['KeyResult']['id'], $periodFrom);
+            $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
+
+            // Total action progress in period
+            $changeValueTotal = 0;
+            foreach ($actionResults as $i => $actionResult) {
+                $krProgressLog = $KrProgressLog->getByActionResultId($actionResult['id'])->toArray();
+                $actionResults[$i]['kr_progress_log'] = $krProgressLog;
+                $changeValueTotal += $krProgressLog['change_value'];
+
+                // Need a post_id to make link to action detail post.
+                $post = $Post->getByActionResultId($actionResult['id'], $this->getTeamId());
+                $actionResults[$i]['post_id'] = $post['Post']['id'];
+                $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
+            }
+
+            $keyResult['KeyResult'] = $GoalExtension->extend($keyResult['KeyResult'], 'goal_id');
+
+            array_push($krs, array_merge(
+                $keyResult['KeyResult'],
+                [
+                    'progress_log_recent_total' => [
+                        'change_value' => $changeValueTotal,
+                    ],
+                    'action_results' => $actionResults,
+                ]
+            ));
+        }
+
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'period_kr_collection' => [
+                        'from' => $periodFrom->getTimestamp(),
+                        'to' => $periodTo->getTimestamp(),
+                    ],
+                    'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
+                    'krs' => $krs,
+                    'goals' => $GoalService->findNameListAsMember($this->getUserId(), $currentTerm['start_date'], $currentTerm['end_date']),
+                ],
+            ])->getResponse();
+    }
+
+    /**
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function put_hide_goal_create_guidance()
+    {
+        /** @var AuthenticationSessionDataService $AuthenticationSessionDataService */
+        $AuthenticationSessionDataService = ClassRegistry::init("AuthenticationSessionDataService");
+        $sessionData = $AuthenticationSessionDataService->read($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId());
+        $sessionData->withHideGoalCreateGuidance(true);
+        $AuthenticationSessionDataService->write($this->getUserId(), $this->getTeamId(), $this->getJwtAuth()->getJwtId(), $sessionData);
+
+        return ApiResponse::ok()->withBody([])->getResponse();
     }
 
     /**
@@ -143,15 +316,14 @@ class MeController extends BasePagingController
      */
     public function get_all_unread_posts()
     {
-        $unreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
-        $unreadPostsClient = new UnreadPostsClient();
-
-        $data = $unreadPostsClient->read($unreadPostsKey)->get(true);
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+        $data = $UnreadCirclePostService->getGrouped($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
 
-    public function get_all_unread_circles()
+    public function get_recent_circles()
     {
         try {
             $pagingRequest = $this->getPagingParameters();
@@ -159,15 +331,45 @@ class MeController extends BasePagingController
             return ErrorResponse::badRequest()->withException($e)->getResponse();
         }
 
-        /** @var UnreadCircleListPagingService $UnreadCircleListPagingService */
-        $UnreadCircleListPagingService = ClassRegistry::init('UnreadCircleListPagingService');
+        /** @var RecentCircleListPagingService $RecentCircleListPagingService */
+        $RecentCircleListPagingService = ClassRegistry::init('RecentCircleListPagingService');
 
-        $data = $UnreadCircleListPagingService->getDataWithPaging(
+        $data = $RecentCircleListPagingService->getDataWithPaging(
             $pagingRequest,
             $this->getPagingLimit(15),
             [CircleExtender::EXTEND_MEMBER_INFO]);
 
-        return ApiResponse::ok()->withData($data)->getResponse();
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    public function get_unread_posts()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var CirclePostUnreadPagingService $CirclePostUnreadPagingService */
+        $CirclePostUnreadPagingService = ClassRegistry::init('CirclePostUnreadPagingService');
+        $data = $CirclePostUnreadPagingService->getDataWithPaging($pagingRequest);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
+    }
+
+    public function get_posts()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var JoinedCirclePostPagingService $JoinedCirclePostPagingService */
+        $JoinedCirclePostPagingService = ClassRegistry::init('JoinedCirclePostPagingService');
+        $data = $JoinedCirclePostPagingService->getDataWithPaging($pagingRequest, 15, [CirclePostExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
     /**
@@ -175,12 +377,34 @@ class MeController extends BasePagingController
      */
     public function delete_all_unread_posts()
     {
-        $UnreadPostsKey = new UnreadPostsKey($this->getUserId(), $this->getTeamId());
-        $UnreadPostsClient = new UnreadPostsClient();
+        /** @var UnreadCirclePostService $UnreadCirclePostService */
+        $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
 
-        $UnreadPostsClient->del($UnreadPostsKey);
+        $UnreadCirclePostService->deleteUserCacheInTeam($this->getTeamId(), $this->getUserId());
 
         return ApiResponse::ok()->getResponse();
+    }
+
+    /**
+     * Get action & goal feed for homepage
+     */
+    public function get_feed()
+    {
+        try {
+            $pagingRequest = $this->getPagingParameters();
+        } catch (Exception $e) {
+            return ErrorResponse::badRequest()->withException($e)->getResponse();
+        }
+
+        /** @var FeedPostPagingService $FeedPostPagingService */
+        $FeedPostPagingService = ClassRegistry::init('FeedPostPagingService');
+
+        $data = $FeedPostPagingService->getDataWithPaging(
+            $pagingRequest,
+            $this->getPagingLimit(),
+            [FeedPostExtender::EXTEND_ALL]);
+
+        return ApiResponse::ok()->withBody($data)->getResponse();
     }
 
     /**
@@ -259,5 +483,34 @@ class MeController extends BasePagingController
         ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    /**
+     * Get checked circle ids
+     *
+     * @return ApiResponse|BaseApiResponse
+     */
+    public function get_checkedCircleIds()
+    {
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        /** @var CheckedCircle $CheckedCircle */
+        $CheckedCircle = ClassRegistry::init('CheckedCircle');
+
+        try {
+            $CheckedCircleIds = $CheckedCircle->getCheckedCircleIds($userId, $teamId);
+        }
+        catch (Exception $e) {
+            GoalousLog::error("Faild to get checked circle ids.", [
+                'message'   => $e->getMessage(),
+                'trace'     => $e->getTraceAsString(),
+                'team_id'   => $teamId,
+                'circle_id' => $circleId
+            ]);
+            throw $e;
+        }
+
+        return ApiResponse::ok()->withData($CheckedCircleIds)->getResponse();
     }
 }

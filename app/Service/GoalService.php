@@ -29,6 +29,7 @@ App::import('Service', 'KeyResultService');
 App::import('Service', 'KrValuesDailyLogService');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
+App::uses('CollaborateStartRequest', 'Service/Request/Goal');
 
 use Goalous\Enum\Csv\GoalAndKrs as GoalAndKrs;
 /**
@@ -1509,7 +1510,7 @@ class GoalService extends AppService
      *
      * @return array
      */
-    function findActionables(): array
+    function findActionables(int $userId = null): array
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -1521,7 +1522,7 @@ class GoalService extends AppService
 //        }
 
         // キャッシュが存在しない場合はDBにqueryを投げてキャッシュに保存する
-        $actionableGoals = $Goal->findActionables($Goal->my_uid);
+        $actionableGoals = $Goal->findActionables($userId ?? $Goal->my_uid);
         $actionableGoals = Hash::combine($actionableGoals, '{n}.id', '{n}.name');
 
 //        Cache::write($Goal->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), $actionableGoals, 'user_data');
@@ -1878,5 +1879,92 @@ class GoalService extends AppService
             }
         }
         return $conditions;
+    }
+
+    public function collaborateStart(CollaborateStartRequest $r)
+    {
+        /** @var Goal $Goal */
+        $Goal = ClassRegistry::init('Goal');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $goal = $Goal->findById($r->getGoalId());
+        if (empty($goal)) {
+            throw new RuntimeException('Goal not found');
+        }
+        if ($GoalMember->isLeader($r->getGoalId(), $r->getUserId())) {
+            throw new RuntimeException('User is a leader of goal');
+        }
+        if ($Goal->isCompleted($r->getGoalId())) {
+            throw new RuntimeException('Goal is already completed');
+        }
+        if ($Goal->isFinished($r->getGoalId(), $r->getTeamId())) {
+            throw new RuntimeException('Goal is already finished');
+        }
+        if ($GoalMember->isCollaborated($r->getGoalId(), $r->getUserId())) {
+            throw new RuntimeException('Already collaborated');
+        }
+
+        $GoalMember->create();
+
+        if (!$GoalMember->save([
+            'team_id' => $r->getTeamId(),
+            'goal_id' => $r->getGoalId(),
+            'user_id' => $r->getUserId(),
+            'type' => $r->getType()->getValue(),
+            'role' => $r->getRole(),
+            'description' => $r->getDescription(),
+            'priority' => $r->getPriority(),
+            'approval_status' => $r->getApprovalStatus()->getValue(),
+            'is_wish_approval' => $r->isWishApproval(),
+            'is_target_evaluation' => $r->isTargetEvaluation(),
+        ])) {
+            throw new RuntimeException('Failed to save goal_members');
+        }
+
+        // Success to collaborate goal
+        $goalMemberId = $GoalMember->getLastInsertID();
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        // ダッシュボードのKRキャッシュ削除
+        Cache::delete($GlRedis->getCacheKey(CACHE_KEY_KRS_IN_DASHBOARD, true), 'user_data');
+        Cache::delete($GlRedis->getCacheKey(CACHE_KEY_MY_KR_COUNT, true), 'user_data');
+        // アクション可能ゴール一覧キャッシュ削除
+        Cache::delete($GlRedis->getCacheKey(CACHE_KEY_MY_ACTIONABLE_GOALS, true), 'user_data');
+        // ユーザページのマイゴール一覧キャッシュ削除
+        Cache::delete($GlRedis->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+
+        $coachId = $TeamMember->getCoachUserIdByMemberUserId($r->getUserId());
+        $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
+        if (!empty($coachId) && $goalLeaderUserId != $coachId) {
+            $r->getNotifyBiz()->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $r->getGoalId());
+        }
+
+        $isOver1Priority = 1 < $r->getPriority();
+        if (!empty($coachId) && $isOver1Priority && $Goal->isPresentTermGoal($r->getGoalId())) {
+            $this->_sendNotifyToCoach($r->getNotifyBiz(), $r->getUserId(), $goalMemberId, NotifySetting::TYPE_COACHEE_COLLABORATE_GOAL);
+            Cache::delete($GlRedis->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coachId),
+                'user_data');
+        }
+        return true;
+    }
+
+    private function _sendNotifyToCoach(NotifyBizComponent $notifyBizComponent, $userId, $modelId, $notifyType)
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $coachId  = $TeamMember->getCoachId($userId, CakeSession::read('current_team_id'));
+        if (!$coachId) {
+            return;
+        }
+        $notifyBizComponent->execSendNotify($notifyType, $modelId, null, $coachId);
+    }
+
+    public function collaborateStop(string $goalId)
+    {
+
     }
 }

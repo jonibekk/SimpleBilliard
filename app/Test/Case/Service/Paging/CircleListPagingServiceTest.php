@@ -224,4 +224,21 @@ class CircleListPagingServiceTest extends GoalousTestCase
         $this->assertEquals(7, $res['count']);
     }
 
+    /**
+     * filter new created circle from unjoined circle
+     */
+    public function test_getCircleListWithCursor_newCreated()
+    {
+        $userId = 13;
+        $teamId = 1;
+        $pagingRequest = new PagingRequest();
+        $pagingRequest->setCurrentTeamId($teamId);
+        $pagingRequest->setCurrentUserId($userId);
+        $pagingRequest->addQueries(['joined' => false]);
+        $pagingRequest->addQueries(['newcreated' => true]);
+        $res = $this->CircleListPagingService->getDataWithPaging($pagingRequest, 2);
+
+        $this->assertCount(0, $res['data']);
+    }
+
 }

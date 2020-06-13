@@ -9,6 +9,7 @@ App::import('Service', 'VideoStreamService');
 App::import('Service', 'SearchPostFileService');
 App::import('Lib/Storage', 'UploadedFile');
 App::import('Service', 'PostResourceService');
+App::import('Service', 'UnreadCirclePostService');
 App::uses('Circle', 'Model');
 App::uses('PostShareUser', 'Model');
 App::uses('PostShareCircle', 'Model');
@@ -25,6 +26,7 @@ App::uses('User', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
+App::uses('ActionResult', 'Model');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model/Entity', 'PostFileEntity');
 App::import('Model/Entity', 'CircleEntity');
@@ -509,8 +511,7 @@ class PostService extends AppService
         int $userId,
         int $teamId,
         array $files = []
-    ): PostEntity
-    {
+    ): PostEntity {
         /** @var Post $Post */
         $Post = ClassRegistry::init('Post');
         /** @var PostShareCircle $PostShareCircle */
@@ -587,15 +588,6 @@ class PostService extends AppService
                 ]);
                 throw new RuntimeException('Error on adding post: ' . $errorMessage);
             }
-            // Update unread post numbers if specified sharing circle
-            if (false === $CircleMember->incrementUnreadCount([$circleId], true, $teamId, $userId)) {
-                GoalousLog::error($errorMessage = 'failed increment unread count', [
-                    'post.id'    => $postId,
-                    'circles.id' => $circleId,
-                    'teams.id'   => $teamId,
-                ]);
-                throw new RuntimeException('Error on adding post: ' . $errorMessage);
-            }
             // Update last_post_created in circle
             if (false === $Circle->updateLatestPosted($circleId)) {
                 GoalousLog::error($errorMessage = 'failed updating last post created', [
@@ -610,6 +602,9 @@ class PostService extends AppService
             if (!empty($files)) {
                 $this->saveFiles($postId, $userId, $teamId, $files, false, 0, $circleId);
             }
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->addUnread($teamId, $circleId, $postId, $userId);
 
             $this->TransactionManager->commit();
 
@@ -623,10 +618,6 @@ class PostService extends AppService
         if ($TranslationService->canTranslate($teamId)) {
             $TranslationService->createDefaultTranslation($teamId, TranslationContentType::CIRCLE_POST(), $postId);
         }
-
-        /** @var UnreadPostsRedisService $UnreadPostsRedisService */
-        $UnreadPostsRedisService = ClassRegistry::init('UnreadPostsRedisService');
-        $UnreadPostsRedisService->addToAllCircleMembers($circleId, $postId, $userId);
 
         return $savedPost;
     }
@@ -655,61 +646,67 @@ class PostService extends AppService
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
-        $circleOption = [
-            'conditions' => [
-                'PostShareCircle.post_id' => $postId,
-            ],
-            'fields'     => [
-                'Circle.id',
-                'Circle.public_flg',
-                'Circle.team_all_flg'
-            ],
-            'table'      => 'circles',
-            'alias'      => 'Circle',
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'conditions' => [
-                        'Circle.id = PostShareCircle.circle_id',
-                    ],
-                    'table'      => 'post_share_circles',
-                    'alias'      => 'PostShareCircle',
-                    'field'      => 'PostShareCircle.circle_id'
-                ]
-            ]
-        ];
-
-        /** @var CircleEntity[] $circles */
-        $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
-
-        if (empty($circles)) {
-            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
-        }
-
-        $circleArray = [];
-
-        foreach ($circles as $circle) {
-            $circleArray[] = $circle['id'];
-            //If circle is public or team_all, return true
-            if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+        switch ($post['Post']['type']) {
+            case Enum\Model\Post\Type::ACTION:
+            case Enum\Model\Post\Type::CREATE_GOAL:
                 return true;
-            }
+            case Enum\Model\Post\Type::NORMAL:
+                $circleOption = [
+                    'conditions' => [
+                        'PostShareCircle.post_id' => $postId,
+                    ],
+                    'fields'     => [
+                        'Circle.id',
+                        'Circle.public_flg',
+                        'Circle.team_all_flg'
+                    ],
+                    'table'      => 'circles',
+                    'alias'      => 'Circle',
+                    'joins'      => [
+                        [
+                            'type'       => 'INNER',
+                            'conditions' => [
+                                'Circle.id = PostShareCircle.circle_id',
+                            ],
+                            'table'      => 'post_share_circles',
+                            'alias'      => 'PostShareCircle',
+                            'field'      => 'PostShareCircle.circle_id'
+                        ]
+                    ]
+                ];
+
+                /** @var CircleEntity[] $circles */
+                $circles = $Circle->useType()->useEntity()->find('all', $circleOption);
+
+                if (empty($circles)) {
+                    throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+                }
+
+                $circleArray = [];
+
+                foreach ($circles as $circle) {
+                    $circleArray[] = $circle['id'];
+                    //If circle is public or team_all, return true
+                    if (!$mustBelong && ($circle['public_flg'] || $circle['team_all_flg'])) {
+                        return true;
+                    }
+                }
+
+                $circleMemberOption = [
+                    'conditions' => [
+                        'CircleMember.circle_id' => $circleArray,
+                        'CircleMember.user_id'   => $userId,
+                        'CircleMember.del_flg'   => false
+                    ],
+                    'table'      => 'circle_members',
+                    'alias'      => 'CircleMember',
+                    'fields'     => 'CircleMember.circle_id'
+                ];
+
+                $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
+
+                return $circleList > 0;
         }
-
-        $circleMemberOption = [
-            'conditions' => [
-                'CircleMember.circle_id' => $circleArray,
-                'CircleMember.user_id'   => $userId,
-                'CircleMember.del_flg'   => false
-            ],
-            'table'      => 'circle_members',
-            'alias'      => 'CircleMember',
-            'fields'     => 'CircleMember.circle_id'
-        ];
-
-        $circleList = (int)$CircleMember->find('count', $circleMemberOption) ?? 0;
-
-        return $circleList > 0;
     }
 
     /**
@@ -870,18 +867,19 @@ class PostService extends AppService
                 'del_flg' => false
             ]
         ];
-        if (empty($Post->find('first', $postCondition))) {
+        $post = $Post->find('first', $postCondition);
+        if (empty($post)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
         }
 
         $modelsToDelete = [
-            'PostDraft'       => 'post_id',
-            'PostLike'        => 'post_id',
-            'PostMention'     => 'post_id',
-            'PostRead'        => 'post_id',
-            'PostShareCircle' => 'post_id',
-            'PostShareUser'   => 'post_id',
-            'Post'            => 'Post.id'
+            'PostDraft'        => 'post_id',
+            'PostLike'         => 'post_id',
+            'PostMention'      => 'post_id',
+            'PostRead'         => 'post_id',
+            'PostShareCircle'  => 'post_id',
+            'PostShareUser'    => 'post_id',
+            'Post'             => 'Post.id'
         ];
 
         try {
@@ -898,6 +896,17 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
+            
+            // Delete action results
+            /** @var ActionResult $ActionResult*/
+            if ($post['Post']['type'] == $Post::TYPE_ACTION && $post['Post']['action_result_id']){
+                $ActionResult = ClassRegistry::init('ActionResult');
+                $res = $ActionResult->softDelete($post['Post']['action_result_id']);
+                if (!$res) {
+                    throw new RuntimeException("Error on deleting action result for post $postId: failed action soft delete");
+                }
+            }
+
 
             // Delete translations
             /** @var Translation $Translation */
@@ -912,6 +921,11 @@ class PostService extends AppService
                 $PostResourceService = ClassRegistry::init('PostResourceService');
                 $PostResourceService->deleteResources(Hash::extract($deletedPosts, '{n}.id'));
             }
+
+            //Delete cache and update unread count
+            /** @var UnreadCirclePostService $UnreadCirclePostService */
+            $UnreadCirclePostService = ClassRegistry::init('UnreadCirclePostService');
+            $UnreadCirclePostService->deletePostCache($postId);
 
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -936,8 +950,15 @@ class PostService extends AppService
      * @return bool
      * @throws Exception
      */
-    public function saveFiles(int $postId, int $userId, int $teamId, array $files, bool $isDraft = false, int $postFileIndex = 0, ?int $circleId = null): bool
-    {
+    public function saveFiles(
+        int $postId,
+        int $userId,
+        int $teamId,
+        array $files,
+        bool $isDraft = false,
+        int $postFileIndex = 0,
+        ?int $circleId = null
+    ): bool {
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init('UploadService');
         /** @var AttachedFileService $AttachedFileService */
@@ -983,7 +1004,7 @@ class PostService extends AppService
                             $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
                         }
 
-                        if( ( !$isDraft ) && ( $circleId !== null ) ) {
+                        if ((!$isDraft) && ($circleId !== null)) {
                             $SearchPostFileService->addAttachedFile(
                                 $teamId,
                                 $userId,
@@ -994,28 +1015,31 @@ class PostService extends AppService
                             );
                         }
 
-                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                        $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached',
+                            $uploadedFile);
                     }
-                } else if (isset($file['is_video'])) {
-                    // VideoStream (file is already in transcode)
-                    /** @var VideoStreamService $VideoStreamService */
-                    $VideoStreamService = ClassRegistry::init('VideoStreamService');
-                    if (!$VideoStreamService->isVideoStreamBelongsToTeam($file['video_stream_id'], $teamId)) {
-                        // If video_stream is not belongs to team, skip adding to resource.
-                        continue;
-                    }
-                    if ($isDraft) {
-                        $postResource = $PostResourceService->addResourceDraft(
-                            $postId,
-                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
-                            $file['video_stream_id'],
-                            $postFileIndex);
-                    } else {
-                        $PostResourceService->addResourcePost(
-                            $postId,
-                            Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
-                            $file['video_stream_id'],
-                            $postFileIndex);
+                } else {
+                    if (isset($file['is_video'])) {
+                        // VideoStream (file is already in transcode)
+                        /** @var VideoStreamService $VideoStreamService */
+                        $VideoStreamService = ClassRegistry::init('VideoStreamService');
+                        if (!$VideoStreamService->isVideoStreamBelongsToTeam($file['video_stream_id'], $teamId)) {
+                            // If video_stream is not belongs to team, skip adding to resource.
+                            continue;
+                        }
+                        if ($isDraft) {
+                            $postResource = $PostResourceService->addResourceDraft(
+                                $postId,
+                                Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                                $file['video_stream_id'],
+                                $postFileIndex);
+                        } else {
+                            $PostResourceService->addResourcePost(
+                                $postId,
+                                Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
+                                $file['video_stream_id'],
+                                $postFileIndex);
+                        }
                     }
                 }
                 $postFileIndex++;
@@ -1086,13 +1110,14 @@ class PostService extends AppService
 
             if (!empty($newResources)) {
                 //get circle id, if possible
-                $postCircles = $PostShareCircle->getShareCircleList( $postId, $teamId );
-                $circleId = ( count( $postCircles ) > 0 ) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
+                $postCircles = $PostShareCircle->getShareCircleList($postId, $teamId);
+                $circleId = (count($postCircles) > 0) ? $postCircles[0] : null; //before there could be multiple circles per post, now it is only one
 
                 //save ressources
                 /** @var PostResource $PostResource */
                 $PostResource = ClassRegistry::init('PostResource');
-                $this->saveFiles($postId, $userId, $teamId, $newResources, false, $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
+                $this->saveFiles($postId, $userId, $teamId, $newResources, false,
+                    $PostResource->findMaxResourceOrderOfPost($postId) + 1, $circleId);
             }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
@@ -1221,7 +1246,9 @@ class PostService extends AppService
             if (isset($resource['is_video']) && $resource['is_video']) {
                 $groupedResource[Enum\Model\Post\PostResourceType::VIDEO_STREAM][] = $resource['video_stream_id'];
             }
-            if (!array_key_exists('resource_type', $resource)) continue;
+            if (!array_key_exists('resource_type', $resource)) {
+                continue;
+            }
             $groupedResource[$resource['resource_type']][] = $resource['id'];
         }
 

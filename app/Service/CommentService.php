@@ -52,18 +52,19 @@ class CommentService extends AppService
                 'id' => $commentId
             ],
             'fields'     => [
-                'post_id'
+                'post_id',
+                'team_id'
             ]
         ];
 
-        $comments = $Comment->useType()->find('first', $options);
+        $comment = $Comment->useType()->find('first', $options);
 
-        if (empty($comments)) {
+        if (empty($comment)) {
             throw new GlException\GoalousNotFoundException(__("This comment doesn't exist."));
         }
 
-        /** @var int $postId */
-        $postId = Hash::extract($comments, '{s}.post_id')[0];
+        $postId = $comment['Comment']['post_id'];
+        $teamId = $comment['Comment']['team_id'];
 
         if (empty($postId)) {
             throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
@@ -78,11 +79,11 @@ class CommentService extends AppService
                 $PostService = ClassRegistry::init('PostService');
                 return $PostService->checkUserAccessToCirclePost($userId, $postId);
                 break;
+            case Post::TYPE_CREATE_GOAL:
             case Post::TYPE_ACTION:
-                /** @var ActionService $ActionService */
-                $ActionService = ClassRegistry::init('ActionService');
-                return $ActionService = $ActionService->checkUserAccess($userId, $postId);
-                break;
+                /** @var TeamMember $TeamMember */
+                $TeamMember = ClassRegistry::init('TeamMember');
+                return !empty($TeamMember->getIdByTeamAndUserId($teamId, $userId));
             default:
                 return false;
         }

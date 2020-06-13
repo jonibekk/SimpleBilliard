@@ -2,6 +2,7 @@
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
 App::import('Lib/DataExtender/Extension', 'UserExtension');
+App::import('Lib/DataExtender/Extension', 'CircleIdExtension');
 App::import('Lib/DataExtender/Extension', 'CircleExtension');
 App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
@@ -21,6 +22,7 @@ class CirclePostExtender extends BaseExtender
 {
     const EXTEND_ALL = "ext:circle_post:all";
     const EXTEND_USER = "ext:circle_post:user";
+    const EXTEND_CIRCLE_ID = "ext:circle_post:circle_id";
     const EXTEND_CIRCLE = "ext:circle_post:circle";
     const EXTEND_COMMENTS = "ext:circle_post:comments";
     const EXTEND_POST_SHARE_CIRCLE = "ext:circle_post:share_circle";
@@ -31,6 +33,7 @@ class CirclePostExtender extends BaseExtender
     const EXTEND_READ = "ext:circle_post:read";
     const EXTEND_TRANSLATION_LANGUAGE = "ext:circle_post:translation_language";
     const EXTEND_RELATED_TYPE = "ext:circle_post:related_type";
+    const EXTEND_SITE_INFO = "ext:circle_post:site_info";
 
     const DEFAULT_COMMENT_COUNT = 3;
 
@@ -46,16 +49,22 @@ class CirclePostExtender extends BaseExtender
             $UserExtension = ClassRegistry::init('UserExtension');
             $data = $UserExtension->extendMulti($data, "{n}.user_id");
         }
+        if ($this->includeExt($extensions, self::EXTEND_CIRCLE_ID)) {
+            /** @var CircleIdExtension $CircleIdExtension */
+            $CircleIdExtension = ClassRegistry::init('CircleIdExtension');
+            $data = $CircleIdExtension->extendMulti($data, '');
+        }
         if ($this->includeExt($extensions, self::EXTEND_CIRCLE)) {
             /** @var CircleExtension $CircleExtension */
             $CircleExtension = ClassRegistry::init('CircleExtension');
+            $CircleExtension->setUserId($userId);
             $data = $CircleExtension->extendMulti($data, "{n}.circle_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_COMMENTS)) {
             /** @var CommentPagingService $CommentPagingService */
             $CommentPagingService = ClassRegistry::init('CommentPagingService');
 
-            foreach ($data as &$result) {
+            foreach ($data as $key => $result) {
                 $commentPagingRequest = new PagingRequest();
                 $commentPagingRequest->setResourceId(Hash::get($result, 'id'));
                 $commentPagingRequest->setCurrentUserId($userId);
@@ -64,36 +73,20 @@ class CirclePostExtender extends BaseExtender
                 $comments = $CommentPagingService->getDataWithPaging($commentPagingRequest, self::DEFAULT_COMMENT_COUNT,
                     CommentExtender::EXTEND_ALL);
 
-                $result['comments'] = $comments;
+                $data[$key]['comments'] = $comments;
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_RELATED_TYPE)) {
 
-            foreach ($data as &$entry) {
-                switch ((int)$data['type']) {
+            foreach ($data as $i => $entry) {
+                switch ((int)$entry['type']) {
                     case Post::TYPE_NORMAL:
                         // TODO: depends on spec
                         break;
                     case Post::TYPE_CREATE_CIRCLE:
                         /** @var CircleExtension $CircleExtension */
                         $CircleExtension = ClassRegistry::init('CircleExtension');
-                        $entry = $CircleExtension->extend($entry, "circle_id");
-                        break;
-                    case Post::TYPE_ACTION:
-                    case Post::TYPE_KR_COMPLETE:
-                    case Post::TYPE_CREATE_GOAL:
-                    case Post::TYPE_GOAL_COMPLETE:
-                        /** @var ActionExtension $ActionExtension */
-                        $ActionExtension = ClassRegistry::init('ActionExtension');
-                        $entry = $ActionExtension->extend($entry, "action_result_id");
-
-                        /** @var KeyResultExtension $KeyResultExtension */
-                        $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
-                        $entry = $KeyResultExtension->extend($entry, "action_result.key_result_id");
-
-                        /** @var GoalExtension $GoalExtension */
-                        $GoalExtension = ClassRegistry::init('GoalExtension');
-                        $entry = $GoalExtension->extend($entry, "action_result.goal_id");
+                        $data[$i] = $CircleExtension->extend($entry, "circle_id");
                         break;
                 }
             }
@@ -136,7 +129,8 @@ class CirclePostExtender extends BaseExtender
                         $attachedFile['download_url'] = '';
 
                         if ($attachedFile['file_type'] == AttachedFile::TYPE_FILE_IMG) {
-                            $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile, 'AttachedFile',
+                            $attachedFile['file_url'] = $ImageStorageService->getImgUrlEachSize($attachedFile,
+                                'AttachedFile',
                                 'attached');
                             $attachedFile['resource_type'] = Enum\Model\Post\PostResourceType::IMAGE;
                             $data[$index]['resources'][] = $attachedFile;
@@ -151,7 +145,8 @@ class CirclePostExtender extends BaseExtender
                     // Fetch data from video stream
                     if ((int)$postResource['resource_type'] === Enum\Model\Post\PostResourceType::VIDEO_STREAM) {
                         $isUserAgentSupportManifestRedirect = $VideoStreamService->isBrowserSupportManifestRedirects();
-                        $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'], !$isUserAgentSupportManifestRedirect);
+                        $resourceVideoStream = $VideoStreamService->getVideoStreamForPlayer($postResource['resource_id'],
+                            !$isUserAgentSupportManifestRedirect);
                         $data[$index]['resources'][] = $resourceVideoStream;
                     }
                 }
@@ -170,7 +165,7 @@ class CirclePostExtender extends BaseExtender
             $data = $PostSavedExtension->extendMulti($data, "{n}.id", "post_id");
         }
         if ($this->includeExt($extensions, self::EXTEND_READ)) {
-            /** @var PostSavedExtension $PostSavedExtension */
+            /** @var PostReadExtension $PostSavedExtension */
             $PostReadExtension = ClassRegistry::init('PostReadExtension');
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extendMulti($data, "{n}.id", "post_id");
@@ -188,9 +183,9 @@ class CirclePostExtender extends BaseExtender
                 $TeamTranslationStatus->hasEntry($teamId) &&
                 ($Team->isFreeTrial($teamId) || $Team->isPaidPlan($teamId))) {
                 if ($TeamTranslationStatus->isLimitReached($teamId)) {
-                    foreach ($data as &$entry) {
-                        $entry['translation_limit_reached'] = true;
-                        $entry['translation_languages'] = [];
+                    foreach ($data as $key => $entry) {
+                        $data[$key]['translation_limit_reached'] = true;
+                        $data[$key]['translation_languages'] = [];
                     }
                 } else {
                     /** @var TeamMemberService $TeamMemberService */
@@ -200,12 +195,12 @@ class CirclePostExtender extends BaseExtender
 
                     $userDefaultLanguage = $TeamMemberService->getDefaultTranslationLanguageCode($teamId, $userId);
 
-                    foreach ($data as &$entry) {
+                    foreach ($data as $key => $entry) {
 
                         $postLanguage = Hash::get($entry, 'language');
 
-                        $entry['translation_limit_reached'] = false;
-                        $entry['translation_languages'] = [];
+                        $data[$key]['translation_limit_reached'] = false;
+                        $data[$key]['translation_languages'] = [];
 
                         if ($userDefaultLanguage !== $postLanguage) {
 
@@ -215,10 +210,18 @@ class CirclePostExtender extends BaseExtender
                                 if ($postLanguage === $availableLanguage['language']) {
                                     continue;
                                 }
-                                $entry['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
+                                $data[$key]['translation_languages'][] = $TranslationLanguage->getLanguageByCode($availableLanguage['language'])->toLanguageArray();
                             }
                         }
                     }
+                }
+            }
+        }
+
+        if ($this->includeExt($extensions, self::EXTEND_SITE_INFO)) {
+            foreach ($data as $key => $entry) {
+                if (!is_null($entry['site_info'])){
+                    $data[$key]['site_info'] = json_decode($entry['site_info'], true);
                 }
             }
         }

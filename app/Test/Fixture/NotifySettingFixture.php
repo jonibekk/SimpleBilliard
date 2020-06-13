@@ -28,6 +28,24 @@ class NotifySettingFixture extends CakeTestFixtureEx
             'key'      => 'index',
             'comment'  => 'ユーザID(belongsToでUserモデルに関連)'
         ),
+        'email_status'    => array(
+            'type'    => 'string',
+            'length'  => 16,
+            'null'    => false,
+            'default' => 'all',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'email sttus',
+            'charset' => 'utf8mb4'
+        ),
+        'mobile_status'    => array(
+            'type'    => 'string',
+            'length'  => 16,
+            'null'    => false,
+            'default' => 'all',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'mobile sttus',
+            'charset' => 'utf8mb4'
+        ),
         'feed_post_app_flg'                                => array(
             'type'    => 'boolean',
             'null'    => false,
@@ -543,6 +561,8 @@ class NotifySettingFixture extends CakeTestFixtureEx
         array(
             'id'                                            => '1',
             'user_id'                                       => '',
+            'email_status'                                  => 'all',
+            'mobile_status'                                 => 'all',
             'feed_post_app_flg'                             => 1,
             'feed_post_email_flg'                           => 1,
             'feed_commented_on_my_post_app_flg'             => 1,
