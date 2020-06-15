@@ -236,7 +236,6 @@ SQL;
      * @return SavedPostEntity
      */
     public function getUserSavedPost(int $postId, int $user_id){
-
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
 
