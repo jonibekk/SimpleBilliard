@@ -13,6 +13,7 @@ App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
+App::import('Service', 'KeyResultService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
@@ -207,10 +208,53 @@ class MeController extends BasePagingController
             ])->getResponse();
     }
 
+    public function get_kr_actionable()
+    {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var KrProgressLog $KrProgressLog */
+        $KrProgressLog = ClassRegistry::init('KrProgressLog');
+        /** @var UserExtension $UserExtension */
+        $UserExtension = ClassRegistry::init('UserExtension');
+        /** @var GoalExtension $UserExtension */
+        $GoalExtension = ClassRegistry::init('GoalExtension');
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
+        $Term->Team->current_team_id = $this->getTeamId();
+        $Term->Team->my_uid = $this->getUserId();
+        $Term->current_team_id = $this->getTeamId();
+        $Term->my_uid = $this->getUserId();
+        $currentTerm = $Term->getCurrentTermData();
+
+        // Find KeyResult ordered by actioned in recent
+        $findForKeyResultListRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $currentTerm);
+        $findForKeyResultListRequest->setOnlyKrIncomplete(true);
+        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
+
+        foreach ($keyResults as $index => $keyResult) {
+            $keyResults[$index]['KeyResult'] = $GoalExtension->extend($keyResults[$index]['KeyResult'], 'goal_id');
+        }
+
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'krs' => Hash::extract($keyResults, '{n}.KeyResult'),
+                ],
+            ])->getResponse();
+    }
+
     public function get_kr_progress()
     {
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
         /** @var KrProgressLog $KrProgressLog */
         $KrProgressLog = ClassRegistry::init('KrProgressLog');
         /** @var UserExtension $UserExtension */
@@ -238,13 +282,14 @@ class MeController extends BasePagingController
         $limit = intval($this->request->query('limit'));
 
         // Find KeyResult ordered by actioned in recent
-        $keyResults = $KeyResult->findForKeyResultList(
+        $findForKeyResultListRequest = new FindForKeyResultListRequest(
             $this->getUserId(),
             $this->getTeamId(),
-            $currentTerm,
-            $goalIdSelected,
-            $limit
-        );
+            $currentTerm);
+        $findForKeyResultListRequest->setGoalIdSelected($goalIdSelected);
+        $findForKeyResultListRequest->setLimit($limit);
+
+        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
 
         $krs = [];
         foreach ($keyResults as $index => $keyResult) {

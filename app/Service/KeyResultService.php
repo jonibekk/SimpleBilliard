@@ -10,6 +10,7 @@ App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
+App::uses('FindForKeyResultListRequest', 'Service/Request/KeyResults');
 
 /**
  * Class KeyResultService
@@ -671,5 +672,63 @@ class KeyResultService extends AppService
         Cache::delete($KeyResult->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         return true;
+    }
+
+    public function findForKeyResultList(FindForKeyResultListRequest $request): array
+    {
+        $now = GoalousDateTime::now();
+        $options = [
+            'conditions' => [
+                'GoalMember.user_id'    => $request->getUserId(),
+                'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
+                'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
+                'KeyResult.team_id'     => $request->getTeamId(),
+                'GoalMember.del_flg'    => false,
+                'Goal.end_date >='      => $now->format('Y-m-d'),
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*',
+                'GoalMember.priority'
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goal_members',
+                    'alias'      => 'GoalMember',
+                    'conditions' => [
+                        'GoalMember.goal_id = KeyResult.goal_id'
+                    ]
+                ],
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
+                        'ActionResult.created' => 'desc'
+                    ],
+                    'User'
+                ]
+            ]
+        ];
+        if ($request->getGoalIdSelected()) {
+            $options['conditions']['Goal.id'] = $request->getGoalIdSelected();
+        }
+        if ($request->getLimit()) {
+            $options['limit'] = $request->getLimit();
+        }
+        if ($request->getOnlyKrIncomplete()) {
+            $options['conditions']['KeyResult.completed'] = null;
+        }
+
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        return $KeyResult->useType()->find('all', $options);
     }
 }
