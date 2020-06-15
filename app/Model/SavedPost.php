@@ -222,7 +222,7 @@ class SavedPost extends AppModel
     sp.post_id = psc.post_id
     AND psc.circle_id = $circleId
     AND psc.team_id = $teamId
-    WHERE sp.user_id = $userId;        
+    WHERE sp.user_id = $userId;
 SQL;
         $res = $this->query($sql);
         return $res !== false;
@@ -236,7 +236,7 @@ SQL;
      * @return SavedPostEntity
      */
     public function getUserSavedPost(int $postId, int $user_id){
-        
+
         /** @var SavedPost $SavedPost */
         $SavedPost = ClassRegistry::init('SavedPost');
 
