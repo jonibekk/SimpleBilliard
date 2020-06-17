@@ -220,6 +220,10 @@ class KeyResult extends AppModel
         'value_unit'          => DataType::INT,
         'priority'            => DataType::INT,
         'action_result_count' => DataType::INT,
+        // FYI: Do not cast to float, PHP floating casting makes to low accuracy value 0.1 -> 0.0999
+        // 'current_value'       => DataType::FLOAT,
+        // 'start_value'         => DataType::FLOAT,
+        // 'target_value'        => DataType::FLOAT,
         'tkr_flg'             => DataType::BOOL,
     ];
 
@@ -912,62 +916,6 @@ class KeyResult extends AppModel
         }
 
         return $krs;
-    }
-
-    public function findForKeyResultList(int $userId, int $teamId, array $currentTerm, int $goalIdSelected, int $limit): array
-    {
-        $now = GoalousDateTime::now();
-        $options = [
-            'conditions' => [
-                'GoalMember.user_id'    => $userId,
-                'KeyResult.end_date >=' => $currentTerm['start_date'],
-                'KeyResult.end_date <=' => $currentTerm['end_date'],
-                'KeyResult.team_id'     => $teamId,
-                'KeyResult.completed'   => null,
-                'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $now->format('Y-m-d'),
-            ],
-            'order'      => [
-                'KeyResult.latest_actioned' => 'desc',
-                'KeyResult.priority'        => 'desc',
-                'KeyResult.created'         => 'desc'
-            ],
-            'fields'     => [
-                'KeyResult.*',
-                'Goal.*',
-                'GoalMember.priority'
-            ],
-            'joins'      => [
-                [
-                    'type'       => 'INNER',
-                    'table'      => 'goal_members',
-                    'alias'      => 'GoalMember',
-                    'conditions' => [
-                        'GoalMember.goal_id = KeyResult.goal_id'
-                    ]
-                ],
-            ],
-            'contain'    => [
-                'Goal',
-                'ActionResult' => [
-                    'fields'     => ['user_id'],
-                    'order'      => [
-                        'ActionResult.created' => 'desc'
-                    ],
-                    'User'
-                ]
-            ]
-        ];
-        if ($goalIdSelected) {
-            $options['conditions']['Goal.id'] = $goalIdSelected;
-        }
-        if ($limit) {
-            $options['limit'] = $limit;
-        }
-
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
-        return $KeyResult->useType()->find('all', $options);
     }
 
     /**
