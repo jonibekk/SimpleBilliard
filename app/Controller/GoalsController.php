@@ -305,8 +305,10 @@ class GoalsController extends AppController
         $limitEndDate = AppUtil::dateYmdReformat($goal['Goal']['end_date'], "/");
 
         $isCurrentTermGoal = $this->Goal->isPresentTermGoal($goalId);
+        $timezone = $this->Team->getTimezone();
+        $hour = 3600;
         if ($isCurrentTermGoal) {
-            $limitStartDate = GoalousDateTime::now()->format('Y/m/d');
+            $limitStartDate = AppUtil::dateYmd(GoalousDateTime::now()->timestamp + $timezone * $hour, '/');
         } else {
             $limitStartDate = GoalousDateTime::parse($goal['Goal']['start_date'])->format('Y/m/d');
         }
