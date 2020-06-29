@@ -67,7 +67,7 @@ class PostReadService extends AppService
                 $rawString(count($postIdsToRead), '?')
             );
             $stateSelectRead = $pdo->prepare($query);
-            $stateSelectRead->execute(array_merge([$userId, $teamId], $postIds));
+            $stateSelectRead->execute(array_merge([$userId, $teamId], $postIdsToRead));
             $postIdsCached = $stateSelectRead->fetchAll(PDO::FETCH_COLUMN);
 
             if (!empty($postIdsCached)) {
