@@ -565,14 +565,7 @@ class Post extends AppModel
             $post_list = $this->find('list', $post_options);
 
         }
-        //投稿を既読に
-        // But Not read the post display from user's page
-        // https://jira.goalous.com/browse/GL-8709
-        $isOpeningUserPagePostList = !empty($this->orgParams['user_id'])
-            && $this->orgParams['type'] === self::TYPE_NORMAL;
-        if (!$isOpeningUserPagePostList) {
-            $this->PostRead->red($post_list);
-        }
+        $this->PostRead->red($post_list);
 
         $options = [
             'conditions' => [
