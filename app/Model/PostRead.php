@@ -80,6 +80,9 @@ class PostRead extends AppModel
 
         try {
             $res = $this->bulkInsert($post_data, true, ['post_id']);
+            foreach ($post_data as $data) {
+                $UnreadCirclePostService->deletePostCache($data['post_id']);
+            }
         } catch (PDOException $e) {
             // post_id と user_id が重複したデータを登録しようとした場合
             // １件ずつ登録し直して登録可能なものだけ登録する
