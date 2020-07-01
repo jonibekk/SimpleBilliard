@@ -74,6 +74,7 @@ class FixUnreadPostUnconsistencyShell extends AppShell
 
         $this->CacheUnreadCirclePost->deleteAll($condition);
 
+        // maintain unread_count in circle_members to be correct
         foreach ($target as $user_id => $info){
             foreach ($info as $circle_id=> $count){
                 $conditions = [
@@ -86,15 +87,8 @@ class FixUnreadPostUnconsistencyShell extends AppShell
                         'CacheUnreadCirclePost.user_id' => $user_id,
                     ],
                 ];
-                $res = $this->CacheUnreadCirclePost->find('count', $conditions);
-                $target[$user_id][$circle_id] = $res;
-                var_dump($res);
-            }
-        }
+                $correct = $this->CacheUnreadCirclePost->find('count', $conditions);
 
-        // maintain unread_count in circle_members to be correct
-        foreach ($target as $user_id => $info){
-            foreach ($info as $circle_id=> $count){
                 $conditions = [
 
                     'table' => 'circle_members',
@@ -106,14 +100,10 @@ class FixUnreadPostUnconsistencyShell extends AppShell
                     ],
                 ];
                 $res = $this->CircleMember->find('first', $conditions);
-                var_dump($res);
-                var_dump($count);
-                $res['CircleMember']['unread_count'] = $count;
+                $res['CircleMember']['unread_count'] = $correct;
                 $this->CircleMember->save($res);
             }
         }
-        
-
     }
 
 }
