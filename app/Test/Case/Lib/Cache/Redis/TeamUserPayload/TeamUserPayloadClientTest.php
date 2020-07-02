@@ -39,7 +39,7 @@ class TeamUserPayloadClientTest extends GoalousTestCase
         /** @var $redis Redis */
         $redis = ConnectionManager::getDataSource('redis');
         $prefix = $redis->getOption(Redis::OPT_PREFIX);
-        $keys = $redis->keys('test:team_user_payload:*');
+        $keys = $redis->keys('*:team_user_payload:*');
         foreach ($keys as $i => $key) {
             if (0 === strpos($key, $prefix)) {
                 $keys[$i] = substr($key, strlen($prefix));
