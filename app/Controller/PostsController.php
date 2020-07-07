@@ -1061,7 +1061,9 @@ class PostsController extends AppController
 
                 $postType = (int)$post['Post']['type'];
                 $typesCanViewOnAngular = [
-                    Enum\Model\Post\Type::NORMAL
+                    Enum\Model\Post\Type::NORMAL,
+                    Enum\Model\Post\Type::CREATE_GOAL,
+                    Enum\Model\Post\Type::ACTION,
                 ];
                 if (!in_array($postType, $typesCanViewOnAngular)) {
                     // Angular could not show this type of post yet.
