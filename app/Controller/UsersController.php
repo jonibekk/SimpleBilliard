@@ -438,8 +438,10 @@ class UsersController extends AppController
         //If not notification can't reach the frontend
         $logoutRedirect = $this->logoutProcess();
 
-        $this->Notification->outInfo(__("See you %s", $user['display_username']),
-            ['title' => __("Logged out")]);
+        if ($user) {
+            $this->Notification->outInfo(__("See you %s", $user['display_username']),
+                ['title' => __("Logged out")]);
+        }
 
         return $this->redirect($logoutRedirect);
     }
