@@ -786,12 +786,15 @@ function getModalFormFromUrl(e) {
   e.preventDefault();
   var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
   modalFormCommonBindEvent($modal_elm);
-
   $modal_elm.on('shown.bs.modal', function (e) {
+    var lang = 'en';
+    if (cake.lang === 'ja' || cake.lang === 'jpn') {
+      lang = 'ja';
+    }
     $(this).find('.input-group.date').datepicker({
       format: "yyyy/mm/dd",
       todayBtn: 'linked',
-      language: "ja",
+      language: lang,
       autoclose: true,
       todayHighlight: true
       //endDate:"2015/11/30"
