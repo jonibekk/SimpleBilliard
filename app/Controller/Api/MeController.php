@@ -272,6 +272,7 @@ class MeController extends BasePagingController
 
         $goalIdSelected = intval($this->request->query('goal_id'));
         $limit = intval($this->request->query('limit'));
+        $withKrProgressGraphValues = intval($this->request->query('with_kr_progress_graph_values'));
 
         // Find KeyResult ordered by actioned in recent
         $findForKeyResultListRequest = new FindForKeyResultListRequest(
@@ -320,18 +321,46 @@ class MeController extends BasePagingController
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        return ApiResponse::ok()
-            ->withBody([
-                'data' => [
-                    'period_kr_collection' => [
-                        'from' => $periodFrom->getTimestamp(),
-                        'to' => $periodTo->getTimestamp(),
-                    ],
-                    'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
-                    'krs' => $krs,
-                    'goals' => $GoalService->findNameListAsMember($this->getUserId(), $currentTerm['start_date'], $currentTerm['end_date']),
+        $response = [
+            'data' => [
+                'period_kr_collection' => [
+                    'from' => $periodFrom->getTimestamp(),
+                    'to' => $periodTo->getTimestamp(),
                 ],
-            ])->getResponse();
+                'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
+                'krs' => $krs,
+                'goals' => $GoalService->findNameListAsMember($this->getUserId(), $currentTerm['start_date'], $currentTerm['end_date']),
+            ],
+        ];
+
+        if ($withKrProgressGraphValues) {
+            $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
+            $graphRange = $GoalService->getGraphRange(
+                $todayDate,
+                GoalService::GRAPH_TARGET_DAYS,
+                GoalService::GRAPH_MAX_BUFFER_DAYS
+            );
+            $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
+                $this->getUserId(),
+                $graphRange['graphStartDate'],
+                $graphRange['graphEndDate'],
+                $graphRange['plotDataEndDate'],
+                true
+            );
+            $krProgressGraphValues = [
+                'data'       => [
+                    'sweet_spot_top' => $progressGraph[0],
+                    'sweet_spot_bottom' => $progressGraph[1],
+                    'data' => $progressGraph[2],
+                    'x' => $progressGraph[3],
+                ],
+                'start_date' => strtotime($graphRange['graphStartDate']),
+                'end_date'   => strtotime($graphRange['graphEndDate']),
+            ];
+            $response['data']['kr_progress_graph'] = $krProgressGraphValues;
+        }
+
+        return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
     /**
