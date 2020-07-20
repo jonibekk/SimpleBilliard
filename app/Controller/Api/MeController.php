@@ -347,6 +347,7 @@ class MeController extends BasePagingController
                 $graphRange['plotDataEndDate'],
                 true
             );
+            $TimeEx = new TimeExHelper(new View());
             $krProgressGraphValues = [
                 'data'       => [
                     'sweet_spot_top' => $progressGraph[0],
@@ -354,8 +355,8 @@ class MeController extends BasePagingController
                     'data' => $progressGraph[2],
                     'x' => $progressGraph[3],
                 ],
-                'start_date' => strtotime($graphRange['graphStartDate']),
-                'end_date'   => strtotime($graphRange['graphEndDate']),
+                'start_date' => $TimeEx->formatDateI18n(strtotime($graphRange['graphStartDate'])),
+                'end_date'   => $TimeEx->formatDateI18n(strtotime($graphRange['graphEndDate'])),
             ];
             $response['data']['kr_progress_graph'] = $krProgressGraphValues;
         }
