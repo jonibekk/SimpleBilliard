@@ -101,10 +101,14 @@
    * @param e
    */
   function showInitModal(e) {
+    var lang = 'en';
+    if (cake.lang === 'ja' || cake.lang === 'jpn') {
+      lang = 'ja';
+    }
     $modal.find('.input-group.date').datepicker({
       format: "yyyy/mm/dd",
       todayBtn: 'linked',
-      language: "ja",
+      language: lang,
       autoclose: true,
       todayHighlight: true
       //endDate:"2015/11/30"
