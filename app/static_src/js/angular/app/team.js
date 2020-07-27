@@ -13,6 +13,8 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
                 $rootScope.login_user_language = data.data.login_user_language;
                 if ($rootScope.login_user_language === 'eng') {
                     $translate.use('en');
+                } else if($rootScope.login_user_language === 'por') {
+                    $translate.use('pt');
                 }
                 $rootScope.admin_user_cnt = data.data.admin_user_cnt;
             });
