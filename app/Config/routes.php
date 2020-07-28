@@ -91,6 +91,12 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['controller' => 'me', 'action' => 'hide_goal_create_guidance', 'prefix' => 'put', '[method]' => 'PUT']);
 
     /**
+     * Search
+     */
+    Router::connect('/api/search',
+        ['controller' => 'search', 'action' => 'search', '[method]' => 'GET']);
+
+    /**
      * REST Endpoints with version in header 'X-API-Version'
      * No action
      */
