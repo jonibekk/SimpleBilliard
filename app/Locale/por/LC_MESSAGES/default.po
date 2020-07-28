@@ -3903,8 +3903,8 @@ msgstr "Escreva uma descrição da categoria de Goal."
 msgid "Goal category settings"
 msgstr "Configurações de categoria de Goal. "
 
-msgid "Add a Goal category de Goal"
-msgstr "Add a Goal category de Goal"
+msgid "Add a Goal category"
+msgstr "Adicionar uma categoria ao Goal"
 
 msgid "Reach"
 msgstr "Alcance"
