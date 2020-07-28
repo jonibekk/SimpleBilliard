@@ -21,6 +21,9 @@ msgstr "円"
 msgid "Dollar"
 msgstr "ドル"
 
+msgid "Currency"
+msgstr "通貨"
+
 msgid "Other numeric"
 msgstr "その他の数値"
 
