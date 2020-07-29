@@ -6222,7 +6222,7 @@ msgid "Korean"
 msgstr "韓国語"
 
 msgid "Group Settings"
-msgstr "Group Settings"
+msgstr "グループ設定"
 
 msgid "Manage groups"
-msgstr "Manage groups"
+msgstr "グループ管理"
