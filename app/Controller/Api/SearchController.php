@@ -62,7 +62,7 @@ class SearchController extends BasePagingController
         $searchModel->actions->totalItemsCount = 3;
         $searchModel->posts->totalItemsCount = 0;
         $searchModel->members->totalItemsCount = 2;
-        $searchModel->circles->totalItemsCount = 3;
+        $searchModel->circles->totalItemsCount = 4;
 
         $itemSearchModel = new PostItemSearchModel();
         $itemSearchModel->id = 3;
@@ -122,6 +122,12 @@ class SearchController extends BasePagingController
         $itemSearchModel->id = 3;
         $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
         $itemSearchModel->name = 'Circle C';
+        $searchModel->circles->items[] = $itemSearchModel;
+
+        $itemSearchModel = new DefaultItemSearchModel();
+        $itemSearchModel->id = 4;
+        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/f63/fff.png';
+        $itemSearchModel->name = 'Circle D';
         $searchModel->circles->items[] = $itemSearchModel;
 
         // Create response.
