@@ -67,9 +67,9 @@ class SearchController extends BasePagingController
         $itemSearchModel = new PostItemSearchModel();
         $itemSearchModel->id = 3;
         $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
-        $itemSearchModel->type = 'post';
+        $itemSearchModel->type = 'posts';
         $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-15H12:00:00';
+        $itemSearchModel->dateTime = '2020-07-15 12:00:00';
         $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
         $itemSearchModel->userName = 'Member A';
         $searchModel->actions->items[] = $itemSearchModel;
@@ -77,9 +77,9 @@ class SearchController extends BasePagingController
         $itemSearchModel = new PostItemSearchModel();
         $itemSearchModel->id = 2;
         $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/c88/fff.png';
-        $itemSearchModel->type = 'comment';
+        $itemSearchModel->type = 'comments';
         $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-12H11:30:00';
+        $itemSearchModel->dateTime = '2020-07-12 11:30:00';
         $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
         $itemSearchModel->userName = 'Member A';
         $searchModel->actions->items[] = $itemSearchModel;
@@ -87,9 +87,9 @@ class SearchController extends BasePagingController
         $itemSearchModel = new PostItemSearchModel();
         $itemSearchModel->id = 1;
         $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/98c/fff.png';
-        $itemSearchModel->type = 'post';
+        $itemSearchModel->type = 'posts';
         $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-10H15:20:00';
+        $itemSearchModel->dateTime = '2020-07-10 15:20:00';
         $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/c6a/fff.png';
         $itemSearchModel->userName = 'Member B';
         $searchModel->actions->items[] = $itemSearchModel;
