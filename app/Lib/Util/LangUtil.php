@@ -11,6 +11,7 @@ class LangUtil
     static $ISOMap = [
         Enum\LanguageISO639_2::ENG => Enum\Language::EN,
         Enum\LanguageISO639_2::JPN => Enum\Language::JA,
+        Enum\LanguageISO639_2::POR => Enum\Language::PT,
     ];
 
     /**

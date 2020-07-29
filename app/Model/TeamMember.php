@@ -822,7 +822,18 @@ class TeamMember extends AppModel
         if (Hash::get($contain, 'Email')) {
             $contain['Email']['conditions']['user_id'] = $user_ids;
             $user_emails = $this->User->Email->find('all', $contain['Email']);
-            $user_emails = Hash::combine($user_emails, '{n}.Email.user_id', '{n}.Email.email_verified');
+            // if user changes email and does not verify it via the email,
+            // his email_verified should be the anyone he got verified.
+            $tmp = [];
+            foreach ($user_emails as $email){
+                $idKey = $email['Email']['user_id'];
+                $verifiedValue = $email['Email']['email_verified'];
+                if (isset($tmp[$idKey]) and $tmp[$idKey] == 1){
+                    continue;
+                }
+                $tmp[$idKey] = $verifiedValue;
+            }
+            $user_emails = $tmp;
         }
         //ユーザ情報とグループ情報を取得して、ユーザ情報にマージ
         if (Hash::get($contain, 'User')) {
