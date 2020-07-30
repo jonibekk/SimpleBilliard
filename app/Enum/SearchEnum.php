@@ -6,8 +6,6 @@ class SearchEnum
 {
     /** @var int */
     const MAX_LIMIT = 20;
-    /** @var int */
-    const MIN_KEYWORD_LENGTH = 2;
     /** @var string */
     const TYPE_ACTIONS = 'actions';
     /** @var string */

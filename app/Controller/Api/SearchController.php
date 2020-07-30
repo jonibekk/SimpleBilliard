@@ -58,80 +58,80 @@ class SearchController extends BasePagingController
             $this->searchType($searchApiModel);
         }
 
-        $searchModel = new SearchModel();
-        $searchModel->actions->totalItemsCount = 3;
-        $searchModel->posts->totalItemsCount = 0;
-        $searchModel->members->totalItemsCount = 2;
-        $searchModel->circles->totalItemsCount = 4;
-
-        $itemSearchModel = new PostItemSearchModel();
-        $itemSearchModel->id = 3;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
-        $itemSearchModel->type = 'posts';
-        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-15 12:00:00';
-        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-        $itemSearchModel->userName = 'Member A';
-        $searchModel->actions->items[] = $itemSearchModel;
-
-        $itemSearchModel = new PostItemSearchModel();
-        $itemSearchModel->id = 2;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/c88/fff.png';
-        $itemSearchModel->type = 'comments';
-        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-12 11:30:00';
-        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-        $itemSearchModel->userName = 'Member A';
-        $searchModel->actions->items[] = $itemSearchModel;
-
-        $itemSearchModel = new PostItemSearchModel();
-        $itemSearchModel->id = 1;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/98c/fff.png';
-        $itemSearchModel->type = 'posts';
-        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
-        $itemSearchModel->dateTime = '2020-07-10 15:20:00';
-        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/c6a/fff.png';
-        $itemSearchModel->userName = 'Member B';
-        $searchModel->actions->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 1;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-        $itemSearchModel->name = 'Member A';
-        $searchModel->members->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 2;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/c6a/fff.png';
-        $itemSearchModel->name = 'Member B';
-        $searchModel->members->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 1;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
-        $itemSearchModel->name = 'Circle A';
-        $searchModel->circles->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 2;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
-        $itemSearchModel->name = 'Circle B';
-        $searchModel->circles->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 3;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
-        $itemSearchModel->name = 'Circle C';
-        $searchModel->circles->items[] = $itemSearchModel;
-
-        $itemSearchModel = new DefaultItemSearchModel();
-        $itemSearchModel->id = 4;
-        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/f63/fff.png';
-        $itemSearchModel->name = 'Circle D';
-        $searchModel->circles->items[] = $itemSearchModel;
+//        $searchModel = new SearchModel();
+//        $searchModel->actions->totalItemsCount = 3;
+//        $searchModel->posts->totalItemsCount = 0;
+//        $searchModel->members->totalItemsCount = 2;
+//        $searchModel->circles->totalItemsCount = 4;
+//
+//        $itemSearchModel = new PostItemSearchModel();
+//        $itemSearchModel->id = 3;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
+//        $itemSearchModel->type = 'posts';
+//        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
+//        $itemSearchModel->dateTime = '2020-07-15 12:00:00';
+//        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
+//        $itemSearchModel->userName = 'Member A';
+//        $searchModel->actions->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new PostItemSearchModel();
+//        $itemSearchModel->id = 2;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/c88/fff.png';
+//        $itemSearchModel->type = 'comments';
+//        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats.';
+//        $itemSearchModel->dateTime = '2020-07-12 11:30:00';
+//        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
+//        $itemSearchModel->userName = 'Member A';
+//        $searchModel->actions->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new PostItemSearchModel();
+//        $itemSearchModel->id = 1;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/98c/fff.png';
+//        $itemSearchModel->type = 'posts';
+//        $itemSearchModel->content = 'This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats. This is some random content that repeats.';
+//        $itemSearchModel->dateTime = '2020-07-10 15:20:00';
+//        $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/c6a/fff.png';
+//        $itemSearchModel->userName = 'Member B';
+//        $searchModel->actions->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 1;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
+//        $itemSearchModel->name = 'Member A';
+//        $searchModel->members->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 2;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/c6a/fff.png';
+//        $itemSearchModel->name = 'Member B';
+//        $searchModel->members->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 1;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
+//        $itemSearchModel->name = 'Circle A';
+//        $searchModel->circles->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 2;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
+//        $itemSearchModel->name = 'Circle B';
+//        $searchModel->circles->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 3;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/36a/fff.png';
+//        $itemSearchModel->name = 'Circle C';
+//        $searchModel->circles->items[] = $itemSearchModel;
+//
+//        $itemSearchModel = new DefaultItemSearchModel();
+//        $itemSearchModel->id = 4;
+//        $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/f63/fff.png';
+//        $itemSearchModel->name = 'Circle D';
+//        $searchModel->circles->items[] = $itemSearchModel;
 
         // Create response.
-        $array = $this->modelToArray($searchModel);
+        $array = $this->modelToArray($searchApiModel);
 
         return ApiResponse::ok()->withBody($array)->getResponse();
     }
@@ -145,7 +145,7 @@ class SearchController extends BasePagingController
     {
         $keyword = $this->request->query('keyword');
 
-        if (empty($keyword) || strlen($keyword) < SearchEnum::MIN_KEYWORD_LENGTH) {
+        if (empty($keyword)) {
             throw new Exception();
         }
 
@@ -193,7 +193,7 @@ class SearchController extends BasePagingController
             return $userSearchPagingService->getDataWithPaging($pagingRequest);
         }
 
-        $pagingRequest->addCondition('type', 'post', true);
+        $pagingRequest->addCondition('type', 'circle_post', true);
 
         /** @var PostSearchPagingService $postSearchPagingService */
         $postSearchPagingService = ClassRegistry::init('PostSearchPagingService');
@@ -225,7 +225,6 @@ class SearchController extends BasePagingController
         // Validate conditions.
         if (
             empty($keyword) || empty($limit) || empty($pn) || empty($type) ||
-            strlen($keyword) < SearchEnum::MIN_KEYWORD_LENGTH ||
             !in_array($type, [
                 SearchEnum::TYPE_ACTIONS,
                 SearchEnum::TYPE_ALL,
