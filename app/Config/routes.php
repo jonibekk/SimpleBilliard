@@ -155,6 +155,11 @@ Router::connect('/circles/:id/edit',
 Router::connect('/topics/:topic_id/detail', ['controller' => 'topics', 'action' => 'detail']);
 Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'action' => 'add_members']);
 Router::connect('/topics/:topic_id/search_messages', ['controller' => 'topics', 'action' => 'search_messages']);
+Router::connect(
+    '/groups/:id/members_list',
+    ['controller' => 'groups', 'action' => 'members_list', '[method]' => 'GET'],
+    ['id' => '[0-9]+', 'pass' => ['id']]
+);
 
 Router::connect('/evaluator_settings/:user_id/detail', ['controller' => 'evaluator_settings', 'action' => 'detail']);
 
@@ -192,6 +197,8 @@ Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'app_version
 
 // Allow '.pdf' extension
 Router::parseExtensions('pdf');
+// Allow '.csv' extension
+Router::parseExtensions('csv');
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

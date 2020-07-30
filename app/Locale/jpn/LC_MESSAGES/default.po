@@ -6224,3 +6224,8 @@ msgstr "ベンガル語"
 msgid "Korean"
 msgstr "韓国語"
 
+msgid "Group Settings"
+msgstr "グループ設定"
+
+msgid "Manage groups"
+msgstr "グループ管理"
