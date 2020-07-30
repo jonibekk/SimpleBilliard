@@ -17,4 +17,6 @@ class Language extends Enum
     const JA = 'ja';
     // English
     const EN = 'en';
+    // Português
+    const PT = 'pt';
 }

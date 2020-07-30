@@ -306,4 +306,100 @@ class Email extends AppModel
         }
         return Hash::extract($res, '{n}.Email.email');
     }
+
+    public function findVerifiedTeamMembers(int $teamId): array
+    {
+        return $this->find('all', [
+            'joins' => [
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        "TeamMember.user_id = Email.user_id",
+                        "TeamMember.team_id" => $teamId
+                    ]
+                ],
+                [
+                    'alias' => 'User',
+                    'table' => 'users',
+                    'conditions' => [
+                        "User.id = Email.user_id",
+                        "User.active_flg" => true
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'Email.email_verified' => true
+            ],
+            'fields' => [
+                'Email.email'
+            ],
+        ]);
+    }
+
+    public function findForGroup(int $groupId): array
+    {
+        return $this->find('all', [
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        "MemberGroup.user_id = Email.user_id",
+                        "MemberGroup.group_id" => $groupId
+                    ]
+                ],
+            ],
+            'fields' => [
+                'Email.email'
+            ],
+        ]);
+    }
+
+    public function findVerifiedTeamMembersByEmailAndGroup(
+        int $groupId,
+        int $teamId,
+        array $emails
+    ): array {
+        $options = [
+            'conditions' => [
+                'Email.email' => $emails,
+                'Email.email_verified' => true
+            ],
+            'joins' => [
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        "TeamMember.user_id = Email.user_id",
+                        "TeamMember.team_id" => $teamId
+                    ]
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        "MemberGroup.user_id = Email.user_id",
+                        "MemberGroup.group_id" => $groupId
+                    ]
+                ],
+                [
+                    'alias' => 'User',
+                    'table' => 'users',
+                    'conditions' => [
+                        "User.id = Email.user_id",
+                        "User.active_flg" => true
+                    ]
+                ],
+            ],
+            'fields' => [
+                'Email.user_id',
+                'Email.email',
+                'MemberGroup.group_id',
+            ]
+        ];
+
+        return $this->find('all', $options);
+    }
 }

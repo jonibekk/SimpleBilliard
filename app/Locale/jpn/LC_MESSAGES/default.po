@@ -21,6 +21,9 @@ msgstr "円"
 msgid "Dollar"
 msgstr "ドル"
 
+msgid "Currency"
+msgstr "通貨"
+
 msgid "Other numeric"
 msgstr "その他の数値"
 
@@ -6221,3 +6224,8 @@ msgstr "ベンガル語"
 msgid "Korean"
 msgstr "韓国語"
 
+msgid "Group Settings"
+msgstr "グループ設定"
+
+msgid "Manage groups"
+msgstr "グループ管理"

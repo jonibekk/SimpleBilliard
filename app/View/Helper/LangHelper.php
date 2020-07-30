@@ -5,6 +5,7 @@ class LangHelper extends AppHelper
 {
     const LANG_CODE_JP = 'ja';
     const LANG_CODE_EN = 'en';
+    const LANG_CODE_PT = 'pt';
 
     /**
      * get lang code
@@ -18,6 +19,8 @@ class LangHelper extends AppHelper
     public function getLangCode() {
         if(in_array(Configure::read('Config.language'), array('jpn','ja'))) {
             return self::LANG_CODE_JP;
+        } elseif (in_array(Configure::read('Config.language'), array('por','pt'))) {
+            return self::LANG_CODE_PT;
         } else {
             return self::LANG_CODE_EN;
         }
