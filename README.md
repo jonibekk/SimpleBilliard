@@ -9,4 +9,4 @@ Please do not mind of critizing the project because I myself a beginner in Graph
 
 Have a nice hacking).
 
-[![Download Demo](https://github.com/GitJonibek/SimpleBilliard/blob/master/Capture.PNG)](https://github.com/GitJonibek/SimpleBilliard/blob/master/Practice%20Window.mp4)
+[![Download Demo](https://github.com/GitJonibek/SimpleBilliard/blob/master/GifMaker_20200731154513020.gif)](https://github.com/GitJonibek/SimpleBilliard/blob/master/Practice%20Window.mp4)
