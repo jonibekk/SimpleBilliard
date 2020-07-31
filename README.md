@@ -8,3 +8,6 @@ This is pure C++ written code with Open Graphics library (OpenGL) and FreeGlut O
 Please do not mind of critizing the project because I myself a beginner in Graphics. I hope to imrove it.
 
 Have a nice hacking).
+
+
+![](https://github.com/GitJonibek/SimpleBilliard/blob/master/Practice%20Window.mp4)
