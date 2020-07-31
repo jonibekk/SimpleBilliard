@@ -9,4 +9,4 @@ Please do not mind of critizing the project because I myself a beginner in Graph
 
 Have a nice hacking).
 
-[![SC2 Video](https://img.youtube.com/vi/--b-9HrKK6w/0.jpg)](http://www.youtube.com/watch?v=--b-9HrKK6w)
+[![SC2 Video](https://img.youtube.com/vi/--b-9HrKK6w/0.jpg)](https://github.com/GitJonibek/SimpleBilliard/blob/master/Practice%20Window.mp4)
