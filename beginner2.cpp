@@ -19,6 +19,7 @@ GLfloat table_color[] = { 0.10, 0.32, 0.35 };
 #define D 15 /* 1/2 the length of the table */
 #define H 0.5 /* wall height */
 #define R 0.3 /* Pack radius */
+#define Pi 3.14159265
 
 float x_pos = 0.0, y_pos = 0.0;
 double angle = 0.0;
@@ -28,7 +29,7 @@ int x_1 = 0, y_1 = 0;
 int direction_x = 0;
 int direction_y = 0;
 
-float Vx = 0.f, Vy = 0.f;
+float V0 = 0.f, Vx = 0.f, Vy = 0.f;
 float Vmax = 1.0;
 float hypothesis = 0.f;
 
@@ -45,18 +46,14 @@ public:
 	float Vx;
 	float Vy;
 	bool swt;
-	int direction_x;
-	int direction_y;
 
-	BallObject(int radius, float x_pos, float y_pos, float accel, float Vx, float Vy, int dir_x, int dir_y, bool swt) {
+	BallObject(int radius, float x_pos, float y_pos, float accel, float Vx, float Vy, bool swt) {
 		this->radius = radius;
 		this->x_pos = x_pos;
 		this->y_pos = y_pos;
 		this->accel = accel;
 		this->Vx = Vx;
 		this->Vy = Vy;
-		this->direction_x = dir_x;
-		this->direction_y = dir_y;
 		this->swt = swt;
 	}
 
@@ -64,7 +61,7 @@ public:
 
 static void myGround(double height);
 void pockets();
-bool collision(float& x_1, float& y_1, float& x_2, float& y_2);
+void collision(BallObject* w, BallObject* r);
 bool putInPocket(float& x_1, float& y_1);
 void display();
 void idle();
@@ -77,8 +74,8 @@ void keyboard(unsigned char key, int x, int y);
 void resize(int w, int h);
 void init();
 
-BallObject* red_ball = new BallObject(radius, 0.0, 0.0, 1.0, 0.0, 0.0, 1, 1, false);
-BallObject* white_ball = new BallObject(radius, 5.0, 5.0, 1.0, 0.0, 0.0, 1, 1, false);
+BallObject* red_ball = new BallObject(radius, 0.0, 0.0, 1.0, Vx, Vy, false);
+BallObject* white_ball = new BallObject(radius, 5.0, 5.0, 1.0, 0.0, 0.0, false);
 
 int main(int argc, char** argv) {
 
@@ -164,15 +161,81 @@ void pockets() {
 
 }
 
-bool collision(float& x_1, float& y_1, float& x_2, float& y_2) {
-	float xs = abs(x_1 - x_2);
-	float ys = abs(y_1 - y_2);
+void collision(BallObject* b1, BallObject* b2) {
+	
+	
+	float dx = b2->x_pos - b1->x_pos;
+	float dy = b2->y_pos - b1->y_pos;
+	float dist = sqrt(dx * dx + dy * dy);
+	float error = 0.001;
+	float overlap = 0.f;
 
-	float c = sqrtf(pow(xs, 2) + pow(ys, 2));
+	// In this game, each ball has same Radius as Mass; radius == mass;
 
-	if (c <= 2.01) return true;
+	if (dist <= (b1->radius + b2->radius + error)) {
+		
+		overlap = (b1->radius + b2->radius + error) - dist;
 
-	return false;
+		if (b1->accel > b2->accel) {
+			b2->accel = b1->accel;
+			b1->accel -= b1->accel * 0.2;
+		}
+		else {
+			b1->accel = b2->accel;
+			b2->accel -= b2->accel * 0.2;
+		}
+
+		float angle = atan2f(dy, dx) * 180 / Pi;
+		float _sin = sin(angle);
+		float _cos = cos(angle);
+
+		float _x1 = 0.f, _y1 = 0.f;
+
+		// Rotate velocities from 2D to 1D;
+		float vx1 = b1->Vx * _cos + b1->Vy * _sin;
+		float vy1 = b1->Vy * _cos - b1->Vx * _sin;
+		float vx2 = b2->Vx * _cos + b2->Vy * _sin;
+		float vy2 = b2->Vy * _cos - b2->Vx * _sin;
+
+		// Calculate V1_final and V2_final velocities
+		float vx1final = ((b1->radius - b2->radius) * vx1 + 2 * b2->radius*vx2) / (b1->radius + b2->radius);
+		float vx2final = ((b2->radius - b1->radius) * vx2 + 2 * b1->radius*vx1) / (b1->radius + b2->radius);
+		vx1 = vx1final;
+		vx2 = vx2final;
+
+		// Rotate back to 2D from 1D;
+		b1->Vx = vx1 * _cos - vy1 * _sin;
+		b1->Vy = vy1 * _cos + vx1 * _sin;
+		b2->Vx = vx2 * _cos - vy2 * _sin;
+		b2->Vy = vy2 * _cos + vx2 * _sin;
+
+		if (angle >= 0.f and angle < 90.f) {
+			b1->x_pos -= overlap / 2;
+			b1->y_pos -= overlap / 2;
+			b2->x_pos += overlap / 2;
+			b2->y_pos += overlap / 2;
+		}
+		else if (angle >= 90.f and angle < 180.f) {
+			b1->x_pos += overlap / 2;
+			b1->y_pos -= overlap / 2;
+			b2->x_pos -= overlap / 2;
+			b2->y_pos += overlap / 2;
+		}
+		else if (angle < 0.f and angle > -90.f) {
+			b1->x_pos -= overlap / 2;
+			b1->y_pos += overlap / 2;
+			b2->x_pos += overlap / 2;
+			b2->y_pos -= overlap / 2;
+		}
+		else if (angle <= -90.f and angle > -180.f) {
+			b1->x_pos -= overlap / 2;
+			b1->y_pos += overlap / 2;
+			b2->x_pos += overlap / 2;
+			b2->y_pos -= overlap / 2;
+		}
+
+		glutTimerFunc(0, timer, 2);
+	}
 }
 
 bool putInPocket(float& x, float& y) {
@@ -220,11 +283,12 @@ void display() {
 		glutSolidSphere(white_ball->radius, 50.f, 50.f);
 	glPopMatrix();
 
-	touch = collision(white_ball->x_pos, white_ball->y_pos, red_ball->x_pos, red_ball->y_pos);
-	if (!before_touch and touch) {
-		glutTimerFunc(0, timer, 2);
-	}
-	before_touch = touch;
+	collision(red_ball, white_ball);
+	//touch = collision(white_ball->x_pos, white_ball->y_pos, red_ball->x_pos, red_ball->y_pos);
+	//if (!before_touch and touch) {
+	//	glutTimerFunc(0, timer, 2);
+	//}
+	//before_touch = touch;
 
 	cout << "-----------------------------------" << endl << endl;
 	cout << "acceleration: " << accel << endl;
@@ -257,24 +321,17 @@ void timer (int state) {
 
 	case 1: { // Start Red Ball
 		red_ball->swt = true;
-		red_ball->accel = accel;
 		glutTimerFunc(1000 / 60, timer, 0);
 	} break;
 
 	case 2: { // Start White Ball
-		white_ball->direction_x = white_ball->x_pos - red_ball->x_pos > 0 ? 1 : -1;
-		white_ball->direction_y = white_ball->y_pos - red_ball->y_pos > 0 ? 1 : -1;
-
-		white_ball->accel = red_ball->accel;
-		red_ball->accel -= red_ball->accel * 0.2;
-
 		white_ball->swt = true;
 	} break;
 
 	case 3: {
 		// RESET
-		red_ball = new BallObject(radius, 0.0, 0.0, 1.0, 0.0, 0.0, 1, 1, false);
-		white_ball = new BallObject(radius, 5.0, 5.0, 1.0, 0.0, 0.0, 1, 1, false);
+		red_ball = new BallObject(radius, 0.0, 0.0, 1.0, 0.0, 0.0, false);
+		white_ball = new BallObject(radius, 5.0, 5.0, 1.0, 0.0, 0.0, false);
 		glutIdleFunc(0);
 	}
 
@@ -286,6 +343,8 @@ void ball_motion(BallObject* obj, int type) { // Ball movement function
 
 	if (putInPocket(obj->x_pos, obj->y_pos)) {
 		obj->accel == 0.0;
+		obj->Vx = 0.0;
+		obj->Vy = 0.0;
 		obj->swt = false;
 		obj->radius = 0;
 		glutIdleFunc(0);
@@ -295,49 +354,34 @@ void ball_motion(BallObject* obj, int type) { // Ball movement function
 		obj->swt = false;
 		glutIdleFunc(0);
 		obj->accel = 0.0;
+		obj->Vx = 0.0;
+		obj->Vy = 0.0;
 		cout << &obj->name << endl;
 	}
 
 	if (obj->swt) {
 		glutIdleFunc(idle);
 
-		// For X direction
-		switch (obj->direction_x)
-		{
-		case 1:
-			if (obj->x_pos < D) obj->x_pos += Vx * obj->accel;
-			else {
-				obj->accel -= obj->accel * 0.07;
-				obj->direction_x = obj->direction_x * (-1);
-			}
-			break;
-		case -1:
-			if (obj->x_pos > -D) obj->x_pos -= Vx * obj->accel;
-			else {
-				obj->accel -= obj->accel * 0.07;
-				obj->direction_x = obj->direction_x * (-1);
-			}
-			break;
+		obj->x_pos += obj->Vx * obj->accel;
+		obj->y_pos += obj->Vy * obj->accel;
+
+		if (obj->x_pos > D) {
+			obj->x_pos = D;
+			obj->Vx *= -1;
+		}
+		if (obj->x_pos < -D) {
+			obj->x_pos = -D;
+			obj->Vx *= -1;
+		}
+		if (obj->y_pos > W) {
+			obj->y_pos = W;
+			obj->Vy *= -1;
+		}
+		if (obj->y_pos < -W) {
+			obj->y_pos = -W;
+			obj->Vy *= -1;
 		}
 
-		// For Z direction
-		switch (obj->direction_y)
-		{
-		case 1:
-			if (obj->y_pos < W) obj->y_pos += Vy * obj->accel;
-			else {
-				obj->accel -= obj->accel * 0.07;
-				obj->direction_y = obj->direction_y * (-1);
-			}
-			break;
-		case -1:
-			if (obj->y_pos > -W) obj->y_pos -= Vy * obj->accel;
-			else {
-				obj->accel -= obj->accel * 0.07;
-				obj->direction_y = obj->direction_y * (-1);
-			}
-			break;
-		}
 		obj->accel -= 0.002; // Negative Acceleration
 	}
 }
@@ -351,6 +395,9 @@ void mouse(int button, int state, int x, int y) {
 			y_0 = y;
 		}
 		else if (state == GLUT_UP) {
+			red_ball->accel = accel;
+			red_ball->Vx = Vx;
+			red_ball->Vy = Vy;
 			glutTimerFunc(0, timer, 1);
 		}
 		break;
@@ -368,23 +415,18 @@ void dragMotion(int x, int y) {
 	x_1 = x;
 	y_1 = y;
 
-	int d_x = abs(x_0 - x_1);
-	int d_y = abs(y_0 - y_1);
+	int d_x = (x_0 - x_1);
+	int d_y = (y_0 - y_1);
+	float angle = atan2f(d_y, d_x) * 180 / Pi;
 
 	hypothesis = sqrtf(pow(d_x, 2) + pow(d_y, 2));
 
-	direction_x = (x_0 - x_1) > 0 ? 1 : -1;
-	direction_y = (y_0 - y_1) > 0 ? -1 : 1;
+	V0 = min(1.2f, hypothesis / 70);
 
-	red_ball->direction_x = direction_x;
-	red_ball->direction_y = direction_y;
+	Vx = V0 * sin(angle);
+	Vy = V0 * cos(angle);
 
-	float V0 = min(1.2f, hypothesis / 70);
-
-	Vx = V0 * (d_x / hypothesis);
-	Vy = V0 * (d_y / hypothesis);
-
-	accel = max(Vx, Vy);
+	accel = max(abs(Vx), abs(Vy));
 }
 void passiveMotion(int x, int y) {
 	// cout << "Passive Motion:  x - " << x << ", y - " << y << endl;
