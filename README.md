@@ -9,4 +9,4 @@ Please do not mind of critizing the project because I myself a beginner in Graph
 
 Have a nice hacking).
 
-![](Practice Window.mp4)
+[![SC2 Video](https://img.youtube.com/vi/--b-9HrKK6w/0.jpg)](http://www.youtube.com/watch?v=--b-9HrKK6w)
