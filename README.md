@@ -9,5 +9,6 @@ Please do not mind of critizing the project because I myself a beginner in 2D/3D
 
 Have a nice hacking).
 
-![#f03c15] _This is an example in Gif format which has a lot of noise and very low **fps**. _
+![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `This is an example in Gif format which has a lot of noise and very low fps. 
+I recommend to download Short Demo 'Practice Window.mp4' which is a lot smoother.`
 [![Download Demo](https://github.com/GitJonibek/SimpleBilliard/blob/master/GifMaker_20200731154513020.gif)](https://github.com/GitJonibek/SimpleBilliard/blob/master/Practice%20Window.mp4)
