@@ -9,7 +9,4 @@ Please do not mind of critizing the project because I myself a beginner in Graph
 
 Have a nice hacking).
 
-
-<video width="320" height="240" controls>
-  <source src="Practice Window.mp4" type="video/mp4">
-</video>
+![](Practice Window.mp4)
