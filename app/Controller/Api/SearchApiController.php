@@ -2,13 +2,13 @@
 
 use Goalous\Enum\Api\SearchApiEnum;
 
-App::import('CakeResponse', 'Network');
-App::import('Controller/Api', 'BasePagingController');
-App::import('Enum/Api', 'SearchApiEnum');
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Model/Dto/Search', 'SearchApiRequestDto');
 App::import('Model/Dto/Search', 'SearchApiResponseDto');
+App::import('Service/Api', 'SearchApiService');
+App::uses('BasePagingController', 'Controller/Api');
+App::uses('Network', 'CakeResponse');
 
 /**
  * Class SearchApiController
@@ -58,6 +58,11 @@ class SearchApiController extends BasePagingController
         return ApiResponse::ok()->withBody($body)->getResponse();
     }
 
+    /**
+     * @param SearchApiRequestDto $searchApiRequestDto
+     *
+     * @throws Exception
+     */
     private function handleRequest(SearchApiRequestDto $searchApiRequestDto)
     {
         if (empty($this->request->query('cursor'))) {
