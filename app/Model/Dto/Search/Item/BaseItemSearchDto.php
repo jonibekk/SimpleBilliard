@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class BaseItemSearchModel
+ * Class BaseItemSearchDto
  */
-abstract class BaseItemSearchModel
+abstract class BaseItemSearchDto
 {
     /** @var string */
     public $id;

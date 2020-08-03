@@ -1,8 +1,8 @@
 <?php
 
-namespace Goalous\Enum;
+namespace Goalous\Enum\Api;
 
-class SearchEnum
+class SearchApiEnum
 {
     /** @var int */
     const MAX_LIMIT = 20;

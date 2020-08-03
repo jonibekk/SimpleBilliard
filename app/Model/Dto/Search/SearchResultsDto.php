@@ -1,19 +1,19 @@
 <?php
 
-App::import('Model/Search/Item', 'BaseItemSearchModel');
+App::import('Model/Dto/Search/Item', 'SearchApiBaseItemDto');
 
 /**
- * Class TypeSearchModel
+ * Class SearchResultsDto
  */
-class TypeSearchModel
+class SearchResultsDto
 {
-    /** @var array|BaseItemSearchModel[] */
+    /** @var array|BaseItemSearchDto[] */
     public $items;
     /** @var int */
     public $totalItemsCount;
 
     /**
-     * TypeSearchModel constructor.
+     * SearchResultsDto constructor.
      */
     public function __construct()
     {

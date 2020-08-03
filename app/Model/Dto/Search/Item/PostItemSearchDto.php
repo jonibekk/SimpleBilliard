@@ -1,11 +1,11 @@
 <?php
 
-App::import('Model/Search/Item', 'BaseItemSearchModel');
+App::import('Model/Dto/Search/Item', 'BaseItemSearchDto');
 
 /**
- * Class PostItemSearchModel
+ * Class PostItemSearchDto
  */
-class PostItemSearchModel extends BaseItemSearchModel
+class PostItemSearchDto extends BaseItemSearchDto
 {
     /** @var string */
     public $content;
