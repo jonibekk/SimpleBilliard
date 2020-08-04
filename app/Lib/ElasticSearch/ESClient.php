@@ -90,13 +90,6 @@ class ESClient
         try {
             $response = $client->request('POST', $url, ['json' => $requestBody]);
             $json = json_decode($response->getBody()->getContents(), true);
-
-            var_export($url);
-            var_export($requestBody);
-            var_export($response);
-            var_export($response->getBody()->getContents());
-            exit();
-
             return $json ?: [];
         } catch (Exception $exception) {
             GoalousLog::error($exception->getMessage(), $exception->getTrace());
