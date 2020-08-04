@@ -3,6 +3,13 @@
 use Goalous\Enum\Api\SearchApiEnum;
 
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Service/Api', 'SearchApiService');
+App::import('Service/Paging/Search', 'ActionSearchPagingService');
+App::import('Service/Paging/Search', 'CircleSearchPagingService');
+App::import('Service/Paging/Search', 'PostSearchPagingService');
+App::import('Service/Paging/Search', 'UserSearchPagingService');
+App::uses('SearchApiRequestDto', 'Model/Dto/Search');
+App::uses('SearchApiResponseDto', 'Model/Dto/Search');
 
 /**
  * Class SearchApiService
