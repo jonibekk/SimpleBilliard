@@ -105,29 +105,7 @@ class SearchApiService
         $searchResultsDto->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
-            $item = new PostItemSearchDto();
-
-            $item->id = $itemData['id'];
-            $item->imageUrl = $itemData['img_url'];
-
-
-            if (isset($itemData['comment'])) {
-                $item->content = $itemData['comment']['body'];
-                $item->dateTime = $itemData['comment']['created'];
-                $item->type = SearchApiEnum::POST_TYPE_COMMENTS;
-                $item->userId = $itemData['comment']['user_id'];
-                $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
-                $item->userName = $itemData['comment']['user']['display_username'];
-            } else {
-                $item->content = $itemData['post']['body'];
-                $item->dateTime = $itemData['post']['created'];
-                $item->type = SearchApiEnum::POST_TYPE_COMMENTS;
-                $item->userId = $itemData['post']['user_id'];
-                $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
-                $item->userName = $itemData['post']['user']['display_username'];
-            }
-
-            $searchResultsDto->items[] = $item;
+            $searchResultsDto->items[] = $this->mapPostData($itemData);
         }
 
         return $searchResultsDto;
@@ -149,7 +127,15 @@ class SearchApiService
 
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
-        $searchResultsDto->items = $data['data'];
+
+        foreach ($data['data'] as $itemData) {
+            $item = new DefaultItemSearchDto();
+            $item->id = $itemData['id'];
+            $item->imageUrl = $itemData['img_url'];
+            $item->name = $itemData['circle']['name'];
+
+            $searchResultsDto->items[] = $item;
+        }
 
         return $searchResultsDto;
     }
@@ -170,7 +156,15 @@ class SearchApiService
 
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
-        $searchResultsDto->items = $data['data'];
+
+        foreach ($data['data'] as $itemData) {
+            $item = new DefaultItemSearchDto();
+            $item->id = $itemData['id'];
+            $item->imageUrl = $itemData['img_url'];
+            $item->name = $itemData['user']['display_username'];
+
+            $searchResultsDto->items[] = $item;
+        }
 
         return $searchResultsDto;
     }
@@ -193,31 +187,39 @@ class SearchApiService
         $searchResultsDto->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
-            $item = new PostItemSearchDto();
-
-            $item->id = $itemData['id'];
-            $item->imageUrl = $itemData['img_url'];
-
-
-            if (isset($itemData['comment'])) {
-                $item->content = $itemData['comment']['body'];
-                $item->dateTime = $itemData['comment']['created'];
-                $item->type = 'comment';
-                $item->userId = $itemData['comment']['user_id'];
-                $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
-                $item->userName = $itemData['comment']['user']['display_username'];
-            } else {
-                $item->content = $itemData['post']['body'];
-                $item->dateTime = $itemData['post']['created'];
-                $item->type = 'post';
-                $item->userId = $itemData['post']['user_id'];
-                $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
-                $item->userName = $itemData['post']['user']['display_username'];
-            }
-
-            $searchResultsDto->items[] = $item;
+            $searchResultsDto->items[] = $this->mapPostData($itemData);
         }
 
         return $searchResultsDto;
+    }
+
+    /**
+     * @param array $itemData
+     * @return PostItemSearchDto
+     */
+    private function mapPostData($itemData): PostItemSearchDto
+    {
+        $item = new PostItemSearchDto();
+
+        $item->id = $itemData['id'];
+        $item->imageUrl = $itemData['img_url'];
+
+        if (isset($itemData['comment'])) {
+            $item->content = $itemData['comment']['body'];
+            $item->dateTime = $itemData['comment']['created'];
+            $item->type = 'comment';
+            $item->userId = $itemData['comment']['user_id'];
+            $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
+            $item->userName = $itemData['comment']['user']['display_username'];
+        } else {
+            $item->content = $itemData['post']['body'];
+            $item->dateTime = $itemData['post']['created'];
+            $item->type = 'post';
+            $item->userId = $itemData['post']['user_id'];
+            $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
+            $item->userName = $itemData['post']['user']['display_username'];
+        }
+
+        return $item;
     }
 }
