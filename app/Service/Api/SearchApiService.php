@@ -3,6 +3,9 @@
 use Goalous\Enum\Api\SearchApiEnum;
 
 App::import('Lib/ElasticSearch', 'ESPagingRequest');
+App::import('Model/Dto/Search', 'SearchResultsDto');
+App::import('Model/Dto/Search/Item', 'DefaultItemSearchDto');
+App::import('Model/Dto/Search/Item', 'PostItemSearchDto');
 App::import('Service/Api', 'SearchApiService');
 App::import('Service/Paging/Search', 'ActionSearchPagingService');
 App::import('Service/Paging/Search', 'CircleSearchPagingService');
@@ -100,7 +103,21 @@ class SearchApiService
 
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
-        $searchResultsDto->items = $data['data'];
+
+        foreach ($data['data'] as $itemData) {
+            $item = new PostItemSearchDto();
+            $item->content = $itemData['post']['body'];
+            $item->dateTime = $itemData['post']['created'];
+            $item->id = $itemData['id'];
+            $item->imageUrl = $itemData['img_url'];
+            $item->type = $itemData['post']['type'];
+            $item->userId = $itemData['post']['user_id'];
+            $item->userImageUrl = $itemData['post']['user']['profile_img_url'];
+            $item->userNameFirst = $itemData['post']['user']['display_first_name'];
+            $item->userNameLast = $itemData['post']['user']['display_last_name'];
+
+            $searchResultsDto->items[] = $item;
+        }
 
         return $searchResultsDto;
     }
@@ -163,7 +180,21 @@ class SearchApiService
 
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
-        $searchResultsDto->items = $data['data'];
+
+        foreach ($data['data'] as $itemData) {
+            $item = new PostItemSearchDto();
+            $item->content = $itemData['post']['body'];
+            $item->dateTime = $itemData['post']['created'];
+            $item->id = $itemData['id'];
+            $item->imageUrl = $itemData['img_url'];
+            $item->type = $itemData['post']['type'];
+            $item->userId = $itemData['post']['user_id'];
+            $item->userImageUrl = $itemData['post']['user']['profile_img_url'];
+            $item->userNameFirst = $itemData['post']['user']['display_first_name'];
+            $item->userNameLast = $itemData['post']['user']['display_last_name'];
+
+            $searchResultsDto->items[] = $item;
+        }
 
         return $searchResultsDto;
     }

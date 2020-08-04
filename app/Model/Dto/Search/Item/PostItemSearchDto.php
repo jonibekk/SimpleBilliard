@@ -13,8 +13,12 @@ class PostItemSearchDto extends BaseItemSearchDto
     public $dateTime;
     /** @var string */
     public $type;
+    /** @var int */
+    public $userId;
     /** @var string */
     public $userImageUrl;
     /** @var string */
-    public $userName;
+    public $userNameFirst;
+    /** @var string */
+    public $userNameLast;
 }
