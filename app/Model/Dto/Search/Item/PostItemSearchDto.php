@@ -18,7 +18,5 @@ class PostItemSearchDto extends BaseItemSearchDto
     /** @var string */
     public $userImageUrl;
     /** @var string */
-    public $userNameFirst;
-    /** @var string */
-    public $userNameLast;
+    public $userName;
 }

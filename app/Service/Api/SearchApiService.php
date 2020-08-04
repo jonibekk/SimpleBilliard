@@ -106,15 +106,26 @@ class SearchApiService
 
         foreach ($data['data'] as $itemData) {
             $item = new PostItemSearchDto();
-            $item->content = $itemData['post']['body'];
-            $item->dateTime = $itemData['post']['created'];
+
             $item->id = $itemData['id'];
             $item->imageUrl = $itemData['img_url'];
-            $item->type = $itemData['post']['type'];
-            $item->userId = $itemData['post']['user_id'];
-            $item->userImageUrl = $itemData['post']['user']['profile_img_url'];
-            $item->userNameFirst = $itemData['post']['user']['display_first_name'];
-            $item->userNameLast = $itemData['post']['user']['display_last_name'];
+
+
+            if (isset($itemData['comment'])) {
+                $item->content = $itemData['comment']['body'];
+                $item->dateTime = $itemData['comment']['created'];
+                $item->type = 'comment';
+                $item->userId = $itemData['comment']['user_id'];
+                $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
+                $item->userName = $itemData['comment']['user']['display_username'];
+            } else {
+                $item->content = $itemData['post']['body'];
+                $item->dateTime = $itemData['post']['created'];
+                $item->type = 'post';
+                $item->userId = $itemData['post']['user_id'];
+                $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
+                $item->userName = $itemData['post']['user']['display_username'];
+            }
 
             $searchResultsDto->items[] = $item;
         }
@@ -183,15 +194,26 @@ class SearchApiService
 
         foreach ($data['data'] as $itemData) {
             $item = new PostItemSearchDto();
-            $item->content = $itemData['post']['body'];
-            $item->dateTime = $itemData['post']['created'];
+
             $item->id = $itemData['id'];
             $item->imageUrl = $itemData['img_url'];
-            $item->type = $itemData['post']['type'];
-            $item->userId = $itemData['post']['user_id'];
-            $item->userImageUrl = $itemData['post']['user']['profile_img_url'];
-            $item->userNameFirst = $itemData['post']['user']['display_first_name'];
-            $item->userNameLast = $itemData['post']['user']['display_last_name'];
+
+
+            if (isset($itemData['comment'])) {
+                $item->content = $itemData['comment']['body'];
+                $item->dateTime = $itemData['comment']['created'];
+                $item->type = 'comment';
+                $item->userId = $itemData['comment']['user_id'];
+                $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
+                $item->userName = $itemData['comment']['user']['display_username'];
+            } else {
+                $item->content = $itemData['post']['body'];
+                $item->dateTime = $itemData['post']['created'];
+                $item->type = 'post';
+                $item->userId = $itemData['post']['user_id'];
+                $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
+                $item->userName = $itemData['post']['user']['display_username'];
+            }
 
             $searchResultsDto->items[] = $item;
         }
