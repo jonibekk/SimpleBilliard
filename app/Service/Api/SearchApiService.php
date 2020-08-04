@@ -114,14 +114,14 @@ class SearchApiService
             if (isset($itemData['comment'])) {
                 $item->content = $itemData['comment']['body'];
                 $item->dateTime = $itemData['comment']['created'];
-                $item->type = 'comment';
+                $item->type = SearchApiEnum::POST_TYPE_COMMENTS;
                 $item->userId = $itemData['comment']['user_id'];
                 $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
                 $item->userName = $itemData['comment']['user']['display_username'];
             } else {
                 $item->content = $itemData['post']['body'];
                 $item->dateTime = $itemData['post']['created'];
-                $item->type = 'post';
+                $item->type = SearchApiEnum::POST_TYPE_COMMENTS;
                 $item->userId = $itemData['post']['user_id'];
                 $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
                 $item->userName = $itemData['post']['user']['display_username'];
