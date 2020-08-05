@@ -75,11 +75,11 @@ class SearchApiController extends BasePagingController
             $searchApiRequestDto->type = $this->request->query('type');
 
             if (!empty($this->request->query('limit'))) {
-                $searchApiRequestDto->limit = $this->request->query('limit');
+                $searchApiRequestDto->limit = (int) $this->request->query('limit');
             }
 
             if (!empty($this->request->query('pn'))) {
-                $searchApiRequestDto->pn = $this->request->query('pn');
+                $searchApiRequestDto->pn = (int) $this->request->query('pn');
             }
         } else {
             $cursorJson = base64_decode($this->request->query('cursor'), true);
@@ -204,12 +204,16 @@ class SearchApiController extends BasePagingController
      */
     private function _dummyItemCount($count, $pn, $limit): int
     {
-        $maxPn = ceil($count / $limit);
+        $maxPn = (int) ceil($count / $limit);
 
         if ($pn < $maxPn) {
             return $limit;
         } elseif ($pn === $maxPn) {
-            return $count % $limit;
+            if (0 !== $count % $limit) {
+                return $count % $limit;
+            }
+
+            return $limit;
         }
 
         return 0;
