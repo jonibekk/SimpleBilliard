@@ -25,11 +25,6 @@ class BackBtnHelper extends AppHelper
                 } else {
                     $backButton = false;
                 }
-            } elseif ($pageURL == 'users') {
-                $userUrlID = substr($this->request->here, strpos($this->request->here, ":") + 1);
-                if ($userUrlID == $this->Session->read('Auth.User.id')) {
-                    $backButton = false;
-                }
             }
         }
 
