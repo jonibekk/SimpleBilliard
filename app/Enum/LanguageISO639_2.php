@@ -17,4 +17,5 @@ class LanguageISO639_2 extends Enum
 {
     const JPN = 'jpn';
     const ENG = 'eng';
+    const POR = 'por';
 }
