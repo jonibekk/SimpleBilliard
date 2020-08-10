@@ -101,6 +101,8 @@ class SearchApiService
         $actionSearchPagingService = ClassRegistry::init('ActionSearchPagingService');
         $data = $actionSearchPagingService->getDataWithPaging($pagingRequest);
 
+        var_dump($data);
+
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
 
