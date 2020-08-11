@@ -204,29 +204,33 @@ class SearchApiService
         $item->id = $itemData['id'];
         $item->imageUrl = $itemData['img_url'];
 
+        if (isset($itemData['highlight'])) {
+            if (is_array($itemData['highlight'])) {
+                $item->content = implode(' ', $itemData['highlight']);
+            } else {
+                $item->content = $itemData['highlight'];
+            }
+        }
+
         if (isset($itemData['comment'])) {
-            $item->content = $itemData['comment']['body'];
             $item->dateTime = $itemData['comment']['created'];
             $item->type = SearchApiEnum::POST_TYPE_COMMENTS;
             $item->userId = $itemData['comment']['user_id'];
             $item->userImageUrl = $itemData['comment']['user']['profile_img_url']['small'];
             $item->userName = $itemData['comment']['user']['display_username'];
+
+            if (empty($item->content)) {
+                $item->content = $itemData['comment']['body'];
+            }
         } else {
-            $item->content = $itemData['post']['body'];
             $item->dateTime = $itemData['post']['created'];
             $item->type = SearchApiEnum::POST_TYPE_POSTS;
             $item->userId = $itemData['post']['user_id'];
             $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
             $item->userName = $itemData['post']['user']['display_username'];
-        }
 
-        if (empty($item->content)) {
-            if (isset($itemData['highlight'])) {
-                if (is_array($itemData['highlight'])) {
-                    $item->content = implode(' ', $itemData['highlight']);
-                } else {
-                    $item->content = $itemData['highlight'];
-                }
+            if (empty($item->content)) {
+                $item->content = $itemData['post']['body'];
             }
         }
 
