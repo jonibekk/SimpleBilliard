@@ -1038,6 +1038,7 @@ class AppController extends BaseController
         $this->set('serviceUseStatus', $serviceUseStatus);
         $this->set('isTeamAdmin', boolval($this->User->TeamMember->isAdmin() ?? false));
         $this->set('stateEndDate', $TeamService->getStateEndDate());
+        $this->set('currentTeamId', $this->current_team_id);
 
         $isAdmin = $this->_isAdmin();
         if ($isAdmin && $serviceUseStatus == Team::SERVICE_USE_STATUS_PAID) {
