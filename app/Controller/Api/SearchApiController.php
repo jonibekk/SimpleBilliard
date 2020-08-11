@@ -132,7 +132,7 @@ class SearchApiController extends BasePagingController
             $itemSearchModel->id = $searchApiRequestDto->pn * $i + $i;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
             $itemSearchModel->type = 1 === mt_rand(0, 1) ? SearchApiEnum::POST_TYPE_COMMENTS : SearchApiEnum::POST_TYPE_POSTS;
-            $itemSearchModel->content = sprintf('This is action %d with a body.', $itemSearchModel->id);
+            $itemSearchModel->content = sprintf('This is action %d with <em>%s</em> as keyword.', $itemSearchModel->id, $searchApiRequestDto->keyword);
             $itemSearchModel->dateTime = '2020-07-15 12:00:00';
             $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
             $itemSearchModel->userName = 'Member '.$itemSearchModel->id;
