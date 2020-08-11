@@ -101,8 +101,6 @@ class SearchApiService
         $actionSearchPagingService = ClassRegistry::init('ActionSearchPagingService');
         $data = $actionSearchPagingService->getDataWithPaging($pagingRequest);
 
-        var_dump($data);
-
         $searchResultsDto = new SearchResultsDto();
         $searchResultsDto->totalItemsCount = $data['count'];
 
@@ -220,6 +218,16 @@ class SearchApiService
             $item->userId = $itemData['post']['user_id'];
             $item->userImageUrl = $itemData['post']['user']['profile_img_url']['small'];
             $item->userName = $itemData['post']['user']['display_username'];
+        }
+
+        if (empty($item->content)) {
+            if (isset($itemData['highlight'])) {
+                if (is_array($itemData['highlight'])) {
+                    $item->content = implode(' ', $itemData['highlight']);
+                } else {
+                    $item->content = $itemData['highlight'];
+                }
+            }
         }
 
         return $item;
