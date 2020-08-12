@@ -6,39 +6,19 @@ App::import('Lib/ElasticSearch', 'ESPagingRequest');
 App::import('Model/Dto/Search', 'SearchResultsDto');
 App::import('Model/Dto/Search/Item', 'DefaultItemSearchDto');
 App::import('Model/Dto/Search/Item', 'PostItemSearchDto');
-App::import('Service/Api', 'SearchApiService');
 App::import('Service/Paging/Search', 'ActionSearchPagingService');
 App::import('Service/Paging/Search', 'CircleSearchPagingService');
 App::import('Service/Paging/Search', 'PostSearchPagingService');
 App::import('Service/Paging/Search', 'UserSearchPagingService');
 App::uses('SearchApiRequestDto', 'Model/Dto/Search');
 App::uses('SearchApiResponseDto', 'Model/Dto/Search');
+App::uses('SearchApiServiceInterface', 'Service/Api');
 
 /**
  * Class SearchApiService
  */
-class SearchApiService
+class SearchApiService implements SearchApiServiceInterface
 {
-    /**
-     * @param $searchModel
-     *
-     * @return array
-     */
-    public function dtoToArray($searchModel): array
-    {
-        $array = [];
-
-        foreach ($searchModel as $key => $value) {
-            if (is_object($value)) {
-                $array[$key] = $this->dtoToArray($value);
-            } else {
-                $array[$key] = $value;
-            }
-        }
-
-        return $array;
-    }
-
     /**
      * @param SearchApiRequestDto $searchApiRequestDto
      * @param SearchApiResponseDto $searchApiResponseDto
@@ -46,21 +26,21 @@ class SearchApiService
     public function search(
         SearchApiRequestDto $searchApiRequestDto,
         SearchApiResponseDto $searchApiResponseDto
-    ) {
+    ): void {
         if (in_array($searchApiRequestDto->type, [SearchApiEnum::TYPE_ALL, SearchApiEnum::TYPE_ACTIONS])) {
-            $searchApiResponseDto->actions = $this->getActions($searchApiRequestDto);
+            $this->getActions($searchApiRequestDto, $searchApiResponseDto);
         }
 
         if (in_array($searchApiRequestDto->type, [SearchApiEnum::TYPE_ALL, SearchApiEnum::TYPE_CIRCLES])) {
-            $searchApiResponseDto->circles = $this->getCircles($searchApiRequestDto);
+            $this->getCircles($searchApiRequestDto, $searchApiResponseDto);
         }
 
         if (in_array($searchApiRequestDto->type, [SearchApiEnum::TYPE_ALL, SearchApiEnum::TYPE_MEMBERS])) {
-            $searchApiResponseDto->members = $this->getMembers($searchApiRequestDto);
+            $this->getMembers($searchApiRequestDto, $searchApiResponseDto);
         }
 
         if (in_array($searchApiRequestDto->type, [SearchApiEnum::TYPE_ALL, SearchApiEnum::TYPE_POSTS])) {
-            $searchApiResponseDto->posts = $this->getPosts($searchApiRequestDto);
+            $this->getPosts($searchApiRequestDto, $searchApiResponseDto);
         }
     }
 
@@ -74,7 +54,7 @@ class SearchApiService
         $pagingRequest = new ESPagingRequest();
         $pagingRequest->addCondition('keyword', $searchApiRequestDto->keyword);
         $pagingRequest->addCondition('limit', $searchApiRequestDto->limit);
-        $pagingRequest->addCondition('pn', $searchApiRequestDto->pn);
+        $pagingRequest->addCondition('pn', $searchApiRequestDto->pageNumber);
         $pagingRequest->addTempCondition('team_id', $searchApiRequestDto->teamId);
         $pagingRequest->addTempCondition('user_id', $searchApiRequestDto->userId);
 
@@ -89,10 +69,12 @@ class SearchApiService
 
     /**
      * @param SearchApiRequestDto $searchApiRequestDto
-     *
-     * @return SearchResultsDto
+     * @param SearchApiResponseDto $searchApiResponseDto
      */
-    private function getActions(SearchApiRequestDto $searchApiRequestDto): SearchResultsDto
+    private function getActions(
+        SearchApiRequestDto $searchApiRequestDto,
+        SearchApiResponseDto $searchApiResponseDto
+    ): void
     {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'action');
@@ -101,22 +83,21 @@ class SearchApiService
         $actionSearchPagingService = ClassRegistry::init('ActionSearchPagingService');
         $data = $actionSearchPagingService->getDataWithPaging($pagingRequest);
 
-        $searchResultsDto = new SearchResultsDto();
-        $searchResultsDto->totalItemsCount = $data['count'];
+        $searchApiResponseDto->actions->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
-            $searchResultsDto->items[] = $this->mapPostData($itemData);
+            $searchApiResponseDto->actions->items[] = $this->mapPostData($itemData);
         }
-
-        return $searchResultsDto;
     }
 
     /**
      * @param SearchApiRequestDto $searchApiRequestDto
-     *
-     * @return SearchResultsDto
+     * @param SearchApiResponseDto $searchApiResponseDto
      */
-    private function getCircles(SearchApiRequestDto $searchApiRequestDto): SearchResultsDto
+    private function getCircles(
+        SearchApiRequestDto $searchApiRequestDto,
+        SearchApiResponseDto $searchApiResponseDto
+    ): void
     {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'circle');
@@ -125,8 +106,7 @@ class SearchApiService
         $circleSearchPagingService = ClassRegistry::init('CircleSearchPagingService');
         $data = $circleSearchPagingService->getDataWithPaging($pagingRequest);
 
-        $searchResultsDto = new SearchResultsDto();
-        $searchResultsDto->totalItemsCount = $data['count'];
+        $searchApiResponseDto->circles->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
             $item = new DefaultItemSearchDto();
@@ -134,18 +114,18 @@ class SearchApiService
             $item->imageUrl = $itemData['img_url'];
             $item->name = $itemData['circle']['name'];
 
-            $searchResultsDto->items[] = $item;
+            $searchApiResponseDto->circles->items[] = $item;
         }
-
-        return $searchResultsDto;
     }
 
     /**
      * @param SearchApiRequestDto $searchApiRequestDto
-     *
-     * @return SearchResultsDto
+     * @param SearchApiResponseDto $searchApiResponseDto
      */
-    private function getMembers(SearchApiRequestDto $searchApiRequestDto): SearchResultsDto
+    private function getMembers(
+        SearchApiRequestDto $searchApiRequestDto,
+        SearchApiResponseDto $searchApiResponseDto
+    ): void
     {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'user');
@@ -154,8 +134,7 @@ class SearchApiService
         $userSearchPagingService = ClassRegistry::init('UserSearchPagingService');
         $data = $userSearchPagingService->getDataWithPaging($pagingRequest);
 
-        $searchResultsDto = new SearchResultsDto();
-        $searchResultsDto->totalItemsCount = $data['count'];
+        $searchApiResponseDto->members->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
             $item = new DefaultItemSearchDto();
@@ -163,18 +142,18 @@ class SearchApiService
             $item->imageUrl = $itemData['img_url'];
             $item->name = $itemData['user']['display_username'];
 
-            $searchResultsDto->items[] = $item;
+            $searchApiResponseDto->members->items[] = $item;
         }
-
-        return $searchResultsDto;
     }
 
     /**
      * @param SearchApiRequestDto $searchApiRequestDto
-     *
-     * @return SearchResultsDto
+     * @param SearchApiResponseDto $searchApiResponseDto
      */
-    private function getPosts(SearchApiRequestDto $searchApiRequestDto): SearchResultsDto
+    private function getPosts(
+        SearchApiRequestDto $searchApiRequestDto,
+        SearchApiResponseDto $searchApiResponseDto
+    ): void
     {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'circle_post');
@@ -183,14 +162,11 @@ class SearchApiService
         $postSearchPagingService = ClassRegistry::init('PostSearchPagingService');
         $data = $postSearchPagingService->getDataWithPaging($pagingRequest);
 
-        $searchResultsDto = new SearchResultsDto();
-        $searchResultsDto->totalItemsCount = $data['count'];
+        $searchApiResponseDto->posts->totalItemsCount = $data['count'];
 
         foreach ($data['data'] as $itemData) {
-            $searchResultsDto->items[] = $this->mapPostData($itemData);
+            $searchApiResponseDto->posts->items[] = $this->mapPostData($itemData);
         }
-
-        return $searchResultsDto;
     }
 
     /**

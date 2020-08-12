@@ -6,16 +6,18 @@ App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
 App::import('Model/Dto/Search', 'SearchApiRequestDto');
 App::import('Model/Dto/Search', 'SearchApiResponseDto');
+App::import('Service/Api', 'SearchApiDummyService');
 App::import('Service/Api', 'SearchApiService');
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('Network', 'CakeResponse');
+App::uses('SearchApiServiceInterface', 'Service/Api');
 
 /**
  * Class SearchApiController
  */
 class SearchApiController extends BasePagingController
 {
-    /** @var SearchApiService */
+    /** @var SearchApiServiceInterface */
     private $searchApiService;
 
     /**
@@ -28,7 +30,11 @@ class SearchApiController extends BasePagingController
     {
         parent::__construct($request, $response);
 
-        $this->searchApiService = ClassRegistry::init('SearchApiService');
+        if ('local' === constant('ENV_NAME')) {
+            $this->searchApiService = ClassRegistry::init('SearchApiDummyService');
+        } else {
+            $this->searchApiService = ClassRegistry::init('SearchApiService');
+        }
     }
 
     /**
@@ -52,13 +58,8 @@ class SearchApiController extends BasePagingController
             return ErrorResponse::badRequest();
         }
 
-        if ('local' === constant('ENV_NAME')) {
-             $this->_dummyResponse($searchApiRequestDto, $searchApiResponseDto);
-        } else {
-            $this->searchApiService->search($searchApiRequestDto, $searchApiResponseDto);
-        }
-
-        $body = $this->searchApiService->dtoToArray($searchApiResponseDto);
+        $this->searchApiService->search($searchApiRequestDto, $searchApiResponseDto);
+        $body = $this->dtoToArray($searchApiResponseDto);
 
         return ApiResponse::ok()->withBody($body)->getResponse();
     }
@@ -79,7 +80,7 @@ class SearchApiController extends BasePagingController
             }
 
             if (!empty($this->request->query('pn'))) {
-                $searchApiRequestDto->pn = (int) $this->request->query('pn');
+                $searchApiRequestDto->pageNumber = (int) $this->request->query('pn');
             }
         } else {
             $cursorJson = base64_decode($this->request->query('cursor'), true);
@@ -92,10 +93,15 @@ class SearchApiController extends BasePagingController
             $searchApiRequestDto->keyword = $cursor['keyword'];
             $searchApiRequestDto->type = $cursor['type'];
             $searchApiRequestDto->limit = $cursor['limit'];
-            $searchApiRequestDto->pn = $cursor['pn'];
+            $searchApiRequestDto->pageNumber = $cursor['pn'];
         }
 
-        if (empty($searchApiRequestDto->keyword) || empty($searchApiRequestDto->limit) || empty($searchApiRequestDto->pn) || empty($searchApiRequestDto->type)) {
+        if (
+            empty($searchApiRequestDto->keyword) ||
+            empty($searchApiRequestDto->limit) ||
+            empty($searchApiRequestDto->pageNumber) ||
+            empty($searchApiRequestDto->type)
+        ) {
             throw new Exception();
         }
 
@@ -105,117 +111,22 @@ class SearchApiController extends BasePagingController
     }
 
     /**
-     * @param SearchApiRequestDto $searchApiRequestDto
-     * @param SearchApiResponseDto $searchApiResponseDto
+     * @param iterable $searchModel
      *
-     * @return SearchApiResponseDto
+     * @return array
      */
-    private function _dummyResponse(
-        SearchApiRequestDto $searchApiRequestDto,
-        SearchApiResponseDto $searchApiResponseDto
-    ): SearchApiResponseDto
+    private function dtoToArray($searchModel): array
     {
-        $searchApiResponseDto->actions->totalItemsCount = 1;
-        $searchApiResponseDto->posts->totalItemsCount = 3;
-        $searchApiResponseDto->members->totalItemsCount = 10;
-        $searchApiResponseDto->circles->totalItemsCount = 100;
+        $array = [];
 
-        // Actions.
-        $count = $this->_dummyItemCount(
-            $searchApiResponseDto->actions->totalItemsCount,
-            $searchApiRequestDto->pn,
-            $searchApiRequestDto->limit
-        );
-
-        for ($i = 0; $i < $count; $i++) {
-            $itemSearchModel = new PostItemSearchDto();
-            $itemSearchModel->id = $searchApiRequestDto->pn * $i + $i;
-            $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
-            $itemSearchModel->type = 1 === mt_rand(0, 1) ? SearchApiEnum::POST_TYPE_COMMENTS : SearchApiEnum::POST_TYPE_POSTS;
-            $itemSearchModel->content = sprintf('This is action %d with <em>%s</em> as keyword.', $itemSearchModel->id, $searchApiRequestDto->keyword);
-            $itemSearchModel->dateTime = '2020-07-15 12:00:00';
-            $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-            $itemSearchModel->userName = 'Member '.$itemSearchModel->id;
-
-            $searchApiResponseDto->actions->items[] = $itemSearchModel;
-        }
-
-        // Posts.
-        $count = $this->_dummyItemCount(
-            $searchApiResponseDto->posts->totalItemsCount,
-            $searchApiRequestDto->pn,
-            $searchApiRequestDto->limit
-        );
-
-        for ($i = 0; $i < $count; $i++) {
-            $itemSearchModel = new PostItemSearchDto();
-            $itemSearchModel->id = $searchApiRequestDto->pn * $i + $i;
-            $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.png';
-            $itemSearchModel->type = 1 === mt_rand(0, 1) ? SearchApiEnum::POST_TYPE_COMMENTS : SearchApiEnum::POST_TYPE_POSTS;
-            $itemSearchModel->content = sprintf('This is post %d with a body.', $itemSearchModel->id);
-            $itemSearchModel->dateTime = '2020-07-15 12:00:00';
-            $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-            $itemSearchModel->userName = 'Member '.$itemSearchModel->id;
-
-            $searchApiResponseDto->posts->items[] = $itemSearchModel;
-        }
-
-        // Members.
-        $count = $this->_dummyItemCount(
-            $searchApiResponseDto->members->totalItemsCount,
-            $searchApiRequestDto->pn,
-            $searchApiRequestDto->limit
-        );
-
-        for ($i = 0; $i < $count; $i++) {
-            $itemSearchModel = new DefaultItemSearchDto();
-            $itemSearchModel->id = $searchApiRequestDto->pn * $i + $i;
-            $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-            $itemSearchModel->name = 'Member '.$itemSearchModel->id;
-
-            $searchApiResponseDto->members->items[] = $itemSearchModel;
-        }
-
-        // Circles.
-        $count = $this->_dummyItemCount(
-            $searchApiResponseDto->circles->totalItemsCount,
-            $searchApiRequestDto->pn,
-            $searchApiRequestDto->limit
-        );
-
-        for ($i = 0; $i < $count; $i++) {
-            $itemSearchModel = new DefaultItemSearchDto();
-            $itemSearchModel->id = $searchApiRequestDto->pn * $i + $i;
-            $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.png';
-            $itemSearchModel->name = 'Circles '.$itemSearchModel->id;
-
-            $searchApiResponseDto->circles->items[] = $itemSearchModel;
-        }
-
-        return $searchApiResponseDto;
-    }
-
-    /**
-     * @param int $count
-     * @param int $pn
-     * @param int $limit
-     *
-     * @return int
-     */
-    private function _dummyItemCount($count, $pn, $limit): int
-    {
-        $maxPn = (int) ceil($count / $limit);
-
-        if ($pn < $maxPn) {
-            return $limit;
-        } elseif ($pn === $maxPn) {
-            if (0 !== $count % $limit) {
-                return $count % $limit;
+        foreach ($searchModel as $key => $value) {
+            if (is_object($value)) {
+                $array[$key] = $this->dtoToArray($value);
+            } else {
+                $array[$key] = $value;
             }
-
-            return $limit;
         }
 
-        return 0;
+        return $array;
     }
 }

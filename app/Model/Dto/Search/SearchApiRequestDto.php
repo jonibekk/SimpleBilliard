@@ -9,7 +9,7 @@ class SearchApiRequestDto {
     /** @var int */
     public $limit;
     /** @var int */
-    public $pn;
+    public $pageNumber;
     /** @var null|int */
     public $teamId;
     /** @var null|string */
@@ -23,6 +23,6 @@ class SearchApiRequestDto {
     public function __construct()
     {
         $this->limit = 3;
-        $this->pn = 1;
+        $this->pageNumber = 1;
     }
 }
