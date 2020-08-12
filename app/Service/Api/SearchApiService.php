@@ -173,7 +173,7 @@ class SearchApiService implements SearchApiServiceInterface
      * @param array $itemData
      * @return PostItemSearchDto
      */
-    private function mapPostData($itemData): PostItemSearchDto
+    private function mapPostData(array $itemData): PostItemSearchDto
     {
         $item = new PostItemSearchDto();
 
