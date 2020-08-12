@@ -18,9 +18,9 @@ class SearchApiDummyService implements SearchApiServiceInterface {
         SearchApiResponseDto $searchApiResponseDto
     ): void {
         $searchApiResponseDto->actions->totalItemsCount = 30;
-        $searchApiResponseDto->circles->totalItemsCount = 6;
-        $searchApiResponseDto->members->totalItemsCount = 3;
-        $searchApiResponseDto->posts->totalItemsCount = 0;
+        $searchApiResponseDto->circles->totalItemsCount = 20;
+        $searchApiResponseDto->members->totalItemsCount = 10;
+        $searchApiResponseDto->posts->totalItemsCount = 4;
 
         if (in_array($searchApiRequestDto->type, [SearchApiEnum::TYPE_ALL, SearchApiEnum::TYPE_ACTIONS])) {
             $this->getActions($searchApiRequestDto, $searchApiResponseDto);
@@ -73,7 +73,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.pageNumberg';
             $itemSearchModel->type = 1 === mt_rand(0, 1) ? SearchApiEnum::POST_TYPE_COMMENTS : SearchApiEnum::POST_TYPE_POSTS;
-            $itemSearchModel->content = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 20)));
+            $itemSearchModel->content = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(10, 30)));
             $itemSearchModel->dateTime = $this->createTimestamp();
             $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
             $itemSearchModel->userName = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
@@ -101,7 +101,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel = new DefaultItemSearchDto();
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
-            $itemSearchModel->name = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
+            $itemSearchModel->name = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
 
             $searchApiResponseDto->circles->items[] = $itemSearchModel;
         }
@@ -126,7 +126,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel = new DefaultItemSearchDto();
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
-            $itemSearchModel->name = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
+            $itemSearchModel->name = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
 
             $searchApiResponseDto->members->items[] = $itemSearchModel;
         }
@@ -152,7 +152,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/09f/fff.pageNumberg';
             $itemSearchModel->type = 1 === mt_rand(0, 1) ? SearchApiEnum::POST_TYPE_COMMENTS : SearchApiEnum::POST_TYPE_POSTS;
-            $itemSearchModel->content = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 20)));
+            $itemSearchModel->content = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(10, 30)));
             $itemSearchModel->dateTime = $this->createTimestamp();
             $itemSearchModel->userImageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
             $itemSearchModel->userName = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
