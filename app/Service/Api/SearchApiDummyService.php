@@ -101,7 +101,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel = new DefaultItemSearchDto();
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
-            $itemSearchModel->name = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
+            $itemSearchModel->name = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
 
             $searchApiResponseDto->circles->items[] = $itemSearchModel;
         }
@@ -126,7 +126,7 @@ class SearchApiDummyService implements SearchApiServiceInterface {
             $itemSearchModel = new DefaultItemSearchDto();
             $itemSearchModel->id = ($searchApiRequestDto->pageNumber - 1) * $searchApiRequestDto->limit + $i + 1;
             $itemSearchModel->imageUrl = 'https://via.placeholder.com/300/9fa/fff.pageNumberg';
-            $itemSearchModel->name = sprintf('Xxxx <em>%d</em>%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
+            $itemSearchModel->name = sprintf('Xxxx %d%s.', $itemSearchModel->id, str_repeat(" xxxx", mt_rand(1, 10)));
 
             $searchApiResponseDto->members->items[] = $itemSearchModel;
         }
