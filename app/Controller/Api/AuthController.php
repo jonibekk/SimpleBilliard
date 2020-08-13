@@ -11,6 +11,7 @@ App::uses('LangUtil', 'Util');
 App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 /**
  * Created by PhpStorm.
@@ -23,6 +24,41 @@ class AuthController extends BaseApiController
     public function beforeFilter()
     {
         parent::beforeFilter();
+    }
+
+    /**
+     * Endpoint for step 1 of login. Returns login method information for the user
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function post_request_login()
+    {
+        $return = $this->validateRequestLogin();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init('AuthService');
+            $loginRequestData = $AuthService->createLoginRequestData($requestData['email']);
+        } catch (GlException\Auth\AuthUserNotFoundException $e) {
+            return ApiResponse::ok()->withMessage(Enum\Auth\Status::AUTH_MISMATCH)->getResponse();
+        } catch (GlException\Auth\AuthFailedException $e) {
+            return ApiResponse::ok()->withMessage(Enum\Auth\Status::AUTH_ERROR)->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency('user failed to request login', [
+                'message' => $e->getMessage(),
+            ]);
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withMessage(Enum\Auth\Status::OK)->withData($loginRequestData)->getResponse();
     }
 
     /**
@@ -49,15 +85,15 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                                ->withMessage(__('Email address or Password is incorrect.'))
-                                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
-                                ->getResponse();
+                ->withMessage(__('Email address or Password is incorrect.'))
+                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
+                ->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency('user failed to login', [
                 'message' => $e->getMessage(),
             ]);
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         $data = [
@@ -66,6 +102,16 @@ class AuthController extends BaseApiController
         ];
 
         return ApiResponse::ok()->withData($data)->getResponse();
+    }
+
+    public function post_login_2fa()
+    {
+
+    }
+
+    public function post_login_sso()
+    {
+        //TODO
     }
 
     /**
@@ -99,18 +145,47 @@ class AuthController extends BaseApiController
             GoalousLog::error('failed to logout', [
                 'user.id' => $this->getUserId(),
                 'team.id' => $this->getTeamId(),
-                'jwt_id'  => $this->getJwtAuth()->getJwtId(),
+                'jwt_id' => $this->getJwtAuth()->getJwtId(),
             ]);
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         if (!$res) {
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
+    }
+
+    /**
+     * Validate parameters
+     *
+     * @return CakeResponse
+     */
+    private function validateRequestLogin()
+    {
+        $requestedBody = $this->getRequestJsonBody();
+        $validator = AuthRequestValidator::createRequestLoginValidator();
+
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
+        try {
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error('Unexpected validation exception', [
+                'class' => get_class($e),
+                'message' => $e,
+            ]);
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 
     /**
@@ -129,11 +204,11 @@ class AuthController extends BaseApiController
             $validator->validate($requestedBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
-                'class'   => get_class($e),
+                'class' => get_class($e),
                 'message' => $e,
             ]);
             return ErrorResponse::internalServerError()->getResponse();
@@ -174,7 +249,8 @@ class AuthController extends BaseApiController
      * @param int $teamId
      * @return string
      */
-    private function getTokenForRecovery(array $user, int $teamId): string {
+    private function getTokenForRecovery(array $user, int $teamId): string
+    {
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 

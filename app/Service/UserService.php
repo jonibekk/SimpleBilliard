@@ -3,6 +3,8 @@ App::import('Service', 'AppService');
 App::import('Service', 'PaymentService');
 App::uses('User', 'Model');
 App::uses("Circle", 'Model');
+App::uses("Team", 'Model');
+App::uses("TeamMember", 'Model');
 App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
@@ -107,11 +109,11 @@ class UserService extends AppService
      * Update default_team_id of specified users.id
      *
      * @param int $userId
-     * @param int $teamId
+     * @param int|null $teamId
      *
      * @return bool
      */
-    public function updateDefaultTeam(int $userId, int $teamId): bool
+    public function updateDefaultTeam(int $userId, ?int $teamId): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -186,5 +188,64 @@ class UserService extends AppService
         $users = $User->findByKeywordRangeCircle($keyword, $teamId, $userId, $limit, true, $secretCircleId);
 
         return $users;
+    }
+
+    /**
+     * Check whether user's default team is usable & user can access the team
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function isDefaultTeamValid(int $userId): bool
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $user = $User->getById($userId);
+
+        if (empty($user)) {
+            return false;
+        }
+
+        $defaultTeamId = $user['default_team_id'];
+
+        if (empty($defaultTeamId)) {
+            return false;
+        }
+
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        if ($Team->isDeleted($defaultTeamId)) {
+            return false;
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        return $TeamMember->isStatusActive($defaultTeamId, $userId);
+    }
+
+    /**
+     * Update user's default team id if it's invalid
+     *
+     * @param int $userId
+     * @throws Exception
+     */
+    public function updateDefaultTeamIfInvalid(int $userId) {
+
+        if ($this->isDefaultTeamValid($userId)){
+            return;
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $nextActiveTeamId = $TeamMember->getLatestLoggedInActiveTeamId($userId);
+
+        if (!empty($nextActiveTeamId)){
+            $this->updateDefaultTeam($userId, $nextActiveTeamId);
+        }
+
     }
 }

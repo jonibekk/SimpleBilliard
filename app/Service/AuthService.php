@@ -4,10 +4,13 @@ App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
 App::uses('JwtAuthentication', 'Lib/Jwt');
 App::uses('User', 'Model');
+App::uses('Team', 'Model');
 App::import('Service', 'AppService');
+App::import('Service', 'UserService');
 App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 /**
  * Class for handling authentication
@@ -32,10 +35,10 @@ class AuthService extends AppService
      * @param string $email
      * @param string $password
      *
-     * @throws GlException\Auth\AuthMismatchException When user's email+password does not match
+     * @return JwtAuthentication Authentication token of the user. Will return null on failed login
      * @throws GlException\Auth\AuthFailedException Any reason failed authorize(including internal server error)
      *
-     * @return JwtAuthentication Authentication token of the user. Will return null on failed login
+     * @throws GlException\Auth\AuthMismatchException When user's email+password does not match
      */
     public function authenticateUser(string $email, string $password)
     {
@@ -46,7 +49,7 @@ class AuthService extends AppService
 
         if (empty($user)) {
             // email is not registered
-            throw new GlException\Auth\AuthMismatchException('password and email does not match');
+            throw new GlException\Auth\AuthUserNotFoundException('password and email does not match');
         }
 
         $storedHashedPassword = $user['password'];
@@ -76,8 +79,8 @@ class AuthService extends AppService
      *
      * @param JwtAuthentication $jwt JWT Auth of the user
      *
-     * @throws Exception
      * @return bool True on successful logout
+     * @throws Exception
      */
     public function invalidateUser(JwtAuthentication $jwt): bool
     {
@@ -95,6 +98,43 @@ class AuthService extends AppService
         $jwtClient->del($jwtKey);
 
         return true;
+    }
+
+    /**
+     * Create information for login method
+     *
+     * @param string $email User email address
+     * @return array
+     */
+    public function createLoginRequestData(string $email): array
+    {
+        /** @var .\Model\User $User */
+        $User = ClassRegistry::init('User');
+
+        $user = $User->findUserByEmail($email);
+
+        if (empty($user)) {
+            // email is not registered
+            throw new GlException\Auth\AuthUserNotFoundException('Email does not exist');
+        }
+
+        $requestData = ["email" => $email];
+
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+        $UserService->updateDefaultTeamIfInvalid($user['id']);
+
+        $user = $User->getById($user['id']);
+
+        $defaultTeamId = $user['default_team_id'];
+
+        if (!empty($defaultTeamId)) {
+            $requestData['default_team'] = $this->createTeamData($defaultTeamId);
+        }
+
+        $teamLoginMethod =$this->getTeamLoginMethod($defaultTeamId);
+
+        return am($requestData, $teamLoginMethod);
     }
 
     /**
@@ -132,7 +172,7 @@ class AuthService extends AppService
      * Save new password as SHA256
      *
      * @param UserEntity $userData
-     * @param string     $plainPassword
+     * @param string $plainPassword
      *
      * @return bool
      */
@@ -143,7 +183,7 @@ class AuthService extends AppService
 
         try {
             $User->save([
-                'id'       => $userData['id'],
+                'id' => $userData['id'],
                 'password' => $newHashedPassword,
             ], false);
         } catch (Exception $e) {
@@ -157,12 +197,52 @@ class AuthService extends AppService
         return true;
     }
 
+    /**
+     * Create login method information
+     *
+     * @param int|null $teamId
+     * @return array
+     */
+    private function getTeamLoginMethod(?int $teamId): array
+    {
+        //TODO read from DB. For now, it's hard-coded for password
+
+        $loginMethod = "";
+
+        switch ($loginMethod) {
+            case Enum\Auth\Method::PASSWORD:
+            default:
+                return [
+                    "auth_method" => Enum\Auth\Method::PASSWORD,
+                    "auth_content" => ""
+                ];
+        }
+    }
+
+    /**
+     * Create array for default team information during login
+     *
+     * @param int $teamId
+     * @return array
+     */
+    private function createTeamData(int $teamId): array
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $team = $Team->getById($teamId);
+
+        return [
+            "name" => $team['name']
+        ];
+    }
+
 
     /**
      * Recreate new jwt
      * use case: switch team
      *
-     * @param JwtAuthentication $jwt: old jwt
+     * @param JwtAuthentication $jwt : old jwt
      * @param int $teamId
      * @return JwtAuthentication new jwt
      */

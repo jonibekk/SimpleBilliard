@@ -32,10 +32,28 @@ class AuthRequestValidator extends BaseValidator
         return $rules;
     }
 
+    public function getRequestLoginValidationRule(): array
+    {
+        $rules = [
+            'email' => [
+                validator::email(),
+            ],
+        ];
+
+        return $rules;
+    }
+
     public static function createLoginValidator(): self
     {
         $self = new self();
         $self->addRule($self->getLoginValidationRule(), true);
+        return $self;
+    }
+
+    public static function createRequestLoginValidator(): self
+    {
+        $self = new self();
+        $self->addRule($self->getRequestLoginValidationRule(), true);
         return $self;
     }
 }

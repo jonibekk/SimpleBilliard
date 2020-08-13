@@ -5,6 +5,8 @@ App::uses('User', 'Model');
 App::uses('Email', 'Model');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 
+use Goalous\Enum as Enum;
+
 /**
  * Created by PhpStorm.
  * User: StephenRaharja
@@ -22,7 +24,8 @@ class AuthServiceTest extends GoalousTestCase
     public $fixtures = [
         'app.email',
         'app.team',
-        'app.user'
+        'app.user',
+        'app.team_member'
     ];
 
     public function test_authentication_success()
@@ -50,7 +53,7 @@ class AuthServiceTest extends GoalousTestCase
 
 
     /**
-     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
     public function test_authWrongUsername_failed()
     {
@@ -66,7 +69,7 @@ class AuthServiceTest extends GoalousTestCase
     }
 
     /**
-     * @expectedException \Goalous\Exception\Auth\AuthMismatchException
+     * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
     public function test_authEmptyUsername_failed()
     {
@@ -89,7 +92,7 @@ class AuthServiceTest extends GoalousTestCase
     {
         $this->insertNewUser();
 
-        $emailAddress = 'auth_testt@email.com';
+        $emailAddress = 'auth_test@email.com';
         $password = '';
 
         /** @var AuthService $AuthService */
@@ -136,6 +139,38 @@ class AuthServiceTest extends GoalousTestCase
             printf($e->getTraceAsString());
             $this->assertNotEmpty($e);
         }
+    }
+
+    public function test_createLoginRequestData_success()
+    {
+        $this->insertNewUser();
+
+        $email = 'auth_test@email.com';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $requestData = $AuthService->createLoginRequestData($email);
+
+        $this->assertArrayHasKey('email', $requestData);
+        $this->assertEquals($email, $requestData['email']);
+        $this->assertArrayHasKey('default_team', $requestData);
+        $this->assertArrayHasKey('auth_method', $requestData);
+        $this->assertEquals(Enum\Auth\Method::PASSWORD, $requestData['auth_method']);
+        $this->assertArrayHasKey('auth_content', $requestData);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
+     */
+    public function test_createLoginRequestDataNoUser_failed()
+    {
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $AuthService->createLoginRequestData("somerandomemail@123");
+
+        $this->fail();
     }
 
     private function insertAndAuthenticateUser()
