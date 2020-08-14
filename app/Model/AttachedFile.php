@@ -767,7 +767,7 @@ class AttachedFile extends AppModel
             'alias'      => 'CommentFile',
             'joins'      => [
                 [
-                    'type'       => 'LEFT',
+                    'type'       => 'INNER',
                     'table'      => 'attached_files',
                     'alias'      => 'AttachedFile',
                     'conditions' => [
