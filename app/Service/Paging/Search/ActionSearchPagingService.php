@@ -234,9 +234,6 @@ class ActionSearchPagingService extends BaseSearchPagingService
             }
 
             $item['img_url'] = $imgUrl;
-
-            // GL-8542 test
-            $imgUrl = null;
         }
 
         return $rawData;

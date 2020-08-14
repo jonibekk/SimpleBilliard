@@ -760,7 +760,7 @@ class AttachedFile extends AppModel
         $db = $this->getDataSource();
         $subQuery = $db->buildStatement([
             'fields'     => [
-                'MIN(AttachedFile.id) AS id',
+                'AttachedFile.id AS id',
                 'CommentFile.comment_id'
             ],
             'table'      => 'comment_files',
