@@ -1,6 +1,5 @@
 <?php
 App::uses('BaseApiController', 'Controller/Api');
-App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
@@ -77,12 +76,10 @@ class AuthController extends BaseApiController
 
         $requestData = $this->getRequestJsonBody();
 
-        // TODO: do the translation
-
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
-            $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
+            $response = $AuthService->createPasswordLoginResponse($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(__('Email address or Password is incorrect.'))
@@ -96,12 +93,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
-        $data = [
-            'me' => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
-            'token' => $jwt->token()
-        ];
-
-        return ApiResponse::ok()->withData($data)->getResponse();
+        return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
     public function post_login_2fa()
@@ -112,21 +104,6 @@ class AuthController extends BaseApiController
     public function post_login_sso()
     {
         //TODO
-    }
-
-    /**
-     * Get auth user info for Login API response
-     *
-     * @param int $userId
-     * @param int $teamId
-     * @return array
-     */
-    private function _getAuthUserInfo(int $userId, int $teamId): array
-    {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init('UserService');
-        $req = new UserResourceRequest($userId, $teamId, true);
-        return $UserService->get($req, [MeExtender::EXTEND_ALL]);
     }
 
     /**

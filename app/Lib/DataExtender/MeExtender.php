@@ -65,7 +65,7 @@ class MeExtender extends BaseExtender
             $data['my_active_teams'] = [];
             foreach ($activeTeams as $activeTeamId => $name) {
                 $data['my_active_teams'][] = [
-                    'id'   => $activeTeamId,
+                    'id' => $activeTeamId,
                     'name' => $name
                 ];
             }
@@ -144,6 +144,7 @@ class MeExtender extends BaseExtender
             Cache::set('duration', $expire, 'user_data');
             $action_count = Cache::remember($Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
                 function () use ($currentTerm, $Team, $Goal) {
+                    if (empty($currentTerm)) return 0;
                     $timezone = $Team->getTimezone();
                     $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
                     $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
