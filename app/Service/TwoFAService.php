@@ -1,4 +1,5 @@
 <?php
+
 App::uses('RecoveryCode', 'Model');
 App::uses('User', 'Model');
 App::import('Service', 'AppService');
@@ -9,10 +10,25 @@ use Goalous\Exception as GlException;
 class TwoFAService extends AppService
 {
     /**
+     * Generate new secret key for totp 2fa
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    public function generateSecretKey(int $length = 16): string
+    {
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+
+        return $Google2Fa->generateSecretKey($length);
+    }
+
+    /**
      * Verify 2fa totp token
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $twoFaCode
+     *
      * @return bool
      */
     public function verifyCode(int $userId, string $twoFaCode): bool
@@ -38,11 +54,13 @@ class TwoFAService extends AppService
     /**
      * Use a 2fa recovery code
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $backupCode
+     *
+     * @return bool
      * @throws Exception
      */
-    public function useBackupCode(int $userId, string $backupCode)
+    public function useBackupCode(int $userId, string $backupCode): bool
     {
         /** @var RecoveryCode $RecoveryCode */
         $RecoveryCode = ClassRegistry::init('RecoveryCode');
@@ -50,7 +68,7 @@ class TwoFAService extends AppService
         $code = $RecoveryCode->findUnusedCode($userId, $backupCode);
 
         if (empty($code)) {
-            throw new GlException\Auth\Auth2FAInvalidBackupCodeException("Invalid 2fa backup code.");
+            return false;
         }
 
         try {
@@ -61,5 +79,7 @@ class TwoFAService extends AppService
             $this->TransactionManager->rollback();
             throw $e;
         }
+
+        return true;
     }
 }

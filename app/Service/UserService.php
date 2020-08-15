@@ -7,9 +7,11 @@ App::uses("Team", 'Model');
 App::uses("TeamMember", 'Model');
 App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service/Request/Resource', 'UserResourceRequest');
+App::import('Service', 'ImageStorageService');
 App::import('Service', 'UserService');
 
 use Goalous\Enum as Enum;
+
 /**
  * Class UserService
  */
@@ -20,7 +22,7 @@ class UserService extends AppService
      * extend data
      *
      * @param UserResourceRequest $req
-     * @param array               $extensions
+     * @param array $extensions
      *
      * @return array
      */
@@ -51,6 +53,39 @@ class UserService extends AppService
     }
 
     /**
+     * Get minimum user information without any information related to team
+     * Used in case where user doesn't belong to any team
+     *
+     * @param int $userId
+     * @param bool $isMe Whether user requesting own information
+     *
+     * @return array
+     */
+    public function getMinimum(int $userId, bool $isMe = false): array
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $fields = $isMe ? $User->loginUserFields : $User->profileFields;
+        $data = $this->_getWithCache($userId, 'User', $fields);
+        if (empty($data)) {
+            return [];
+        }
+
+        //Can't use extender since it required team id
+        /** @var ImageStorageService $ImageStorageService */
+        $ImageStorageService = ClassRegistry::init('ImageStorageService');
+        $data['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User');
+        $data['cover_img_url'] = $ImageStorageService->getImgUrlEachSize($data, 'User', 'cover_photo');
+
+        $data['current_team_id'] = null;
+        $data['current_team'] = [];
+        $data['language'] = LangUtil::convertISOFrom3to2($data['language']);
+
+        return $data;
+    }
+
+    /**
      * Getting user names as string from user id list.
      *
      * @param array $userIds e.g. [1,2,3]
@@ -72,10 +107,10 @@ class UserService extends AppService
     /**
      * find topic new members for select2 on message
      *
-     * @param  string $keyword
-     * @param  integer $limit
-     * @param  int $topicId
-     * @param  boolean $withGroup
+     * @param string $keyword
+     * @param integer $limit
+     * @param int $topicId
+     * @param boolean $withGroup
      *
      * @return array
      */
@@ -137,11 +172,11 @@ class UserService extends AppService
      * @param int $teamId
      * @param int $userId
      * @param int $limit
-     * @param int|null $postId: Affection range by post (especially post is in secret circle, search range is only target secret circle members)
-     * @param int      $resourceType: 1, comment; 2, post;
+     * @param int|null $postId : Affection range by post (especially post is in secret circle, search range is only target secret circle members)
+     * @param int $resourceType : 1, comment; 2, post;
      * @return array
      */
-    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $resourceId = null, $resourceType = 1) : array
+    public function findMentionItems(string $keyword, int $teamId, int $userId, $limit = 10, $resourceId = null, $resourceType = 1): array
     {
         $keyword = trim($keyword);
         if (strlen($keyword) == 0) {
@@ -232,9 +267,10 @@ class UserService extends AppService
      * @param int $userId
      * @throws Exception
      */
-    public function updateDefaultTeamIfInvalid(int $userId) {
+    public function updateDefaultTeamIfInvalid(int $userId)
+    {
 
-        if ($this->isDefaultTeamValid($userId)){
+        if ($this->isDefaultTeamValid($userId)) {
             return;
         }
 
@@ -243,7 +279,7 @@ class UserService extends AppService
 
         $nextActiveTeamId = $TeamMember->getLatestLoggedInActiveTeamId($userId);
 
-        if (!empty($nextActiveTeamId)){
+        if (!empty($nextActiveTeamId)) {
             $this->updateDefaultTeam($userId, $nextActiveTeamId);
         }
 

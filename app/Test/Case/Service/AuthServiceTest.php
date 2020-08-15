@@ -1,11 +1,15 @@
 <?php
+
 App::uses('GoalousTestCase', 'Test');
 App::import('Service', 'AuthService');
+App::import('Service', 'TwoFAService');
 App::uses('User', 'Model');
 App::uses('Email', 'Model');
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
+App::import('Vendor', 'paragmarx/google2fa/src/Google2FA');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Created by PhpStorm.
@@ -15,6 +19,8 @@ use Goalous\Enum as Enum;
  */
 class AuthServiceTest extends GoalousTestCase
 {
+
+    private const TWOFA_SECRET = 'JUOQEYF6W7UWW3GX';
 
     /**
      * Fixtures
@@ -39,7 +45,7 @@ class AuthServiceTest extends GoalousTestCase
 
     public function test_authentication_success()
     {
-       $this->assertNotEmpty($this->insertAndAuthenticateUser());
+        $this->assertNotEmpty($this->insertAndAuthenticateUser());
     }
 
     public function test_authWrongPassword_failed()
@@ -76,9 +82,7 @@ class AuthServiceTest extends GoalousTestCase
         $jwt = $this->insertAndAuthenticateUser()['data']['token'];
 
         try {
-
             $res = $AuthService->invalidateUser(JwtAuthentication::decode($jwt));
-
         } catch (Exception $e) {
             printf($e->getMessage());
             printf($e->getTraceAsString());
@@ -86,7 +90,6 @@ class AuthServiceTest extends GoalousTestCase
         }
 
         $this->assertTrue($res);
-
     }
 
     public function test_invalidateInvalidToken_failed()
@@ -96,7 +99,7 @@ class AuthServiceTest extends GoalousTestCase
 
         $this->insertAndAuthenticateUser();
 
-        $failJwt = new JwtAuthentication(0,0);
+        $failJwt = new JwtAuthentication(0, 0);
         $failJwt->withJwtId('failed');
 
         try {
@@ -157,6 +160,139 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertArrayHasKey('data', $response);
         $this->assertArrayHasKey('me', $response['data']);
         $this->assertArrayHasKey('token', $response['data']);
+        $this->assertNotNull($response['data']['me']['current_team_id']);
+    }
+
+    public function test_createPasswordLoginResponseNoTeam_success()
+    {
+        $this->insertNewUser();
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        $User->updateDefaultTeam(null, true, 101);
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+
+        $this->assertArrayHasKey('message', $response);
+        $this->assertEquals(Enum\Auth\Status::OK, $response['message']);
+        $this->assertArrayHasKey('data', $response);
+        $this->assertArrayHasKey('me', $response['data']);
+        $this->assertArrayHasKey('token', $response['data']);
+        $this->assertNull($response['data']['me']['current_team_id']);
+    }
+
+    public function test_createPasswordLoginResponseWith2FA_success()
+    {
+        $this->insertNewUser(true);
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+
+        $this->assertArrayHasKey('message', $response);
+        $this->assertEquals(Enum\Auth\Status::REQUEST_2FA, $response['message']);
+        $this->assertArrayHasKey('data', $response);
+        $this->assertArrayHasKey('auth_hash', $response['data']);
+    }
+
+    public function test_create2FALoginResponse_success()
+    {
+        $this->insertNewUser(true);
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+
+        $authHash = $response['data']['auth_hash'];
+
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+        $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
+
+        $response = $AuthService->create2FALoginResponse($authHash, $otpCode);
+
+        $this->assertArrayHasKey('message', $response);
+        $this->assertEquals(Enum\Auth\Status::OK, $response['message']);
+        $this->assertArrayHasKey('data', $response);
+        $this->assertArrayHasKey('me', $response['data']);
+        $this->assertArrayHasKey('token', $response['data']);
+    }
+
+    public function test_create2FALoginResponseHashDeleted_failed()
+    {
+        $this->insertNewUser(true);
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+
+        $authHash = $response['data']['auth_hash'];
+
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+        $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
+
+        $AuthService->create2FALoginResponse($authHash, $otpCode);
+
+        try {
+            $AuthService->create2FALoginResponse($authHash, $otpCode);
+        } catch (GlException\Auth\AuthUserNotFoundException $e) {
+        }
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
+     */
+    public function test_create2FALoginResponseNoHash_failed()
+    {
+        $this->insertNewUser(true);
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+        $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
+
+        $AuthService->create2FALoginResponse('', $otpCode);
+    }
+
+    /**
+     * @expectedException \Goalous\Exception\Auth\Auth2FAMismatchException
+     */
+    public function test_create2FALoginResponseWrongOTP_failed()
+    {
+        $this->insertNewUser(true);
+
+        $emailAddress = "auth_test@email.com";
+        $password = '12345678';
+
+        /** @var AuthService $AuthService */
+        $AuthService = ClassRegistry::init('AuthService');
+
+        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+
+        $authHash = $response['data']['auth_hash'];
+
+        $AuthService->create2FALoginResponse($authHash, '123');
     }
 
     /**
@@ -231,9 +367,9 @@ class AuthServiceTest extends GoalousTestCase
         $this->fail();
     }
 
-    private function insertAndAuthenticateUser(): array
+    private function insertAndAuthenticateUser(bool $with2FA = false): array
     {
-        $this->insertNewUser();
+        $this->insertNewUser($with2FA);
 
         $emailAddress = "auth_test@email.com";
         $password = '12345678';
@@ -252,7 +388,7 @@ class AuthServiceTest extends GoalousTestCase
         return [];
     }
 
-    private function insertNewUser()
+    private function insertNewUser(bool $with2FA = false)
     {
         $User = new User();
         $Email = new Email();
@@ -271,6 +407,7 @@ class AuthServiceTest extends GoalousTestCase
             'comment'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'password'           => $passwordHasher->hash('12345678'),
             'password_token'     => '',
+            '2fa_secret'         => '',
             'password_modified'  => '2014-05-22 02:28:04',
             'no_pass_flg'        => 1,
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
@@ -291,6 +428,11 @@ class AuthServiceTest extends GoalousTestCase
             'created'            => '2014-05-22 02:28:04',
             'modified'           => '2014-05-22 02:28:04'
         ];
+
+        if ($with2FA) {
+            $newUser['User']['2fa_secret'] = self::TWOFA_SECRET;
+        }
+
         $newEmail = [
             'id'                  => 50,
             'user_id'             => '101',

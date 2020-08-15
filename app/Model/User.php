@@ -2025,7 +2025,8 @@ class User extends AppModel
             'fields'     => [
                 'User.id',
                 'User.password',
-                'User.default_team_id'
+                'User.default_team_id',
+                'User.2fa_secret'
             ],
             'joins'      => [
                 [

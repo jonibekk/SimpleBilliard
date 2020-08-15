@@ -1,4 +1,5 @@
 <?php
+
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
@@ -50,9 +51,12 @@ class AuthController extends BaseApiController
         } catch (GlException\Auth\AuthFailedException $e) {
             return ApiResponse::ok()->withMessage(Enum\Auth\Status::AUTH_ERROR)->getResponse();
         } catch (\Throwable $e) {
-            GoalousLog::emergency('user failed to request login', [
-                'message' => $e->getMessage(),
-            ]);
+            GoalousLog::emergency(
+                'user failed to request login',
+                [
+                    'message' => $e->getMessage(),
+                ]
+            );
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -82,13 +86,15 @@ class AuthController extends BaseApiController
             $response = $AuthService->createPasswordLoginResponse($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                ->withMessage(__('Email address or Password is incorrect.'))
-                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
+                ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
                 ->getResponse();
         } catch (\Throwable $e) {
-            GoalousLog::emergency('user failed to login', [
-                'message' => $e->getMessage(),
-            ]);
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                ]
+            );
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -96,9 +102,84 @@ class AuthController extends BaseApiController
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
+    /**
+     * Login endpoint for user using 2fa. Ignore restriction and authentication
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
     public function post_login_2fa()
     {
+        $return = $this->validate2FALogin();
 
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $response = $AuthService->create2FALoginResponse($requestData['auth_hash'], $requestData['2fa_token']);
+        } catch (GlException\Auth\Auth2FAMismatchException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
+                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                ]
+            );
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($response)->getResponse();
+    }
+
+    /**
+     * Login endpoint for user using 2fa recovery codes. Ignore restriction and authentication
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function post_login_2fa_backup()
+    {
+        $return = $this->validate2FALogin();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $response = $AuthService->create2FALoginResponse(
+                $requestData['auth_hash'],
+                $requestData['2fa_token'],
+                true
+            );
+        } catch (GlException\Auth\Auth2FAMismatchException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
+                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                ]
+            );
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
     public function post_login_sso()
@@ -119,11 +200,14 @@ class AuthController extends BaseApiController
         try {
             $res = $AuthService->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            GoalousLog::error('failed to logout', [
-                'user.id' => $this->getUserId(),
-                'team.id' => $this->getTeamId(),
-                'jwt_id' => $this->getJwtAuth()->getJwtId(),
-            ]);
+            GoalousLog::error(
+                'failed to logout',
+                [
+                    'user.id' => $this->getUserId(),
+                    'team.id' => $this->getTeamId(),
+                    'jwt_id'  => $this->getJwtAuth()->getJwtId(),
+                ]
+            );
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -155,10 +239,13 @@ class AuthController extends BaseApiController
                 ->addErrorsFromValidationException($e)
                 ->getResponse();
         } catch (Exception $e) {
-            GoalousLog::error('Unexpected validation exception', [
-                'class' => get_class($e),
-                'message' => $e,
-            ]);
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
             return ErrorResponse::internalServerError()->getResponse();
         }
 
@@ -184,10 +271,13 @@ class AuthController extends BaseApiController
                 ->addErrorsFromValidationException($e)
                 ->getResponse();
         } catch (Exception $e) {
-            GoalousLog::error('Unexpected validation exception', [
-                'class' => get_class($e),
-                'message' => $e,
-            ]);
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
             return ErrorResponse::internalServerError()->getResponse();
         }
 
@@ -212,7 +302,7 @@ class AuthController extends BaseApiController
         $token = $this->getTokenForRecovery($user, $teamId);
 
         $data = [
-            'me' => $this->_getAuthUserInfo($user['id'], $teamId),
+            'me'    => $this->_getAuthUserInfo($user['id'], $teamId),
             'token' => $token
         ];
 
@@ -222,8 +312,10 @@ class AuthController extends BaseApiController
     /**
      * Get token from redis integrated session
      * If token is not verified, regenerate token
+     *
      * @param array $user
-     * @param int $teamId
+     * @param int   $teamId
+     *
      * @return string
      */
     private function getTokenForRecovery(array $user, int $teamId): string
@@ -247,5 +339,32 @@ class AuthController extends BaseApiController
         }
 
         return $token;
+    }
+
+    private function validate2FALogin()
+    {
+        $requestedBody = $this->getRequestJsonBody();
+        $validator = AuthRequestValidator::create2FALoginValidator();
+
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
+        try {
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 }

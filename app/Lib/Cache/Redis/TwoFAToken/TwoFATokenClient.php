@@ -1,4 +1,5 @@
 <?php
+
 App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
 App::uses('TwoFATokenData', 'Lib/Cache/Redis/TwoFAToken');

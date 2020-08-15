@@ -1,4 +1,5 @@
 <?php
+
 App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
 App::uses('Security', 'Util');
 App::uses('AccessAuthenticator', 'Lib/Auth');
@@ -10,6 +11,7 @@ App::import('Service', 'UserService');
 App::import('Model/Entity', 'UserEntity');
 App::import('Lib/DataExtender', 'MeExtender');
 App::import('Service', 'TwoFAService');
+App::import('Lib/Cache/Redis/AccessToken', 'AccessTokenClient');
 App::import('Lib/Cache/Redis/TwoFAToken', 'TwoFATokenData');
 App::import('Lib/Cache/Redis/TwoFAToken', 'TwoFATokenKey');
 App::import('Lib/Cache/Redis/TwoFAToken', 'TwoFATokenClient');
@@ -37,7 +39,7 @@ class AuthService extends AppService
     /**
      * Authenticate password to an user.
      *
-     * @param int $userId
+     * @param int    $userId
      * @param string $password
      *
      * @return bool Whether password matches
@@ -53,13 +55,13 @@ class AuthService extends AppService
 
         $storedHashedPassword = $user['password'];
 
-        if ($this->_isSha1($storedHashedPassword)) {
+        if ($this->isSha1($storedHashedPassword)) {
             // SHA1 passwords are stored before payment release.
             // Ols passwords will be changed to sha256 when user change password
-            if (!$this->_verifySha1Password($password, $storedHashedPassword)) {
+            if (!$this->verifySha1Password($password, $storedHashedPassword)) {
                 return false;
             }
-            if (!$this->_savePasswordAsSha256($user, $password)) {
+            if (!$this->savePasswordAsSha256($user, $password)) {
                 throw new GlException\Auth\AuthFailedException('failed to save sha256');
             }
         } elseif (!$this->passwordHasher->check($password, $storedHashedPassword)) {
@@ -99,6 +101,7 @@ class AuthService extends AppService
      * Create information for login method
      *
      * @param string $email User email address
+     *
      * @return array
      */
     public function createLoginRequestData(string $email): array
@@ -137,13 +140,13 @@ class AuthService extends AppService
      *
      * @param string $email
      * @param string $password
+     *
      * @return array
      */
     public function createPasswordLoginResponse(string $email, string $password): array
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
-
         $user = $User->findUserByEmail($email);
 
         if (empty($user)) {
@@ -159,47 +162,51 @@ class AuthService extends AppService
         $defaultTeamId = $user['default_team_id'];
 
         if ($user->has2FA()) {
-            $hash = $this->create2FAToken($userId, $defaultTeamId);
             return [
                 "message" => Enum\Auth\Status::REQUEST_2FA,
-                "data" => [
-                    "2fa_type" => "totp",
-                    "auth_hash" => $hash
+                "data"    => [
+                    "auth_hash" => $this->create2FAToken($userId, $defaultTeamId)
                 ]
             ];
         }
 
-        $data = $this->createAuthResponseData($userId, $defaultTeamId);
-
         return [
             "message" => Enum\Auth\Status::OK,
-            "data" => $data
+            "data"    => $this->createAuthResponseData($userId, $defaultTeamId)
         ];
     }
 
-    public function create2FALoginResponse(string $authHash, string $twoFACode)
+    /**
+     * Perform authentication using 2fa. Assuming that user has authenticated using password
+     *
+     * @param string $authHash           Hash generated when user authenticated with password
+     * @param string $twoFACode
+     * @param bool   $useRecoveryCodeFlg Whether recovery code is used instead of totp code
+     *
+     * @return array
+     */
+    public function create2FALoginResponse(string $authHash, string $twoFACode, bool $useRecoveryCodeFlg = false)
     {
-        $tokenKey = new TwoFATokenKey($authHash);
-        $tokenClient = new TwoFATokenClient();
-
-        $tokenData = $tokenClient->read($tokenKey);
-
-        if (empty($tokenData)) {
-            throw new GlException\Auth\AuthFailedException("Missing 2fa auth hash token.");
-        }
+        $tokenData = $this->getCached2FAToken($authHash);
 
         /** @var TwoFAService $TwoFAService */
         $TwoFAService = ClassRegistry::init('TwoFAService');
 
-        if (!$TwoFAService->verifyCode($tokenData->getUserId(), $twoFACode)) {
-            throw new GlException\Auth\Auth2FAMismatchException("Wrong 2fa token.");
+        if ($useRecoveryCodeFlg) {
+            if (!$TwoFAService->useBackupCode($tokenData->getUserId(), $twoFACode)) {
+                throw new GlException\Auth\Auth2FAInvalidBackupCodeException("Invalid 2fa backup code.");
+            }
+        } else {
+            if (!$TwoFAService->verifyCode($tokenData->getUserId(), $twoFACode)) {
+                throw new GlException\Auth\Auth2FAMismatchException("Wrong 2fa token.");
+            }
         }
 
-        $data = $this->createAuthResponseData($tokenData->getUserId(), $tokenData->getTeamId());
+        $this->removeCached2FAToken($authHash);
 
         return [
             "message" => Enum\Auth\Status::OK,
-            "data" => $data
+            "data"    => $this->createAuthResponseData($tokenData->getUserId(), $tokenData->getTeamId())
         ];
     }
 
@@ -211,7 +218,7 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _isSha1(string $hashedPassword): bool
+    private function isSha1(string $hashedPassword): bool
     {
         return strlen($hashedPassword) == 40;
     }
@@ -224,7 +231,7 @@ class AuthService extends AppService
      *
      * @return bool
      */
-    private function _verifySha1Password(string $inputPlainPassword, string $storedHashedPassword): bool
+    private function verifySha1Password(string $inputPlainPassword, string $storedHashedPassword): bool
     {
         $passwordHasher = new SimplePasswordHasher(['hashType' => 'sha1']);
         $inputHashedPassword = $passwordHasher->hash($inputPlainPassword);
@@ -238,26 +245,32 @@ class AuthService extends AppService
      * Save new password as SHA256
      *
      * @param UserEntity $userData
-     * @param string $plainPassword
+     * @param string     $plainPassword
      *
      * @return bool
      */
-    private function _savePasswordAsSha256(UserEntity $userData, string $plainPassword): bool
+    private function savePasswordAsSha256(UserEntity $userData, string $plainPassword): bool
     {
         $User = new User();
         $newHashedPassword = $this->passwordHasher->hash($plainPassword);
 
         try {
-            $User->save([
-                'id' => $userData['id'],
-                'password' => $newHashedPassword,
-            ], false);
+            $User->save(
+                [
+                    'id'       => $userData['id'],
+                    'password' => $newHashedPassword,
+                ],
+                false
+            );
         } catch (Exception $e) {
-            GoalousLog::emergency(sprintf("Failed to save SHA256 password. errorMsg: %s, userData: %s, Trace: %s",
-                $e->getMessage(),
-                AppUtil::jsonOneLine($userData->toArray()),
-                AppUtil::jsonOneLine(Debugger::trace())
-            ));
+            GoalousLog::emergency(
+                sprintf(
+                    "Failed to save SHA256 password. errorMsg: %s, userData: %s, Trace: %s",
+                    $e->getMessage(),
+                    AppUtil::jsonOneLine($userData->toArray()),
+                    AppUtil::jsonOneLine(Debugger::trace())
+                )
+            );
             return false;
         }
         return true;
@@ -267,6 +280,7 @@ class AuthService extends AppService
      * Create login method information
      *
      * @param int|null $teamId
+     *
      * @return array
      */
     private function getLoginMethod(?int $teamId): array
@@ -279,7 +293,7 @@ class AuthService extends AppService
             case Enum\Auth\Method::PASSWORD:
             default:
                 return [
-                    "auth_method" => Enum\Auth\Method::PASSWORD,
+                    "auth_method"  => Enum\Auth\Method::PASSWORD,
                     "auth_content" => ""
                 ];
         }
@@ -289,6 +303,7 @@ class AuthService extends AppService
      * Create array for default team information during login
      *
      * @param int $teamId
+     *
      * @return array
      */
     private function createTeamData(int $teamId): array
@@ -309,7 +324,8 @@ class AuthService extends AppService
      * use case: switch team
      *
      * @param JwtAuthentication $jwt : old jwt
-     * @param int $teamId
+     * @param int               $teamId
+     *
      * @return JwtAuthentication new jwt
      */
     public function recreateJwt(JwtAuthentication $jwt, int $teamId): JwtAuthentication
@@ -328,15 +344,20 @@ class AuthService extends AppService
     /**
      * Get user information
      *
-     * @param int $userId
-     * @param int $teamId
+     * @param int      $userId
+     * @param int|null $teamId
+     *
      * @return array
      */
-    public function getUserInfo(int $userId, int $teamId): array
+    public function getUserInfo(int $userId, ?int $teamId): array
     {
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init('UserService');
-        //Name, photo, default team id,
+
+        if (empty($teamId)) {
+            return $UserService->getMinimum($userId, true);
+        }
+
         $req = new UserResourceRequest($userId, $teamId, true);
         return $UserService->get($req, [MeExtender::EXTEND_ALL]);
     }
@@ -357,7 +378,7 @@ class AuthService extends AppService
             $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
 
             return [
-                "me" => $userInfo,
+                "me"    => $userInfo,
                 "token" => $jwt->token()
             ];
         } catch (\Throwable $e) {
@@ -368,8 +389,9 @@ class AuthService extends AppService
     /**
      * Create unique token for 2fa login and store it in Redis
      *
-     * @param int $userId
+     * @param int      $userId
      * @param int|null $teamId
+     *
      * @return string
      */
     private function create2FAToken(int $userId, ?int $teamId): string
@@ -386,5 +408,39 @@ class AuthService extends AppService
         }
 
         return $hash;
+    }
+
+    /**
+     * Get cached auth hash information for 2fa login
+     *
+     * @param string $authHash
+     *
+     * @return TwoFATokenData
+     */
+    private function getCached2FAToken(string $authHash): TwoFATokenData
+    {
+        $tokenKey = new TwoFATokenKey($authHash);
+        $tokenClient = new TwoFATokenClient();
+
+        $tokenData = $tokenClient->read($tokenKey);
+
+        if (empty($tokenData)) {
+            throw new GlException\Auth\AuthUserNotFoundException("Missing 2fa auth hash token.");
+        }
+
+        return $tokenData;
+    }
+
+    /**
+     * Remove cached auth hash after successful login
+     *
+     * @param string $authHash
+     */
+    private function removeCached2FAToken(string $authHash)
+    {
+        $tokenKey = new TwoFATokenKey($authHash);
+        $tokenClient = new TwoFATokenClient();
+
+        $tokenClient->del($tokenKey);
     }
 }

@@ -15,8 +15,10 @@ class TwoFATokenKey
 
     public function toKey(): string
     {
-        return sprintf('%s:id:%s',
+        return sprintf(
+            '%s:id:%s',
             self::CACHE_KEY,
-            $this->uuid);
+            $this->uuid
+        );
     }
 }

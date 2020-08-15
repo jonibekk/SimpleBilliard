@@ -52,7 +52,6 @@ class UserEntity extends BaseEntity
      */
     public function has2FA(): bool
     {
-        return true;
-        return !empty($this['2fa_secret']);
+        return strlen($this['2fa_secret']) > 0;
     }
 }
