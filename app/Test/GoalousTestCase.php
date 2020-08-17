@@ -45,39 +45,39 @@ use Mockery as mock;
  * CakeTestCase class
  *
  * @package       Cake.TestSuite
- * @property Term $Term
- * @property GoalMember $GoalMember
- * @property Team $Team
- * @property GoalService $GoalService
- * @property GlRedis $GlRedis
- * @property CreditCardService $CreditCardService
- * @property PaymentSetting $PaymentSetting
- * @property CreditCard $CreditCard
- * @property ChargeHistory $ChargeHistory
- * @property Invoice $Invoice
- * @property InvoiceHistory $InvoiceHistory
+ * @property Term                          $Term
+ * @property GoalMember                    $GoalMember
+ * @property Team                          $Team
+ * @property GoalService                   $GoalService
+ * @property GlRedis                       $GlRedis
+ * @property CreditCardService             $CreditCardService
+ * @property PaymentSetting                $PaymentSetting
+ * @property CreditCard                    $CreditCard
+ * @property ChargeHistory                 $ChargeHistory
+ * @property Invoice                       $Invoice
+ * @property InvoiceHistory                $InvoiceHistory
  * @property InvoiceHistoriesChargeHistory $InvoiceHistoriesChargeHistory
- * @property PaymentService $PaymentService
+ * @property PaymentService                $PaymentService
  */
 class GoalousTestCase extends CakeTestCase
 {
     // Card with specific error for Stripe API test
     // https://stripe.com/docs/testing#cards-responses
     // Error Cards
-    const CARD_DECLINED = "4000000000000002";
-    const CARD_INCORRECT_CVC = "4000000000000127";
-    const CARD_EXPIRED = "4000000000000069";
+    const CARD_DECLINED         = "4000000000000002";
+    const CARD_INCORRECT_CVC    = "4000000000000127";
+    const CARD_EXPIRED          = "4000000000000069";
     const CARD_PROCESSING_ERROR = "4000000000000119";
     const CARD_INCORRECT_NUMBER = "4242424242424241";
-    const CARD_CHARGE_FAIL = "4000000000000341";
+    const CARD_CHARGE_FAIL      = "4000000000000341";
     // Valid Cards
-    const CARD_VISA = "4012888888881881";
+    const CARD_VISA       = "4012888888881881";
     const CARD_MASTERCARD = "5555555555554444";
-    const CARD_ = "5555555555554444";
+    const CARD_           = "5555555555554444";
 
-    const ERR_CODE_CARD_DECLINED = 'card_declined';
-    const ERR_CODE_CARD_INCORRECT_CVC = "incorrect_cvc";
-    const ERR_CODE_CARD_EXPIRED = 'expired_card';
+    const ERR_CODE_CARD_DECLINED         = 'card_declined';
+    const ERR_CODE_CARD_INCORRECT_CVC    = "incorrect_cvc";
+    const ERR_CODE_CARD_EXPIRED          = 'expired_card';
     const ERR_CODE_CARD_PROCESSING_ERROR = 'processing_error';
 
     private $testCustomersList = array();
@@ -156,9 +156,9 @@ class GoalousTestCase extends CakeTestCase
         $Goal->my_uid = 1;
         $Goal->current_team_id = 1;
         $default = [
-            "name" => "ゴール",
+            "name"             => "ゴール",
             "goal_category_id" => 1,
-            "description" => "ゴールの詳細\nです"
+            "description"      => "ゴールの詳細\nです"
         ];
         $data = am($default, $data);
         $Goal->create();
@@ -169,15 +169,15 @@ class GoalousTestCase extends CakeTestCase
     function createGoalMember($data)
     {
         $default = [
-            "goal_id" => 13,
-            "role" => "役割",
-            "description" => "詳細",
-            "priority" => 5,
-            "approval_status" => 0,
+            "goal_id"              => 13,
+            "role"                 => "役割",
+            "description"          => "詳細",
+            "priority"             => 5,
+            "approval_status"      => 0,
             "is_target_evaluation" => false,
-            "user_id" => $this->Term->my_uid,
-            "team_id" => $this->Term->current_team_id,
-            "type" => 0,
+            "user_id"              => $this->Term->my_uid,
+            "team_id"              => $this->Term->current_team_id,
+            "type"                 => 0,
         ];
         $data = am($default, $data);
         $this->GoalMember->clear();
@@ -188,21 +188,21 @@ class GoalousTestCase extends CakeTestCase
     {
         //実行月の期間1ヶ月で生成される。開始日:当月の月初、終了日:当月の月末
         $default = [
-            "name" => "ゴール",
+            "name"             => "ゴール",
             "goal_category_id" => 1,
-            "labels" => [
+            "labels"           => [
                 "0" => "Goalous"
             ],
-            "term_type" => "current",
-            "priority" => 5,
-            "description" => "ゴールの詳細\nです",
+            "term_type"        => "current",
+            "priority"         => 5,
+            "description"      => "ゴールの詳細\nです",
             "is_wish_approval" => true,
-            "key_result" => [
-                "value_unit" => 0,
-                "start_value" => 0,
+            "key_result"       => [
+                "value_unit"   => 0,
+                "start_value"  => 0,
                 "target_value" => 100,
-                "name" => "TKR1",
-                "description" => "TKR詳細\nです",
+                "name"         => "TKR1",
+                "description"  => "TKR詳細\nです",
             ],
         ];
         $data = am($default, $data);
@@ -353,11 +353,11 @@ class GoalousTestCase extends CakeTestCase
 
         $data = [
             'file' => [
-                'name' => 'test.jpg',
-                'type' => 'image/jpeg',
+                'name'     => 'test.jpg',
+                'type'     => 'image/jpeg',
                 'tmp_name' => $file_1_path,
-                'size' => $file_size,
-                'remote' => true
+                'size'     => $file_size,
+                'remote'   => true
             ]
         ];
         App::import('Service', 'AttachedFileService');
@@ -366,11 +366,11 @@ class GoalousTestCase extends CakeTestCase
         $hash_1 = $AttachedFileService->preUploadFile($data);
         $data = [
             'file' => [
-                'name' => 'test.php',
-                'type' => 'test/php',
+                'name'     => 'test.php',
+                'type'     => 'test/php',
                 'tmp_name' => $file_2_path,
-                'size' => 1000,
-                'remote' => true
+                'size'     => 1000,
+                'remote'   => true
             ]
         ];
         $hash_2 = $AttachedFileService->preUploadFile($data);
@@ -402,36 +402,38 @@ class GoalousTestCase extends CakeTestCase
         $startDate = $this->Term->getTermData($termType)['start_date'];
         $endDate = $this->Term->getTermData($termType)['end_date'];
         $goalData = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'name' => 'ゴール1',
+            'user_id'          => $userId,
+            'team_id'          => $teamId,
+            'name'             => 'ゴール1',
             'goal_category_id' => 1,
-            'start_date' => $startDate,
-            'end_date' => $endDate
+            'start_date'       => $startDate,
+            'end_date'         => $endDate
         ];
         $Goal->create();
         $Goal->save($goalData);
         $goalId = $Goal->getLastInsertID();
         $GoalMember->create();
-        $GoalMember->save([
-            'goal_id' => $goalId,
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'type' => $goalMemberType,
-        ]);
+        $GoalMember->save(
+            [
+                'goal_id' => $goalId,
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'type'    => $goalMemberType,
+            ]
+        );
         $krDatas = [];
         foreach ($krProgresses as $v) {
             $krDatas[] = [
-                'goal_id' => $goalId,
-                'team_id' => $teamId,
-                'user_id' => $userId,
-                'name' => 'テストKR',
-                'start_value' => 0,
-                'target_value' => 100,
-                'value_unit' => 0,
+                'goal_id'       => $goalId,
+                'team_id'       => $teamId,
+                'user_id'       => $userId,
+                'name'          => 'テストKR',
+                'start_value'   => 0,
+                'target_value'  => 100,
+                'value_unit'    => 0,
                 'current_value' => $v,
-                'start_date' => $startDate,
-                'end_date' => $endDate
+                'start_date'    => $startDate,
+                'end_date'      => $endDate
             ];
         }
 
@@ -451,26 +453,25 @@ class GoalousTestCase extends CakeTestCase
         $termType = Term::TYPE_CURRENT,
         $tkrFlg = false,
         $valueUnit = 0
-    )
-    {
+    ) {
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init('KeyResult');
         $startDate = $this->Term->getTermData($termType)['start_date'];
         $endDate = $this->Term->getTermData($termType)['end_date'];
 
         $kr = [
-            'goal_id' => $goalId,
-            'team_id' => $teamId,
-            'user_id' => $userId,
-            'name' => 'テストKR',
-            'start_value' => $startValue,
-            'target_value' => $targetValue,
-            'value_unit' => $valueUnit,
+            'goal_id'       => $goalId,
+            'team_id'       => $teamId,
+            'user_id'       => $userId,
+            'name'          => 'テストKR',
+            'start_value'   => $startValue,
+            'target_value'  => $targetValue,
+            'value_unit'    => $valueUnit,
             'current_value' => $currentValue,
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'priority' => $priority,
-            'tkr_flg' => $tkrFlg,
+            'start_date'    => $startDate,
+            'end_date'      => $endDate,
+            'priority'      => $priority,
+            'tkr_flg'       => $tkrFlg,
         ];
         $KeyResult->create();
         $KeyResult->save($kr, false);
@@ -487,15 +488,15 @@ class GoalousTestCase extends CakeTestCase
     function createTeam($data = [])
     {
         $default = [
-            'start_term_month' => 4,
-            'border_months' => 6,
-            'type' => 3,
-            'name' => 'Test Team.',
-            'timezone' => 9,
-            'service_use_status' => 1,
-            'country' => 1,
+            'start_term_month'             => 4,
+            'border_months'                => 6,
+            'type'                         => 3,
+            'name'                         => 'Test Team.',
+            'timezone'                     => 9,
+            'service_use_status'           => 1,
+            'country'                      => 1,
             'service_use_state_start_date' => '2017-07-20',
-            'service_use_state_end_date' => '2020-07-20',
+            'service_use_state_end_date'   => '2020-07-20',
         ];
         $team = am($default, $data);
         $this->Team->create();
@@ -540,11 +541,14 @@ class GoalousTestCase extends CakeTestCase
     protected function createTeamMember($teamId, $userId, $status = TeamMember::USER_STATUS_ACTIVE)
     {
         $this->Team->TeamMember->create();
-        $this->Team->TeamMember->save([
-            'team_id' => $teamId,
-            'user_id' => $userId,
-            'status' => $status
-        ], false);
+        $this->Team->TeamMember->save(
+            [
+                'team_id' => $teamId,
+                'user_id' => $userId,
+                'status'  => $status
+            ],
+            false
+        );
         return $this->Team->TeamMember->getLastInsertId();;
     }
 
@@ -552,48 +556,63 @@ class GoalousTestCase extends CakeTestCase
     {
         // save topic
         $this->Topic->create();
-        $this->Topic->save([
-            'team_id' => $teamid,
-            'creator_user_id' => $userId,
-            'title' => 'Sample title',
-            'latest_message_id' => 1,
-            'latest_message_datetime' => $latestMessageDatetime
-        ], false);
+        $this->Topic->save(
+            [
+                'team_id'                 => $teamid,
+                'creator_user_id'         => $userId,
+                'title'                   => 'Sample title',
+                'latest_message_id'       => 1,
+                'latest_message_datetime' => $latestMessageDatetime
+            ],
+            false
+        );
         $topicId = $this->Topic->getLastInsertId();
 
         // save topic members
         $this->Topic->TopicMember->create();
-        $this->Topic->TopicMember->save([
-            'team_id' => $teamid,
-            'user_id' => $userId,
-            'topic_id' => $topicId,
-        ], false);
+        $this->Topic->TopicMember->save(
+            [
+                'team_id'  => $teamid,
+                'user_id'  => $userId,
+                'topic_id' => $topicId,
+            ],
+            false
+        );
         $this->Topic->TopicMember->create();
-        $this->Topic->TopicMember->save([
-            'team_id' => $teamid,
-            'user_id' => $subUserId,
-            'topic_id' => $topicId,
-        ], false);
+        $this->Topic->TopicMember->save(
+            [
+                'team_id'  => $teamid,
+                'user_id'  => $subUserId,
+                'topic_id' => $topicId,
+            ],
+            false
+        );
 
         // save messages
         $this->Message->create();
-        $this->Message->save([
-            'id' => 1,
-            'team_id' => $teamid,
-            'sender_user_id' => $userId,
-            'topic_id' => $topicId,
-            'body' => 'message 1',
-            'created' => $latestMessageDatetime - 1
-        ], false);
+        $this->Message->save(
+            [
+                'id'             => 1,
+                'team_id'        => $teamid,
+                'sender_user_id' => $userId,
+                'topic_id'       => $topicId,
+                'body'           => 'message 1',
+                'created'        => $latestMessageDatetime - 1
+            ],
+            false
+        );
         $this->Message->create();
-        $this->Message->save([
-            'id' => 2,
-            'team_id' => $teamid,
-            'sender_user_id' => $subUserId,
-            'topic_id' => $topicId,
-            'body' => 'message 2(latest)',
-            'created' => $latestMessageDatetime
-        ], false);
+        $this->Message->save(
+            [
+                'id'             => 2,
+                'team_id'        => $teamid,
+                'sender_user_id' => $subUserId,
+                'topic_id'       => $topicId,
+                'body'           => 'message 2(latest)',
+                'created'        => $latestMessageDatetime
+            ],
+            false
+        );
 
         return $topicId;
     }
@@ -605,18 +624,20 @@ class GoalousTestCase extends CakeTestCase
         $Topic = ClassRegistry::init('Topic');
 
         $Topic->create();
-        $Topic->save([
-            'team_id' => 1,
-            'creator_user_id' => 1
-        ]);
+        $Topic->save(
+            [
+                'team_id'         => 1,
+                'creator_user_id' => 1
+            ]
+        );
         $topicId = $Topic->getLastInsertID();
         $Topic->TopicMember->create();
         $topicMemberData = [];
         foreach ($memberUserIds as $uid) {
             $topicMemberData[] = [
-                'team_id' => 1,
+                'team_id'  => 1,
                 'topic_id' => $topicId,
-                'user_id' => $uid
+                'user_id'  => $uid
             ];
         }
         $Topic->TopicMember->saveAll($topicMemberData);
@@ -637,9 +658,9 @@ class GoalousTestCase extends CakeTestCase
         }
 
         $currentTerm = [
-            'team_id' => $teamId,
-            'start_date' => $startDate,
-            'end_date' => date('Y-m-d', strtotime("{$startDate} + {$range}month yesterday")),
+            'team_id'         => $teamId,
+            'start_date'      => $startDate,
+            'end_date'        => date('Y-m-d', strtotime("{$startDate} + {$range}month yesterday")),
             'evaluate_status' => 0
         ];
         $this->Term->create();
@@ -648,9 +669,9 @@ class GoalousTestCase extends CakeTestCase
         if ($withNext) {
             $nextStartDate = date('Y-m-d', strtotime("{$startDate} + {$range}month"));
             $nextTerm = [
-                'team_id' => $teamId,
-                'start_date' => $nextStartDate,
-                'end_date' => date('Y-m-d', strtotime("{$nextStartDate} + {$range}month yesterday")),
+                'team_id'         => $teamId,
+                'start_date'      => $nextStartDate,
+                'end_date'        => date('Y-m-d', strtotime("{$nextStartDate} + {$range}month yesterday")),
                 'evaluate_status' => 0
             ];
             $this->Term->create();
@@ -668,7 +689,7 @@ class GoalousTestCase extends CakeTestCase
         $KeyResult = ClassRegistry::init('KeyResult');
 
         $default = [
-            "name" => "KR Name",
+            "name"        => "KR Name",
             "description" => "KR description"
         ];
         $data = am($default, $data);
@@ -680,13 +701,13 @@ class GoalousTestCase extends CakeTestCase
     function createInvite($data = [])
     {
         $default = [
-            'from_user_id' => 1,
-            'to_user_id' => 2,
-            'team_id' => 1,
-            'email' => 'xxxx@isao.co.jp',
-            'message' => 'Hello',
-            'email_verified' => false,
-            'email_token' => 'testnotokenhananndemoiiyo',
+            'from_user_id'        => 1,
+            'to_user_id'          => 2,
+            'team_id'             => 1,
+            'email'               => 'xxxx@isao.co.jp',
+            'message'             => 'Hello',
+            'email_verified'      => false,
+            'email_token'         => 'testnotokenhananndemoiiyo',
             'email_token_expires' => time() + DAY
         ];
         $invite = am($default, $data);
@@ -711,8 +732,7 @@ class GoalousTestCase extends CakeTestCase
         array $creditCard = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    )
-    {
+    ) {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->CreditCard = $this->CreditCard ?? ClassRegistry::init('CreditCard');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -727,13 +747,13 @@ class GoalousTestCase extends CakeTestCase
 
         $savePaymentSetting = array_merge(
             [
-                'team_id' => $teamId,
-                'type' => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
+                'team_id'          => $teamId,
+                'type'             => Enum\Model\PaymentSetting\Type::CREDIT_CARD,
                 'payment_base_day' => 15,
                 'payment_skip_flg' => ($skipPayment) ? 1 : 0,
-                'currency' => Enum\Model\PaymentSetting\Currency::JPY,
-                'amount_per_user' => PaymentService::AMOUNT_PER_USER_JPY,
-                'company_country' => 'JP',
+                'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+                'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+                'company_country'  => 'JP',
             ],
             $paymentSetting
         );
@@ -742,9 +762,9 @@ class GoalousTestCase extends CakeTestCase
         $paymentSettingId = $this->PaymentSetting->getLastInsertID();
         $saveCreditCard = array_merge(
             [
-                'team_id' => $teamId,
+                'team_id'            => $teamId,
                 'payment_setting_id' => $paymentSettingId,
-                'customer_code' => 'cus_BDjPwryGzOQRBI',
+                'customer_code'      => 'cus_BDjPwryGzOQRBI',
             ],
             $creditCard
         );
@@ -766,8 +786,7 @@ class GoalousTestCase extends CakeTestCase
         array $invoice = [],
         int $createActiveUserCount = 1,
         bool $skipPayment = false
-    )
-    {
+    ) {
         $this->PaymentSetting = $this->PaymentSetting ?? ClassRegistry::init('PaymentSetting');
         $this->Invoice = $this->Invoice ?? ClassRegistry::init('Invoice');
         $this->ChargeHistory = $this->ChargeHistory ?? ClassRegistry::init('ChargeHistory');
@@ -781,13 +800,13 @@ class GoalousTestCase extends CakeTestCase
         $teamId = $this->createTeam($saveTeam);
         $savePaymentSetting = array_merge(
             [
-                'team_id' => $teamId,
-                'type' => Enum\Model\PaymentSetting\Type::INVOICE,
+                'team_id'          => $teamId,
+                'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
                 'payment_base_day' => 15,
                 'payment_skip_flg' => ($skipPayment) ? 1 : 0,
-                'currency' => Enum\Model\PaymentSetting\Currency::JPY,
-                'amount_per_user' => PaymentService::AMOUNT_PER_USER_JPY,
-                'company_country' => 'JP',
+                'currency'         => Enum\Model\PaymentSetting\Currency::JPY,
+                'amount_per_user'  => PaymentService::AMOUNT_PER_USER_JPY,
+                'company_country'  => 'JP',
             ],
             $paymentSetting
         );
@@ -796,20 +815,20 @@ class GoalousTestCase extends CakeTestCase
         $paymentSettingId = $this->PaymentSetting->getLastInsertID();
         $saveInvoice = array_merge(
             [
-                'team_id' => $teamId,
-                'payment_setting_id' => $paymentSettingId,
-                'credit_status' => Invoice::CREDIT_STATUS_OK,
-                'company_name' => "株式会社これなんで商会",
-                'company_post_code' => "123-4567",
-                'company_region' => "東京都",
-                'company_city' => "台東区",
-                'company_street' => "浅草橋1-2-3",
-                'contact_person_first_name' => "ゴラ男",
+                'team_id'                        => $teamId,
+                'payment_setting_id'             => $paymentSettingId,
+                'credit_status'                  => Invoice::CREDIT_STATUS_OK,
+                'company_name'                   => "株式会社これなんで商会",
+                'company_post_code'              => "123-4567",
+                'company_region'                 => "東京都",
+                'company_city'                   => "台東区",
+                'company_street'                 => "浅草橋1-2-3",
+                'contact_person_first_name'      => "ゴラ男",
                 'contact_person_first_name_kana' => "ごらお",
-                'contact_person_last_name' => "ゴラ橋",
-                'contact_person_last_name_kana' => "ごらはし",
-                'contact_person_tel' => "03-1234-5678",
-                'contact_person_email' => "test@goalous.com",
+                'contact_person_last_name'       => "ゴラ橋",
+                'contact_person_last_name_kana'  => "ごらはし",
+                'contact_person_tel'             => "03-1234-5678",
+                'contact_person_email'           => "test@goalous.com",
             ],
             $invoice
         );
@@ -839,8 +858,7 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistories = []
-    ): array
-    {
+    ): array {
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $chargeHistoryIds = [];
@@ -848,13 +866,17 @@ class GoalousTestCase extends CakeTestCase
             $this->addChargeHistory($teamId, $his);
             $chargeHistoryIds[] = $this->ChargeHistory->getLastInsertID();
         }
-        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init(
+                'InvoiceHistoriesChargeHistory'
+            );
         foreach ($chargeHistoryIds as $chargeHistoryId) {
             $this->InvoiceHistoriesChargeHistory->create();
-            $this->InvoiceHistoriesChargeHistory->save([
-                'invoice_history_id' => $invoiceHistoryId,
-                'charge_history_id' => $chargeHistoryId,
-            ]);
+            $this->InvoiceHistoriesChargeHistory->save(
+                [
+                    'invoice_history_id' => $invoiceHistoryId,
+                    'charge_history_id'  => $chargeHistoryId,
+                ]
+            );
         }
         return [
             $chargeHistoryIds,
@@ -874,19 +896,21 @@ class GoalousTestCase extends CakeTestCase
         int $teamId,
         array $invoiceHistory = [],
         array $chargeHistory = []
-    ): array
-    {
-
+    ): array {
         $this->addInvoiceHistory($teamId, $invoiceHistory);
         $invoiceHistoryId = $this->InvoiceHistory->getLastInsertID();
         $this->addChargeHistory($teamId, $chargeHistory);
         $chargeHistoryId = $this->ChargeHistory->getLastInsertID();
-        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init('InvoiceHistoriesChargeHistory');
+        $this->InvoiceHistoriesChargeHistory = $this->InvoiceHistoriesChargeHistory ?? ClassRegistry::init(
+                'InvoiceHistoriesChargeHistory'
+            );
         $this->InvoiceHistoriesChargeHistory->create();
-        $this->InvoiceHistoriesChargeHistory->save([
-            'invoice_history_id' => $invoiceHistoryId,
-            'charge_history_id' => $chargeHistoryId,
-        ]);
+        $this->InvoiceHistoriesChargeHistory->save(
+            [
+                'invoice_history_id' => $invoiceHistoryId,
+                'charge_history_id'  => $chargeHistoryId,
+            ]
+        );
         return [
             $chargeHistoryId,
             $invoiceHistoryId,
@@ -912,8 +936,8 @@ class GoalousTestCase extends CakeTestCase
         $this->ChargeHistory->clear();
         $saveChargeHistory = am(
             [
-                'team_id' => $teamId,
-                'currency' => PaymentSetting::CURRENCY_TYPE_JPY,
+                'team_id'     => $teamId,
+                'currency'    => PaymentSetting::CURRENCY_TYPE_JPY,
                 'result_type' => Enum\Model\ChargeHistory\ResultType::SUCCESS,
             ],
             $chargeHistory
@@ -929,8 +953,8 @@ class GoalousTestCase extends CakeTestCase
      *
      * @param string $cardNumber
      * @param string $cardHolder
-     * @param int $expireMonth
-     * @param int $expireYear
+     * @param int    $expireMonth
+     * @param int    $expireYear
      * @param string $cvc
      *
      * @return array
@@ -938,17 +962,17 @@ class GoalousTestCase extends CakeTestCase
     public function createToken(string $cardNumber): string
     {
         $result = [
-            "error" => false,
+            "error"   => false,
             "message" => null
         ];
 
         $request = array(
             "card" => array(
-                "number" => $cardNumber,
+                "number"    => $cardNumber,
                 "exp_month" => 11,
-                "exp_year" => 2026,
-                "cvc" => "123",
-                "name" => "Goalous Taro"
+                "exp_year"  => 2026,
+                "cvc"       => "123",
+                "name"      => "Goalous Taro"
             )
         );
 
@@ -1023,9 +1047,9 @@ class GoalousTestCase extends CakeTestCase
         $Circle = ClassRegistry::init('Circle');
 
         $default = [
-            "name" => "Circle Name",
-            "description" => "Circle description",
-            "public_flg" => true,
+            "name"         => "Circle Name",
+            "description"  => "Circle description",
+            "public_flg"   => true,
             "team_all_flg" => false
         ];
         $data = am($default, $data);
@@ -1050,9 +1074,9 @@ class GoalousTestCase extends CakeTestCase
 
         // Create campaign team
         $campaignTeam = [
-            'team_id' => $teamId,
+            'team_id'             => $teamId,
             'price_plan_group_id' => $pricePlanGroupId,
-            'start_date' => $this->currentDateTime,
+            'start_date'          => $this->currentDateTime,
         ];
 
         $CampaignTeam->create();
@@ -1064,7 +1088,7 @@ class GoalousTestCase extends CakeTestCase
     /**
      * Create PricePlanPurchaseTeam
      *
-     * @param int $teamId
+     * @param int    $teamId
      * @param string $pricePlanCode
      *
      * @return int
@@ -1075,23 +1099,31 @@ class GoalousTestCase extends CakeTestCase
         $PricePlanPurchaseTeam = ClassRegistry::init('PricePlanPurchaseTeam');
 
         $PricePlanPurchaseTeam->create();
-        $PricePlanPurchaseTeam->save([
-            'team_id' => $teamId,
-            'price_plan_code' => $pricePlanCode,
-            'purchase_datetime' => $this->currentDateTime,
-        ]);
+        $PricePlanPurchaseTeam->save(
+            [
+                'team_id'           => $teamId,
+                'price_plan_code'   => $pricePlanCode,
+                'purchase_datetime' => $this->currentDateTime,
+            ]
+        );
 
         return $PricePlanPurchaseTeam->getLastInsertID();
     }
 
     function createCcCampaignTeam(int $pricePlanGroupId, string $pricePlanCode, $team = [], $paymentSetting = []): array
     {
-        $team = array_merge([
-            'country' => 'JP'
-        ], $team);
-        $paymentSetting = array_merge([
-            'amount_per_user' => 0,
-        ], $paymentSetting);
+        $team = array_merge(
+            [
+                'country' => 'JP'
+            ],
+            $team
+        );
+        $paymentSetting = array_merge(
+            [
+                'amount_per_user' => 0,
+            ],
+            $paymentSetting
+        );
         list($teamId) = $this->createCcPaidTeam($team, $paymentSetting);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
@@ -1108,17 +1140,22 @@ class GoalousTestCase extends CakeTestCase
         string $pricePlanCode,
         $team = [],
         $paymentSetting = []
-    ): array
-    {
-        $team = am([
-            'country' => 'JP',
-            'timezone' => 9
-        ], $team);
-        $paymentSetting = am([
-            'company_country' => 'JP',
-            'currency' => Enum\Model\PaymentSetting\Currency::JPY,
-            'amount_per_user' => 0,
-        ], $paymentSetting);
+    ): array {
+        $team = am(
+            [
+                'country'  => 'JP',
+                'timezone' => 9
+            ],
+            $team
+        );
+        $paymentSetting = am(
+            [
+                'company_country' => 'JP',
+                'currency'        => Enum\Model\PaymentSetting\Currency::JPY,
+                'amount_per_user' => 0,
+            ],
+            $paymentSetting
+        );
         list ($teamId, $paymentSettingId, $invoiceId) = $this->createInvoicePaidTeam($team, $paymentSetting, []);
         $campaignTeamId = $this->createCampaignTeam($teamId, $pricePlanGroupId);
         $pricePlanPurchaseId = $this->createPurchasedTeam($teamId, $pricePlanCode);
@@ -1135,10 +1172,12 @@ class GoalousTestCase extends CakeTestCase
         /** @var Experiment $Experiment */
         $Experiment = ClassRegistry::init('Experiment');
         foreach ($experiments as $experiment) {
-            $experiment = $Experiment->create([
-                'name' => $experiment[0],
-                'team_id' => $experiment[1],
-            ]);
+            $experiment = $Experiment->create(
+                [
+                    'name'    => $experiment[0],
+                    'team_id' => $experiment[1],
+                ]
+            );
             $Experiment->save($experiment);
         }
     }
@@ -1186,7 +1225,7 @@ class GoalousTestCase extends CakeTestCase
     /**
      * Insert translation language option to a team
      *
-     * @param int $teamId
+     * @param int    $teamId
      * @param string $language
      *
      * @throws Exception
@@ -1197,7 +1236,7 @@ class GoalousTestCase extends CakeTestCase
         $TeamTranslationLanguage = ClassRegistry::init('TeamTranslationLanguage');
 
         $data = [
-            'team_id' => $teamId,
+            'team_id'  => $teamId,
             'language' => $language
         ];
 
@@ -1212,7 +1251,6 @@ class GoalousTestCase extends CakeTestCase
      */
     protected function getLongArticle(): string
     {
-
         $path = APP . "Test" . DS . "Files" . DS . 'article.txt';
 
         $article = file_get_contents($path);
@@ -1233,8 +1271,13 @@ class GoalousTestCase extends CakeTestCase
      *              [post_id, [post_file,...], [video_stream,...]]
      * @throws Exception
      */
-    protected final function createNewCirclePost(int $circleId, int $userId, int $teamId, int $fileCount = 0, int $videoCount = 0): array
-    {
+    protected final function createNewCirclePost(
+        int $circleId,
+        int $userId,
+        int $teamId,
+        int $fileCount = 0,
+        int $videoCount = 0
+    ): array {
         /** @var TransactionManager $TransactionManager */
         $TransactionManager = ClassRegistry::init('TransactionManager');
         /** @var Post $Post */
@@ -1260,8 +1303,12 @@ class GoalousTestCase extends CakeTestCase
             $TransactionManager->begin();
             $postBody = "New post in circle $circleId by user $userId in team $teamId";
 
-            if ($videoCount > 1) throw new InvalidArgumentException('Too many videos');
-            if ($fileCount + $videoCount > 10) throw new InvalidArgumentException("Too many files");
+            if ($videoCount > 1) {
+                throw new InvalidArgumentException('Too many videos');
+            }
+            if ($fileCount + $videoCount > 10) {
+                throw new InvalidArgumentException("Too many files");
+            }
 
             if ($fileCount > 0) {
                 $postBody .= " with $fileCount files";
@@ -1272,16 +1319,16 @@ class GoalousTestCase extends CakeTestCase
 
             $Post->create();
             $postData = [
-                'body' => $postBody,
+                'body'    => $postBody,
                 'user_id' => $userId,
                 'team_id' => $teamId,
-                'type' => Post::TYPE_NORMAL
+                'type'    => Post::TYPE_NORMAL
             ];
             $savedPost = $Post->save($postData, false);
             $postId = $savedPost['Post']['id'];
             $postCreated = $savedPost['Post']['created'];
             $updateCondition = [
-                'CircleMember.user_id' => $userId,
+                'CircleMember.user_id'   => $userId,
                 'CircleMember.circle_id' => $circleId
             ];
             $CircleMember->updateAll(['last_posted' => $postCreated], $updateCondition);
@@ -1296,20 +1343,26 @@ class GoalousTestCase extends CakeTestCase
             $postFileIndex = 0;
 
             for ($i = 0; $i < $fileCount; $i++) {
-
                 $UploadedFile = new UploadedFile($this->getTestFileDataBase64WithHeader(), 'test.jpg', false);
 
                 /** @var AttachedFileEntity $attachedFile */
-                $attachedFile = $AttachedFileService->add($userId, $teamId, $UploadedFile,
-                    AttachedModelType::TYPE_MODEL_POST());
+                $attachedFile = $AttachedFileService->add(
+                    $userId,
+                    $teamId,
+                    $UploadedFile,
+                    AttachedModelType::TYPE_MODEL_POST()
+                );
 
-                $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType($attachedFile['file_type']);
+                $postResourceType = $PostResourceService->getPostResourceTypeFromAttachedFileType(
+                    $attachedFile['file_type']
+                );
 
                 $PostResourceService->addResourcePost(
                     $postId,
                     $postResourceType,
                     $attachedFile['id'],
-                    $postFileIndex);
+                    $postFileIndex
+                );
                 $addedPostFile = $PostFileService->add($postId, $attachedFile['id'], $teamId, $postFileIndex);
 
                 $addedFiles[] = $addedPostFile->toArray();
@@ -1318,16 +1371,16 @@ class GoalousTestCase extends CakeTestCase
 
             for ($i = 0; $i < $videoCount; $i++) {
                 $newVideo = [
-                    'user_id' => $userId,
-                    'team_id' => $teamId,
+                    'user_id'   => $userId,
+                    'team_id'   => $teamId,
                     'file_name' => "video $i"
                 ];
                 $Video->create();
                 $video = $Video->save($newVideo, false);
 
                 $newVideoStream = [
-                    'video_id' => $video['Video']['id'],
-                    'output_version' => 1,
+                    'video_id'         => $video['Video']['id'],
+                    'output_version'   => 1,
                     'transcode_status' => Enum\Model\Video\VideoTranscodeStatus::TRANSCODE_COMPLETE,
                 ];
                 $VideoStream->create();
@@ -1337,7 +1390,8 @@ class GoalousTestCase extends CakeTestCase
                     $postId,
                     Enum\Model\Post\PostResourceType::VIDEO_STREAM(),
                     $videoStream['VideoStream']['id'],
-                    $postFileIndex);
+                    $postFileIndex
+                );
                 $postFileIndex++;
             }
             $TransactionManager->commit();
@@ -1349,23 +1403,27 @@ class GoalousTestCase extends CakeTestCase
         return [$postId, $addedFiles, $addedVideos];
     }
 
-    protected function createAttachedFile(int $userId, int $teamId, Enum\Model\AttachedFile\AttachedFileType $type, Enum\Model\AttachedFile\AttachedModelType $modelType): AttachedFileEntity
-    {
+    protected function createAttachedFile(
+        int $userId,
+        int $teamId,
+        Enum\Model\AttachedFile\AttachedFileType $type,
+        Enum\Model\AttachedFile\AttachedModelType $modelType
+    ): AttachedFileEntity {
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
 
         $fileName = "user_" . $userId . "_team_" . $teamId . ".test";
 
         $newData = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
-            'attached_file_name' => $fileName,
-            'file_type' => $type->getValue(),
-            'file_ext' => 'test',
-            'file_size' => 123,
-            'model_type' => $modelType->getValue(),
+            'user_id'               => $userId,
+            'team_id'               => $teamId,
+            'attached_file_name'    => $fileName,
+            'file_type'             => $type->getValue(),
+            'file_ext'              => 'test',
+            'file_size'             => 123,
+            'model_type'            => $modelType->getValue(),
             'display_file_list_flg' => true,
-            'removable_flg' => true,
+            'removable_flg'         => true,
         ];
 
         $AttachedFile->create();
@@ -1393,14 +1451,18 @@ class GoalousTestCase extends CakeTestCase
         $result = [];
 
         for ($indexNum = 0; $indexNum < $count; $indexNum++) {
-
-            $newAttachedFile = $this->createAttachedFile($userId, $teamId, Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_DOC(), Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_COMMENT());
+            $newAttachedFile = $this->createAttachedFile(
+                $userId,
+                $teamId,
+                Enum\Model\AttachedFile\AttachedFileType::TYPE_FILE_DOC(),
+                Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_COMMENT()
+            );
 
             $newCommentFile = [
-                'comment_id' => $commentId,
+                'comment_id'       => $commentId,
                 'attached_file_id' => $newAttachedFile['id'],
-                'team_id' => $teamId,
-                'index_num' => $indexNum
+                'team_id'          => $teamId,
+                'index_num'        => $indexNum
             ];
 
             $CommentFile->create();
@@ -1414,8 +1476,8 @@ class GoalousTestCase extends CakeTestCase
     {
         $mainData = [
             'circle_id' => $circleId,
-            'team_id' => $teamId,
-            'user_id' => $userId
+            'team_id'   => $teamId,
+            'user_id'   => $userId
         ];
 
         $newData = array_merge($mainData, $options);
@@ -1453,10 +1515,12 @@ class GoalousTestCase extends CakeTestCase
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        $Team->updateAll([
-            'Team.service_use_status' => $newStatus
-        ],
-            ['Team.id' => $teamId]);
+        $Team->updateAll(
+            [
+                'Team.service_use_status' => $newStatus
+            ],
+            ['Team.id' => $teamId]
+        );
     }
 
     protected function updateTeamMemberStatus(int $teamId, int $userId, int $status)
@@ -1464,9 +1528,11 @@ class GoalousTestCase extends CakeTestCase
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
-        $TeamMember->updateAll([
-            'TeamMember.status' => $status
-        ],
-            ['TeamMember.user_id' => $userId, 'TeamMember.team_id' => $teamId]);
+        $TeamMember->updateAll(
+            [
+                'TeamMember.status' => $status
+            ],
+            ['TeamMember.user_id' => $userId, 'TeamMember.team_id' => $teamId]
+        );
     }
 }
