@@ -193,16 +193,35 @@ class ActionSearchPagingService extends BaseSearchPagingService
         $actionIds = Hash::extract($rawData, '{n}.post.action_result_id');
         $commentIds = Hash::extract($rawData, '{n}.comment_id');
 
+        var_dump('actionIds');
+        var_dump($actionIds);
+        var_dump('commentIds');
+        var_dump($commentIds);
+
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
         $Upload = new UploadHelper(new View());
 
         /* Bulk set saved item image each post */
         $attachedImgEachAction = $AttachedFile->findAttachedImgEachAction($teamId, $actionIds);
+
+        var_dump('attachedImgEachAction 1');
+        var_dump($attachedImgEachAction);
+
         $attachedImgEachAction = Hash::combine($attachedImgEachAction, '{n}.action_result_id', '{n}');
 
+        var_dump('attachedImgEachAction 2');
+        var_dump($attachedImgEachAction);
+
         $attachedImgEachComment = $AttachedFile->findAttachedImgEachComment($teamId, $commentIds);
+
+        var_dump('attachedImgEachComment 1');
+        var_dump($attachedImgEachComment);
+
         $attachedImgEachComment = Hash::combine($attachedImgEachComment, '{n}.comment_id', '{n}');
+
+        var_dump('attachedImgEachComment 2');
+        var_dump($attachedImgEachComment);
 
         foreach ($rawData as &$item) {
             if (!empty($item['comment_id'])) {
@@ -232,6 +251,9 @@ class ActionSearchPagingService extends BaseSearchPagingService
                     $imgUrl = $item['post']['user']['profile_img_url']['medium'];
                 }
             }
+
+            var_dump('imgUrl');
+            var_dump($imgUrl);
 
             $item['img_url'] = $imgUrl;
         }
