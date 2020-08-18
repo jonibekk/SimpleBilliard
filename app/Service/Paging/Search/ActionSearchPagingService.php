@@ -234,6 +234,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
             }
 
             $item['img_url'] = $imgUrl;
+            $imgUrl = null;
         }
 
         return $rawData;
