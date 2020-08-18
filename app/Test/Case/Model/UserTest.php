@@ -843,15 +843,15 @@ class UserTest extends GoalousTestCase
         $this->User->LocalName->current_team_id = 1;
 
         $result = $this->User->getUsersByKeyword("first", 20, false);
-        $this->assertCount(5, $result);
+        $this->assertCount(6, $result);
         $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList);
-        $this->assertCount(5, $result);
+        $this->assertCount(6, $result);
         $result = $this->User->getUsersByKeyword("first", 20, true);
-        $this->assertCount(4, $result);
+        $this->assertCount(5, $result);
         $result = $this->User->getUsersByKeyword("first", 20, false, $excludedUserIdList2);
-        $this->assertCount(3, $result);
+        $this->assertCount(4, $result);
         $result = $this->User->getUsersByKeyword("first", 20, true, $excludedUserIdList2);
-        $this->assertCount(2, $result);
+        $this->assertCount(3, $result);
     }
 
     function testGetNewUsersByKeywordNotSharedOnPost()
@@ -1322,7 +1322,7 @@ class UserTest extends GoalousTestCase
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
-        
+
         $conditions = [
             'conditions' => [
                 'id' => 1
