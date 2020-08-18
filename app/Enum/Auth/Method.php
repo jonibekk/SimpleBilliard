@@ -11,6 +11,6 @@ use MyCLabs\Enum\Enum;
  */
 class Method extends Enum
 {
-    const PASSWORD = "password";
+    const PASSWORD = "PASSWORD";
     const SSO = "SSO";
 }

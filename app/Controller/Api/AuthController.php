@@ -45,11 +45,11 @@ class AuthController extends BaseApiController
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init('AuthService');
-            $loginRequestData = $AuthService->createLoginRequestData($requestData['email']);
+            $loginRequestData = $AuthService->createLoginRequest($requestData['email']);
         } catch (GlException\Auth\AuthUserNotFoundException $e) {
-            return ApiResponse::ok()->withMessage(Enum\Auth\Status::AUTH_MISMATCH)->getResponse();
+            return ErrorResponse::badRequest()->withMessage(Enum\Auth\Status::AUTH_MISMATCH)->getResponse();
         } catch (GlException\Auth\AuthFailedException $e) {
-            return ApiResponse::ok()->withMessage(Enum\Auth\Status::AUTH_ERROR)->getResponse();
+            return ErrorResponse::badRequest()->withMessage(Enum\Auth\Status::AUTH_ERROR)->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency(
                 'user failed to request login',
@@ -83,7 +83,7 @@ class AuthController extends BaseApiController
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
-            $response = $AuthService->createPasswordLoginResponse($requestData['email'], $requestData['password']);
+            $response = $AuthService->authenticateWithPassword($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -121,8 +121,8 @@ class AuthController extends BaseApiController
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
-            $response = $AuthService->create2FALoginResponse($requestData['auth_hash'], $requestData['2fa_token']);
-        } catch (GlException\Auth\Auth2FAMismatchException $e) {
+            $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
+        } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
                 ->getResponse();
@@ -159,7 +159,7 @@ class AuthController extends BaseApiController
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
-            $response = $AuthService->create2FALoginResponse(
+            $response = $AuthService->authenticateWith2FA(
                 $requestData['auth_hash'],
                 $requestData['2fa_token'],
                 true

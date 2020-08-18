@@ -48,7 +48,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertNotEmpty($this->insertAndAuthenticateUser());
     }
 
-    public function test_authWrongPassword_failed()
+    public function test_verifyWrongPassword_failed()
     {
         $this->insertNewUser();
 
@@ -58,10 +58,10 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $this->assertFalse($AuthService->authenticatePassword($userId, $password));
+        $this->assertFalse($AuthService->verifyPassword($userId, $password));
     }
 
-    public function test_authEmptyPassword_failed()
+    public function test_verifyEmptyPassword_failed()
     {
         $this->insertNewUser();
 
@@ -71,7 +71,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $this->assertFalse($AuthService->authenticatePassword($userId, $password));
+        $this->assertFalse($AuthService->verifyPassword($userId, $password));
     }
 
     public function test_invalidate_success()
@@ -111,7 +111,7 @@ class AuthServiceTest extends GoalousTestCase
         }
     }
 
-    public function test_createLoginRequestData_success()
+    public function test_createLoginRequest_success()
     {
         $this->insertNewUser();
 
@@ -120,7 +120,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $requestData = $AuthService->createLoginRequestData($email);
+        $requestData = $AuthService->createLoginRequest($email);
 
         $this->assertArrayHasKey('email', $requestData);
         $this->assertEquals($email, $requestData['email']);
@@ -133,17 +133,17 @@ class AuthServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
-    public function test_createLoginRequestDataNoUser_failed()
+    public function test_createLoginRequestNoUser_failed()
     {
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $AuthService->createLoginRequestData("somerandomemail@123");
+        $AuthService->createLoginRequest("somerandomemail@123");
 
         $this->fail();
     }
 
-    public function test_createPasswordLoginResponse_success()
+    public function test_authenticateWithPassword_success()
     {
         $this->insertNewUser();
 
@@ -153,7 +153,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->assertArrayHasKey('message', $response);
         $this->assertEquals(Enum\Auth\Status::OK, $response['message']);
@@ -163,7 +163,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertNotNull($response['data']['me']['current_team_id']);
     }
 
-    public function test_createPasswordLoginResponseNoTeam_success()
+    public function test_authenticateWithPasswordNoTeam_success()
     {
         $this->insertNewUser();
 
@@ -177,7 +177,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->assertArrayHasKey('message', $response);
         $this->assertEquals(Enum\Auth\Status::OK, $response['message']);
@@ -187,7 +187,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertNull($response['data']['me']['current_team_id']);
     }
 
-    public function test_createPasswordLoginResponseWith2FA_success()
+    public function test_authenticateWithPasswordWith2FA_success()
     {
         $this->insertNewUser(true);
 
@@ -197,7 +197,7 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->assertArrayHasKey('message', $response);
         $this->assertEquals(Enum\Auth\Status::REQUEST_2FA, $response['message']);
@@ -205,7 +205,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertArrayHasKey('auth_hash', $response['data']);
     }
 
-    public function test_create2FALoginResponse_success()
+    public function test_authenticateWith2FA_success()
     {
         $this->insertNewUser(true);
 
@@ -215,14 +215,14 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $authHash = $response['data']['auth_hash'];
 
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
         $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
 
-        $response = $AuthService->create2FALoginResponse($authHash, $otpCode);
+        $response = $AuthService->authenticateWith2FA($authHash, $otpCode);
 
         $this->assertArrayHasKey('message', $response);
         $this->assertEquals(Enum\Auth\Status::OK, $response['message']);
@@ -231,7 +231,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertArrayHasKey('token', $response['data']);
     }
 
-    public function test_create2FALoginResponseHashDeleted_failed()
+    public function test_authenticateWith2FAHashDeleted_failed()
     {
         $this->insertNewUser(true);
 
@@ -241,17 +241,17 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $authHash = $response['data']['auth_hash'];
 
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
         $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
 
-        $AuthService->create2FALoginResponse($authHash, $otpCode);
+        $AuthService->authenticateWith2FA($authHash, $otpCode);
 
         try {
-            $AuthService->create2FALoginResponse($authHash, $otpCode);
+            $AuthService->authenticateWith2FA($authHash, $otpCode);
         } catch (GlException\Auth\AuthUserNotFoundException $e) {
         }
     }
@@ -259,7 +259,7 @@ class AuthServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
-    public function test_create2FALoginResponseNoHash_failed()
+    public function test_authenticateWith2FANoHash_failed()
     {
         $this->insertNewUser(true);
 
@@ -272,13 +272,13 @@ class AuthServiceTest extends GoalousTestCase
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
         $otpCode = $Google2Fa->getCurrentOtp(self::TWOFA_SECRET);
 
-        $AuthService->create2FALoginResponse('', $otpCode);
+        $AuthService->authenticateWith2FA('', $otpCode);
     }
 
     /**
      * @expectedException \Goalous\Exception\Auth\Auth2FAMismatchException
      */
-    public function test_create2FALoginResponseWrongOTP_failed()
+    public function test_authenticateWith2FAWrongOTP_failed()
     {
         $this->insertNewUser(true);
 
@@ -288,17 +288,17 @@ class AuthServiceTest extends GoalousTestCase
         /** @var AuthService $AuthService */
         $AuthService = ClassRegistry::init('AuthService');
 
-        $response = $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $response = $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $authHash = $response['data']['auth_hash'];
 
-        $AuthService->create2FALoginResponse($authHash, '123');
+        $AuthService->authenticateWith2FA($authHash, '123');
     }
 
     /**
      * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
-    public function test_createPasswordLoginResponseNotFound_failed()
+    public function test_authenticateWithPasswordUserNotFound_failed()
     {
         $this->insertNewUser();
 
@@ -308,7 +308,7 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = "somerandomemail123@123123123";
         $password = '12345678';
 
-        $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->fail();
     }
@@ -316,7 +316,7 @@ class AuthServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\Auth\AuthUserNotFoundException
      */
-    public function test_createPasswordLoginResponseEmptyUsername_failed()
+    public function test_authenticateWithPasswordEmptyUsername_failed()
     {
         $this->insertNewUser();
 
@@ -326,7 +326,7 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = "";
         $password = '12345678';
 
-        $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->fail();
     }
@@ -334,7 +334,7 @@ class AuthServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
-    public function test_createPasswordLoginResponseNoPassword_failed()
+    public function test_authenticateWithPasswordNoPassword_failed()
     {
         $this->insertNewUser();
 
@@ -344,7 +344,7 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = "auth_test@email.com";
         $password = '';
 
-        $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->fail();
     }
@@ -352,7 +352,7 @@ class AuthServiceTest extends GoalousTestCase
     /**
      * @expectedException \Goalous\Exception\Auth\AuthMismatchException
      */
-    public function test_createPasswordLoginResponseWrongPassword_failed()
+    public function test_authenticateWithPasswordWrongPassword_failed()
     {
         $this->insertNewUser();
 
@@ -362,7 +362,7 @@ class AuthServiceTest extends GoalousTestCase
         $emailAddress = "auth_test@email.com";
         $password = 'wrongpassword';
 
-        $AuthService->createPasswordLoginResponse($emailAddress, $password);
+        $AuthService->authenticateWithPassword($emailAddress, $password);
 
         $this->fail();
     }
@@ -378,7 +378,7 @@ class AuthServiceTest extends GoalousTestCase
         $AuthService = ClassRegistry::init('AuthService');
 
         try {
-            return $AuthService->createPasswordLoginResponse($emailAddress, $password);
+            return $AuthService->authenticateWithPassword($emailAddress, $password);
         } catch (Exception $e) {
             printf($e->getMessage());
             printf($e->getTraceAsString());

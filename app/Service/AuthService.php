@@ -37,7 +37,7 @@ class AuthService extends AppService
     }
 
     /**
-     * Authenticate password to an user.
+     * Verify password to an user.
      *
      * @param int    $userId
      * @param string $password
@@ -46,7 +46,7 @@ class AuthService extends AppService
      *
      * @throws GlException\Auth\AuthFailedException Any reason failed authorize(including internal server error)
      */
-    public function authenticatePassword(int $userId, string $password): bool
+    public function verifyPassword(int $userId, string $password): bool
     {
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
@@ -104,7 +104,7 @@ class AuthService extends AppService
      *
      * @return array
      */
-    public function createLoginRequestData(string $email): array
+    public function createLoginRequest(string $email): array
     {
         /** @var .\Model\User $User */
         $User = ClassRegistry::init('User');
@@ -143,7 +143,7 @@ class AuthService extends AppService
      *
      * @return array
      */
-    public function createPasswordLoginResponse(string $email, string $password): array
+    public function authenticateWithPassword(string $email, string $password): array
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -154,7 +154,7 @@ class AuthService extends AppService
             throw new GlException\Auth\AuthUserNotFoundException('Email does not exist');
         }
 
-        if (!$this->authenticatePassword($user['id'], $password)) {
+        if (!$this->verifyPassword($user['id'], $password)) {
             throw new GlException\Auth\AuthMismatchException('Authentication information does not match');
         }
 
@@ -165,7 +165,7 @@ class AuthService extends AppService
             return [
                 "message" => Enum\Auth\Status::REQUEST_2FA,
                 "data"    => [
-                    "auth_hash" => $this->create2FAToken($userId, $defaultTeamId)
+                    "auth_hash" => $this->createAuthHash($userId, $defaultTeamId)
                 ]
             ];
         }
@@ -185,9 +185,9 @@ class AuthService extends AppService
      *
      * @return array
      */
-    public function create2FALoginResponse(string $authHash, string $twoFACode, bool $useRecoveryCodeFlg = false)
+    public function authenticateWith2FA(string $authHash, string $twoFACode, bool $useRecoveryCodeFlg = false)
     {
-        $tokenData = $this->getCached2FAToken($authHash);
+        $tokenData = $this->getAuthHashInfo($authHash);
 
         /** @var TwoFAService $TwoFAService */
         $TwoFAService = ClassRegistry::init('TwoFAService');
@@ -202,7 +202,7 @@ class AuthService extends AppService
             }
         }
 
-        $this->removeCached2FAToken($authHash);
+        $this->removeAuthHash($authHash);
 
         return [
             "message" => Enum\Auth\Status::OK,
@@ -387,14 +387,14 @@ class AuthService extends AppService
     }
 
     /**
-     * Create unique token for 2fa login and store it in Redis
+     * Create unique auth hash for 2fa login and store it in Redis
      *
      * @param int      $userId
      * @param int|null $teamId
      *
      * @return string
      */
-    private function create2FAToken(int $userId, ?int $teamId): string
+    private function createAuthHash(int $userId, ?int $teamId): string
     {
         //FNV-1a has very low collision chance with excellent performance
         $hash = hash("fnv1a64", $userId . $teamId . uniqid());
@@ -417,7 +417,7 @@ class AuthService extends AppService
      *
      * @return TwoFATokenData
      */
-    private function getCached2FAToken(string $authHash): TwoFATokenData
+    private function getAuthHashInfo(string $authHash): TwoFATokenData
     {
         $tokenKey = new TwoFATokenKey($authHash);
         $tokenClient = new TwoFATokenClient();
@@ -436,7 +436,7 @@ class AuthService extends AppService
      *
      * @param string $authHash
      */
-    private function removeCached2FAToken(string $authHash)
+    private function removeAuthHash(string $authHash)
     {
         $tokenKey = new TwoFATokenKey($authHash);
         $tokenClient = new TwoFATokenClient();
