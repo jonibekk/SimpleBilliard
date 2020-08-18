@@ -28,7 +28,7 @@ use Goalous\Enum as Enum;
 class PaymentService extends AppService
 {
     const AMOUNT_PER_USER_JPY = 1225;
-    const AMOUNT_PER_USER_USD = 12;
+    const AMOUNT_PER_USER_USD = 1200;
 
     /**
      * Get payment setting by team id
@@ -396,7 +396,7 @@ class PaymentService extends AppService
         if ($currency == PaymentSetting::CURRENCY_TYPE_JPY) {
             $amount = AppUtil::floor($amount, 0);
         } else {
-            $amount = AppUtil::floor($amount, 2);
+            $amount = AppUtil::floor($amount, 0);
         }
         return $amount;
     }
@@ -595,10 +595,13 @@ class PaymentService extends AppService
      */
     public function formatCharge(float $charge, int $currencyType): string
     {
-        // Format ex 1980 → ¥1,980
-        $num = number_format($charge, 2);
         if ($currencyType == Enum\Model\PaymentSetting\Currency::JPY) {
+            // Format ex 1980 → ¥1,980
+            $num = number_format($charge, 2);
             $num = preg_replace("/\.?0+$/", "", $num);
+        } else if ($currencyType == Enum\Model\PaymentSetting\Currency::USD) {
+            $num = $charge / 100;
+            $num = number_format($num, 2);
         }
         $res = PaymentSetting::CURRENCY_SYMBOLS_EACH_TYPE[$currencyType] . $num;
         return $res;
@@ -1883,7 +1886,7 @@ class PaymentService extends AppService
         return true;
     }
 
-    
+
     /**
      * Charge single
      * [Important]
@@ -2287,7 +2290,7 @@ class PaymentService extends AppService
         $chargeUserCnt = $currentChargeTargetUserCnt + $addUserCnt - $maxChargedUserCnt;
         if ($chargeUserCnt <= 0){
             $chargeUserCnt = $TeamMember->countHeadCount($teamId) + $addUserCnt - $maxChargedUserCnt;
-            
+
         }
          */
         /** @var ChargeHistory $ChargeHistory */
