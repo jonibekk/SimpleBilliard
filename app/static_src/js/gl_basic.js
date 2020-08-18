@@ -914,7 +914,7 @@ document.addEventListener('click', function (event) {
   if (event.target.matches('#search-input-clear')) {
     event.preventDefault();
     event.target.style.visibility = 'hidden';
-    let searchInputInput = document.getElementById('search-input-input');
+    var searchInputInput = document.getElementById('search-input-input');
     searchInputInput.value = '';
     searchInputInput.focus();
   }
@@ -922,7 +922,7 @@ document.addEventListener('click', function (event) {
 
 document.addEventListener('keyup', function (event) {
   if (event.target.matches('#search-input-input')) {
-    let searchInputClear = document.getElementById('search-input-clear');
+    var searchInputClear = document.getElementById('search-input-clear');
     searchInputClear.style.visibility = event.target.value ? 'visible' : 'hidden';
   }
 }, false);
@@ -931,7 +931,7 @@ document.addEventListener('keyup', function (event) {
 document.addEventListener('submit', function (event) {
   if (event.target.matches('#search-input')) {
     event.preventDefault();
-    let searchInputInput = document.getElementById('search-input-input');
+    var searchInputInput = document.getElementById('search-input-input');
 
     if (searchInputInput.value) {
       window.location.href = "/search/" + searchInputInput.value;
