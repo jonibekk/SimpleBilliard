@@ -102,9 +102,6 @@ msgstr "Este círculo não existe."
 msgid "It's only a circle administrator that can change circle settings."
 msgstr "Apenas um administrador do círculo pode alterar as configurações do círculo."
 
-msgid "Saved circle settings."
-msgstr "Configurações de círculo salvas."
-
 msgid "Failed to save circle settings."
 msgstr "Falha ao salvar as configurações do círculo."
 
@@ -390,9 +387,6 @@ msgstr "Quero saber mais"
 msgid "Get documentation"
 msgstr "Documentos"
 
-msgid "Collaborate with ISAO"
-msgstr "Quero colaborar"
-
 msgid "Give us an interview"
 msgstr "Dar um depoimento"
 
@@ -425,9 +419,6 @@ msgstr "Postado!"
 
 msgid "This post no longer exist."
 msgstr "Esse post não existe"
-
-msgid "There are no recent updates."
-msgstr "Não há novos updates"
 
 msgid "This isn't your post."
 msgstr "Esse post não é seu."
@@ -693,9 +684,6 @@ msgstr "Sua conta está temporariamente bloqueada. Será desbloqueado após %s m
 msgid "Email address or Password is incorrect."
 msgstr "Email ou senha incorretos。"
 
-msgid "You don't belong to any team."
-msgstr "Você não pertence a nenhuma equipe."
-
 msgid "Error. Try to login again."
 msgstr "Erro. Tente fazer login novamente."
 
@@ -857,12 +845,6 @@ msgstr "Goal salvo e pTop Key Result."
 
 msgid "The following doesn't exist."
 msgstr "Não existe."
-
-msgid "You cannot follow because you are participating in collaboration."
-msgstr "Você não pode seguir porque está participando como colaborador."
-
-msgid "You cannot follow because you are coaching this goal."
-msgstr "Você não pode seguir porque está treinando esse goal."
 
 msgid "Error, this user already exists."
 msgstr "Erro, este usuário já existe."
@@ -1124,9 +1106,6 @@ msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented o
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> mencionou você em um comentário."
-
-msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a post. "
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> mencionou você em uma postagem."
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> entrou no círculo."
@@ -1905,9 +1884,6 @@ msgstr "Falha no comentário."
 msgid "N/A"
 msgstr "Não se aplica."
 
-msgid "After leaving secret circle, you can't join again by yourself. Do you really want to leave this secret circle?"
-msgstr "Após sair de um círculo privado, você não pode entrar novamente sozinho. Tem certeza que deseja sair?"
-
 msgid "Do you really want to cancel this post?"
 msgstr "Quer realmente cancelar este post?"
 
@@ -2106,8 +2082,8 @@ msgstr "Falar com os membros"
 msgid "Lunch with team members"
 msgstr "Almoço com os membros"
 
-msgid "Ouvir necessidades dos membros do time"
-msgstr "社員の不満を聞く"
+msgid "Hear complaints of team members"
+msgstr ""
 
 msgid "Create your own"
 msgstr "Crie o seu"
@@ -2259,14 +2235,15 @@ msgstr "Utilize 8 ou mais caracteres, incluindo pelo menos 1 número."
 msgid "Choose your team's (company's) term"
 msgstr "Selecione o período que deseja trabalhar com os Goals"
 
+#, fuzzy
 msgid "Your name"
 msgstr "Seu nome"
 
 msgid "Birthday(Optional)"
 msgstr "Data de nascimento (opcional)"
 
-msgid "I agree to %s and %s of Goalies."
-msgstr "Eu concordo com os %s e %s do Goalous."
+msgid "I agree to %s and %s of Goalous."
+msgstr ""
 
 msgid "Terms of Service"
 msgstr "Termos"
@@ -2349,8 +2326,8 @@ msgstr "Ex: Espalhar o Goalous pelo mundo!"
 msgid "View samples"
 msgstr "Ver exemplos"
 
-msgid "Others"
-msgstr "Outros"
+msgid "See Other"
+msgstr ""
 
 msgid "Next →"
 msgstr "Próximo →"
@@ -2437,7 +2414,7 @@ msgid "View Previous"
 msgstr "Ver Anterior"
 
 msgid "View all %s comments"
-msgstr "Ver todos os %s comentários" 
+msgstr "Ver todos os %s comentários"
 
 msgid "more"
 msgstr "mais"
@@ -2676,9 +2653,6 @@ msgstr "Endereço da empresa"
 msgid "Company Name"
 msgstr "Nome da empresa"
 
-msgid "ISAO Corporation"
-msgstr "ISAO Corporation"
-
 msgid "Post Code"
 msgstr "Código postal"
 
@@ -2874,9 +2848,6 @@ msgstr "Contrato de campanha"
 msgid "By purchasing, you agree to the %s and %s."
 msgstr "Ao comprar, você concorda com %s e %s."
 
-msgid "Contact us"
-msgstr "Contate-nos"
-
 msgid "Your team upgraded price plan"
 msgstr "Sua equipe atualizou o plano de preços"
 
@@ -2922,9 +2893,6 @@ msgstr "Círculos"
 msgid "Manage"
 msgstr "Gerenciar"
 
-msgid "View Circles"
-msgstr "Ver círculos"
-
 msgid "View All"
 msgstr "Ver tudo"
 
@@ -2936,9 +2904,6 @@ msgstr "Blog"
 
 msgid "About Us"
 msgstr "Sobre nós"
-
-msgid "ISAO Corporation, An IT corporation located in Akihabara, Tokyo."
-msgstr "ISAO Corporation, uma empresa de TI localizada em Akihabara, Tóquio."
 
 msgid "Our mid-term vision to be “a visionary company that brings joy to work around the world”,"
 msgstr "Nossa visão de médio prazo é ser “uma empresa visionária que traz alegria para trabalhar em todo o mundo”,"
@@ -2960,12 +2925,6 @@ msgstr "Inscrição por lei"
 
 msgid "Get in touch"
 msgstr "Get in touch"
-
-msgid "Contact for press"
-msgstr "Contato para imprensa"
-
-msgid "Contact for cooperation"
-msgstr "Contato para cooperação"
 
 msgid "Action list"
 msgstr "Lista de Ação"
@@ -3384,9 +3343,6 @@ msgstr "Por favor, coloque um número."
 msgid "Start"
 msgstr "Começar"
 
-msgid "(Today)"
-msgstr "（Hoje）"
-
 msgid "Weight of Key Result for the Goal"
 msgstr "Peso do Key Result do Goal"
 
@@ -3507,20 +3463,11 @@ msgstr "Ver tudo"
 msgid "User Setting"
 msgstr "Configuração do Usuário"
 
-msgid "Team Setting"
-msgstr "Configuração do Usuário da Equipe."
-
 msgid "Evaluation"
 msgstr "Avaliação"
 
 msgid "Goal Approval"
 msgstr "Aprovação de Goal"
-
-msgid "User Guide"
-msgstr "Guia do usuário"
-
-msgid "How to make a Goal (jp)"
-msgstr "Como fazer um Goal"
 
 msgid "Tutorial"
 msgstr "Tutorial"
@@ -3578,9 +3525,6 @@ msgstr "Após o login, entre em contato conosco usando a ferramenta de suporte. 
 
 msgid "What company manages Goalous?"
 msgstr "Qual empresa gerencia a Goalous?"
-
-msgid "ISAO, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
-msgstr "ISAO Corporation, somos uma empresa japonesa, fundada em 1999, com vasta experiência no mercado de IT.  "
 
 msgid "Frequent questions"
 msgstr "Perguntas frequentes"
@@ -3782,75 +3726,6 @@ msgstr "O recurso de avaliação está desativado agora. Se você gostaria de us
 
 msgid "Evaluate"
 msgstr "Avalie"
-
-msgid "Self evaluation"
-msgstr "Autoavaliação"
-
-msgid "Self evaluation Goal score"
-msgstr "Auto-avaliação Pontuação de Goal"
-
-msgid "Self evaluation Goal score required"
-msgstr "Auto-avaliação Pontuação do Goal necessária"
-
-msgid "Self evaluation Goal comment"
-msgstr "Auto-avaliação Comentário do Goal"
-
-msgid "Self evaluation Goal comment required"
-msgstr "Auto-avaliação Comentário do Goal obrigatório"
-
-msgid "Self evaluation total score"
-msgstr "Pontuação total de auto-avaliação"
-
-msgid "Self evaluation total score required"
-msgstr "Pontuação total de auto-avaliação necessária"
-
-msgid "Self evaluation total comment"
-msgstr "Comentário total de auto-avaliação"
-
-msgid "Self evaluation total comment required"
-msgstr "Comentário total de auto-avaliação necessário"
-
-msgid "Evaluation by Evaluator"
-msgstr "Avaliação pelo avaliador"
-
-msgid "Evaluation Goal score by Evaluator"
-msgstr "Pontuação da avaliação de Goal pelo avaliador"
-
-msgid "Evaluation Goal score by Evaluator required"
-msgstr "Pontuação de avaliação de Goal exigida pelo avaliador"
-
-msgid "Evaluation Goal comment by Evaluator"
-msgstr "Comentário de avaliação de Goal pelo avaliador"
-
-msgid "Evaluation Goal comment by Evaluator required"
-msgstr "Comentário de avaliação de Goal exigida pelo avaliador"
-
-msgid "Evaluation total score by Evaluator"
-msgstr "Pontuação total da avaliação pelo avaliador"
-
-msgid "Evaluation total score by Evaluator required"
-msgstr "Pontuação total da avaliação exigida pelo avaliador"
-
-msgid "Evaluation total comment by Evaluator"
-msgstr "Comentário total da avaliação pelo avaliador"
-
-msgid "Evaluation total comment by Evaluator required"
-msgstr "Comentário total da avaliação exigido pelo avaliador"
-
-msgid "Evaluation by Final Evaluator"
-msgstr "Avaliação pelo Avaliador Final"
-
-msgid "Evaluation total score by Final Evaluator"
-msgstr "Pontuação total da avaliação pelo avaliador final"
-
-msgid "Evaluation total score by Final Evaluator required"
-msgstr "Pontuação total da avaliação exigida pelo avaliador final"
-
-msgid "Evaluation total comment by Final Evaluator"
-msgstr "Comentário total da avaliação pelo avaliador final"
-
-msgid "Evaluation total comment by Final Evaluator required"
-msgstr "Comentário total da avaliação exigido pelo avaliador final"
 
 msgid "Begin evaluation"
 msgstr "Iniciar avaliação"
@@ -4104,8 +3979,8 @@ msgstr "Digite o código de confirmação"
 msgid "After reading QR, enter the code (6 digits)"
 msgstr "Depois de ler o QR Code, digite o código (6 dígitos)"
 
-msgid "Code "
-msgstr "Código"
+msgid "code"
+msgstr ""
 
 msgid "Finished to change, you'll get confirmation email."
 msgstr "Concluída a alteração, você receberá um e-mail de confirmação."
@@ -4213,15 +4088,25 @@ msgid "It will be shared with members only in this team."
 msgstr "Será compartilhado com os membros apenas nesta equipe."
 
 msgid "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n"
-msgstr "[Como você pode contribuir para a equipe?]\n\n[O que você deseja alcançar na equipe? (Especificamente)]\n\n[Outros]\n\n"
-
+msgstr ""
+"[Como você pode contribuir para a equipe?]"
+"[O que você deseja alcançar na equipe? (Especificamente)]"
+"[Outros]"
 
 msgid "Show Examples"
 msgstr "Mostra exemplos"
 
 msgid "[Now, What is that you can contribute to the team?]<br>\n\nConsulting UX of your production.<br>\n\n[What is the thing you want to achieve in the team?(Specifically)]<br>\n\nInnovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n\n[Others]<br>\n\nNeed New Customers?<br>\n\n1. Be focused on culture above all else, get happy employees.<br>\n\n2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n\n3. Simplify everything\n"
-msgstr "[Como você pode contribuir para a equipe?]<br>\n\ Consultando o UX da sua produção.<br>\n\n[Qual é o que você deseja alcançar na equipe? (Especificamente)]<br>\n\nnMétodos de inovação - Colaboração remota - Criatividade - UX no nível C - Holocracia<br>\n\n[Outros]<br>\n\nPrecisa de novos clientes?<br>\n\n1. Concentre-se na cultura acima de tudo, receba funcionários felizes.<br>\n\n2. Crie uma cultura de inovação, espírito de equipe, colaboração, criatividade em todos os lugares<br>\n\n3. Simplifique\n"
-
+msgstr ""
+"[Como você pode contribuir para a equipe?]<br>"
+" Consultando o UX da sua produção.<br>"
+"[Qual é o que você deseja alcançar na equipe? (Especificamente)]<br>"
+"nMétodos de inovação - Colaboração remota - Criatividade - UX no nível C - Holocracia<br>"
+"[Outros]<br>"
+"Precisa de novos clientes?<br>"
+"1. Concentre-se na cultura acima de tudo, receba funcionários felizes.<br>"
+"2. Crie uma cultura de inovação, espírito de equipe, colaboração, criatividade em todos os lugares<br>"
+"3. Simplifique"
 
 msgid "Upload Cover Image"
 msgstr "Carregar imagem de capa"
@@ -4583,9 +4468,6 @@ msgstr "Goalous │ Rede social corporativa como foco em gestão de metas."
 msgid "Campaign Contract | Goalous"
 msgstr "Contrato | Goalous"
 
-msgid "We accept consultation of introduction."
-msgstr "Aceito colsultoria sobre introdução."
-
 msgid "Contact us | Goalous"
 msgstr "Contate-nos | Goalous"
 
@@ -4640,9 +4522,6 @@ msgstr "Twitter"
 msgid "Follow now!"
 msgstr "Siga-nos!"
 
-msgid "Description of the function is here."
-msgstr "Clique aqui para descrever uma função."
-
 msgid "Features | Goalous"
 msgstr "Funcionalidades | Goalous"
 
@@ -4687,9 +4566,6 @@ msgstr "Compartilhando em um círculo."
 
 msgid "Create circles, and share with project members division members or anyone in the company."
 msgstr "Crie círculos e compartilhe informações com membros do time."
-
-msgid "Let's start conversation about any activities and topics!"
-msgstr "Compartilhe notícias, dúvidas, melhorias, o que quiser!"
 
 msgid "Messaging"
 msgstr "Mensagens"
@@ -4745,50 +4621,14 @@ msgstr "Os membros do time sabem qual a visão da empresa? Torne a visão comum 
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous. Curta seu trabalho. Alcance suas metas."
 
-msgid "Enjoy your work. Achieve your goals."
-msgstr "Curta seu trabalho. Alcance suas metas."
-
 msgid "Contact&nbsp;us"
 msgstr "Contato&nbsp"
-
-msgid "New Event"
-msgstr "Novo evento"
 
 msgid "Free Goalous Seminar"
 msgstr "Seminário Goalous"
 
 msgid "Learn all of the ways you can improve your organization using Goalous."
 msgstr "Aprenda novas maneiras de ajudar sua empresa."
-
-msgid "Get Ticket"
-msgstr "Aplicar"
-
-msgid "Your organization can be changed by Goalous!"
-msgstr "Sua organização pode mudar com Goalous!"
-
-msgid "Achieve Goals, make your team open, let your job become joyful!"
-msgstr "Alcance metas, deixe o time mais leve, transforme o ambiente de trabalho."
-
-msgid "Move closer to your company's vision."
-msgstr "Siga em direção da visão da empresa."
-
-msgid "Everyone can know the company vision and can make their Goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision."
-msgstr "Todos podem entender a visão da empresa e também criar Goals. Acompanhe seu desenvolvimento. Quanto mais utilizar Goalous, mais estará próximo da visão da empresa."
-
-msgid "You get to know your team grow by your achievement of goals."
-msgstr "Quanto mais ações no Goalous, maior será o crescimento da organização."
-
-msgid "The phrase \"I don know what that is, what they do\" goes away."
-msgstr "Todos os membros terão clareza nas metas da empresa."
-
-msgid "What did your colleagues did today? Share on Goalous and get to know more and more."
-msgstr "O que seus colegas fizeram hoje? Acesse Goalous e veja o progresso das metas."
-
-msgid "Cooperate, get results."
-msgstr "Colabore, alcance resultados."
-
-msgid "To achieve the team vision, the team must know what each other is doing. By using Goalous to know clearly what each other is doing, the team can succeeded efficiently."
-msgstr "Com Goalous, o ambiente se torna 100% colaborativo."
 
 msgid "Help each other, enjoy with them. How wonderful?"
 msgstr "Ajude o time, contribua, torne o ambiente mais divertido!"
@@ -4799,38 +4639,11 @@ msgstr "Veja o vídeo"
 msgid "About Goalous"
 msgstr "Sobre o Goalous"
 
-msgid "Wherever, Whenever, from your smartphone."
-msgstr "Em qualquer lugar, a qualquer momento, na palma da sua mão."
-
-msgid "iOS and Android apps avaliable."
-msgstr "Disponível em iOS e Android."
-
-msgid "What is Goalous? (pdf)"
-msgstr "O que é o Goalous?（pdf)"
-
-msgid "Please refer to this document."
-msgstr "Use este material como referência."
-
-msgid "Download the file"
-msgstr "Faça download do arquivo."
-
-msgid "Flyer (pdf)"
-msgstr "Brochura（pdf）"
-
-msgid "Goalous Flyer (Japanese)"
-msgstr "Brochura do Goalous"
-
-msgid "Inscription based on specific trade law is here."
-msgstr "Detalhes legais de comercialização aqui."
-
 msgid "Inscription by Law | Goalous"
 msgstr "Inscrição legal de comercialização aqui."
 
 msgid "Create a team."
 msgstr "Crie um time."
-
-msgid "Pricing is here."
-msgstr "Preço"
 
 msgid "Pricing | Goalous"
 msgstr "Preço | Goalous"
@@ -5023,9 +4836,6 @@ msgstr "Depois de criar seu contrato de fatura, sua primeira fatura será emitid
 
 msgid "Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."
 msgstr "Após a emissão da fatura atualizada, você terá 10 dias para concluir seu pagamento. Se esse processo for repetido várias vezes, sua empresa poderá estar sujeita a revisão e poderá ter seu acesso negado ao Goalous."
-
-msgid "Privacy Policy is here."
-msgstr "A Política de Privacidade está aqui."
 
 msgid "PrivacyPolicy | Goalous"
 msgstr "Política de Privacidade | Goalous"
@@ -5220,7 +5030,7 @@ msgid "Your email address"
 msgstr "Seu endereço de email"
 
 msgid "By clicking <q>I agree. Continue.</q> below, you are agreeing to the <a href=\"/terms?backBtn=true\" target=\"_blank\">Terms of Service</a> and the <a href=\"/privacy_policy?backBtn=true\" target=\"_blank\">Privacy Policy</a>."
-msgstr "Ao clicar em <q> eu concordo. Continue. </q> abaixo, você concorda com os <a href=\"/terms?backBtn=true\" target=\"_blank\"> Termos de Serviço </a> e os <a href = \ " / privacy_policy? backBtn = true \ "target = \" _ blank \ "> Política de privacidade </a>."
+msgstr "Ao clicar em <q> eu concordo. Continue. </q> abaixo, você concorda com os <a href=\"/terms?backBtn=true\" target=\"_blank\"> Termos de Serviço </a> e os <a href =  \" / privacy_policy? backBtn = true  \"target = \" _ blank  \"> Política de privacidade </a>."
 
 msgid "I agree. Continue."
 msgstr "Concordo. Continuar."
@@ -5360,12 +5170,6 @@ msgstr "Juntar-se à equipe Goalous para \"%s\"?"
 msgid "Your name will displayed along with your goals and posts in Goalous"
 msgstr "Seu nome será exibido junto com seus Goals e postagens no Goalous"
 
-msgid "Your date of birth"
-msgstr "Sua data de nascimento"
-
-msgid "You must be at least 16 years old to register Goalous."
-msgstr "Você deve ter pelo menos 16 anos para registrar a Goalous."
-
 msgid "User Authentication"
 msgstr "Autenticação de usuário"
 
@@ -5426,9 +5230,6 @@ msgstr "Seguindo (%s)"
 msgid "Approval Status: %s"
 msgstr "Status de aprovação: %s"
 
-msgid "You can mention to no one here."
-msgstr "Você não pode mencionar ninguém aqui"
-
 msgid "4"
 msgstr "4"
 
@@ -5443,9 +5244,6 @@ msgstr "Sessão não existe"
 
 msgid "You already joined to this circle."
 msgstr "Você já ingressou neste círculo."
-
-msgid "This team member already joined this circle."
-msgstr "Este membro da equipe já ingressou neste círculo."
 
 msgid "You can not invite."
 msgstr "Você não pode convidar."
@@ -5486,17 +5284,11 @@ msgstr "Este item já está salvo."
 msgid "This item doesn't exist."
 msgstr "Este item não existe."
 
-msgid "Discover more circles"
-msgstr "Descubra mais círculos"
-
 msgid "Posting the Action"
 msgstr "Publicando a ação"
 
 msgid "You are about to post this action without progress. Do you wish to continue?"
 msgstr "Você está prestes a publicar esta ação sem progresso. Você deseja continuar?"
-
-msgid "Search Members, Goals, Circles"
-msgstr "Procurar Membros, Goals, Círculos"
 
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr "Para alterá-lo, você precisa digitar a senha."
@@ -5549,12 +5341,6 @@ msgstr "Muito obrigado."
 msgid "The team has been deleted"
 msgstr "A equipe foi excluída"
 
-msgid "%s in Goalous has been deleted because the usage expiration date has passed. After that, you can not use by that team."
-msgstr "Foi excluído porque a data de validade do uso passou. Depois disso, você não pode mais usar essa equipe."
-
-msgid "This is a required field."
-msgstr "Este é um campo obrigatório."
-
 msgid "Please log in."
 msgstr "Por favor entre."
 
@@ -5566,9 +5352,6 @@ msgstr "Você não curtiu isso"
 
 msgid "Information matching the search could not be found"
 msgstr "Não foi possível encontrar informações correspondentes à pesquisa"
-
-msgid "Search post and comment"
-msgstr "Pesquisar publicação e comentário"
 
 msgid "Search result %d topics hit"
 msgstr "Resultado da pesquisa %d tópicos atingidos"
@@ -5723,23 +5506,8 @@ msgstr "KR CRIADA"
 msgid "KR EDITED"
 msgstr "KR EDITADA"
 
-msgid "DOWNROAD APP"
-msgstr "DOWNLOAD APP"
-
 msgid "CONTACT US"
 msgstr "CONTATE-NOS"
-
-msgid "See,"
-msgstr "Veja"
-
-msgid "Recognize,"
-msgstr "Reconheça"
-
-msgid "Share today’s step\nwith photos."
-msgstr "Copartilhe as ações de hoje com fotos."
-
-msgid "Move Forward."
-msgstr "Siga em frente."
 
 msgid "OKR and Communication Software | Goalous"
 msgstr "Software de OKRs e comunicação | Goalous"
@@ -5882,12 +5650,6 @@ msgstr "Teste as principais funcionalidades do Goalous, como Goals, ações, cí
 msgid "Search (Complete match with ”…”)"
 msgstr "Procurar (igual a ”...”)"
 
-msgid "DOWNLOAD APP"
-msgstr "BAIXAR O APP"
-
-msgid "Share today’s step<br>with photos."
-msgstr "Compartilhar as ações de hoje<br>com fotos."
-
 msgid "Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous."
 msgstr "Seminário do Goalous! Aprenda todos os caminhos para melhorar sua organização."
 
@@ -5906,14 +5668,8 @@ msgstr "Pague apenas pelo que for utilizar. Teste grátis por 15 dias."
 msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
 msgstr "Vamos começar uma nova jornada que irá mudar a essência do seu time!"
 
-msgid "Try Demo Site"
-msgstr "Acesse o Demo do Goalous"
-
 msgid "Welcome to the Demo Site!"
 msgstr "Bem vindo ao Demo do Goalous!"
-
-msgid "Let's experience Goalous as Demo"
-msgstr "Vamos testar o Demo do Goalous."
 
 msgid "Translation Failed"
 msgstr "Tradução não realizada"
@@ -5972,50 +5728,8 @@ msgstr "Esta é uma senha temporária. Clique em mais > Ajustes > Conta > Senha 
 msgid "Email Address: %s"
 msgstr "E-mail: %s"
 
-msgid "Hindi"
-msgstr "Dica"
-
-msgid "Vietnamese"
-msgstr "Vietnamita"
-
-msgid "Urdu"
-msgstr "Urdu"
-
-msgid "Filipino"
-msgstr "Filipino"
-
-msgid "Czech"
-msgstr "Tcheco"
-
-msgid "Hungarian"
-msgstr "Húngaro"
-
 msgid "Portuguese"
 msgstr "Português"
-
-msgid "Polish"
-msgstr "Polonês"
-
-msgid "Russian"
-msgstr "Russo"
-
-msgid "Afrikaans"
-msgstr "Africano"
-
-msgid "Swahili"
-msgstr "Suaíli"
-
-msgid "Shona"
-msgstr "Shona"
-
-msgid "Zulu"
-msgstr "Zulu"
-
-msgid "Xhosa"
-msgstr "Xhosa"
-
-msgid "Chichewa"
-msgstr "Chichewa"
 
 msgid "More "
 msgstr "Mais"
@@ -6107,15 +5821,8 @@ msgstr "Promover comunicação efetiva faz com que membros do time aumentem suas
 msgid "Feedback from our seminar participants"
 msgstr "Feedbacks dos participantes dos nossos seminários"
 
-msgid "We hold Organizational reform seminars regularly. This seminar is very popular every time for <br>CEO’s, upper / lower management, HR Team, team management and those who want to improve their organizational capabilities.<br> Please feel free to join us at our next seminar!"
-msgstr ""
-"Nós ministramos seminários regularmente para <br>CEOs, tomadores de decisão, executivos, RH, líderes de projeto, ou qualquer pessoa que queira aprimorar as capacidades do time."
-
 msgid "I felt that it was ideal to go from fairness to a fun world and apply that mind to business."
 msgstr "Um amibente justo e divertido deve ser implementado em todas as empresas."
-
-msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that ISAO has achieved that ideal, I would like to observe how ISAO grows with this ideal moving forward."
-msgstr "O modo de pensar é o ideal, mas também difícil de implementar. MAs vendo como a ISAO o fez, quero testar em minha empresa também."
 
 msgid "I started visualizing our evaluations at my company, so I would like to consider using Goalous for that as well."
 msgstr "Comecei a visualizar os feedbacks atuais, e portanto estou considerando utilizar o Goalous a partir de agora."
@@ -6135,9 +5842,6 @@ msgstr "Conteúdos interessantes devem ser levados aos gestores."
 msgid "I thought that the organization could change depending on the approach."
 msgstr "Dependendo da abordagem, a empresa poderá mudar seu ambiente e resultados."
 
-msgid "I thought it was nice to be able to hit the spotlight to all the employees."
-msgstr "É sempre legal compartilhar suas atividades com o time todo."
-
 msgid "Free Goalous Seminar!"
 msgstr "Seminário do Goalous!"
 
@@ -6146,6 +5850,45 @@ msgstr "Confira esse vídeo do Goalous!"
 
 msgid "Introduction video for Goalous"
 msgstr "Vídeo de introdução do Goalous"
+
+msgid "Collaborate with Colorkrew"
+msgstr ""
+
+msgid "There are no recent updates."
+msgstr "Não há novos updates"
+
+msgid "You cannot follow because you are participating in collaboration."
+msgstr "Você não pode seguir porque está participando como colaborador."
+
+msgid "You cannot follow because you are coaching this goal."
+msgstr "Você não pode seguir porque está treinando esse goal."
+
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a post. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> mencionou você em uma postagem."
+
+msgid "Brazil"
+msgstr ""
+
+msgid "Colorkrew Inc."
+msgstr ""
+
+msgid "Colorkrew Inc., An IT corporation located in Akihabara, Tokyo."
+msgstr "Colorkrew Inc., located in Akihabara Tokyo."
+
+msgid "Colorkrew, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
+msgstr ""
+
+msgid "You must be at least 16 years old to register Goalous."
+msgstr "Você deve ter pelo menos 16 anos para registrar a Goalous."
+
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a post. "
+msgstr ""
+
+msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
+msgstr ""
+
+msgid "I thought it was nice to be able to hit the spotlight to all the employees."
+msgstr "É sempre legal compartilhar suas atividades com o time todo."
 
 msgid "Goalous will automatically change the amount charged to your account whenever active members are added to your team."
 msgstr "Goalous irá automaticamente alterar o total cobrado da sua conta caso o total de usuários seja alterado."
@@ -6165,12 +5908,24 @@ msgstr "Vamos criar Goals"
 msgid "Create Goal"
 msgstr "Crie um Goal"
 
-msgid "Arabic"
-msgstr "Árabe"
+msgid "Currency"
+msgstr ""
 
-msgid "Bengali"
-msgstr "Bengali"
+msgid "Group Settings"
+msgstr ""
 
-msgid "Korean"
-msgstr "Coreano"
+msgid "Manage groups"
+msgstr ""
 
+msgid "Ouvir necessidades dos membros do time"
+msgstr "社員の不満を聞く"
+
+msgid "I agree to %s and %s of Goalies."
+msgstr "Eu concordo com os %s e %s do Goalous."
+
+#, fuzzy
+msgid "Code "
+msgstr "Código"
+
+msgid "Contact us"
+msgstr "Contate-nos"
