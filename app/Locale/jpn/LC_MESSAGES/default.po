@@ -21,9 +21,6 @@ msgstr "円"
 msgid "Dollar"
 msgstr "ドル"
 
-msgid "Currency"
-msgstr "通貨"
-
 msgid "Other numeric"
 msgstr "その他の数値"
 
@@ -104,9 +101,6 @@ msgstr "このサークルは存在しません。"
 
 msgid "It's only a circle administrator that can change circle settings."
 msgstr "サークルの変更ができるのはサークル管理者のみです。"
-
-msgid "Saved circle settings."
-msgstr "サークル設定を保存しました。"
 
 msgid "Failed to save circle settings."
 msgstr "サークル設定の保存に失敗しました。"
@@ -393,9 +387,6 @@ msgstr "詳しく知りたい"
 msgid "Get documentation"
 msgstr "資料がほしい"
 
-msgid "Collaborate with Colorkrew"
-msgstr "協業したい"
-
 msgid "Give us an interview"
 msgstr "取材したい"
 
@@ -428,9 +419,6 @@ msgstr "投稿しました。"
 
 msgid "This post no longer exist."
 msgstr "この投稿は存在しません。"
-
-msgid "There are no recent updates."
-msgstr "直近の更新はありません。"
 
 msgid "This isn't your post."
 msgstr "この投稿はあなたのものではありません。"
@@ -696,9 +684,6 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 msgid "Email address or Password is incorrect."
 msgstr "メールアドレスもしくはパスワードが正しくありません。"
 
-msgid "You don't belong to any team."
-msgstr "あなたはどのチームにも属していません"
-
 msgid "Error. Try to login again."
 msgstr "エラーが発生しました。再度ログインをしてください。"
 
@@ -860,12 +845,6 @@ msgstr "ゴールとトップKRを変更しました。"
 
 msgid "The following doesn't exist."
 msgstr "フォロー中ではありません。"
-
-msgid "You cannot follow because you are participating in collaboration."
-msgstr "コラボに参加しているため、フォローできません。"
-
-msgid "You cannot follow because you are coaching this goal."
-msgstr "このゴールをコーチしているため、フォローできません。"
 
 msgid "Error, this user already exists."
 msgstr "エラーが発生しました。このユーザはすでにチームに参加しています。"
@@ -1127,9 +1106,6 @@ msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class=\"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにコメントしました。"
-
-msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a post. "
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにメンションしました。"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しました。"
@@ -1908,9 +1884,6 @@ msgstr "コメントを取得できませんでした。"
 msgid "N/A"
 msgstr "該当なし"
 
-msgid "After leaving secret circle, you can't join again by yourself. Do you really want to leave this secret circle?"
-msgstr "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいですか？"
-
 msgid "Do you really want to cancel this post?"
 msgstr "本当にこの投稿をキャンセルしますか？"
 
@@ -2658,9 +2631,6 @@ msgstr "タイ"
 msgid "United States"
 msgstr "アメリカ合衆国"
 
-msgid "Brazil"
-msgstr "ブラジル"
-
 msgid "%d members"
 msgstr "%dメンバー"
 
@@ -2681,9 +2651,6 @@ msgstr "会社住所"
 
 msgid "Company Name"
 msgstr "会社名"
-
-msgid "Colorkrew Inc."
-msgstr "株式会社Colorkrew"
 
 msgid "Post Code"
 msgstr "郵便番号"
@@ -2880,9 +2847,6 @@ msgstr "キャンペーン利用特約"
 msgid "By purchasing, you agree to the %s and %s."
 msgstr "お支払い頂いた場合、%s及び%sに同意した事になります。"
 
-msgid "Contact us"
-msgstr "お問い合わせ"
-
 msgid "Your team upgraded price plan"
 msgstr "プランアップグレードが完了しました"
 
@@ -2928,9 +2892,6 @@ msgstr "サークル"
 msgid "Manage"
 msgstr "管理"
 
-msgid "View Circles"
-msgstr "サークルを見る"
-
 msgid "View All"
 msgstr "すべて表示"
 
@@ -2942,9 +2903,6 @@ msgstr "ブログ"
 
 msgid "About Us"
 msgstr "About Us"
-
-msgid "Colorkrew Inc., An IT corporation located in Akihabara, Tokyo."
-msgstr "東京・秋葉原にあるIT企業、株式会社Colorkrew。"
 
 msgid "Our mid-term vision to be “a visionary company that brings joy to work around the world”,"
 msgstr "”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げています。"
@@ -2966,12 +2924,6 @@ msgstr "特定商取引法に基づく表記"
 
 msgid "Get in touch"
 msgstr "Get in touch"
-
-msgid "Contact for press"
-msgstr "プレス関連のお問い合わせ"
-
-msgid "Contact for cooperation"
-msgstr "協業のお問い合わせ"
 
 msgid "Action list"
 msgstr "アクションリスト"
@@ -3390,9 +3342,6 @@ msgstr "数字を入力してください。"
 msgid "Start"
 msgstr "開始"
 
-msgid "(Today)"
-msgstr "（本日）"
-
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこのKRの重要度"
 
@@ -3513,20 +3462,11 @@ msgstr "すべて見る"
 msgid "User Setting"
 msgstr "ユーザー設定"
 
-msgid "Team Setting"
-msgstr "チーム設定"
-
 msgid "Evaluation"
 msgstr "評価"
 
 msgid "Goal Approval"
 msgstr "ゴール認定"
-
-msgid "User Guide"
-msgstr "ユーザー利用ガイド"
-
-msgid "How to make a Goal (jp)"
-msgstr "ゴール作成方法"
 
 msgid "Tutorial"
 msgstr "チュートリアル"
@@ -3586,9 +3526,6 @@ msgstr "ログイン後に利用できるサポートツールでお問い合わ
 
 msgid "What company manages Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
-
-msgid "Colorkrew, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
-msgstr "\"たのしい！\"をうみだしとどける企業、Colorkrew（カラクル）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。"
 
 msgid "Frequent questions"
 msgstr "よくあるご質問"
@@ -3792,75 +3729,6 @@ msgstr "評価機能は現在無効化されています。もしご利用にな
 
 msgid "Evaluate"
 msgstr "評価する"
-
-msgid "Self evaluation"
-msgstr "自己評価"
-
-msgid "Self evaluation Goal score"
-msgstr "自己評価ゴールスコア"
-
-msgid "Self evaluation Goal score required"
-msgstr "自己評価ゴールスコア必須"
-
-msgid "Self evaluation Goal comment"
-msgstr "自己評価 ゴール コメント"
-
-msgid "Self evaluation Goal comment required"
-msgstr "自己評価 ゴール コメント必須"
-
-msgid "Self evaluation total score"
-msgstr "自己評価 トータル スコア"
-
-msgid "Self evaluation total score required"
-msgstr "自己評価 トータル スコア 必須"
-
-msgid "Self evaluation total comment"
-msgstr "自己評価 トータル コメント"
-
-msgid "Self evaluation total comment required"
-msgstr "自己評価 トータル コメント 必須"
-
-msgid "Evaluation by Evaluator"
-msgstr "評価者評価"
-
-msgid "Evaluation Goal score by Evaluator"
-msgstr "評価者評価 ゴール スコア"
-
-msgid "Evaluation Goal score by Evaluator required"
-msgstr "評価者評価 ゴール スコア必須"
-
-msgid "Evaluation Goal comment by Evaluator"
-msgstr "評価者評価 ゴール コメント"
-
-msgid "Evaluation Goal comment by Evaluator required"
-msgstr "評価者評価 ゴール コメント必須"
-
-msgid "Evaluation total score by Evaluator"
-msgstr "評価者評価 トータル スコア"
-
-msgid "Evaluation total score by Evaluator required"
-msgstr "評価者評価 トータル スコア 必須"
-
-msgid "Evaluation total comment by Evaluator"
-msgstr "評価者評価 トータル コメント"
-
-msgid "Evaluation total comment by Evaluator required"
-msgstr "評価者評価 トータル コメント 必須"
-
-msgid "Evaluation by Final Evaluator"
-msgstr "最終評価者評価"
-
-msgid "Evaluation total score by Final Evaluator"
-msgstr "最終評価者評価 トータル スコア"
-
-msgid "Evaluation total score by Final Evaluator required"
-msgstr "最終評価者評価 トータル スコア 必須"
-
-msgid "Evaluation total comment by Final Evaluator"
-msgstr "最終評価者評価 トータル コメント"
-
-msgid "Evaluation total comment by Final Evaluator required"
-msgstr "最終評価者評価 トータル コメント 必須"
 
 msgid "Begin evaluation"
 msgstr "評価開始"
@@ -4606,9 +4474,6 @@ msgstr "Goalous (ゴーラス) │ ゴール達成への最強にオープンな
 msgid "Campaign Contract | Goalous"
 msgstr "Goalousキャンペーン利用特約 | Goalous(ゴーラス)"
 
-msgid "We accept consultation of introduction."
-msgstr "導入のご相談を受け付けています。"
-
 msgid "Contact us | Goalous"
 msgstr "お問い合わせ | Goalous"
 
@@ -4663,9 +4528,6 @@ msgstr "Twitter"
 msgid "Follow now!"
 msgstr "Follow now！"
 
-msgid "Description of the function is here."
-msgstr "機能の説明はこちら。"
-
 msgid "Features | Goalous"
 msgstr "機能 | Goalous (ゴーラス)"
 
@@ -4710,9 +4572,6 @@ msgstr "共有はサークルで"
 
 msgid "Create circles, and share with project members division members or anyone in the company."
 msgstr "部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェア。"
-
-msgid "Let's start conversation about any activities and topics!"
-msgstr "様々な活動や話題をサークルで共有しよう！"
 
 msgid "Messaging"
 msgstr "メッセージ"
@@ -4768,50 +4627,14 @@ msgstr "会社のビジョン、どのくらいの社員が知っていますか
 msgid "Goalous | Enjoy your work. Achieve your Goal."
 msgstr "Goalous (ゴーラス) │チーム力を\"たのしく\"あげる"
 
-msgid "Enjoy your work. Achieve your goals."
-msgstr "チーム力を<br><q>たのしく</q>あげる"
-
 msgid "Contact&nbsp;us"
 msgstr "お問い合わせ"
-
-msgid "New Event"
-msgstr "イベント"
 
 msgid "Free Goalous Seminar"
 msgstr "無料のGoalousセミナー開催！"
 
 msgid "Learn all of the ways you can improve your organization using Goalous."
 msgstr "Goalousを使ってどのように組織改革するかをご紹介します。"
-
-msgid "Get Ticket"
-msgstr "申し込む"
-
-msgid "Your organization can be changed by Goalous!"
-msgstr "Goalousで、組織は激変する"
-
-msgid "Achieve Goals, make your team open, let your job become joyful!"
-msgstr "「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしくしたい。それだけのこと。"
-
-msgid "Move closer to your company's vision."
-msgstr "経営ビジョンにずんずん近づく"
-
-msgid "Everyone can know the company vision and can make their Goals. Goalous lets them see their improvement and how close they are to the vision. The more they use Goalous the closer they can get to that vision."
-msgstr "経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。"
-
-msgid "You get to know your team grow by your achievement of goals."
-msgstr "自分のゴールの活動によって組織が成長している事を実感できます！"
-
-msgid "The phrase \"I don know what that is, what they do\" goes away."
-msgstr "「それ知らない」が激減する"
-
-msgid "What did your colleagues did today? Share on Goalous and get to know more and more."
-msgstr "商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。"
-
-msgid "Cooperate, get results."
-msgstr "協力による成果が出る"
-
-msgid "To achieve the team vision, the team must know what each other is doing. By using Goalous to know clearly what each other is doing, the team can succeeded efficiently."
-msgstr "チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。"
 
 msgid "Help each other, enjoy with them. How wonderful?"
 msgstr "共に助けあい、共に喜び合う。素敵ですよね？"
@@ -4822,38 +4645,11 @@ msgstr "Watch Video"
 msgid "About Goalous"
 msgstr "Goalousについて"
 
-msgid "Wherever, Whenever, from your smartphone."
-msgstr "スマホアプリで、いつでもどこからでも"
-
-msgid "iOS and Android apps avaliable."
-msgstr "iOS・Androidアプリでもご利用いただけます"
-
-msgid "What is Goalous? (pdf)"
-msgstr "Goalous紹介資料（PDFファイル）"
-
-msgid "Please refer to this document."
-msgstr "社内稟議用のサンプル資料です。ぜひご活用ください。"
-
-msgid "Download the file"
-msgstr "資料ダウンロード"
-
-msgid "Flyer (pdf)"
-msgstr "フライヤー（PDFファイル）"
-
-msgid "Goalous Flyer (Japanese)"
-msgstr "フライヤー資料です。ぜひご活用ください。"
-
-msgid "Inscription based on specific trade law is here."
-msgstr "特定商取引法に基づく表記はこちら。"
-
 msgid "Inscription by Law | Goalous"
 msgstr "特定商取引法に基づく表記 | Goalous (ゴーラス)"
 
 msgid "Create a team."
 msgstr "チームを作成してください。"
-
-msgid "Pricing is here."
-msgstr "料金・価格はこちら。"
 
 msgid "Pricing | Goalous"
 msgstr "料金・価格 | Goalous(ゴーラス)"
@@ -5046,9 +4842,6 @@ msgstr "請求書払いでの契約後、最初の請求書は翌営業日に発
 
 msgid "Upon issuing the updated invoice, you will have 10 days to complete your payment. If this process is repeated multiple times, your company may be subject to review, and may be denied access to Goalous."
 msgstr "次の請求書が発行された場合、10日間以内にお支払いいただきます。このプロセスが複数回繰り返されると、あなたの会社は審査の対象となり、Goalousの利用を停止される可能性があります。"
-
-msgid "Privacy Policy is here."
-msgstr "プライバシーポリシーはこちら。"
 
 msgid "PrivacyPolicy | Goalous"
 msgstr "プライバシーポリシー | Goalous (ゴーラス)"
@@ -5383,12 +5176,6 @@ msgstr "チーム「%s」に参加しますか?"
 msgid "Your name will displayed along with your goals and posts in Goalous"
 msgstr "あなたの名前はGoalous内のあなたのゴール、あなたの投稿に表示されます。"
 
-msgid "Your date of birth"
-msgstr "あなたの誕生日"
-
-msgid "You must be at least 16 years old to register Goalous."
-msgstr "16歳以上の方がGoalousに登録できます。"
-
 msgid "User Authentication"
 msgstr "ユーザ認証"
 
@@ -5449,9 +5236,6 @@ msgstr "フォロー中(%s)"
 msgid "Approval Status: %s"
 msgstr "認定ステータス: %s"
 
-msgid "You can mention to no one here."
-msgstr "ここではメンションできません。"
-
 msgid "4"
 msgstr ""
 
@@ -5466,9 +5250,6 @@ msgstr "セッションが存在しません。"
 
 msgid "You already joined to this circle."
 msgstr "あなたはすでにこのサークルに参加しています。"
-
-msgid "This team member already joined this circle."
-msgstr "このチームメンバーは既にこのサークルに参加しています。"
 
 msgid "You can not invite."
 msgstr "あなたは招待できません。"
@@ -5509,17 +5290,11 @@ msgstr "このアイテムはすでに保存されています"
 msgid "This item doesn't exist."
 msgstr "このアイテムは保存されていません"
 
-msgid "Discover more circles"
-msgstr "サークルを見つける"
-
 msgid "Posting the Action"
 msgstr "アクションの投稿"
 
 msgid "You are about to post this action without progress. Do you wish to continue?"
 msgstr "あなたはこのアクションを進捗なしで投稿しようとしています。このまま続けますか？"
-
-msgid "Search Members, Goals, Circles"
-msgstr "メンバー,ゴール,サークルを検索"
 
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr ""
@@ -5572,12 +5347,6 @@ msgstr "Goalousのご利用をありがとうございました。"
 msgid "The team has been deleted"
 msgstr "チームが削除されました"
 
-msgid "%s in Goalous has been deleted because the usage expiration date has passed. After that, you can not use by that team."
-msgstr "利用期限を過ぎましたので、Goalous内のチーム「%s」が削除されました。以後、そのチームで利用することはできません。"
-
-msgid "This is a required field."
-msgstr "この項目は必須です。"
-
 msgid "Please log in."
 msgstr "ログインしてください。"
 
@@ -5589,9 +5358,6 @@ msgstr "あなたはいいね！していません。"
 
 msgid "Information matching the search could not be found"
 msgstr "検索に一致する情報は見つかりませんでした"
-
-msgid "Search post and comment"
-msgstr "投稿とコメントから検索"
 
 msgid "Search result %d topics hit"
 msgstr "検索結果 %dトピックが一致しました"
@@ -5746,23 +5512,8 @@ msgstr "KR作成日"
 msgid "KR EDITED"
 msgstr "KR編集日"
 
-msgid "DOWNROAD APP"
-msgstr "アプリダウンロード"
-
 msgid "CONTACT US"
 msgstr "お問い合わせ"
-
-msgid "See,"
-msgstr "みえる、"
-
-msgid "Recognize,"
-msgstr "わかる、"
-
-msgid "Share today’s step\nwith photos."
-msgstr "きょうの一歩を\n写真でシェアして。"
-
-msgid "Move Forward."
-msgstr "すすむ。"
 
 msgid "OKR and Communication Software | Goalous"
 msgstr "OKR・コミュニケーションツール | Goalous(ゴーラス)"
@@ -5905,12 +5656,6 @@ msgstr "ユーザーの招待からゴールの作成やアクション、サー
 msgid "Search (Complete match with ”…”)"
 msgstr "検索 (”…”で完全一致)"
 
-msgid "DOWNLOAD APP"
-msgstr "アプリダウンロード"
-
-msgid "Share today’s step<br>with photos."
-msgstr "きょうの一歩を<br>写真でシェアして。"
-
 msgid "Free Goalous Seminar!Learn all of the ways you can improve your organization using Goalous."
 msgstr "無料の組織改革セミナー開催！Goalousを使ってどのように組織改革するかをご紹介します。"
 
@@ -5929,14 +5674,8 @@ msgstr "15日間無料で利用できます。みんなで試してみてくだ�
 msgid "Let's go on a journey to pursue the essence of the team. Get in touch with us!"
 msgstr "チームの本質を追求する旅に出ましょう。ご連絡ください！"
 
-msgid "Try Demo Site"
-msgstr "デモサイトに移動"
-
 msgid "Welcome to the Demo Site!"
 msgstr "デモサイトへようこそ！"
-
-msgid "Let's experience Goalous as Demo"
-msgstr "Goalousをデモ体験してみましょう"
 
 msgid "Translation Failed"
 msgstr "翻訳に失敗しました"
@@ -5949,9 +5688,6 @@ msgstr "この動画は現在は投稿できません。"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルにコメントしました。"
-
-msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a post. "
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルに投稿しました。"
 
 msgid "%s pixels is the limit."
 msgstr "%s画素(pixel)がアップロードできるファイルの上限です。"
@@ -5998,50 +5734,8 @@ msgstr "* これは一時的なパスワードなので、ログイン後すぐ�
 msgid "Email Address: %s"
 msgstr "メールアドレス: %s"
 
-msgid "Hindi"
-msgstr "ヒンディー語"
-
-msgid "Vietnamese"
-msgstr "ベトナム語"
-
-msgid "Urdu"
-msgstr "ウルドゥー語"
-
-msgid "Filipino"
-msgstr "フィリピン語"
-
-msgid "Czech"
-msgstr "チェコ語"
-
-msgid "Hungarian"
-msgstr "ハンガリー語"
-
 msgid "Portuguese"
 msgstr "ポルトガル語"
-
-msgid "Polish"
-msgstr "ポーランド語"
-
-msgid "Russian"
-msgstr "ロシア語"
-
-msgid "Afrikaans"
-msgstr "アフリカーンス語"
-
-msgid "Swahili"
-msgstr "スアヒリ語"
-
-msgid "Shona"
-msgstr "ショナ語"
-
-msgid "Zulu"
-msgstr "ズールー語"
-
-msgid "Xhosa"
-msgstr "コサ語"
-
-msgid "Chichewa"
-msgstr "チェワ語"
 
 msgid "More "
 msgstr "もっと見る"
@@ -6053,7 +5747,7 @@ msgid "Introducing “Goalous”<br class=\"spbr\"> the next generation OKR SNS"
 msgstr "コミュニケーション型<br class=\"spbr\">目標達成サービス「ゴーラス」"
 
 msgid "Your organization will change drastically."
-msgstr "あなたの<br class=\"spbr\">組織が、<br>激変する。"
+msgstr "組織が、<br>激変する。"
 
 msgid "Do you have these problems within your organization?<br class=\"spbr\">"
 msgstr "組織のこんなお悩み<br class=\"spbr\">ありませんか？"
@@ -6068,7 +5762,7 @@ msgid "Employees do their work seriously, but they are not pro-active. It is cau
 msgstr "与えられた仕事はまじめにこなすけれど、自分から動く事は少ない社員。その原因は会社のビジョンが浸透していない事にあります。社員の「経営理念の腹落ち化」が進めば何をすべきかが分かり自ら設定した目標へのアクションが自ずと生まれます。"
 
 msgid "Department"
-msgstr "部署"
+msgstr "組織"
 
 msgid "The team has no sense of unity"
 msgstr "チームに一体感が無い"
@@ -6155,17 +5849,8 @@ msgstr "驚きのスピードでコミュニケーションを促進。メンバ
 msgid "Feedback from our seminar participants"
 msgstr "セミナー参加者の声"
 
-msgid "We hold Organizational reform seminars regularly. This seminar is very popular every time for <br>CEO’s, upper / lower management, HR Team, team management and those who want to improve their organizational capabilities.<br> Please feel free to join us at our next seminar!"
-msgstr ""
-"運営会社・株式会社Colorkrew (カラクル) による組織改革セミナーを定期開催しております。<br>"
-"        経営者・人事・チームマネジメントや組織力を上げたい方に、毎回大好評のセミナーです。<br>"
-"        お気軽にご参加ください！"
-
 msgid "I felt that it was ideal to go from fairness to a fun world and apply that mind to business."
 msgstr "フェアネスから楽しい世界に進まれていて、そのマインドをビジネスにも応用されているのは理想的だと感じました。"
-
-msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
-msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、Colorkrewは実現できているということで今後も展開を見守りたいと思いました。"
 
 msgid "I started visualizing our evaluations at my company, so I would like to consider using Goalous for that as well."
 msgstr "自分の会社で評価の見える化をスタートしたので、Goalousの利用も検討してみたい。"
@@ -6185,9 +5870,6 @@ msgstr "経営層に聞かせたい面白い内容でした"
 msgid "I thought that the organization could change depending on the approach."
 msgstr "組織づくりって取り組み方で変わるなって思いました。"
 
-msgid "I thought it was nice to be able to hit the spotlight to all the employees."
-msgstr "全社員にスポットを当てることができるのがいいと思いました。"
-
 msgid "Free Goalous Seminar!"
 msgstr "無料の組織改革セミナー開催！"
 
@@ -6196,6 +5878,45 @@ msgstr "動画で見るGoalous"
 
 msgid "Introduction video for Goalous"
 msgstr "サービス紹介動画"
+
+msgid "Collaborate with Colorkrew"
+msgstr "協業したい"
+
+msgid "There are no recent updates."
+msgstr "直近の更新はありません。"
+
+msgid "You cannot follow because you are participating in collaboration."
+msgstr "コラボに参加しているため、フォローできません。"
+
+msgid "You cannot follow because you are coaching this goal."
+msgstr "このゴールをコーチしているため、フォローできません。"
+
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a post. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたにメンションしました。"
+
+msgid "Brazil"
+msgstr "ブラジル"
+
+msgid "Colorkrew Inc."
+msgstr "株式会社Colorkrew"
+
+msgid "Colorkrew Inc., An IT corporation located in Akihabara, Tokyo."
+msgstr "東京・秋葉原にあるIT企業、株式会社Colorkrew。"
+
+msgid "Colorkrew, make and deliver \"Joyful!\". Found on 1999, our sprits are \"Open, Challanging, Link\"."
+msgstr "\"たのしい！\"をうみだしとどける企業、Colorkrew（カラクル）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。"
+
+msgid "You must be at least 16 years old to register Goalous."
+msgstr "16歳以上の方がGoalousに登録できます。"
+
+msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a post. "
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたを含むサークルに投稿しました。"
+
+msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
+msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、Colorkrewは実現できているということで今後も展開を見守りたいと思いました。"
+
+msgid "I thought it was nice to be able to hit the spotlight to all the employees."
+msgstr "全社員にスポットを当てることができるのがいいと思いました。"
 
 msgid "Goalous will automatically change the amount charged to your account whenever active members are added to your team."
 msgstr "Goalous では、メンバーがチームへ追加されたことによってアクティブメンバー数に変更があった場合、自動的にアカウントへの請求額が調整されます。"
@@ -6215,17 +5936,23 @@ msgstr "ゴールをつくりましょう"
 msgid "Create Goal"
 msgstr "ゴールをつくる"
 
-msgid "Arabic"
-msgstr "アラビア語"
-
-msgid "Bengali"
-msgstr "ベンガル語"
-
-msgid "Korean"
-msgstr "韓国語"
+msgid "Currency"
+msgstr "通貨"
 
 msgid "Group Settings"
 msgstr "グループ設定"
 
 msgid "Manage groups"
 msgstr "グループ管理"
+
+msgid "Ouvir necessidades dos membros do time"
+msgstr ""
+
+msgid "I agree to %s and %s of Goalies."
+msgstr ""
+
+msgid "Code "
+msgstr "コード"
+
+msgid "Contact us"
+msgstr "お問い合わせ"
