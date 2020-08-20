@@ -812,7 +812,8 @@ class AppUtil
     {
         $baseUrl = '';
         if ($envName === 'local') {
-            $baseUrl = 'http://local.goalous.com';
+            // $baseUrl = 'http://local.goalous.com';
+            $baseUrl = 'http://localhost';
         } else {
             $baseUrl = 'https://' . $envName . '.goalous.com';
         }
