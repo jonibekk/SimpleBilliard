@@ -317,7 +317,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $setup_guide_status = [
-        'user' => null,
+        'user'               => null,
+        'setup_guide_status' => null
     ];
 
     /**
@@ -1628,13 +1629,13 @@ class GlRedis extends AppModel
      *
      * @return mixed
      */
-    function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    function getMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         return $this->Db->get($key) ?? "";
     }
 
-    function getKeyMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    function getKeyMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
         $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId, $userId);
         $key .= $sessionId;

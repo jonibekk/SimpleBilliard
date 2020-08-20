@@ -1441,7 +1441,7 @@ class NotifySetting extends AppModel
     {
         $userId = $userId ?: $this->my_uid;
         $model = $this;
-        $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false),
+        $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, $userId, false),
             function () use ($model, $userId) {
                 /** @noinspection PhpMethodParametersCountMismatchInspection */
                 $res = $model->useType()->findByUserId($userId);

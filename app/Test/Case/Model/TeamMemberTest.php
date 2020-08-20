@@ -1932,6 +1932,18 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertNotEmpty($this->TeamMember->updateLastLogin(1, 1));
     }
 
+    /**
+     * @expectedException Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_updateLastLoginDontExist_failed()
+    {
+        $this->setDefault();
+
+        $this->TeamMember->updateLastLogin(1123213, 209309231);
+
+        $this->fail();
+    }
+
     function testDeleteCacheMember()
     {
         $this->setDefault();

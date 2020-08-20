@@ -183,10 +183,30 @@ class TeamMember extends AppModel
         return $this->active_member_list;
     }
 
-    function updateLastLogin($team_id, $uid)
+    /**
+     * Update last login time of a user in a team
+     *
+     * @param int|null $teamId
+     * @param int      $userId
+     * @param int      $loginTimestamp
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function updateLastLogin(?int $teamId, int $userId, int $loginTimestamp = REQUEST_TIMESTAMP): array
     {
-        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
+        if (is_null($teamId)){
+            return[];
+        }
+
+        $teamMember = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
+
+        if (empty($teamMember)) {
+            throw new GlException\GoalousNotFoundException("Team Member doesn't exist");
+        }
+
+        $teamMember['TeamMember']['last_login'] = $loginTimestamp;
 
         $enable_with_team_id = false;
         if ($this->Behaviors->loaded('WithTeamId')) {
@@ -196,7 +216,7 @@ class TeamMember extends AppModel
             $this->Behaviors->disable('WithTeamId');
         }
 
-        $res = $this->save($team_member);
+        $res = $this->save($teamMember);
 
         if ($enable_with_team_id) {
             $this->Behaviors->enable('WithTeamId');

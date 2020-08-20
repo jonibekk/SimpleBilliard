@@ -521,6 +521,9 @@ class AppModel extends Model
      */
     function getCacheKey($name, $is_user_data = false, $user_id = null, $with_team_id = true)
     {
+        if (empty($name)){
+            throw new Exception("Empty!");
+        }
         if ($with_team_id) {
             $name .= ":team:" . $this->current_team_id;
         }

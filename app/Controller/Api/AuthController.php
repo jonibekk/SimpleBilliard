@@ -6,6 +6,7 @@ App::import('Service', 'ImageStorageService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
+App::uses('GlRedis', 'Model');
 App::uses('User', 'Model');
 App::uses('LangUtil', 'Util');
 App::uses('GlRedis', 'Model');
@@ -14,6 +15,9 @@ use Goalous\Exception as GlException;
 use Goalous\Enum as Enum;
 
 /**
+ * @property AuthComponent    Auth
+ * @property SessionComponent Session
+ *
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/30
@@ -24,7 +28,14 @@ class AuthController extends BaseApiController
     public function beforeFilter()
     {
         parent::beforeFilter();
+
+        $this->Auth->allow();
     }
+
+    public $components = [
+        'Auth',
+        'Session'
+    ];
 
     /**
      * Endpoint for step 1 of login. Returns login method information for the user
@@ -93,11 +104,14 @@ class AuthController extends BaseApiController
                 'user failed to login',
                 [
                     'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
                 ]
             );
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
+
+        $response = $this->appendCookieInfo($response);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
@@ -366,5 +380,46 @@ class AuthController extends BaseApiController
         }
 
         return null;
+    }
+
+    /**
+     * @param array $responseData
+     *
+     * @return array
+     */
+    private function appendCookieInfo(array $responseData): array
+    {
+        if (!array_key_exists('me', $responseData['data'])) {
+            return $responseData;
+        }
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        //Filter out extended data
+        $userData = array_filter(
+            $responseData['data']['me'],
+            function ($input) use ($User) {
+                return in_array($input, $User->loginUserFields);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+
+        $this->Auth->login($userData);
+
+        $userId = $responseData['data']['me']['id'];
+        $currentTeamId = $responseData['data']['me']['current_team_id'];
+
+        $sessionId = $this->Session->id();
+
+        $this->Session->write('current_team_id', $currentTeamId);
+        $this->Session->write('default_team_id ', $responseData['data']['me']['default_team_id']);
+
+        $responseData['data']['cookie']['session_id'] = $sessionId;
+        //cache_team_info team_evaluation_setting
+        $GlRedis->saveMapSesAndJwtWithToken($currentTeamId, $userId, $responseData['data']['token'], $sessionId);
+
+        return $responseData;
     }
 }
