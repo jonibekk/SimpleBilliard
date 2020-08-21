@@ -371,12 +371,8 @@ class AuthService extends AppService
      * @param int      $userId
      * @param int|null $teamId
      */
-    private function updateLastLogin(int $userId, ?int $teamId): void
+    public function updateLastLogin(int $userId, ?int $teamId): void
     {
-        if (is_null($teamId)) {
-            return;
-        }
-
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
         /** @var User $User */
@@ -385,7 +381,9 @@ class AuthService extends AppService
         try {
             $this->TransactionManager->begin();
             $User->updateLastLogin($userId);
-            $TeamMember->updateLastLogin($teamId, $userId);
+            if (!is_null($teamId)) {
+                $TeamMember->updateLastLogin($teamId, $userId);
+            }
             $this->TransactionManager->commit();
         } catch (Exception $exception) {
             $this->TransactionManager->rollback();
