@@ -57,7 +57,7 @@ class SetupService extends CakeObject
                 'rest_count' => 0,
             ];
         }
-        
+
         $setupStatuses = $this->getSetupStatuses($userId);
         $completed = array_filter($setupStatuses);
         $restCount = max(0, count(User::$TYPE_SETUP_GUIDE) - count($completed));

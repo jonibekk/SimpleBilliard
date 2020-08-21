@@ -95,6 +95,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWithPassword($requestData['email'], $requestData['password']);
+            $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -110,8 +111,6 @@ class AuthController extends BaseApiController
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
-
-        $response = $this->appendCookieInfo($response);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
@@ -136,6 +135,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
+            $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -406,7 +406,9 @@ class AuthController extends BaseApiController
             ARRAY_FILTER_USE_KEY
         );
 
-        $this->Auth->login($userData);
+        if (!$this->Auth->login($userData)) {
+            throw new GlException\Auth\AuthFailedException("Unable to manually log user.");
+        }
 
         $userId = $responseData['data']['me']['id'];
         $currentTeamId = $responseData['data']['me']['current_team_id'];
@@ -416,8 +418,18 @@ class AuthController extends BaseApiController
         $this->Session->write('current_team_id', $currentTeamId);
         $this->Session->write('default_team_id ', $responseData['data']['me']['default_team_id']);
 
-        $responseData['data']['cookie']['session_id'] = $sessionId;
-        //cache_team_info team_evaluation_setting
+        $cookieLifetime = Configure::read('Session')["ini"]["session.cookie_lifetime"];
+        $cookieExpiryTime = GoalousDateTime::now()->addSeconds($cookieLifetime);
+
+        $cookieData = [
+            'name'       => getSid(),
+            'session_id' => $sessionId,
+            'max-age'    => $cookieLifetime,
+            'expires'    => $cookieExpiryTime->format("D, d-M-Y H:i:s e")
+        ];
+
+        $responseData['data']['cookie'] = $cookieData;
+
         $GlRedis->saveMapSesAndJwtWithToken($currentTeamId, $userId, $responseData['data']['token'], $sessionId);
 
         return $responseData;
