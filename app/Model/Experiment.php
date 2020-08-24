@@ -23,6 +23,12 @@ class Experiment extends AppModel
     const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
 
     /**
+     * SSO Login feature
+     * @see https://confluence.goalous.com/x/BIDUAw
+     */
+    const NAME_ENABLE_SSO_LOGIN = 'EnableSSOLogin';
+
+    /**
      * Validation rules
      *
      * @var array

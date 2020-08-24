@@ -1804,7 +1804,22 @@ class AppSchema extends CakeSchema {
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
-	public $team_members = array(
+    public $team_login_methods = array(
+        'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'Team ID'),
+        'method' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Login method of the team', 'charset' => 'utf8mb4'),
+        'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'indexes' => array(
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'team_id' => array('column' => array('team_id', 'method'), 'unique' => 1)
+        ),
+        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+    );
+
+    public $team_members = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'チームメンバーID'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
 		'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
@@ -1836,6 +1851,24 @@ class AppSchema extends CakeSchema {
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
+
+    public $team_sso_settings = array(
+        'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'team_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'unique', 'comment' => 'Team ID'),
+        'endpoint' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 2000, 'collate' => 'utf8mb4_general_ci', 'comment' => 'SAML2.0 Endpoint URL', 'charset' => 'utf8mb4'),
+        'idp_issuer' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 2000, 'collate' => 'utf8mb4_general_ci', 'comment' => 'IdP Entity ID', 'charset' => 'utf8mb4'),
+        'public_cert' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 2000, 'collate' => 'utf8mb4_general_ci', 'comment' => 'x.509 Public certificate of IdP', 'charset' => 'utf8mb4'),
+        'custom_label' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 50, 'collate' => 'utf8mb4_general_ci', 'comment' => 'Custom login button name', 'charset' => 'utf8mb4'),
+        'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'created' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'indexes' => array(
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'team_id' => array('column' => 'team_id', 'unique' => 1)
+        ),
+        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
+    );
 
 	public $team_translation_languages = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
