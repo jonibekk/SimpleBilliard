@@ -6,6 +6,7 @@ App::uses('TeamMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('AppUtil', 'Util');
 App::import('Service', 'PushService');
+App::import('Service', 'SubscriptionService');
 
 /**
  * TODO: 汎用的なコンポーネントにするために、業務ロジックはサービス層に移す
@@ -86,6 +87,7 @@ class NotifyBizComponent extends Component
         $this->Goal = ClassRegistry::init('Goal');
         $this->Team = ClassRegistry::init('Team');
         $this->Device = ClassRegistry::init('Device');
+        $this->Subscription = ClassRegistry::init('Subscription');
         $this->GlRedis = ClassRegistry::init('GlRedis');
         $this->initialized = true;
     }
@@ -305,6 +307,9 @@ class NotifyBizComponent extends Component
 
         //通常のアプリ向けPUSH通知
         $this->_sendPushNotify();
+
+        //send desktop notificaton
+        $this->_sendDesktopNotify();
     }
 
     /**
@@ -1760,6 +1765,19 @@ class NotifyBizComponent extends Component
         }
         return $uids;
     }
+    /**
+     * get desktop notification target user
+     *
+     * @return array プッシュ通知送信対象のユーザーのリスト
+     */
+    private function _getSendDesktopNotifyUserList()
+    {
+        $uids = [];
+        foreach ($this->notify_settings as $user_id => $val) {
+            $uids[] = $user_id;
+        }
+        return $uids;
+    }
 
     private function _sendNotifyEmail()
     {
@@ -1868,6 +1886,87 @@ class NotifyBizComponent extends Component
                 $PushService->sendFirebasePushNotification($firebaseTokens, $title, $postUrl);
             }
             $sent_device_tokens = array_merge($sent_device_tokens, $deviceTokens);
+        }
+
+        //変更したlangをログインユーザーのものに書き戻しておく
+        $this->_setLang($original_lang);
+    }
+
+    /**
+     * send desktop notification
+     *
+     * @param string $app_key
+     * @param string $client_key
+     */
+    private function _sendDesktopNotify()
+    {
+        // Get list of users to send notifications
+        $uids = $this->_getSendDesktopNotifyUserList();
+        if (empty($uids)) {
+            return;
+        }
+
+        // Config language
+        $this->notify_option['options']['style'] = 'plain';
+        $original_lang = Configure::read('Config.language');
+
+        // URL to be associated with the notification
+        $postUrl = null;
+        if (Hash::get($this->notify_option, 'url')) {
+            GoalousLog::error('url route');
+            $postUrl = $this->notify_option['url'];
+        } else {
+            GoalousLog::error('url data route');
+            $postUrl = Router::url($this->notify_option['url_data'], true);
+        }
+        GoalousLog::error($postUrl);
+        // for switching team when user logged in other team.
+        $postUrl = AppUtil::addQueryParamsToUrl($postUrl, ['team_id' => $this->NotifySetting->current_team_id]);
+        GoalousLog::error($postUrl);
+
+        /** @var SubscriptionService $SubscriptionService */
+        $SubscriptionService = ClassRegistry::init('SubscriptionService');
+
+        // Keep track of already sent notifications
+        $sent_device_tokens = [];
+
+        foreach ($uids as $to_user_id) {
+
+            GoalousLog::error($to_user_id);
+            $subscriptions = $SubscriptionService->getSubscriptionByUserId($to_user_id);
+            if (empty($subscriptions)) {
+                continue;
+            }
+
+            $this->_setLangByUserId($to_user_id, $original_lang);
+            $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
+            $from_user_name = Hash::get($from_user, '0.User.display_username');
+
+            // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
+            $title = "";
+            if (isset($this->notify_option['message'])) {
+                $title = $this->notify_option['message'];
+            } else {
+                $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
+                    $from_user_name,
+                    1,
+                    $this->notify_option['item_name'],
+                    array_merge(
+                        $this->notify_option['options'],
+                        ['to_user_id' => $to_user_id]
+                    )
+                );
+
+                //メッセージの場合は本文も出ていたほうがいいので出してみる
+                $item_name = json_decode($this->notify_option['item_name']);
+                if (!empty($item_name)) {
+                    $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
+                    $title .= " : " . $item_name;
+                }
+            }
+
+            GoalousLog::error(print_r($subscriptions, true));
+            $SubscriptionService->sendDesktopPushNotification($subscriptions, $title, $postUrl);
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく

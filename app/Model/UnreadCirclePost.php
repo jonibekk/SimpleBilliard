@@ -230,7 +230,7 @@ class UnreadCirclePost extends AppModel
             'user_id'   => $userId
         ];
 
-        $this->($condition);
+        $this->deleteAll($condition);
     }
 
     /**
