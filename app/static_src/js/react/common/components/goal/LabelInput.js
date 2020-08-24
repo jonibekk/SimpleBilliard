@@ -18,7 +18,7 @@ export default class LabelInput extends React.Component {
       <div>
         <label className="goals-create-input-label">{__("Labels")}</label>
         <p className="goals-create-description">
-          {__("Add by pressing the Enter.(You can save maximum 5 labels)")}
+          {__("Add by pressing the Enter.(You can save maximum 20 labels)")}
         </p>
         <AutoSuggest
           suggestions={this.props.suggestions}
