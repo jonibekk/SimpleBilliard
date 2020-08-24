@@ -419,7 +419,6 @@ class AuthService extends AppService
                 "token" => $jwt->token()
             ];
         } catch (\Throwable $e) {
-            var_dump($e->getTraceAsString());
             throw new GlException\Auth\AuthFailedException($e->getMessage());
         }
     }
