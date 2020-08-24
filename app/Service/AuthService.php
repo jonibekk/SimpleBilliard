@@ -170,6 +170,8 @@ class AuthService extends AppService
             ];
         }
 
+        $this->updateLastLogin($userId, $defaultTeamId);
+
         return [
             "message" => Enum\Auth\Status::OK,
             "data"    => $this->createAuthResponseData($userId, $defaultTeamId)
@@ -203,6 +205,7 @@ class AuthService extends AppService
         }
 
         $this->removeAuthHash($authHash);
+        $this->updateLastLogin($tokenData->getUserId(), $tokenData->getTeamId());
 
         return [
             "message" => Enum\Auth\Status::OK,
@@ -363,17 +366,51 @@ class AuthService extends AppService
     }
 
     /**
+     * Update last login timestamp of the user
+     *
+     * @param int      $userId
+     * @param int|null $teamId
+     */
+    public function updateLastLogin(int $userId, ?int $teamId): void
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        try {
+            $this->TransactionManager->begin();
+            $User->updateLastLogin($userId);
+            if (!is_null($teamId)) {
+                $TeamMember->updateLastLogin($teamId, $userId);
+            }
+            $this->TransactionManager->commit();
+        } catch (Exception $exception) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error(
+                'Failed to update user last login during login',
+                [
+                    'class'   => get_class($exception),
+                    'message' => $exception->getMessage(),
+                    'trace'   => $exception->getTraceAsString(),
+                    'team_id' => $teamId,
+                    'user_id' => $userId
+                ]
+            );
+        }
+    }
+
+    /**
      * Create successful login response, containing user personal information and JWT token.
      *
-     * @param int $userId
-     * @param int $teamId
+     * @param int      $userId
+     * @param int|null $teamId
      *
      * @return array
      */
     private function createAuthResponseData(int $userId, ?int $teamId): array
     {
         try {
-            //TODO make sure null team works
             $userInfo = $this->getUserInfo($userId, $teamId);
             $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
 
@@ -436,7 +473,7 @@ class AuthService extends AppService
      *
      * @param string $authHash
      */
-    private function removeAuthHash(string $authHash)
+    private function removeAuthHash(string $authHash): void
     {
         $tokenKey = new TwoFATokenKey($authHash);
         $tokenClient = new TwoFATokenClient();

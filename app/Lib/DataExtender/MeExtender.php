@@ -85,14 +85,16 @@ class MeExtender extends BaseExtender
             $Evaluation = ClassRegistry::init("Evaluation");
             $Evaluation->current_team_id = $currentTeamId;
             $Evaluation->Team->current_team_id = $currentTeamId;
+            $Evaluation->Team->EvaluationSetting->current_team_id = $currentTeamId;
             $Evaluation->my_uid = $userId;
             $data['evaluable_count'] = $Evaluation->getMyTurnCount();
         }
         if ($this->includeExt($extensions, self::EXTEND_IS_EVALUATION_AVAILABLE)) {
             /** @var EvaluationSetting $EvaluationSetting */
             $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
-            $EvaluationSetting->current_team_id = $currentTeamId;
             $EvaluationSetting->my_uid = $userId;
+            $EvaluationSetting->current_team_id = $currentTeamId;
+
             $data['is_evaluation_available'] = $EvaluationSetting->isEnabled();
         }
         if ($this->includeExt($extensions, self::EXTEND_NEW_MESSAGE_COUNT)) {
@@ -142,10 +144,11 @@ class MeExtender extends BaseExtender
             $Team->current_team_id = $currentTeamId;
             $Team->Term->current_team_id = $currentTeamId;
             $Team->Term->Team->current_team_id = $currentTeamId;
+            $Goal->current_team_id = $currentTeamId;
             $currentTerm = $Team->Term->getCurrentTermData();
             Cache::set('duration', $expire, 'user_data');
             $action_count = Cache::remember(
-                $Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
+                $Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true, $userId),
                 function () use ($currentTerm, $Team, $Goal) {
                     if (empty($currentTerm)) {
                         return 0;
