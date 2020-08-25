@@ -2437,7 +2437,7 @@ msgid "View Previous"
 msgstr "Ver Anterior"
 
 msgid "View all %s comments"
-msgstr "Ver todos os %s comentários" 
+msgstr "Ver todos os %s comentários"
 
 msgid "more"
 msgstr "mais"
@@ -2484,8 +2484,8 @@ msgstr "Aguardando aprovação"
 msgid "Goal details"
 msgstr "Detalhes do Goal"
 
-msgid "Add by pressing the Enter.(You can save maximum 5 labels)"
-msgstr "Adicione pressionando a tecla Enter. (Você pode salvar no máximo 5 etiquetas)"
+msgid "Add by pressing the Enter.(You can save maximum 20 labels)"
+msgstr "Adicione pressionando a tecla Enter. (Você pode salvar no máximo 20 etiquetas)"
 
 msgid "Withdrawn"
 msgstr "Remover"

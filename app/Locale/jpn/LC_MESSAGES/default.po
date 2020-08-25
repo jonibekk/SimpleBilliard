@@ -2487,8 +2487,8 @@ msgstr "認定待ち"
 msgid "Goal details"
 msgstr "ゴール詳細"
 
-msgid "Add by pressing the Enter.(You can save maximum 5 labels)"
-msgstr "Enterを押すと追加されます。(最大5個まで登録可能)"
+msgid "Add by pressing the Enter.(You can save maximum 20 labels)"
+msgstr "Enterを押すと追加されます。(最大20個まで登録可能)"
 
 msgid "Withdrawn"
 msgstr "申請取り下げ"
