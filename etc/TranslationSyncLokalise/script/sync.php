@@ -29,7 +29,7 @@ function main() {
         '128601805af3e57eec5279.20310938',
         [
             'format' => 'po',
-            'oringal_filenames' => false,
+            'original_filenames' => false,
             'directory_prefix' => '/%LANG_ISO%/',
         ]
     );
@@ -59,7 +59,7 @@ function main() {
     }
 
     foreach (LANG_MAP as $iso6391 => $iso6392) {
-        $src = sprintf('/tmp/lokalise/%s/default.po', $iso6391);
+        $src = sprintf('/tmp/lokalise/locale/%s.po', $iso6391);
         $dest = sprintf('/srv/www/cake/app/Locale/%s/LC_MESSAGES/default.po', $iso6392);
         if (copy($src, $dest)) {
             echo sprintf("\033[0;32mSuccess to apply %s: %s\033[0m" . PHP_EOL, $iso6391, $dest);
