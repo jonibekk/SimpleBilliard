@@ -20,7 +20,7 @@ try {
 
 function main() {
     // https://app.lokalise.com/profile#apitokens
-    // Leave it directory since this is a read-only token
+    // Leave it constant value since this is a read-only token
     $apiToken = 'e954e5da821223d01f1188e8115f0932b9518ea7';
     $client = new \Lokalise\LokaliseApiClient($apiToken);
     $response = $client->files->download(
