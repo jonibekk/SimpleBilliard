@@ -36,7 +36,10 @@ class TeamSsoSettingServiceTest extends GoalousTestCase
 
         $return = $TeamSsoSettingService->getSetting($teamId);
 
-        $this->assertEmpty($return);
+        $this->assertNotEmpty($return);
+        $this->assertEmpty($return['endpoint']);
+        $this->assertEmpty($return['idp_issuer']);
+        $this->assertEmpty($return['public_cert']);
 
         $ssoSetting = $this->getSampleSsoSetting($teamId);
 
@@ -49,7 +52,7 @@ class TeamSsoSettingServiceTest extends GoalousTestCase
 
         $return = $TeamSsoSettingService->getSetting($teamId);
 
-        $this->assertTrue($return instanceof TeamSsoSettingEntity);
+        $this->assertTrue(is_array($return));
 
         $this->assertTextEquals($ssoSetting['endpoint'], $return['endpoint']);
         $this->assertTextEquals($ssoSetting['idp_issuer'], $return['idp_issuer']);
@@ -93,15 +96,11 @@ class TeamSsoSettingServiceTest extends GoalousTestCase
 
         $return = $TeamSsoSettingService->getSetting($teamId);
 
-        $this->assertTrue($return instanceof TeamSsoSettingEntity);
-
         $this->assertTextEquals($ssoSetting['endpoint'], $return['endpoint']);
         $this->assertTextEquals($ssoSetting['idp_issuer'], $return['idp_issuer']);
         $this->assertTextEquals($newCert, $return['public_cert']);
 
         $return = $TeamSsoSettingService->getSetting($anotherTeamId);
-
-        $this->assertTrue($return instanceof TeamSsoSettingEntity);
 
         $this->assertTextEquals($ssoSetting['endpoint'], $return['endpoint']);
         $this->assertTextEquals($ssoSetting['idp_issuer'], $return['idp_issuer']);
