@@ -198,9 +198,9 @@ function getSid(): string {
  */
 if (REDIS_SESSION_HOST) {
     $cookie_domain = 'goalous.com';
-    if (LOCAL_SESSION_DOMAIN !== null){
-        $cookie_domain = LOCAL_SESSION_DOMAIN;
-    }
+    // if (LOCAL_SESSION_DOMAIN !== null){
+    //     $cookie_domain = LOCAL_SESSION_DOMAIN;
+    // }
     $session_config = [
         'checkAgent'     => false,
         'userAgent'      => false,
