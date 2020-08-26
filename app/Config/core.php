@@ -197,6 +197,10 @@ function getSid(): string {
  * the cake shell command: cake schema create Sessions
  */
 if (REDIS_SESSION_HOST) {
+    $cookie_domain = 'goalous.com';
+    if (LOCAL_SESSION_DOMAIN !== null){
+        $cookie_domain = LOCAL_SESSION_DOMAIN;
+    }
     $session_config = [
         'checkAgent'     => false,
         'userAgent'      => false,
@@ -208,7 +212,7 @@ if (REDIS_SESSION_HOST) {
             'key'    => 'session:'
         ],
         'ini' => [
-            'session.cookie_domain' => 'localhost',
+            'session.cookie_domain' => $cookie_domain,
             'session.cookie_secure' => false,
             // setCookie SameSite hack for php under 7.3
             // https://stackoverflow.com/a/46971326
