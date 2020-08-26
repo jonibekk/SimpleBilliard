@@ -10,9 +10,9 @@ class TeamSsoSettingService extends AppService
      *
      * @param int $teamId
      *
-     * @return TeamSsoSettingEntity|null
+     * @return array
      */
-    public function getSetting(int $teamId): ?TeamSsoSettingEntity
+    public function getSetting(int $teamId): array
     {
         /** @var TeamSsoSetting $TeamSsoSetting */
         $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
@@ -20,12 +20,18 @@ class TeamSsoSettingService extends AppService
         $setting = $TeamSsoSetting->getSetting($teamId);
 
         if (empty($setting)) {
-            return $setting;
+            return [
+                "endpoint"    => "",
+                "idp_issuer"  => "",
+                "public_cert" => ""
+            ];
         }
 
-        $setting['public_cert'] = $this->decrypt($setting['public_cert'], $teamId);
-
-        return $setting;
+        return [
+            "endpoint"    => $setting['endpoint'],
+            "idp_issuer"  => $setting['idp_issuer'],
+            "public_cert" => $this->decrypt($setting['public_cert'], $teamId)
+        ];
     }
 
     /**
@@ -100,7 +106,7 @@ class TeamSsoSettingService extends AppService
     }
 
     /**
-     * Create encryption key and initialization value for a team
+     * Create encryption key and initialization vector for a team
      *
      * @param int $teamId
      *

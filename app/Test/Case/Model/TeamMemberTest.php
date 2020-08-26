@@ -2016,47 +2016,113 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
 
         // TeamMember: active admin, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
+        $this->TeamMember->save(
+            ['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
+        $this->TeamMember->save(
+            ['id' => 2, 'user_id' => 2, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
         $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
         $this->assertTrue($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: is not admin
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => false,
-            'status'    => TeamMember::USER_STATUS_ACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => false,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
+
+        // TeamMember: is not admin
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => false,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
+        $this->TeamMember->save(
+            ['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
+        $this->TeamMember->save(
+            ['id' => 2, 'user_id' => 2, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => false]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: not active, User: active
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => true,
-            'status'    => TeamMember::USER_STATUS_INACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_INACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
+
+        // TeamMember: not active, User: active
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_INACTIVE
+            ]
+        );
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => true]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: not active, User: not active
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => true,
-            'status'    => TeamMember::USER_STATUS_ACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
+
+
+        // TeamMember: not active, User: not active
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => false]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
     }
 
     function test_updateActiveFlgToStatus_success()
