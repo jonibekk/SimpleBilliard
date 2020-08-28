@@ -96,7 +96,7 @@ class AccessAuthenticatorTest extends GoalousTestCase
             AccessAuthenticator::verify($validTokenButNotInRedis);
             $this->assertTrue(true);
         } catch (Throwable $e) {
-            $this->assertTrue(false);
+            $this->fail();
         }
 
         // Deleting the registered token in the Redis

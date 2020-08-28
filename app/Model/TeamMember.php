@@ -2175,14 +2175,14 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public
-    function isActiveAdmin(
+    public function isActiveAdmin(
         int $userId,
         int $teamId
     ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
+                'TeamMember.team_id'   => $teamId,
                 'TeamMember.admin_flg' => true,
                 'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
@@ -2200,8 +2200,9 @@ class TeamMember extends AppModel
             ],
         ];
 
-        $res = $this->find('first', $options);
-        return (bool)$res;
+        $res = $this->find('count', $options);
+
+        return $res > 0;
     }
 
     /**
