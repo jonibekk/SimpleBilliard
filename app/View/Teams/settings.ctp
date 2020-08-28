@@ -22,7 +22,9 @@ $this->set('hidden_sidebar_xxs', true);
         <li class=""><a href="#invite_member"><?= __("Invitation") ?></a></li>
         <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#group_settings"><?= __("Group Settings") ?></a></li>
-        <li class=""><a href="#see_gka"><?= __("See GKA") ?></a></li>
+        <?php if ($can_view_see_gka) : ?>
+            <li class=""><a href="#see_gka"><?= __("See GKA") ?></a></li>
+        <?php endif; ?>
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
         <?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true) : ?>
@@ -51,9 +53,11 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="group_settings">
     <?= $this->element('Team/group_settings') ?>
 </div>
-<div id="see_gka">
-    <?= $this->element('Team/see_gka') ?>
-</div>
+<?php if ($can_view_see_gka) : ?>
+    <div id="see_gka">
+        <?= $this->element('Team/see_gka') ?>
+    </div>
+<?php endif; ?>
 <div id="goal_category">
     <?= $this->element('Team/goal_category_setting') ?>
 </div>

@@ -317,6 +317,7 @@ class TeamsController extends AppController
         $goal_categories = [
             'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
         ];
+        $can_view_see_gka = $team['Team']['admin_grp_feat_toggle'];
         $see_gka = !$team['Team']['groups_enabled_flg'];
         $can_update_see_gka = $this->Team->Group->hasAny(['team_id' => $team_id]);
 
@@ -518,7 +519,8 @@ class TeamsController extends AppController
             'translationTeamTotalLimit',
             'translationTeamResetText',
             'see_gka',
-            'can_update_see_gka'
+            'can_update_see_gka',
+            'can_view_see_gka'
         ));
 
         return $this->render();
