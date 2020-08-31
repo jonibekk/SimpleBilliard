@@ -12,6 +12,7 @@ App::import('Service/Api', 'ApiKeyResultService');
 
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Policy', 'GroupPolicy');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -253,6 +254,9 @@ class GoalsController extends ApiController
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init("GoalService");
 
+        /** @var Group **/
+        $Group = ClassRegistry::init("Group");
+
         $res = [];
 
         // 編集の場合、idからゴール情報を取得・設定
@@ -267,6 +271,7 @@ class GoalsController extends ApiController
                 GoalService::EXTEND_TOP_KEY_RESULT,
                 GoalService::EXTEND_GOAL_LABELS,
                 GoalService::EXTEND_GOAL_MEMBERS,
+                GoalService::EXTEND_GOAL_GROUPS
             ]);
         }
 
@@ -313,6 +318,31 @@ class GoalsController extends ApiController
             $current = $this->Team->Term->getTermData(Term::TYPE_CURRENT);
             $next = $this->Team->Term->getTermData(Term::TYPE_NEXT);
             $res['terms'] = [Term::TERM_TYPE_CURRENT => $current, Term::TERM_TYPE_NEXT => $next];
+        }
+
+        if ($dataTypes == 'all' || in_array('labels', $dataTypes)) {
+            $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
+        }
+
+        if ($dataTypes == 'all' || in_array('labels', $dataTypes)) {
+            $res['labels'] = Hash::extract($Label->getListWithGoalCount(), '{n}.Label');
+        }
+
+        if ($dataTypes == 'all' || in_array('groups', $dataTypes)) {
+            $policy = new GroupPolicy($this->my_uid, $this->current_team_id);
+            $auth_scope = $policy->scope();
+            $additional_scope = ['conditions' => ['Group.archived_flg' => false]];
+            $scope = array_merge_recursive($auth_scope, $additional_scope);
+
+            $results = $Group->findGroupsWithMemberCount($scope);
+            $groups = Hash::extract($results, '{n}.Group');
+            $res['groups'] = $groups;
+        }
+
+        if ($dataTypes == 'all' || in_array('groups_enabled', $dataTypes)) {
+            $team = $this->Team->getById($this->current_team_id);
+            $has_groups = $Group->GoalGroup->hasAny(['goal_id' => $id]);
+            $res['groups_enabled'] = $has_groups || $team['groups_enabled_flg'];
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
