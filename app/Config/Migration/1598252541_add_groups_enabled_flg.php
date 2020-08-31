@@ -23,12 +23,6 @@ class AddGroupsFuenabledFlg extends CakeMigration
                         'null' => false,
                         'default' => 0,
                         'comment' => 'status indicating if a team has groups functionality enabled'
-                    ),
-                    'indexes' => array(
-                        'groups_enabled_flg' => array(
-                            'column' => array('groups_enabled_flg'),
-                            'unique' => 0
-                        ),
                     )
                 )
             )
@@ -36,9 +30,6 @@ class AddGroupsFuenabledFlg extends CakeMigration
         'down' => array(
             'drop_field' => array(
                 'teams' => array(
-                    'groups_enabled_flg'
-                ),
-                'indexes' => array(
                     'groups_enabled_flg'
                 )
             )
