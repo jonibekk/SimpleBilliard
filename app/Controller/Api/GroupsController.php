@@ -4,6 +4,8 @@ App::import('Service', 'GroupService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Service', 'ImageStorageService');
 
+use Goalous\Exception as GlException;
+
 class GroupsController extends BasePagingController
 {
     use TranslationNotificationTrait;
@@ -25,18 +27,23 @@ class GroupsController extends BasePagingController
 
     public function get_detail(int $groupId)
     {
-        // @var ImageStorageService $ImageStorageService;
-        $ImageStorageService = ClassRegistry::init("ImageStorageService");
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('read', $group);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
+        }
 
-        $this->loadModel("Group");
-        $result = $this->Group->findById($groupId);
-        $group  = $result["Group"];
         $members = $this->Group->findMembers($groupId);
 
         $group['members'] = array_map(
-            function ($row) use ($ImageStorageService) {
+            function ($row) {
+                // @var ImageStorageService $ImageStorageService;
+                $ImageStorageService = ClassRegistry::init("ImageStorageService");
+
                 $member = $row["User"];
                 $member['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($member, 'User');
+
                 return $member;
             },
             $members
@@ -177,33 +184,33 @@ class GroupsController extends BasePagingController
         return null;
     }
 
-    private function validateTeamAdmin()
+    private function findGroup(int $groupId): array
     {
-        $this->loadModel("TeamMember");
-        $result = $this->TeamMember->hasAny([
-            "user_id" => $this->getUserId(),
-            "team_id" => $this->getTeamId(),
-            "admin_flg" => true
-        ]);
-        if (!$result) {
-            throw new Exception("You are not authorized to manage groups");
+        /** @var Group $Group */
+        $Group = ClassRegistry::init("Group");
+        $group = $Group->useType()->getById($groupId);
+
+        if (empty($group)) {
+            throw new GlException\GoalousNotFoundException(__("This group doesn't exist."));
         }
-        return null;
+
+        return $group;
     }
 
-    private function validateGroupParams(array $data)
+    public function authorize(string $method, array $group): void
     {
-        $this->loadModel("Group");
-        $this->Group->set($data);
+        $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
+        $authorized = $policy->{$method}($group);
 
-        if (!$this->Group->validates()) {
-            $errMsgs = [];
-            foreach ($this->Group->validationErrors as $field => $errors) {
-                $errMsgs[$field] = array_shift($errors);
+        if (!$authorized) {
+            switch ($method) {
+                case 'read':
+                    throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
+                case 'create':
+                    throw new GlException\Auth\AuthFailedException(__("You are not authorized to create groups for this team"));
+                case 'update':
+                    throw new GlException\Auth\AuthFailedException(__("You are not authorized to update this group"));
             }
-            GoalousLog::error("Invalid group paramters", $errMsgs);
-            throw new Exception("Invalid group parameters");
         }
-        return null;
     }
 }
