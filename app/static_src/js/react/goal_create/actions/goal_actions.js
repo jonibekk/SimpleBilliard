@@ -129,6 +129,7 @@ export function saveGoal() {
       postData.key_result.start_value = 0
       postData.key_result.target_value = 1
     }
+    postData.groups = Object.keys(postData.groups)
     return post("/api/v1/goals", getState().goal.inputData, null,
       (response) => {
         // 成功時はリダイレクト
