@@ -2103,4 +2103,27 @@ class Post extends AppModel
 
         return $this->useType()->find('first', $condition) ?: [];
     }
+
+    public function publicPostsSubQuery()
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Post.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Post",
+            "conditions" => [
+                'GoalGroup.id IS NULL',
+            ],
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Post.goal_id',
+                    ],
+                ]
+            ],
+        ], $this);
+    }
 }
