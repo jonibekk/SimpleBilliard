@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GoalGroup', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('Term', 'Model');
 App::uses('AppUtil', 'Util');
@@ -15,6 +16,7 @@ App::uses('AppUtil', 'Util');
  * @property Post         $Post
  * @property KeyResult    $KeyResult
  * @property GoalMember   $GoalMember
+ * @property GoalGroup   $GoalGroup
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
  * @property ActionResult $ActionResult
@@ -285,6 +287,9 @@ class Goal extends AppModel
             'className' => 'KeyResult'
         ],
         'GoalMember'          => [
+            'dependent' => true,
+        ],
+        'GoalGroup'          => [
             'dependent' => true,
         ],
         'Leader'              => [
@@ -570,6 +575,14 @@ class Goal extends AppModel
         $priority = Hash::get($data, 'Goal.priority');
         if ($priority !== null) {
             $data['GoalMember'][0]['priority'] = $priority;
+        }
+        return $data;
+    }
+
+    function buildGoalGroups(array $data, array $groups): array
+    {
+        for ($i = 0; $i < count($groups); $i++) {
+            $data['GoalGroup'][$i]['group_id'] = $groups[$i];
         }
         return $data;
     }
