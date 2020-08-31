@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
+App::uses('Experiment', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'AuthService');
@@ -317,9 +318,14 @@ class TeamsController extends AppController
         $goal_categories = [
             'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
         ];
-        $can_view_see_gka = $team['Team']['admin_grp_feat_toggle'];
+
+
         $see_gka = !$team['Team']['groups_enabled_flg'];
         $can_update_see_gka = $this->Team->Group->hasAny(['team_id' => $team_id]);
+
+        $this->loadModel("Experiment");
+        $groups_experiment = $this->Experiment->findExperiment($this->Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
+        $can_view_see_gka = !(empty($groups_experiment));
 
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
