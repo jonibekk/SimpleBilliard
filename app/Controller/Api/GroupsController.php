@@ -192,17 +192,20 @@ class GroupsController extends BasePagingController
     public function authorize(string $method, array $group): void
     {
         $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
-        $authorized = $policy->{$method}($group);
 
-        if (!$authorized) {
-            switch ($method) {
-                case 'read':
+        switch ($method) {
+            case 'read':
+                if (!$policy->read($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
-                case 'create':
+                }
+            case 'create':
+                if (!$policy->create($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to create groups for this team"));
-                case 'update':
+                }
+            case 'update':
+                if (!$policy->update($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to update this group"));
-            }
+                }
         }
     }
 }
