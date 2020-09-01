@@ -5956,3 +5956,9 @@ msgstr "コード"
 
 msgid "Contact us"
 msgstr "お問い合わせ"
+
+msgid "SSO Login Setting"
+msgstr "SSOログイン設定"
+
+msgid "Set SAML2.0 Configuration"
+msgstr "SAML2.0を設定"

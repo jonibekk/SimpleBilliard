@@ -2,6 +2,7 @@
 
 App::uses('BaseApiController', 'Controller/Api');
 App::uses('TeamRequestValidator', 'Validator/Request/Api/V2');
+App::uses('Experiment', 'Model');
 App::uses('TeamMember', 'Model');
 App::import('Service', 'TeamSsoSettingService');
 
@@ -58,7 +59,12 @@ class TeamsController extends BaseApiController
         try {
             /** @var TeamSsoSettingService $TeamSsoSettingService */
             $TeamSsoSettingService = ClassRegistry::init('TeamSsoSettingService');
-            $TeamSsoSettingService->addOrUpdateSetting($this->getTeamId(), $data['endpoint'], $data['idp_issuer'], $data['public_cert']);
+            $TeamSsoSettingService->addOrUpdateSetting(
+                $this->getTeamId(),
+                $data['endpoint'],
+                $data['idp_issuer'],
+                $data['public_cert']
+            );
         } catch (Exception $e) {
             GoalousLog::error(
                 "Failed to post SSO setting",
@@ -84,6 +90,13 @@ class TeamsController extends BaseApiController
             return ErrorResponse::forbidden()->getResponse();
         }
 
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init('Experiment');
+
+        if (!$Experiment->hasExperimentSetting($this->getTeamId(), Experiment::NAME_ENABLE_SSO_LOGIN)) {
+            return ErrorResponse::forbidden()->getResponse();
+        }
+
         return null;
     }
 
@@ -96,6 +109,13 @@ class TeamsController extends BaseApiController
             return ErrorResponse::forbidden()->getResponse();
         }
 
+        /** @var Experiment $Experiment */
+        $Experiment = ClassRegistry::init('Experiment');
+
+        if (!$Experiment->hasExperimentSetting($this->getTeamId(), Experiment::NAME_ENABLE_SSO_LOGIN)) {
+            return ErrorResponse::forbidden()->getResponse();
+        }
+
         $requestBody = $this->getRequestJsonBody();
 
         try {
@@ -105,10 +125,13 @@ class TeamsController extends BaseApiController
                 ->addErrorsFromValidationException($e)
                 ->getResponse();
         } catch (Exception $e) {
-            GoalousLog::error('Unexpected validation exception', [
-                'class'   => get_class($e),
-                'message' => $e,
-            ]);
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class' => get_class($e),
+                    'message' => $e,
+                ]
+            );
             return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }
 

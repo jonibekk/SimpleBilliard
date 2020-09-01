@@ -5929,3 +5929,9 @@ msgstr "Código"
 
 msgid "Contact us"
 msgstr "Contate-nos"
+
+msgid "SSO Login Setting"
+msgstr ""
+
+msgid "Set SAML2.0 Configuration"
+msgstr ""
