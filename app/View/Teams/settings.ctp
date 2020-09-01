@@ -32,7 +32,7 @@ $this->set('hidden_sidebar_xxs', true);
         <?php endif; ?>
         <li class=""><a href="#translation"><?= __("Translation Settings") ?></a></li>
         <?php if ($this->Expt->is(Experiment::NAME_ENABLE_SSO_LOGIN) === true): ?>
-            <li class=""><a href="#sso_login"><?= __("SSO Login Setting") ?></a></li>
+            <li class=""><a href="#sso_login"><?= __("SAML Authentication") ?></a></li>
         <?php endif; ?>
     </ul>
 </div>

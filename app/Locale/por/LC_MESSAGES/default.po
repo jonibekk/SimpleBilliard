@@ -5930,8 +5930,11 @@ msgstr "Código"
 msgid "Contact us"
 msgstr "Contate-nos"
 
-msgid "SSO Login Setting"
+msgid "SAML Authentication"
+msgstr "SSOログイン設定"
+
+msgid "Get set up with SAML2.0 solution."
 msgstr ""
 
-msgid "Set SAML2.0 Configuration"
-msgstr ""
+msgid "Configure SSO"
+msgstr "SAML2.0を設定"
