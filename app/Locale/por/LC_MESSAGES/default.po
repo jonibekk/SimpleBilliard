@@ -5929,3 +5929,12 @@ msgstr "Código"
 
 msgid "Contact us"
 msgstr "Contate-nos"
+
+msgid "SAML Authentication"
+msgstr "SSOログイン設定"
+
+msgid "Get set up with SAML2.0 solution."
+msgstr ""
+
+msgid "Configure SSO"
+msgstr "SAML2.0を設定"
