@@ -51,8 +51,17 @@
                         $this->Upload->uploadImage($user, 'User.photo',
                             ['style' => 'small']) ?></span>
                 </div>
+                <div class="panel-body" style="border-top: 1px solid #ddd;">
+                    <?= __('Groups') ?>
+                    <span class="pull-right">
+                        <ul>
+                            <?php foreach ($groups as $group) : ?>
+                                <li><?= $group["name"] ?></li>
+                            <?php endforeach ?>
+                        </ul>
+                    </span>
             </div>
-
+            </div>
         </div>
     </div>
 </div>
