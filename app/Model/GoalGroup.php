@@ -34,4 +34,15 @@ class GoalGroup extends AppModel
 
         return $this->find('all', $conditions);
     }
+
+    function goalByUserIdSubQuery(int $userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['GoalGroup.goal_id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "GoalGroup",
+            "joins" => [$this->joinByUserId($userId)]
+        ], $this);
+    }
 }
