@@ -2113,6 +2113,7 @@ class Post extends AppModel
             "alias" => "Post",
             "conditions" => [
                 'GoalGroup.id IS NULL',
+                'Post.goal_id IS NOT NULL',
             ],
             "joins" => [
                 [
