@@ -20,10 +20,11 @@ class ApiGoalService extends ApiService
      * @param        $offset
      * @param        $limit
      * @param string $order
+     * @param array  $scope
      *
      * @return array
      */
-    function search($userId, $conditions, $offset, $limit, $order = "")
+    function search($userId, $conditions, $offset, $limit, $order = "", $scope)
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
@@ -47,7 +48,7 @@ class ApiGoalService extends ApiService
         }
         $ret['count'] = $count;
         // ゴール検索
-        $goals = $Goal->search($conditions, $offset, $limit + 1, $order);
+        $goals = $Goal->search($conditions, $offset, $limit + 1, $order, $scope);
         if (empty($goals)) {
             return $ret;
         }

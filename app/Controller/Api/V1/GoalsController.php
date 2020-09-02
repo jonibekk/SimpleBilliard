@@ -12,6 +12,7 @@ App::import('Service/Api', 'ApiKeyResultService');
 
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Policy', 'GoalPolicy');
 App::import('Policy', 'GroupPolicy');
 App::uses('ErrorResponse', 'Lib/Network/Response');
 
@@ -139,8 +140,19 @@ class GoalsController extends ApiController
 
         $limit = empty($limit) ? ApiGoalService::GOAL_SEARCH_DEFAULT_LIMIT : $limit;
 
+        $policy = new GoalPolicy($this->Auth->user('id'), $this->current_team_id);
+        $scope = $policy->scope();
+
         // ゴール検索
-        $searchResult = $ApiGoalService->search($this->Auth->user('id'), $conditions, $offset, $limit, $order);
+        $searchResult = $ApiGoalService->search(
+            $this->Auth->user('id'),
+            $conditions,
+            $offset,
+            $limit,
+            $order,
+            $scope
+        );
+
         return $searchResult;
     }
 

@@ -1649,10 +1649,11 @@ class Goal extends AppModel
      * @param        $offset
      * @param        $limit
      * @param string $order
+     * @param array  $scope
      *
      * @return array
      */
-    function search($conditions, $offset, $limit, $order = "")
+    function search($conditions, $offset, $limit, $order = "", $scope)
     {
         $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
         $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
@@ -1676,6 +1677,7 @@ class Goal extends AppModel
         ];
         //
         $options = $this->setFilter($options, $conditions, $order);
+        $options = array_merge_recursive($options, $scope);
 
         $goals = $this->find('all', $options);
         return Hash::extract($goals, '{n}.Goal');
@@ -2843,5 +2845,28 @@ class Goal extends AppModel
 
         $goals = $this->find('all', $options);
         return Hash::extract($goals, '{n}.Goal');
+    }
+
+    function publicGoalsSubquery()
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Goal.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Goal",
+            "conditions" => [
+                'GoalGroup.id IS NULL',
+            ],
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Goal.id',
+                    ],
+                ]
+            ],
+        ], $this);
     }
 }
