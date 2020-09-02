@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import Step4Component from '../components/step4'
+import Step5Component from '../components/step5'
 import * as actions from "../actions/goal_actions";
 import * as common from "./common";
 
@@ -13,4 +13,4 @@ function mapDispatchToProps(dispatch) {
   });
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Step4Component)
+export default connect(mapStateToProps, mapDispatchToProps)(Step5Component)

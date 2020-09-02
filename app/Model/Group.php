@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AppModel', 'GoalGroup');
 
 /**
  * Group Model
@@ -44,6 +45,7 @@ class Group extends AppModel
     public $hasMany = [
         'MemberGroup',
         'GroupVision',
+        'GoalGroup'
     ];
 
     function findIdsHavingMembers($teamId)
@@ -245,7 +247,7 @@ class Group extends AppModel
 
         return array_map(
             function ($row) {
-                $row['Group']['member_count'] = $row['0']['member_count'];
+                $row['Group']['member_count'] = (int) $row['0']['member_count'];
                 return $row;
             },
             $results

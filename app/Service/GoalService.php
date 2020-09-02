@@ -16,6 +16,7 @@ App::uses('GoalLabel', 'Model');
 App::uses('GoalCategory', 'Model');
 App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GoalGroup', 'Model');
 App::uses('Post', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
@@ -57,6 +58,7 @@ class GoalService extends AppService
     const EXTEND_GOAL_LABELS = "GOAL:EXTEND_GOAL_LABELS";
     const EXTEND_TOP_KEY_RESULT = "GOAL:EXTEND_TOP_KEY_RESULT";
     const EXTEND_GOAL_MEMBERS = "GOAL:EXTEND_GOAL_MEMBERS";
+    const EXTEND_GOAL_GROUPS = "GOAL:EXTEND_GOAL_GROUPS";
 
     /* グラフ設定 */
     const GRAPH_MAX_BUFFER_DAYS = 10;
@@ -150,6 +152,10 @@ class GoalService extends AppService
         if (in_array(self::EXTEND_GOAL_MEMBERS, $extends)) {
             $data['goal_member'] = Hash::extract($Goal->GoalMember->getUnique($userId, $data['id']), 'GoalMember');
         }
+
+        if (in_array(self::EXTEND_GOAL_GROUPS, $extends)) {
+            $data['groups'] = Hash::extract($Goal->GoalGroup->findGroupsWithGoalId($data['id']), '{n}.Group');
+        }
         return $data;
     }
 
@@ -170,6 +176,8 @@ class GoalService extends AppService
         $GoalMemberService = ClassRegistry::init("GoalMemberService");
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
+        /** @var GoalGroup $GoalGroup */
+        $GoalGroup = ClassRegistry::init("GoalGroup");
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var GoalLabel $GoalLabel */
@@ -205,9 +213,19 @@ class GoalService extends AppService
 
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
+            $updateGoal = $Goal->buildGoalGroups($updateGoal, $requestData['groups']);
+
             if (!$Goal->save($updateGoal, false)) {
                 throw new Exception(sprintf("Failed update goal. data:%s"
                     , var_export($updateGoal, true)));
+            }
+
+            foreach ($requestData['groups'] as $groupId) {
+                $GoalGroup->create();
+                $GoalGroup->save([
+                    'goal_id' => $goalId,
+                    'group_id' => $groupId
+                ]);
             }
 
             // 優先度更新
@@ -329,6 +347,10 @@ class GoalService extends AppService
 
             $data = $Goal->buildTopKeyResult($data, $goal_term);
             $data = $Goal->buildGoalMemberDataAsLeader($data);
+
+            if (!empty($requestData['groups'])) {
+                $data = $Goal->buildGoalGroups($data, $requestData['groups']);
+            }
 
             // setting default image if default image is chosen and image is not selected.
             if (Hash::get($data, 'Goal.img_url') && !Hash::get($data, 'Goal.photo')) {

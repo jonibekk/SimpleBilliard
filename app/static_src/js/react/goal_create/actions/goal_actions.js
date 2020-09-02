@@ -124,12 +124,14 @@ export function fetchInitialData(page) {
 export function saveGoal() {
   return (dispatch, getState) => {
     dispatch(disableSubmit())
-    const postData = getState().goal.inputData
+    const postData = Object.assign({}, getState().goal.inputData)
     if (postData.key_result.value_unit == KeyResult.ValueUnit.NONE) {
       postData.key_result.start_value = 0
       postData.key_result.target_value = 1
     }
-    return post("/api/v1/goals", getState().goal.inputData, null,
+    postData.groups = Object.keys(postData.groups)
+
+    return post("/api/v1/goals", postData, null,
       (response) => {
         // 成功時はリダイレクト
         dispatch({type: types.REDIRECT_TO_HOME})

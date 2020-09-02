@@ -2,6 +2,7 @@
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception\Follow\ValidationToFollowException;
+use Goalous\Exception as GlException;
 
 App::uses('AppController', 'Controller');
 App::uses('PostShareCircle', 'Model');
@@ -15,6 +16,7 @@ App::import('Service', 'FollowService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
+App::import('Policy', 'GoalPolicy');
 
 /**
  * Goals Controller
@@ -110,7 +112,6 @@ class GoalsController extends AppController
         $this->NotifyBiz->push($socketId, $channelName);
 
         return $this->redirect('/');
-
     }
 
     /**
@@ -1751,11 +1752,19 @@ class GoalsController extends AppController
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
         $goal_id = Hash::get($this->request->params, "named.goal_id");
+
+        try {
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
+        } catch (GlException\Auth\AuthFailedException $e) {
+            // TODO: redirect to custom 404 error page
+            //
+            return $this->redirect('/goals/unauthorized');
+        }
+
         //コラボってる？
         $is_collaborated = $this->Goal->GoalMember->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
@@ -1773,6 +1782,8 @@ class GoalsController extends AppController
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
         $this->set('incomplete_kr_count', $incomplete_kr_count);
 
+        $goalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goal_id), '{n}.Group');
+
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
@@ -1780,12 +1791,28 @@ class GoalsController extends AppController
             'with_group' => true,
         ]);
         $this->set('followers', $followers);
+        $this->set('goalGroups', $goalGroups);
         // TODO: Duplicate variable. But both are used, so we have to unify.
         $this->set('goalTerm', $goalTerm);
         $this->set('goal_term', $goalTerm);
 
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function unauthorized()
+    {
+        //$goalId = Hash::get($this->request->params, "named.goal_id");
+        $goalId = 15;
+        $rows = $this->Goal->GoalGroup->find("all", [
+            "conditions" => ["goal_id" => $goalId],
+            "contain" => "Group"
+        ]);
+
+        $this->addHeaderBrowserBackCacheClear();
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set("groups", Hash::extract($rows, "{n}.Group"));
         return $this->render();
     }
 
@@ -1879,6 +1906,12 @@ class GoalsController extends AppController
             // ゴールが存在しない
             return false;
         }
+
+        $policy = new GoalPolicy($this->my_uid, $this->current_team_id);
+        if (!$policy->read($goal['Goal'])) {
+            throw new GlException\Auth\AuthFailedException;
+        }
+
         $goal['goal_labels'] = Hash::extract($this->Goal->GoalLabel->findByGoalId($goal['Goal']['id']), '{n}.Label');
         // 進捗情報を追加
         $goal['Goal']['progress'] = $GoalService->calcProgressByOwnedPriorities($goal['KeyResult']);

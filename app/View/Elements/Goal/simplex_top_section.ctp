@@ -140,6 +140,12 @@
                     <p><?= __('Description') ?></p>
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
+                <li class="goal-detail-goal-groups">
+                    <p><?= __('Groups that can see this goal') ?></p>
+                    <p>
+                        <?= implode(', ', Hash::extract($goalGroups, "{n}.name")) ?>
+                    </p>
+                </li>
                 <li class="goal-detail-info-followers">
                     <p><?= __('Followers') . ' (' . count($followers) . ')'; ?></p>
                     <?php
