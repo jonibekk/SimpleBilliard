@@ -424,7 +424,7 @@ class AuthController extends BaseApiController
         $cookieData = [
             'name'       => getSid(),
             'session_id' => $sessionId,
-            'max-age'    => $cookieLifetime,
+            'max_age'    => $cookieLifetime,
             'expires'    => $cookieExpiryTime->format("D, d-M-Y H:i:s e")
         ];
 
