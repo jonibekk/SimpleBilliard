@@ -5956,3 +5956,10 @@ msgstr "コード"
 
 msgid "Contact us"
 msgstr "お問い合わせ"
+
+msgid "You do not have permission to view this goal"
+msgstr "このゴールは非公開です"
+
+msgid "Groups that can see this goal"
+msgstr "公開先グループ"
+

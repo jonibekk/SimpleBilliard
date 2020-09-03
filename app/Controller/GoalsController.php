@@ -1782,8 +1782,6 @@ class GoalsController extends AppController
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
         $this->set('incomplete_kr_count', $incomplete_kr_count);
 
-        $goalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goal_id), '{n}.Group');
-
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
@@ -1791,7 +1789,6 @@ class GoalsController extends AppController
             'with_group' => true,
         ]);
         $this->set('followers', $followers);
-        $this->set('goalGroups', $goalGroups);
         // TODO: Duplicate variable. But both are used, so we have to unify.
         $this->set('goalTerm', $goalTerm);
         $this->set('goal_term', $goalTerm);
@@ -1976,6 +1973,9 @@ class GoalsController extends AppController
 
         $isGoalAfterCurrentTerm = $GoalService->isGoalAfterCurrentTerm($goalId);
         $this->set(compact('isGoalAfterCurrentTerm'));
+
+        $goalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goalId), '{n}.Group');
+        $this->set('goalGroups', $goalGroups);
 
         return true;
     }

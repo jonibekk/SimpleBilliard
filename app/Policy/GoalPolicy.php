@@ -37,4 +37,27 @@ class GoalPolicy extends BasePolicy
 
         return !empty($results);
     }
+
+    public function scope(): array
+    {
+        if ($this->isTeamAdmin()) {
+            return ['conditions' => ['Goal.team_id' => $this->teamId]];
+        }
+        /** @var Goal **/
+        $Goal = ClassRegistry::init('Goal');
+        /** @var GoalGroup */
+        $GoalGroup = ClassRegistry::init('GoalGroup');
+
+        $allPublicQuery = $Goal->publicGoalsSubquery();
+        $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
+
+        $result =  [
+            'conditions' => [
+                'Goal.id in (' . $allPublicQuery . ') OR 
+                 Goal.id in (' . $allGroupsQuery . ')'
+            ],
+        ];
+
+        return $result;
+    }
 }

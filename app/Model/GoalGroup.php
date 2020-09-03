@@ -45,4 +45,16 @@ class GoalGroup extends AppModel
             "joins" => [$this->joinByUserId($userId)]
         ], $this);
     }
+
+    function joinByUserId(int $userId): array
+    {
+        return [
+            'alias' => 'MemberGroup',
+            'table' => 'member_groups',
+            'conditions' => [
+                'MemberGroup.group_id = GoalGroup.group_id',
+                'MemberGroup.user_id' => $userId
+            ]
+        ];
+    }
 }
