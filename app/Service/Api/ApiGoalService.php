@@ -24,7 +24,7 @@ class ApiGoalService extends ApiService
      *
      * @return array
      */
-    function search($userId, $conditions, $offset, $limit, $order = "", $scope)
+    function search($userId, $conditions, $offset, $limit, $order = "", $scope = [])
     {
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init("Goal");
