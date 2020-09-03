@@ -12,6 +12,24 @@ use Goalous\Enum as Enum;
 class SubscriptionService extends AppService
 {
     /**
+     * add users' subscription
+     *
+     * @param $userid  $subscription
+     *
+     * @return array
+     */
+    public function add($userId, $subscription)
+    {
+        /** @var Subscription $Subscription */
+        $Subscription = ClassRegistry::init('Subscription');
+        $res = $Subscription->add($userId, $subscription);
+        if (!$res) {
+            GoalousLog::warning('Add subscription failed! Params: ', ['user_id' => $userId, 'subscription' => $subscription]);
+        }
+        return $res;
+    }
+
+    /**
      * get users' subscription
      * extend data
      *
@@ -19,81 +37,74 @@ class SubscriptionService extends AppService
      *
      * @return array
      */
-    public function add($user_id, $subscription)
+    public function getSubscriptionByUserId($userId): array
     {
         /** @var Subscription $Subscription */
         $Subscription = ClassRegistry::init('Subscription');
-        $res = $Subscription->add($user_id, $subscription);
+        $res =  $Subscription->getSubscriptionByUserId($userId);
         if (!$res) {
-            GoalousLog::warning('Add subscription failed! Params: ', ['user_id' => $user_id, 'subscription' => $subscription]);
+            GoalousLog::warning('get subscription failed! Params: ', ['user_id' => $userId]);
         }
         return $res;
     }
 
     /**
-     * get users' fcm subscription
-     * extend data
+     * delete users' subscription
      *
-     * @param $userid 
+     * @param $userid $Subscription
      *
-     * @return array
+     * @return bool
      */
-    public function getSubscriptionByUserId($user_id): array
+    public function delete($userId, $subscription)
     {
         /** @var Subscription $Subscription */
         $Subscription = ClassRegistry::init('Subscription');
-        $res =  $Subscription->getSubscriptionByUserId($user_id);
+        $res = $Subscription->deleteSubscription($userId, $subscription);
         if (!$res) {
-            GoalousLog::warning('get subscription failed! Params: ', ['user_id' => $user_id]);
-        }
-        return $res;
-    }
-
-    /**
-     * delete users' fcm subscription
-     * extend data
-     *
-     * @param $userid 
-     *
-     * @return array
-     */
-    public function delete($user_id, $subscription)
-    {
-        /** @var Subscription $Subscription */
-        $Subscription = ClassRegistry::init('Subscription');
-        $res = $Subscription->deleteSubscription($user_id, $subscription);
-        if (!$res) {
-            GoalousLog::warning('delete subscription failed! Params: ', ['user_id' => $user_id, 'subscription' => $subscription]);
+            GoalousLog::warning('delete subscription failed! Params: ', ['user_id' => $userId, 'subscription' => $subscription]);
         }
         return $res;
     }
 
     /**
      * update subscription
-     * extend data
      *
-     * @param $userid 
+     * @param $userid, $subscription 
      *
      * @return array
      */
-    public function updateSubscription($user_id, $subscription)
+    public function updateSubscription($userId, $subscription)
     {
         /** @var Subscription $Subscription */
         $Subscription = ClassRegistry::init('Subscription');
-        $res = $Subscription->updateSubscription($user_id, $subscription);
+        $res = $Subscription->updateSubscription($userId, $subscription);
         if (!$res) {
-            GoalousLog::warning('update subscription failed! Params: ', ['user_id' => $user_id, 'subscription' => $subscription]);
+            GoalousLog::warning('update subscription failed! Params: ', ['user_id' => $userId, 'subscription' => $subscription]);
         }
         return $res;
     }
 
     /**
-     * update subscription
-     * extend data
+     * check subscription
+     *
+     * @param $userid, $subscription 
+     *
+     * @return array
+     */
+    public function check($userId, $subscription)
+    {
+        /** @var Subscription $Subscription */
+        $Subscription = ClassRegistry::init('Subscription');
+        $res = $Subscription->checkSubscription($userId, $subscription);
+        return $res;
+    }
+
+    /**
+     * send Desktop push notification
      *
      * @param $userid 
      *
-     * @return array
+     * @return
      */
     public function sendDesktopPushNotification($subscriptions, $title, $postUrl)
     {

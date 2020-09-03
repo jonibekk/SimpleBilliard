@@ -57,45 +57,42 @@ class Subscription extends AppModel
     /**
      * add subscription
      *
-     * @param $data
+     * @param $userId, $subscription
      *
      * @return bool|mixed
      */
-    function add($user_id, $subscription)
+    function add($userId, $subscription)
     {
-
         $data = array(
-            'user_id' => $user_id,
+            'user_id' => $userId,
             'subscription' => json_encode($subscription),
             'subscription_hash' => hash('sha256', json_encode($subscription)),
         );
-        GoalousLog::error(print_r($data, true));
         $this->set($data);
         if (!$this->validates()) {
             return false;
         }
         $this->create();
         $res = $this->save($data);
-        GoalousLog::error(print_r($res, true));
         return $res;
     }
 
     /**
-     * get subscription by user_id
+     * get subscription by user id
      *
-     * @param $user_id
+     * @param $userId
      *
-     * @return array|bool|null
+     * @return array
      */
-    function getSubscriptionByUserId($user_id)
+    function getSubscriptionByUserId($userId)
     {
-        if (empty($user_id)) {
+        if (empty($userId)) {
             return false;
         }
 
         $options = [
             'conditions' => [
-                'Subscription.user_id' => $user_id,
+                'Subscription.user_id' => $userId,
                 'Subscription.del_flg' => false,
             ],
         ];
@@ -109,9 +106,9 @@ class Subscription extends AppModel
     /**
      * delete user subscription
      *
-     * @param string $installationId
+     * @param $userId, $subscription
      *
-     * @return array|bool|null
+     * @return bool
      */
     function deleteSubscription(int $userId, $subscription)
     {
@@ -133,9 +130,9 @@ class Subscription extends AppModel
     /**
      * update subscription
      *
-     * @param string $installationId
+     * @param userId, subscription
      *
-     * @return array|bool|null
+     * @return array|bool
      */
     function updateSubscription(int $userId, $subscription)
     {
@@ -160,6 +157,31 @@ class Subscription extends AppModel
         $data['Subscription']['user_id'] = $userId;
         
         return $this->save($data);
+    }
+
+    /**
+     * check if user owns subscription
+     *
+     * @param $userId, subscription
+     *
+     * @return bool
+     */
+    function checkSubscription(int $userId, $subscription)
+    {
+        if (empty($userId) or empty($subscription)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'user_id' => $userId,
+                'subscription_hash' => hash('sha256', json_encode($subscription)),
+            ],
+        ];
+
+        $res =  $this->find('all', $options['conditions']);
+        return count($res) > 0;
+        
     }
 
 }
