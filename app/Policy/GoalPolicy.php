@@ -48,11 +48,13 @@ class GoalPolicy extends BasePolicy
         $GoalGroup = ClassRegistry::init('GoalGroup');
 
         $allPublicQuery = $Goal->publicGoalsSubquery();
+        $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
 
         $result =  [
             'conditions' => [
                 'Goal.id in (' . $allPublicQuery . ') OR 
+                 Goal.id in (' . $allCoacheesQuery . ') OR
                  Goal.id in (' . $allGroupsQuery . ')'
             ],
         ];

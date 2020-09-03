@@ -2869,4 +2869,38 @@ class Goal extends AppModel
             ],
         ], $this);
     }
+
+    function coacheeGoalsSubquery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Goal.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Goal",
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Goal.id',
+                    ],
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = GoalGroup.group_id',
+                    ]
+                ],
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'TeamMember.user_id = MemberGroup.user_id',
+                        'TeamMember.coach_user_id' => $userId
+                    ]
+                ]
+            ],
+        ], $this);
+    }
 }
