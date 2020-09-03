@@ -42,15 +42,31 @@ class BasePolicy
         return $team['Team']['groups_enabled_flg'];
     }
 
-    protected function isCoach($resource): bool
+    protected function isCoach($goalId): bool
     {
         /** @var TeamMember **/
         $TeamMember = ClassRegistry::init('TeamMember');
         $result = $TeamMember->find('first', [
             'conditions' => [
-                'TeamMember.user_id' => $resource['user_id'],
                 'TeamMember.coach_user_id' => $this->userId,
                 'TeamMember.team_id' => $this->teamId
+            ],
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.user_id = TeamMember.user_id',
+            ]
+                ],
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.group_id = MemberGroup.group_id',
+                        'GoalGroup.goal_id' => $goalId,
+                    ]
+                ],
             ]
         ]);
 

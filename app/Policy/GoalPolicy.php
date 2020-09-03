@@ -12,8 +12,7 @@ class GoalPolicy extends BasePolicy
     {
         return ((int)$goal['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($goal['team_id'])) ||
-            ($this->isCoach($goal)) ||
-            ($this->isActiveEvaluator($goal)) ||
+            ($this->isCoach($goal['id'])) ||
             ($this->isSameGroup($goal));
     }
 
