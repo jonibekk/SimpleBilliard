@@ -342,7 +342,7 @@ class GoalsController extends ApiController
 
         if ($dataTypes == 'all' || in_array('groups', $dataTypes)) {
             $policy = new GroupPolicy($this->my_uid, $this->current_team_id);
-            $auth_scope = $policy->scope();
+            $auth_scope = $policy->scope('edit');
             $additional_scope = ['conditions' => ['Group.archived_flg' => false]];
             $scope = array_merge_recursive($auth_scope, $additional_scope);
 
