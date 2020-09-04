@@ -333,7 +333,6 @@ class UsersController extends AppController
 
     function set_session()
     {
-        GoalousLog::error('set_session');
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->set('redirect_url', $redirect_url);
 
@@ -359,11 +358,9 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        GoalousLog::error('after');
         $redirect_url = "/users/set_session";
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
-        GoalousLog::error('login succeed');
             $this->Session->delete('preAuthPost');
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
@@ -422,8 +419,6 @@ class UsersController extends AppController
             $this->Notification->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
                 ['title' => __("Succeeded to login")]);
             $this->Session->delete('invited_team_id');
-            GoalousLog::error('login end');
-            GoalousLog::error(print_r($redirect_url, true));
             return $this->redirect($redirect_url);
         } else {
             $this->Notification->outError(__("Error. Try to login again."));
