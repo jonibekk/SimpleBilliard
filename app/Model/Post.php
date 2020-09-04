@@ -2127,4 +2127,41 @@ class Post extends AppModel
             ],
         ], $this);
     }
+
+    public function coacheePostsSubQuery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Post.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Post",
+            "conditions" => [
+                'Post.goal_id IS NOT NULL',
+            ],
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Post.goal_id',
+                    ],
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = GoalGroup.group_id',
+                    ]
+                ],
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'TeamMember.user_id = MemberGroup.user_id',
+                        'TeamMember.coach_user_id' => $userId
+                    ]
+                ]
+            ],
+        ], $this);
+    }
 }

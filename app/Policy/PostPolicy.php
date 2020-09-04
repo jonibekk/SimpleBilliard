@@ -20,8 +20,7 @@ class PostPolicy extends BasePolicy
 
         if (((int)$post['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($post['team_id'])) ||
-            ($this->isCoach($post)) ||
-            ($this->isActiveEvaluator($post)) ||
+            ($this->isCoach($post['goal_id'])) ||
             ($this->isSameGroup($post))
         ) {
             return true;
@@ -74,11 +73,13 @@ class PostPolicy extends BasePolicy
         $GoalGroup = ClassRegistry::init('GoalGroup');
 
         $allPublicQuery = $Post->publicPostsSubQuery();
+        $allCoacheeQuery = $Post->coacheePostsSubQuery($this->userId);
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
 
         $result =  [
             'conditions' => [
                 'Post.id in (' . $allPublicQuery . ') OR 
+                 Post.id in (' . $allCoacheeQuery . ') OR
                  Post.goal_id in (' . $allGroupsQuery . ')'
             ],
         ];

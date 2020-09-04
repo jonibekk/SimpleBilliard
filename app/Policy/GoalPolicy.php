@@ -12,8 +12,7 @@ class GoalPolicy extends BasePolicy
     {
         return ((int)$goal['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($goal['team_id'])) ||
-            ($this->isCoach($goal)) ||
-            ($this->isActiveEvaluator($goal)) ||
+            ($this->isCoach($goal['id'])) ||
             ($this->isSameGroup($goal));
     }
 
@@ -38,7 +37,7 @@ class GoalPolicy extends BasePolicy
         return !empty($results);
     }
 
-    public function scope(): array
+    public function scope($type = 'read'): array
     {
         if ($this->isTeamAdmin()) {
             return ['conditions' => ['Goal.team_id' => $this->teamId]];
@@ -50,10 +49,15 @@ class GoalPolicy extends BasePolicy
 
         $allPublicQuery = $Goal->publicGoalsSubquery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
+        $allCoacheesQuery = '';
+        if ($type === 'read') {
+            $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
+        }
 
         $result =  [
             'conditions' => [
                 'Goal.id in (' . $allPublicQuery . ') OR 
+                 Goal.id in (' . $allCoacheesQuery . ') OR
                  Goal.id in (' . $allGroupsQuery . ')'
             ],
         ];
