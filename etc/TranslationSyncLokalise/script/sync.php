@@ -29,6 +29,7 @@ function main() {
         '128601805af3e57eec5279.20310938',
         [
             'format' => 'po',
+            'replace_breaks' => false,
             'original_filenames' => false,
             'directory_prefix' => '/%LANG_ISO%/',
         ]
