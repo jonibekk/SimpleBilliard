@@ -70,10 +70,22 @@ msgid "[Important]Credit card expiring soon"
 msgstr "[Importante] O cartão de crédito expira em breve"
 
 msgid "[Now, What is that you can contribute to the team?]<br>\n\nConsulting UX of your production.<br>\n\n[What is the thing you want to achieve in the team?(Specifically)]<br>\n\nInnovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n\n[Others]<br>\n\nNeed New Customers?<br>\n\n1. Be focused on culture above all else, get happy employees.<br>\n\n2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n\n3. Simplify everything\n"
-msgstr "[Como você pode contribuir para a equipe?]<br>\n Consultando o UX da sua produção.<br>\n\n[Qual é o que você deseja alcançar na equipe? (Especificamente)]<br>\n\nnMétodos de inovação - Colaboração remota - Criatividade - UX no nível C - Holocracia<br>\n\n[Outros]<br>\n\nPrecisa de novos clientes?<br>\n\n1. Concentre-se na cultura acima de tudo, receba funcionários felizes.<br>\n\n2. Crie uma cultura de inovação, espírito de equipe, colaboração, criatividade em todos os lugares<br>\n\n3. Simplifique\n"
+msgstr ""
+"[Como você pode contribuir para a equipe?]<br>"
+" Consultando o UX da sua produção.<br>"
+"[Qual é o que você deseja alcançar na equipe? (Especificamente)]<br>"
+"nMétodos de inovação - Colaboração remota - Criatividade - UX no nível C - Holocracia<br>"
+"[Outros]<br>"
+"Precisa de novos clientes?<br>"
+"1. Concentre-se na cultura acima de tudo, receba funcionários felizes.<br>"
+"2. Crie uma cultura de inovação, espírito de equipe, colaboração, criatividade em todos os lugares<br>"
+"3. Simplifique"
 
 msgid "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n"
-msgstr "[Como você pode contribuir para a equipe?]\n\n[O que você deseja alcançar na equipe? (Especificamente)]\n\n[Outros]\n\n"
+msgstr ""
+"[Como você pode contribuir para a equipe?]"
+"[O que você deseja alcançar na equipe? (Especificamente)]"
+"[Outros]"
 
 msgid "{{field}} is a required field."
 msgstr "{{field}} é um campo obrigatório."
@@ -469,7 +481,7 @@ msgid "Action that had been commented"
 msgstr "Ação que foi comentada"
 
 msgid "Action that had been liked"
-msgstr "Ação que curtida."
+msgstr "Ação curtida."
 
 msgid "Actions"
 msgstr "Ações"
@@ -706,7 +718,7 @@ msgid "Back"
 msgstr "Voltar"
 
 msgid "Back to evaluation list"
-msgstr "Voltar a lista de avaliação"
+msgstr "Voltar para a lista de avaliação"
 
 msgid "Basic info"
 msgstr "Informação básica"
@@ -946,7 +958,7 @@ msgid "Choose your team's (company's) term"
 msgstr "Selecione o período que deseja trabalhar com os objetivos"
 
 msgid "Circle"
-msgstr "Círculo"
+msgstr "Círculos"
 
 msgid "Circle Description"
 msgstr "Descrição do círculo"
@@ -1122,6 +1134,10 @@ msgstr "Resultado-chave concluído. "
 msgid "Completed this on %s."
 msgstr "Concluiu isso em %s."
 
+#, fuzzy
+msgid "Configure SSO"
+msgstr ""
+
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -1222,10 +1238,10 @@ msgid "Create a goal."
 msgstr "Crie um objetivo."
 
 msgid "Create a group vision"
-msgstr "Crie uma visão de grupo"
+msgstr "Criar visão do grupo"
 
 msgid "Create a group vision."
-msgstr "Crie uma visão de grupo"
+msgstr "Criar visão"
 
 msgid "Create a name for your team. A team is a group that can share goals, actions and posts with each other. People outside of the team can't access this information."
 msgstr "Crie um nome para o seu time. O Time será o ambiente onde sua equipe irá criar objetivos, postar ações e se comunicar. Pessoas externas não terão acesso a suas informações."
@@ -1237,22 +1253,22 @@ msgid "Create a new account?"
 msgstr "Criar uma nova conta?"
 
 msgid "Create a new team"
-msgstr "Crie uma nova equipe"
+msgstr "Criar nova equipe"
 
 msgid "Create a password"
-msgstr "Crie uma senha"
+msgstr "Criar senha"
 
 msgid "Create a team"
 msgstr "Crie uma equipe"
 
 msgid "Create a team vision"
-msgstr "Crie uma visão de equipe"
+msgstr "Criar visão da equipe"
 
 msgid "Create a team vision."
-msgstr "Crie uma visão de equipe."
+msgstr "Criar visão da equipe"
 
 msgid "Create a team."
-msgstr "Crie um time."
+msgstr "Criar time"
 
 msgid "Create another circle"
 msgstr "Crie outro círculo"
@@ -1264,7 +1280,7 @@ msgid "Create circles, and share with project members division members or anyone
 msgstr "Crie círculos e compartilhe informações com membros do time."
 
 msgid "Create Goal"
-msgstr "Crie um objetivo"
+msgstr "Criar objetivo"
 
 msgid "Create New Team"
 msgstr "Criar nova equipe"
@@ -1645,22 +1661,22 @@ msgid "Edited the comment."
 msgstr "As alterações foram salvas"
 
 msgid "eg. 1 (Numeric)"
-msgstr "ex) 1 (Numérico)"
+msgstr "Exemplo: 1 (Numérico)"
 
 msgid "eg. A-E or 1-5"
-msgstr "ex) A-E ou 1-5"
+msgstr "Exemplo: A-E ou 1-5"
 
 msgid "eg. Armstrong"
-msgstr "ex) Silva"
+msgstr "Exemplo: Silva"
 
 msgid "eg. Bruce"
 msgstr "ex. Bruce"
 
 msgid "eg. Harry"
-msgstr "ex) Pedro"
+msgstr "Exemplo: Pedro"
 
 msgid "eg. I completed making the web site."
-msgstr "Ex) Eu terminei de fazer o site."
+msgstr "Exemplo: Eu terminei de fazer o site."
 
 msgid "eg. Increase Goalous weekly active users"
 msgstr "Ex: Aumentar a atividade dos usuários do Goalous."
@@ -1669,7 +1685,7 @@ msgid "eg. Jobs"
 msgstr "ex. empregos"
 
 msgid "eg. making an innovation"
-msgstr "ex) Inovando."
+msgstr "Exemplo: Inovando."
 
 msgid "eg. Spread Goalous users in the world"
 msgstr "Ex: Espalhar o Goalous pelo mundo!"
@@ -1678,25 +1694,25 @@ msgid "eg. Team Goalous"
 msgstr "Ex: Time Goalous"
 
 msgid "eg. Tokyo"
-msgstr "ex) Rio de Janeiro"
+msgstr "Exemplo: Rio de Janeiro"
 
 msgid "eg) Complete making the web site."
-msgstr "ex) Concluir a criação do site."
+msgstr "Exemplo: Concluir a criação do site."
 
 msgid "eg) I will get the users by advertising."
-msgstr "ex) Receberei os usuários anunciando."
+msgstr "Exemplo: Receberei os usuários anunciando."
 
 msgid "eg) Increasing the internal market share of A"
-msgstr "ex) Aumentar a participação de mercado do produto A"
+msgstr "Exemplo: Aumentar a participação de mercado do produto A"
 
 msgid "eg) Increasing the number of users"
-msgstr "ex) Aumentando o número de usuários"
+msgstr "Exemplo: Aumentando o número de usuários"
 
 msgid "eg) Let's share the latest information."
 msgstr "Vamos compartilhar as informações mais recentes."
 
 msgid "eg) the sales division"
-msgstr "ex) a divisão de vendas"
+msgstr "Exemplo: a divisão de vendas"
 
 msgid "Email"
 msgstr "Email"
@@ -2250,6 +2266,10 @@ msgstr "Get in touch"
 msgid "Get more information"
 msgstr "Quero saber mais"
 
+#, fuzzy
+msgid "Get set up with SAML2.0 solution."
+msgstr ""
+
 msgid "Give reactions to posts with likes and comments"
 msgstr "Curta e comente as postagens"
 
@@ -2320,7 +2340,7 @@ msgid "Goal Image"
 msgstr "Imagem do objetivo"
 
 msgid "goal management, achieve a goal, sns app, evaluation, mbo"
-msgstr "Gestão de Goals e performance, comunicação, feedback, MBO."
+msgstr "Gestão de objetivos e performance, comunicação, feedback, MBO."
 
 msgid "GOAL MEMBERS COUNT"
 msgstr "Membros do objetivo"
@@ -2491,7 +2511,7 @@ msgid "Hide birth year"
 msgstr "Ocultar ano de nascimento"
 
 msgid "his/her"
-msgstr "dele/dela"
+msgstr "Sua avaliação"
 
 msgid "History"
 msgstr "História"
@@ -3184,7 +3204,7 @@ msgid "Login"
 msgstr "Login"
 
 msgid "Login -> UserSettings -> Notification"
-msgstr "Login -> Configurações do usuário -> Notificação"
+msgstr "Login -> Configurações do usuário -> Notificações"
 
 msgid "Login from mobile app"
 msgstr "Login pelo smartphone"
@@ -3208,7 +3228,7 @@ msgid "Made a Key Result uncompleted."
 msgstr "Resultado-chave incompleto."
 
 msgid "Make a goal"
-msgstr "Crie um Objetivo"
+msgstr "Criar objetivo"
 
 msgid "Make a good Goal to discuss with your project members."
 msgstr "Crie um ótimo objetivo para discutir com os membros do time."
@@ -3920,7 +3940,7 @@ msgid "Post that had been commented"
 msgstr "Postagem que foi comentada"
 
 msgid "Post that had been liked"
-msgstr "Postagem que foi curtida"
+msgstr "Postagem curtida."
 
 msgid "Post to a circle"
 msgstr "Poste em um círculo"
@@ -4034,7 +4054,7 @@ msgid "Reach"
 msgstr "Alcance"
 
 msgid "Read"
-msgstr "Ler"
+msgstr "Visualizações"
 
 msgid "Read Only"
 msgstr "Somente leitura"
@@ -4140,6 +4160,10 @@ msgstr "Função"
 
 msgid "Same as company information"
 msgstr "Mesmo que as informações da empresa"
+
+#, fuzzy
+msgid "SAML Authentication"
+msgstr ""
 
 msgid "Save"
 msgstr "Salvar"
@@ -4817,7 +4841,7 @@ msgid "The limit date must be after start date."
 msgstr "A data limite precisa ser após a data de início."
 
 msgid "The member who you evaluate"
-msgstr "Membro que você avalia"
+msgstr "Pessoa a ser avaliada"
 
 msgid "The number of translatable characters for your team is approaching the limit."
 msgstr "O número de traduções está atingindo o limite."
@@ -4907,7 +4931,7 @@ msgid "There is no KR."
 msgstr "Não há Resultados-chave."
 
 msgid "There is no like! yet."
-msgstr "Não tem nenhuma curtida! Ainda."
+msgstr "Não tem nenhuma curtida ainda!"
 
 msgid "There is no more data."
 msgstr "Não há mais dados."
@@ -5072,7 +5096,7 @@ msgid "Top KR"
 msgstr "Principal Resultado-chave"
 
 msgid "topic"
-msgstr "Tpico"
+msgstr "Tópico"
 
 msgid "Topics"
 msgstr "Tópicos"
@@ -5114,7 +5138,7 @@ msgid "Translation usage won't be reset in free trial plan."
 msgstr "No plano grátis, a função de tradução não será reinicializada."
 
 msgid "Try out Goalous's key features such as user invitations, goal creation and actions, and circle postings."
-msgstr "Teste as principais funcionalidades do Goalous, como Goals, ações, círculos e posts."
+msgstr "Teste as principais funcionalidades do Goalous, como objetivos, ações, círculos e posts."
 
 msgid "Tutorial"
 msgstr "Tutorial"
@@ -5693,7 +5717,7 @@ msgid "You cant't change leader in the Goal during the evaluation period."
 msgstr "Você não pode mudar o líder do objetivo durante o período de avaliação."
 
 msgid "You did not like it."
-msgstr "Você não curtiu isso"
+msgstr "Você não curtiu isso."
 
 msgid "You do something worthwhile."
 msgstr "Faça algo valioso"
