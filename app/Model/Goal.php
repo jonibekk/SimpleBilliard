@@ -243,7 +243,7 @@ class Goal extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-goal.jpg',
+                'default_url' => 'no-image-goal.png',
                 'quality'     => 100,
             ]
         ]
