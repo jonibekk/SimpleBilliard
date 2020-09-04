@@ -40,13 +40,19 @@ msgid "\"%s\\"
 msgstr "「%s」"
 
 msgid "\"OKR\" is said to be an excellent goal management format worldwide. You may have heard of it before.           Based on this “OKR” concept, we have developed a new goal management framework for creating “pro-activeness,” “team unity,” and “fun”. That is “GKA”.           Goalous is the only service that incorporates GKA, which can be said to be compatible with OKR, into the social networking system.           Now, let’s create something “new” in your organization with Goalous."
-msgstr "世界的に優れた目標管理形式と言われる「OKR」。みなさんも1度は耳にしたことがあるかもしれません。この「OKR」の考え方をベースに、さらに「自発性」「コラボレーションによる一体感」そして「楽しい」を生みだす事を目的に弊社が発案する新しい目標管理形式。それが「GKA」です。<br>\n          Goalousはこの「OKR」の上位互換とも言える「GKA」をSNSのシステムに取り入れた唯一のサービスです。<br>\n          さあ、Goalousであなたの組織に「新しい」を生み出しましょう。"
+msgstr ""
+"世界的に優れた目標管理形式と言われる「OKR」。みなさんも1度は耳にしたことがあるかもしれません。この「OKR」の考え方をベースに、さらに「自発性」「コラボレーションによる一体感」そして「楽しい」を生みだす事を目的に弊社が発案する新しい目標管理形式。それが「GKA」です。<br>"
+"          Goalousはこの「OKR」の上位互換とも言える「GKA」をSNSのシステムに取り入れた唯一のサービスです。<br>"
+"          さあ、Goalousであなたの組織に「新しい」を生み出しましょう。"
 
 msgid "“Goalous solves those problems!”"
 msgstr "そのお悩みGoalousが解決します！"
 
 msgid "“I ’d like to introduce you to the company,” “I ’ll help you with that job,” “Would you like to change this rule?” A new kind of communication is born in the same direction. Let's start with the first action!"
-msgstr "「その会社の知り合い紹介するね」「その役割手伝いますよ」「こんなサービス考えたんだけどどう？」「英語でランチしてみませんか？」「このルールこうしませんか？」<br>\n            同じ方向を向くコミュニケーションの中には「新しい」の種が生まれてきます。<br>\n            まずは、始めのアクションから一歩を踏み出しましょう！"
+msgstr ""
+"「その会社の知り合い紹介するね」「その役割手伝いますよ」「こんなサービス考えたんだけどどう？」「英語でランチしてみませんか？」「このルールこうしませんか？」<br>"
+"            同じ方向を向くコミュニケーションの中には「新しい」の種が生まれてきます。<br>"
+"            まずは、始めのアクションから一歩を踏み出しましょう！"
 
 msgid "“So it can be solved, Image of using Goalous”"
 msgstr "だから解決できる、Goalous活用イメージ"
@@ -70,10 +76,25 @@ msgid "[Important]Credit card expiring soon"
 msgstr "【重要】クレジットカード有効期限が近づいてます"
 
 msgid "[Now, What is that you can contribute to the team?]<br>\n\nConsulting UX of your production.<br>\n\n[What is the thing you want to achieve in the team?(Specifically)]<br>\n\nInnovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n\n[Others]<br>\n\nNeed New Customers?<br>\n\n1. Be focused on culture above all else, get happy employees.<br>\n\n2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n\n3. Simplify everything\n"
-msgstr "■ 例文１（技術者向け）<br>\n【今、チームに貢献できることは？】<br>\nスリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>\n【これからチームで実現してみたいことは？(具体的に)】<br>\niOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>\n================================================<br>\n■ 例文2（技術者以外向け）<br>\n【今、チームに貢献できることは？】<br>\n社内の風通しを良くする事。<br><br>\n【これからチームで実現してみたいことは？(具体的に)】<br>\n地域活性化に貢献できるサービスを作り社会貢献をする事。\n<br>\n"
+msgstr ""
+"■ 例文１（技術者向け）<br>"
+"【今、チームに貢献できることは？】<br>"
+"スリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>"
+"【これからチームで実現してみたいことは？(具体的に)】<br>"
+"iOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>"
+"================================================<br>"
+"■ 例文2（技術者以外向け）<br>"
+"【今、チームに貢献できることは？】<br>"
+"社内の風通しを良くする事。<br><br>"
+"【これからチームで実現してみたいことは？(具体的に)】<br>"
+"地域活性化に貢献できるサービスを作り社会貢献をする事。"
+"<br>"
 
 msgid "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n"
-msgstr "【今、チームに貢献できることは？】\n\n【これからチームで実現してみたいことは？(具体的に)】\n\n【その他】\n\n"
+msgstr ""
+"【今、チームに貢献できることは？】"
+"【これからチームで実現してみたいことは？(具体的に)】"
+"【その他】"
 
 msgid "{{field}} is a required field."
 msgstr "{{field}}は必須です"
@@ -94,7 +115,10 @@ msgid "【Log in URL】"
 msgstr "【ログインURL】"
 
 msgid "* OKR is an abbreviation for Objectives and Key Results. It is a model created by Intel in the 1970s that is the best practice to connect the goals of organizations and employees and measure progress based on the results achieved. Currently, it is used in Google, Uber, LinkedIn, Twitter, Sears, Zynga, Oracle, Yahoo!, Spotify, Box, GoPro, Flipboard, etc."
-msgstr "※OKRは、Objectives and Key\n          Resultsの略で、「組織や従業員の目標をつなぎ、また達成された結果に基づき進捗を測定するベストな実践」とされ、1970年代にIntelにより創案されたモデルです。現在では、Google, Uber,\n          LinkedIn, Twitter, Sears, Zynga, Oracle, Yahoo!, Spotify, Box, GoPro, Flipboardなどが採用しています。"
+msgstr ""
+"※OKRは、Objectives and Key"
+"          Resultsの略で、「組織や従業員の目標をつなぎ、また達成された結果に基づき進捗を測定するベストな実践」とされ、1970年代にIntelにより創案されたモデルです。現在では、Google, Uber,"
+"          LinkedIn, Twitter, Sears, Zynga, Oracle, Yahoo!, Spotify, Box, GoPro, Flipboardなどが採用しています。"
 
 msgid "* This is a temporary password, so you should change it immediately. Click More(in Header) > User Settings >  Account > Password > Change Password, you can change the password."
 msgstr "* これは一時的なパスワードなので、ログイン後すぐに変更してください。[その他] (ヘッダー内) > [ユーザー設定] > [パスワード] > [パスワードを変更する]をクリックしてください。"
@@ -1121,6 +1145,9 @@ msgstr "KRを完了にしました。"
 
 msgid "Completed this on %s."
 msgstr "%sに完了した"
+
+msgid "Configure SSO"
+msgstr "SSO設定"
 
 msgid "Confirm"
 msgstr "確認"
@@ -2250,6 +2277,9 @@ msgstr "Get in touch"
 msgid "Get more information"
 msgstr "詳しく知りたい"
 
+msgid "Get set up with SAML2.0 solution."
+msgstr "SAML2.0 をセットアップする"
+
 msgid "Give reactions to posts with likes and comments"
 msgstr "いいね！とコメントで投稿へのリアクション"
 
@@ -2380,7 +2410,11 @@ msgid "Goalous changes the communication of many organizations and creates a tea
 msgstr "Goalousは多くの組織のコミュニケーションを変え、成果のために実行するチームを作ります。"
 
 msgid "Goalous has features that can be evaluated by looking at the progress of the goal and all actions. If you look at the action, you can feel not only the efforts of the members but also the heat of the thoughts. Employees who are evaluated can obtain a more satisfactory evaluation."
-msgstr "Goalousにはゴールの進捗とすべてのアクションをまとめて見ながら評価できます。<br>\n            アクションを見れば、そのメンバーの頑張りはもちろん、<br>\n            思いや熱量までも感じることができます。<br>\n            さらに、評価にかかる時間が一般的な評価に比べ大幅に減る事もゴールへの活動を加速させます。"
+msgstr ""
+"Goalousにはゴールの進捗とすべてのアクションをまとめて見ながら評価できます。<br>"
+"            アクションを見れば、そのメンバーの頑張りはもちろん、<br>"
+"            思いや熱量までも感じることができます。<br>"
+"            さらに、評価にかかる時間が一般的な評価に比べ大幅に減る事もゴールへの活動を加速させます。"
 
 msgid "Goalous has many sophisticated features for teams around the world."
 msgstr "Goalousには世界中のチームのために洗練された多くの機能が存在します。"
@@ -2581,7 +2615,9 @@ msgid "If the start date and end date of a goals/KRs is both within the current 
 msgstr "「開始日と終了日が共に今期、または来期となるゴール/KR」は、日付の変更はありませんでした。"
 
 msgid "If the team is deleted, everything such as posts, actions and goals will be deleted. Do you really want to delete the team?"
-msgstr "チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\\nよろしければ \"OK\" ボタンを押してください。"
+msgstr ""
+"チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\"
+"よろしければ \"OK\" ボタンを押してください。"
 
 msgid "If the upper limit is reached, the translation feature will be temporarily unavailable."
 msgstr "上限に達すると翻訳機能が一時的に使用できなくなります。"
@@ -3133,7 +3169,11 @@ msgid "Left the circle"
 msgstr "サークルを抜けました。"
 
 msgid "Let ’s set the objectives of the team to “Goal”. It is also important to set a “key result” to be done to achieve the goal. All members collaborate and share goals. If the goals are clear, employees will be able to think and act pro-actively on what to do to achieve it."
-msgstr "チームの目標を「ゴール」に設定しましょう。<br>\n            ゴールを達成するためにやるべき「キーリザルト」の設定も重要です。<br>\n            メンバー全員でコラボしゴールを共有します。<br>\n            ゴールが明確になると社員は何をすべきかを自分で考えることができます。"
+msgstr ""
+"チームの目標を「ゴール」に設定しましょう。<br>"
+"            ゴールを達成するためにやるべき「キーリザルト」の設定も重要です。<br>"
+"            メンバー全員でコラボしゴールを共有します。<br>"
+"            ゴールが明確になると社員は何をすべきかを自分で考えることができます。"
 
 msgid "Let's action to show your activity."
 msgstr "活動内容を写真でみんなにシェアしよう。"
@@ -4140,6 +4180,9 @@ msgstr "役割"
 msgid "Same as company information"
 msgstr "会社情報と同じにする"
 
+msgid "SAML Authentication"
+msgstr "SAML認証"
+
 msgid "Save"
 msgstr "保存する"
 
@@ -4585,7 +4628,12 @@ msgid "Take action since %s !"
 msgstr "%s以来のアクションをしよう！"
 
 msgid "Take action to achieve your goals. Photo action is more intuitive than words. Everyone knows the action is for what goal.             Express your thoughts with Like! and comments. A deeper understanding of communication with each other. Various actions give you a sense of the whole company and create a sense of unity."
-msgstr "ゴールを目指すためのアクションをしましょう。<br>\n            写真付きのアクションは言葉よりも直感的に伝えます。<br>\n            いいね！やコメントで思いを形にすることで社員感のコミュニケーションは広がり<br>\n            一体感を生み出します。<br>\n            口頭の報告よりも、インタラクティブに一度に全員に伝わるのも魅力です。"
+msgstr ""
+"ゴールを目指すためのアクションをしましょう。<br>"
+"            写真付きのアクションは言葉よりも直感的に伝えます。<br>"
+"            いいね！やコメントで思いを形にすることで社員感のコミュニケーションは広がり<br>"
+"            一体感を生み出します。<br>"
+"            口頭の報告よりも、インタラクティブに一度に全員に伝わるのも魅力です。"
 
 msgid "Take first action to this !"
 msgstr "最初のアクションをしよう！"
@@ -5386,7 +5434,9 @@ msgid "We had a problem billing your team"
 msgstr "請求で問題が発生しています"
 
 msgid "We have a distributed back-up system, back-ups are done everyday. Goalous can be used securely With SSL, 2-Step Verification and Login Lock."
-msgstr "データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップをしていますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アクセスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロックに加え、定期的に第三者機関による脆弱性診断を実施しております。\nなお、弊社はプライバシーマークの取得企業ですのでご安心ください。"
+msgstr ""
+"データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップをしていますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アクセスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロックに加え、定期的に第三者機関による脆弱性診断を実施しております。"
+"なお、弊社はプライバシーマークの取得企業ですのでご安心ください。"
 
 msgid "We look forward to your continued support to Goalous in the future."
 msgstr "今後とも、Goalousをよろしくお願い申しあげます。"
