@@ -122,9 +122,9 @@ class SubscriptionService extends AppService
 
         $auth = [
             'VAPID' => [
-                'subject' => 'mailto:ning.li@colorkrew.com', // can be a mailto: or your website address
-                'publicKey' => 'BADPfHVYNRRsWtC9p5_PiWPQF6dTAziyKUUZf1AEl1Jxyq_vbDZdwuvrnpGHK1KejKjAZD1xylESIk3ywANhm7Q', // (recommended) uncompressed public key P-256 encoded in Base64-URL
-                'privateKey' => 'eV6SQy32nZKfniyZHPvS3glCm_8AGkOitktQ8opaPnc', // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
+                'subject' => VAPID_SUBJECT, // can be a mailto: or your website address
+                'publicKey' => VAPID_PUBLIC_KEY, // (recommended) uncompressed public key P-256 encoded in Base64-URL
+                'privateKey' => VAPID_PRIVATE_KEY, // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
             ],
         ];
 

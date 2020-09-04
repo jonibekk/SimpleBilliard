@@ -1913,16 +1913,12 @@ class NotifyBizComponent extends Component
         // URL to be associated with the notification
         $postUrl = null;
         if (Hash::get($this->notify_option, 'url')) {
-            GoalousLog::error('url route');
             $postUrl = $this->notify_option['url'];
         } else {
-            GoalousLog::error('url data route');
             $postUrl = Router::url($this->notify_option['url_data'], true);
         }
-        GoalousLog::error($postUrl);
         // for switching team when user logged in other team.
         $postUrl = AppUtil::addQueryParamsToUrl($postUrl, ['team_id' => $this->NotifySetting->current_team_id]);
-        GoalousLog::error($postUrl);
 
         /** @var SubscriptionService $SubscriptionService */
         $SubscriptionService = ClassRegistry::init('SubscriptionService');
@@ -1932,7 +1928,6 @@ class NotifyBizComponent extends Component
 
         foreach ($uids as $to_user_id) {
 
-            GoalousLog::error($to_user_id);
             $subscriptions = $SubscriptionService->getSubscriptionByUserId($to_user_id);
             if (empty($subscriptions)) {
                 continue;
@@ -1965,7 +1960,6 @@ class NotifyBizComponent extends Component
                 }
             }
 
-            GoalousLog::error(print_r($subscriptions, true));
             $SubscriptionService->sendDesktopPushNotification($subscriptions, $title, $postUrl);
         }
 

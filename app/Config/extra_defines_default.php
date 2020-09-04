@@ -115,6 +115,10 @@ $defines = [
     'TRANSLATION_DEFAULT_LIMIT_PAID_TEAM'           => 1000000,
     'AWS_S3_BUCKET_NEW_GOALOUS'                     => '',
     'FILE_SIZE_UPLOAD_MAX_MB'                       => 100,
+    // VAPID configuration
+    'VAPID_SUBJECT'                                 => 'http://localhost',
+    'VAPID_PUBLIC_KEY'                              => 'BADPfHVYNRRsWtC9p5_PiWPQF6dTAziyKUUZf1AEl1Jxyq_vbDZdwuvrnpGHK1KejKjAZD1xylESIk3ywANhm7Q',
+    'VAPID_PRIVATE_KEY'                              => 'eV6SQy32nZKfniyZHPvS3glCm_8AGkOitktQ8opaPnc',
 ];
 // for local
 if (file_exists(APP . 'Config/extra_defines_local.php')) {
