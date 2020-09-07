@@ -75,12 +75,14 @@ class PostPolicy extends BasePolicy
 
         $allPublicQuery = $Post->publicPostsSubQuery();
         $allCoacheeQuery = $Post->coacheePostsSubQuery($this->userId);
+        $allEvaluteeQuery = $Post->evaluateePostsSubQuery($this->userId);
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
 
         $result =  [
             'conditions' => [
                 'Post.id in (' . $allPublicQuery . ') OR 
                  Post.id in (' . $allCoacheeQuery . ') OR
+                 Post.id in (' . $allEvaluteeQuery . ') OR
                  Post.goal_id in (' . $allGroupsQuery . ')'
             ],
         ];
