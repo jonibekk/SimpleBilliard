@@ -10,7 +10,7 @@ App::uses('AppModel', 'Model');
 class Label extends AppModel
 {
     // ゴールラベル登録の上限数
-    const MAX_SAVE_GOAL_LABEL_COUNT = 5;
+    const MAX_SAVE_GOAL_LABEL_COUNT = 20;
 
     /**
      * Display field
@@ -148,7 +148,7 @@ class Label extends AppModel
 
         // ラベル数上限チェック
         if (count($labelNames) > self::MAX_SAVE_GOAL_LABEL_COUNT) {
-            return __('Label must be at least %d count.', 5);
+            return __('Label must be at least %d count.', 20);
         }
 
         $labels = [];
