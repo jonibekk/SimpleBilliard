@@ -22,15 +22,15 @@ class GoalPolicy extends BasePolicy
     {
         /** @var GoalGroup */
         $GoalGroup = ClassRegistry::init('GoalGroup');
+        $hasGroup = $GoalGroup->hasAny(['GoalGroup.goal_id' => $goal['id']]);
 
-        // check if goal is linked to any groups, none means it is visible to entire team
-        if (!$GoalGroup->hasAny(['GoalGroup.goal_id' => $goal['id']])) {
-            return $goal['team_id'] === $this->teamId;
+        if (!$hasGroup) {
+            return $this->teamId === (int) $goal['team_id'];
         }
 
         $results = $GoalGroup->find('all', [
             'conditions' => [
-                'GoalGroup.goal_id' => $goal['id']
+                'GoalGroup.goal_id' => (int)$goal['id']
             ],
             'joins' => [$GoalGroup->joinByUserId($this->userId)]
         ]);
