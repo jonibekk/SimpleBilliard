@@ -21,6 +21,7 @@ class PostPolicy extends BasePolicy
         if (((int)$post['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($post['team_id'])) ||
             ($this->isCoach($post['goal_id'])) ||
+            ($this->isActiveEvaluator($post['goal_id'])) ||
             ($this->isSameGroup($post))
         ) {
             return true;

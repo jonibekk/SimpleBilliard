@@ -1,7 +1,7 @@
 <?php
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
-App::uses('Evaluator', 'Model');
+App::uses('Evaluation', 'Model');
 
 /**
  * Class BasePolicy
@@ -57,7 +57,7 @@ class BasePolicy
                     'table' => 'member_groups',
                     'conditions' => [
                         'MemberGroup.user_id = TeamMember.user_id',
-            ]
+                    ]
                 ],
                 [
                     'alias' => 'GoalGroup',
@@ -73,17 +73,52 @@ class BasePolicy
         return !empty($result);
     }
 
-    protected function isActiveEvaluator($resource): bool
+    /** 
+     * an evaluator should have access to:
+     *   - actions made directly by evaluatee
+     *   - goals related to the actions made by evaluatee
+     *   - actions not made by evaluatee, but related to the goals that the evaluatee has made actions for
+     **/
+    protected function isActiveEvaluator($goalId): bool
     {
-        /** @var Evaluator **/
-        $Evaluator = ClassRegistry::init('Evaluator');
-        $result = $Evaluator->find('first', [
+        /** @var Evaluation **/
+        $Evaluation = ClassRegistry::init('Evaluation');
+        /** @var Term **/
+        $Term = ClassRegistry::init('Term');
+
+        $result = $Evaluation->find('first', [
             'conditions' => [
-                'Evaluator.evaluatee_user_id' => $resource['user_id'],
-                'Evaluator.evaluator_user_id' => $this->userId,
-                'Evaluator.team_id' => $this->teamId
+                'Evaluation.evaluator_user_id' => $this->userId,
+                'Evaluation.team_id' => $this->teamId
+            ],
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.user_id = Evaluation.evaluatee_user_id',
+                    ]
+                ],
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.group_id = MemberGroup.group_id',
+                        'GoalGroup.goal_id' => $goalId,
+                    ]
+                ],
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'Term.id = Evaluation.term_id',
+                        'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                    ]
+                ],
             ]
         ]);
+
+
 
         return !empty($result);
     }
