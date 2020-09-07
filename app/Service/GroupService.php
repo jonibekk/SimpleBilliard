@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('MemberGroup', 'Model');
 App::uses('Group', 'Model');
+App::import('Model/Entity', 'GroupEntity');
 
 /**
  * This Class is GroupService
@@ -51,4 +52,141 @@ class GroupService extends AppService
         return $ret;
     }
 
+    function createGroup(array $data): array
+    {
+        /** @var Group $Group */
+        $Group = ClassRegistry::init("Group");
+
+        $groupData = [
+            'team_id'       => $data['team_id'],
+            'name'          => $data['name'],
+            'active_flg'    => true,
+            'del_flg'       => false,
+            'created'     => REQUEST_TIMESTAMP
+        ];
+
+        $Group->create();
+        $entity = $Group->useType()->useEntity()->save($groupData, false);
+        return $entity->toArray();
+    }
+
+    function editGroup(string $groupId, array $data): array
+    {
+        /** @var Group $Group */
+        $Group = ClassRegistry::init("Group");
+        $group = $Group->getById($groupId);
+        $groupData = array_merge($group, $data);
+        $entity = $Group->useType()->useEntity()->save($groupData, false);
+        return $entity->toArray();
+    }
+
+    function parseMembers(string $groupId, string $teamId, string $tmp_file_path): array
+    {
+        $results = [
+            'existing' => 0,
+            'invalid' => 0,
+            'valid' => 0,
+            'validUserIds' => [],
+        ];
+
+        $this->parseCsv(
+            $tmp_file_path,
+            function ($rows) use ($groupId, $teamId, &$results) {
+                // take first column of each row
+                $emails = array_map('array_shift', $rows);
+                $queried = $this->queryPossibleMembers($groupId, $teamId, $emails);
+                $results['existing'] += $queried['existing'];
+                $results['invalid'] += $queried['invalid'];
+                $results['valid'] += $queried['valid'];
+                $results['validUserIds'] = array_merge($results['validUserIds'], $queried['validUserIds']);
+            }
+        );
+
+        return $results;
+    }
+
+    function addMembers(string $groupId, string $teamId, array $userIds): int
+    {
+        /** @var MemberGroup $MemberGroup */
+        $MemberGroup = ClassRegistry::init('MemberGroup');
+        $data = [];
+
+        foreach ($userIds as $userId) {
+            $userData = [
+                'team_id'  => $teamId,
+                'user_id'  => $userId,
+                'group_id' => $groupId,
+                'created'  => REQUEST_TIMESTAMP
+            ];
+
+            array_push($data, $userData);
+        }
+
+        $MemberGroup->saveMany($data);
+
+        return count($data);
+    }
+
+    private function parseCsv($tmp_file_path, $callback): void
+    {
+        ini_set('auto_detect_line_endings', TRUE);
+        $chunk_size = 500;
+        $count = 0;
+        $rows = [];
+
+        if (($handle = fopen($tmp_file_path, "r")) === FALSE) {
+            return;
+        }
+
+        // aggregrate rows till it reaches chunk_size, trigger callback and reset
+        while (($row_data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+            array_push($rows, $row_data);
+            $count += 1;
+
+            if ($count == $chunk_size) {
+                $callback($rows);
+                $rows = [];
+                $count = 0;
+            }
+        }
+
+        // trigger callback on any remaining rows that did not reach chunk size
+        if (count($rows) > 0) {
+            $callback($rows);
+        }
+    }
+
+    private function queryPossibleMembers(string $groupId, string $teamId, array $emails): array
+    {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init("Email");
+
+
+        $results = $Email->findVerifiedTeamMembersByEmailAndGroup(
+            (int) $groupId,
+            (int) $teamId,
+            $emails
+        );
+
+        return array_reduce(
+            $results,
+            function ($acc, $data) {
+                $acc['invalid'] -= 1;
+                if ($data['MemberGroup']['group_id'] === null) {
+                    $acc['valid'] += 1;
+                    array_push($acc['validUserIds'], $data['Email']['user_id']);
+                } else {
+                    $acc['existing'] += 1;
+                }
+
+                return $acc;
+            },
+            [
+                'existing' => 0,
+                'invalid' => count($emails),
+                'valid' => 0,
+                'validUserIds' => []
+            ]
+        );
+    }
 }

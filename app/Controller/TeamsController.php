@@ -3050,4 +3050,17 @@ class TeamsController extends AppController
 
         return $this->redirect('/teams/main');
     }
+
+    function members_list()
+    {
+        $this->response->download("members_list.csv");
+
+        $teamId = $this->current_team_id;
+
+        $data = $this->User->Email->findVerifiedTeamMembers($teamId);
+        $this->set(compact('data'));
+        $this->layout = false;
+
+        return;
+    }
 }

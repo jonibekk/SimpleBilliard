@@ -46,7 +46,8 @@ class Group extends AppModel
         'GroupVision',
     ];
 
-    function findIdsHavingMembers($teamId) {
+    function findIdsHavingMembers($teamId)
+    {
         return $this->MemberGroup->find('list', array(
             'fields' => array('group_id'),
             'conditions' => [
@@ -93,7 +94,7 @@ class Group extends AppModel
         ];
         $res = $this->find('all', $options);
 
-        return (array)$res;
+        return (array) $res;
     }
 
     function getByName($name, $team_id = null)
@@ -171,7 +172,7 @@ class Group extends AppModel
             $options['conditions']['id'] = $this->findIdsHavingMembers($this->current_team_id);
         }
         $res = $this->find('list', $options);
-        return (array)$res;
+        return (array) $res;
     }
 
     /**
@@ -190,11 +191,65 @@ class Group extends AppModel
         }
         $options = [
             'conditions' => [
-                'Group.name LIKE' => '%' . $keyword .'%',
+                'Group.name LIKE' => '%' . $keyword . '%',
             ],
             'limit'      => $limit,
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    function findMembers(int $groupId): array
+    {
+        $members = $this->MemberGroup->User->find("all", [
+            "joins" => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.user_id = User.id',
+                        'MemberGroup.group_id' => $groupId,
+                    ],
+                ],
+            ],
+            "order" => [
+                "User.first_name ASC"
+            ]
+        ]);
+
+        return $members;
+    }
+
+    function findGroupsWithMemberCount(string $teamId)
+    {
+        $options = [
+            'conditions' => [
+                'Group.team_id' => $teamId,
+            ],
+            'joins' => [
+                [
+                    'table' => 'member_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'member_groups.group_id = Group.id'
+                    ],
+                ],
+            ],
+            'fields' => [
+                'Group.*',
+                'COALESCE(COUNT(member_groups.id)) AS member_count'
+            ],
+            'group' => 'Group.id',
+        ];
+
+        $results =  $this->find('all', $options);
+
+        return array_map(
+            function ($row) {
+                $row['Group']['member_count'] = $row['0']['member_count'];
+                return $row;
+            },
+            $results
+        );
     }
 }
