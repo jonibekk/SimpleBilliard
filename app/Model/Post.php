@@ -2164,4 +2164,52 @@ class Post extends AppModel
             ],
         ], $this);
     }
+
+    public function evaluateePostsSubQuery($userId)
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Post.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Post",
+            "conditions" => [
+                'Post.goal_id IS NOT NULL',
+            ],
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Post.goal_id',
+                    ],
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = GoalGroup.group_id',
+                    ]
+                ],
+                [
+                    'alias' => 'Evaluation',
+                    'table' => 'evaluations',
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id = MemberGroup.user_id',
+                        'Evaluation.evaluator_user_id' => $userId
+                    ]
+                ],
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'Term.id = Evaluation.term_id',
+                        'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                    ]
+                ]
+            ]
+        ], $this);
+    }
 }

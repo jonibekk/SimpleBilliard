@@ -13,6 +13,7 @@ class GoalPolicy extends BasePolicy
         return ((int)$goal['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($goal['team_id'])) ||
             ($this->isCoach($goal['id'])) ||
+            ($this->isActiveEvaluator($goal['id'])) ||
             ($this->isSameGroup($goal));
     }
 
@@ -50,14 +51,17 @@ class GoalPolicy extends BasePolicy
         $allPublicQuery = $Goal->publicGoalsSubquery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
         $allCoacheesQuery = '';
+        $allEvaluateesQuery = '';
         if ($type === 'read') {
             $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
+            $allEvaluateesQuery = $Goal->evaluateeGoalsSubquery($this->userId);
         }
 
         $result =  [
             'conditions' => [
                 'Goal.id in (' . $allPublicQuery . ') OR 
                  Goal.id in (' . $allCoacheesQuery . ') OR
+                 Goal.id in (' . $allEvaluateesQuery . ') OR
                  Goal.id in (' . $allGroupsQuery . ')'
             ],
         ];
