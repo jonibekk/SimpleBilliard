@@ -5983,3 +5983,30 @@ msgstr "公開先グループ"
 
 msgid "日本語"
 msgstr "日本語"
+
+msgid "See GKA"
+msgstr "GKAの表示"
+
+msgid "Can see GKA of all team members."
+msgstr "全てのメンバーがゴールとアクションを見ることができる"
+
+msgid "Learn More"
+msgstr "もっと詳しく"
+
+msgid "Attention"
+msgstr "注意"
+
+msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
+msgstr "ONにすると、これから作成されるゴールの表示制限がなくなります。"
+
+msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
+msgstr "既に作成されているゴールは、公開先のグループを変更することができます。"
+
+msgid "This setting will set goals to only be visible to group members."
+msgstr "ゴールがグループメンバーにだけ見えるようになります。"
+
+msgid "Any goals created in the future will need to have a destination group set up for publication."
+msgstr "今後作成するゴールには、公開先グループを設定する必要があります。"
+
+msgid "This check cannot be turned off because there is no valid group in this team."
+msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"

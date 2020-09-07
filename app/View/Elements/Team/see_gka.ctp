@@ -11,7 +11,7 @@ $see_gka = isset($see_gka) ? $see_gka : false;
     </header>
     <div class="panel-body form-horizontal">
         <p><?= __("Can see GKA of all team members.") ?></p>
-        <p><?= ("Learn More") ?></p>
+        <p><?= __("Learn More") ?></p>
         <?=
             $this->Form->create('Team', [
                 'inputDefaults' => [
