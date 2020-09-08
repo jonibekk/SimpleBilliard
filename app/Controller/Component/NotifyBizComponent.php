@@ -1774,7 +1774,9 @@ class NotifyBizComponent extends Component
     {
         $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
-            $uids[] = $user_id;
+            if ($val['desktop']) {
+                $uids[] = $user_id;
+            }
         }
         return $uids;
     }

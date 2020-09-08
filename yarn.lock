@@ -5838,10 +5838,6 @@ pure-color@^1.2.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/pure-color/-/pure-color-1.3.0.tgz#1fe064fb0ac851f0de61320a8bf796836422f33e"
 
-push.js@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/push.js/-/push.js-1.0.12.tgz#5703a03f5d286cd46d58564cb27bc079898d26b1"
-
 pusher-js@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/pusher-js/-/pusher-js-4.1.0.tgz#5297973de935994ba65c2048ccf3b8c007247341"

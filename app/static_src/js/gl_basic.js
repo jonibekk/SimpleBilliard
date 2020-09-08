@@ -15,10 +15,7 @@ $(document).ready(function () {
 
   window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/customized-sw.js', { scope: '/' }).then(function(reg) {
-      // registration worked
-      console.log('Registration succeeded. Scope is ' + reg.scope);
-    }).catch(function(error) {
+    navigator.serviceWorker.register('/customized-sw.js', { scope: '/' }).then(function(reg) {}).catch(function(error) {
       // registration failed
       console.err('Registration failed with ' + error);
     });

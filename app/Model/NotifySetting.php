@@ -527,6 +527,12 @@ class NotifySetting extends AppModel
                 'allowEmpty' => true,
             ],
         ],
+        'desktop'                                        => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+        ],
         'del_flg'                                       => [
             'boolean' => ['rule' => ['boolean'],],
         ],
@@ -654,6 +660,7 @@ class NotifySetting extends AppModel
                     'app'    => false,
                     'email'  => false,
                     'mobile' => false,
+                    'desktop' => false,
                 )
             );
 
@@ -663,6 +670,7 @@ class NotifySetting extends AppModel
             'app'    => true,
             'email'  => in_array('all', self::$TYPE[$type]['groups']),
             'mobile' => in_array('all', self::$TYPE[$type]['groups']),
+            'desktop' => in_array('all', self::$TYPE[$type]['groups']),
         ];
         $options = [
             'conditions' => [
@@ -681,6 +689,7 @@ class NotifySetting extends AppModel
                 $appStatus = true;
                 $emailStatus = in_array($val['NotifySetting']['email_status'], self::$TYPE[$type]['groups']);
                 $mobileStatus = in_array($val['NotifySetting']['mobile_status'], self::$TYPE[$type]['groups']);
+                $desktopStatus = in_array($val['NotifySetting']['desktop_status'], self::$TYPE[$type]['groups']);
 
                 // アプリ
                 if (isset($val['NotifySetting'][$field_prefix . '_app_flg'])){
@@ -706,6 +715,9 @@ class NotifySetting extends AppModel
                     $res_data[$val['NotifySetting']['user_id']]['mobile'] = $mobileStatus;
                 }
 
+                // モバイル
+                $res_data[$val['NotifySetting']['user_id']]['desktop'] = $desktopStatus;
+
                 //引数のユーザリストから除去
                 if (($array_key = array_search($val['NotifySetting']['user_id'], $user_ids)) !== false) {
                     unset($user_ids[$array_key]);
@@ -729,6 +741,7 @@ class NotifySetting extends AppModel
                 'app'    => false,
                 'email'  => false,
                 'mobile' => false,
+                'desktop' => false,
             ];
         }
         return $r;
