@@ -524,4 +524,18 @@ abstract class BaseApiController extends Controller
         $decodedJson = json_decode($body, true);
         return is_array($decodedJson) ? $decodedJson : [];
     }
+
+    protected function generateResponseIfException(Exception $e)
+    {
+        switch (true) {
+            case $e instanceof GlException\GoalousNotFoundException:
+                return ErrorResponse::notFound()->withMessage(__($e->getMessage()))->getResponse();
+            case $e instanceof GlException\Auth\AuthFailedException:
+                return ErrorResponse::forbidden()->withMessage(__($e->getMessage()))->getResponse();
+            case $e instanceof GlException\GoalousValidationException;
+                return ErrorResponse::badRequest()->withException($e)->getResponse();
+            default:
+                return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
+    }
 }
