@@ -63,7 +63,7 @@ class PostPolicy extends BasePolicy
         return !empty($results);
     }
 
-    public function scope(): array
+    public function scope($type = 'read'): array
     {
         if ($this->isTeamAdmin()) {
             return ['conditions' => ['Post.team_id' => $this->teamId]];
@@ -74,19 +74,19 @@ class PostPolicy extends BasePolicy
         $GoalGroup = ClassRegistry::init('GoalGroup');
 
         $allPublicQuery = $Post->publicPostsSubQuery();
-        $allCoacheeQuery = $Post->coacheePostsSubQuery($this->userId);
-        $allEvaluteeQuery = $Post->evaluateePostsSubQuery($this->userId);
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
+        $allCoacheesQuery = $Post->coacheePostsSubQuery($this->userId);
+        $allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId);
 
-        $result =  [
-            'conditions' => [
-                'Post.id in (' . $allPublicQuery . ') OR 
-                 Post.id in (' . $allCoacheeQuery . ') OR
-                 Post.id in (' . $allEvaluteeQuery . ') OR
-                 Post.goal_id in (' . $allGroupsQuery . ')'
-            ],
-        ];
+        $fullQuery = 'Post.id in (' . $allPublicQuery . ') OR 
+                      Post.id in (' . $allCoacheesQuery . ') OR
+                      Post.goal_id in (' . $allGroupsQuery . ')';
 
-        return $result;
+        if ($this->evaluationSettingEnabled()) {
+            $query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
+            $fullQuery = $query . $fullQuery;
+        }
+
+        return ['conditions' => [$fullQuery]];
     }
 }

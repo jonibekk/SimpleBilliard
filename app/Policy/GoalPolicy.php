@@ -50,22 +50,22 @@ class GoalPolicy extends BasePolicy
 
         $allPublicQuery = $Goal->publicGoalsSubquery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
-        $allCoacheesQuery = '';
-        $allEvaluateesQuery = '';
+        $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
+        $allEvaluateesQuery = $Goal->evaluateeGoalsSubquery($this->userId);
+
+        $fullQuery = 'Goal.id in (' . $allPublicQuery . ') OR 
+                      Goal.id in (' . $allGroupsQuery . ')';
+
         if ($type === 'read') {
-            $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
-            $allEvaluateesQuery = $Goal->evaluateeGoalsSubquery($this->userId);
+            $query = 'Goal.id in (' . $allCoacheesQuery . ') OR ';
+
+            if ($this->evaluationSettingEnabled()) {
+                $query .= 'Goal.id in (' . $allEvaluateesQuery . ') OR ';
+            }
+
+            $fullQuery = $query . $fullQuery;
         }
 
-        $result =  [
-            'conditions' => [
-                'Goal.id in (' . $allPublicQuery . ') OR 
-                 Goal.id in (' . $allCoacheesQuery . ') OR
-                 Goal.id in (' . $allEvaluateesQuery . ') OR
-                 Goal.id in (' . $allGroupsQuery . ')'
-            ],
-        ];
-
-        return $result;
+        return ['conditions' => [$fullQuery]];
     }
 }

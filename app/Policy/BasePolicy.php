@@ -2,6 +2,7 @@
 App::uses('Team', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluation', 'Model');
+App::uses('EvaluationSetting', 'Model');
 
 /**
  * Class BasePolicy
@@ -32,14 +33,6 @@ class BasePolicy
         /** @var TeamMember **/
         $TeamMember = ClassRegistry::init('TeamMember');
         return $TeamMember->isActiveAdmin($this->userId, $teamId);
-    }
-
-    protected function groupsFeatureEnabled(): bool
-    {
-        /** @var Team **/
-        $Team = ClassRegistry::init('Team');
-        $team = $Team->findById($this->teamId);
-        return $team['Team']['groups_enabled_flg'];
     }
 
     protected function isCoach($goalId): bool
@@ -81,6 +74,9 @@ class BasePolicy
      **/
     protected function isActiveEvaluator($goalId): bool
     {
+        if (!$this->evaluationSettingEnabled()) {
+            return false;
+        }
         /** @var Evaluation **/
         $Evaluation = ClassRegistry::init('Evaluation');
         /** @var Term **/
@@ -121,5 +117,13 @@ class BasePolicy
 
 
         return !empty($result);
+    }
+
+    protected function evaluationSettingEnabled(): bool
+    {
+        /** @var EvaluationSetting **/
+        $EvaluationSetting = ClassRegistry::init('EvaluationSetting');
+
+        return $EvaluationSetting->isEnabled();
     }
 }
