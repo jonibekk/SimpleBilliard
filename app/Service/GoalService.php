@@ -213,7 +213,10 @@ class GoalService extends AppService
 
             // ゴール更新
             $updateGoal = $this->buildUpdateGoalData($goalId, $requestData);
-            $updateGoal = $Goal->buildGoalGroups($updateGoal, $requestData['groups']);
+
+            if (!empty($requestData['groups'])) {
+                $updateGoal = $Goal->buildGoalGroups($updateGoal, $requestData['groups']);
+            }
 
             if (!$Goal->save($updateGoal, false)) {
                 throw new Exception(sprintf("Failed update goal. data:%s"
