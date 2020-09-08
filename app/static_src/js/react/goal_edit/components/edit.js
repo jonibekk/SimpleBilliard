@@ -86,8 +86,30 @@ export default class Edit extends React.Component {
     this.props.updateInputData({[e.target.name]: e.target.value}, childKey)
   }
 
+  toggleGroup(groupId) {
+    const {groups} = this.props.goal.inputData;
+
+    if (groups[groupId]) {
+      delete groups[groupId]
+    } else {
+      groups[groupId] = true
+    }
+    
+    this.props.updateInputData(groups, 'groups')
+  }
+
+  shouldDisplayGroupSelection() {
+    const { inputData, groups_enabled } = this.props.goal
+
+    if (Object.keys(inputData.groups).length === 0) {
+      return false
+    }
+
+    return groups_enabled
+  }
+
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     let progress_reset_warning = null
@@ -111,7 +133,7 @@ export default class Edit extends React.Component {
       )
     }
 
-    let term_options = []
+    const term_options = []
     if (Object.keys(terms).length) {
       term_options.push(
         <option value="current" key={terms.current.start_date}>
@@ -277,7 +299,43 @@ export default class Edit extends React.Component {
 
           </section>
 
-
+          {
+              this.shouldDisplayGroupSelection() ? 
+              <section className="goals-edit-groups">
+                <h2 className="goals-edit-subject"><i className="fa fa-user-circle"></i> { __("Shared Groups") }</h2>
+                <p className="goals-create-description">{__('You can only add groups to share a Goal.')}</p>
+                <div className="goals-create-list">
+                  {
+                    groups ?  groups.map(group => {
+                      const alreadyPresent = goal.groups.findIndex(g => g.id === group.id) !== -1
+                      return (
+                        <div className="goals-create-list-item" ref={`group-item-${group.id}`}>
+                          <div className='left'>
+                            <input 
+                              type="checkbox" 
+                              className="goal-create-checkbox" 
+                              disabled={alreadyPresent}
+                              onChange={() => this.toggleGroup(group.id)}
+                              checked={alreadyPresent || inputData.groups[group.id] === true}
+                           />
+                          </div>
+                          <div className='right'>
+                            <div className="goals-create-list-item-title">
+                              {group.name}
+                            </div>
+                            <div className="goals-create-list-item-subtitle">
+                              {group.member_count} members
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    }
+                    ) : null
+                  }
+                </div>
+              </section>
+            : null
+          }
           <button type="submit" className="goals-create-btn-next btn"
                   disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{ goal.is_approvable ? __("Save & Reapply") : __("Save changes")}</button>
           <a className="goals-create-btn-cancel btn" href={ redirect_to }>{__("Cancel")}</a>

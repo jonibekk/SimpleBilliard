@@ -162,7 +162,7 @@ class CreditCardServiceTest extends GoalousTestCase
         $this->assertEquals($currency, strtoupper($res['paymentData']['currency']));
         $this->assertEquals($description, $res['paymentData']['description']);
         $this->assertEquals($customerId, $res['paymentData']['customer']);
-        $this->assertEquals($amount * 100, $res['paymentData']['amount']);
+        $this->assertEquals($amount, $res['paymentData']['amount']);
     }
 
     /**
