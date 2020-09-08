@@ -98,8 +98,18 @@ export default class Edit extends React.Component {
     this.props.updateInputData(groups, 'groups')
   }
 
+  shouldDisplayGroupSelection() {
+    const { inputData, groups_enabled } = this.props.goal
+
+    if (Object.keys(inputData.groups).length === 0) {
+      return false
+    }
+
+    return groups_enabled
+  }
+
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups, groups_enabled} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     let progress_reset_warning = null
@@ -290,7 +300,7 @@ export default class Edit extends React.Component {
           </section>
 
           {
-              groups_enabled ? 
+              this.shouldDisplayGroupSelection() ? 
               <section className="goals-edit-groups">
                 <h2 className="goals-edit-subject"><i className="fa fa-user-circle"></i> { __("Shared Groups") }</h2>
                 <p className="goals-create-description">{__('You can only add groups to share a Goal.')}</p>
