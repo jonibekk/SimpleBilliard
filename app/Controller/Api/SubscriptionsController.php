@@ -25,7 +25,11 @@ class SubscriptionsController extends BasePagingController
             $subscription = $requestData;
             $res = $SubscriptionService->updateSubscription($userId, $subscription);
         } catch (Exception $e) {
-            GoalousLog::error('Add subscription failed! Message: '. $e->getMessage());
+            GoalousLog::error("Add subscription failed! ", [
+                     'message'   => $e->getMessage(),
+                     'trace'     => $e->getTraceAsString(),
+                     'request_data'   => $requestData
+                 ]);
             return ErrorResponse::internalServerError()
                 ->withMessage(__($e->getMessage()))
                 ->getResponse();
@@ -34,38 +38,6 @@ class SubscriptionsController extends BasePagingController
         if (!$res) {
             GoalousLog::warning('Add subscription failed! Request data: ', $requestData);
             $ret['message'] = 'failed';
-        }
-
-        return ApiResponse::ok()->withData($ret)->getResponse();
-    }
-
-    public function post_checkSubscription()
-    {
-        /** @var SubscriptionService $SubscriptionService */
-        $SubscriptionService = ClassRegistry::init("SubscriptionService");
-
-        $requestData = $this->getRequestJsonBody();
-
-        
-        $validationError = $this->validateCheck($requestData);
-        if ($validationError !== null) {
-            return $validationError;
-        }
-
-        try {
-            $userId = $this->getUserId();
-            $subscription = $requestData;
-            $res = $SubscriptionService->check($userId, $subscription);
-        } catch (Exception $e) {
-            GoalousLog::error('Checke subscription failed! Message: '. $e->getMessage());
-            return ErrorResponse::internalServerError()
-                ->withMessage(__($e->getMessage()))
-                ->getResponse();
-        }
-        $ret['message'] = 'OK';
-        if (!$res) {
-            GoalousLog::warning('Delete subscription failed! Request data: ', $requestData);
-            $ret['message'] = 'Failed';
         }
 
         return ApiResponse::ok()->withData($ret)->getResponse();
@@ -89,7 +61,11 @@ class SubscriptionsController extends BasePagingController
             $subscription = $requestData;
             $res = $SubscriptionService->delete($userId, $subscription);
         } catch (Exception $e) {
-            GoalousLog::error('Delete subscription failed! Message: '. $e->getMessage());
+            GoalousLog::error("Delete subscription failed! ", [
+                     'message'   => $e->getMessage(),
+                     'trace'     => $e->getTraceAsString(),
+                     'request_data'   => $requestData
+                 ]);
             return ErrorResponse::internalServerError()
                 ->withMessage(__($e->getMessage()))
                 ->getResponse();

@@ -35,7 +35,11 @@ class SubscriptionsController extends ApiController
             $subscription = $requestData;
             $res = $SubscriptionService->updateSubscription($userId, $subscription);
         } catch (Exception $e) {
-            GoalousLog::error('Add subscription failed! Message: '. $e->getMessage());
+            GoalousLog::error("Add subscription failed! ", [
+                     'message'   => $e->getMessage(),
+                     'trace'     => $e->getTraceAsString(),
+                     'request_data'   => $requestData
+                 ]);
             return $this->_getResponseInternalServerError();
         }
         $ret['message'] = 'OK';
