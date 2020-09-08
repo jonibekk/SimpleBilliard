@@ -6010,3 +6010,6 @@ msgstr "今後作成するゴールには、公開先グループを設定する
 
 msgid "This check cannot be turned off because there is no valid group in this team."
 msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
+
+msgid "This goal is open to all team members"
+msgstr "このゴールは全員に公開されています"
