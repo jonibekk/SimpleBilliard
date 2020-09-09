@@ -1,4 +1,5 @@
 <?php
+
 App::import('Lib/Paging', 'BasePagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
@@ -89,6 +90,11 @@ class FeedPostPagingService extends BasePagingService
         $returnArray = [];
 
         foreach ($queryResult as $result) {
+
+            if ($result['type'] == Post::TYPE_ACTION && empty($result['key_result'])) {
+                continue;
+            }
+
             $entry['type'] = $result['type'];
             $entry['data'] = $result;
 
@@ -97,5 +103,4 @@ class FeedPostPagingService extends BasePagingService
 
         return $returnArray;
     }
-
 }
