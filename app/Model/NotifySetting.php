@@ -1214,12 +1214,12 @@ class NotifySetting extends AppModel
 
                 if ($is_plain_mode) {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> added an action on<span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> added an action on <span class="notify-card-head-target">%2$s</span>.',
                         $user_text,
                         $goalName);
                 } else {
                     $title = __(
-                        '<span class="notify-card-head-target">%1$s</span> added an action on<span class="notify-card-head-target">%2$s</span>.',
+                        '<span class="notify-card-head-target">%1$s</span> added an action on <span class="notify-card-head-target">%2$s</span>.',
                         h($user_text),
                         h($goalName));
                 }

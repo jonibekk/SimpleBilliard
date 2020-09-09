@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
-import {Link} from "react-router";
+import {browserHistory, Link} from "react-router";
 import * as Page from "../constants/Page";
 import ValueStartEndInput from "~/common/components/goal/ValueStartEndInput";
 import UnitSelect from "~/common/components/goal/UnitSelect";
@@ -23,11 +23,13 @@ export default class Step4Component extends Base {
     this.props.fetchInitialData(Page.STEP4)
   }
 
-  componentDidMount() {
-    super.componentDidMount.apply(this)
+  componentDidMount() { super.componentDidMount.apply(this)
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.goal.toNextPage) {
+      browserHistory.push(Page.URL_STEP5)
+    }
     if (nextProps.goal.redirect_to_home) {
       super.removeBeforeUnloadHandler.apply(this)
       document.location.href = "/"
@@ -40,8 +42,13 @@ export default class Step4Component extends Base {
 
   handleSubmit(e) {
     e.preventDefault()
-    // ゴール・tKR登録
-    this.props.saveGoal()
+    const {saveGoal, validateGoal, goal} = this.props
+
+    if (goal.groups_enabled) {
+      validateGoal(Page.STEP4)
+    } else {
+      saveGoal()
+    }
   }
 
   handleChange(e) {
@@ -56,7 +63,7 @@ export default class Step4Component extends Base {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "")
 
-    const {inputData, units, validationErrors, isDisabledSubmit} = this.props.goal
+    const {inputData, units, validationErrors, isDisabledSubmit, groups_enabled} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     return (
@@ -99,8 +106,15 @@ export default class Step4Component extends Base {
             />
             <InvalidMessageBox message={tkrValidationErrors.description}/>
           </div>
-          <button type="submit" className="goals-create-btn-next btn"
-                  disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{__("Save and share")}</button>
+          {
+            groups_enabled 
+            ?
+            <button type="submit" className="goals-create-btn-next btn">{__("Next →")}</button>
+            :
+            <button type="submit" className="goals-create-btn-next btn" >
+              {__("Save and share")}
+            </button>
+          }
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP3}>{__("Back")}</Link>
         </form>
       </section>

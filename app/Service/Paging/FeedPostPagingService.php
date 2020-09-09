@@ -4,6 +4,7 @@ App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::import('Lib/DataExtender', 'FeedPostExtender');
+App::import('Policy', 'PostPolicy');
 
 class FeedPostPagingService extends BasePagingService
 {
@@ -55,7 +56,11 @@ class FeedPostPagingService extends BasePagingService
      */
     private function createSearchCondition(PagingRequest $request): array
     {
+        $userId = $request->getCurrentUserId();
         $teamId = $request->getCurrentTeamId();
+
+        $policy = new PostPolicy($userId, $teamId);
+        $scope = $policy->scope();
 
         $options = [
             'conditions' => [
@@ -65,7 +70,7 @@ class FeedPostPagingService extends BasePagingService
             ],
         ];
 
-        return $options;
+        return array_merge_recursive($options, $scope);
     }
 
     protected function createPointer(
@@ -97,5 +102,4 @@ class FeedPostPagingService extends BasePagingService
 
         return $returnArray;
     }
-
 }

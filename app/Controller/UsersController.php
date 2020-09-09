@@ -1783,6 +1783,17 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = Hash::get($this->request->params, "named.user_id");
+        $rows = $this->User->find("all", [
+            "conditions" => [
+                "User.id" => $user_id
+            ],
+            "contain" => [
+                "MemberGroup" => [
+                    "Group"
+                ]
+            ],
+        ]);
+        $groups = Hash::extract($rows, "{n}.MemberGroup.{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1792,6 +1803,7 @@ class UsersController extends AppController
 
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('groups', $groups);
         return $this->render();
     }
 

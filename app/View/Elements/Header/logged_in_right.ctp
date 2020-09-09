@@ -24,12 +24,6 @@
             </a>
         </li>
         <li class="glHeaderPc-nav-menu">
-            <a href="/search" class="glHeaderPc-nav-menu-link <?= Router::url() === '/search' ? 'active' : '' ?>" >
-                <i class="material-icons">search</i>
-                <span><?= __('Search')?></span>
-            </a>
-        </li>
-        <li class="glHeaderPc-nav-menu">
             <a id="GlHeaderMenuDropdown-Create" href="#" class="glHeaderPc-nav-menu-link" data-toggle="dropdown">
                 <i class="material-icons">add_circle</i>
                 <span><?= __('Create')?></span>
