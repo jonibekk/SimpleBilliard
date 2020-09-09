@@ -1760,9 +1760,7 @@ class GoalsController extends AppController
             return $this->redirect($this->referer());
         }
         } catch (GlException\Auth\AuthFailedException $e) {
-            // TODO: redirect to custom 404 error page
-            //
-            return $this->redirect('/goals/unauthorized');
+            return $this->redirect("/goals/unauthorized/goal_id:{$goal_id}");
         }
 
         //コラボってる？
@@ -1800,8 +1798,9 @@ class GoalsController extends AppController
 
     function unauthorized()
     {
-        //$goalId = Hash::get($this->request->params, "named.goal_id");
-        $goalId = 15;
+        $namedParams = $this->request->params['named'];
+        $goalId = Hash::get($namedParams, "goal_id");
+
         $rows = $this->Goal->GoalGroup->find("all", [
             "conditions" => ["goal_id" => $goalId],
             "contain" => "Group"
