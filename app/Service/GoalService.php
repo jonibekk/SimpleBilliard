@@ -540,11 +540,11 @@ class GoalService extends AppService
         return $goals;
     }
 
-    function filterUnauthorized($goals, $userId, $teamId): array
+    function filterUnauthorized($goals): array
     {
         /** @var Goal **/
         $Goal = ClassRegistry::init("Goal");
-        $policy = new GoalPolicy($userId, $teamId);
+        $policy = new GoalPolicy($Goal->my_uid, $Goal->current_team_id);
         $options = ['fields' => 'Goal.id'];
         $options = array_merge_recursive($options, $policy->scope());
         $authorizedGoals = $Goal->find("all", $options);
@@ -553,7 +553,8 @@ class GoalService extends AppService
         return array_filter(
             $goals,
             function ($goal) use ($authorizedGoalIds) {
-                return in_array($goal['Goal']['id'], $authorizedGoalIds);
+                $goalId = empty($goal['Goal']) ? $goal['id'] : $goal['Goal']['id'];
+                return in_array($goalId, $authorizedGoalIds);
             }
         );
     }
@@ -1537,6 +1538,7 @@ class GoalService extends AppService
         /** @var Goal $Goal */
         $Goal = ClassRegistry::init('Goal');
         $goals = $Goal->findCollaboratedGoals($userId, $termStart, $termEnd);
+        $goals = $this->filterUnauthorized($goals);
         $goalFilter = [];
         if ($withAllOption) {
             $goalFilter[null] = __('All');
