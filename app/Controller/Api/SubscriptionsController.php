@@ -13,7 +13,6 @@ class SubscriptionsController extends BasePagingController
         $SubscriptionService = ClassRegistry::init("SubscriptionService");
 
         $requestData = $this->getRequestJsonBody();
-
         
         $validationError = $this->validateCreate($requestData);
         if ($validationError !== null) {
@@ -37,7 +36,7 @@ class SubscriptionsController extends BasePagingController
         $ret['message'] = 'OK';
         if (!$res) {
             GoalousLog::warning('Add subscription failed! Request data: ', $requestData);
-            $ret['message'] = 'failed';
+            $ret['message'] = 'Failed';
         }
 
         return ApiResponse::ok()->withData($ret)->getResponse();
@@ -49,7 +48,6 @@ class SubscriptionsController extends BasePagingController
         $SubscriptionService = ClassRegistry::init("SubscriptionService");
 
         $requestData = $this->getRequestJsonBody();
-
         
         $validationError = $this->validateDelete($requestData);
         if ($validationError !== null) {
@@ -90,15 +88,6 @@ class SubscriptionsController extends BasePagingController
     }
     
     private function validateDelete($data)
-    {
-        if ($this->validateSubscription($data)) {
-            return ErrorResponse::badRequest()->getResponse();
-        }
-
-        return null;
-    }
-
-    private function validateCheck($data)
     {
         if ($this->validateSubscription($data)) {
             return ErrorResponse::badRequest()->getResponse();

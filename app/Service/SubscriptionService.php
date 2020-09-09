@@ -112,10 +112,9 @@ class SubscriptionService extends AppService
             "notification" => [
                 "title" => $title,
                 "body" => '',
-                "url" => "https://e2e.goalous.com/circles",
+                "url" => VAPID_SUBJECT,
                 "data" => [
                     "url" => $postUrl,
-                    "type" => "circle"
                 ]
             ]
         ];

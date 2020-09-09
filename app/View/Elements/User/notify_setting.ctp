@@ -91,8 +91,8 @@
             <div class="form-group" id="desktopNormalOptions">
 
                 <div class="col col-sm-offset-3 help-block font_12px none" style="color:red" id="desktopInvalidReminder" hidden>
-                    Permission Denied!!<br>
-                    Please enable notification permission via brower setting and refresh the homepage!
+                    Browser Notification Permission Denied!!<br>
+                    Please enable notification permission via brower setting and refresh!
                 </div>
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
                     <i class="fa fa-mobile"></i> <?= __('Desktop') ?>
@@ -121,8 +121,6 @@
 <?php $this->append('script'); ?>
 <script>
     $(function () {
-        
-
         var notify_help_message = {
             'all': "<?= __("You'll get all notification.") ?>",
             'primary': "<?= __("You'll get important notification.") ?>",
@@ -143,20 +141,11 @@
         $('#NotifySettingMobile').on('change', onSelectChange).trigger('change');
         $('#NotifySettingDesktop').on('change', onSelectChange).trigger('change');
          
-        if (!('Notification' in window)) { 
-            var invalidReminder = $('#desktopNormalOptions');
-            var desktopHelp = $('#NotifySettingDesktopHelp');
-            invalidReminder.hide();
-            desktopHelp.hide();
+        var invalidReminder = $('#desktopInvalidReminder');
+        if (Notification.permission == 'denied') {
+            invalidReminder.show();
         } else {
-            var normalOptions = document.querySelector('#NotifySettingDesktop');
-            var invalidReminder = $('#desktopInvalidReminder');
-            if (Notification.permission == 'denied') {
-                normalOptions.disabled = true;
-                invalidReminder.show();
-            } else {
-                invalidReminder.hide();
-            }
+            invalidReminder.hide();
         }
     })
 </script>

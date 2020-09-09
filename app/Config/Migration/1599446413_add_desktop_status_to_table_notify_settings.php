@@ -1,12 +1,12 @@
 <?php
-class AddDesktopStatususToTableNotifySettings extends CakeMigration {
+class AddDesktopStatusToTableNotifySettings extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'add_desktop_statusus_to_table_notify_settings';
+	public $description = 'add_desktop_status_to_table_notify_settings';
 
 /**
  * Actions to be performed

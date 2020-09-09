@@ -21,9 +21,6 @@ class SubscriptionsController extends ApiController
 
         $body = $this->request->input();
         $requestData = json_decode($body, true);
-        // $requestData = $this->getRequestJsonBody();
-        GoalousLog::error(print_r($requestData, true));
-
         
         $validationError = $this->validateCreate($requestData);
         if ($validationError !== null) {

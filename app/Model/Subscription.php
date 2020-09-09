@@ -8,11 +8,6 @@ App::uses('AppModel', 'Model');
  */
 class Subscription extends AppModel
 {
-    const BROWSER_TYPE_CHROME = 1;
-    const BROWSER_TYPE_FIREFOX = 2;
-    const BROWSER_TYPE_EDGE = 3;
-    const BROWSER_TYPE_OTHER = 99;
-
     public $useTable = "subscriptions";
     /**
      * Validation rules
