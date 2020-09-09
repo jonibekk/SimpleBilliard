@@ -1497,9 +1497,12 @@ class UsersController extends AppController
         $goals = $GoalService->filterUnauthorized($goals);
         $goals = $GoalService->processGoals($goals);
         $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
-        $unauthorizedGoalsCount = $myGoalsCount - count($goals);
         $isMine = $userId == $this->Auth->user('id') ? true : false;
         $displayActionCount = MY_PAGE_ACTION_NUMBER;
+
+        $unauthorizedGoalsCount = ($pageType == "following") ? $followGoalsCount : $myGoalsCount;
+        $unauthorizedGoalsCount -= count($goals);
+
         if ($isMine) {
             $displayActionCount--;
         }
