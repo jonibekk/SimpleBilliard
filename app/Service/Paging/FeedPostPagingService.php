@@ -62,8 +62,29 @@ class FeedPostPagingService extends BasePagingService
             'conditions' => [
                 'Post.del_flg' => false,
                 'Post.team_id' => $teamId,
-                'Post.type'    => [Post::TYPE_CREATE_GOAL, Post::TYPE_ACTION]
+                'OR'           => [
+                    [
+                        'Post.type' => [Post::TYPE_CREATE_GOAL]
+                    ],
+                    [
+                        'Post.type' => [Post::TYPE_ACTION],
+                        'ActionResult.key_result_id is not null'
+                    ]
+                ]
             ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'conditions' => [
+                        'ActionResult.id = Post.action_result_id',
+                    ],
+                    'fields'     => [
+                        'ActionResult.key_result_id'
+                    ]
+                ]
+            ]
         ];
 
         return $options;
@@ -90,11 +111,6 @@ class FeedPostPagingService extends BasePagingService
         $returnArray = [];
 
         foreach ($queryResult as $result) {
-
-            if ($result['type'] == Post::TYPE_ACTION && empty($result['key_result'])) {
-                continue;
-            }
-
             $entry['type'] = $result['type'];
             $entry['data'] = $result;
 
