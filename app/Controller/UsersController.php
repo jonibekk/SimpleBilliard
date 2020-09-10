@@ -1627,6 +1627,7 @@ class UsersController extends AppController
         $oldestTimestamp = $postCondition['oldestTimestamp'];
 
         $posts = $this->_findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
+        $posts = $GoalService->filterUnauthorized($posts);
 
         $this->set('long_text', false);
         $this->set(compact(
