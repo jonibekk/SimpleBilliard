@@ -80,18 +80,19 @@ class GroupsController extends BasePagingController
 
     public function put(int $groupId)
     {
+        $requestData = $this->getRequestJsonBody();
+
         try {
             $group = $this->findGroup($groupId);
             $this->authorize('update', $group);
+            $this->validateUpdate($group, $requestData);
+
+            // @var GroupService $GroupService
+            $GroupService = ClassRegistry::init("GroupService");
+            $ret = $GroupService->editGroup($groupId, $requestData);
         } catch (Exception $e) {
             return $this->generateResponseIfException($e);
         }
-
-        $requestData = $this->getRequestJsonBody();
-
-        // @var GroupService $GroupService
-        $GroupService = ClassRegistry::init("GroupService");
-        $ret = $GroupService->editGroup($groupId, $requestData);
 
         return ApiResponse::ok()->withData($ret)->getResponse();
     }
@@ -174,6 +175,23 @@ class GroupsController extends BasePagingController
             throw new GlException\GoalousValidationException(__("Invalid group parameters"));
         }
         return null;
+    }
+
+    private function validateUpdate(array $group, array $data)
+    {
+        // a group with public visiblity turned OFF must have at least one non-archived group
+        if ($data["archived_flg"] === true) {
+            $this->loadModel('Group');
+            $groupsPresent = $this->Group->hasAny([
+                'team_id' => $this->getTeamId(),
+                'archived_flg' => false,
+                'id !=' => $group['id']
+            ]);
+
+            if (!$groupsPresent) {
+                throw new GlException\GoalousValidationException(__("You need at least one non-archived group."));
+            }
+        }
     }
 
     private function findGroup(int $groupId): array
