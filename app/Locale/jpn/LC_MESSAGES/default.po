@@ -6016,3 +6016,6 @@ msgstr "このゴールは全員に公開されています"
 
 msgid "There is %s goals you do not have permission to see"
 msgstr "非公開のゴールが%s件あります"
+
+msgid "There is %s actions you do not have permission to see"
+msgstr "非公開のアクションが%s件あります"
