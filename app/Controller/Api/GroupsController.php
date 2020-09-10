@@ -179,9 +179,16 @@ class GroupsController extends BasePagingController
 
     private function validateUpdate(array $group, array $data)
     {
+        $this->loadModel('Group');
+        $this->loadModel('Team');
+        $team = $this->Team->findById($this->getTeamId());
+
+        if (!$team['Team']['groups_enabled_flg']) {
+            return null;
+        }
+
         // a group with public visiblity turned OFF must have at least one non-archived group
         if ($data["archived_flg"] === true) {
-            $this->loadModel('Group');
             $groupsPresent = $this->Group->hasAny([
                 'team_id' => $this->getTeamId(),
                 'archived_flg' => false,
