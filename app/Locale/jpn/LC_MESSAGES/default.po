@@ -6013,3 +6013,6 @@ msgstr "このチームには有効なグループが存在していないため
 
 msgid "This goal is open to all team members"
 msgstr "このゴールは全員に公開されています"
+
+msgid "There is %s goals you do not have permission to see"
+msgstr "非公開のゴールが%s件あります"

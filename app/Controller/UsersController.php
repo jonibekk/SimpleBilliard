@@ -1494,10 +1494,15 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($userId, MY_PAGE_ACTION_NUMBER, $startDate, $endDate);
         }
+        $goals = $GoalService->filterUnauthorized($goals);
         $goals = $GoalService->processGoals($goals);
         $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
         $isMine = $userId == $this->Auth->user('id') ? true : false;
         $displayActionCount = MY_PAGE_ACTION_NUMBER;
+
+        $unauthorizedGoalsCount = ($pageType == "following") ? $followGoalsCount : $myGoalsCount;
+        $unauthorizedGoalsCount -= count($goals);
+
         if ($isMine) {
             $displayActionCount--;
         }
@@ -1522,6 +1527,7 @@ class UsersController extends AppController
             'term_base_url'        => $termBaseUrl,
             'my_goals_count'       => $myGoalsCount,
             'follow_goals_count'   => $followGoalsCount,
+            'unauthorized_goals_count' => $unauthorizedGoalsCount,
             'page_type'            => $pageType,
             'goals'                => $goals,
             'is_mine'              => $isMine,
