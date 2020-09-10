@@ -533,7 +533,7 @@ abstract class BaseApiController extends Controller
             case $e instanceof GlException\Auth\AuthFailedException:
                 return ErrorResponse::forbidden()->withMessage(__($e->getMessage()))->getResponse();
             case $e instanceof GlException\GoalousValidationException;
-                return ErrorResponse::badRequest()->withException($e)->getResponse();
+                return ErrorResponse::badRequest()->withMessage(__($e->getMessage()))->getResponse();
             default:
                 return ErrorResponse::internalServerError()->withException($e)->getResponse();
         }

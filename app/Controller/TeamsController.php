@@ -3082,6 +3082,16 @@ class TeamsController extends AppController
         $this->Team->id = $this->current_team_id;
         $groups_enabled_flg = !$this->request->data['Team']['see_gka'];
 
+        $groupsPresent = $this->Goal->GoalGroup->Group->hasAny([
+            'team_id' => $this->current_team_id,
+            'archived_flg' => false
+        ]);
+
+        if (!$groupsPresent && $groups_enabled_flg === true) {
+            $this->Notification->outError(__("You need at least one non-archived group to toggle group visibility."));
+            return $this->redirect($this->referer());
+        }
+
         if ($this->Team->save(['groups_enabled_flg' => $groups_enabled_flg])) {
             Cache::clear(false, 'team_info');
             $this->Notification->outSuccess(__("Changed groups visibility settings"));
