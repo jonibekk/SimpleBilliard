@@ -3,6 +3,8 @@ App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
+App::uses('TeamLoginMethod', 'Model');
+App::uses('TeamSsoSetting', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'AuthService');
@@ -469,6 +471,22 @@ class TeamsController extends AppController
                 $translationTeamResetText = "-";
             }
         }
+
+        // SSO setting
+        /** @var TeamSsoSetting $TeamSsoSetting */
+        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
+        try {
+            $hasSsoSetting = !empty($TeamSsoSetting->getSetting($team_id));
+        } catch(Exception $e) {
+            GoalousLog::error("Error in getting sso setting information for team setting", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team_id' => $team_id,
+                'user_id' => $this->Auth->user('id')
+            ]);
+            $hasSsoSetting = false;
+        }
+
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
@@ -514,7 +532,8 @@ class TeamsController extends AppController
             'translationTeamDefaultLanguage',
             'translationTeamTotalUsage',
             'translationTeamTotalLimit',
-            'translationTeamResetText'
+            'translationTeamResetText',
+            'hasSsoSetting'
         ));
 
         return $this->render();
@@ -3062,5 +3081,11 @@ class TeamsController extends AppController
         $this->layout = false;
 
         return;
+    }
+
+    public function delete_sso_setting() {
+        //TODO Will be implemented in phase 3
+
+        return $this->redirect('/');
     }
 }
