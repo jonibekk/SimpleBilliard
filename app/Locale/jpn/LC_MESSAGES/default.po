@@ -5965,3 +5965,9 @@ msgstr ""
 
 msgid "Configure SSO"
 msgstr "SAML2.0を設定"
+
+msgid "Update SSO Setting"
+msgstr ""
+
+msgid "Stop Using the SSO"
+msgstr ""
