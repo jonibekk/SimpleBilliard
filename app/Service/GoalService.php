@@ -540,7 +540,7 @@ class GoalService extends AppService
         return $goals;
     }
 
-    function filterUnauthorized($goals): array
+    function filterUnauthorized($items): array
     {
         /** @var Goal **/
         $Goal = ClassRegistry::init("Goal");
@@ -551,9 +551,16 @@ class GoalService extends AppService
         $authorizedGoalIds = Hash::extract($authorizedGoals, '{n}.Goal.id');
 
         return array_filter(
-            $goals,
-            function ($goal) use ($authorizedGoalIds) {
-                $goalId = empty($goal['Goal']) ? $goal['id'] : $goal['Goal']['id'];
+            $items,
+            function ($item) use ($authorizedGoalIds) {
+                if (!empty($item['Goal'])) {
+                    $goalId = $item['Goal']['id'];
+                } elseif (!empty($item['Post'])) {
+                    $goalId = $item['Post']['goal_id'];
+                } else {
+                    $goalId = $item['id'];
+                } 
+
                 return in_array($goalId, $authorizedGoalIds);
             }
         );
