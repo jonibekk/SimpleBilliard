@@ -10,6 +10,8 @@ App::import('Service/Paging/Search', 'ActionSearchPagingService');
 App::import('Service/Paging/Search', 'CircleSearchPagingService');
 App::import('Service/Paging/Search', 'PostSearchPagingService');
 App::import('Service/Paging/Search', 'UserSearchPagingService');
+App::uses('Group', 'Model');
+App::uses('SearchApiRequestDto', 'Model/Dto/Search');
 App::uses('SearchApiRequestDto', 'Model/Dto/Search');
 App::uses('SearchApiResponseDto', 'Model/Dto/Search');
 App::uses('SearchApiServiceInterface', 'Service/Api');
@@ -61,8 +63,16 @@ class SearchApiService implements SearchApiServiceInterface
         /** @var CircleMember $circleMember */
         $circleMember = ClassRegistry::init('CircleMember');
         $circleIds = Hash::extract($circleMember->getMyCircleList(), '{n}.{*}');
-
         $pagingRequest->addCondition('circle', $circleIds);
+
+        /** @var GroupPolicy **/
+        $groupPolicy = new GroupPolicy($searchApiRequestDto->userId, $searchApiRequestDto->teamId);
+        /** @var $Group */
+        $Group = ClassRegistry::init('Group');
+
+        $groups = $Group->find('all', $groupPolicy->scope('search'));
+        $groupsIds = Hash::extract($groups, '{n}.Group.id');
+        $pagingRequest->addCondition('group', $groupsIds);
 
         return $pagingRequest;
     }
@@ -74,8 +84,7 @@ class SearchApiService implements SearchApiServiceInterface
     private function getActions(
         SearchApiRequestDto $searchApiRequestDto,
         SearchApiResponseDto $searchApiResponseDto
-    ): void
-    {
+    ): void {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'action');
 
@@ -97,8 +106,7 @@ class SearchApiService implements SearchApiServiceInterface
     private function getCircles(
         SearchApiRequestDto $searchApiRequestDto,
         SearchApiResponseDto $searchApiResponseDto
-    ): void
-    {
+    ): void {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'circle');
 
@@ -125,8 +133,7 @@ class SearchApiService implements SearchApiServiceInterface
     private function getMembers(
         SearchApiRequestDto $searchApiRequestDto,
         SearchApiResponseDto $searchApiResponseDto
-    ): void
-    {
+    ): void {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'user');
 
@@ -153,8 +160,7 @@ class SearchApiService implements SearchApiServiceInterface
     private function getPosts(
         SearchApiRequestDto $searchApiRequestDto,
         SearchApiResponseDto $searchApiResponseDto
-    ): void
-    {
+    ): void {
         $pagingRequest = $this->createPagingRequest($searchApiRequestDto);
         $pagingRequest->addCondition('type', 'circle_post');
 
