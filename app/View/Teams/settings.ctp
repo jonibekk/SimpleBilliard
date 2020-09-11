@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: bigplants
@@ -21,9 +22,12 @@ $this->set('hidden_sidebar_xxs', true);
         <li class=""><a href="#invite_member"><?= __("Invitation") ?></a></li>
         <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#group_settings"><?= __("Group Settings") ?></a></li>
+        <?php if ($can_view_see_gka) : ?>
+            <li class=""><a href="#see_gka"><?= __("See GKA") ?></a></li>
+        <?php endif; ?>
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
-        <?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true): ?>
+        <?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true) : ?>
             <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation score settings") ?></a></li>
             <li class=""><a href="#evaluation_start"><?= __("Begin evaluation") ?></a></li>
             <li class=""><a href="#evaluation_freeze"><?= __("Pause evaluation") ?></a></li>
@@ -52,13 +56,18 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="group_settings">
     <?= $this->element('Team/group_settings') ?>
 </div>
+<?php if ($can_view_see_gka) : ?>
+    <div id="see_gka">
+        <?= $this->element('Team/see_gka') ?>
+    </div>
+<?php endif; ?>
 <div id="goal_category">
     <?= $this->element('Team/goal_category_setting') ?>
 </div>
 <div id="evaluation">
     <?= $this->element('Team/evaluation_setup') ?>
 </div>
-<?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true): ?>
+<?php if ($this->Expt->is(Experiment::NAME_ENABLE_EVALUATION_FEATURE) === true) : ?>
     <div id="evaluation_score_setting">
         <?= $this->element('Team/evaluation_score_setting') ?>
     </div>
@@ -84,9 +93,11 @@ $this->set('hidden_sidebar_xxs', true);
 <?php endif; ?>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('body').scrollspy({target: '.sidebar-setting'});
-  });
+    $(document).ready(function() {
+        $('body').scrollspy({
+            target: '.sidebar-setting'
+        });
+    });
 </script>
 <?php $this->end(); ?>
 <?= $this->App->viewEndComment() ?>

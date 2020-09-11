@@ -3,6 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
+App::uses('Experiment', 'Model');
 App::uses('TeamLoginMethod', 'Model');
 App::uses('TeamSsoSetting', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
@@ -320,6 +321,14 @@ class TeamsController extends AppController
             'GoalCategory' => Hash::extract($this->Goal->GoalCategory->getCategories(), '{n}.GoalCategory')
         ];
 
+
+        $see_gka = !$team['Team']['groups_enabled_flg'];
+        $can_update_see_gka = $this->Team->Group->hasAny(['team_id' => $team_id]);
+
+        $this->loadModel("Experiment");
+        $groups_experiment = $this->Experiment->findExperiment($this->Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
+        $can_view_see_gka = !(empty($groups_experiment));
+
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
         // current term data
@@ -534,6 +543,9 @@ class TeamsController extends AppController
             'translationTeamTotalLimit',
             'translationTeamResetText',
             'hasSsoSetting'
+            'see_gka',
+            'can_update_see_gka',
+            'can_view_see_gka'
         ));
 
         return $this->render();
@@ -3087,5 +3099,31 @@ class TeamsController extends AppController
         //TODO Will be implemented in phase 3
 
         return $this->redirect('/');
+    }
+  
+    function toggle_see_gka()
+    {
+        $this->request->allowMethod('post');
+        $this->Team->id = $this->current_team_id;
+        $groups_enabled_flg = !$this->request->data['Team']['see_gka'];
+
+        $groupsPresent = $this->Goal->GoalGroup->Group->hasAny([
+            'team_id' => $this->current_team_id,
+            'archived_flg' => false
+        ]);
+
+        if (!$groupsPresent && $groups_enabled_flg === true) {
+            $this->Notification->outError(__("You need at least one non-archived group to toggle group visibility."));
+            return $this->redirect($this->referer());
+        }
+
+        if ($this->Team->save(['groups_enabled_flg' => $groups_enabled_flg])) {
+            Cache::clear(false, 'team_info');
+            $this->Notification->outSuccess(__("Changed groups visibility settings"));
+        } else {
+            $this->Notification->outError(__("Failed to change group visibility settings"));
+        }
+
+        return $this->redirect($this->referer());
     }
 }

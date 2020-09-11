@@ -537,7 +537,7 @@ App::uses('AttachedFile', 'Model');
             "Waiting": "<?=__("Waiting")?>",
             "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
-            "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
+            "Add by pressing the Enter.(You can save maximum 20 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 20 labels)") ?>",
             "Withdrawn": "<?=__("Withdrawn")?>",
             "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",

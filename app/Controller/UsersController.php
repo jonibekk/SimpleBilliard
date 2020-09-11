@@ -1494,10 +1494,15 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($userId, MY_PAGE_ACTION_NUMBER, $startDate, $endDate);
         }
+        $goals = $GoalService->filterUnauthorized($goals);
         $goals = $GoalService->processGoals($goals);
         $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
         $isMine = $userId == $this->Auth->user('id') ? true : false;
         $displayActionCount = MY_PAGE_ACTION_NUMBER;
+
+        $unauthorizedGoalsCount = ($pageType == "following") ? $followGoalsCount : $myGoalsCount;
+        $unauthorizedGoalsCount -= count($goals);
+
         if ($isMine) {
             $displayActionCount--;
         }
@@ -1522,6 +1527,7 @@ class UsersController extends AppController
             'term_base_url'        => $termBaseUrl,
             'my_goals_count'       => $myGoalsCount,
             'follow_goals_count'   => $followGoalsCount,
+            'unauthorized_goals_count' => $unauthorizedGoalsCount,
             'page_type'            => $pageType,
             'goals'                => $goals,
             'is_mine'              => $isMine,
@@ -1621,6 +1627,8 @@ class UsersController extends AppController
         $oldestTimestamp = $postCondition['oldestTimestamp'];
 
         $posts = $this->_findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
+        $posts = $GoalService->filterUnauthorized($posts);
+        $unauthorizedActionsCount = $actionCount - count($posts);
 
         $this->set('long_text', false);
         $this->set(compact(
@@ -1631,6 +1639,7 @@ class UsersController extends AppController
             'endTimestamp',
             'oldestTimestamp',
             'actionCount',
+            'unauthorizedActionsCount',
             'currentTermId',
             'canAction'
         ));
@@ -1778,6 +1787,17 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = Hash::get($this->request->params, "named.user_id");
+        $rows = $this->User->find("all", [
+            "conditions" => [
+                "User.id" => $user_id
+            ],
+            "contain" => [
+                "MemberGroup" => [
+                    "Group"
+                ]
+            ],
+        ]);
+        $groups = Hash::extract($rows, "{n}.MemberGroup.{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1787,6 +1807,7 @@ class UsersController extends AppController
 
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('groups', $groups);
         return $this->render();
     }
 

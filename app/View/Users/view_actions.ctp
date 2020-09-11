@@ -183,6 +183,11 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
                 </div>
             </div>
         <?php endif; ?>
+        <?php if ($unauthorizedActionsCount > 0): ?>
+            <div class="profile-actions-footer">
+                <?= __("There is %s actions you do not have permission to see", $unauthorizedActionsCount) ?>
+            </div>
+        <?php endif ?>
     </div>
 </div>
 <?= $this->App->viewEndComment() ?>

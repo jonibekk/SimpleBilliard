@@ -67,7 +67,7 @@
                     'required' => false
                 )); ?>
                 <div class="font_brownRed font_11px">
-                    <?= __('You can\'t change this setting lator.') ?>
+                    <?= __('You can\'t change this setting later.') ?>
                 </div>
                 <?=
                 $this->Form->input('description',

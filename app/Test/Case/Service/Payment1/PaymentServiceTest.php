@@ -576,7 +576,7 @@ class PaymentServiceTest extends GoalousTestCase
         $this->PaymentSetting->save([
             'team_id'          => $teamId,
             'payment_base_day' => 1,
-            'amount_per_user'  => 16,
+            'amount_per_user'  => 1600,
             'currency'         => PaymentSetting::CURRENCY_TYPE_USD,
             'company_country'  => 'US'
         ], false);
@@ -585,37 +585,37 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 1;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 16);
+        $this->assertEquals($res['sub_total_charge'], 1600);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 16);
+        $this->assertEquals($res['total_charge'], 1600);
 
         GoalousDateTime::setTestNow("2017-01-01");
         $userCnt = 2;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 32);
+        $this->assertEquals($res['sub_total_charge'], 3200);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 32);
+        $this->assertEquals($res['total_charge'], 3200);
 
         GoalousDateTime::setTestNow("2017-01-02");
         $userCnt = 2;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 30.96);
+        $this->assertEquals($res['sub_total_charge'], 3096);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 30.96);
+        $this->assertEquals($res['total_charge'], 3096);
 
         GoalousDateTime::setTestNow("2017-01-15");
         $userCnt = 2;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 17.54);
+        $this->assertEquals($res['sub_total_charge'], 1754);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 17.54);
+        $this->assertEquals($res['total_charge'], 1754);
 
         GoalousDateTime::setTestNow("2017-01-31");
         $userCnt = 2;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 1.03);
+        $this->assertEquals($res['sub_total_charge'], 103);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 1.03);
+        $this->assertEquals($res['total_charge'], 103);
 
         // If invalid payment base date
         $this->PaymentSetting->save([
@@ -627,16 +627,16 @@ class PaymentServiceTest extends GoalousTestCase
         GoalousDateTime::setTestNow("2017-04-29");
         $userCnt = 1;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 0.53);
+        $this->assertEquals($res['sub_total_charge'], 53);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 0.53);
+        $this->assertEquals($res['total_charge'], 53);
 
         GoalousDateTime::setTestNow("2017-04-30");
         $userCnt = 2;
         $res = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $userCnt);
-        $this->assertEquals($res['sub_total_charge'], 32.0);
+        $this->assertEquals($res['sub_total_charge'], 3200);
         $this->assertEquals($res['tax'], 0);
-        $this->assertEquals($res['total_charge'], 32.0);
+        $this->assertEquals($res['total_charge'], 3200);
     }
 
     public function test_calcRelatedTotalChargeByAddUsers_exception()
@@ -951,7 +951,7 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']));
         $this->assertEquals($chargeRes->currency, 'usd');
 
         /* Case charge user:multiple*/
@@ -986,7 +986,7 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']));
         $this->assertEquals($chargeRes->currency, 'usd');
     }
 
@@ -1102,7 +1102,7 @@ class PaymentServiceTest extends GoalousTestCase
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
-        $this->assertEquals($chargeInfo['total_charge'] * 100, $stripeCharge['amount']);
+        $this->assertEquals($chargeInfo['total_charge'], $stripeCharge['amount']);
 
         $res = "";
         try {
@@ -1120,7 +1120,7 @@ class PaymentServiceTest extends GoalousTestCase
         $chargeInfo = $this->PaymentService->calcRelatedTotalChargeByAddUsers($teamId, $chargeUserCnt);
         $this->assertEquals($res['total_amount'], $chargeInfo['sub_total_charge']);
         $this->assertEquals($res['tax'], $chargeInfo['tax']);
-        $this->assertEquals($chargeInfo['total_charge'] * 100, $stripeCharge['amount']);
+        $this->assertEquals($chargeInfo['total_charge'], $stripeCharge['amount']);
     }
 
     public function test_applyCreditCardCharge_stripeMinimumAmount()
@@ -1542,7 +1542,7 @@ class PaymentServiceTest extends GoalousTestCase
         ];
         $res = array_intersect_key($res, $expected);
         $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']) * 100);
+        $this->assertEquals($chargeRes->amount, ($res['total_amount'] + $res['tax']));
         $this->assertTrue($res['total_amount'] < $amountPerUser);
         $this->assertEquals($chargeRes->currency, 'usd');
 
@@ -1835,7 +1835,7 @@ class PaymentServiceTest extends GoalousTestCase
 
         $chargeRes = \Stripe\Charge::retrieve($history['stripe_payment_code']);
         $this->assertNotEmpty($chargeRes);
-        $this->assertEquals($chargeRes->amount, ($history['total_amount'] + $history['tax']) * 100);
+        $this->assertEquals($chargeRes->amount, ($history['total_amount'] + $history['tax']));
         $this->assertEquals($chargeRes->currency, 'usd');
 
         // Check if team status updated
@@ -2739,19 +2739,19 @@ class PaymentServiceTest extends GoalousTestCase
         $this->assertEquals($res, 1);
 
         $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.1);
-        $this->assertEquals($res, 0.1);
+        $this->assertEquals($res, 0);
 
         $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.01);
-        $this->assertEquals($res, 0.01);
+        $this->assertEquals($res, 0);
 
         $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.001);
         $this->assertEquals($res, 0);
 
         $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 0.999);
-        $this->assertEquals($res, 0.99);
+        $this->assertEquals($res, 0);
 
         $res = $this->PaymentService->processDecimalPointForAmount($currencyType, 9.9);
-        $this->assertEquals($res, 9.9);
+        $this->assertEquals($res, 9);
     }
 
     public function test_getDefaultAmountPerUserByCountry()
@@ -3261,12 +3261,14 @@ class PaymentServiceTest extends GoalousTestCase
 
         // USD
         $currency = Enum\Model\PaymentSetting\Currency::USD;
+        $res = $this->PaymentService->formatCharge(350, $currency);
+        $this->assertEquals($res, '$3.50');
         $res = $this->PaymentService->formatCharge(100.12, $currency);
-        $this->assertEquals($res, '$100.12');
+        $this->assertEquals($res, '$1.00');
         $res = $this->PaymentService->formatCharge(0.1, $currency);
-        $this->assertEquals($res, '$0.10');
+        $this->assertEquals($res, '$0.00');
         $res = $this->PaymentService->formatCharge(1234567890, $currency);
-        $this->assertEquals($res, '$1,234,567,890.00');
+        $this->assertEquals($res, '$12,345,678.90');
     }
 
     public function test_formatTotalChargeByAddUsers_jp()
@@ -4072,7 +4074,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 483.87);
+        $this->assertEquals($res['sub_total_charge'], 483.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4082,7 +4084,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 482.14);
+        $this->assertEquals($res['sub_total_charge'], 482.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4093,7 +4095,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 16.12);
+        $this->assertEquals($res['sub_total_charge'], 16.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4103,7 +4105,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 17.85);
+        $this->assertEquals($res['sub_total_charge'], 17.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4147,7 +4149,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 483.87);
+        $this->assertEquals($res['sub_total_charge'], 483.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4155,7 +4157,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 483.33);
+        $this->assertEquals($res['sub_total_charge'], 483.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4163,7 +4165,7 @@ class PaymentServiceTest extends GoalousTestCase
         $res = $this->PaymentService->calcRelatedTotalChargeForUpgradingPlan(
             $teamId, $currencyType, $upgradePlanCode, $currentPlanCode
         );
-        $this->assertEquals($res['sub_total_charge'], 16.12);
+        $this->assertEquals($res['sub_total_charge'], 16.0);
         $this->assertEquals($res['tax'], 0);
         $this->assertEquals($res['total_charge'], $res['sub_total_charge'] + $res['tax']);
 
@@ -4315,8 +4317,12 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $res = array_intersect_key($res, $expected);
-        $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+
+        $castFloat = function (array $array): array {
+            return array_map('floatval', $array);
+        };
+        $this->assertEquals($castFloat($res), $castFloat($expected));
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge));
         $this->assertEquals($chargeRes->currency, 'usd');
 
         // Case: Upgraded plan date is one day after payment base day
@@ -4329,7 +4335,7 @@ class PaymentServiceTest extends GoalousTestCase
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
-        $subTotalCharge = 1935.48;
+        $subTotalCharge = 1935.0;
         $expected = am($baseExpected, [
             'id'           => 2,
             'total_amount' => $subTotalCharge,
@@ -4337,8 +4343,8 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $res = array_intersect_key($res, $expected);
-        $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+        $this->assertEquals($castFloat($res), $castFloat($expected));
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge));
         $this->assertEquals($chargeRes->currency, 'usd');
 
         // Case: Upgraded plan date is one day before payment base day
@@ -4351,7 +4357,7 @@ class PaymentServiceTest extends GoalousTestCase
         $chargeRes = \Stripe\Charge::retrieve($res['stripe_payment_code']);
         $this->assertTrue($res['charge_datetime'] <= time());
         $this->assertNotEmpty($res['stripe_payment_code']);
-        $subTotalCharge = 71.42;
+        $subTotalCharge = 71.0;
         $expected = am($baseExpected, [
             'id'           => 3,
             'total_amount' => $subTotalCharge,
@@ -4359,8 +4365,8 @@ class PaymentServiceTest extends GoalousTestCase
         ]);
 
         $res = array_intersect_key($res, $expected);
-        $this->assertEquals($res, $expected);
-        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge * 100));
+        $this->assertEquals($castFloat($res), $castFloat($expected));
+        $this->assertEquals($chargeRes->amount, (string)($subTotalCharge));
         $this->assertEquals($chargeRes->currency, 'usd');
     }
 

@@ -31,6 +31,8 @@ class Experiment extends AppModel
      */
     const NAME_ENABLE_SSO_LOGIN = 'EnableSSOLogin';
 
+    const NAME_ENABLE_GROUPS_MANAGEMENT = 'EnableGroupsManagement';
+
     /**
      * Validation rules
      *

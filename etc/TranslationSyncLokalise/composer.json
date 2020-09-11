@@ -1,0 +1,8 @@
+{
+    "name": "root/translation-sync-lokalise",
+    "require": {
+        "ext-zip": "*",
+        "ext-curl": "*",
+        "lokalise/php-lokalise-api": "^3.1"
+    }
+}
