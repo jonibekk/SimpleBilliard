@@ -466,10 +466,22 @@ class MeController extends BasePagingController
         /** @var FeedPostPagingService $FeedPostPagingService */
         $FeedPostPagingService = ClassRegistry::init('FeedPostPagingService');
 
-        $data = $FeedPostPagingService->getDataWithPaging(
-            $pagingRequest,
-            $this->getPagingLimit(),
-            [FeedPostExtender::EXTEND_ALL]);
+        try {
+            $data = $FeedPostPagingService->getDataWithPaging(
+                $pagingRequest,
+                $this->getPagingLimit(),
+                [FeedPostExtender::EXTEND_ALL]
+            );
+        } catch (Exception $e) {
+            GoalousLog::error(
+                "Failed to fetch feed",
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
+                ]
+            );
+            return ErrorResponse::internalServerError()->withException($e)->getResponse();
+        }
 
         return ApiResponse::ok()->withBody($data)->getResponse();
     }
