@@ -91,8 +91,7 @@
             <div class="form-group" id="desktopNormalOptions">
 
                 <div class="col col-sm-offset-3 help-block font_12px none" style="color:red" id="desktopInvalidReminder" hidden>
-                    Browser Notification Permission Denied!!<br>
-                    Please enable notification permission via brower setting and refresh!
+                    <?=__("Browser notification permission denied!<br>Please enable notification permission via brower setting and refresh.")?>
                 </div>
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
                     <i class="fa fa-mobile"></i> <?= __('Desktop') ?>

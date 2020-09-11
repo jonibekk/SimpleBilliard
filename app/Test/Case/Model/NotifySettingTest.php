@@ -102,16 +102,17 @@ class NotifySettingTest extends GoalousTestCase
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid => ['app' => true, 'email' => true, 'mobile' => false]
+            $uid => ['app' => true, 'email' => true, 'mobile' => false, 'desktop' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、on");
         $res = $this->NotifySetting->getUserNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid  => ['app' => true, 'email' => true, 'mobile' => false],
+            $uid  => ['app' => true, 'email' => true, 'mobile' => false, 'desktop' => true],
             $uid2 => [
                 'app'    => true,
                 'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
-                'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])
+                'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                'desktop' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])
             ]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");

@@ -118,7 +118,8 @@ $defines = [
     // VAPID configuration
     'VAPID_SUBJECT'                                 => 'http://localhost',
     'VAPID_PUBLIC_KEY'                              => 'BADPfHVYNRRsWtC9p5_PiWPQF6dTAziyKUUZf1AEl1Jxyq_vbDZdwuvrnpGHK1KejKjAZD1xylESIk3ywANhm7Q',
-    'VAPID_PRIVATE_KEY'                              => 'eV6SQy32nZKfniyZHPvS3glCm_8AGkOitktQ8opaPnc',
+    'VAPID_PRIVATE_KEY'                             => 'eV6SQy32nZKfniyZHPvS3glCm_8AGkOitktQ8opaPnc',
+    'SESSION_DOMAIN'                                => 'goalous.com'
 ];
 // for local
 if (file_exists(APP . 'Config/extra_defines_local.php')) {

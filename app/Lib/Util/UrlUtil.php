@@ -7,8 +7,11 @@ class UrlUtil
 {
     static function fqdnFrontEnd(): string {
         if (ENV_NAME === "local") {
-            return "http://local.goalous.com:5790";
-            // return "http://localhost:5790";
+            if (SESSION_DOMAIN == 'localhost'){
+                return "http://localhost:5790";
+            } else {
+                return "http://local.goalous.com:5790";
+            }
         }
         return '';
     }
