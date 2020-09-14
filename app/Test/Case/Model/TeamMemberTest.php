@@ -107,7 +107,7 @@ class TeamMemberTest extends GoalousTestCase
 
     }
 
-    function test_getTeamsSsoEnabled()
+    function test_getSsoEnabledTeams()
     {
         $uid = '1';
         $data = [
@@ -125,9 +125,9 @@ class TeamMemberTest extends GoalousTestCase
 
         Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
 
-        $this->assertEmpty($TeamMember->getTeamsSsoEnabled($uid));
+        $this->assertEmpty($TeamMember->getSsoEnabledTeams($uid));
         $TeamSsoSettingService->addOrUpdateSetting(1, "https://somesampleidp.com/12345", "https://somesampleidp.com/", "anykindofcertificate");
-        $this->assertNotEmpty($TeamMember->getTeamsSsoEnabled($uid));
+        $this->assertNotEmpty($TeamMember->getSsoEnabledTeams($uid));
     }
 
     function testPermissionCheck()

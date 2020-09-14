@@ -130,7 +130,12 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
-    public function getTeamsSsoEnabled(string $userId): array
+    /**
+     * Get the team list of SSO enabled
+     * @param string $userId
+     * @return array
+     */
+    public function getSsoEnabledTeams(string $userId): array
     {
         /** @var TeamSsoSetting $TeamSsoSetting */
         $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
