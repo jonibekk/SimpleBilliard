@@ -542,7 +542,7 @@ class TeamsController extends AppController
             'translationTeamTotalUsage',
             'translationTeamTotalLimit',
             'translationTeamResetText',
-            'hasSsoSetting'
+            'hasSsoSetting',
             'see_gka',
             'can_update_see_gka',
             'can_view_see_gka'
