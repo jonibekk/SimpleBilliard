@@ -9,7 +9,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return Object.assign({}, common.getCommonDispatchToProps(dispatch), {
-    saveGoal: () => dispatch(actions.saveGoal()),
+    saveGoal: () => dispatch(actions.saveGoal())
   });
 }
 

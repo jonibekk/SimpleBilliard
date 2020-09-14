@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AppModel', 'GoalGroup');
 
 /**
  * Group Model
@@ -44,6 +45,7 @@ class Group extends AppModel
     public $hasMany = [
         'MemberGroup',
         'GroupVision',
+        'GoalGroup'
     ];
 
     function findIdsHavingMembers($teamId)
@@ -220,12 +222,9 @@ class Group extends AppModel
         return $members;
     }
 
-    function findGroupsWithMemberCount(string $teamId)
+    function findGroupsWithMemberCount(array $scope): array
     {
         $options = [
-            'conditions' => [
-                'Group.team_id' => $teamId,
-            ],
             'joins' => [
                 [
                     'table' => 'member_groups',
@@ -242,11 +241,13 @@ class Group extends AppModel
             'group' => 'Group.id',
         ];
 
+        $options = array_merge_recursive($options, $scope);
+
         $results =  $this->find('all', $options);
 
         return array_map(
             function ($row) {
-                $row['Group']['member_count'] = $row['0']['member_count'];
+                $row['Group']['member_count'] = (int) $row['0']['member_count'];
                 return $row;
             },
             $results
