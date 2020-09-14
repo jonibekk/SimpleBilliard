@@ -63,11 +63,18 @@ class MeExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_JOINED_ACTIVE_TEAMS)) {
             $activeTeams = $TeamMember->getActiveTeamList($userId);
             $data['my_active_teams'] = [];
-            foreach ($activeTeams as $activeTeamId => $name) {
+            if (!empty($TeamMember->getTeamsSsoEnabled($userId))) {
                 $data['my_active_teams'][] = [
-                    'id'   => $activeTeamId,
-                    'name' => $name
+                    'id'   => $currentTeam['id'],
+                    'name' => $currentTeam['name']
                 ];
+            } else {
+                foreach ($activeTeams as $activeTeamId => $name) {
+                    $data['my_active_teams'][] = [
+                        'id'   => $activeTeamId,
+                        'name' => $name
+                    ];
+                }
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_NOTIFICATION_SETTING)) {

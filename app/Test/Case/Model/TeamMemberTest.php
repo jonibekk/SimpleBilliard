@@ -35,6 +35,7 @@ class TeamMemberTest extends GoalousTestCase
         'app.circle',
         'app.circle_member',
         'app.mst_translation_language',
+        'app.team_sso_setting'
     );
 
     /**
@@ -103,6 +104,29 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
+    }
+
+    function test_getTeamsSsoEnabled()
+    {
+        $uid = '1';
+        $data = [
+            'TeamMember' => [
+                ['user_id' => $uid, 'status' => TeamMember::USER_STATUS_ACTIVE]],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamSsoSettingService $TeamSsoSettingService */
+        $TeamSsoSettingService = ClassRegistry::init('TeamSsoSettingService');
+
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
+
+        $this->assertEmpty($TeamMember->getTeamsSsoEnabled($uid));
+        $TeamSsoSettingService->addOrUpdateSetting(1, "https://somesampleidp.com/12345", "https://somesampleidp.com/", "anykindofcertificate");
+        $this->assertNotEmpty($TeamMember->getTeamsSsoEnabled($uid));
     }
 
     function testPermissionCheck()
