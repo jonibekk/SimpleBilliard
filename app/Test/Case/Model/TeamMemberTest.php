@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamMember', 'Model');
+App::import('Service', 'TeamSsoSettingService');
 
 use Goalous\Enum as Enum;
 
