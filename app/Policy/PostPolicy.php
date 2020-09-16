@@ -87,6 +87,11 @@ class PostPolicy extends BasePolicy
             $fullQuery = $query . $fullQuery;
         }
 
-        return ['conditions' => [$fullQuery]];
+        return [
+            'conditions' => [
+                'Post.team_id' => $this->teamId,
+                '(' . $fullQuery . ')',
+            ]
+        ];
     }
 }
