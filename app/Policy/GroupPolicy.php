@@ -43,9 +43,9 @@ class GroupPolicy extends BasePolicy
         /** @var Group **/
         $Group = ClassRegistry::init('Group');
 
-        $ownGroupsSubquery = $Group->groupByUserIdSubQuery($this->userId, $this->teamId);
-        $coacheeGroupsSubquery = $Group->groupForCoacheesSubQuery($this->userId, $this->teamId);
-        $evaluateeGroupsSubquery = $Group->groupForEvaluateesSubQuery($this->userId, $this->teamId);
+        $ownGroupsSubquery = $Group->groupByUserIdSubQuery($this->userId);
+        $coacheeGroupsSubquery = $Group->groupForCoacheesSubQuery($this->userId);
+        $evaluateeGroupsSubquery = $Group->groupForEvaluateesSubQuery($this->userId);
 
         $fullQuery = 'Group.id IN (' . $ownGroupsSubquery . ')';
 

@@ -255,16 +255,13 @@ class Group extends AppModel
         );
     }
 
-    function groupByUserIdSubQuery($userId, $teamId)
+    function groupByUserIdSubQuery($userId)
     {
         $db = $this->getDataSource();
         return $db->buildStatement([
             "fields" => ['Group.id'],
             "table" => $db->fullTableName($this),
             "alias" => "Group",
-            'conditions' => [
-                'Group.team_id' => $teamId,
-            ],
             'joins' => [
                 [
                     'alias' => 'MemberGroup',
@@ -278,16 +275,13 @@ class Group extends AppModel
         ], $this);
     }
 
-    function groupForCoacheesSubQuery($userId, $teamId)
+    function groupForCoacheesSubQuery($userId)
     {
         $db = $this->getDataSource();
         return $db->buildStatement([
             "fields" => ['Group.id'],
             "table" => $db->fullTableName($this),
             "alias" => "Group",
-            'conditions' => [
-                'Group.team_id' => $teamId,
-            ],
             'joins' => [
                 [
                     'alias' => 'MemberGroup',
@@ -302,14 +296,13 @@ class Group extends AppModel
                     'conditions' => [
                         'TeamMember.user_id = MemberGroup.user_id',
                         'TeamMember.coach_user_id' => $userId,
-                        'TeamMember.team_id' => $teamId
                     ]
                 ]
             ]
         ], $this);
     }
 
-    function groupForEvaluateesSubQuery($userId, $teamId)
+    function groupForEvaluateesSubQuery($userId)
     {
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
@@ -319,9 +312,6 @@ class Group extends AppModel
             "fields" => ['Group.id'],
             "table" => $db->fullTableName($this),
             "alias" => "Group",
-            'conditions' => [
-                'Group.team_id' => $teamId,
-            ],
             'joins' => [
                 [
                     'alias' => 'MemberGroup',
