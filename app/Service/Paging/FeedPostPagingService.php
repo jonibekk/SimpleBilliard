@@ -1,4 +1,5 @@
 <?php
+
 App::import('Lib/Paging', 'BasePagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
@@ -66,8 +67,29 @@ class FeedPostPagingService extends BasePagingService
             'conditions' => [
                 'Post.del_flg' => false,
                 'Post.team_id' => $teamId,
-                'Post.type'    => [Post::TYPE_CREATE_GOAL, Post::TYPE_ACTION]
+                'OR'           => [
+                    [
+                        'Post.type' => [Post::TYPE_CREATE_GOAL]
+                    ],
+                    [
+                        'Post.type' => [Post::TYPE_ACTION],
+                        'ActionResult.key_result_id is not null'
+                    ]
+                ]
             ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'conditions' => [
+                        'ActionResult.id = Post.action_result_id',
+                    ],
+                    'fields'     => [
+                        'ActionResult.key_result_id'
+                    ]
+                ]
+            ]
         ];
 
         return array_merge_recursive($options, $scope);
