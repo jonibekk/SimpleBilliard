@@ -10,6 +10,7 @@ App::import('Service/Paging/Search', 'ActionSearchPagingService');
 App::import('Service/Paging/Search', 'CircleSearchPagingService');
 App::import('Service/Paging/Search', 'PostSearchPagingService');
 App::import('Service/Paging/Search', 'UserSearchPagingService');
+App::import('Policy', 'GroupPolicy');
 App::uses('Group', 'Model');
 App::uses('SearchApiRequestDto', 'Model/Dto/Search');
 App::uses('SearchApiRequestDto', 'Model/Dto/Search');
@@ -72,7 +73,7 @@ class SearchApiService implements SearchApiServiceInterface
 
         $groups = $Group->find('all', $groupPolicy->scope('search'));
         $groupsIds = Hash::extract($groups, '{n}.Group.id');
-        $pagingRequest->addCondition('group', $groupsIds);
+        $pagingRequest->addCondition('group_ids', $groupsIds);
 
         return $pagingRequest;
     }

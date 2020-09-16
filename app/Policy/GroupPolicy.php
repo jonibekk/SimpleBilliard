@@ -54,6 +54,11 @@ class GroupPolicy extends BasePolicy
             $fullQuery = 'Group.id IN (' . $evaluateeGroupsSubquery . ') OR ' . $fullQuery;
         }
 
-        return ['conditions' => [$fullQuery]];
+        return [
+            'conditions' => [
+                'Group.team_id' => $this->teamId,
+                '(' . $fullQuery . ')'
+            ]
+        ];
     }
 }
