@@ -24,6 +24,11 @@ class UrlUtil
      */
     public static function encapsulateUrl(string $baseString, array $protocols, string $prefix, string $suffix): string
     {
+        /**
+         * Taken from site below, with some modification
+         *
+         * @url https://urlregex.com/
+         */
         $urlPattern = "%(" . implode(
                 "|",
                 $protocols
