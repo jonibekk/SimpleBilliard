@@ -71,7 +71,7 @@ class MentionComponent extends Component
     }
 
     /**
-     * replace all mentions in content with HTML expression.
+     * Replace all mentions in content with HTML expression.
      *
      * @param $text     string the content should be replaced
      * @param $mentions array[string] mentions should be replaced
