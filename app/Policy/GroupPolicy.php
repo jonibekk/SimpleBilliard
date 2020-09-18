@@ -31,7 +31,7 @@ class GroupPolicy extends BasePolicy
         return $this->isTeamAdminForItem($group['team_id']);
     }
 
-    public function scope(): array
+    public function scope($type = 'read'): array
     {
         if ($this->isTeamAdmin()) {
             return [
@@ -40,21 +40,24 @@ class GroupPolicy extends BasePolicy
                 ]
             ];
         }
+        /** @var Group **/
+        $Group = ClassRegistry::init('Group');
+
+        $ownGroupsSubquery = $Group->groupByUserIdSubQuery($this->userId);
+        $coacheeGroupsSubquery = $Group->groupForCoacheesSubQuery($this->userId);
+        $evaluateeGroupsSubquery = $Group->groupForEvaluateesSubQuery($this->userId);
+
+        $fullQuery = 'Group.id IN (' . $ownGroupsSubquery . ')';
+
+        if ($type === "search") {
+            $fullQuery = 'Group.id IN (' . $coacheeGroupsSubquery . ') OR ' . $fullQuery;
+            $fullQuery = 'Group.id IN (' . $evaluateeGroupsSubquery . ') OR ' . $fullQuery;
+        }
 
         return [
             'conditions' => [
                 'Group.team_id' => $this->teamId,
-                'MemberGroup.user_id' => $this->userId,
-            ],
-            'joins' => [
-                [
-                    'alias' => 'MemberGroup',
-                    'table' => 'member_groups',
-                    'type' => 'LEFT',
-                    'conditions' => [
-                        'MemberGroup.group_id = Group.id'
-                    ]
-                ]
+                '(' . $fullQuery . ')'
             ]
         ];
     }

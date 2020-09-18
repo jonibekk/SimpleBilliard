@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('AppModel', 'GoalGroup');
+App::uses('Term', 'Model');
 
 /**
  * Group Model
@@ -252,5 +253,90 @@ class Group extends AppModel
             },
             $results
         );
+    }
+
+    function groupByUserIdSubQuery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id',
+                        'MemberGroup.user_id' => $userId
+                    ]
+                ]
+            ]
+        ], $this);
+    }
+
+    function groupForCoacheesSubQuery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'TeamMember.user_id = MemberGroup.user_id',
+                        'TeamMember.coach_user_id' => $userId,
+                    ]
+                ]
+            ]
+        ], $this);
+    }
+
+    function groupForEvaluateesSubQuery($userId)
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'Evaluation',
+                    'table' => 'evaluations',
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id = MemberGroup.user_id',
+                        'Evaluation.evaluator_user_id' => $userId
+                    ]
+                ],
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'Term.id = Evaluation.term_id',
+                        'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                    ]
+                ]
+            ]
+        ], $this);
     }
 }
