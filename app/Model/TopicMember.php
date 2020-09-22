@@ -323,7 +323,8 @@ class TopicMember extends AppModel
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
-                'user_id'  => $activeTeamMembersList
+                'user_id'  => $activeTeamMembersList,
+                'del_flg'  => 0
             ],
             'contain'    => [
                 'User' => [
