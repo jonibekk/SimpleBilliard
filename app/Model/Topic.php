@@ -101,19 +101,12 @@ class Topic extends AppModel
      *
      * @return array
      */
-    function findLatest(int $userId, int $offset, int $limit, string $keyword = ''): array
+    public function findLatest(int $userId, int $offset, int $limit, string $keyword = ''): array
     {
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
-
         $options = [
             'conditions' => [
                 'Topic.team_id'       => $this->current_team_id,
                 'TopicMember.user_id' => $userId,
-            ],
-            'fields'     => [
-                'Topic.*'
             ],
             'joins'      => [
                 [
@@ -169,7 +162,8 @@ class Topic extends AppModel
 
         // attach user images
         foreach ($res as $i => $topic) {
-            $distinctUsers = $this->TopicMember->findUsersSortedBySentMessage($topic['Topic']['id'], 10);
+            $topicId = $topic['Topic']['id'];
+            $distinctUsers = $this->TopicMember->findUsersSortedBySentMessage($topicId, 10);
             foreach ($distinctUsers as $index => $user) {
                 $res[$i]['TopicMember'][$index]['User'] = $user;
                 $imgUrls = $ImageStorageService->getImgUrlEachSize($user, 'User');
