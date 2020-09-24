@@ -66,6 +66,7 @@ class AuthController extends BaseApiController
                 'user failed to request login',
                 [
                     'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
                 ]
             );
             return ErrorResponse::internalServerError()
@@ -145,6 +146,7 @@ class AuthController extends BaseApiController
                 'user failed to login',
                 [
                     'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
                 ]
             );
             return ErrorResponse::internalServerError()
@@ -187,6 +189,7 @@ class AuthController extends BaseApiController
                 'user failed to login',
                 [
                     'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
                 ]
             );
             return ErrorResponse::internalServerError()
@@ -217,6 +220,8 @@ class AuthController extends BaseApiController
             GoalousLog::error(
                 'failed to logout',
                 [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
                     'user.id' => $this->getUserId(),
                     'team.id' => $this->getTeamId(),
                     'jwt_id'  => $this->getJwtAuth()->getJwtId(),
