@@ -320,11 +320,25 @@ class TopicMember extends AppModel
         $TeamMember = ClassRegistry::init('TeamMember');
         $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
 
-        $options = [
+        $distinctOptions = [
             'conditions' => [
                 'topic_id' => $topicId,
-                'user_id'  => $activeTeamMembersList,
-                'del_flg'  => 0
+                'TopicMember.user_id'  => $activeTeamMembersList,
+            ],
+            'fields'     => [
+                'MIN(id) as id',
+                'user_id'
+            ],
+            'group' => [
+                'user_id'
+            ]
+        ];
+
+        $distinctIds = Hash::extract($this->find('all', $distinctOptions), '{n}.0.id');
+
+        $options = [
+            'conditions' => [
+                'TopicMember.id' => $distinctIds
             ],
             'contain'    => [
                 'User' => [
@@ -333,6 +347,7 @@ class TopicMember extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
+
         return $res;
     }
 
