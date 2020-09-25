@@ -264,6 +264,9 @@ class Group extends AppModel
                 'COALESCE(COUNT(member_groups.user_id)) AS member_count'
             ],
             'group' => 'Group.id',
+            "order" => [
+                "Group.name ASC"
+            ] 
         ];
 
         $options = array_merge_recursive($options, $scope);
