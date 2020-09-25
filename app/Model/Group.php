@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('AppModel', 'GoalGroup');
 App::uses('Term', 'Model');
 
@@ -204,7 +205,10 @@ class Group extends AppModel
 
     function findMembers(int $groupId): array
     {
-        $members = $this->MemberGroup->User->find("all", [
+        /** @var TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $options = [
             "joins" => [
                 [
                     'alias' => 'MemberGroup',
@@ -214,17 +218,28 @@ class Group extends AppModel
                         'MemberGroup.group_id' => $groupId,
                     ],
                 ],
+                [
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'MemberGroup.user_id = team_members.user_id', 
+                        'MemberGroup.team_id = team_members.team_id',
+                        'team_members.status !=' => $TeamMember::USER_STATUS_INACTIVE
+                    ],
+                ],
             ],
             "order" => [
                 "User.first_name ASC"
-            ]
-        ]);
+            ]    
+        ];
 
-        return $members;
+        return $this->MemberGroup->User->find("all", $options);
     }
 
     function findGroupsWithMemberCount(array $scope): array
     {
+        /** @var TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         $options = [
             'joins' => [
                 [
@@ -234,10 +249,19 @@ class Group extends AppModel
                         'member_groups.group_id = Group.id'
                     ],
                 ],
+                [
+                    'table' => 'team_members',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'member_groups.user_id = team_members.user_id',
+                        'member_groups.team_id = team_members.team_id',
+                        'team_members.status !=' => $TeamMember::USER_STATUS_INACTIVE
+                    ],
+                ],
             ],
             'fields' => [
                 'Group.*',
-                'COALESCE(COUNT(member_groups.id)) AS member_count'
+                'COALESCE(COUNT(member_groups.user_id)) AS member_count'
             ],
             'group' => 'Group.id',
         ];
