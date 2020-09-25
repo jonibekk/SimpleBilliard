@@ -178,6 +178,7 @@ class AuthController extends BaseApiController
                 $requestData['2fa_token'],
                 true
             );
+            $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\Auth2FAMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
