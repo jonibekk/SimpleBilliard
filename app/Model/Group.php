@@ -223,7 +223,7 @@ class Group extends AppModel
                     'conditions' => [
                         'MemberGroup.user_id = team_members.user_id', 
                         'MemberGroup.team_id = team_members.team_id',
-                        'team_members.status !=' => $TeamMember::USER_STATUS_INACTIVE
+                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
             ],
@@ -255,7 +255,7 @@ class Group extends AppModel
                     'conditions' => [
                         'member_groups.user_id = team_members.user_id',
                         'member_groups.team_id = team_members.team_id',
-                        'team_members.status !=' => $TeamMember::USER_STATUS_INACTIVE
+                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
             ],
