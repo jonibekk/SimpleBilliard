@@ -257,6 +257,13 @@ class Group extends AppModel
                         'member_groups.team_id = team_members.team_id',
                     ],
                 ],
+                [
+                    'table' => 'users',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'users.id = member_groups.user_id'
+                    ]
+                ]
             ],
             'fields' => [
                 'Group.*',
@@ -264,7 +271,8 @@ class Group extends AppModel
             ],
             'group' => [
                 'Group.id', 
-                'team_members.status HAVING (team_members.status = 1) OR (team_members.status IS NULL)',
+                'team_members.status',
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL)',
             ],
             "order" => [
                 "Group.name ASC"
@@ -274,7 +282,6 @@ class Group extends AppModel
         $options = array_merge_recursive($options, $scope);
 
         $results =  $this->find('all', $options);
-        GoalousLog::info('result', $results);
 
         return array_map(
             function ($row) {
