@@ -255,15 +255,25 @@ class Group extends AppModel
                     'conditions' => [
                         'member_groups.user_id = team_members.user_id',
                         'member_groups.team_id = team_members.team_id',
-                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
+                [
+                    'table' => 'users',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'users.id = member_groups.user_id'
+                    ]
+                ]
             ],
             'fields' => [
                 'Group.*',
                 'COALESCE(COUNT(member_groups.user_id)) AS member_count'
             ],
-            'group' => 'Group.id',
+            'group' => [
+                'Group.id', 
+                'team_members.status',
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL)',
+            ],
             "order" => [
                 "Group.name ASC"
             ] 
