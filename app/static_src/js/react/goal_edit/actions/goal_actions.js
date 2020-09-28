@@ -112,7 +112,6 @@ export function saveGoal(goalId, addInputData) {
         dispatch(toNextPage())
       },
       ({response}) => {
-        console.log(response.data)
         // when team is in read only
         if (!response.data.validation_errors) {
           // Reason to set to validation_errors.key_result.description is that

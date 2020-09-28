@@ -1,4 +1,5 @@
 <?php
+
 App::import('Service', 'AppService');
 App::import('Service', 'ActionService');
 App::import('Service', 'CommentService');
@@ -14,6 +15,7 @@ App::uses('Translation', 'Model');
 App::uses('TranslationLanguage', 'Model');
 App::import('Lib/Translation', 'TranslationResult');
 App::import('Lib/Translation', 'GoogleTranslatorClient');
+App::uses('UrlUtil', 'Util');
 App::uses('MentionComponent', 'Controller/Component');
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
@@ -22,7 +24,7 @@ use Goalous\Exception as GlException;
 
 class TranslationService extends AppService
 {
-    const MAX_TRY_COUNT = 3;
+    const MAX_TRY_COUNT    = 3;
     const RETRY_SLEEP_SECS = 2;
 
     /**
@@ -44,7 +46,6 @@ class TranslationService extends AppService
         int $contentId,
         string $targetLanguage
     ): TranslationResult {
-
         /** @var TranslationLanguage $TranslationLanguage */
         $TranslationLanguage = ClassRegistry::init('TranslationLanguage');
 
@@ -56,7 +57,6 @@ class TranslationService extends AppService
         $Translation = ClassRegistry::init('Translation');
 
         if ($Translation->hasTranslation($contentType, $contentId, $targetLanguage)) {
-
             $tryCount = 0;
 
             do {
@@ -139,12 +139,16 @@ class TranslationService extends AppService
         $result = $this->getTranslation($contentType, $contentId, $targetLanguage);
 
         switch ($contentType->getValue()) {
+            case TranslationContentType::ACTION_POST:
+                $translation = self::removeUrlEncapsulation($result->getTranslation());
+                return new TranslationResult($result->getSourceLanguage(), $translation, $result->getTargetLanguage());
+            case TranslationContentType::CIRCLE_POST:
             case TranslationContentType::CIRCLE_POST_COMMENT:
             case TranslationContentType::ACTION_POST_COMMENT:
                 $translation = $result->getTranslation();
                 $translation = MentionComponent::replaceMentionTagForTranslationV2($translation);
+                $translation = self::removeUrlEncapsulation($translation);
                 return new TranslationResult($result->getSourceLanguage(), $translation, $result->getTargetLanguage());
-                break;
         };
 
         return $result;
@@ -174,13 +178,16 @@ class TranslationService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('Failed to erase translation.', [
-                'message'      => $e->getMessage(),
-                'trace'        => $e->getTraceAsString(),
-                'content_type' => $contentType->getValue(),
-                'content_id'   => $contentId,
-                'language'     => $targetLanguage
-            ]);
+            GoalousLog::error(
+                'Failed to erase translation.',
+                [
+                    'message'      => $e->getMessage(),
+                    'trace'        => $e->getTraceAsString(),
+                    'content_type' => $contentType->getValue(),
+                    'content_id'   => $contentId,
+                    'language'     => $targetLanguage
+                ]
+            );
             throw $e;
         }
     }
@@ -216,13 +223,16 @@ class TranslationService extends AppService
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('Failed to create translation entry.', [
-                'message'      => $e->getMessage(),
-                'trace'        => $e->getTraceAsString(),
-                'content_type' => $contentType->getValue(),
-                'content_id'   => $contentId,
-                'language'     => $targetLanguage
-            ]);
+            GoalousLog::error(
+                'Failed to create translation entry.',
+                [
+                    'message'      => $e->getMessage(),
+                    'trace'        => $e->getTraceAsString(),
+                    'content_type' => $contentType->getValue(),
+                    'content_id'   => $contentId,
+                    'language'     => $targetLanguage
+                ]
+            );
             throw $e;
         }
 
@@ -248,21 +258,31 @@ class TranslationService extends AppService
             $translatedResult = $TranslatorClient->translate($sourceBody, $targetLanguage);
             $this->updateSourceBodyLanguage($contentType, $contentId, $translatedResult->getSourceLanguage());
 
-            $Translation->updateTranslationBody($contentType, $contentId, $targetLanguage,
-                $translatedResult->getTranslation());
+            $Translation->updateTranslationBody(
+                $contentType,
+                $contentId,
+                $targetLanguage,
+                $translatedResult->getTranslation()
+            );
 
-            $TeamTranslationStatusService->incrementUsageCount($teamId, $contentType,
-                StringUtil::mbStrLength($sourceBody));
+            $TeamTranslationStatusService->incrementUsageCount(
+                $teamId,
+                $contentType,
+                StringUtil::mbStrLength($sourceBody)
+            );
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
-            GoalousLog::error('Failed to insert translation.', [
-                'message'      => $e->getMessage(),
-                'trace'        => $e->getTraceAsString(),
-                'content_type' => $contentType->getValue(),
-                'content_id'   => $contentId,
-                'language'     => $targetLanguage
-            ]);
+            GoalousLog::error(
+                'Failed to insert translation.',
+                [
+                    'message'      => $e->getMessage(),
+                    'trace'        => $e->getTraceAsString(),
+                    'content_type' => $contentType->getValue(),
+                    'content_id'   => $contentId,
+                    'language'     => $targetLanguage
+                ]
+            );
             throw $e;
         }
     }
@@ -292,12 +312,15 @@ class TranslationService extends AppService
         try {
             $TranslationService->createTranslation($contentType, $contentId, $defaultLanguage);
         } catch (Exception $e) {
-            GoalousLog::error('Failed create default translation on new content', [
-                'message'      => $e->getMessage(),
-                'trace'        => $e->getTraceAsString(),
-                'content_type' => $contentType->getKey(),
-                'content_id'   => $contentId,
-            ]);
+            GoalousLog::error(
+                'Failed create default translation on new content',
+                [
+                    'message'      => $e->getMessage(),
+                    'trace'        => $e->getTraceAsString(),
+                    'content_type' => $contentType->getKey(),
+                    'content_id'   => $contentId,
+                ]
+            );
         }
     }
 
@@ -325,24 +348,18 @@ class TranslationService extends AppService
                 /** @var PostService $PostService */
                 $PostService = ClassRegistry::init('PostService');
                 return $PostService->checkUserAccessToCirclePost($userId, $contentId);
-                break;
             case TranslationContentType::CIRCLE_POST_COMMENT:
             case TranslationContentType::ACTION_POST_COMMENT:
                 /** @var CommentService $CommentService */
                 $CommentService = ClassRegistry::init('CommentService');
                 return $CommentService->checkUserAccessToComment($userId, $contentId);
-                break;
             case TranslationContentType::MESSAGE:
                 /** @var MessageService $MessageService */
                 $MessageService = ClassRegistry::init('MessageService');
                 return $MessageService->checkUserAccessToMessage($userId, $contentId);
-                break;
             default:
                 throw new UnexpectedValueException("Unknown translation model type.");
-                break;
         }
-
-        return false;
     }
 
     /**
@@ -379,13 +396,15 @@ class TranslationService extends AppService
             }
 
             return $translationFlg;
-
         } catch (Exception $e) {
-            GoalousLog::error("Error in checking translation availability of a team.", [
-                'message' => $e->getMessage(),
-                'trace'   => $e->getTraceAsString(),
-                'team.id' => $teamId
-            ]);
+            GoalousLog::error(
+                "Error in checking translation availability of a team.",
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                    'team.id' => $teamId
+                ]
+            );
             return false;
         }
     }
@@ -414,8 +433,9 @@ class TranslationService extends AppService
                 if (empty($actionResult)) {
                     break;
                 }
+                $actionBody = self::encapsulateUrlForTranslation($actionResult['name']);
                 $originalModel = [
-                    'body'     => $actionResult['name'],
+                    'body'     => $actionBody,
                     'language' => $post['language'] ?: "",
                     'team_id'  => $actionResult['team_id']
                 ];
@@ -427,8 +447,10 @@ class TranslationService extends AppService
                 if (empty($post)) {
                     break;
                 }
+                $postBody = MentionComponent::replaceMentionForTranslation($post['body']);
+                $postBody = self::encapsulateUrlForTranslation($postBody);
                 $originalModel = [
-                    'body'     => $post['body'],
+                    'body'     => $postBody,
                     'language' => $post['language'] ?: "",
                     'team_id'  => $post['team_id']
                 ];
@@ -442,6 +464,7 @@ class TranslationService extends AppService
                     break;
                 }
                 $commentBody = MentionComponent::replaceMentionForTranslation($comment['body']);
+                $commentBody = self::encapsulateUrlForTranslation($commentBody);
                 $originalModel = [
                     'body'     => $commentBody,
                     'language' => $comment['language'] ?: "",
@@ -463,7 +486,6 @@ class TranslationService extends AppService
                 break;
             default:
                 throw new UnexpectedValueException("Unknown translation model type.");
-                break;
         }
 
         if (empty($originalModel)) {
@@ -524,4 +546,40 @@ class TranslationService extends AppService
         }
         return new GoogleTranslatorClient();
     }
+
+    /**
+     * Encapsulate URLs before translation
+     *
+     * @param string $baseString
+     *
+     * @return string
+     */
+    private static function encapsulateUrlForTranslation(string $baseString): string
+    {
+        $urlPrefix = "<span class=\"glsurl\" translate=\"no\">";
+        $urlSuffix = "</span>";
+
+        return UrlUtil::encapsulateUrl($baseString, ["http", "https"], $urlPrefix, $urlSuffix);
+    }
+
+    /**
+     * Remove URL encapsulation after translated
+     *
+     * @param string $baseString
+     *
+     * @return string
+     */
+    private static function removeUrlEncapsulation(string $baseString): string
+    {
+        $result = preg_replace(
+            '/<span class="glsurl" translate="no">(((?!(\<|\>)).)*)<\/span>/ium',
+            '$1 ',
+            $baseString
+        );
+
+        $result = rtrim($result);
+
+        return $result;
+    }
+
 }
