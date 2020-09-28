@@ -1043,31 +1043,6 @@ class TeamMember extends AppModel
         }
 
         /**
-         * グループ登録処理
-         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
-         */
-        //一旦グループ紐付けを解除
-        $this->User->MemberGroup->deleteAll(['MemberGroup.team_id' => $this->current_team_id]);
-
-        $member_groups = [];
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            if (Hash::get($row_v, 'Group')) {
-                foreach ($row_v['Group'] as $k => $v) {
-                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
-                    $member_groups[] = [
-                        'group_id'  => $group['Group']['id'],
-                        'index_num' => $k,
-                        'team_id'   => $this->current_team_id,
-                        'user_id'   => $row_v['User']['id'],
-                    ];
-                }
-                unset($this->csv_datas[$row_k]['Group']);
-            }
-        }
-        $this->User->MemberGroup->create();
-        $this->User->MemberGroup->saveAll($member_groups);
-
-        /**
          * コーチは最後に登録
          * コーチIDはメンバーIDを検索し、セット
          */
@@ -1138,7 +1113,6 @@ class TeamMember extends AppModel
         foreach ($csv_data as $key => $row) {
             //set line no
             $res['error_line_no'] = $key + 1;
-
             //key name set
             if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
                 $res['error_msg'] = __("Numbers are not consistent.");
@@ -1182,12 +1156,6 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
             } else {
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
-            }
-            //Group
-            foreach ($row['group'] as $v) {
-                if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Group'][] = $v;
-                }
             }
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
@@ -1442,14 +1410,6 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
                 'TeamMember.evaluation_enable_flg') && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
-            //group
-            if (Hash::get($v, 'User.MemberGroup')) {
-                foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
-                    $key_index = $g_k + 1;
-                    $this->csv_datas[$k]['group.' . $key_index] = Hash::get($g_v,
-                        'Group.name') ? $g_v['Group']['name'] : null;
-                }
-            }
         }
 
         $this->setCoachNumberForCsvData($team_id);
@@ -1743,13 +1703,6 @@ class TeamMember extends AppModel
             'admin_flg'             => __("Administrator(*)"),
             'evaluation_enable_flg' => __("Evaluated(*)"),
             'member_type'           => __("Member Type"),
-            'group.1'               => __("Group 1"),
-            'group.2'               => __("Group 2"),
-            'group.3'               => __("Group 3"),
-            'group.4'               => __("Group 4"),
-            'group.5'               => __("Group 5"),
-            'group.6'               => __("Group 6"),
-            'group.7'               => __("Group 7"),
             'coach_member_no'       => __("Coach ID"),
             'evaluator_member_no.1' => __("Evaluator 1"),
             'evaluator_member_no.2' => __("Evaluator 2"),
@@ -1865,23 +1818,6 @@ class TeamMember extends AppModel
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Member Type"))
-                ],
-            ],
-            'group'                 => [
-                'isAlignLeft'     => [
-                    'rule'       => 'isAlignLeft',
-                    'message'    => __("Please %s fill with align left.", __("Group name")),
-                    'allowEmpty' => true,
-                ],
-                'isNotDuplicated' => [
-                    'rule'       => 'isNotDuplicated',
-                    'message'    => __("%s is duplicated.", __("Group name")),
-                    'allowEmpty' => true,
-                ],
-                'maxLengthArray'  => [
-                    'rule'       => ['maxLengthArray', 64],
-                    'message'    => __("%s should be entered in less than 64 characters.", __("Group name")),
-                    'allowEmpty' => true,
                 ],
             ],
             'coach_member_no'       => [

@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
 App::uses('AppModel', 'GoalGroup');
+App::uses('Term', 'Model');
 
 /**
  * Group Model
@@ -203,7 +205,10 @@ class Group extends AppModel
 
     function findMembers(int $groupId): array
     {
-        $members = $this->MemberGroup->User->find("all", [
+        /** @var TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $options = [
             "joins" => [
                 [
                     'alias' => 'MemberGroup',
@@ -213,17 +218,28 @@ class Group extends AppModel
                         'MemberGroup.group_id' => $groupId,
                     ],
                 ],
+                [
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'MemberGroup.user_id = team_members.user_id', 
+                        'MemberGroup.team_id = team_members.team_id',
+                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
+                    ],
+                ],
             ],
             "order" => [
                 "User.first_name ASC"
-            ]
-        ]);
+            ]    
+        ];
 
-        return $members;
+        return $this->MemberGroup->User->find("all", $options);
     }
 
     function findGroupsWithMemberCount(array $scope): array
     {
+        /** @var TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         $options = [
             'joins' => [
                 [
@@ -233,12 +249,34 @@ class Group extends AppModel
                         'member_groups.group_id = Group.id'
                     ],
                 ],
+                [
+                    'table' => 'team_members',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'member_groups.user_id = team_members.user_id',
+                        'member_groups.team_id = team_members.team_id',
+                    ],
+                ],
+                [
+                    'table' => 'users',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'users.id = member_groups.user_id'
+                    ]
+                ]
             ],
             'fields' => [
                 'Group.*',
-                'COALESCE(COUNT(member_groups.id)) AS member_count'
+                'COALESCE(COUNT(member_groups.user_id)) AS member_count'
             ],
-            'group' => 'Group.id',
+            'group' => [
+                'Group.id', 
+                'team_members.status',
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL)',
+            ],
+            "order" => [
+                "Group.name ASC"
+            ] 
         ];
 
         $options = array_merge_recursive($options, $scope);
@@ -252,5 +290,90 @@ class Group extends AppModel
             },
             $results
         );
+    }
+
+    function groupByUserIdSubQuery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id',
+                        'MemberGroup.user_id' => $userId
+                    ]
+                ]
+            ]
+        ], $this);
+    }
+
+    function groupForCoacheesSubQuery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'TeamMember.user_id = MemberGroup.user_id',
+                        'TeamMember.coach_user_id' => $userId,
+                    ]
+                ]
+            ]
+        ], $this);
+    }
+
+    function groupForEvaluateesSubQuery($userId)
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Group.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Group",
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'Evaluation',
+                    'table' => 'evaluations',
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id = MemberGroup.user_id',
+                        'Evaluation.evaluator_user_id' => $userId
+                    ]
+                ],
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'Term.id = Evaluation.term_id',
+                        'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                    ]
+                ]
+            ]
+        ], $this);
     }
 }
