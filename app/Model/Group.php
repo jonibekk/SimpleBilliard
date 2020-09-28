@@ -255,7 +255,6 @@ class Group extends AppModel
                     'conditions' => [
                         'member_groups.user_id = team_members.user_id',
                         'member_groups.team_id = team_members.team_id',
-                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
             ],
@@ -263,7 +262,10 @@ class Group extends AppModel
                 'Group.*',
                 'COALESCE(COUNT(member_groups.user_id)) AS member_count'
             ],
-            'group' => 'Group.id',
+            'group' => [
+                'Group.id', 
+                'team_members.status HAVING (team_members.status = 1) OR (team_members.status IS NULL)',
+            ],
             "order" => [
                 "Group.name ASC"
             ] 
@@ -272,6 +274,7 @@ class Group extends AppModel
         $options = array_merge_recursive($options, $scope);
 
         $results =  $this->find('all', $options);
+        GoalousLog::info('result', $results);
 
         return array_map(
             function ($row) {
