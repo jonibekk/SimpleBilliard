@@ -224,7 +224,7 @@ class ApiTopicService extends ApiService
         /** @var Topic $Topic */
         $Topic = ClassRegistry::init('Topic');
 
-        $res = $Topic->getWithLatestMessage($topicId);
+        $res = $Topic->getWithLatestMesasge($topicId);
         $res = $this->process([$res], $userId)[0];
         return $res;
     }
