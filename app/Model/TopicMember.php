@@ -57,20 +57,16 @@ class TopicMember extends AppModel
     /**
      * Count members
      *
-     * @param int  $topicId
-     * @param bool $distinctOnly Only counting distinct users
+     * @param int $topicId
      *
      * @return int
      */
-    public function countMember(int $topicId, bool $distinctOnly = true): int
+    function countMember(int $topicId): int
     {
-        if ($distinctOnly) {
-            return count($this->findDistinctTopicMemberIds($topicId));
-        }
-
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
         $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
+
         $options = [
             'conditions' => [
                 'topic_id' => $topicId,
@@ -112,14 +108,15 @@ class TopicMember extends AppModel
      * @param int   $topicId
      * @param int   $limit if 0, unlimited
      * @param array $excludeUids
-     * @param bool  $distinctOnly Only distinct users
      *
      * @return array
      */
-    function findUsersSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = [], bool $distinctOnly = true): array
+    function findUsersSortedBySentMessage(int $topicId, int $limit = 0, array $excludeUids = []): array
     {
         $options = [
-            'conditions' => [],
+            'conditions' => [
+                'TopicMember.topic_id' => $topicId,
+            ],
             'fields'     => [
                 'TopicMember.id',
             ],
@@ -136,11 +133,6 @@ class TopicMember extends AppModel
         }
         if ($limit !== 0) {
             $options['limit'] = $limit;
-        }
-        if ($distinctOnly) {
-            $options['conditions'][] = ['TopicMember.id' => $this->findDistinctTopicMemberIds($topicId, false)];
-        } else {
-            $options['conditions'][] = ['TopicMember.topic_id' => $topicId];
         }
         $ret = $this->find('all', $options);
         if (!$ret) {
@@ -322,17 +314,16 @@ class TopicMember extends AppModel
      *
      * @return array
      */
-    public function findMembers(int $topicId): array
+    function findMembers(int $topicId): array
     {
-        $distinctIds = $this->findDistinctTopicMemberIds($topicId);
-
-        if (empty($distinctIds)) {
-            return [];
-        }
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $activeTeamMembersList = $TeamMember->getActiveTeamMembersList();
 
         $options = [
             'conditions' => [
-                'TopicMember.id' => $distinctIds
+                'topic_id' => $topicId,
+                'user_id'  => $activeTeamMembersList
             ],
             'contain'    => [
                 'User' => [
@@ -341,7 +332,6 @@ class TopicMember extends AppModel
             ]
         ];
         $res = $this->find('all', $options);
-
         return $res;
     }
 
@@ -368,42 +358,6 @@ class TopicMember extends AppModel
         }
         $lastReadMessageId = Hash::get($res, 'TopicMember.last_read_message_id');
         return $lastReadMessageId;
-    }
-
-    /**
-     * Get a list of topic member ids for distinct users in a topic
-     *
-     * @param int  $topicId
-     * @param bool $activeUsersOnly Only get users active in a team
-     *
-     * @return array [TopicMember.id]
-     */
-    public function findDistinctTopicMemberIds(int $topicId, bool $activeUsersOnly = true): array
-    {
-        $options = [
-            'conditions' => [
-                'TopicMember.topic_id' => $topicId
-            ],
-            'fields'     => [
-                'MIN(id) as id',
-                'user_id'
-            ],
-            'group' => [
-                'user_id'
-            ]
-        ];
-
-        if ($activeUsersOnly) {
-            $teamId = $this->Topic->get($topicId)['team_id'];
-
-            /** @var TeamMember $TeamMember */
-            $TeamMember = ClassRegistry::init('TeamMember');
-            $activeTeamMembersList = $TeamMember->getActiveTeamMembersList(false, $teamId);
-
-            $options['conditions'][] = ['TopicMember.user_id' => $activeTeamMembersList];
-        }
-
-        return Hash::extract($this->find('all', $options), '{n}.0.id');
     }
 
 }
