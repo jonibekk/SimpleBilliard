@@ -874,7 +874,8 @@ class UsersController extends AppController
 
             // 通知設定 更新時
             if (isset($this->request->data['NotifySetting']['email_status']) &&
-                isset($this->request->data['NotifySetting']['mobile_status'])
+                isset($this->request->data['NotifySetting']['mobile_status']) &&
+                isset($this->request->data['NotifySetting']['desktop_status'])
             ) {
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
@@ -887,6 +888,10 @@ class UsersController extends AppController
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('mobile',
                             $this->request->data['NotifySetting']['mobile_status']));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                        $this->User->NotifySetting->getSettingValues('desktop',
+                            $this->request->data['NotifySetting']['desktop_status']));
             }
 
             if (isset($this->request->data['TeamMember'][0]['default_translation_language'])) {
