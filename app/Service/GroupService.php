@@ -83,10 +83,9 @@ class GroupService extends AppService
     function parseMembers(string $groupId, string $teamId, string $tmp_file_path): array
     {
         $results = [
-            'existing' => 0,
-            'invalid' => 0,
-            'valid' => 0,
+            'invalidEmails' => [],
             'validUserIds' => [],
+            'existingUserIds' => []
         ];
 
         $this->parseCsv(
@@ -95,14 +94,16 @@ class GroupService extends AppService
                 // take first column of each row
                 $emails = array_map('array_shift', $rows);
                 $queried = $this->queryPossibleMembers($groupId, $teamId, $emails);
-                $results['existing'] += $queried['existing'];
-                $results['invalid'] += $queried['invalid'];
-                $results['valid'] += $queried['valid'];
-                $results['validUserIds'] = array_merge($results['validUserIds'], $queried['validUserIds']);
+                $results = array_merge_recursive($results, $queried);
             }
         );
 
-        return $results;
+        return [
+            'existing' => count(array_unique($results['existingUserIds'])),
+            'valid' => count(array_unique($results['validUserIds'])),
+            'invalid' => count(array_unique($results['invalidEmails'])),
+            'validUserIds' => $results['validUserIds']
+        ];
     }
 
     function addMembers(string $groupId, string $teamId, array $userIds): int
@@ -161,31 +162,31 @@ class GroupService extends AppService
         /** @var Email $Email */
         $Email = ClassRegistry::init("Email");
 
-
         $results = $Email->findVerifiedTeamMembersByEmailAndGroup(
             (int) $groupId,
             (int) $teamId,
             $emails
         );
 
+        $retrievedEmails = Hash::extract($results, '{n}.Email.email');
+        $invalidEmails = array_diff(array_unique($emails), $retrievedEmails);
+
         return array_reduce(
             $results,
             function ($acc, $data) {
-                $acc['invalid'] -= 1;
+
                 if ($data['MemberGroup']['group_id'] === null) {
-                    $acc['valid'] += 1;
                     array_push($acc['validUserIds'], $data['Email']['user_id']);
                 } else {
-                    $acc['existing'] += 1;
+                    array_push($acc['existingUserIds'], $data['Email']['user_id']);
                 }
 
                 return $acc;
             },
             [
-                'existing' => 0,
-                'invalid' => count($emails),
-                'valid' => 0,
-                'validUserIds' => []
+                'invalidEmails' => $invalidEmails,
+                'validUserIds' => [],
+                'existingUserIds' => []
             ]
         );
     }

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('TeamMember', 'Model');
 
 use Goalous\Enum as Enum;
 
@@ -309,6 +310,9 @@ class Email extends AppModel
 
     public function findVerifiedTeamMembers(int $teamId): array
     {
+        /** @var TeamMember **/
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         return $this->find('all', [
             'joins' => [
                 [
@@ -316,7 +320,8 @@ class Email extends AppModel
                     'table' => 'team_members',
                     'conditions' => [
                         "TeamMember.user_id = Email.user_id",
-                        "TeamMember.team_id" => $teamId
+                        "TeamMember.team_id" => $teamId,
+                        "TeamMember.status" => TeamMember::USER_STATUS_ACTIVE
                     ]
                 ],
                 [
@@ -324,12 +329,12 @@ class Email extends AppModel
                     'table' => 'users',
                     'conditions' => [
                         "User.id = Email.user_id",
-                        "User.active_flg" => true
                     ]
                 ],
             ],
             'conditions' => [
-                'Email.email_verified' => true
+                'Email.email_verified' => true,
+                'Email.del_flg' => false
             ],
             'fields' => [
                 'Email.email'
@@ -361,10 +366,14 @@ class Email extends AppModel
         int $teamId,
         array $emails
     ): array {
+        /** @var TeamMember **/
+        $TeamMember = ClassRegistry::init("TeamMember");
+
         $options = [
             'conditions' => [
                 'Email.email' => $emails,
-                'Email.email_verified' => true
+                'Email.email_verified' => true,
+                'Email.del_flg' => false
             ],
             'joins' => [
                 [
@@ -372,7 +381,8 @@ class Email extends AppModel
                     'table' => 'team_members',
                     'conditions' => [
                         "TeamMember.user_id = Email.user_id",
-                        "TeamMember.team_id" => $teamId
+                        "TeamMember.team_id" => $teamId,
+                        "TeamMember.status" => $TeamMember::USER_STATUS_ACTIVE
                     ]
                 ],
                 [
@@ -389,7 +399,6 @@ class Email extends AppModel
                     'table' => 'users',
                     'conditions' => [
                         "User.id = Email.user_id",
-                        "User.active_flg" => true
                     ]
                 ],
             ],
