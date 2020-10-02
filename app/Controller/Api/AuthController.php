@@ -321,8 +321,11 @@ class AuthController extends BaseApiController
         }
         $token = $this->getTokenForRecovery($user, $teamId);
 
+        /** @var AuthService $AuthService */
+        $AuthService = new AuthService();
+
         $data = [
-            'me'    => $this->_getAuthUserInfo($user['id'], $teamId),
+            'me'    => $AuthService->getUserInfo($user['id'], $teamId),
             'token' => $token
         ];
 
