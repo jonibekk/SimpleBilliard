@@ -137,7 +137,7 @@ class AuthController extends BaseApiController
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
             $response = $this->appendCookieInfo($response);
-        } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
+        } catch (GlException\Auth\Auth2FAMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
                 ->getResponse();
@@ -181,7 +181,7 @@ class AuthController extends BaseApiController
                 true
             );
             $response = $this->appendCookieInfo($response);
-        } catch (GlException\Auth\Auth2FAMismatchException $e) {
+        } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
                 ->getResponse();
