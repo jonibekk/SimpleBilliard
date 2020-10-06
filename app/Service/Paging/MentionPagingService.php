@@ -69,7 +69,13 @@ class MentionPagingService extends BaseGetAllService
         /** @var ImageStorageService $ImageStorageService */
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         $res = [];
+        $existingUsers = [];
         foreach ($users as $user) {
+            if (array_key_exists($user['id'], $existingUsers)) {
+                 continue;
+            }
+            $existingUsers[$user['id']] = true;
+
             $user['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($user, 'User');
             $res[] = [
                 'type'    => 'user',
