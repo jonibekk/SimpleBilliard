@@ -19,7 +19,7 @@ msgid " +%s"
 msgstr " +%s"
 
 msgid " count"
-msgstr "Contagem"
+msgstr " Contagem"
 
 msgid " New comments."
 msgstr "Novos comentários."
@@ -651,6 +651,9 @@ msgstr "e %s outros"
 msgid "Annual plan(paid monthly)"
 msgstr "Plano anual (pago mensalmente)"
 
+msgid "Any goals created in the future will need to have a destination group set up for publication."
+msgstr ""
+
 msgid "Any other questions?"
 msgstr "Alguma outra pergunta?"
 
@@ -780,6 +783,10 @@ msgstr "As senhas não são iguais. "
 msgid "Brazil"
 msgstr "Brasil"
 
+#, fuzzy
+msgid "Browser Notification Permission Denied!! Please enable notification permission via brower setting and refresh!"
+msgstr ""
+
 msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 msgstr "Clicando em <q> Eu concordo. Contate-nos.</q> Você está concordando com os <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Services</a> e <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 
@@ -809,6 +816,13 @@ msgstr "Contrato | Goalous"
 
 msgid "Can I continue using Goalous for free?"
 msgstr "Posso continuar usando o Goalous gratuitamente?"
+
+#, fuzzy
+msgid "Can see GKA of all members"
+msgstr ""
+
+msgid "Can see GKA of all team members."
+msgstr ""
 
 msgid "Can we customize Goalous?"
 msgstr "Podemos personalizar o Goalous?"
@@ -1525,6 +1539,7 @@ msgstr "Você quer realmente excluir este comentário?"
 msgid "Do you really want to delete this Goal?"
 msgstr "Deseja realmente excluir este objetivo?"
 
+#, fuzzy
 msgid "Do you really want to delete this Key Result?"
 msgstr "Deseja realmente excluir este Resultado-chave?"
 
@@ -2423,6 +2438,9 @@ msgstr "Goalous: diversas funcionalidades que deixam o trabalho mais divertido!"
 msgid "Goals"
 msgstr "Lista de objetivos"
 
+msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
+msgstr ""
+
 msgid "Google"
 msgstr "Google"
 
@@ -2470,6 +2488,9 @@ msgstr "Nome da visão do grupo"
 
 msgid "Group Visions"
 msgstr "Visões do grupo"
+
+msgid "Groups that can see this goal"
+msgstr ""
 
 msgid "Half a year"
 msgstr "Semestre"
@@ -3134,6 +3155,9 @@ msgstr "ID DE USUÁRIO DO LÍDER"
 msgid "Learn all of the ways you can improve your organization using Goalous."
 msgstr "Aprenda novas maneiras de ajudar sua empresa."
 
+msgid "Learn More"
+msgstr ""
+
 msgid "Learn more about GKA（Check out our Goalous Blog）"
 msgstr "Aprenda sobre o GKA (veja nosso Blog)"
 
@@ -3605,6 +3629,9 @@ msgstr "Outubro"
 
 msgid "Off"
 msgstr "Nenhum"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "OKR and Communication Software | Goalous"
 msgstr "Software de OKRs e comunicação | Goalous"
@@ -4276,6 +4303,10 @@ msgstr "Privado"
 msgid "See All"
 msgstr "Ver tudo"
 
+#, fuzzy
+msgid "See GKA"
+msgstr ""
+
 msgid "See how many members have read your posts and comments"
 msgstr "Veja quantos membros leram suas postagens e comentários"
 
@@ -4813,6 +4844,10 @@ msgstr "O objetivo que começa no período atual e termina no próximo período 
 msgid "The Goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term."
 msgstr "O objetivo que começa no próximo período e termina após o próximo período será atualizado no último dia no próximo período."
 
+#, fuzzy
+msgid "The goal will only be visible to group members. Any goals you create in the future will need to have a destination group set up for publication."
+msgstr ""
+
 msgid "The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term."
 msgstr "Os Objetivos/Resultados-chave que começam e terminam depois do próximo período foram atualizados para corresponder à data de início e término do próximo período."
 
@@ -4906,6 +4941,9 @@ msgstr "Não há mais rankings para mostrar."
 msgid "There are no recent updates."
 msgstr "Não há novos updates"
 
+msgid "There is %s goals you do not have permission to see"
+msgstr ""
+
 msgid "There is a problem with your card."
 msgstr "Há um problema no seu cartão."
 
@@ -4953,6 +4991,13 @@ msgstr "Portanto, alteramos o status da sua equipe para somente leitura."
 
 msgid "This action can't be edited."
 msgstr "Esta ação não pode ser editada."
+
+msgid "This check cannot be turned off because there is no valid group in this team."
+msgstr ""
+
+#, fuzzy
+msgid "This check cannot be turned off because there is no valid group on this team."
+msgstr ""
 
 msgid "This circle does not exist."
 msgstr "Este círculo não existe."
@@ -5002,6 +5047,9 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
 
+msgid "This goal is open to all team members"
+msgstr ""
+
 msgid "This invitation isn't not for you."
 msgstr "Este convite não é para você."
 
@@ -5031,6 +5079,9 @@ msgstr "Esse post não existe"
 
 msgid "This post was deleted."
 msgstr "Este post foi deletado"
+
+msgid "This setting will set goals to only be visible to group members."
+msgstr ""
 
 msgid "This Term"
 msgstr "Este período"
@@ -5497,6 +5548,13 @@ msgstr "Quando devo solicitar o plano pago?"
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "Quando a avaliação gratuita terminar, você poderá usá-lo apenas no modo somente leitura por 30 dias. Durante esse período, você não poderá postar."
 
+#, fuzzy
+msgid "When this is turned on, there will be no restriction on display of goals created after now. For goals that have already been created, you can change the group to which they are published."
+msgstr ""
+
+msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
+msgstr ""
+
 msgid "Whichever you choose, this kr will be finished."
 msgstr "Qualquer que seja a sua escolha, esse Resultado-chave será concluído."
 
@@ -5718,6 +5776,9 @@ msgstr "Você não pode mudar o líder do objetivo durante o período de avalia�
 
 msgid "You did not like it."
 msgstr "Você não curtiu isso."
+
+msgid "You do not have permission to view this goal"
+msgstr ""
 
 msgid "You do something worthwhile."
 msgstr "Faça algo valioso"

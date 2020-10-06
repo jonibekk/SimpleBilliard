@@ -663,6 +663,9 @@ msgstr "と%s人"
 msgid "Annual plan(paid monthly)"
 msgstr "年間プラン (月々払い)"
 
+msgid "Any goals created in the future will need to have a destination group set up for publication."
+msgstr "今後作成するゴールには、公開先グループを設定する必要があります。"
+
 msgid "Any other questions?"
 msgstr "その他のご質問はありますか？"
 
@@ -709,7 +712,7 @@ msgid "Attach and share files up to 100MB per file"
 msgstr "1ファイルあたり100MBまでのファイルを添付"
 
 msgid "Attention"
-msgstr "ご注意"
+msgstr "注意"
 
 msgid "Aug"
 msgstr "８月"
@@ -792,6 +795,11 @@ msgstr "パスワードが一致しません。"
 msgid "Brazil"
 msgstr "ブラジル"
 
+msgid "Browser Notification Permission Denied!! Please enable notification permission via brower setting and refresh!"
+msgstr ""
+"ブラウザの通知許可が拒否されました。"
+"ブラウザの設定で通知許可を有効にして、ページを更新してください。"
+
 msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 msgstr "下の<q>同意して、問い合わせる</q>をクリックすると、<a href='/terms' target='_blank'>利用規約</a>と<a href='/privacy_policy' target='_blank'>プライバシーポリシー</a>に同意したことになります。"
 
@@ -821,6 +829,12 @@ msgstr "Goalousキャンペーン利用特約 | Goalous(ゴーラス)"
 
 msgid "Can I continue using Goalous for free?"
 msgstr "無料でGoalousを使い続けることはできますか？"
+
+msgid "Can see GKA of all members"
+msgstr "全てのメンバーにゴールとアクションを公開する"
+
+msgid "Can see GKA of all team members."
+msgstr "全てのメンバーがゴールとアクションを見ることができる"
 
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
@@ -1537,7 +1551,10 @@ msgid "Do you really want to delete this Goal?"
 msgstr "本当にこのゴールを削除しますか？"
 
 msgid "Do you really want to delete this Key Result?"
-msgstr "本当にこのKRを削除しますか？"
+msgstr ""
+"このKRに紐付いたアクションは全て削除されます。"
+"この操作を取り消すことはできません。"
+"本当にこのKRを削除しますか？"
 
 msgid "Do you really want to delete this post?"
 msgstr "本当にこの投稿を削除しますか？"
@@ -2437,6 +2454,9 @@ msgstr "もっとあります、シゴトをたのしくするGoalousの特徴�
 msgid "Goals"
 msgstr "ゴール一覧"
 
+msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
+msgstr "既に作成されているゴールは、公開先のグループを変更することができます。"
+
 msgid "Google"
 msgstr "Google"
 
@@ -2484,6 +2504,9 @@ msgstr "グループビジョン名"
 
 msgid "Group Visions"
 msgstr "グループビジョン"
+
+msgid "Groups that can see this goal"
+msgstr "公開先グループ"
 
 msgid "Half a year"
 msgstr "半年"
@@ -3150,6 +3173,9 @@ msgstr "リーダーのユーザーID"
 msgid "Learn all of the ways you can improve your organization using Goalous."
 msgstr "Goalousを使ってどのように組織改革するかをご紹介します。"
 
+msgid "Learn More"
+msgstr "もっと詳しく"
+
 msgid "Learn more about GKA（Check out our Goalous Blog）"
 msgstr "GKAについて詳しく(Goalousブログへ)"
 
@@ -3624,6 +3650,9 @@ msgstr "１０月"
 
 msgid "Off"
 msgstr "オフ"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "OKR and Communication Software | Goalous"
 msgstr "OKR・コミュニケーションツール | Goalous(ゴーラス)"
@@ -4294,6 +4323,9 @@ msgstr "秘密"
 msgid "See All"
 msgstr "すべて見る"
 
+msgid "See GKA"
+msgstr "GKAの表示"
+
 msgid "See how many members have read your posts and comments"
 msgstr "全ての投稿とコメントの既読者を表示"
 
@@ -4836,6 +4868,11 @@ msgstr "「開始日が今期に属し、かつ終了日が来期に属するゴ
 msgid "The Goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term."
 msgstr "「開始日が来期に属し、かつ終了日が来期末を超えるゴール/KR」は、終了日が来期末に更新されます。"
 
+msgid "The goal will only be visible to group members. Any goals you create in the future will need to have a destination group set up for publication."
+msgstr ""
+"ゴール、キーリザルト、アクションがグループメンバーにだけ見えるようになります。"
+"この機能をオフにした後に作成するゴールには、公開先グループを設定する必要があります。"
+
 msgid "The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term."
 msgstr "「開始日と終了日が共に来期を超えるゴール/KR」は、開始日が来期初めに、かつ終了日が来期末に更新されました。"
 
@@ -4929,6 +4966,9 @@ msgstr "これ以下のランキングはありません。"
 msgid "There are no recent updates."
 msgstr "直近の更新はありません。"
 
+msgid "There is %s goals you do not have permission to see"
+msgstr "非公開のゴールが%s件あります"
+
 msgid "There is a problem with your card."
 msgstr "お客様のカード情報に問題があります。"
 
@@ -4976,6 +5016,12 @@ msgstr "そのため、チームのステータスを読み取り専用に変更
 
 msgid "This action can't be edited."
 msgstr "このアクションは編集できません。"
+
+msgid "This check cannot be turned off because there is no valid group in this team."
+msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
+
+msgid "This check cannot be turned off because there is no valid group on this team."
+msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
 
 msgid "This circle does not exist."
 msgstr "このサークルは存在しません。"
@@ -5025,6 +5071,9 @@ msgstr "本機能はPCにてご利用できます。"
 msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
+msgid "This goal is open to all team members"
+msgstr "このゴールは全員に公開されています"
+
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
 
@@ -5054,6 +5103,9 @@ msgstr "この投稿は存在しません。"
 
 msgid "This post was deleted."
 msgstr "この投稿は削除されています。"
+
+msgid "This setting will set goals to only be visible to group members."
+msgstr "ゴールがグループメンバーにだけ見えるようになります。"
 
 msgid "This Term"
 msgstr "今期"
@@ -5522,6 +5574,14 @@ msgstr "いつ有料プランに申し込めばよいですか？"
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "フリートライアル期間が終了すると、30日間の読込専用モードになります。この期間は、アクションや投稿などの書込をすることができません。"
 
+msgid "When this is turned on, there will be no restriction on display of goals created after now. For goals that have already been created, you can change the group to which they are published."
+msgstr ""
+"この機能をONにすると、これから作成されるゴールの表示制限がなくなります。"
+"既に作成されているゴールは、公開先のグループを変更することができます。"
+
+msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
+msgstr "ONにすると、これから作成されるゴールの表示制限がなくなります。"
+
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
 
@@ -5743,6 +5803,9 @@ msgstr "評価期間中のゴールのリーダーは変更できません。"
 
 msgid "You did not like it."
 msgstr "あなたはいいね！していません。"
+
+msgid "You do not have permission to view this goal"
+msgstr "このゴールは非公開です"
 
 msgid "You do something worthwhile."
 msgstr "社員となんかしよう"
