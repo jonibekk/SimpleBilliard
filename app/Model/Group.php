@@ -366,11 +366,27 @@ class Group extends AppModel
                     ]
                 ],
                 [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'Goal',
+                    'table' => 'goals',
+                    'conditions' => [
+                        'Goal.id = GoalGroup.goal_id'
+                    ]
+                ],
+                [
                     'alias' => 'Term',
                     'table' => 'terms',
                     'conditions' => [
                         'Term.id = Evaluation.term_id',
                         'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
                     ]
                 ]
             ]
