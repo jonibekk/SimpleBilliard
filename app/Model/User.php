@@ -1842,7 +1842,8 @@ class User extends AppModel
                     'table'      => 'team_members',
                     'alias'      => 'TeamMember',
                     'conditions' => [
-                        'TeamMember.user_id = User.id'
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.del_flg' => false
                     ]
                 ]
             ]
