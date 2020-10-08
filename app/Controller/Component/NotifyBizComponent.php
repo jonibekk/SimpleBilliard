@@ -1941,6 +1941,7 @@ class NotifyBizComponent extends Component
 
             // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
             $title = "";
+            $body = "";
             if (isset($this->notify_option['message'])) {
                 $title = $this->notify_option['message'];
             } else {
@@ -1955,14 +1956,10 @@ class NotifyBizComponent extends Component
                 );
 
                 //メッセージの場合は本文も出ていたほうがいいので出してみる
-                $item_name = json_decode($this->notify_option['item_name']);
-                if (!empty($item_name)) {
-                    $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
-                    $title .= " : " . $item_name;
-                }
+                $body = json_decode($this->notify_option['item_name']);
             }
 
-            $SubscriptionService->sendDesktopPushNotification($subscriptions, $title, $postUrl);
+            $SubscriptionService->sendDesktopPushNotification($subscriptions, $title, $body, $postUrl);
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく
