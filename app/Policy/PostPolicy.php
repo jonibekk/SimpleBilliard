@@ -79,12 +79,16 @@ class PostPolicy extends BasePolicy
         $allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId);
 
         $fullQuery = 'Post.id in (' . $allPublicQuery . ') OR 
-                      Post.id in (' . $allCoacheesQuery . ') OR
                       Post.goal_id in (' . $allGroupsQuery . ')';
 
-        if ($this->evaluationSettingEnabled()) {
-            $query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
+        if ($type === 'read') {
+            $query = 'Post.id in (' . $allCoacheesQuery . ') OR ';
             $fullQuery = $query . $fullQuery;
+
+            if ($this->evaluationSettingEnabled()) {
+                $query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
+                $fullQuery = $query . $fullQuery;
+            }
         }
 
         return [
