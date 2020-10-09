@@ -203,6 +203,30 @@ class Group extends AppModel
         return $res;
     }
 
+    function findForUser(int $userId)
+    {
+        return $this->find("all", [
+            "joins" => [
+                [
+                    "alias" => "MemberGroup",
+                    "table" => "member_groups",
+                    "conditions" => [
+                        "MemberGroup.group_id = Group.id"
+                    ]
+                ],
+                [
+                    "alias" => "User",
+                    "table" => "users",
+                    "conditions" => [
+                        "MemberGroup.user_id = User.id",
+                        "User.id" => $userId
+                    ]
+                ]
+            ],
+            "order" => "Group.name"
+        ]);
+    }
+
     function findMembers(int $groupId): array
     {
         /** @var TeamMember */
