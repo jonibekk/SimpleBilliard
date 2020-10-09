@@ -185,7 +185,9 @@ $filterCommonUrl = "/users/view_actions/user_id:{$namedParams['user_id']}/page_t
         <?php endif; ?>
         <?php if ($unauthorizedActionsCount > 0): ?>
             <div class="profile-actions-footer">
-                <?= __("There is %s actions you do not have permission to see", $unauthorizedActionsCount) ?>
+                <div>
+                    <?= __("There is %s actions you do not have permission to see", $unauthorizedActionsCount) ?>
+                </div>
             </div>
         <?php endif ?>
     </div>
