@@ -56,4 +56,61 @@ class UrlUtilTest extends GoalousTestCase
             $processedSampleTextUTF3
         );
     }
+
+    /**
+ * Function to test encapsulating Goalous (CakePHP 2.0) styled URLs
+ */
+    public function test_encapsulateGoalousURL_success()
+    {
+        $sampleText = "
+  https://isao.goalous.com/goals/view_actions/goal_id:2682/page_type:list/key_result_id:6971
+  https://isao.goalous.com/goals/view_actions/goal_id:2615/page_type:list/key_result_id:6837
+";
+
+        $expectedText = "
+  12https://isao.goalous.com/goals/view_actions/goal_id:2682/page_type:list/key_result_id:697134
+  12https://isao.goalous.com/goals/view_actions/goal_id:2615/page_type:list/key_result_id:683734
+";
+
+        $processedSample = UrlUtil::encapsulateUrl($sampleText, ["http", "https"], "12", "34");
+
+        $this->assertTextEquals($expectedText, $processedSample);
+    }
+
+    /**
+     * Function to test encapsulating Goalous (CakePHP 2.0) styled URLs
+     */
+    public function test_encapsulateMultipleURL_success()
+    {
+        $sampleText = "[サークルとアクションのテンプレート]
+  GitHubの問題テンプレートは私のイメージです。
+  https://docs.github.com/en/free-pro-team@latest/github/building-a-strong-community/configuring-issue-templates-for-your-repository
+
+ 一部のメンバーは、同じKRのアクションで同じ形式を使用します。
+  https://isao.goalous.com/goals/view_actions/goal_id:2682/page_type:list/key_result_id:6971
+  https://isao.goalous.com/goals/view_actions/goal_id:2615/page_type:list/key_result_id:6837
+  （花田さん）
+
+ この機能により、コンテンツの投稿と思考が簡単になります。
+
+ そして、それは外部サービス（RPA、DB、SaaS ....）との統合に関連します。";
+
+        $expectedText = "[サークルとアクションのテンプレート]
+  GitHubの問題テンプレートは私のイメージです。
+  12https://docs.github.com/en/free-pro-team@latest/github/building-a-strong-community/configuring-issue-templates-for-your-repository34
+
+ 一部のメンバーは、同じKRのアクションで同じ形式を使用します。
+  12https://isao.goalous.com/goals/view_actions/goal_id:2682/page_type:list/key_result_id:697134
+  12https://isao.goalous.com/goals/view_actions/goal_id:2615/page_type:list/key_result_id:683734
+  （花田さん）
+
+ この機能により、コンテンツの投稿と思考が簡単になります。
+
+ そして、それは外部サービス（RPA、DB、SaaS ....）との統合に関連します。";
+
+        $processedSample = UrlUtil::encapsulateUrl($sampleText, ["http", "https"], "12", "34");
+
+        $this->assertTextEquals($expectedText, $processedSample);
+    }
+
 }
