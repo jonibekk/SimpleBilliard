@@ -3,6 +3,7 @@ App::import('Service', 'AppService');
 App::uses('Team', 'Model');
 App::import('Service', 'PaymentService');
 App::import('Service', 'UnreadCirclePostService');
+App::import('Service', 'TeamMemberService');
 App::uses('NotifyBizComponent', 'Controller/Component');
 App::import('Lib/DataExtender', 'TeamExtender');
 App::import('Service/Request/Resource', 'TeamResourceRequest');
@@ -19,6 +20,7 @@ App::uses('PricePlanPurchaseTeam', 'Model');
 App::uses('UnreadCirclePost', 'Model');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Class TeamService
@@ -152,7 +154,8 @@ class TeamService extends AppService
         int $currentStatus,
         int $nextStatus,
         array $targetTeamIds = []
-    ): bool {
+    ): bool
+    {
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
 
@@ -523,5 +526,50 @@ class TeamService extends AppService
 
         return $TeamExtender->extend($team->toArray(), $request->getUserId(), $request->getTeamId(),
             [TeamExtender::EXTEND_ALL]);
+    }
+
+    /**
+     * Join an user to a team
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function joinTeam(int $userId, int $teamId): bool
+    {
+        try {
+            $this->TransactionManager->begin();
+            /** @var TeamMemberService $TeamMemberService */
+            $TeamMemberService = ClassRegistry::init('TeamMemberService');
+            if (!$TeamMemberService->add($userId, $teamId)) {
+                throw new RuntimeException("Failed to add team member");
+            }
+
+            /** @var Circle $Circle */
+            $Circle = ClassRegistry::init('Circle');
+            $teamAllCircleId = $Circle->getTeamAllCircleId($teamId);
+
+            if (empty($teamAllCircleId)) {
+                throw new GlException\GoalousNotFoundException("Team does not have default circle.");
+            }
+
+            // Add to default circle
+            /** @var CircleMemberService $CircleMemberService */
+            $CircleMemberService = ClassRegistry::init('CircleMemberService');
+            if (!$CircleMemberService->add($userId, $teamId, $teamAllCircleId)) {
+                throw new RuntimeException("Failed to join circle");
+            }
+            $this->TransactionManager->commit();
+        } catch (GlException\GoalousConflictException $e) {
+            $this->TransactionManager->rollback();
+            return false;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+        return true;
     }
 }

@@ -10,6 +10,7 @@ App::uses('GlEmailComponent', 'Controller/Component');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentTiming');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * Class InvitationService
@@ -217,7 +218,7 @@ class InvitationService extends AppService
 
             /* get payment flag */
             $paymentTiming = new PaymentTiming();
-            if (!$paymentTiming->checkIfPaymentTiming($teamId)){
+            if (!$paymentTiming->checkIfPaymentTiming($teamId)) {
 
                 /* Charge if paid plan */
                 // TODO.payment: Should we store $addUserCnt to DB?
@@ -376,5 +377,111 @@ class InvitationService extends AppService
         $Email->set(['email' => $email]);
         $Email->validates();
         return $this->validationExtract($Email->validationErrors);
+    }
+
+    /**
+     * Validate token to a user
+     *
+     * @param int    $userId
+     * @param string $token
+     *
+     * @return string
+     */
+    public function validateToken(int $userId, string $token): string
+    {
+        /** @var Invite $Invite */
+        $Invite = ClassRegistry::init("Invite");
+
+        $invite = $Invite->getByToken($token);
+        if (empty($invite)) {
+            return Enum\Invite\ResponseMessage::FAILED;
+        }
+        if ($invite['Invite']['to_user_id'] != $userId) {
+            return Enum\Invite\ResponseMessage::FAILED_INVALID_USER;
+        }
+        if ($invite['Invite']['email_verified']) {
+            return Enum\Invite\ResponseMessage::FAILED_TOKEN_USED;
+        }
+        if ($invite['Invite']['email_token_expires'] < REQUEST_TIMESTAMP) {
+            return Enum\Invite\ResponseMessage::FAILED_TOKEN_EXPIRED;
+        }
+        return Enum\Invite\ResponseMessage::SUCCESS;
+    }
+
+    /**
+     * Consume an invitation token and add the user to the team.
+     * Assumes that token is already verified
+     *
+     * @param int    $userId
+     * @param string $token
+     *
+     * @return int Invited team id
+     * @throws Exception
+     */
+    public function consumeToken(int $userId, string $token): int
+    {
+        try {
+            $this->TransactionManager->begin();
+
+            /** @var Invite $Invite */
+            $Invite = ClassRegistry::init("Invite");
+            $Invite->verify($token, $userId);
+            $invitation = $Invite->getByToken($token);
+            $teamId = $invitation['Invite']['team_id'];
+
+            /** @var TeamService $TeamService */
+            $TeamService = ClassRegistry::init('TeamService');
+            $TeamService->joinTeam($userId, $teamId);
+
+            $invitorUserId = $invitation['Invite']['from_user_id'];
+            $this->chargeTeamForInvitation($invitorUserId, $teamId);
+
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error("Failed to consume invitation token", [
+                'class'   => get_class($e),
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString()
+            ]);
+            throw new GlException\Auth\AuthInvitationFailedException($e);
+        }
+
+        return $teamId;
+    }
+
+    /**
+     * Charge paid team for adding new user in invitation
+     *
+     * @param int $invitorUserId User ID of user who created the invitation
+     * @param int $invitedTeamId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    private function chargeTeamForInvitation(int $invitorUserId, int $invitedTeamId): void
+    {
+        /** @var PaymentService $PaymentService */
+        $PaymentService = ClassRegistry::init('PaymentService');
+        $isCharge = $PaymentService->calcChargeUserCount($invitedTeamId, 1) === 1;
+
+        $paymentTiming = new PaymentTiming();
+        if ($paymentTiming->checkIfPaymentTiming($invitedTeamId)) {
+            /* Charge if paid plan */
+            /** @var Team $Team */
+            $Team = ClassRegistry::init("Team");
+            /** @var CampaignService $CampaignService */
+            $CampaignService = ClassRegistry::init('CampaignService');
+            if ($Team->isPaidPlan($invitedTeamId) && !$CampaignService->purchased($invitedTeamId) && $isCharge) {
+                // [Important] Transaction commit in this method
+                $PaymentService->charge(
+                    $invitedTeamId,
+                    Enum\Model\ChargeHistory\ChargeType::USER_INCREMENT_FEE(),
+                    1,
+                    $invitorUserId
+                );
+            }
+        }
     }
 }

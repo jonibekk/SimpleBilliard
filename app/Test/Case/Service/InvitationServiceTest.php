@@ -36,6 +36,10 @@ class InvitationServiceTest extends GoalousTestCase
         'app.mst_price_plan',
         'app.view_price_plan',
         'app.campaign_team',
+        'app.circle',
+        'app.circle_member',
+        'app.credit_card',
+        'app.experiment'
     );
 
     /**
@@ -292,7 +296,27 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
     }
 
-    private function createDataInvite(int $userIdFrom, int $teamId, string $email): array
+    public function test_consumeToken_success()
+    {
+        $invitationToken = "somecustomtoken";
+
+        $newInviteData = $this->createDataInvite(14, 2, "from@email.com", $invitationToken);
+        $this->Invite->save($newInviteData, false);
+        $createData = $this->createTestPaymentData(
+            [
+                'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
+                'team_id'          => 2,
+                'payment_base_day' => 31
+            ]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
+        $InvitationService->consumeToken(1, $invitationToken);
+    }
+
+    private function createDataInvite(int $userIdFrom, int $teamId, string $email, string $token = 'token'): array
     {
         return [
             'from_user_id'        => $userIdFrom,
@@ -301,7 +325,7 @@ class InvitationServiceTest extends GoalousTestCase
             'email'               => $email,
             'message'             => '',
             'email_verified'      => false,
-            'email_token'         => 'token',
+            'email_token'         => $token,
             'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
             'del_flg'             => false,
             'deleted'             => null,

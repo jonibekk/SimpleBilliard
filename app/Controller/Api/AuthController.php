@@ -3,6 +3,7 @@
 App::uses('BaseApiController', 'Controller/Api');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'InvitationService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
@@ -96,6 +97,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWithPassword($requestData['email'], $requestData['password']);
+            $response = $this->processInvite($response);
             $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
@@ -136,6 +138,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
+            $response = $this->processInvite($response);
             $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\Auth2FAMismatchException $e) {
             return ErrorResponse::badRequest()
@@ -180,6 +183,7 @@ class AuthController extends BaseApiController
                 $requestData['2fa_token'],
                 true
             );
+            $response = $this->processInvite($response);
             $response = $this->appendCookieInfo($response);
         } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
             return ErrorResponse::badRequest()
@@ -389,6 +393,58 @@ class AuthController extends BaseApiController
         }
 
         return null;
+    }
+
+    private function processInvite(array $responseData): array
+    {
+        $newResponseData = $responseData;
+
+        // If it's not invitation, return
+        if (!key_exists('invitation_token', $this->request->query)) {
+            return $newResponseData;
+        }
+
+        $userId = $newResponseData['data']['me']['id'];
+        $invitationToken = $this->request->query('invitation_token');
+
+        try {
+            /** @var InvitationService $InvitationService */
+            $InvitationService = ClassRegistry::init('InvitationService');
+            $message = $InvitationService->validateToken($userId, $invitationToken);
+
+            // If token is invalid, return with message
+            if ($message !== Enum\Invite\ResponseMessage::SUCCESS) {
+                $newResponseData['message'] = $message;
+                return $newResponseData;
+            }
+
+            $newTeamId = $InvitationService->consumeToken($userId, $invitationToken);
+
+            if (empty($newTeamId) || $newTeamId < 0) {
+                $newResponseData['message'] = Enum\Invite\ResponseMessage::FAILED;
+                return $newResponseData;
+            }
+
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init('AuthService');
+            $newResponseData['data'] = $AuthService->getUserInfo($userId, $newTeamId);
+
+            $newResponseData['message'] = Enum\Invite\ResponseMessage::SUCCESS;
+        } catch (Exception $e) {
+            GoalousLog::error("Failed to process invitation",
+                [
+                    'class'   => get_class($e),
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                    'user.id' => $this->getUserId(),
+                ]
+            );
+            $responseData['message'] = Enum\Invite\ResponseMessage::FAILED;
+            return $responseData;
+        }
+        //TODO send notification
+
+        return $newResponseData;
     }
 
     /**

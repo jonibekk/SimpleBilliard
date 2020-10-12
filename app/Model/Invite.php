@@ -179,7 +179,7 @@ class Invite extends AppModel
         return false;
     }
 
-    function isForMe($token, $uid)
+    public function isForMe($token, $uid)
     {
         $invite = $this->getByToken($token);
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {

@@ -336,7 +336,7 @@ class TeamMemberService extends AppService
      *
      * @param int    $teamId
      * @param string $emails
-     * 
+     *
      * @return boolean
      */
     public function updateDelFlgToRevoke(int $teamId, string $email)
@@ -392,6 +392,44 @@ class TeamMemberService extends AppService
         }
 
         $this->TransactionManager->commit();
+
+        return true;
+    }
+
+    /**
+     * Add an user to a team. DOES NOT charge payment
+     *
+     * @param int $userId
+     * @param int $teamId
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function add(int $userId, int $teamId): bool
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        if(!$Team->isFreeTrial($teamId) && !$Team->isPaidPlan($teamId)) {
+            throw new GlException\GoalousNotFoundException("Team is not a valid team to join to.");
+        }
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        if (!empty($TeamMember->getUnique($userId, $teamId)))
+        {
+            throw new GlException\GoalousConflictException("User already exists in team.");
+        }
+
+        try {
+            $this->TransactionManager->begin();
+            $TeamMember->add($userId, $teamId);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
 
         return true;
     }

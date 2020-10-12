@@ -605,8 +605,8 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        
-        
+
+
         // Message of team joining
         $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
@@ -1359,7 +1359,6 @@ class UsersController extends AppController
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
 
-            
             /* get payment flag */
             $teamId = $inviteTeamId;
             $paymentTiming = new PaymentTiming();
@@ -1875,10 +1874,10 @@ class UsersController extends AppController
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
     }
-    
+
     /**
      * check Age
-     * 
+     *
      */
     private function checkAge(int $age, array $birthday, string $localDate): bool
     {
