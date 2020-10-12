@@ -150,13 +150,7 @@
                                 <ul class="profile-user-actions">
                                     <?php if ($is_mine && $goal['Goal']['term_type'] == GoalService::TERM_TYPE_CURRENT): ?>
                                         <li class="profile-user-action-list">
-                                            <a class="profile-user-add-action"
-                                               href="<?= $this->Html->url([
-                                                   'controller' => 'goals',
-                                                   'action'     => 'add_action',
-                                                   'goal_id'    => $goal['Goal']['id']
-                                               ]) ?>"><i
-                                                    class="fa fa-plus"></i>
+                                            <a class="profile-user-add-action" href="/goals/add_action/goal/<?= $goal['Goal']['id'] ?>"><i class="fa fa-plus"></i>
 
                                                 <p class="profile-user-add-action-text "><?= __("Action") ?></p>
 
