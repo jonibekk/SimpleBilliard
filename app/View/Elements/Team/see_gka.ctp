@@ -44,7 +44,7 @@ $see_gka = isset($see_gka) ? $see_gka : false;
         $('#see-gka-btn').click(function() {
             if (<?= $can_update_see_gka ?> === 1) {
                 var checkbox = document.getElementById('see-gka-checkbox')
-                console.log(checkbox.checked)
+
                 if (checkbox.checked) {
                     $('#SeeGkaToggleOnModal').modal('show')
                 } else {

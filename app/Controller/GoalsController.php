@@ -1980,6 +1980,8 @@ class GoalsController extends AppController
 
         $goalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goalId), '{n}.Group');
         $this->set('goalGroups', $goalGroups);
+        $archivedGoalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goalId, true), '{n}.Group');
+        $this->set('archivedGoalGroups', $archivedGoalGroups);
 
         return true;
     }
