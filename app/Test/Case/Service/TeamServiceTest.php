@@ -418,21 +418,26 @@ class TeamServiceTest extends GoalousTestCase
     {
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init('TeamService');
-        $this->assertTrue($TeamService->joinTeam(1,2));
+        $this->assertTrue($TeamService->joinTeam(1, 2));
 
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        $this->assertNotEmpty($TeamMember->getUnique(1,2));
+        $this->assertNotEmpty($TeamMember->getUnique(1, 2));
 
         /** @var CircleMember $CircleMember */
         $CircleMember = ClassRegistry::init('CircleMember');
-        $this->assertCount(1, $CircleMember->getJoinedCircleIds(2,1));
+        $this->assertCount(1, $CircleMember->getJoinedCircleIds(2, 1));
     }
 
     public function test_joinTeamAlreadyExist_failed()
     {
         /** @var TeamService $TeamService */
         $TeamService = ClassRegistry::init('TeamService');
-        $this->assertFalse($TeamService->joinTeam(1,1));
+        try {
+            $TeamService->joinTeam(1, 1);
+        } catch (Goalous\Exception\GoalousConflictException $e) {
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 }
