@@ -1320,7 +1320,8 @@ class UsersController extends AppController
             }
 
             $userId = $this->Auth->user('id');
-            $invite = $this->Invite->verify($token, $userId);
+            $this->Invite->verify($token, $userId);
+            $invite =$this->Invite->getByToken($token);
 
             $inviteTeamId = Hash::get($invite, 'Invite.team_id');
             $isCharge = $PaymentService->calcChargeUserCount($inviteTeamId, 1) === 1;

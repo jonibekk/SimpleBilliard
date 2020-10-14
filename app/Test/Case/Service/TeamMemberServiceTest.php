@@ -411,7 +411,7 @@ class TeamMemberServiceTest extends GoalousTestCase
         $TeamMemberService = ClassRegistry::init('TeamMemberService');
         try {
             $TeamMemberService->add(1, 1);
-        } catch (GlException\GoalousConflictException $e) {
+        } catch (Goalous\Exception\GoalousConflictException $e) {
         } catch (Exception $e) {
             $this->fail();
         }
