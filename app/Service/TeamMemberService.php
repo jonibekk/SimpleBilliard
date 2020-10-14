@@ -419,15 +419,11 @@ class TeamMemberService extends AppService
             throw new GlException\GoalousNotFoundException("Team is not a valid team to join to.");
         }
 
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
-        if (!empty($TeamMember->getUnique($userId, $teamId))) {
-            throw new GlException\GoalousConflictException("User already exists in team.");
-        }
-
         try {
             $this->TransactionManager->begin();
 
+            /** @var TeamMember $TeamMember */
+            $TeamMember = ClassRegistry::init('TeamMember');
             if ($TeamMember->add($userId, $teamId) === false) {
                 throw new RuntimeException("Failed to add team member");
             }

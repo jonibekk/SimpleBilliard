@@ -408,17 +408,4 @@ class TeamMemberServiceTest extends GoalousTestCase
             $this->fail();
         }
     }
-
-    public function test_addUserExist_failed()
-    {
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init('TeamMemberService');
-        try {
-            $TeamMemberService->add(1, 1);
-        } catch (Goalous\Exception\GoalousConflictException $e) {
-        } catch (Exception $e) {
-            $this->fail();
-        }
-    }
-
 }
