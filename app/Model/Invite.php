@@ -143,19 +143,20 @@ class Invite extends AppModel
      * @param string $token The token that wa sent to the user
      * @param        $user_id
      *
-     * @return bool On success it returns true
+     * @return array On success it returns invitation model
      */
-    public function verify($token, $user_id): bool
+    public function verify($token, $user_id): array
     {
-       return $this->updateAll(
-           [
-               'email_verified' => true,
-               'to_user_id'     => $user_id
-           ],
-           [
-               'email_token' => $token
-           ]
-       );
+       $this->updateAll(
+            [
+                'email_verified' => true,
+                'to_user_id'     => $user_id
+            ],
+            [
+                'email_token' => $token
+            ]
+        );
+        return $this->getByToken($token);
     }
 
     function getByToken($token)

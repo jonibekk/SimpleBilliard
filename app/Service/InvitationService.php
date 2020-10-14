@@ -425,8 +425,7 @@ class InvitationService extends AppService
 
             /** @var Invite $Invite */
             $Invite = ClassRegistry::init("Invite");
-            $Invite->verify($token, $userId);
-            $invitation = $Invite->getByToken($token);
+            $invitation = $Invite->verify($token, $userId);
             $teamId = $invitation['Invite']['team_id'];
 
             /** @var TeamService $TeamService */
