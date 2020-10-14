@@ -2436,7 +2436,7 @@ msgid "Goalous: even more features to make your work joyful."
 msgstr "Goalous: diversas funcionalidades que deixam o trabalho mais divertido!"
 
 msgid "Goals"
-msgstr "Lista de objetivos"
+msgstr "Objetivos"
 
 msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
 msgstr ""
@@ -2527,6 +2527,10 @@ msgstr "Ajude o time, contribua, torne o ambiente mais divertido!"
 
 msgid "Here"
 msgstr "Aqui"
+
+#, fuzzy
+msgid "Hide archived groups"
+msgstr ""
 
 msgid "Hide birth year"
 msgstr "Ocultar ano de nascimento"
@@ -3055,6 +3059,10 @@ msgstr "KR EDITADA"
 
 msgid "KR END DATE"
 msgstr "Data final do Resultado-chave"
+
+#, fuzzy
+msgid "KR has been added to the Important List"
+msgstr ""
 
 msgid "KR ID"
 msgstr "ID do Resultado-chave"
@@ -4140,6 +4148,10 @@ msgstr "Remover administrador"
 msgid "Remove from the circle"
 msgstr "Remover do círculo"
 
+#, fuzzy
+msgid "Remove Watch"
+msgstr ""
+
 msgid "Removed evaluation suspension."
 msgstr "Avaliação ativa"
 
@@ -4148,6 +4160,10 @@ msgstr "Removido do objetivo."
 
 msgid "Removed from the circle members."
 msgstr "Removido dos membros do círculo."
+
+#, fuzzy
+msgid "Removed from the important list"
+msgstr ""
 
 msgid "Reply"
 msgstr "Resposta"
@@ -4202,7 +4218,7 @@ msgid "Save & Quit this Goal"
 msgstr "Salvar e sair deste objetivo"
 
 msgid "Save & Reapply"
-msgstr "Salvar e reaplicar"
+msgstr "Salvar"
 
 msgid "Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved."
 msgstr "Salve as ações e postagens que deseja ver novamente. Ninguém é notificado e somente você pode ver o que salvou."
@@ -4941,6 +4957,9 @@ msgstr "Não há mais rankings para mostrar."
 msgid "There are no recent updates."
 msgstr "Não há novos updates"
 
+msgid "There is %s actions you do not have permission to see"
+msgstr ""
+
 msgid "There is %s goals you do not have permission to see"
 msgstr ""
 
@@ -5389,6 +5408,10 @@ msgstr "Ver todos os %s comentários"
 msgid "View All Notifications"
 msgstr "Ver todas as notificações"
 
+#, fuzzy
+msgid "View archived groups"
+msgstr ""
+
 msgid "View Cover Image"
 msgstr "Ver imagem da capa"
 
@@ -5400,6 +5423,10 @@ msgstr "Veja os objetivos criados por membros (%s)"
 
 msgid "View info"
 msgstr "Ver informações"
+
+#, fuzzy
+msgid "View List"
+msgstr ""
 
 msgid "View more"
 msgstr "Mais"
@@ -5445,6 +5472,10 @@ msgstr "Aguardando aprovação"
 
 msgid "Waiting for the evaluation by %s."
 msgstr "Aguardando a avaliação por %s."
+
+#, fuzzy
+msgid "Watch this Key Result"
+msgstr ""
 
 msgid "Watch Video"
 msgstr "Veja o vídeo"
