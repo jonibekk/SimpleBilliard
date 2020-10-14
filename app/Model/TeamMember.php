@@ -425,10 +425,6 @@ class TeamMember extends AppModel
             'team_id' => $teamId,
             'status'  => self::USER_STATUS_ACTIVE,
         ];
-
-        Cache::delete($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $userId), 'team_info');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'team_info');
-        $this->create();
         return $this->save($data);
     }
 

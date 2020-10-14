@@ -402,35 +402,48 @@ class TeamMemberService extends AppService
      * @param int $userId
      * @param int $teamId
      *
-     * @return bool
+     * @return TeamMemberEntity
      *
      * @throws Exception
      */
-    public function add(int $userId, int $teamId): bool
+    public function add(int $userId, int $teamId): TeamMemberEntity
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
 
-        if(!$Team->isFreeTrial($teamId) && !$Team->isPaidPlan($teamId)) {
+        if (!$Team->exists($teamId)) {
+            throw new GlException\GoalousNotFoundException("Team does not exist.");
+        }
+
+        if (!$Team->isFreeTrial($teamId) && !$Team->isPaidPlan($teamId)) {
             throw new GlException\GoalousNotFoundException("Team is not a valid team to join to.");
         }
 
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
-        if (!empty($TeamMember->getUnique($userId, $teamId)))
-        {
+        if (!empty($TeamMember->getUnique($userId, $teamId))) {
             throw new GlException\GoalousConflictException("User already exists in team.");
         }
 
         try {
             $this->TransactionManager->begin();
-            $TeamMember->add($userId, $teamId);
+
+            $data = [
+                'user_id' => $userId,
+                'team_id' => $teamId,
+                'status'  => TeamMember::USER_STATUS_ACTIVE,
+            ];
+            Cache::delete($TeamMember->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $userId), 'team_info');
+            Cache::delete($TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'team_info');
+
+            $TeamMember->create();
+            $newMember = $TeamMember->useType()->useEntity()->save($data, false);
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             throw $e;
         }
 
-        return true;
+        return $newMember;
     }
 }

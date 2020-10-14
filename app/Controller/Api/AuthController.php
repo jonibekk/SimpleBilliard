@@ -35,7 +35,8 @@ class AuthController extends BaseApiController
 
     public $components = [
         'Auth',
-        'Session'
+        'Session',
+        'NotifyBiz',
     ];
 
     /**
@@ -97,8 +98,10 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
             $response = $AuthService->authenticateWithPassword($requestData['email'], $requestData['password']);
-            $response = $this->processInvite($response);
-            $response = $this->appendCookieInfo($response);
+            if ($response['message'] === Enum\Auth\Status::OK) {
+                $response = $this->processInvite($response);
+                $response = $this->appendCookieInfo($response);
+            }
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -400,12 +403,12 @@ class AuthController extends BaseApiController
         $newResponseData = $responseData;
 
         // If it's not invitation, return
-        if (!key_exists('invitation_token', $this->request->query)) {
+        if (!key_exists('invitation_token', $this->getRequestJsonBody())) {
             return $newResponseData;
         }
 
         $userId = $newResponseData['data']['me']['id'];
-        $invitationToken = $this->request->query('invitation_token');
+        $invitationToken = $this->getRequestJsonBody()['invitation_token'];
 
         try {
             /** @var InvitationService $InvitationService */
@@ -430,6 +433,9 @@ class AuthController extends BaseApiController
             $newResponseData['data'] = $AuthService->getUserInfo($userId, $newTeamId);
 
             $newResponseData['message'] = Enum\Invite\ResponseMessage::SUCCESS;
+
+            /** @var NotifyBizComponent $NotifyBiz */
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $newTeamId);
         } catch (Exception $e) {
             GoalousLog::error("Failed to process invitation",
                 [
@@ -442,7 +448,6 @@ class AuthController extends BaseApiController
             $responseData['message'] = Enum\Invite\ResponseMessage::FAILED;
             return $responseData;
         }
-        //TODO send notification
 
         return $newResponseData;
     }

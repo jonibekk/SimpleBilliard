@@ -11,6 +11,7 @@ App::uses('Email', 'Model');
  */
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 class TeamMemberServiceTest extends GoalousTestCase
 {
@@ -383,4 +384,37 @@ class TeamMemberServiceTest extends GoalousTestCase
         // excute target function
         $this->TeamMemberService->updateDelFlgToRevoke($teamId, $email);
     }
+
+    public function test_add_success()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+
+        $TeamMemberService->add(123,1);
+    }
+
+    public function test_addTeamNotExist_failed()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+        try {
+            $TeamMemberService->add(123, 123);
+        } catch (GlException\GoalousNotFoundException $e) {
+        } catch (Exception $e) {
+            $this->fail();
+        }
+    }
+
+    public function test_addUserExist_failed()
+    {
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init('TeamMemberService');
+        try {
+            $TeamMemberService->add(1, 1);
+        } catch (GlException\GoalousConflictException $e) {
+        } catch (Exception $e) {
+            $this->fail();
+        }
+    }
+
 }

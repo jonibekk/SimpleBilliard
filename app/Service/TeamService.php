@@ -559,13 +559,8 @@ class TeamService extends AppService
             // Add to default circle
             /** @var CircleMemberService $CircleMemberService */
             $CircleMemberService = ClassRegistry::init('CircleMemberService');
-            if (!$CircleMemberService->add($userId, $teamId, $teamAllCircleId)) {
-                throw new RuntimeException("Failed to join circle");
-            }
+            $CircleMemberService->add($userId, $teamId, $teamAllCircleId);
             $this->TransactionManager->commit();
-        } catch (GlException\GoalousConflictException $e) {
-            $this->TransactionManager->rollback();
-            return false;
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             throw $e;
