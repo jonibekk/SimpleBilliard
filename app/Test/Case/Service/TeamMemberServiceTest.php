@@ -391,6 +391,10 @@ class TeamMemberServiceTest extends GoalousTestCase
         $TeamMemberService = ClassRegistry::init('TeamMemberService');
 
         $TeamMemberService->add(123,1);
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $this->assertNotEmpty($TeamMember->getUnique(123,1));
     }
 
     public function test_addTeamNotExist_failed()

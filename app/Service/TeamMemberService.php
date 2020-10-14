@@ -402,11 +402,11 @@ class TeamMemberService extends AppService
      * @param int $userId
      * @param int $teamId
      *
-     * @return TeamMemberEntity
+     * @return bool
      *
      * @throws Exception
      */
-    public function add(int $userId, int $teamId): TeamMemberEntity
+    public function add(int $userId, int $teamId): bool
     {
         /** @var Team $Team */
         $Team = ClassRegistry::init('Team');
@@ -428,22 +428,19 @@ class TeamMemberService extends AppService
         try {
             $this->TransactionManager->begin();
 
-            $data = [
-                'user_id' => $userId,
-                'team_id' => $teamId,
-                'status'  => TeamMember::USER_STATUS_ACTIVE,
-            ];
+            if ($TeamMember->add($userId, $teamId) === false) {
+                throw new RuntimeException("Failed to add team member");
+            }
+
             Cache::delete($TeamMember->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $userId), 'team_info');
             Cache::delete($TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'team_info');
 
-            $TeamMember->create();
-            $newMember = $TeamMember->useType()->useEntity()->save($data, false);
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();
             throw $e;
         }
 
-        return $newMember;
+        return true;
     }
 }

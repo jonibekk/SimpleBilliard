@@ -418,14 +418,15 @@ class TeamMember extends AppModel
         $team_member = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
-            return $this->save($team_member);
+            return $this->save($team_member, false);
         }
         $data = [
             'user_id' => $userId,
             'team_id' => $teamId,
             'status'  => self::USER_STATUS_ACTIVE,
         ];
-        return $this->save($data);
+        $this->create();
+        return $this->save($data, false);
     }
 
     public function getAllMemberUserIdList(

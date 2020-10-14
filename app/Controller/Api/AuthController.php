@@ -102,6 +102,10 @@ class AuthController extends BaseApiController
                 $response = $this->processInvite($response);
                 $response = $this->appendCookieInfo($response);
             }
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -143,6 +147,10 @@ class AuthController extends BaseApiController
             $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
             $response = $this->processInvite($response);
             $response = $this->appendCookieInfo($response);
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
         } catch (GlException\Auth\Auth2FAMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
@@ -188,6 +196,10 @@ class AuthController extends BaseApiController
             );
             $response = $this->processInvite($response);
             $response = $this->appendCookieInfo($response);
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
         } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
