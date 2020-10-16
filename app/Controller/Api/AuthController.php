@@ -442,7 +442,7 @@ class AuthController extends BaseApiController
 
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init('AuthService');
-            $newResponseData['data'] = $AuthService->getUserInfo($userId, $newTeamId);
+            $newResponseData['data']['me'] = $AuthService->getUserInfo($userId, $newTeamId);
 
             $newResponseData['message'] = Enum\Invite\ResponseMessage::SUCCESS;
 
