@@ -6,7 +6,7 @@
  * Date: 2017/05/25
  * Time: 3:13
  */
-$url = '/goals/add_action';
+$url = '/goals/add-action';
 if (!empty($goal_id)) {
     $url .= '/goal/' . $goal_id;
     if (!empty($key_result_id)) {
