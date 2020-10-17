@@ -1059,7 +1059,9 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-            return $this->redirect(['action' => 'login']);
+            return $this->redirect(['action' => 'login', '?' => [
+                'invitation_token' => $token
+            ]]);
         }
 
         $userId = $this->Auth->user('id');
