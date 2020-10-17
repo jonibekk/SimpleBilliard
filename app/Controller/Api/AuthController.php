@@ -445,7 +445,7 @@ class AuthController extends BaseApiController
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init('AuthService');
             $newResponseData['data']['me'] = $AuthService->getUserInfo($userId, $newTeamId);
-            $newResponseData['data']['token'] = $AuthService->recreateJwt($oldJwt, $newTeamId);
+            $newResponseData['data']['token'] = $AuthService->recreateJwt($oldJwt, $newTeamId)->token();
 
             $newResponseData['message'] = Enum\Invite\ResponseMessage::SUCCESS;
 
