@@ -1136,6 +1136,7 @@ class TeamMember extends AppModel
         $this->csv_datas = [];
         //emails
         $before_emails = array_column($before_csv_data, 'email');
+        $groupsEnabled = $this->isGroupsFeatureEnabled();
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
@@ -1192,7 +1193,7 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
             //Group
-            if (!$this->isGroupsFeatureEnabled()) {
+            if (!$groupsEnabled) {
                 foreach ($row['group'] as $v) {
                     if (viaIsSet($v)) {
                         $this->csv_datas[$key]['Group'][] = $v;
@@ -1431,6 +1432,7 @@ class TeamMember extends AppModel
         }
 
         $this->setAllMembers($team_id);
+        $groupsEnabled = $this->isGroupsFeatureEnabled();
         //convert csv data
         foreach ($this->all_users as $k => $v) {
             if (!Hash::get($v, 'User.id')) {
@@ -1455,7 +1457,7 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
 
 
-            if (!$this->isGroupsFeatureEnabled() && Hash::get($v, 'User.MemberGroup')) {
+            if (!$groupsEnabled && Hash::get($v, 'User.MemberGroup')) {
                 foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
                     $key_index = $g_k + 1;
                     $this->csv_datas[$k]['group.' . $key_index] = Hash::get($g_v,
