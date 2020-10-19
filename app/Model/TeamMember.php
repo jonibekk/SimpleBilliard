@@ -1042,30 +1042,14 @@ class TeamMember extends AppModel
             $this->save($this->csv_datas[$k]['TeamMember'], true, $team_member_update_fields);
         }
 
-        /**
-         * グループ登録処理
-         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
-         */
-        //一旦グループ紐付けを解除
-        $this->User->MemberGroup->deleteAll(['MemberGroup.team_id' => $this->current_team_id]);
+        /** @var Experiment */
+        $Experiment = ClassRegistry::init("Experiment");
+        $groupsExperiment = $Experiment->findExperiment($Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
 
-        $member_groups = [];
-        foreach ($this->csv_datas as $row_k => $row_v) {
-            if (Hash::get($row_v, 'Group')) {
-                foreach ($row_v['Group'] as $k => $v) {
-                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
-                    $member_groups[] = [
-                        'group_id'  => $group['Group']['id'],
-                        'index_num' => $k,
-                        'team_id'   => $this->current_team_id,
-                        'user_id'   => $row_v['User']['id'],
-                    ];
-                }
-                unset($this->csv_datas[$row_k]['Group']);
-            }
+        // Only parse group from csv if groups experiment is disabled
+        if (empty($groupsExperiment)) {
+            $this->setGroupMembersFromCsv();
         }
-        $this->User->MemberGroup->create();
-        $this->User->MemberGroup->saveAll($member_groups);
 
         /**
          * コーチは最後に登録
@@ -1112,6 +1096,34 @@ class TeamMember extends AppModel
 
         $res['success_count'] = count($this->csv_datas);
         return $res;
+    }
+
+    function setGroupMembersFromCsv()
+    {
+        /**
+         * グループ登録処理
+         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
+         */
+        //一旦グループ紐付けを解除
+        $this->User->MemberGroup->deleteAll(['MemberGroup.team_id' => $this->current_team_id]);
+
+        $member_groups = [];
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (Hash::get($row_v, 'Group')) {
+                foreach ($row_v['Group'] as $k => $v) {
+                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
+                    $member_groups[] = [
+                        'group_id'  => $group['Group']['id'],
+                        'index_num' => $k,
+                        'team_id'   => $this->current_team_id,
+                        'user_id'   => $row_v['User']['id'],
+                    ];
+                }
+                unset($this->csv_datas[$row_k]['Group']);
+            }
+        }
+        $this->User->MemberGroup->create();
+        $this->User->MemberGroup->saveAll($member_groups);
     }
 
     function validateUpdateMemberCsvData($csv_data)
