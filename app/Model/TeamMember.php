@@ -1042,12 +1042,8 @@ class TeamMember extends AppModel
             $this->save($this->csv_datas[$k]['TeamMember'], true, $team_member_update_fields);
         }
 
-        /** @var Experiment */
-        $Experiment = ClassRegistry::init("Experiment");
-        $groupsExperiment = $Experiment->findExperiment($Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
-
         // Only parse group from csv if groups experiment is disabled
-        if (empty($groupsExperiment)) {
+        if (!$this->isGroupsFeatureEnabled()) {
             $this->setGroupMembersFromCsv();
         }
 
@@ -1196,11 +1192,14 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
             //Group
-            foreach ($row['group'] as $v) {
-                if (viaIsSet($v)) {
-                    $this->csv_datas[$key]['Group'][] = $v;
+            if (!$this->isGroupsFeatureEnabled()) {
+                foreach ($row['group'] as $v) {
+                    if (viaIsSet($v)) {
+                        $this->csv_datas[$key]['Group'][] = $v;
+                    }
                 }
             }
+            
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
             if (Hash::get($row, 'coach_member_no')) {
@@ -1454,8 +1453,9 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
                 'TeamMember.evaluation_enable_flg') && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
-            //group
-            if (Hash::get($v, 'User.MemberGroup')) {
+
+
+            if (!$this->isGroupsFeatureEnabled() && Hash::get($v, 'User.MemberGroup')) {
                 foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
                     $key_index = $g_k + 1;
                     $this->csv_datas[$k]['group.' . $key_index] = Hash::get($g_v,
@@ -1746,32 +1746,52 @@ class TeamMember extends AppModel
      */
     function _getCsvHeading()
     {
-        return [
-            'email'                 => __("Email(*, Not changed)"),
-            'first_name'            => __("First Name(*, Not changed)"),
-            'last_name'             => __("Last Name(*, Not changed)"),
-            'member_no'             => __("Member ID(*)"),
-            'status'                => __("Member active status(*)"),
-            'admin_flg'             => __("Administrator(*)"),
-            'evaluation_enable_flg' => __("Evaluated(*)"),
-            'member_type'           => __("Member Type"),
-            'group.1'               => __("Group 1"),
-            'group.2'               => __("Group 2"),
-            'group.3'               => __("Group 3"),
-            'group.4'               => __("Group 4"),
-            'group.5'               => __("Group 5"),
-            'group.6'               => __("Group 6"),
-            'group.7'               => __("Group 7"),
-            'coach_member_no'       => __("Coach ID"),
-            'evaluator_member_no.1' => __("Evaluator 1"),
-            'evaluator_member_no.2' => __("Evaluator 2"),
-            'evaluator_member_no.3' => __("Evaluator 3"),
-            'evaluator_member_no.4' => __("Evaluator 4"),
-            'evaluator_member_no.5' => __("Evaluator 5"),
-            'evaluator_member_no.6' => __("Evaluator 6"),
-            'evaluator_member_no.7' => __("Evaluator 7"),
-        ];
-
+        if ($this->isGroupsFeatureEnabled()) {
+            return [
+                'email'                 => __("Email(*, Not changed)"),
+                'first_name'            => __("First Name(*, Not changed)"),
+                'last_name'             => __("Last Name(*, Not changed)"),
+                'member_no'             => __("Member ID(*)"),
+                'status'                => __("Member active status(*)"),
+                'admin_flg'             => __("Administrator(*)"),
+                'evaluation_enable_flg' => __("Evaluated(*)"),
+                'member_type'           => __("Member Type"),
+                'coach_member_no'       => __("Coach ID"),
+                'evaluator_member_no.1' => __("Evaluator 1"),
+                'evaluator_member_no.2' => __("Evaluator 2"),
+                'evaluator_member_no.3' => __("Evaluator 3"),
+                'evaluator_member_no.4' => __("Evaluator 4"),
+                'evaluator_member_no.5' => __("Evaluator 5"),
+                'evaluator_member_no.6' => __("Evaluator 6"),
+                'evaluator_member_no.7' => __("Evaluator 7"),
+            ];
+        } else {
+            return [
+                'email'                 => __("Email(*, Not changed)"),
+                'first_name'            => __("First Name(*, Not changed)"),
+                'last_name'             => __("Last Name(*, Not changed)"),
+                'member_no'             => __("Member ID(*)"),
+                'status'                => __("Member active status(*)"),
+                'admin_flg'             => __("Administrator(*)"),
+                'evaluation_enable_flg' => __("Evaluated(*)"),
+                'member_type'           => __("Member Type"),
+                'group.1'               => __("Group 1"),
+                'group.2'               => __("Group 2"),
+                'group.3'               => __("Group 3"),
+                'group.4'               => __("Group 4"),
+                'group.5'               => __("Group 5"),
+                'group.6'               => __("Group 6"),
+                'group.7'               => __("Group 7"),
+                'coach_member_no'       => __("Coach ID"),
+                'evaluator_member_no.1' => __("Evaluator 1"),
+                'evaluator_member_no.2' => __("Evaluator 2"),
+                'evaluator_member_no.3' => __("Evaluator 3"),
+                'evaluator_member_no.4' => __("Evaluator 4"),
+                'evaluator_member_no.5' => __("Evaluator 5"),
+                'evaluator_member_no.6' => __("Evaluator 6"),
+                'evaluator_member_no.7' => __("Evaluator 7"),
+            ];
+        }
     }
 
     function _getCsvHeadingEvaluation()
@@ -2668,5 +2688,14 @@ class TeamMember extends AppModel
         }
 
         return true;
+    }
+
+    function isGroupsFeatureEnabled()
+    {
+        /** @var Experiment */
+        $Experiment = ClassRegistry::init("Experiment");
+        $groupsExperiment = $Experiment->findExperiment($Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
+
+        return !empty($groupsExperiment);
     }
 }
