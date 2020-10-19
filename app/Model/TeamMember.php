@@ -403,20 +403,30 @@ class TeamMember extends AppModel
         return (bool)$res;
     }
 
-    public function add($uid, $team_id)
+    /**
+     * Create or update status of user member information in a team.
+     *
+     * @param int $userId
+     * @param int $teamId ID of the team that the user is joining
+     *
+     * @return array|BaseEntity|mixed
+     * @throws Exception
+     */
+    public function add(int $userId, int $teamId)
     {
         //if exists update
-        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
+        $team_member = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
-            return $this->save($team_member);
+            return $this->save($team_member, false);
         }
         $data = [
-            'user_id' => $uid,
-            'team_id' => $team_id,
+            'user_id' => $userId,
+            'team_id' => $teamId,
             'status'  => self::USER_STATUS_ACTIVE,
         ];
-        return $this->save($data);
+        $this->create();
+        return $this->save($data, false);
     }
 
     public function getAllMemberUserIdList(
