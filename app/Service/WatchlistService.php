@@ -19,10 +19,29 @@ class WatchlistService extends AppService
         $KrWatchlist = ClassRegistry::init("KrWatchlist");
 
         $watchlist = $this->findOrCreateWatchlist($userId, $teamId);
+        $conditions = [
+            "key_result_id" => (int)$krId, 
+            "watchlist_id" => $watchlist['Watchlist']['id'], 
+            "del_flg" => false
+        ];
+
+        if (empty($KrWatchlist->find("first", ["conditions" => $conditions]))) {
+            $KrWatchlist->create();
+            $KrWatchlist->save($conditions);
+        }
     }
 
     public function remove(int $userId, int $teamId, int $krId)
     {
+        /** @var KrWatchlist */
+        $KrWatchlist = ClassRegistry::init("KrWatchlist");
+
+        $watchlist = $this->findOrCreateWatchlist($userId, $teamId);
+
+        $KrWatchlist->deleteAll([
+            "key_result_id" => $krId, 
+            "watchlist_id" => $watchlist['Watchlist']['id']
+        ]);
     }
 
     private function findOrCreateWatchlist(int $userId, int $teamId): array
@@ -44,10 +63,8 @@ class WatchlistService extends AppService
 
             $Watchlist->create();
             $entity = $Watchlist->useType()->useEntity()->save($data, false);
-            $watchlist = $entity->toArray();
+            $watchlist = ["Watchlist" => $entity->toArray()];
         }
-
-        GoalousLog::info("watchlist", [$watchlist]);
 
         return $watchlist;
     }

@@ -13,6 +13,7 @@ App::import('Service', 'GoalMemberService');
 App::import('Service', 'ActionService');
 App::import('Service', 'TranslationService');
 App::import('Service', 'FollowService');
+App::import('Service', 'WatchlistService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -1054,29 +1055,6 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
-    public function ajax_toggle_watch_key_result($kr_id)
-    {
-        $watch = $this->request->params['named']['watch'];
-
-        $return = [];
-        if ($this->Goal->KeyResult->isExists($kr_id)) {
-            /** @var WatchlistService */
-            $WatchlistService = ClassRegistry::init("WatchlistService");
-
-            if ($watch) {
-                $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
-                $return['msg'] = __("Watched key result");
-            } else {
-                $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
-                $return['msg'] = __("Unwatched key result");
-            }
-        } else {
-            $return['msg'] = __("Invalid key result");
-        }
-
-        return $this->_ajaxGetResponse($return);
-    }
-
     /**
      * ゴールに紐づくキーリザルト一覧を返す
      *
@@ -2044,5 +2022,29 @@ class GoalsController extends AppController
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
+    }
+
+    public function toggle_watch()
+    {
+        $this->request->allowMethod("post");
+        $kr_id = $this->request->data["KeyResult"]["kr_id"];
+        $watched = $this->request->data["KeyResult"]["watched"];
+
+        if ($this->Goal->KeyResult->exists($kr_id)) {
+            /** @var WatchlistService */
+            $WatchlistService = ClassRegistry::init("WatchlistService");
+
+            if ($watched) {
+                $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
+                $this->Notification->outSuccess(__("Watched key result"));
+            } else {
+                $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
+                $this->Notification->outError(__("Unwatched key result"));
+            }
+        } else {
+            $this->Notification->outError(__("Invalid key result"));
+        }
+
+        return $this->redirect($this->referer());
     }
 }
