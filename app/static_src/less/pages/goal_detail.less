@@ -686,8 +686,25 @@
   &-description {
     margin: 0 8px 0 2px;
   }
+}
 
-  .active {
-    color: @basicPink;
+.goal-detail-toggle {
+  display: inline-block;
+
+  a {
+    color: @darkGray;
+
+    &:hover {
+      color: #4c4d4e; 
+      text-decoration: none;
+    }
+
+    &.active {
+      color: @basicPink;
+
+      &:hover {
+        color: #91170a;
+      }
+    }
   }
 }

@@ -119,6 +119,7 @@ class KeyResultService extends AppService
         $keyResult['current_value_with_unit'] = $headUnit . $keyResult['comma_current_value'] . $tailUnit;
         $keyResult['display_value'] = "{$keyResult['start_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
         $keyResult['display_in_progress_bar'] = "{$keyResult['current_value_with_unit']} {$symbol} {$keyResult['target_value_with_unit']}";
+        $keyResult['watched'] = rand(0,1) == 1;
         return $keyResult;
     }
 
