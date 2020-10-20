@@ -37,6 +37,16 @@
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>
                 </dd>
+                <dt class="goal-detail-kr-info-counts-title <?= (true ? 'active' : '') ?>">
+                    <i class="fa fa-eye"></i>
+                </dt>
+                <dd class="goal-detail-kr-info-counts-description <?= (true ? 'active' : '') ?>">
+                    <?php if (true) : ?>
+                        <?= __("Watched") ?>
+                    <?php else : ?>
+                        <?= __("Watch") ?>
+                    <?php endif; ?>
+                </dd>
             </dl>
             <?php if (!empty($kr['KeyResult']['description'])): ?>
                 <div class="showmore-init-none">
