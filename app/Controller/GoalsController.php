@@ -1054,6 +1054,29 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
+    public function ajax_toggle_watch_key_result($kr_id)
+    {
+        $watch = $this->request->params['named']['watch'];
+
+        $return = [];
+        if ($this->Goal->KeyResult->isExists($kr_id)) {
+            /** @var WatchlistService */
+            $WatchlistService = ClassRegistry::init("WatchlistService");
+
+            if ($watch) {
+                $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
+                $return['msg'] = __("Watched key result");
+            } else {
+                $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
+                $return['msg'] = __("Unwatched key result");
+            }
+        } else {
+            $return['msg'] = __("Invalid key result");
+        }
+
+        return $this->_ajaxGetResponse($return);
+    }
+
     /**
      * ゴールに紐づくキーリザルト一覧を返す
      *
