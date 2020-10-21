@@ -605,8 +605,8 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        
-        
+
+
         // Message of team joining
         $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
@@ -811,9 +811,15 @@ class UsersController extends AppController
             $this->Notification->outSuccess(__("Please login with your new password."),
                 ['title' => __('Password is set.')]);
             return $this->redirect(['action' => 'login']);
+        } else {
+            GoalousLog::error("Failed to reset password", [
+                'token'   => $token,
+                'user.id' => $user_email['Email']['user_id']
+            ]);
+            $this->Notification->outError(__("Please try again later."),
+                ['title' => __('Failed to reset the password')]);
+            return $this->render('password_reset');
         }
-        return $this->render('password_reset');
-
     }
 
     public function token_resend()
@@ -1064,7 +1070,9 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-            return $this->redirect(['action' => 'login']);
+            return $this->redirect(['action' => 'login', '?' => [
+                'invitation_token' => $token
+            ]]);
         }
 
         $userId = $this->Auth->user('id');
@@ -1364,7 +1372,6 @@ class UsersController extends AppController
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
 
-            
             /* get payment flag */
             $teamId = $inviteTeamId;
             $paymentTiming = new PaymentTiming();
@@ -1893,10 +1900,10 @@ class UsersController extends AppController
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
     }
-    
+
     /**
      * check Age
-     * 
+     *
      */
     private function checkAge(int $age, array $birthday, string $localDate): bool
     {

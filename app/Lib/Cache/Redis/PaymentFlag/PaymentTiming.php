@@ -29,7 +29,7 @@ class PaymentTiming
 
         if (empty($switchFlag) or intval($switchFlag) == 1 and empty($switchStartDate)){
             $validationErrors = 'Switch Value Error!';
-            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s", 
+            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s",
                 $teamId, var_export($validationErrors, true)));
         }
 
@@ -65,12 +65,12 @@ class PaymentTiming
 
         if (empty($switchFlag) or intval($switchFlag) == 1 and empty($switchStartDate)){
             $validationErrors = 'Switch Value Error!';
-            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s", 
+            throw new Exception(sprintf("Failed to get correct switch value. teamId:%s validationErrors:%s",
                 $teamId, var_export($validationErrors, true)));
         }
 
         $paymentTimingDay = PaymentFlagClient::getPaymentTimingDay($paymentBaseDay, $switchStartDate);
-        
+
         return $paymentTimingDay->getTimestamp();
 
     }
