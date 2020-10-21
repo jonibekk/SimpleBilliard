@@ -4,7 +4,6 @@ App::uses('GoalGroup', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluator', 'Model');
 App::import('Policy', 'BasePolicy');
-App::import('Service', 'PostService');
 
 /**
  * Class PostPolicy
@@ -13,10 +12,7 @@ class PostPolicy extends BasePolicy
 {
     public function read($post): bool
     {
-        // If circle post, apply different auth criteria
-        if ($post['circle_id'] !== null) {
-            return $this->checkCirclePostAccess($post);
-        }
+        // Do not check circle access in this module
 
         if (((int)$post['user_id'] === $this->userId) ||
             ($this->isTeamAdminForItem($post['team_id'])) ||
@@ -33,14 +29,6 @@ class PostPolicy extends BasePolicy
         }
 
         return false;
-    }
-
-
-    private function checkCirclePostAccess($post): bool
-    {
-        /** @var PostService */
-        $PostService = ClassRegistry::init('PostService');
-        return $PostService->checkUserAccessToCirclePost($this->userId, $post['id']);
     }
 
     private function isSameGroup($post): bool

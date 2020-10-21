@@ -359,6 +359,11 @@ class PostsController extends BasePagingController
 
     public function get_detail(int $postId): CakeResponse
     {
+        $error = $this->validatePostAccess($postId);
+        if (!empty($error)) {
+            return $error;
+        }
+
         try {
             $post = $this->findPost($postId);
             $this->authorize('read', $post);
