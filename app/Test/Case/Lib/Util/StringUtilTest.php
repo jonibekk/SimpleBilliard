@@ -1,4 +1,5 @@
 <?php
+
 App::uses('GoalousTestCase', 'Test');
 App::uses('StringUtil', 'Util');
 
@@ -21,6 +22,4 @@ class StringUtilTest extends GoalousTestCase
 
         $this->assertEquals($mergedString, $originalString);
     }
-
-
 }

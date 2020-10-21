@@ -1239,6 +1239,7 @@ class User extends AppModel
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
                         'SearchLocalName.user_id = User.id',
+                        'SearchLocalName.language' => $this->me['language'],
                     ],
                 ],
                 [
@@ -1843,7 +1844,8 @@ class User extends AppModel
                     'table'      => 'team_members',
                     'alias'      => 'TeamMember',
                     'conditions' => [
-                        'TeamMember.user_id = User.id'
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.del_flg' => false
                     ]
                 ]
             ]

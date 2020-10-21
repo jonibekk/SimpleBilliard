@@ -14,6 +14,12 @@ $(document).ready(function () {
   });
 
   window.addEventListener('MobileKeyboardStatusChanged', evtMobileKeyboardStatusChanged);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/customized-sw.js', { scope: '/' }).then(function(reg) {}).catch(function(error) {
+      // registration failed
+      console.err('Registration failed with ' + error);
+    });
+  }
 
   //アップロード画像選択時にトリムして表示
   $('.fileinput').fileinput().on('change.bs.fileinput', function (e) {
@@ -911,3 +917,63 @@ function triggerMobileKeyboardStatusChanged(status, height) {
     }})
   window.dispatchEvent(event);
 }
+
+// Search input
+
+// Clear
+function searchInputClearEvent(isMobile) {
+  document.addEventListener('click', function (event) {
+    if (event.target.matches('#search-input-clear' + (isMobile ? '-mobile' : ''))) {
+      event.preventDefault();
+      event.target.style.visibility = 'hidden';
+
+      var searchInputClear2 = document.getElementById('search-input-clear' + (isMobile ? '' : '-mobile'));
+      searchInputClear2.style.visibility = 'hidden';
+
+      var searchInputInput = document.getElementById('search-input-input' + (isMobile ? '-mobile' : ''));
+      searchInputInput.value = '';
+      var searchInputInput2 = document.getElementById('search-input-input' + (isMobile ? '' : '-mobile'));
+      searchInputInput2.value = '';
+
+      searchInputInput.focus();
+    }
+  }, false);
+}
+
+searchInputClearEvent(false);
+searchInputClearEvent(true);
+
+// Input
+function searchInputKeyupEvent(isMobile) {
+  document.addEventListener('keyup', function (event) {
+    if (event.target.matches('#search-input-input' + (isMobile ? '-mobile' : ''))) {
+      var searchInputClear = document.getElementById('search-input-clear' + (isMobile ? '-mobile' : ''));
+      searchInputClear.style.visibility = event.target.value ? 'visible' : 'hidden';
+      var searchInputClear2 = document.getElementById('search-input-clear' + (isMobile ? '' : '-mobile'));
+      searchInputClear2.style.visibility = event.target.value ? 'visible' : 'hidden';
+
+      var searchInputInput = document.getElementById('search-input-input' + (isMobile ? '' : '-mobile'));
+      searchInputInput.value = event.target.value;
+    }
+  }, false);
+}
+
+searchInputKeyupEvent(false);
+searchInputKeyupEvent(true);
+
+// Submit
+function searchInputSubmitEvent(isMobile) {
+  document.addEventListener('submit', function (event) {
+    if (event.target.matches('#search-input' + (isMobile ? '-mobile' : ''))) {
+      event.preventDefault();
+      var searchInputInput = document.getElementById('search-input-input' + (isMobile ? '-mobile' : ''));
+
+      if (searchInputInput.value) {
+        window.location.href = "/search/" + searchInputInput.value;
+      }
+    }
+  }, false);
+}
+
+searchInputSubmitEvent(false);
+searchInputSubmitEvent(true);

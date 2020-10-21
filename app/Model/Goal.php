@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('GoalGroup', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('Term', 'Model');
 App::uses('AppUtil', 'Util');
@@ -15,6 +16,7 @@ App::uses('AppUtil', 'Util');
  * @property Post         $Post
  * @property KeyResult    $KeyResult
  * @property GoalMember   $GoalMember
+ * @property GoalGroup   $GoalGroup
  * @property Follower     $Follower
  * @property Evaluation   $Evaluation
  * @property ActionResult $ActionResult
@@ -243,7 +245,7 @@ class Goal extends AppModel
                     'x_large'      => '256x256',
                 ],
                 'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'default_url' => 'no-image-goal.jpg',
+                'default_url' => 'no-image-goal.png',
                 'quality'     => 100,
             ]
         ]
@@ -285,6 +287,9 @@ class Goal extends AppModel
             'className' => 'KeyResult'
         ],
         'GoalMember'          => [
+            'dependent' => true,
+        ],
+        'GoalGroup'          => [
             'dependent' => true,
         ],
         'Leader'              => [
@@ -570,6 +575,14 @@ class Goal extends AppModel
         $priority = Hash::get($data, 'Goal.priority');
         if ($priority !== null) {
             $data['GoalMember'][0]['priority'] = $priority;
+        }
+        return $data;
+    }
+
+    function buildGoalGroups(array $data, array $groups): array
+    {
+        for ($i = 0; $i < count($groups); $i++) {
+            $data['GoalGroup'][$i]['group_id'] = $groups[$i];
         }
         return $data;
     }
@@ -1636,10 +1649,11 @@ class Goal extends AppModel
      * @param        $offset
      * @param        $limit
      * @param string $order
+     * @param array  $scope
      *
      * @return array
      */
-    function search($conditions, $offset, $limit, $order = "")
+    function search($conditions, $offset, $limit, $order = "", $scope)
     {
         $start_date = $this->Team->Term->getCurrentTermData()['start_date'];
         $end_date = $this->Team->Term->getCurrentTermData()['end_date'];
@@ -1663,6 +1677,7 @@ class Goal extends AppModel
         ];
         //
         $options = $this->setFilter($options, $conditions, $order);
+        $options = array_merge_recursive($options, $scope);
 
         $goals = $this->find('all', $options);
         return Hash::extract($goals, '{n}.Goal');
@@ -2830,5 +2845,109 @@ class Goal extends AppModel
 
         $goals = $this->find('all', $options);
         return Hash::extract($goals, '{n}.Goal');
+    }
+
+    function publicGoalsSubquery()
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Goal.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Goal",
+            "conditions" => [
+                'GoalGroup.id IS NULL',
+            ],
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Goal.id',
+                    ],
+                ]
+            ],
+        ], $this);
+    }
+
+    function coacheeGoalsSubquery($userId)
+    {
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Goal.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Goal",
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Goal.id',
+                    ],
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = GoalGroup.group_id',
+                    ]
+                ],
+                [
+                    'alias' => 'TeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'TeamMember.user_id = MemberGroup.user_id',
+                        'TeamMember.coach_user_id' => $userId
+                    ]
+                ]
+            ],
+        ], $this);
+    }
+
+    function evaluateeGoalsSubquery($userId)
+    {
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        $db = $this->getDataSource();
+        return $db->buildStatement([
+            "fields" => ['Goal.id'],
+            "table" => $db->fullTableName($this),
+            "alias" => "Goal",
+            "joins" => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.goal_id = Goal.id',
+                    ],
+                ],
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'conditions' => [
+                        'MemberGroup.group_id = GoalGroup.group_id',
+                    ]
+                ],
+                [
+                    'alias' => 'Evaluation',
+                    'table' => 'evaluations',
+                    'conditions' => [
+                        'Evaluation.evaluatee_user_id = MemberGroup.user_id',
+                        'Evaluation.evaluator_user_id' => $userId
+                    ]
+                ],
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'Term.id = Evaluation.term_id',
+                        'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
+                    ]
+                ]
+            ]
+        ], $this);
     }
 }

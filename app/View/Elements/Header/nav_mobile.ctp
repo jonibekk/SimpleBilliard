@@ -8,6 +8,13 @@
         <?php else: ?>
             <?= $this->element('Header/back_btn'); ?>
         <?php endif; ?>
+        <form id="search-input-mobile" class="search-input">
+            <label class="search-input-label">
+                <i class="material-icons search-input-icon">search</i>
+                <input id="search-input-input-mobile" class="search-input-input" type="text" placeholder="<?= __('Search')?>">
+                <i id="search-input-clear-mobile" class="material-icons search-input-clear">clear</i>
+            </label>
+        </form>
     </div>
     <div class="glHeaderMobile-right">
         <ul class="glHeaderMobile-nav">
@@ -48,12 +55,6 @@
                         </li>
                     <?php endif; ?>
                 </ul>
-
-            </li>
-            <li class="glHeaderMobile-nav-menu">
-                <a href="/search" class="glHeaderMobile-nav-menu-link">
-                    <i class="material-icons">search</i>
-                </a>
             </li>
         </ul>
     </div>

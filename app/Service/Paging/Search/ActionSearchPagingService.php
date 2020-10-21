@@ -43,6 +43,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
             'pn'        => intval($pagingRequest->getCondition('pn')),
             'rn'        => intval($pagingRequest->getCondition('limit')),
             'file_name' => intval($pagingRequest->getCondition('file_name')),
+            'group_ids' => $pagingRequest->getCondition('group_ids'),
         ];
 
         return $ESClient->search($query, $teamId, $params);
@@ -234,6 +235,7 @@ class ActionSearchPagingService extends BaseSearchPagingService
             }
 
             $item['img_url'] = $imgUrl;
+            $imgUrl = null;
         }
 
         return $rawData;

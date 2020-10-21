@@ -1035,7 +1035,11 @@ class PostsController extends AppController
             $circleId = $this->request->params['circle_id'];
             $urlCircleFeed = sprintf('/circles/%s/posts', $circleId);
             if (ENV_NAME == 'local') {
-                $urlCircleFeed = "http://local.goalous.com:5790" . $urlCircleFeed;
+                if (SESSION_DOMAIN == 'localhost') {
+                    $urlCircleFeed = "http://localhost:5790" . $urlCircleFeed;
+                } else {
+                    $urlCircleFeed = "http://local.goalous.com:5790" . $urlCircleFeed;
+                }
             }
             $this->redirect($urlCircleFeed);
             return;
@@ -1049,7 +1053,11 @@ class PostsController extends AppController
             $post = $Post->findById($postId);
             $url = sprintf('/posts/%s?%s', $postId, http_build_query($this->request->query));
             if (ENV_NAME == 'local') {
-                $url = "http://local.goalous.com:5790" . $url;
+                if (SESSION_DOMAIN == 'localhost') {
+                    $url = "http://localhost:5790" . $url;
+                } else {
+                    $url = "http://local.goalous.com:5790" . $url;
+                }
             }
             do {
                 if (empty($post)) {

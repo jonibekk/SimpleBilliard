@@ -665,8 +665,7 @@ class Team extends AppModel
     function findByServiceUseStatus(
         int $serviceUseStatus,
         array $fields = ['id', 'name', 'service_use_state_start_date', 'service_use_state_end_date', 'timezone']
-    ): array
-    {
+    ): array {
         $options = [
             'conditions' => [
                 'service_use_status' => $serviceUseStatus
@@ -1004,4 +1003,8 @@ class Team extends AppModel
         return Hash::extract($queryResult, '{n}.{s}.id') ?: [];
     }
 
+    public function hasGroups(int $teamId): boolean
+    {
+        return $this->Group->hasAny(['team_id' => $teamId]);
+    }
 }

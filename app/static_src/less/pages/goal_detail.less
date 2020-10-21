@@ -396,6 +396,7 @@
   .goal-detail-item;
   &:before {
     content: '\f02c';
+    margin-top: 4px;
   }
 }
 
@@ -427,6 +428,21 @@
   }
 }
 
+.goal-detail-goal-groups{
+  .goal-detail-item;
+  &:before {
+    content: '\f0c0';
+  }
+
+  .archived-toggle {
+    color: @color-04-gray;
+  }
+
+  .archived-list {
+    display: none;
+  }
+
+}
 .goal-detail-kr-panel {
   &:extend(.goal-detail-panels);
 }

@@ -874,7 +874,8 @@ class UsersController extends AppController
 
             // 通知設定 更新時
             if (isset($this->request->data['NotifySetting']['email_status']) &&
-                isset($this->request->data['NotifySetting']['mobile_status'])
+                isset($this->request->data['NotifySetting']['mobile_status']) &&
+                isset($this->request->data['NotifySetting']['desktop_status'])
             ) {
                 $this->request->data['NotifySetting'] =
                     array_merge($this->request->data['NotifySetting'],
@@ -887,6 +888,10 @@ class UsersController extends AppController
                     array_merge($this->request->data['NotifySetting'],
                         $this->User->NotifySetting->getSettingValues('mobile',
                             $this->request->data['NotifySetting']['mobile_status']));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                        $this->User->NotifySetting->getSettingValues('desktop',
+                            $this->request->data['NotifySetting']['desktop_status']));
             }
 
             if (isset($this->request->data['TeamMember'][0]['default_translation_language'])) {
@@ -1495,10 +1500,15 @@ class UsersController extends AppController
         } else {
             $goals = $this->Goal->getGoalsWithAction($userId, MY_PAGE_ACTION_NUMBER, $startDate, $endDate);
         }
+        $goals = $GoalService->filterUnauthorized($goals);
         $goals = $GoalService->processGoals($goals);
         $goals = $GoalService->extendTermType($goals, $this->Auth->user('id'));
         $isMine = $userId == $this->Auth->user('id') ? true : false;
         $displayActionCount = MY_PAGE_ACTION_NUMBER;
+
+        $unauthorizedGoalsCount = ($pageType == "following") ? $followGoalsCount : $myGoalsCount;
+        $unauthorizedGoalsCount -= count($goals);
+
         if ($isMine) {
             $displayActionCount--;
         }
@@ -1523,6 +1533,7 @@ class UsersController extends AppController
             'term_base_url'        => $termBaseUrl,
             'my_goals_count'       => $myGoalsCount,
             'follow_goals_count'   => $followGoalsCount,
+            'unauthorized_goals_count' => $unauthorizedGoalsCount,
             'page_type'            => $pageType,
             'goals'                => $goals,
             'is_mine'              => $isMine,
@@ -1622,6 +1633,9 @@ class UsersController extends AppController
         $oldestTimestamp = $postCondition['oldestTimestamp'];
 
         $posts = $this->_findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
+        $allAccountsCount = count($posts);
+        $posts = $GoalService->filterUnauthorized($posts);
+        $unauthorizedActionsCount = $allAccountsCount - count($posts);
 
         $this->set('long_text', false);
         $this->set(compact(
@@ -1632,6 +1646,7 @@ class UsersController extends AppController
             'endTimestamp',
             'oldestTimestamp',
             'actionCount',
+            'unauthorizedActionsCount',
             'currentTermId',
             'canAction'
         ));
@@ -1779,6 +1794,8 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = Hash::get($this->request->params, "named.user_id");
+        $rows = $this->User->MemberGroup->Group->findForUser($user_id);
+        $groups = Hash::extract($rows, "{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1788,6 +1805,7 @@ class UsersController extends AppController
 
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('groups', $groups);
         return $this->render();
     }
 

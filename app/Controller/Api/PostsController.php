@@ -22,6 +22,7 @@ App::import('Lib/DataExtender', 'PostExtender');
 App::import('Lib/Pusher', 'NewCommentNotifiable');
 App::import('Service/Pusher', 'PostPusherService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
+App::import('Policy', 'PostPolicy');
 App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
@@ -358,14 +359,12 @@ class PostsController extends BasePagingController
 
     public function get_detail(int $postId): CakeResponse
     {
-        $error = $this->validatePostAccess($postId);
-        if (!empty($error)) {
-            return $error;
+        try {
+            $post = $this->findPost($postId);
+            $this->authorize('read', $post);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
-
-        /** @var Post $Post */
-        $Post = ClassRegistry::init("Post");
-        $post = $Post->useType()->getById($postId);
 
         /** @var PostExtender $PostExtender */
         $PostExtender = ClassRegistry::init('PostExtender');
@@ -382,6 +381,28 @@ class PostsController extends BasePagingController
         ])->getResponse();
     }
 
+    private function findPost(int $postId): array
+    {
+        /** @var Post $Post */
+        $Post = ClassRegistry::init("Post");
+        $post = $Post->useType()->getById($postId);
+
+        if (empty($post)) {
+            throw new GlException\GoalousNotFoundException(__("This post doesn't exist."));
+        }
+
+        return $post;
+    }
+
+    public function authorize(string $method, array $post): void
+    {
+        $policy = new PostPolicy($this->getUserId(), $this->getTeamId());
+        $authorized = $policy->{$method}($post);
+
+        if (!$authorized) {
+            throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this post"));
+        }
+    }
     public function post_likes(int $postId): CakeResponse
     {
         $res = $this->validatePostAccess($postId);
@@ -688,8 +709,10 @@ class PostsController extends BasePagingController
             return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))->getResponse();
         }
 
-        if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin($this->getUserId(),
-                $this->getTeamId())) {
+        if (!$Post->isPostOwned($postId, $this->getUserId()) && !$TeamMember->isActiveAdmin(
+            $this->getUserId(),
+            $this->getTeamId()
+        )) {
             return ErrorResponse::forbidden()->withMessage(__("You don't have permission to access this post"))
                 ->getResponse();
         }

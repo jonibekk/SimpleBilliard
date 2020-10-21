@@ -537,7 +537,7 @@ App::uses('AttachedFile', 'Model');
             "Waiting": "<?=__("Waiting")?>",
             "Waiting for approval": "<?=__("Waiting for approval")?>",
             "Goal details": "<?= __("Goal details") ?>",
-            "Add by pressing the Enter.(You can save maximum 5 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 5 labels)") ?>",
+            "Add by pressing the Enter.(You can save maximum 20 labels)": "<?= __("Add by pressing the Enter.(You can save maximum 20 labels)") ?>",
             "Withdrawn": "<?=__("Withdrawn")?>",
             "Evaluation target goals are listed up here.": "<?= __("Evaluation target goals are listed up here.") ?>",
             "There are no evaluation target goals.": "<?= __("There are no evaluation target goals.") ?>",
@@ -769,7 +769,8 @@ App::uses('AttachedFile', 'Model');
         is_current_team_admin: "<?= viaIsSet($is_current_team_admin) ?>",
         attachable_max_file_size_mb: "<?= AttachedFile::ATTACHABLE_MAX_FILE_SIZE_MB?>",
         my_notifying_circles: <?= json_encode(viaIsSet($my_notifying_circles)) ?>,
-        is_demo: "<?= IS_DEMO ?>"
+        is_demo: "<?= IS_DEMO ?>",
+        vapid_public_key: "<?= VAPID_PUBLIC_KEY ?>"
     };
 
     function __(text) {

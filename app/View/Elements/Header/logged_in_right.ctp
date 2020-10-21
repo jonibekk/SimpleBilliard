@@ -24,12 +24,6 @@
             </a>
         </li>
         <li class="glHeaderPc-nav-menu">
-            <a href="/search" class="glHeaderPc-nav-menu-link <?= Router::url() === '/search' ? 'active' : '' ?>" >
-                <i class="material-icons">search</i>
-                <span><?= __('Search')?></span>
-            </a>
-        </li>
-        <li class="glHeaderPc-nav-menu">
             <a id="GlHeaderMenuDropdown-Create" href="#" class="glHeaderPc-nav-menu-link" data-toggle="dropdown">
                 <i class="material-icons">add_circle</i>
                 <span><?= __('Create')?></span>
@@ -168,4 +162,52 @@
         </a>
     </li>
 </ul>
+<script>
+    $(function () {
+        if ('serviceWorker' in navigator) { 
+            navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+                serviceWorkerRegistration.pushManager.getSubscription()
+                .then(function(subscription) {
+                    if (!subscription){
+                        if (Notification.permission !== 'denied') {
+                            var options = {
+                                userVisibleOnly: true,
+                                applicationServerKey: cake.vapid_public_key 
+                            };
+                            serviceWorkerRegistration.pushManager.subscribe(options).then(
+                                function(pushSubscription) {}, 
+                                function(error) {
+                                    console.error(error);
+                                }
+                            ); 
+                        }
+
+                    } else {
+                        var url = "/api/v1/subscriptions/addSubscription"
+                        $.ajax({
+                            type: 'post',
+                            url: url,
+                            data: JSON.stringify(subscription),
+                            async: true,
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.error) {
+                                    console.error('Add subscription error!!')
+                                }
+                            },
+                            error: function (err) {
+                                console.error('Ajax add subscription error!!')
+                                return false;
+                            }
+                        });
+                    }
+                })
+                .catch(function(err) {
+                    console.error('Error during getSubscription()', err);
+                });
+            });
+        }
+    })
+</script>
+<?php $this->end(); ?>
 <?= $this->App->viewEndComment() ?>

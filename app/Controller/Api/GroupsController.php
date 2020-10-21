@@ -3,6 +3,9 @@ App::uses('BasePagingController', 'Controller/Api');
 App::import('Service', 'GroupService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Service', 'ImageStorageService');
+App::import('Policy', 'GroupPolicy');
+
+use Goalous\Exception as GlException;
 
 class GroupsController extends BasePagingController
 {
@@ -14,10 +17,11 @@ class GroupsController extends BasePagingController
 
     public function get_list()
     {
-        $teamId = $this->getTeamId();
+        $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
+        $scope = $policy->scope();
         // @var Group $Group;
         $Group = ClassRegistry::init("Group");
-        $results = $Group->findGroupsWithMemberCount($teamId);
+        $results = $Group->findGroupsWithMemberCount($scope);
         $ret = Hash::extract($results, '{n}.Group');
 
         return ApiResponse::ok()->withData($ret)->getResponse();
@@ -25,18 +29,23 @@ class GroupsController extends BasePagingController
 
     public function get_detail(int $groupId)
     {
-        // @var ImageStorageService $ImageStorageService;
-        $ImageStorageService = ClassRegistry::init("ImageStorageService");
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('read', $group);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
+        }
 
-        $this->loadModel("Group");
-        $result = $this->Group->findById($groupId);
-        $group  = $result["Group"];
         $members = $this->Group->findMembers($groupId);
 
         $group['members'] = array_map(
-            function ($row) use ($ImageStorageService) {
+            function ($row) {
+                // @var ImageStorageService $ImageStorageService;
+                $ImageStorageService = ClassRegistry::init("ImageStorageService");
+
                 $member = $row["User"];
                 $member['profile_img_url'] = $ImageStorageService->getImgUrlEachSize($member, 'User');
+
                 return $member;
             },
             $members
@@ -48,23 +57,22 @@ class GroupsController extends BasePagingController
     public function post()
     {
         $requestData = $this->getRequestJsonBody();
+        $requestData['team_id'] = $this->getTeamId();
 
-        $validationError = $this->validateCreate($requestData);
-        if ($validationError !== null) {
-            return $validationError;
+        try {
+            $this->authorize('create', $requestData);
+            $this->validateGroupParams($requestData);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
 
         // @var GroupService $GroupService
         $GroupService = ClassRegistry::init("GroupService");
 
         try {
-            $data = $requestData;
-            $data['team_id'] = $this->getTeamId();
-            $newGroup = $GroupService->createGroup($data);
+            $newGroup = $GroupService->createGroup($requestData);
         } catch (Exception $e) {
-            return ErrorResponse::internalServerError()
-                ->withMessage(__($e->getMessage()))
-                ->getResponse();
+            return $this->generateResponseIfException($e);
         }
 
         return ApiResponse::ok()->withData($newGroup)->getResponse();
@@ -74,23 +82,28 @@ class GroupsController extends BasePagingController
     {
         $requestData = $this->getRequestJsonBody();
 
-        $validationError = $this->validateUpdate($groupId);
-        if ($validationError !== null) {
-            return $validationError;
-        }
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('update', $group);
+            $this->validateUpdate($group, $requestData);
 
-        // @var GroupService $GroupService
-        $GroupService = ClassRegistry::init("GroupService");
-        $ret = $GroupService->editGroup($groupId, $requestData);
+            // @var GroupService $GroupService
+            $GroupService = ClassRegistry::init("GroupService");
+            $ret = $GroupService->editGroup($groupId, $requestData);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
+        }
 
         return ApiResponse::ok()->withData($ret)->getResponse();
     }
 
     public function post_verify_members(int $groupId)
     {
-        $validationError = $this->validateUpdate($groupId);
-        if ($validationError !== null) {
-            return $validationError;
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('update', $group);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
 
         $file = Hash::get($this->request->params, 'form.file');
@@ -108,9 +121,11 @@ class GroupsController extends BasePagingController
 
     public function post_members(int $groupId)
     {
-        $validationError = $this->validateUpdate($groupId);
-        if ($validationError !== null) {
-            return $validationError;
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('update', $group);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
 
         $requestData = $this->getRequestJsonBody();
@@ -128,9 +143,11 @@ class GroupsController extends BasePagingController
 
     public function post_remove_member(int $groupId)
     {
-        $validationError = $this->validateUpdate($groupId);
-        if ($validationError !== null) {
-            return $validationError;
+        try {
+            $group = $this->findGroup($groupId);
+            $this->authorize('update', $group);
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
 
         $requestData = $this->getRequestJsonBody();
@@ -144,53 +161,6 @@ class GroupsController extends BasePagingController
         return ApiResponse::ok()->withData([])->getResponse();
     }
 
-    private function validateCreate($data)
-    {
-        try {
-            $this->validateTeamAdmin();
-            $this->validateGroupParams($data);
-            return null;
-        } catch (Exception $e) {
-            return ErrorResponse::badRequest()
-                ->withMessage(__($e->getMessage()))
-                ->getResponse();
-        }
-    }
-
-    private function validateUpdate($groupId)
-    {
-        $this->loadModel("Group");
-        $group = $this->Group->findById($groupId);
-
-        $this->loadModel("TeamMember");
-        $result = $this->TeamMember->hasAny([
-            "user_id" => $this->getUserId(),
-            "team_id" => $this->getTeamId(),
-            "admin_flg" => true
-        ]);
-
-        if (!$result || $group['Group']['team_id'] != $this->getTeamId()) {
-            return ErrorResponse::badRequest()
-                ->withMessage(__("You are not authorized to manage this group"))
-                ->getResponse();
-        }
-        return null;
-    }
-
-    private function validateTeamAdmin()
-    {
-        $this->loadModel("TeamMember");
-        $result = $this->TeamMember->hasAny([
-            "user_id" => $this->getUserId(),
-            "team_id" => $this->getTeamId(),
-            "admin_flg" => true
-        ]);
-        if (!$result) {
-            throw new Exception("You are not authorized to manage groups");
-        }
-        return null;
-    }
-
     private function validateGroupParams(array $data)
     {
         $this->loadModel("Group");
@@ -202,8 +172,65 @@ class GroupsController extends BasePagingController
                 $errMsgs[$field] = array_shift($errors);
             }
             GoalousLog::error("Invalid group paramters", $errMsgs);
-            throw new Exception("Invalid group parameters");
+            throw new GlException\GoalousValidationException(__("Invalid group parameters"));
         }
         return null;
+    }
+
+    private function validateUpdate(array $group, array $data)
+    {
+        $this->loadModel('Group');
+        $this->loadModel('Team');
+        $team = $this->Team->findById($this->getTeamId());
+
+        if (!$team['Team']['groups_enabled_flg']) {
+            return null;
+        }
+
+        // a group with public visiblity turned OFF must have at least one non-archived group
+        if ($data["archived_flg"] === true) {
+            $groupsPresent = $this->Group->hasAny([
+                'team_id' => $this->getTeamId(),
+                'archived_flg' => false,
+                'id !=' => $group['id']
+            ]);
+
+            if (!$groupsPresent) {
+                throw new GlException\GoalousValidationException(__("You need at least one non-archived group."));
+            }
+        }
+    }
+
+    private function findGroup(int $groupId): array
+    {
+        /** @var Group $Group */
+        $Group = ClassRegistry::init("Group");
+        $group = $Group->useType()->getById($groupId);
+
+        if (empty($group)) {
+            throw new GlException\GoalousNotFoundException(__("This group doesn't exist."));
+        }
+
+        return $group;
+    }
+
+    public function authorize(string $method, array $group): void
+    {
+        $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
+
+        switch ($method) {
+            case 'read':
+                if (!$policy->read($group)) {
+                    throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
+                }
+            case 'create':
+                if (!$policy->create($group)) {
+                    throw new GlException\Auth\AuthFailedException(__("You are not authorized to create groups for this team"));
+                }
+            case 'update':
+                if (!$policy->update($group)) {
+                    throw new GlException\Auth\AuthFailedException(__("You are not authorized to update this group"));
+                }
+        }
     }
 }
