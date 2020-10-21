@@ -1957,6 +1957,18 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertNotEmpty($this->TeamMember->updateLastLogin(1, 1));
     }
 
+    /**
+     * @expectedException Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_updateLastLoginDontExist_failed()
+    {
+        $this->setDefault();
+
+        $this->TeamMember->updateLastLogin(1123213, 209309231);
+
+        $this->fail();
+    }
+
     function testDeleteCacheMember()
     {
         $this->setDefault();
@@ -2332,7 +2344,7 @@ class TeamMemberTest extends GoalousTestCase
             ['user_id' => 3, 'team_id' => 1]
         );
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 4);
+        $this->assertEquals(count($res), 5);
         $diff = array_values(array_diff($allMemberIds, $res));
         $this->assertEquals($diff, [3]);
 
@@ -2341,20 +2353,20 @@ class TeamMemberTest extends GoalousTestCase
             ['user_id' => 1, 'team_id' => 1]
         );
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 3);
-        $this->assertEquals($res, [2, 12, 13]);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res, [2, 12, 13, 4]);
 
         $userId = $this->createActiveUser(1);
         $tmId = $this->TeamMember->getLastInsertId();
 
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 3);
-        $this->assertEquals($res, [2, 12, 13]);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res, [2, 12, 13, 4]);
 
         $allMemberIds[] = $userId;
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 4);
-        $this->assertEquals($res, [2, 12, 13, $userId]);
+        $this->assertEquals(count($res), 5);
+        $this->assertEquals($res, [2, 12, 13, 4, $userId]);
     }
 
     public function test_setDefaultTranslationLanguage_success()

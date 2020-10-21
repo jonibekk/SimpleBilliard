@@ -6,6 +6,7 @@ App::uses('Email', 'Model');
 App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -1018,7 +1019,7 @@ class User extends AppModel
         $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
         $user_email['Email']['email_verified'] = true;
-        $res = $this->Email->saveAll($user_email);
+        $res = $this->Email->saveAll($user_email, ['validate' => false]);
         return $res;
     }
 
@@ -1238,6 +1239,7 @@ class User extends AppModel
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
                         'SearchLocalName.user_id = User.id',
+                        'SearchLocalName.language' => $this->me['language'],
                     ],
                 ],
                 [
@@ -1842,7 +1844,8 @@ class User extends AppModel
                     'table'      => 'team_members',
                     'alias'      => 'TeamMember',
                     'conditions' => [
-                        'TeamMember.user_id = User.id'
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.del_flg' => false
                     ]
                 ]
             ]
@@ -2025,7 +2028,8 @@ class User extends AppModel
             'fields'     => [
                 'User.id',
                 'User.password',
-                'User.default_team_id'
+                'User.default_team_id',
+                'User.2fa_secret'
             ],
             'joins'      => [
                 [
@@ -2093,5 +2097,26 @@ class User extends AppModel
         }
 
         return $data;
+    }
+
+    /**
+     * Update last login time of an user
+     *
+     * @param int $userId
+     * @param int $timestamp
+     *
+     * @throws Exception
+     */
+    public function updateLastLogin(int $userId, int $timestamp = REQUEST_TIMESTAMP): void {
+
+        $user = $this->getById($userId);
+
+        if (empty($user)) {
+            throw new GlException\GoalousNotFoundException("User doesn't exist");
+        }
+
+        $user['last_login'] = $timestamp;
+
+        $this->save($user, false);
     }
 }

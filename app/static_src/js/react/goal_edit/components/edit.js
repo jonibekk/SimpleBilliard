@@ -99,9 +99,9 @@ export default class Edit extends React.Component {
   }
 
   shouldDisplayGroupSelection() {
-    const { inputData, groups_enabled } = this.props.goal
+    const { goal, groups_enabled } = this.props.goal
 
-    if (Object.keys(inputData.groups).length === 0) {
+    if (goal.groups && Object.keys(goal.groups).length === 0) {
       return false
     }
 

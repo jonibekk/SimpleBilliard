@@ -1396,7 +1396,12 @@ class GoalsController extends AppController
             if ($post) {
                 $url = sprintf('/posts/%s', $post['Post']['id']);
                 if (ENV_NAME == 'local') {
-                    $url = "http://local.goalous.com:5790" . $url;
+                    if (SESSION_DOMAIN == 'localhost') {
+                        $url = "http://localhost:5790" . $url;
+                    } else {
+                        $url = "http://local.goalous.com:5790" . $url;
+
+                    }
                 }
             }
             return $this->redirect($url);
@@ -1975,6 +1980,8 @@ class GoalsController extends AppController
 
         $goalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goalId), '{n}.Group');
         $this->set('goalGroups', $goalGroups);
+        $archivedGoalGroups = Hash::extract($this->Goal->GoalGroup->findGroupsWithGoalId($goalId, true), '{n}.Group');
+        $this->set('archivedGoalGroups', $archivedGoalGroups);
 
         return true;
     }

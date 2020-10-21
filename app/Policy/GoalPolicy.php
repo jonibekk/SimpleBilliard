@@ -66,6 +66,11 @@ class GoalPolicy extends BasePolicy
             $fullQuery = $query . $fullQuery;
         }
 
-        return ['conditions' => [$fullQuery]];
+        return [
+            'conditions' => [
+                'Goal.team_id' => $this->teamId,
+                '(' . $fullQuery . ')',
+            ]
+        ];
     }
 }

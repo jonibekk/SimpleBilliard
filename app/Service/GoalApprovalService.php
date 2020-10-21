@@ -43,6 +43,8 @@ class GoalApprovalService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         if (!empty($teamId)) {
             $GoalMember->current_team_id = $teamId;
+            $GoalMember->Team->current_team_id = $teamId;
+            $GoalMember->Team->Term->current_team_id = $teamId;
         }
         // Redisのキャッシュデータ取得
         $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $userId), 'user_data');

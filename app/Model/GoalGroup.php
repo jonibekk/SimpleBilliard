@@ -23,16 +23,26 @@ class GoalGroup extends AppModel
         'Group',
     ];
 
-    function findGroupsWithGoalId(int $goalId)
+    function findGroupsWithGoalId($goalId, $archived = false)
     {
         $conditions = [
-            'contain' => 'Group',
             'conditions' => [
-                'GoalGroup.goal_id' => $goalId
+                'archived_flg' => $archived
+            ],
+            'order' => 'Group.name',
+            'joins' => [
+                [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'Group.id = GoalGroup.group_id',
+                        'GoalGroup.goal_id' => $goalId
+                    ]
+                ]
             ]
         ];
 
-        return $this->find('all', $conditions);
+        return $this->Group->find('all', $conditions);
     }
 
     function goalByUserIdSubQuery(int $userId)
