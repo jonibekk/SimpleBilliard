@@ -2034,8 +2034,9 @@ class GoalsController extends AppController
         $this->request->allowMethod("post");
         $kr_id = $this->request->data["KeyResult"]["kr_id"];
         $watched = $this->request->data["KeyResult"]["watched"];
+        $kr = $this->Goal->KeyResult->findById($kr_id);
 
-        if ($this->Goal->KeyResult->exists($kr_id)) {
+        if (!empty($kr)) {
             /** @var WatchlistService */
             $WatchlistService = ClassRegistry::init("WatchlistService");
 
@@ -2050,6 +2051,12 @@ class GoalsController extends AppController
             $this->Notification->outError(__("Invalid key result"));
         }
 
-        return $this->redirect($this->referer());
+        $url = Router::url([
+            'controller' => 'goals',
+            'action'     => 'view_krs',
+            'goal_id'    => $kr['KeyResult']['goal_id'],
+        ]);
+
+        return $this->redirect($url);
     }
 }
