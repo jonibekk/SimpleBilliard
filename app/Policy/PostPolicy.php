@@ -14,8 +14,9 @@ class PostPolicy extends BasePolicy
     public function read($post): bool
     {
         // If circle post, apply different auth criteria
-        if ($post['circle_id'] !== null) {
-            return $this->checkCirclePostAccess($post);
+        // circle post check will ignore action/goal create posts
+        if (!$this->checkCirclePostAccess($post)) {
+            return false;
         }
 
         if (((int)$post['user_id'] === $this->userId) ||
