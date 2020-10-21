@@ -811,9 +811,15 @@ class UsersController extends AppController
             $this->Notification->outSuccess(__("Please login with your new password."),
                 ['title' => __('Password is set.')]);
             return $this->redirect(['action' => 'login']);
+        } else {
+            GoalousLog::error("Failed to reset password", [
+                'token'   => $token,
+                'user.id' => $user_email['Email']['user_id']
+            ]);
+            $this->Notification->outError(__("Please try again later."),
+                ['title' => __('Failed to reset the password')]);
+            return $this->render('password_reset');
         }
-        return $this->render('password_reset');
-
     }
 
     public function token_resend()

@@ -1019,7 +1019,7 @@ class User extends AppModel
         $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
         $user_email['Email']['email_verified'] = true;
-        $res = $this->Email->saveAll($user_email);
+        $res = $this->Email->saveAll($user_email, ['validate' => false]);
         return $res;
     }
 
