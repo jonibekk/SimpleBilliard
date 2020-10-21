@@ -16,6 +16,7 @@ import Step1Container from '../containers/step1'
 import Step2Container from '../containers/step2'
 import Step3Container from '../containers/step3'
 import Step4Container from '../containers/step4'
+import Step5Container from '../containers/step5'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -51,6 +52,7 @@ export default class Routes extends Component {
               <Route path="step2" component={Step2Container} />
               <Route path="step3" component={Step3Container} />
               <Route path="step4" component={Step4Container} />
+              <Route path="step5" component={Step5Container} />
             </Route>
           </Router>
           {/* <DevTools / > */}

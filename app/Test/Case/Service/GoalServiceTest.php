@@ -41,6 +41,7 @@ class GoalServiceTest extends GoalousTestCase
         'app.goal_category',
         'app.goal_member',
         'app.goal_label',
+        'app.goal_group',
         'app.label',
         'app.post',
         'app.key_result',

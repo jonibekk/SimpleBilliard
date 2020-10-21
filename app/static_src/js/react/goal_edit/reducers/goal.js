@@ -27,11 +27,13 @@ const initialState = {
       current_value:"",
       description: ""
     },
-    labels: []
+    labels: [],
+    groups: {}
   },
   approvalHistories: [],
   isDisabledSubmit: false,
-  from: ""
+  from: "",
+  groups_enabled: false
 }
 
 export default function goal(state = initialState, action) {
@@ -154,7 +156,7 @@ export default function goal(state = initialState, action) {
  * @returns {*|Array}
  */
 export function updateSelectedLabels(inputData, label, deleteFlg = false) {
-  let labels = inputData.labels || [];
+  const labels = inputData.labels || [];
   if (!label) {
     return labels
   }
@@ -211,7 +213,7 @@ export function addItemToSuggestions(suggestions, suggestionName, baseList) {
  * @returns {{}}
  */
 export function initInputData(goal) {
-  let labels = [];
+  const labels = [];
 
   for (const i in goal.goal_labels) {
     labels.push(goal.goal_labels[i].name)
@@ -232,7 +234,8 @@ export function initInputData(goal) {
       target_value: goal.top_key_result.target_value,
       current_value: goal.top_key_result.current_value,
       description: goal.top_key_result.description
-    }
+    },
+    groups: {}
   }
   return inputData;
 }

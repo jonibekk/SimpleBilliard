@@ -20,11 +20,6 @@ class KeyResultExtension extends DataExtension
 
         $fetchedData = $KeyResult->useType()->find('all', $conditions);
 
-        if (count($fetchedData) != count($uniqueKeys)) {
-            GoalousLog::error("Missing data for data extension. KeyResult ID: " . implode(',',
-                    array_diff($uniqueKeys, Hash::extract($fetchedData, '{n}.KeyResult.id'))));
-        }
-
         return $fetchedData;
     }
 }

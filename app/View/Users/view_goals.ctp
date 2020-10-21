@@ -238,6 +238,11 @@
                     </div>
                 </div>
             <?php endforeach ?>
+            <?php if ($unauthorized_goals_count > 0) : ?>
+                <div class="col col-xxs-12 unauthorized-goals-notification">
+                    <?= __("There is %s goals you do not have permission to see", $unauthorized_goals_count) ?>
+                </div>
+            <?php endif ?>
         </div>
     </div>
 </div>

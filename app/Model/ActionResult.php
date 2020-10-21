@@ -403,8 +403,18 @@ class ActionResult extends AppModel
     {
         $options = [
             'conditions' => [
-                'key_result_id' => $krId,
+                'ActionResult.key_result_id' => $krId,
                 'ActionResult.created >=' => $periodFrom->getTimestamp()
+            ],
+            'joins' => [
+                [
+                    'alias' => 'KrProgressLog',
+                    'table' => 'kr_progress_logs',
+                    'conditions' => [
+                        'KrProgressLog.action_result_id = ActionResult.id',
+                        'KrProgressLog.del_flg' => false
+                    ]
+                ]
             ],
             'order'      => [
                 'created' => 'desc'

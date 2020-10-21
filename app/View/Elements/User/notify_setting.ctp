@@ -86,6 +86,29 @@
                 ?>
             </div>
             <div id="NotifySettingMobileHelp" class="col col-sm-offset-3 help-block font_12px none"></div>
+
+            <hr>
+            <div class="form-group" id="desktopNormalOptions">
+
+                <div class="col col-sm-offset-3 help-block font_12px none" style="color:red" id="desktopInvalidReminder" hidden>
+                    <?=__("Browser notification permission denied!<br>Please enable notification permission via brower setting and refresh.")?>
+                </div>
+                <label class="col col-sm-3 col-xxs-12 control-label form-label">
+                    <i class="fa fa-mobile"></i> <?= __('Desktop') ?>
+                </label>
+                <?=
+                $this->Form->input("NotifySetting.desktop_status", [
+                    'id'        => 'NotifySettingDesktop',
+                    'label'     => false,
+                    'div'       => false,
+                    'type'      => 'select',
+                    'class'     => 'form-control',
+                    'options'   => NotifySetting::$TYPE_GROUP,
+                    'wrapInput' => 'user-setting-notify-mobile-select col col-xxs-5 col-sm-3',
+                ])
+                ?>
+            </div>
+            <div id="NotifySettingDesktopHelp" class="col col-sm-offset-3 help-block font_12px none"></div>
         </div>
         <div class="panel-footer setting_pannel-footer">
             <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary pull-right']) ?>
@@ -115,6 +138,14 @@
         };
         $('#NotifySettingEmail').on('change', onSelectChange).trigger('change');
         $('#NotifySettingMobile').on('change', onSelectChange).trigger('change');
+        $('#NotifySettingDesktop').on('change', onSelectChange).trigger('change');
+         
+        var invalidReminder = $('#desktopInvalidReminder');
+        if (Notification.permission == 'denied') {
+            invalidReminder.show();
+        } else {
+            invalidReminder.hide();
+        }
     })
 </script>
 <?php $this->end(); ?>
