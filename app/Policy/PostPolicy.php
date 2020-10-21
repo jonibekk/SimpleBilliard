@@ -4,6 +4,9 @@ App::uses('GoalGroup', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Evaluator', 'Model');
 App::import('Policy', 'BasePolicy');
+App::import('Service', 'PostService');
+
+use Goalous\Enum as Enum;
 
 /**
  * Class PostPolicy
@@ -12,23 +15,28 @@ class PostPolicy extends BasePolicy
 {
     public function read($post): bool
     {
-        // Do not check circle access in this module
-
-        if (((int)$post['user_id'] === $this->userId) ||
-            ($this->isTeamAdminForItem($post['team_id'])) ||
-            ($this->isCoach($post['goal_id'])) ||
-            ($this->isActiveEvaluator($post['goal_id'])) ||
-            ($this->isSameGroup($post))
-        ) {
-            return true;
-        }
-
-        // both action posts and goal posts have goal_id
-        if (!empty($post['goal_id'])) {
-            return $this->isSameGroup($post);
+        switch ($post['type']) {
+            case Enum\Model\Post\Type::ACTION:
+            case Enum\Model\Post\Type::CREATE_GOAL:
+                return (((int)$post['user_id'] === $this->userId) ||
+                    ($this->isTeamAdminForItem($post['team_id'])) ||
+                    ($this->isCoach($post['goal_id'])) ||
+                    ($this->isActiveEvaluator($post['goal_id'])) ||
+                    ($this->isSameGroup($post))
+                );            
+            case Enum\Model\Post\Type::NORMAL:
+                return $this->checkCirclePostAccess($post);
         }
 
         return false;
+    }
+
+
+    private function checkCirclePostAccess($post): bool
+    {
+        /** @var PostService */
+        $PostService = ClassRegistry::init('PostService');
+        return $PostService->checkUserAccessToCirclePost($this->userId, $post['id']);
     }
 
     private function isSameGroup($post): bool
