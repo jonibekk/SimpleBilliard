@@ -6064,3 +6064,36 @@ msgstr "日本語"
 
 msgid "Failed to reset the password"
 msgstr "パスワードの再設定に失敗しました"
+
+msgid "Any goals created in the future will need to have a destination group set up for publication."
+msgstr "今後作成するゴールには、公開先グループを設定する必要があります。"
+
+msgid "This check cannot be turned off because there is no valid group in this team."
+msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
+
+msgid "This goal is open to all team members"
+msgstr "このゴールは全員に公開されています"
+
+msgid "There is %s goals you do not have permission to see"
+msgstr "非公開のゴールが%s件あります"
+
+msgid "Contact us"
+msgstr "お問い合わせ"
+
+msgid "SAML Authentication"
+msgstr "SSOログイン設定"
+
+msgid "Get set up with SAML2.0 solution."
+msgstr ""
+
+msgid "Configure SSO"
+msgstr "SAML2.0を設定"
+
+msgid "Update SSO Setting"
+msgstr ""
+
+msgid "Stop Using the SSO"
+msgstr ""
+
+msgid "There is %s actions you do not have permission to see"
+msgstr "非公開のアクションが%s件あります"
