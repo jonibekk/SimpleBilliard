@@ -2042,10 +2042,16 @@ class GoalsController extends AppController
 
             if ($watched) {
                 $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
-                $this->Notification->outSuccess(__("KR has been added to the Important list"));
+                $this->Notification->outSuccess(
+                    __("KR has been added to the Important list"),
+                    ['url' => "https://google.com"]
+                );
             } else {
                 $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
-                $this->Notification->outError(__("Removed from the Important list"));
+                $this->Notification->outSuccess(
+                    __("Removed from the Important list"),
+                    ['url' => "https://google.com"]
+                );
             }
         } else {
             $this->Notification->outError(__("Invalid key result"));

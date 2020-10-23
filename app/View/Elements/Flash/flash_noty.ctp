@@ -17,6 +17,15 @@
     new Noty({
         type: "<?=$type?>",
         text: '<h4>'+'<?=$title?>'+'</h4>'+'<?=$message?>',
+        closeWith: ['click'],
+        callbacks: {
+            onClick: function() {
+                var url = "<?= $url ?>"
+                if (url !== "") {
+                    window.location.href = url;
+                }
+            }
+        }
     }).show();
 </script>
 <?= $this->App->viewEndComment()?>

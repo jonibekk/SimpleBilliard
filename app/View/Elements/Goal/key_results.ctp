@@ -45,13 +45,9 @@
                             'url'           => ['controller' => 'goals', 'action' => 'toggle_watch']
                         ])
                     ?>
-                    <?= 
-                        $this->Form->input('kr_id', ['type' => 'hidden', 'value' => $kr['KeyResult']['id']]) 
-                    ?>
-                    <?= 
-                        $this->Form->input('watched', ['type' => 'hidden', 'value' => (int)!$kr['KeyResult']['watched']]) 
-                    ?>
-                    <a href="#" class="goal-detail-toggle-link <?= $kr['KeyResult']['watched'] ? 'active' : '' ?>">
+                    <?= $this->Form->input('kr_id', ['type' => 'hidden', 'value' => $kr['KeyResult']['id']]) ?>
+                    <?= $this->Form->input('watched', ['type' => 'hidden', 'value' => (int)!$kr['KeyResult']['watched']]) ?>
+                    <button type="submit" class="<?= $kr['KeyResult']['watched'] ? 'active' : '' ?>">
                         <dt class="goal-detail-kr-info-counts-title">
                             <i class="fa fa-eye"></i>
                         </dt>
@@ -62,7 +58,7 @@
                                 <?= __("Watch") ?>
                             <?php endif; ?>
                         </dd>
-                    </a>
+                    </button>
                     <?= $this->Form->end() ?>
                 <?php endif; ?>
             </dl>
@@ -75,13 +71,3 @@
     <?php endforeach ?>
 <?php endif ?>
 <?= $this->App->viewEndComment() ?>
-<?php $this->start('script') ?>
-<script type="text/javascript">
-    (function() {
-        $('.goal-detail-toggle-link').click(function(e) {
-            e.preventDefault();
-            this.parentElement.submit();
-        })
-    }())
-</script>
-<?php $this->end() ?>
