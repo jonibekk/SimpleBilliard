@@ -47,7 +47,11 @@
                     ?>
                     <?= $this->Form->input('kr_id', ['type' => 'hidden', 'value' => $kr['KeyResult']['id']]) ?>
                     <?= $this->Form->input('watched', ['type' => 'hidden', 'value' => (int)!$kr['KeyResult']['watched']]) ?>
-                    <button type="submit" class="<?= $kr['KeyResult']['watched'] ? 'active' : '' ?>">
+                    <button 
+                        type="submit" 
+                        class="<?= $kr['KeyResult']['watched'] ? 'active' : '' ?>"
+                        onclick="this.form.submit();this.disabled=true"
+                    >
                         <dt class="goal-detail-kr-info-counts-title">
                             <i class="fa fa-eye"></i>
                         </dt>
