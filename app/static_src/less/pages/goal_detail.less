@@ -682,7 +682,39 @@
     display: inline-block;
     font-size: 13px;
   }
+
   &-description {
     margin: 0 8px 0 2px;
+  }
+}
+
+.goal-detail-toggle {
+  display: inline-block;
+
+  button {
+    /** remove button style */
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
+
+    color: @darkGray;
+
+    &:hover {
+      color: #4c4d4e; 
+      text-decoration: none;
+    }
+
+    &.active {
+      color: @basicPink;
+
+      &:hover,
+      &:active,
+      &:focus,
+      &:visited {
+        color: #91170a;
+      }
+    }
   }
 }

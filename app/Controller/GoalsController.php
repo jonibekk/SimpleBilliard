@@ -13,6 +13,7 @@ App::import('Service', 'GoalMemberService');
 App::import('Service', 'ActionService');
 App::import('Service', 'TranslationService');
 App::import('Service', 'FollowService');
+App::import('Service', 'WatchlistService');
 /** @noinspection PhpUndefinedClassInspection */
 App::import('Service', 'KeyResultService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -1780,6 +1781,11 @@ class GoalsController extends AppController
             'limit' => GOAL_PAGE_KR_NUMBER,
         ], true, $display_action_count);
         $key_results = $KeyResultService->processKeyResults($key_results, 'KeyResult', '/');
+        $key_results = $KeyResultService->appendWatchedToKeyResults(
+            $key_results, 
+            $this->my_uid, 
+            $this->current_team_id
+        );
         $this->set('key_results', $key_results);
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
@@ -2021,5 +2027,42 @@ class GoalsController extends AppController
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
+    }
+
+    public function toggle_watch()
+    {
+        $this->request->allowMethod("post");
+        $kr_id = $this->request->data["KeyResult"]["kr_id"];
+        $watched = $this->request->data["KeyResult"]["watched"];
+        $kr = $this->Goal->KeyResult->findById($kr_id);
+
+        if (!empty($kr)) {
+            /** @var WatchlistService */
+            $WatchlistService = ClassRegistry::init("WatchlistService");
+
+            if ($watched) {
+                $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
+                $this->Notification->outSuccess(
+                    __("KR has been added to the Important List"),
+                    ['link_url' => "https://google.com", "link_text" => __("View List")]
+                );
+            } else {
+                $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
+                $this->Notification->outSuccess(
+                    __("Removed from the Important list"),
+                    ['link_url' => "https://google.com", "link_text" => __("View List")]
+                );
+            }
+        } else {
+            $this->Notification->outError(__("Invalid key result"));
+        }
+
+        $url = Router::url([
+            'controller' => 'goals',
+            'action'     => 'view_krs',
+            'goal_id'    => $kr['KeyResult']['goal_id'],
+        ]);
+
+        return $this->redirect($url);
     }
 }

@@ -9,6 +9,7 @@ App::import('Model/Entity', 'KeyResultEntity');
  * @property Goal         $Goal
  * @property ActionResult $ActionResult
  * @property Post         $Post
+ * @property KrWatchlist  $KrWatchlist
  * @method findByGoalId($goalId)
  */
 
@@ -240,6 +241,7 @@ class KeyResult extends AppModel
     public $hasMany = [
         'ActionResult',
         'Post',
+        'KrWatchlist'
     ];
 
     function __construct($id = false, $table = null, $ds = null)

@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('Watchlist', 'Model');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 App::uses('FindForKeyResultListRequest', 'Service/Request/KeyResults');
@@ -45,6 +46,41 @@ class KeyResultService extends AppService
             $unit_select_list[$v['id']] = $unit;
         }
         return $unit_select_list;
+    }
+
+    function appendWatchedToKeyResults(array $keyResults, int $userId, int $teamId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        $krIds = Hash::extract($keyResults, '{n}.KeyResult.id');
+        $watchedKrs = $KeyResult->find("all", [
+            "joins" => [
+                [
+                    'alias' => 'KrWatchlist',
+                    'table' => 'kr_watchlists',
+                    'conditions' => [
+                        'KrWatchlist.key_result_id = KeyResult.id',
+                        'KrWatchlist.key_result_id' => $krIds
+                    ]
+                ],
+                [
+                    'alias' => 'Watchlist',
+                    'table' => 'watchlists',
+                    'conditions' => [
+                        'KrWatchlist.watchlist_id = Watchlist.id',
+                        'Watchlist.user_id' => $userId,
+                        'Watchlist.team_id' => $teamId
+                    ]
+                ]
+            ],
+            "fields" => "KeyResult.id"
+        ]);
+        $watchedKrsIds = Hash::extract($watchedKrs, "{n}.KeyResult.id");
+
+        return array_map(function($kr) use ($watchedKrsIds) {
+            $kr['KeyResult']['watched'] = in_array($kr['KeyResult']['id'], $watchedKrsIds);
+            return $kr;
+        }, $keyResults);
     }
 
     /**
