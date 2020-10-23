@@ -9,6 +9,7 @@ App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Lib/DataExtender/Extension', 'PostCanCollaborateExtension');
+App::import('Lib/DataExtender/Extension', 'KeyResultWatchedExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::import('Service', 'TeamMemberService');
@@ -71,6 +72,8 @@ class FeedPostExtender extends BaseExtender
 
             /** @var KeyResultExtension $KeyResultExtension */
             $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
+            $KeyResultExtension->setUserId($userId);
+            $KeyResultExtension->setTeamId($teamId);
 
             /** @var GoalExtension $GoalExtension */
             $GoalExtension = ClassRegistry::init('GoalExtension');
