@@ -2071,6 +2071,9 @@ msgstr "Falha ao registrar o plano pago."
 msgid "Failed to register user. Please try again later."
 msgstr "Falha ao registrar o usuário. Por favor, tente novamente mais tarde."
 
+msgid "Failed to reset the password"
+msgstr "Falha ao redefinir a senha"
+
 msgid "Failed to save a Device Information."
 msgstr "Falha ao salvar as informações do dispositivo."
 
@@ -4162,7 +4165,7 @@ msgid "Removed from the circle members."
 msgstr "Removido dos membros do círculo."
 
 #, fuzzy
-msgid "Removed from the important list"
+msgid "Removed from the Important list"
 msgstr ""
 
 msgid "Reply"
@@ -5474,11 +5477,19 @@ msgid "Waiting for the evaluation by %s."
 msgstr "Aguardando a avaliação por %s."
 
 #, fuzzy
+msgid "Watch"
+msgstr ""
+
+#, fuzzy
 msgid "Watch this Key Result"
 msgstr ""
 
 msgid "Watch Video"
 msgstr "Veja o vídeo"
+
+#, fuzzy
+msgid "Watched"
+msgstr ""
 
 msgid "We are downgrading your team to read-only"
 msgstr "Estamos reclassificando sua equipe para modo leitura"

@@ -123,7 +123,7 @@ class NotificationComponent extends Component
             return;
         }
 
-        $base_options = ['url' => null];
+        $base_options = ['link_url' => null, 'link_text' => null];
         $option['escape'] = false;
         $merged_option = array_merge($base_options, $this->options[$type], $option);
         //改行を<br>に変換
