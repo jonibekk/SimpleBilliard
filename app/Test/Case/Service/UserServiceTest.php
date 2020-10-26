@@ -1,7 +1,10 @@
 <?php
 App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
+App::uses('Team', 'Model');
 App::import('Service', 'UserService');
+
+use Goalous\Enum as Enum;
 
 /**
  * Class UserServiceTest
@@ -135,5 +138,69 @@ class UserServiceTest extends GoalousTestCase
         $user = $User->getById($userId);
 
         $this->assertEquals($newTeamId, $user['default_team_id']);
+    }
+
+    public function test_isDefaultTeamValid_success()
+    {
+        $userId = 2;
+        $teamId = 2;
+
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+
+        //Null default team
+        $this->assertFalse($UserService->isDefaultTeamValid(1));
+
+        //Team available, user active
+        $this->assertTrue($UserService->isDefaultTeamValid($userId));
+
+        $this->updateTeamServiceStatus($teamId, Enum\Model\Team\ServiceUseStatus::READ_ONLY);
+        $this->assertTrue($UserService->isDefaultTeamValid($userId));
+        $this->updateTeamServiceStatus($teamId, Enum\Model\Team\ServiceUseStatus::CANNOT_USE);
+        $this->assertTrue($UserService->isDefaultTeamValid($userId));
+
+        //Team deleted, user active
+        $this->updateTeamServiceStatus($teamId,Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL);
+        $this->assertFalse($UserService->isDefaultTeamValid($userId));
+        $this->updateTeamServiceStatus($teamId,Enum\Model\Team\ServiceUseStatus::DELETED_AUTO);
+        $this->assertFalse($UserService->isDefaultTeamValid($userId));
+
+        $userId = 4;
+        $teamId = 1;
+
+        $this->assertTrue($UserService->isDefaultTeamValid($userId));
+
+        $this->updateTeamMemberStatus($teamId,$userId,Enum\Model\TeamMember\Status::INACTIVE);
+
+        //Team available, user inactive
+        $this->assertFalse($UserService->isDefaultTeamValid($userId));
+    }
+
+    public function test_updateDefaultTeamIfInvalid_success()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init('UserService');
+
+        $userId = 2;
+
+        //User with valid default team. Won't be updated
+        $user = $User->getById($userId);
+        $originalDefaultTeamId = $user['default_team_id'];
+        $UserService->updateDefaultTeamIfInvalid($userId);
+        $user = $User->getById($userId);
+        $newDefaultTeamId = $user['default_team_id'];
+        $this->assertEquals($originalDefaultTeamId, $newDefaultTeamId);
+
+        $userId = 1;
+
+        //User with invalid default team. Will be updated
+        $user = $User->getById($userId);
+        $originalDefaultTeamId = $user['default_team_id'];
+        $UserService->updateDefaultTeamIfInvalid($userId);
+        $user = $User->getById($userId);
+        $newDefaultTeamId = $user['default_team_id'];
+        $this->assertNotEquals($originalDefaultTeamId, $newDefaultTeamId);
     }
 }
