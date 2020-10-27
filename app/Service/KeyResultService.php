@@ -39,7 +39,7 @@ class KeyResultService extends AppService
      */
     function buildKrUnitsSelectList(bool $isShort = false): array
     {
-        $units_config = Configure::read("label.units");
+        $units_config = ConfigKeyResult::getUnits();
         $unit_select_list = [];
         foreach ($units_config as $v) {
             $unit = $isShort ? $v['unit'] : "{$v['label']}({$v['unit']})";

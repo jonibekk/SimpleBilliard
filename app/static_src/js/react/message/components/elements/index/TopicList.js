@@ -66,7 +66,7 @@ export default class TopicList extends React.Component {
           </div>
           <div className="topicList-header-middle">
             <div className="topicList-header-middle-label">
-              {__("TOPICS")}
+              {__("Topics")}
             </div>
           </div>
         </div>

@@ -6050,5 +6050,23 @@ msgstr "Vamos melhorar nossa comunicação interna. Tudo começa aí!"
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr "Para alterá-lo, você precisa digitar a senha."
 
+msgid "Contact us"
+msgstr "Contate-nos"
+
+msgid "SAML Authentication"
+msgstr "SSOログイン設定"
+
+msgid "Get set up with SAML2.0 solution."
+msgstr ""
+
+msgid "Configure SSO"
+msgstr "SAML2.0を設定"
+
+msgid "Update SSO Setting"
+msgstr ""
+
+msgid "Stop Using the SSO"
+msgstr ""
+
 msgid "日本語"
 msgstr "Japonês"
