@@ -9,7 +9,6 @@ App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
 App::import('Lib/DataExtender/Extension', 'PostCanCollaborateExtension');
-App::import('Lib/DataExtender/Extension', 'KeyResultWatchedExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::import('Service', 'TeamMemberService');

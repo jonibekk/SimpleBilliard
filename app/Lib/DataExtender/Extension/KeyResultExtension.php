@@ -37,6 +37,27 @@ class KeyResultExtension extends DataExtension
             'conditions' => [
                 'KeyResult.id' => $uniqueKeys
             ],
+        ];
+
+        $fetchedData = $KeyResult->useType()->find('all', $conditions);
+        $isWatchedResults = $this->appendIsWatched($uniqueKeys);
+
+        return array_map(function($row) use ($isWatchedResults) {
+            $krId = $row['KeyResult']['id'];
+            $row['KeyResult']['is_watched'] = $isWatchedResults[$krId];
+            return $row;
+        }, $fetchedData);
+    }
+
+    private function appendIsWatched($krIds)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        $conditions = [
+            'conditions' => [
+                'KeyResult.id' => $krIds
+            ],
             'joins' => [
                 [
                     'alias' => 'KrWatchlist',
@@ -55,23 +76,21 @@ class KeyResultExtension extends DataExtension
                         'Watchlist.id = KrWatchlist.watchlist_id',
                         'Watchlist.user_id' => $this->userId,
                         'Watchlist.team_id' => $this->teamId,
+                        'Watchlist.del_flg != 1'
                     ]
                 ]
             ],
             'fields' => [
-                'KeyResult.*',
+                'KeyResult.id',
                 'Watchlist.id'
             ]
         ];
 
-        $fetchedData = $KeyResult->useType()->find('all', $conditions);
+        $results = $KeyResult->find('all', $conditions);
 
-        $processedData = array_map(function($row) {
-            $watched = !empty($row['Watchlist']["id"]);
-            $row['KeyResult']['is_watched'] = $watched;
-            return $row;
-        }, $fetchedData);
-
-        return $processedData;
+        return array_reduce($results, function ($acc, $row) {
+            $acc[$row['KeyResult']['id']] = !empty($row['Watchlist']['id']);
+            return $acc;
+        }, []);
     }
 }

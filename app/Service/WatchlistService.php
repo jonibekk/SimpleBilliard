@@ -29,6 +29,8 @@ class WatchlistService extends AppService
             $KrWatchlist->create();
             $KrWatchlist->save($conditions);
         }
+
+        return $watchlist;
     }
 
     public function remove(int $userId, int $teamId, int $krId)
@@ -42,6 +44,8 @@ class WatchlistService extends AppService
             "key_result_id" => $krId, 
             "watchlist_id" => $watchlist['Watchlist']['id']
         ]);
+
+        return $watchlist;
     }
 
     private function findOrCreateWatchlist(int $userId, int $teamId): array
