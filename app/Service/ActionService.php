@@ -207,6 +207,28 @@ class ActionService extends AppService
         }
     }
 
+    public function updateAngular(array $data): int
+    {
+        try {
+            $this->TransactionManager->begin();
+            $actionId = $this->updateAction($data);
+            //$this->updateKrAndProgress($actionId, $data);
+            //$this->createGoalPost($actionId, $data);
+            if($data['file_ids'] !== null) {
+                $this->createAttachedFiles($actionId, $data);
+            }
+            //$this->refreshKrCache($data['goal_id']);
+            $this->TransactionManager->commit();
+            //$this->refreshKrCache($data['goal_id']);
+
+            $this->translateActionPost($data['team_id'], $actionId);
+            return $actionId;
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            throw $e;
+        }
+    }
+
     /**
      * アクション一覧をユーザーIDでグルーピング
      *
@@ -260,6 +282,27 @@ class ActionService extends AppService
         $ActionResult->create();
         $result = $ActionResult->useType()->useEntity()->save($actionSaveData, false);
         return $result['id'];
+    }
+
+    private function updateAction(array $data)
+    {
+        /** @var ActionResult $ActionResult */
+        $ActionResult = ClassRegistry::init("ActionResult");
+
+        $actionSaveData = [
+            'goal_id'       => $data['goal_id'],
+            'team_id'       => $data['team_id'],
+            'user_id'       => $data['user_id'],
+            'type'          => ActionResult::TYPE_KR,
+            'name'          => $data['name'],
+            'key_result_id' => $data['key_result_id'],
+            'completed'     => REQUEST_TIMESTAMP
+        ];
+
+        $ActionResult->create();
+        $result = $ActionResult->useType()->useEntity()->update($actionSaveData, false);
+
+        return $result;
     }
 
     private function updateKrAndProgress(int $newActionId, array $data)

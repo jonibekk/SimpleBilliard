@@ -44,6 +44,32 @@ class ActionsController extends BasePagingController
         return ApiResponse::ok()->withData($ret)->getResponse();
     }
 
+    public function put() 
+    {
+        $this->loadModel("Goal");
+        $this->loadModel("Post");
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
+
+        $data = $this->getRequestJsonBody();
+
+        // Validator
+        // -----------------------------------------------------------
+
+        try {
+            $data['user_id'] = $this->getUserId();
+            $data['team_id'] = $this->getTeamId();
+
+            $resAction = $ActionService->updateAngular($data);
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()
+                ->withMessage(__($e->getMessage()))
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($resAction)->getResponse();
+    }
+
     private function validateCreate($data)
     {
         try {
