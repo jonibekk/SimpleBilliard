@@ -730,31 +730,6 @@ class AppModel extends Model
     }
 
     /**
-     * Override update() function. Do post-processing
-     *
-     * @param null  $data
-     * @param bool  $validate
-     *
-     * @return array|mixed
-     * @throws Exception
-     */
-    public function update($data = null, $validate = true)
-    {
-        //parent::saveField delete the postProcessFunctions array
-        $functions = $this->postProcessFunctions;
-
-        $result = parent::saveField("name", $data['name'], $validate);
-
-        $this->postProcessFunctions = $functions;
-
-        if (is_array($result)) {
-            $result = $this->postProcess($result);
-        }
-
-        return $result;
-    }
-
-    /**
      * Override saveAll() function. Do post-processing
      *
      * @param array $data

@@ -212,14 +212,11 @@ class ActionService extends AppService
         try {
             $this->TransactionManager->begin();
             $actionId = $this->updateAction($data);
-            //$this->updateKrAndProgress($actionId, $data);
-            //$this->createGoalPost($actionId, $data);
+            
             if($data['file_ids'] !== null) {
-                $this->createAttachedFiles($actionId, $data);
+                $this->updateAttachedFiles($actionId, $data);
             }
-            //$this->refreshKrCache($data['goal_id']);
             $this->TransactionManager->commit();
-            //$this->refreshKrCache($data['goal_id']);
 
             $this->translateActionPost($data['team_id'], $actionId);
             return $actionId;
@@ -289,20 +286,18 @@ class ActionService extends AppService
         /** @var ActionResult $ActionResult */
         $ActionResult = ClassRegistry::init("ActionResult");
 
-        $actionSaveData = [
-            'goal_id'       => $data['goal_id'],
-            'team_id'       => $data['team_id'],
-            'user_id'       => $data['user_id'],
-            'type'          => ActionResult::TYPE_KR,
-            'name'          => $data['name'],
-            'key_result_id' => $data['key_result_id'],
-            'completed'     => REQUEST_TIMESTAMP
+        $options = [
+            'conditions' => [
+                'ActionResult.id' => $data['action_result_id'],
+                'ActionResult.del_flg'      => false,
+            ],
         ];
 
-        $ActionResult->create();
-        $result = $ActionResult->useType()->useEntity()->update($actionSaveData, false);
+        $oldAction = $ActionResult->find('first', $options);
+        $oldAction['ActionResult']['name'] = $data['name'];
+        $ActionResult->useType()->useEntity()->save($oldAction, false);
 
-        return $result;
+        return $data['action_result_id'];
     }
 
     private function updateKrAndProgress(int $newActionId, array $data)
@@ -414,6 +409,95 @@ class ActionService extends AppService
                 $ActionResultFile->useType()->useEntity()->save($newData, false);
                 $actionFileIdx += 1;
                 $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+            }
+        } catch (Exception $e) {
+            foreach ($addedFiles as $id) {
+                $UploadService->deleteAsset('AttachedFile', $id);
+            }
+
+            throw new Exception("Failed to save attached files.");
+        }
+        //if ($newActionid !== null) { // Main Action Image update
+        //    $oldActionid = $data['old_action_file_id'];
+        //    $options = [
+        //        'conditions' => [
+        //            'AttachedFile.id' => $oldActionid,
+        //            'AttachedFile.del_flg'      => false,
+        //        ],
+        //    ];
+        //    $file = $AttachedFile->find('first', $options);
+        //    if ($file) {
+        //        GoalousLog::error(print_r($file, true));
+        //        ///** @var UploadedFile $uploadedFile */
+        //        //$uploadedFile = $UploadService->getBuffer($userId, $teamId, $newActionid);
+        //        //
+        //        ///** @var AttachedFileEntity $attachedFile */
+        //        //$attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+        //        //
+        //        //$newData = [
+        //        //    'action_result_id' => $actionID,
+        //        //    'attached_file_id' => $oldActionid,
+        //        //    'team_id'          => $teamId,
+        //        //    'index_num'        => $actionFileIdx,
+        //        //    'del_flag'         => false,
+        //        //    'created'          => GoalousDateTime::now()->getTimestamp()
+        //        //];
+        //    }
+        //}
+    }
+
+    // TODO: Exceptions that occur in this function will not cause transaction rollback
+    private function updateAttachedFiles(int $actionID, array $data)
+    {
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init("UploadService");
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init("AttachedFileService");
+        /** @var ActionResultFile $ActionResultFile */
+        $ActionResultFile = ClassRegistry::init('ActionResultFile');
+
+        $userId = $data['user_id'];
+        $teamId = $data['team_id'];
+        $fileIds = $data['file_ids'];
+        $addedFiles = [];
+        $actionFileIdx = 0;
+
+        try {
+            foreach ($fileIds as $id) {
+                $options = [
+                    'conditions' => [
+                        'ActionResultFile.attached_file_id' => $id,
+                        'ActionResultFile.del_flg'      => false,
+                    ],
+                ];
+                $file = $ActionResultFile->find('first', $options);
+
+                if($file !== null) {
+                    GoalousLog::error(print_r($file, true));
+                }
+                else {
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
+                    GoalousLog::error(print_r($uploadedFile, true));
+                    
+                    /** @var AttachedFileEntity $attachedFile */
+                    $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+                    $addedFiles[] = $attachedFile['id'];
+                    GoalousLog::error(print_r($attachedFile, true));
+
+                    $newData = [
+                        'action_result_id' => $actionID,
+                        'attached_file_id' => $attachedFile['id'],
+                        'team_id'          => $teamId,
+                        'index_num'        => $actionFileIdx,
+                        'del_flag'         => false,
+                        'created'          => GoalousDateTime::now()->getTimestamp()
+                    ];
+                    $ActionResultFile->create();
+                    $ActionResultFile->useType()->useEntity()->save($newData, false);
+                    $actionFileIdx += 1;
+                    $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                }       
             }
         } catch (Exception $e) {
             foreach ($addedFiles as $id) {
