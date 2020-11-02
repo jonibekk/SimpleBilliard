@@ -35,9 +35,6 @@ $this->set('hidden_sidebar_xxs', true);
             <li class=""><a href="#progress"><?= __("Evaluation status") ?></a></li>
         <?php endif; ?>
         <li class=""><a href="#translation"><?= __("Translation Settings") ?></a></li>
-        <?php if ($this->Expt->is(Experiment::NAME_ENABLE_SSO_LOGIN) === true): ?>
-            <li class=""><a href="#sso_login"><?= __("SAML Authentication") ?></a></li>
-        <?php endif; ?>
     </ul>
 </div>
 <?php $this->end() ?>
@@ -87,10 +84,6 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="translation">
     <?= $this->element('Team/translation_setting') ?>
 </div>
-<?php if ($this->Expt->is(Experiment::NAME_ENABLE_SSO_LOGIN) === true): ?>
-<div id="sso_login">
-    <?= $this->element('Team/sso_login_setting') ?>
-<?php endif; ?>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
     $(document).ready(function() {
