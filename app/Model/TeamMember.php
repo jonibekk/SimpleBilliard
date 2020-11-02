@@ -130,22 +130,6 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
-    /**
-     * Get the team list of SSO enabled
-     * @param string $userId
-     * @return array
-     */
-    public function getSsoEnabledTeams(string $userId): array
-    {
-        /** @var TeamSsoSetting $TeamSsoSetting */
-        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
-
-        $teamIdsJoined = $this->getActiveTeamList($userId);
-        return array_filter($teamIdsJoined, function ($teamName, $teamId) use ($TeamSsoSetting) {
-            return !empty($TeamSsoSetting->getSetting($teamId));
-        }, ARRAY_FILTER_USE_BOTH);
-    }
-
     function setActiveTeamList($uid)
     {
         $model = $this;
@@ -199,30 +183,10 @@ class TeamMember extends AppModel
         return $this->active_member_list;
     }
 
-    /**
-     * Update last login time of a user in a team
-     *
-     * @param int|null $teamId
-     * @param int      $userId
-     * @param int      $loginTimestamp
-     *
-     * @return array
-     *
-     * @throws Exception
-     */
-    public function updateLastLogin(?int $teamId, int $userId, int $loginTimestamp = REQUEST_TIMESTAMP): array
+    function updateLastLogin($team_id, $uid)
     {
-        if (is_null($teamId)){
-            return[];
-        }
-
-        $teamMember = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
-
-        if (empty($teamMember)) {
-            throw new GlException\GoalousNotFoundException("Team Member doesn't exist");
-        }
-
-        $teamMember['TeamMember']['last_login'] = $loginTimestamp;
+        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
+        $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
 
         $enable_with_team_id = false;
         if ($this->Behaviors->loaded('WithTeamId')) {
@@ -232,7 +196,7 @@ class TeamMember extends AppModel
             $this->Behaviors->disable('WithTeamId');
         }
 
-        $res = $this->save($teamMember);
+        $res = $this->save($team_member);
 
         if ($enable_with_team_id) {
             $this->Behaviors->enable('WithTeamId');
@@ -419,30 +383,20 @@ class TeamMember extends AppModel
         return (bool)$res;
     }
 
-    /**
-     * Create or update status of user member information in a team.
-     *
-     * @param int $userId
-     * @param int $teamId ID of the team that the user is joining
-     *
-     * @return array|BaseEntity|mixed
-     * @throws Exception
-     */
-    public function add(int $userId, int $teamId)
+    public function add($uid, $team_id)
     {
         //if exists update
-        $team_member = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
+        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
-            return $this->save($team_member, false);
+            return $this->save($team_member);
         }
         $data = [
-            'user_id' => $userId,
-            'team_id' => $teamId,
+            'user_id' => $uid,
+            'team_id' => $team_id,
             'status'  => self::USER_STATUS_ACTIVE,
         ];
-        $this->create();
-        return $this->save($data, false);
+        return $this->save($data);
     }
 
     public function getAllMemberUserIdList(
@@ -2255,14 +2209,14 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isActiveAdmin(
+    public
+    function isActiveAdmin(
         int $userId,
         int $teamId
     ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
-                'TeamMember.team_id'   => $teamId,
                 'TeamMember.admin_flg' => true,
                 'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
@@ -2280,9 +2234,8 @@ class TeamMember extends AppModel
             ],
         ];
 
-        $res = $this->find('count', $options);
-
-        return $res > 0;
+        $res = $this->find('first', $options);
+        return (bool)$res;
     }
 
     /**
