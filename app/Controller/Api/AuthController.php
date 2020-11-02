@@ -40,20 +40,6 @@ class AuthController extends BaseApiController
     ];
 
     /**
-     * Endpoint for checking for session
-     *
-     * @ignoreRestriction
-     * @skipAuthentication
-     */
-    public function get_has_session()
-    {
-        return ApiResponse::ok()
-            ->withMessage(Enum\Auth\Status::OK)
-            ->withData(['has_session' => !!$this->Auth->user()])
-            ->getResponse();
-    }
-
-    /**
      * Endpoint for step 1 of login. Returns login method information for the user
      *
      * @ignoreRestriction
