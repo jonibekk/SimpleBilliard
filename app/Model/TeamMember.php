@@ -130,22 +130,6 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
-    /**
-     * Get the team list of SSO enabled
-     * @param string $userId
-     * @return array
-     */
-    public function getSsoEnabledTeams(string $userId): array
-    {
-        /** @var TeamSsoSetting $TeamSsoSetting */
-        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
-
-        $teamIdsJoined = $this->getActiveTeamList($userId);
-        return array_filter($teamIdsJoined, function ($teamName, $teamId) use ($TeamSsoSetting) {
-            return !empty($TeamSsoSetting->getSetting($teamId));
-        }, ARRAY_FILTER_USE_BOTH);
-    }
-
     function setActiveTeamList($uid)
     {
         $model = $this;
@@ -2255,14 +2239,14 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public function isActiveAdmin(
+    public
+    function isActiveAdmin(
         int $userId,
         int $teamId
     ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
-                'TeamMember.team_id'   => $teamId,
                 'TeamMember.admin_flg' => true,
                 'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
@@ -2280,9 +2264,8 @@ class TeamMember extends AppModel
             ],
         ];
 
-        $res = $this->find('count', $options);
-
-        return $res > 0;
+        $res = $this->find('first', $options);
+        return (bool)$res;
     }
 
     /**
