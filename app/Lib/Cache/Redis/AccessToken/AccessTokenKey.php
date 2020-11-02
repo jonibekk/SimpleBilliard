@@ -30,7 +30,7 @@ class AccessTokenKey
      * @param $teamId
      * @param $uuid
      */
-    public function __construct(string $userId, ?string $teamId, string $uuid)
+    public function __construct(string $userId, string $teamId, string $uuid)
     {
         $this->userId = $userId;
         $this->teamId = $teamId;
@@ -42,7 +42,7 @@ class AccessTokenKey
         return sprintf('%s:user:%s:team:%s:%s',
             self::CACHE_KEY,
             $this->userId,
-            $this->teamId ?? 'null',
+            $this->teamId,
             $this->uuid);
     }
 }

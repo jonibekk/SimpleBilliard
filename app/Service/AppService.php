@@ -25,8 +25,7 @@ class AppService extends CakeObject
         $this->TransactionManager = ClassRegistry::init("TransactionManager");
     }
 
-    public function getCacheList()
-    {
+    public function getCacheList() {
         return static::$cacheList;
     }
 
@@ -39,13 +38,12 @@ class AppService extends CakeObject
      * @param string $key
      * @return array
      */
-    protected function _getWithCache(int $id, string $modelName, $fields = null, string $key = 'id'): array
-    {
+    protected function _getWithCache(int $id, string $modelName, $fields = null, string $key = 'id'): array {
         if (empty($id)) {
             return [];
         }
 
-        $path = $modelName . "." . $id;
+        $path = $modelName.".".$id;
         // In case already got data from db and cached, but data is empty
         if (Hash::check(static::$cacheList, $path)
             && empty(Hash::get(static::$cacheList, $path))) {
@@ -114,11 +112,11 @@ class AppService extends CakeObject
     /**
      * Validate only specified fields and model
      *
-     * @param array $data
-     * @param array $fields
+     * @param array  $data
+     * @param array  $fields
      * @param string $dataParentKey
      * @param string $modelKey
-     * @param Model $model
+     * @param Model  $model
      *
      * @return array
      */
@@ -128,8 +126,7 @@ class AppService extends CakeObject
         string $dataParentKey,
         string $modelKey,
         Model $model
-    ): array
-    {
+    ): array {
         $validationFields = Hash::get($fields, $modelKey) ?? [];
         $validationBackup = $model->validate;
         // Set each field rule
