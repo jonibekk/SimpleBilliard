@@ -1,5 +1,5 @@
 <?php
-App::uses('NotificationFlagKey', 'Lib/Cache/Redis/NotificationFlag');
+App::uses('NotificationFlagKey', 'Lib/Cache/Redis/AccessToken');
 App::uses('BaseRedisClient', 'Lib/Cache/Redis');
 App::uses('InterfaceRedisClient', 'Lib/Cache/Redis');
 

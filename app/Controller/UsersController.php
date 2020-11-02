@@ -1070,9 +1070,7 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-            return $this->redirect(['action' => 'login', '?' => [
-                'invitation_token' => $token
-            ]]);
+            return $this->redirect(['action' => 'login']);
         }
 
         $userId = $this->Auth->user('id');
@@ -1371,6 +1369,7 @@ class UsersController extends AppController
 
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
+
 
             /* get payment flag */
             $teamId = $inviteTeamId;

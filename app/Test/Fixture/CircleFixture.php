@@ -370,20 +370,5 @@ class CircleFixture extends CakeTestFixtureEx
             'modified'            => 10,
             'latest_post_created' => 113
         ),
-        array(
-            'id'                  => 18,
-            'team_id'             => 2,
-            'name'                => 'Team 2 default circle',
-            'description'         => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-            'photo_file_name'     => 'Lorem ipsum dolor sit amet',
-            'public_flg'          => 1,
-            'team_all_flg'        => 1,
-            'circle_member_count' => 0,
-            'del_flg'             => 0,
-            'deleted'             => 0,
-            'created'             => 10,
-            'modified'            => 10,
-            'latest_post_created' => 113
-        ),
     );
 }
