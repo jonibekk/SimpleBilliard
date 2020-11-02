@@ -158,7 +158,7 @@ class AuthController extends BaseApiController
                 ->withMessage(__("Session doesn't exist"))
                 ->getResponse();
         }
-        $token = $this->getTokenForRecovery($user, $teamId); //
+        $token = $this->getTokenForRecovery($user, $teamId);
 
         $data = [
             'me'    => $this->_getAuthUserInfo($user['id'], $teamId),
@@ -186,7 +186,7 @@ class AuthController extends BaseApiController
         $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
         if (strlen($token) > 0) {
             try {
-                $jwtAuth = AccessAuthenticator::verify($token); //
+                $jwtAuth = AccessAuthenticator::verify($token);
                 if (empty($jwtAuth->getUserId()) || empty ($jwtAuth->getTeamId())) {
                     throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
                 }
