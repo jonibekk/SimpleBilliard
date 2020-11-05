@@ -434,17 +434,15 @@ class ActionService extends AppService
         $teamId = $data['team_id'];
         $fileIds = $data['file_ids'];
         $oldActionId = $data['old_action_file_id'];
-        $newActionId = $data['file_ids'][0];
         $deletedFiles = $data['old_resources'];
         $addedFiles = [];
-        $actionFileIdx = 0;
 
         try {
-            foreach ($fileIds as $id) {
+            foreach ($fileIds as $index => $id) {
                 if ($id === null) {
                     continue;
                 }
-
+            
                 $actionResultOptions = [
                     'conditions' => [
                         'ActionResultFile.attached_file_id' => $id,
@@ -455,7 +453,7 @@ class ActionService extends AppService
 
                 if ($actionResultFile === null || empty($actionResultFile)) {
 
-                    if ($id === $newActionId) {
+                    if ($index === 0) {
                         $this->deleteActionFile($oldActionId);
                     }
 
@@ -470,15 +468,16 @@ class ActionService extends AppService
                         'action_result_id' => $actionID,
                         'attached_file_id' => $attachedFile['id'],
                         'team_id'          => $teamId,
-                        'index_num'        => $actionFileIdx,
+                        'index_num'        => $index,
                         'del_flag'         => false,
                         'created'          => GoalousDateTime::now()->getTimestamp()
                     ];
                     $ActionResultFile->create();
                     $ActionResultFile->useType()->useEntity()->save($newData, false);
-                    $actionFileIdx += 1;
                     $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
-                }       
+
+                    GoalousLog::error("Index number: " . $index);
+                }
             }
 
             foreach ($deletedFiles as $file) {
