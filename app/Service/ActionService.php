@@ -475,8 +475,6 @@ class ActionService extends AppService
                     $ActionResultFile->create();
                     $ActionResultFile->useType()->useEntity()->save($newData, false);
                     $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
-
-                    GoalousLog::error("Index number: " . $index);
                 }
             }
 

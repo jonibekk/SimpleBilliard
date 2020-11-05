@@ -53,9 +53,6 @@ class ActionsController extends BasePagingController
 
         $data = $this->getRequestJsonBody();
 
-        // Validator
-        // -----------------------------------------------------------
-
         try {
             $data['user_id'] = $this->getUserId();
             $data['team_id'] = $this->getTeamId();

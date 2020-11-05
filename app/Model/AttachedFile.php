@@ -914,8 +914,6 @@ class AttachedFile extends AppModel
             ],
             "order"      => 'ActionResultFile.index_num ASC',
         ];
-
-        GoalousLog::error(print_r($this->useType()->useEntity()->find('all', $option), true));
         
         return $this->useType()->useEntity()->find('all', $option);
     }
