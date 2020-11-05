@@ -98,7 +98,7 @@ class Translation extends AppModel
      *
      * @return TranslationEntity | null
      */
-    public function getTranslation(TranslationContentType $contentType, int $contentId, string $language): ?TranslationEntity
+    public function getTranslation(TranslationContentType $contentType, int $contentId, string $language)
     {
         $option = [
             'conditions' => [
@@ -110,10 +110,6 @@ class Translation extends AppModel
 
         /** @var TranslationEntity $queryResult */
         $queryResult = $this->useType()->useEntity()->find('first', $option);
-
-        if (empty($queryResult)) {
-            return null;
-        }
 
         return $queryResult;
     }

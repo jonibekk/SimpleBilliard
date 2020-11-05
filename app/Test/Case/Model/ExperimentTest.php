@@ -1,5 +1,4 @@
 <?php
-
 App::uses('Experiment', 'Model');
 App::uses('GoalousTestCase', 'Test');
 
@@ -46,11 +45,9 @@ class ExperimentTest extends GoalousTestCase
 
     function testFindExperiment()
     {
-        $this->createExperiments(
-            [
-                [Experiment::NAME_ENABLE_EVALUATION_FEATURE, 1],
-            ]
-        );
+        $this->createExperiments([
+            [Experiment::NAME_ENABLE_EVALUATION_FEATURE, 1],
+        ]);
 
         $this->Experiment->current_team_id = 1;
         $experiment = $this->Experiment->findExperiment(Experiment::NAME_ENABLE_EVALUATION_FEATURE);
@@ -59,26 +56,6 @@ class ExperimentTest extends GoalousTestCase
         $this->assertSame(Experiment::NAME_ENABLE_EVALUATION_FEATURE, $experiment['Experiment']['name']);
         $this->assertSame('1', $experiment['Experiment']['team_id']);
         $this->assertSame(false, $experiment['Experiment']['del_flg']);
-    }
-
-    function test_hasExperimentSetting_success()
-    {
-        $this->createExperiments(
-            [
-                [Experiment::NAME_ENABLE_EVALUATION_FEATURE, 1],
-                [Experiment::NAME_ENABLE_EVALUATION_FEATURE, 2],
-                [Experiment::NAME_ENABLE_SSO_LOGIN, 1],
-            ]
-        );
-
-        $this->assertTrue($this->Experiment->hasExperimentSetting(1, Experiment::NAME_ENABLE_EVALUATION_FEATURE));
-        $this->assertTrue($this->Experiment->hasExperimentSetting(2, Experiment::NAME_ENABLE_EVALUATION_FEATURE));
-
-        $this->assertTrue($this->Experiment->hasExperimentSetting(1, Experiment::NAME_ENABLE_SSO_LOGIN));
-        $this->assertFalse($this->Experiment->hasExperimentSetting(2, Experiment::NAME_ENABLE_SSO_LOGIN));
-
-        $this->assertFalse($this->Experiment->hasExperimentSetting(1, Experiment::NAME_ENABLE_VIDEO_POST_PLAY));
-        $this->assertFalse($this->Experiment->hasExperimentSetting(2, Experiment::NAME_ENABLE_VIDEO_POST_PLAY));
     }
 
 }

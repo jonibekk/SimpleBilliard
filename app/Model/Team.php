@@ -779,21 +779,6 @@ class Team extends AppModel
     }
 
     /**
-     * Check whether team is deleted
-     *
-     * @param int $teamId
-     *
-     * @return bool
-     */
-    public function isDeleted(int $teamId): bool
-    {
-        $status = $this->getServiceUseStatus($teamId);
-
-        return $status == Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL ||
-            $status == Enum\Model\Team\ServiceUseStatus::DELETED_AUTO;
-    }
-
-    /**
      * Check free trial plan or not
      *
      * @param int $teamId
