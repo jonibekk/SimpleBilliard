@@ -2733,4 +2733,25 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    function findLastMemberIdForTeam(int $teamId): int
+    {
+        $options = [
+            'conditions' => [
+                "TeamMember.member_no LIKE 'Goalous%'",
+                'TeamMember.team_id' => $teamId,
+            ],
+            'order' => 'member_no DESC'
+        ];
+
+        $result = $this->find("first", $options);
+
+        if (empty($result)) {
+            return 0;
+        } else {
+            $memberNo = $result['TeamMember']['member_no'];
+            $matches = [];
+            preg_match('/^Goalous(\d+)/', $memberNo, $matches);
+            return (int) $matches[1];
+        }
+    }
 }
