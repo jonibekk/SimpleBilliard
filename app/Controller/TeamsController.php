@@ -3088,4 +3088,23 @@ class TeamsController extends AppController
 
         return $this->redirect($this->referer());
     }
+
+
+    function import_sample()
+    {
+        $this->layout = false;
+        $filename = 'import_sample';
+
+        $th = [ __('Member ID')];
+
+        $td = [];
+        for ($i = 0; $i < 5; $i++) {
+            $row = [];
+            $row['member_no'] = 'Member00' . $i;
+            $td[] = $row;
+        }
+        
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
 }
