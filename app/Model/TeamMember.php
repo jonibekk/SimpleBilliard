@@ -2736,6 +2736,7 @@ class TeamMember extends AppModel
     function findLastMemberIdForTeam(int $teamId): int
     {
         $options = [
+            // when teting is fixed, use "REGEX '^Goalous[[:digit:]]+$'" instead
             'conditions' => [
                 "TeamMember.member_no LIKE 'Goalous%'",
                 'TeamMember.team_id' => $teamId,
