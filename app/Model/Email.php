@@ -308,40 +308,6 @@ class Email extends AppModel
         return Hash::extract($res, '{n}.Email.email');
     }
 
-    public function findVerifiedTeamMembers(int $teamId): array
-    {
-        /** @var TeamMember **/
-        $TeamMember = ClassRegistry::init("TeamMember");
-
-        return $this->find('all', [
-            'joins' => [
-                [
-                    'alias' => 'TeamMember',
-                    'table' => 'team_members',
-                    'conditions' => [
-                        "TeamMember.user_id = Email.user_id",
-                        "TeamMember.team_id" => $teamId,
-                        "TeamMember.status" => TeamMember::USER_STATUS_ACTIVE
-                    ]
-                ],
-                [
-                    'alias' => 'User',
-                    'table' => 'users',
-                    'conditions' => [
-                        "User.id = Email.user_id",
-                    ]
-                ],
-            ],
-            'conditions' => [
-                'Email.email_verified' => true,
-                'Email.del_flg' => false
-            ],
-            'fields' => [
-                'Email.email'
-            ],
-        ]);
-    }
-
     public function findForGroup(int $groupId): array
     {
         return $this->find('all', [

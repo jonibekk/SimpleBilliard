@@ -200,14 +200,20 @@ class InvitationService extends AppService
                 );
             }
 
+            $lastMemberId = $TeamMember->findLastMemberIdForTeam($teamId);
             $insertTeamMembers = [];
             foreach ($targetUserIds as $userId) {
+                $lastMemberId += 1;
+                // format should be 5 digit number left padded with zeroes
+                $formattedMemberId = str_pad($lastMemberId, 5, "0", STR_PAD_LEFT);
                 $insertTeamMembers[] = [
                     'user_id' => $userId,
                     'team_id' => $teamId,
-                    'status'  => TeamMember::USER_STATUS_INVITED
+                    'status'  => TeamMember::USER_STATUS_INVITED,
+                    'member_no' => 'Goalous' . $formattedMemberId
                 ];
             }
+
             if (!$TeamMember->bulkInsert($insertTeamMembers)) {
                 throw new Exception(sprintf("Failed to insert team members. data:%s",
                         AppUtil::varExportOneLine(compact('insertTeamMembers', 'emails')))
