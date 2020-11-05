@@ -2700,4 +2700,37 @@ class TeamMember extends AppModel
 
         return !empty($groupsExperiment);
     }
+
+    function findVerifiedTeamMembersByTeamAndGroup(
+        int $groupId, 
+        int $teamId, 
+        array $memberIds
+    ){
+        $options = [
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        "TeamMember.user_id = MemberGroup.user_id",
+                        "MemberGroup.group_id" => $groupId
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.member_no' => $memberIds,
+                "TeamMember.team_id" => $teamId,
+                "TeamMember.status" => $this::USER_STATUS_ACTIVE
+            ],
+            'fields'     => [
+                'TeamMember.member_no',
+                'TeamMember.user_id',
+                'MemberGroup.group_id',
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
 }
