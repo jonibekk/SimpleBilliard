@@ -91,6 +91,8 @@ class PostExtender extends BaseExtender
 
                     /** @var KeyResultExtension $KeyResultExtension */
                     $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
+                    $KeyResultExtension->setUserId($userId);
+                    $KeyResultExtension->setTeamId($teamId);
                     $data = $KeyResultExtension->extend($data, "action_result.key_result_id");
 
                     /** @var GoalExtension $GoalExtension */
