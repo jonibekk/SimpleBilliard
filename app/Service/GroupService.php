@@ -99,8 +99,6 @@ class GroupService extends AppService
             }
         );
 
-        GoalousLog::info("results", $results);
-
         return [
             'existing' => count(array_unique($results['existingUserIds'])),
             'valid' => count(array_unique($results['validUserIds'])),
@@ -139,8 +137,12 @@ class GroupService extends AppService
         $rows = [];
 
         $pre_data = file_get_contents($tmpFilePath);
-        $pre_data = hex2bin(preg_replace("/^fffe/", "", bin2hex($pre_data)));
-        file_put_contents($tmpFilePath, mb_convert_encoding($pre_data, "UTF-8", "UTF-16LE"));
+        $bomPresent = substr($pre_data, 0, 2) == (chr(0xFF) . chr(0xFE));
+
+        if ($bomPresent) {
+            $pre_data = hex2bin(preg_replace("/^fffe/", "", bin2hex($pre_data)));
+            file_put_contents($tmpFilePath, mb_convert_encoding($pre_data, "UTF-8", "UTF-16LE"));
+        }
 
         if (($handle = fopen($tmpFilePath, "r")) === FALSE) {
             return;
