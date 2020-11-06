@@ -99,6 +99,8 @@ class GroupService extends AppService
             }
         );
 
+        GoalousLog::info("results", $results);
+
         return [
             'existing' => count(array_unique($results['existingUserIds'])),
             'valid' => count(array_unique($results['validUserIds'])),
@@ -179,7 +181,7 @@ class GroupService extends AppService
             $ids
         );
 
-        $retrievedIds = Hash::extract($results, '{n}.TeamMember.user_id');
+        $retrievedIds = Hash::extract($results, '{n}.TeamMember.member_no');
         $invalidIds = array_diff(array_unique($ids), $retrievedIds);
 
         return array_reduce(
