@@ -475,6 +475,9 @@ class ActionService extends AppService
                     $ActionResultFile->create();
                     $ActionResultFile->useType()->useEntity()->save($newData, false);
                     $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
+                } else {
+                    $actionResultFile['ActionResultFile']['index_num'] = $index;
+                    $ActionResultFile->useType()->useEntity()->save($actionResultFile, false);
                 }
             }
 
