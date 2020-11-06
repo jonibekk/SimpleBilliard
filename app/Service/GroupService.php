@@ -129,16 +129,26 @@ class GroupService extends AppService
         return count($data);
     }
 
-    private function parseCsv($tmp_file_path, $callback): void
+    private function parseCsv($tmpFilePath, $callback): void
     {
         ini_set('auto_detect_line_endings', TRUE);
         $chunk_size = 500;
         $count = 0;
         $rows = [];
 
-        if (($handle = fopen($tmp_file_path, "r")) === FALSE) {
+        $pre_data = file_get_contents($tmpFilePath);
+        $bomPresent = substr($pre_data, 0, 2) == (chr(0xFF) . chr(0xFE));
+
+        if ($bomPresent) {
+            $pre_data = hex2bin(preg_replace("/^fffe/", "", bin2hex($pre_data)));
+            file_put_contents($tmpFilePath, mb_convert_encoding($pre_data, "UTF-8", "UTF-16LE"));
+        }
+
+        if (($handle = fopen($tmpFilePath, "r")) === FALSE) {
             return;
         }
+
+        setlocale(LC_ALL, 'ja_JP.UTF-8');
 
         // ignore header row
         fgetcsv($handle, 2000, ",");
@@ -173,7 +183,7 @@ class GroupService extends AppService
             $ids
         );
 
-        $retrievedIds = Hash::extract($results, '{n}.TeamMember.user_id');
+        $retrievedIds = Hash::extract($results, '{n}.TeamMember.member_no');
         $invalidIds = array_diff(array_unique($ids), $retrievedIds);
 
         return array_reduce(
