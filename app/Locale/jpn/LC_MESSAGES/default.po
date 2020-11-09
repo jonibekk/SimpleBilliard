@@ -489,6 +489,9 @@ msgstr "ゴールにアクションする"
 msgid "Action list"
 msgstr "アクションリスト"
 
+msgid "Action members"
+msgstr "アクションメンバー"
+
 msgid "Action that had been commented"
 msgstr "コメントされたアクション"
 
@@ -2083,6 +2086,9 @@ msgstr "有料プランの登録に失敗しました。"
 
 msgid "Failed to register user. Please try again later."
 msgstr "ユーザー本登録に失敗しました。しばらく時間をおいて再度登録してください。"
+
+msgid "Failed to reset the password"
+msgstr "パスワードの再設定に失敗しました"
 
 msgid "Failed to save a Device Information."
 msgstr "デバイス情報の保存に失敗しました。"
@@ -4179,7 +4185,7 @@ msgstr "評価対象外にしました"
 msgid "Removed from the circle members."
 msgstr "サークルから外しました。"
 
-msgid "Removed from the important list"
+msgid "Removed from the Important list"
 msgstr "重要なKRリストから削除しました"
 
 msgid "Reply"
@@ -5491,11 +5497,17 @@ msgstr "認定待ち"
 msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
 
+msgid "Watch"
+msgstr "ウォッチ"
+
 msgid "Watch this Key Result"
 msgstr "このKRをウォッチする"
 
 msgid "Watch Video"
 msgstr "Watch Video"
+
+msgid "Watched"
+msgstr "ウォッチ"
 
 msgid "We are downgrading your team to read-only"
 msgstr "読み取り専用にダウングレードしました"
