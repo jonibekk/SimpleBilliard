@@ -959,7 +959,10 @@ class GoalsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Deleted an action."));
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+        $currentTerm = $this->Goal->Team->Term->getCurrentTermData();
+        $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
+
+        Cache::delete($this->Goal->getCacheKey($redisKeyname, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
