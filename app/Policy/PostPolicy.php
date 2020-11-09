@@ -19,9 +19,9 @@ class PostPolicy extends BasePolicy
             case Enum\Model\Post\Type::ACTION:
             case Enum\Model\Post\Type::CREATE_GOAL:
                 return (((int)$post['user_id'] === $this->userId) ||
-                    ($this->isTeamAdminForItem($post['team_id'])) ||
-                    ($this->isCoach($post['goal_id'])) ||
-                    ($this->isActiveEvaluator($post['goal_id'])) ||
+                    //($this->isTeamAdminForItem($post['team_id'])) ||
+                    //($this->isCoach($post['goal_id'])) ||
+                    //($this->isActiveEvaluator($post['goal_id'])) ||
                     ($this->isSameGroup($post))
                 );            
             case Enum\Model\Post\Type::NORMAL:
@@ -61,9 +61,10 @@ class PostPolicy extends BasePolicy
 
     public function scope($type = 'read'): array
     {
-        if ($this->isTeamAdmin()) {
-            return ['conditions' => ['Post.team_id' => $this->teamId]];
-        }
+        //if ($this->isTeamAdmin()) {
+            //return ['conditions' => ['Post.team_id' => $this->teamId]];
+        //}
+        
         /** @var Post **/
         $Post = ClassRegistry::init('Post');
         /** @var GoalGroup */
@@ -71,21 +72,21 @@ class PostPolicy extends BasePolicy
 
         $allPublicQuery = $Post->publicPostsSubQuery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
-        $allCoacheesQuery = $Post->coacheePostsSubQuery($this->userId);
-        $allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId);
+        //$allCoacheesQuery = $Post->coacheePostsSubQuery($this->userId, $this->teamId);
+        //$allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId, $this->teamId);
 
         $fullQuery = 'Post.id in (' . $allPublicQuery . ') OR 
                       Post.goal_id in (' . $allGroupsQuery . ')';
 
-        if ($type === 'read') {
-            $query = 'Post.id in (' . $allCoacheesQuery . ') OR ';
-            $fullQuery = $query . $fullQuery;
+        //if ($type === 'read') {
+            //$query = 'Post.id in (' . $allCoacheesQuery . ') OR ';
+            //$fullQuery = $query . $fullQuery;
 
-            if ($this->evaluationSettingEnabled()) {
-                $query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
-                $fullQuery = $query . $fullQuery;
-            }
-        }
+            //if ($this->evaluationSettingEnabled()) {
+                //$query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
+                //$fullQuery = $query . $fullQuery;
+            //}
+        //}
 
         return [
             'conditions' => [
