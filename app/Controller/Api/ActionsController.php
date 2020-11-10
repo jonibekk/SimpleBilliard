@@ -46,8 +46,6 @@ class ActionsController extends BasePagingController
 
     public function put()
     {
-        $this->loadModel("Goal");
-        $this->loadModel("Post");
         /** @var ActionService $ActionService */
         $ActionService = ClassRegistry::init("ActionService");
 

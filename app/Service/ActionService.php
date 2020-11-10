@@ -214,7 +214,7 @@ class ActionService extends AppService
             $this->TransactionManager->begin();
             $actionId = $this->updateAction($data);
 
-            if ($data['file_ids'] !== null || !empty($data['old_resources'])) {
+            if (!empty($data['file_ids']) || !empty($data['old_resources'])) {
                 $this->updateAttachedFiles($actionId, $data);
             }
             $this->TransactionManager->commit();
@@ -420,7 +420,6 @@ class ActionService extends AppService
         }
     }
 
-    // TODO: Exceptions that occur in this function will not cause transaction rollback
     private function updateAttachedFiles(int $actionID, array $data)
     {
         /** @var UploadService $UploadService */
