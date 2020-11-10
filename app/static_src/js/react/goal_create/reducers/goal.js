@@ -26,11 +26,13 @@ const initialState = {
       start_value: 0,
       target_value: 100,
       description: ""
-    }
+    },
+    groups: {}
   },
   isDisabledSubmit: false,
   can_approve: false,
-  redirect_to_home: false
+  redirect_to_home: false,
+  groups_enabled: false
 }
 
 export default function goal(state = initialState, action) {
@@ -82,7 +84,7 @@ export default function goal(state = initialState, action) {
 
       return Object.assign({}, state, {
         inputData,
-        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels),
+        suggestionsExcludeSelected: addItemToSuggestions(state.suggestionsExcludeSelected, action.label, state.labels)
       })
 
     case types.ADD_LABEL:
@@ -137,7 +139,7 @@ export default function goal(state = initialState, action) {
  * @returns {*|Array}
  */
 export function updateSelectedLabels(inputData, label, deleteFlg = false) {
-  let labels = inputData.labels || [];
+  const labels = inputData.labels || [];
   if (!label) {
     return labels
   }

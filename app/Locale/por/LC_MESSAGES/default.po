@@ -19,7 +19,7 @@ msgid " +%s"
 msgstr " +%s"
 
 msgid " count"
-msgstr "Contagem"
+msgstr " Contagem"
 
 msgid " New comments."
 msgstr "Novos comentários."
@@ -256,19 +256,19 @@ msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on <span class=\"notify-card-head-target\">%3$s</span>'s post."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on <span class=\"notify-card-head-target\">%3$s</span>'s post."
+msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> também comentou na <span class=\"notify-card-head-target\">%3$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span class=\"notify-card-head-target\">your </span>post."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou sobre <span class=\"notify-card-head-target\">your </span>post."
+msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou na <span class=\"notify-card-head-target\">sua</span>publicação"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> entrou no círculo."
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> posted in <span class=\"notify-card-head-target\">%3$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> publicado em <span class=\"notify-card-head-target\">%3$s</span>。"
+msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> publicou em <span class=\"notify-card-head-target\">%3$s</span>。"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> added <span class=\"notify-card-head-target\">you </span>to the circle."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> adicionado <span class=\"notify-card-head-target\">you </span>para o círculo"
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> adicionado <span class=\"notify-card-head-target\">você</span>para o círculo"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> added an action on <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> adicionou uma ação em <span class=\"notify-card-head-target\">%2$s</span>."
@@ -277,22 +277,22 @@ msgid "<span class=\"notify-card-head-target\">%1$s</span> added an action on<sp
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> adicionou uma ação em <span class=\"notify-card-head-target\">%2$s</span>."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span class=\"notify-card-head-target\">%2$s</span>'s action"
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> também comentou ação de <span class=\"notify-card-head-target\">%2$s</span>"
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> também comentou na <span class=\"notify-card-head-target\">%2$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> changed team basic setting."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> configuração básica da equipe alterada."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> changed term setting."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> configuração de período alterada."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> alterou a configuração de período."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> changed Top KR to another KR."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> mudou principal Resultado-chave para outro Resultado-chave."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> commented on <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou sobre <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou na<span class=\"notify-card-head-target\">%2$s</span>."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> commented on <span class=\"notify-card-head-target\">your </span>action."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou sobre <span class=\"notify-card-head-target\">sua </span> ação."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou na <span class=\"notify-card-head-target\">sua </span> ação."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> created <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> criado <span class=\"notify-card-head-target\">%2$s</span>"
@@ -319,7 +319,7 @@ msgid "<span class=\"notify-card-head-target\">%1$s</span> has commented on <spa
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou o objetivo do(a) <span class=\"notify-card-head-target\">%2$s</span>."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has commented on his/her Goal."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou sobre seu objetivo."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou no seu objetivo."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has commented on your goal."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou seu objetivo."
@@ -328,7 +328,7 @@ msgid "<span class=\"notify-card-head-target\">%1$s</span> has evaluated <span c
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> avaliou <span class=\"notify-card-head-target\">%2$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has followed <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> seguiu <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> começou a seguir <span class=\"notify-card-head-target\">%2$s</span>."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has not evaluated <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> não avaliou <span class=\"notify-card-head-target\">%2$s</span>"
@@ -343,10 +343,10 @@ msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> juntou-se a esta equipe."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a comment. "
-msgstr "<span class=\"notify-card-head-target\">%1$s</span> Alguém marcou você em um comentário"
+msgstr "<span class=\"notify-card-head-target\">%1$s</span>  marcou você em um comentário"
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned the circle includes you in a post. "
-msgstr "<span class=\"notify-card-head-target\"> %1$s </span> postado no círculo que inclui você."
+msgstr "<span class=\"notify-card-head-target\"> %1$s </span> postou no círculo que inclui você."
 
 msgid "<span class=\"notify-card-head-target\">%1$s</span> mentioned you in a comment. "
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> mencionou você em um comentário."
@@ -476,6 +476,10 @@ msgstr "Faça ações para seus objetivos."
 
 msgid "Action list"
 msgstr "Lista de Ação"
+
+#, fuzzy
+msgid "Action members"
+msgstr ""
 
 msgid "Action that had been commented"
 msgstr "Ação que foi comentada"
@@ -651,6 +655,9 @@ msgstr "e %s outros"
 msgid "Annual plan(paid monthly)"
 msgstr "Plano anual (pago mensalmente)"
 
+msgid "Any goals created in the future will need to have a destination group set up for publication."
+msgstr "Quaisquer objetivos criados no futuro precisarão ter um grupo de destino configurado para publicação."
+
 msgid "Any other questions?"
 msgstr "Alguma outra pergunta?"
 
@@ -780,6 +787,11 @@ msgstr "As senhas não são iguais. "
 msgid "Brazil"
 msgstr "Brasil"
 
+msgid "Browser Notification Permission Denied!! Please enable notification permission via brower setting and refresh!"
+msgstr ""
+"Permissão de notificação do navegador negada !!"
+"Ative a permissão de notificação por meio da configuração do navegador e atualize!"
+
 msgid "By clicking <q>I Agree. Contact us.</q> below, you are agreeing to the <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Service</a> and the <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 msgstr "Clicando em <q> Eu concordo. Contate-nos.</q> Você está concordando com os <a href='/terms' target='_blank'>Terms&nbsp;of&nbsp;Services</a> e <a href='/privacy_policy' target='_blank'>Privacy&nbsp;Policy</a>."
 
@@ -809,6 +821,12 @@ msgstr "Contrato | Goalous"
 
 msgid "Can I continue using Goalous for free?"
 msgstr "Posso continuar usando o Goalous gratuitamente?"
+
+msgid "Can see GKA of all members"
+msgstr "Pode ver GKA de todos os membros."
+
+msgid "Can see GKA of all team members."
+msgstr "Pode ver GKA de todos os membros da equipe."
 
 msgid "Can we customize Goalous?"
 msgstr "Podemos personalizar o Goalous?"
@@ -1134,9 +1152,8 @@ msgstr "Resultado-chave concluído. "
 msgid "Completed this on %s."
 msgstr "Concluiu isso em %s."
 
-#, fuzzy
 msgid "Configure SSO"
-msgstr ""
+msgstr "Configurar SSO"
 
 msgid "Confirm"
 msgstr "Confirmar"
@@ -1525,6 +1542,7 @@ msgstr "Você quer realmente excluir este comentário?"
 msgid "Do you really want to delete this Goal?"
 msgstr "Deseja realmente excluir este objetivo?"
 
+#, fuzzy
 msgid "Do you really want to delete this Key Result?"
 msgstr "Deseja realmente excluir este Resultado-chave?"
 
@@ -2056,6 +2074,9 @@ msgstr "Falha ao registrar o plano pago."
 msgid "Failed to register user. Please try again later."
 msgstr "Falha ao registrar o usuário. Por favor, tente novamente mais tarde."
 
+msgid "Failed to reset the password"
+msgstr "Falha ao redefinir a senha"
+
 msgid "Failed to save a Device Information."
 msgstr "Falha ao salvar as informações do dispositivo."
 
@@ -2266,9 +2287,8 @@ msgstr "Get in touch"
 msgid "Get more information"
 msgstr "Quero saber mais"
 
-#, fuzzy
 msgid "Get set up with SAML2.0 solution."
-msgstr ""
+msgstr "Prepare-se com a solução SAML2.0."
 
 msgid "Give reactions to posts with likes and comments"
 msgstr "Curta e comente as postagens"
@@ -2421,7 +2441,10 @@ msgid "Goalous: even more features to make your work joyful."
 msgstr "Goalous: diversas funcionalidades que deixam o trabalho mais divertido!"
 
 msgid "Goals"
-msgstr "Lista de objetivos"
+msgstr "Objetivos"
+
+msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
+msgstr "Os objetivos já criados manterão suas restrições. Você pode alterar o grupo no qual eles são publicados."
 
 msgid "Google"
 msgstr "Google"
@@ -2471,6 +2494,9 @@ msgstr "Nome da visão do grupo"
 msgid "Group Visions"
 msgstr "Visões do grupo"
 
+msgid "Groups that can see this goal"
+msgstr "Grupos que podem ver este objetivo"
+
 msgid "Half a year"
 msgstr "Semestre"
 
@@ -2506,6 +2532,9 @@ msgstr "Ajude o time, contribua, torne o ambiente mais divertido!"
 
 msgid "Here"
 msgstr "Aqui"
+
+msgid "Hide archived groups"
+msgstr "Ocultar grupo arquivado"
 
 msgid "Hide birth year"
 msgstr "Ocultar ano de nascimento"
@@ -3035,6 +3064,9 @@ msgstr "KR EDITADA"
 msgid "KR END DATE"
 msgstr "Data final do Resultado-chave"
 
+msgid "KR has been added to the Important List"
+msgstr "KR foi adicionado à Lista Importante"
+
 msgid "KR ID"
 msgstr "ID do Resultado-chave"
 
@@ -3133,6 +3165,9 @@ msgstr "ID DE USUÁRIO DO LÍDER"
 
 msgid "Learn all of the ways you can improve your organization using Goalous."
 msgstr "Aprenda novas maneiras de ajudar sua empresa."
+
+msgid "Learn More"
+msgstr "Saber mais"
 
 msgid "Learn more about GKA（Check out our Goalous Blog）"
 msgstr "Aprenda sobre o GKA (veja nosso Blog)"
@@ -3605,6 +3640,9 @@ msgstr "Outubro"
 
 msgid "Off"
 msgstr "Nenhum"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "OKR and Communication Software | Goalous"
 msgstr "Software de OKRs e comunicação | Goalous"
@@ -4113,6 +4151,9 @@ msgstr "Remover administrador"
 msgid "Remove from the circle"
 msgstr "Remover do círculo"
 
+msgid "Remove Watch"
+msgstr "Remover "
+
 msgid "Removed evaluation suspension."
 msgstr "Avaliação ativa"
 
@@ -4121,6 +4162,9 @@ msgstr "Removido do objetivo."
 
 msgid "Removed from the circle members."
 msgstr "Removido dos membros do círculo."
+
+msgid "Removed from the Important list"
+msgstr "Removido da lista importante"
 
 msgid "Reply"
 msgstr "Resposta"
@@ -4161,9 +4205,8 @@ msgstr "Função"
 msgid "Same as company information"
 msgstr "Mesmo que as informações da empresa"
 
-#, fuzzy
 msgid "SAML Authentication"
-msgstr ""
+msgstr "Autenticação SAML"
 
 msgid "Save"
 msgstr "Salvar"
@@ -4175,7 +4218,7 @@ msgid "Save & Quit this Goal"
 msgstr "Salvar e sair deste objetivo"
 
 msgid "Save & Reapply"
-msgstr "Salvar e reaplicar"
+msgstr "Salvar"
 
 msgid "Save Actions and Posts that you want to see again. No one is notified, and only you can see what you’ve saved."
 msgstr "Salve as ações e postagens que deseja ver novamente. Ninguém é notificado e somente você pode ver o que salvou."
@@ -4275,6 +4318,9 @@ msgstr "Privado"
 
 msgid "See All"
 msgstr "Ver tudo"
+
+msgid "See GKA"
+msgstr "Ver GKA"
 
 msgid "See how many members have read your posts and comments"
 msgstr "Veja quantos membros leram suas postagens e comentários"
@@ -4813,6 +4859,9 @@ msgstr "O objetivo que começa no período atual e termina no próximo período 
 msgid "The Goal that beings in the next term and ends beyond the next term will be updated to end on the last day of the next term."
 msgstr "O objetivo que começa no próximo período e termina após o próximo período será atualizado no último dia no próximo período."
 
+msgid "The goal will only be visible to group members. Any goals you create in the future will need to have a destination group set up for publication."
+msgstr "O objetivo ficará visível apenas para os membros do grupo. Todas as metas que você criar no futuro precisarão ter um grupo de destino configurado para publicação."
+
 msgid "The goals/KRs that begins and ends beyond the the next term were updated to match the start and end date of the next term."
 msgstr "Os Objetivos/Resultados-chave que começam e terminam depois do próximo período foram atualizados para corresponder à data de início e término do próximo período."
 
@@ -4906,6 +4955,12 @@ msgstr "Não há mais rankings para mostrar."
 msgid "There are no recent updates."
 msgstr "Não há novos updates"
 
+msgid "There is %s actions you do not have permission to see"
+msgstr "Existem %s ações que você não tem permissão para ver"
+
+msgid "There is %s goals you do not have permission to see"
+msgstr "Há %s objetivos que você não tem permissão para ver"
+
 msgid "There is a problem with your card."
 msgstr "Há um problema no seu cartão."
 
@@ -4953,6 +5008,12 @@ msgstr "Portanto, alteramos o status da sua equipe para somente leitura."
 
 msgid "This action can't be edited."
 msgstr "Esta ação não pode ser editada."
+
+msgid "This check cannot be turned off because there is no valid group in this team."
+msgstr "Esta verificação não pode ser desativada porque não existe um grupo válido nesta equipe"
+
+msgid "This check cannot be turned off because there is no valid group on this team."
+msgstr "Esta verificação não pode ser desativada porque não há um grupo válido nesta equipe."
 
 msgid "This circle does not exist."
 msgstr "Este círculo não existe."
@@ -5002,6 +5063,9 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
 
+msgid "This goal is open to all team members"
+msgstr "Este objetivo está aberto a todos os membros da equipe"
+
 msgid "This invitation isn't not for you."
 msgstr "Este convite não é para você."
 
@@ -5031,6 +5095,9 @@ msgstr "Esse post não existe"
 
 msgid "This post was deleted."
 msgstr "Este post foi deletado"
+
+msgid "This setting will set goals to only be visible to group members."
+msgstr "Esta configuração definirá objetivos para serem visíveis apenas para membros do grupo"
 
 msgid "This Term"
 msgstr "Este período"
@@ -5338,6 +5405,9 @@ msgstr "Ver todos os %s comentários"
 msgid "View All Notifications"
 msgstr "Ver todas as notificações"
 
+msgid "View archived groups"
+msgstr "Ver grupo arquivado"
+
 msgid "View Cover Image"
 msgstr "Ver imagem da capa"
 
@@ -5349,6 +5419,9 @@ msgstr "Veja os objetivos criados por membros (%s)"
 
 msgid "View info"
 msgstr "Ver informações"
+
+msgid "View List"
+msgstr "Ver lista"
 
 msgid "View more"
 msgstr "Mais"
@@ -5395,8 +5468,17 @@ msgstr "Aguardando aprovação"
 msgid "Waiting for the evaluation by %s."
 msgstr "Aguardando a avaliação por %s."
 
+msgid "Watch"
+msgstr "Ver"
+
+msgid "Watch this Key Result"
+msgstr "Veja este  KR"
+
 msgid "Watch Video"
 msgstr "Veja o vídeo"
+
+msgid "Watched"
+msgstr "Visto"
 
 msgid "We are downgrading your team to read-only"
 msgstr "Estamos reclassificando sua equipe para modo leitura"
@@ -5496,6 +5578,12 @@ msgstr "Quando devo solicitar o plano pago?"
 
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "Quando a avaliação gratuita terminar, você poderá usá-lo apenas no modo somente leitura por 30 dias. Durante esse período, você não poderá postar."
+
+msgid "When this is turned on, there will be no restriction on display of goals created after now. For goals that have already been created, you can change the group to which they are published."
+msgstr "Quando ativado, não haverá restrição à exibição de objetivos criados a partir de agora. Para objetivos que já foram criados, você pode alterar o grupo no qual são publicadas."
+
+msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
+msgstr "Quando ativado, não haverá restrições na exibição de objetivos criados a partir de agora."
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "Qualquer que seja a sua escolha, esse Resultado-chave será concluído."
@@ -5718,6 +5806,9 @@ msgstr "Você não pode mudar o líder do objetivo durante o período de avalia�
 
 msgid "You did not like it."
 msgstr "Você não curtiu isso."
+
+msgid "You do not have permission to view this goal"
+msgstr "Você não tem permissão para ver este objetivo"
 
 msgid "You do something worthwhile."
 msgstr "Faça algo valioso"

@@ -47,8 +47,8 @@
 
   <?php // Show header alert only team admin temporarily. [GL-6387]  ?>
     <?php if (!empty($isTeamAdmin) && $isTeamAdmin && !($this->request->params['controller'] == 'payments' && $this->request->params['action'] == 'apply')): ?>
-        <?php // Temporary hide on specific team https://jira.goalous.com/browse/GL-8944
-            if (!in_array($currentTeamId, [1058])):
+        <?php // Temporary hide banner on specific team GL-8944 / GL-9025
+            if (!in_array($currentTeamId, [])):
         ?>
             <?php
             // TODO.Payment: must refactoring.

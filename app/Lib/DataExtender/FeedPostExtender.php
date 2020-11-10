@@ -8,6 +8,7 @@ App::import('Lib/DataExtender/Extension', 'GoalExtension');
 App::import('Lib/DataExtender/Extension', 'PostLikeExtension');
 App::import('Lib/DataExtender/Extension', 'PostSavedExtension');
 App::import('Lib/DataExtender/Extension', 'PostReadExtension');
+App::import('Lib/DataExtender/Extension', 'PostCanCollaborateExtension');
 App::import('Service/Paging', 'CommentPagingService');
 App::import('Service', 'PostService');
 App::import('Service', 'TeamMemberService');
@@ -30,6 +31,7 @@ class FeedPostExtender extends BaseExtender
     const EXTEND_LIKE = "ext:feed_post:like";
     const EXTEND_SAVED = "ext:feed_post:saved";
     const EXTEND_READ = "ext:feed_post:read";
+    const EXTEND_CAN_COLLABORATE = "ext:feed_post:can_collaborate";
     const EXTEND_TRANSLATION_LANGUAGE = "ext:feed_post:translation_language";
 
     const DEFAULT_COMMENT_COUNT = 3;
@@ -191,6 +193,14 @@ class FeedPostExtender extends BaseExtender
             $PostReadExtension->setUserId($userId);
             $data = $PostReadExtension->extendMulti($data, "{n}.id", "post_id");
         }
+        if ($this->includeExt($extensions, self::EXTEND_CAN_COLLABORATE)) {
+            /** @var PostCanCollaborateExtension */
+            $PostCanCollaborateExtension = ClassRegistry::init('PostCanCollaborateExtension');
+            $PostCanCollaborateExtension->setUserId($userId);
+            $PostCanCollaborateExtension->setTeamId($teamId);
+            $data = $PostCanCollaborateExtension->extendMulti($data, "{n}.id", "post_id");
+        }
+
         if ($this->includeExt($extensions, self::EXTEND_TRANSLATION_LANGUAGE)) {
             /** @var Team $Team */
             $Team = ClassRegistry::init('Team');

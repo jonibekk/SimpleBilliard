@@ -82,7 +82,7 @@ export function fetchInitialData(goalId) {
   return (dispatch) => {
     return axios.get(`/api/v1/goals/${goalId}/init_form?data_types=all`)
       .then((response) => {
-        let data = response.data.data
+        const data = response.data.data
         dispatch({
           type: types.FETCH_INITIAL_DATA,
           data
@@ -105,12 +105,13 @@ export function saveGoal(goalId, addInputData) {
       postData.key_result.target_value = 1
     }
 
+    postData.groups = Object.keys(postData.groups)
+
     return post(`/api/v1/goals/${goalId}/update`, postData, null,
       (response) => {
         dispatch(toNextPage())
       },
       ({response}) => {
-        console.log(response.data)
         // when team is in read only
         if (!response.data.validation_errors) {
           // Reason to set to validation_errors.key_result.description is that

@@ -53,5 +53,5 @@ PhotoUpload.propTypes = {
   imgUrl: React.PropTypes.string,
 };
 PhotoUpload.defaultProps = {
-  imgUrl: "/img/no-image-goal.jpg"
+  imgUrl: "/img/no-image-goal.png"
 };

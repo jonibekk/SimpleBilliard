@@ -1,9 +1,11 @@
 <?php
+
 App::import('Lib/Paging', 'BasePagingService');
 App::uses('PagingRequest', 'Lib/Paging');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 App::import('Lib/DataExtender', 'FeedPostExtender');
+App::import('Policy', 'PostPolicy');
 
 class FeedPostPagingService extends BasePagingService
 {
@@ -55,17 +57,42 @@ class FeedPostPagingService extends BasePagingService
      */
     private function createSearchCondition(PagingRequest $request): array
     {
+        $userId = $request->getCurrentUserId();
         $teamId = $request->getCurrentTeamId();
+
+        $policy = new PostPolicy($userId, $teamId);
+        $scope = $policy->scope();
 
         $options = [
             'conditions' => [
                 'Post.del_flg' => false,
                 'Post.team_id' => $teamId,
-                'Post.type'    => [Post::TYPE_CREATE_GOAL, Post::TYPE_ACTION]
+                'OR'           => [
+                    [
+                        'Post.type' => [Post::TYPE_CREATE_GOAL]
+                    ],
+                    [
+                        'Post.type' => [Post::TYPE_ACTION],
+                        'ActionResult.key_result_id is not null'
+                    ]
+                ]
             ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'action_results',
+                    'alias'      => 'ActionResult',
+                    'conditions' => [
+                        'ActionResult.id = Post.action_result_id',
+                    ],
+                    'fields'     => [
+                        'ActionResult.key_result_id'
+                    ]
+                ]
+            ]
         ];
 
-        return $options;
+        return array_merge_recursive($options, $scope);
     }
 
     protected function createPointer(
@@ -97,5 +124,4 @@ class FeedPostPagingService extends BasePagingService
 
         return $returnArray;
     }
-
 }

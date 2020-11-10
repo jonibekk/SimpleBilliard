@@ -143,7 +143,7 @@ class GoalTest extends GoalousTestCase
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
-        $res = $this->Goal->search([], 0, 1);
+        $res = $this->Goal->search([], 0, 1, "", []);
         $this->assertTrue(!empty($res));
     }
 
@@ -647,12 +647,12 @@ class GoalTest extends GoalousTestCase
             if ($type === "order") {
                 foreach ($val as $key => $value) {
                     $searchConditions[$type] = $key;
-                    $this->Goal->search([], 0, 10, $key);
+                    $this->Goal->search([], 0, 10, $key, []);
                 }
             } else {
                 foreach ($val as $key => $value) {
                     $searchConditions[$type] = $key;
-                    $this->Goal->search($searchConditions, 0, 10);
+                    $this->Goal->search($searchConditions, 0, 10, "", []);
                 }
             }
         }

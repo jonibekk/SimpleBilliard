@@ -22,6 +22,8 @@ class Experiment extends AppModel
     const NAME_ENABLE_VIDEO_POST_TRANSCODING = 'EnableVideoPostTranscoding';
     const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
 
+    const NAME_ENABLE_GROUPS_MANAGEMENT = 'EnableGroupsManagement';
+
     /**
      * Validation rules
      *

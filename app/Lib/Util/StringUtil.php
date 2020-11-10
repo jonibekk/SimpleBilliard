@@ -48,14 +48,15 @@ class StringUtil
         $splitInput = mb_split($delimiter, $input);
 
         for ($splitInputIndex = 0, $segmentedStringIndex = 0; $splitInputIndex < count($splitInput);) {
-
             if (empty($segmentedString[$segmentedStringIndex])) {
                 $segmentedString[$segmentedStringIndex] = $splitInput[$splitInputIndex];
                 $splitInputIndex++;
                 continue;
             }
 
-            if (self::mbStrLength($segmentedString[$segmentedStringIndex]) + self::mbStrLength($splitInput[$splitInputIndex]) + self::mbStrLength($delimiterReplacement) <= $maxCharLength) {
+            if (self::mbStrLength($segmentedString[$segmentedStringIndex]) + self::mbStrLength(
+                    $splitInput[$splitInputIndex]
+                ) + self::mbStrLength($delimiterReplacement) <= $maxCharLength) {
                 $segmentedString[$segmentedStringIndex] .= $delimiterReplacement . $splitInput[$splitInputIndex];
                 $splitInputIndex++;
             } else {
@@ -94,4 +95,5 @@ class StringUtil
 
         return $mergedString;
     }
+
 }

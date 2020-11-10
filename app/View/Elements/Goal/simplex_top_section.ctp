@@ -140,6 +140,24 @@
                     <p><?= __('Description') ?></p>
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
+                <li class="goal-detail-goal-groups">
+                    <?php if (empty($goalGroups)) : ?>
+                        <p><?= __('This goal is open to all team members') ?></p>
+                    <?php else : ?>
+                        <p><?= __('Groups that can see this goal') ?></p>
+                        <p>
+                            <?= implode(', ', Hash::extract($goalGroups, "{n}.name")) ?>
+                        </p>
+                    <?php endif ?>
+                    <?php if (!empty($archivedGoalGroups)) : ?>
+                        <p>
+                            <a href="#" class="archived-toggle"><?= __('View archived groups') ?></a>
+                        </p>
+                        <p class="archived-list">
+                            <?= implode(', ', Hash::extract($archivedGoalGroups, "{n}.name")) ?>
+                        </p>
+                    <?php endif ?>
+                </li>
                 <li class="goal-detail-info-followers">
                     <p><?= __('Followers') . ' (' . count($followers) . ')'; ?></p>
                     <?php
@@ -219,3 +237,27 @@
     </a>
 </div>
 <?= $this->App->viewEndComment() ?>
+<?php $this->append('script') ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var archivedHidden = true;
+            var archivedToggle = $('.goal-detail-goal-groups .archived-toggle');
+            var archivedList = $('.goal-detail-goal-groups .archived-list');
+
+            archivedToggle.click(function(e) {
+                e.preventDefault();
+                
+
+                if (archivedHidden) {
+                    archivedToggle.text("<?= __("Hide archived groups") ?>");
+                    archivedList.css("display", "block");
+                } else {
+                    archivedToggle.text("<?= __("View archived groups") ?>");
+                    archivedList.css("display", "none");
+                }
+
+                archivedHidden = !archivedHidden
+            })
+        });
+    </script>
+<?php $this->end() ?>
