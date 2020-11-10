@@ -2,6 +2,7 @@
 App::import('Service', 'AppService');
 App::uses('MemberGroup', 'Model');
 App::uses('Group', 'Model');
+App::uses('TeamMember', 'Model');
 App::import('Model/Entity', 'GroupEntity');
 
 /**
@@ -83,7 +84,7 @@ class GroupService extends AppService
     function parseMembers(string $groupId, string $teamId, string $tmp_file_path): array
     {
         $results = [
-            'invalidEmails' => [],
+            'invalidIds' => [],
             'validUserIds' => [],
             'existingUserIds' => []
         ];
@@ -101,7 +102,7 @@ class GroupService extends AppService
         return [
             'existing' => count(array_unique($results['existingUserIds'])),
             'valid' => count(array_unique($results['validUserIds'])),
-            'invalid' => count(array_unique($results['invalidEmails'])),
+            'invalid' => count(array_unique($results['invalidIds'])),
             'validUserIds' => $results['validUserIds']
         ];
     }
@@ -128,18 +129,32 @@ class GroupService extends AppService
         return count($data);
     }
 
-    private function parseCsv($tmp_file_path, $callback): void
+    private function parseCsv($tmpFilePath, $callback): void
     {
         ini_set('auto_detect_line_endings', TRUE);
         $chunk_size = 500;
         $count = 0;
         $rows = [];
 
-        if (($handle = fopen($tmp_file_path, "r")) === FALSE) {
+        $pre_data = file_get_contents($tmpFilePath);
+        $bomPresent = substr($pre_data, 0, 2) == (chr(0xFF) . chr(0xFE));
+
+        if ($bomPresent) {
+            $pre_data = hex2bin(preg_replace("/^fffe/", "", bin2hex($pre_data)));
+            file_put_contents($tmpFilePath, mb_convert_encoding($pre_data, "UTF-8", "UTF-16LE"));
+        }
+
+        if (($handle = fopen($tmpFilePath, "r")) === FALSE) {
             return;
         }
 
+        setlocale(LC_ALL, 'ja_JP.UTF-8');
+
+        // ignore header row
+        fgetcsv($handle, 2000, ",");
+
         // aggregrate rows till it reaches chunk_size, trigger callback and reset
+        // max 2000 char line based on CsvComponent
         while (($row_data = fgetcsv($handle, 2000, ",")) !== FALSE) {
             array_push($rows, $row_data);
             $count += 1;
@@ -157,34 +172,34 @@ class GroupService extends AppService
         }
     }
 
-    private function queryPossibleMembers(string $groupId, string $teamId, array $emails): array
+    private function queryPossibleMembers(string $groupId, string $teamId, array $ids): array
     {
-        /** @var Email $Email */
-        $Email = ClassRegistry::init("Email");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
 
-        $results = $Email->findVerifiedTeamMembersByEmailAndGroup(
+        $results = $TeamMember->findVerifiedTeamMembersByTeamAndGroup(
             (int) $groupId,
             (int) $teamId,
-            $emails
+            $ids
         );
 
-        $retrievedEmails = Hash::extract($results, '{n}.Email.email');
-        $invalidEmails = array_diff(array_unique($emails), $retrievedEmails);
+        $retrievedIds = Hash::extract($results, '{n}.TeamMember.member_no');
+        $invalidIds = array_diff(array_unique($ids), $retrievedIds);
 
         return array_reduce(
             $results,
             function ($acc, $data) {
 
                 if ($data['MemberGroup']['group_id'] === null) {
-                    array_push($acc['validUserIds'], $data['Email']['user_id']);
+                    array_push($acc['validUserIds'], $data['TeamMember']['user_id']);
                 } else {
-                    array_push($acc['existingUserIds'], $data['Email']['user_id']);
+                    array_push($acc['existingUserIds'], $data['TeamMember']['user_id']);
                 }
 
                 return $acc;
             },
             [
-                'invalidEmails' => $invalidEmails,
+                'invalidIds' => $invalidIds,
                 'validUserIds' => [],
                 'existingUserIds' => []
             ]

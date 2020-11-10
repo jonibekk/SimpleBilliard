@@ -49,19 +49,19 @@ class AuthController extends BaseApiController
             $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
-                                ->withMessage(__('Email address or Password is incorrect.'))
-                                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
-                                ->getResponse();
+                ->withMessage(__('Email address or Password is incorrect.'))
+                ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
+                ->getResponse();
         } catch (\Throwable $e) {
             GoalousLog::emergency('user failed to login', [
                 'message' => $e->getMessage(),
             ]);
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         $data = [
-            'me' => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
+            'me'    => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
             'token' => $jwt->token()
         ];
 
@@ -73,6 +73,7 @@ class AuthController extends BaseApiController
      *
      * @param int $userId
      * @param int $teamId
+     *
      * @return array
      */
     private function _getAuthUserInfo(int $userId, int $teamId): array
@@ -102,12 +103,12 @@ class AuthController extends BaseApiController
                 'jwt_id'  => $this->getJwtAuth()->getJwtId(),
             ]);
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         if (!$res) {
             return ErrorResponse::internalServerError()
-                                ->getResponse();
+                ->getResponse();
         }
 
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
@@ -129,8 +130,8 @@ class AuthController extends BaseApiController
             $validator->validate($requestedBody);
         } catch (\Respect\Validation\Exceptions\AllOfException $e) {
             return ErrorResponse::badRequest()
-                                ->addErrorsFromValidationException($e)
-                                ->getResponse();
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
         } catch (Exception $e) {
             GoalousLog::error('Unexpected validation exception', [
                 'class'   => get_class($e),
@@ -160,7 +161,7 @@ class AuthController extends BaseApiController
         $token = $this->getTokenForRecovery($user, $teamId);
 
         $data = [
-            'me' => $this->_getAuthUserInfo($user['id'], $teamId),
+            'me'    => $this->_getAuthUserInfo($user['id'], $teamId),
             'token' => $token
         ];
 
@@ -170,29 +171,33 @@ class AuthController extends BaseApiController
     /**
      * Get token from redis integrated session
      * If token is not verified, regenerate token
+     *
      * @param array $user
-     * @param int $teamId
+     * @param int   $teamId
+     *
      * @return string
      */
-    private function getTokenForRecovery(array $user, int $teamId): string {
+    private function getTokenForRecovery(array $user, int $teamId): string
+    {
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 
         $sesId = $this->Session->id();
         $token = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
-        try {
-            $jwtAuth = AccessAuthenticator::verify($token);
-            if (empty($jwtAuth->getUserId()) || empty ($jwtAuth->getTeamId())) {
-                throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
+        if (strlen($token) > 0) {
+            try {
+                $jwtAuth = AccessAuthenticator::verify($token);
+                if (empty($jwtAuth->getUserId()) || empty ($jwtAuth->getTeamId())) {
+                    throw new GlException\Auth\AuthFailedException('Jwt data is incorrect');
+                }
+                return $token;
+            } catch (Exception $e) {
+                GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
             }
-        } catch (Exception $e) {
-            GoalousLog::error("ERROR " . $e->getMessage(), $e->getTrace());
-            // Regenerate token
-            $jwt = $GlRedis->saveMapSesAndJwt($teamId, $user['id'], $sesId);
-            $token = $jwt->token();
-            return $token;
         }
-
+        // Regenerate token
+        $jwt = $GlRedis->saveMapSesAndJwt($teamId, $user['id'], $sesId);
+        $token = $jwt->token();
         return $token;
     }
 }
