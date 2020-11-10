@@ -33,13 +33,13 @@ class GroupPolicy extends BasePolicy
 
     public function scope($type = 'read'): array
     {
-        //if ($this->isTeamAdmin()) {
-            //return [
-                //'conditions' => [
-                    //'Group.team_id' => $this->teamId
-                //]
-            //];
-        //}
+        if ($type === 'manage' && $this->isTeamAdmin()) {
+            return [
+                'conditions' => [
+                    'Group.team_id' => $this->teamId
+                ]
+            ];
+        }
         
         /** @var Group **/
         $Group = ClassRegistry::init('Group');
