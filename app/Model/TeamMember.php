@@ -2491,7 +2491,7 @@ class TeamMember extends AppModel
                 ]
             ]
         ];
-        $res = $this->find('first', $condition);
+        $res = $this->findWithoutTeamId('first', $condition);
 
         return Hash::get($res, 'TeamMember.team_id', null);
     }
