@@ -412,7 +412,7 @@ class PostFixture extends CakeTestFixtureEx
             'post_read_count'  => 13,
             'important_flg'    => 0,
             'action_result_id' => 1,
-            'goal_id'          => null,
+            'goal_id'          => 1,
             'del_flg'          => 0,
             'deleted'          => null,
             'created'          => 1,

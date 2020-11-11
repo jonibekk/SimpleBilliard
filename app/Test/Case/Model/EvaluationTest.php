@@ -34,6 +34,8 @@ class EvaluationTest extends GoalousTestCase
         'app.evaluator',
         'app.term',
         'app.evaluate_score',
+        'app.goal_group',
+        'app.member_group',
         'app.evaluation_setting'
     );
     private $current_date;
@@ -784,18 +786,23 @@ class EvaluationTest extends GoalousTestCase
         ];
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
+        $evaluators = $this->Evaluation->appendEvaluatorAccessibleGoals($evaluators);
 
         $goalMember = $this->Evaluation->Goal->GoalMember->find('all');
+        // 
         foreach ($goalMember as $k => $v) {
             $goalMember[$k]['GoalMember']['is_target_evaluation'] = true;
         }
+
         $this->Evaluation->Goal->GoalMember->saveAll($goalMember);
         $this->Evaluation->Goal->id = 1;
         $this->Evaluation->Goal->saveField('start_date', $current_start);
         $this->Evaluation->Goal->saveField('end_date', $current_end);
 
         $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, $term_id, $evaluators, 0);
-        $this->assertCount(5, $res);
+
+        // 4 -> oneself, goal 1 -> evaluator 2, goal 1 -> evaluator 3, leader evaluator
+        $this->assertCount(4, $res);
     }
 
     function testGetMyTurnCountCaseCurrentTermIsFrozen()
