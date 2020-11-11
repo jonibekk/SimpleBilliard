@@ -605,18 +605,22 @@ class Evaluation extends AppModel
     {
         // evaluators {"0":{"3":"618","4":"614"} -> array<eval_id, eval_uid>
         $evaluatorGoals = [];
+
         foreach ($evaluators as $uid => $evals) {
+            $evaluatorGoals[$uid] = [];
+
             foreach ($evals as $eval_uid) {
-                if (!array_key_exists($eval_uid, $evaluatorGoals)) {
+                if (!array_key_exists($eval_uid, $evaluatorGoals[$uid])) {
                     $policy = new GoalPolicy($eval_uid, $this->current_team_id);
                     $scope = $policy->scope('evaluate');
                     $options = array_merge_recursive($scope, ['fields' => 'Goal.id']);
                     $res = $this->Goal->find('all', $options);
 
                     $evaluatorGoals[$uid][$eval_uid] = Hash::extract($res, '{n}.Goal.id');
-                }
+                } 
             }
         }
+
         return $evaluatorGoals;
     }
 
