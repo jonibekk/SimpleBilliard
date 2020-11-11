@@ -11,9 +11,9 @@ class GoalPolicy extends BasePolicy
     public function read($goal): bool
     {
         return ((int)$goal['user_id'] === $this->userId) ||
-            ($this->isTeamAdminForItem($goal['team_id'])) ||
-            ($this->isCoach($goal['id'])) ||
-            ($this->isActiveEvaluator($goal['id'])) ||
+            //($this->isTeamAdminForItem($goal['team_id'])) ||
+            //($this->isCoach($goal['id'])) ||
+            //($this->isActiveEvaluator($goal['id'])) ||
             ($this->isSameGroup($goal));
     }
 
@@ -40,9 +40,10 @@ class GoalPolicy extends BasePolicy
 
     public function scope($type = 'read'): array
     {
-        if ($this->isTeamAdmin()) {
-            return ['conditions' => ['Goal.team_id' => $this->teamId]];
-        }
+        //if ($this->isTeamAdmin()) {
+            //return ['conditions' => ['Goal.team_id' => $this->teamId]];
+        //}
+        
         /** @var Goal **/
         $Goal = ClassRegistry::init('Goal');
         /** @var GoalGroup */
@@ -50,21 +51,21 @@ class GoalPolicy extends BasePolicy
 
         $allPublicQuery = $Goal->publicGoalsSubquery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
-        $allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId);
-        $allEvaluateesQuery = $Goal->evaluateeGoalsSubquery($this->userId);
+        //$allCoacheesQuery = $Goal->coacheeGoalsSubquery($this->userId, $this->teamId);
+        //$allEvaluateesQuery = $Goal->evaluateeGoalsSubquery($this->userId, $this->teamId);
 
         $fullQuery = 'Goal.id in (' . $allPublicQuery . ') OR 
                       Goal.id in (' . $allGroupsQuery . ')';
 
-        if ($type === 'read') {
-            $query = 'Goal.id in (' . $allCoacheesQuery . ') OR ';
+        //if ($type === 'read') {
+            //$query = 'Goal.id in (' . $allCoacheesQuery . ') OR ';
 
-            if ($this->evaluationSettingEnabled()) {
-                $query .= 'Goal.id in (' . $allEvaluateesQuery . ') OR ';
-            }
+            //if ($this->evaluationSettingEnabled()) {
+                //$query .= 'Goal.id in (' . $allEvaluateesQuery . ') OR ';
+            //}
 
-            $fullQuery = $query . $fullQuery;
-        }
+            //$fullQuery = $query . $fullQuery;
+        //}
 
         return [
             'conditions' => [
