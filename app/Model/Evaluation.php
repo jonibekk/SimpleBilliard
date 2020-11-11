@@ -330,10 +330,14 @@ class Evaluation extends AppModel
      */
     function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
     {
+        $goalPolicy = new GoalPolicy($evaluatorId, $this->current_team_id);
+        $accessibleGoals = $this->Goal->find('all', $goalPolicy->scope());
+
         return $this->getEvaluations($evaluateTermId, $evaluateeId,
             [
                 'evaluator_user_id' => [$evaluatorId, $evaluateeId],
-                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR]
+                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
+                'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id')
             ]
         );
 
