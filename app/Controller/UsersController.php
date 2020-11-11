@@ -333,6 +333,8 @@ class UsersController extends AppController
 
     function set_session()
     {
+        GoalousLog::error('refer url');
+        GoalousLog::error(print_r($this->Session->read('referer_url'), true));
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->set('redirect_url', $redirect_url);
 
@@ -1064,6 +1066,7 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+            $this->Session->write('referer_url', $this->Session->read('Auth.redirect'));
             return $this->redirect(['action' => 'login']);
         }
 
