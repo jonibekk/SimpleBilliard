@@ -333,9 +333,11 @@ class UsersController extends AppController
 
     function set_session()
     {
-        GoalousLog::error('refer url');
-        GoalousLog::error(print_r($this->Session->read('referer_url'), true));
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST && !empty($this->Session->read('referer_url'))){
+             $redirect_url = Router::url($this->Session->read('referer_url'));
+         } else {
+             $redirect_url = ($this->Session->read('Auth.redirect')) ? Router::url($this->Session->read('Auth.redirect')) : "/";
+         }
         $this->set('redirect_url', $redirect_url);
 
         $teamId = $this->Auth->user('default_team_id');
@@ -396,10 +398,6 @@ class UsersController extends AppController
                 $activeTeams = $this->Team->TeamMember->getActiveTeamMembersList();
                 if (empty($activeTeams)) {
                     $this->Session->write('current_team_id', $invitedTeamId);
-                }
-                $token = $this->Session->read('Auth.redirect.0');
-                if ($token) {
-                    $this->accept_invite_temporary($token);
                 }
             } else {
                 $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
@@ -1094,57 +1092,9 @@ class UsersController extends AppController
         }
 
         $this->Session->delete('referer_status');
+        $this->Session->delete('referer_url');
         $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
-    }
-
-    public function accept_invite_temporary($token)
-    {
-        // トークンが有効かどうかチェック
-        $confirmRes = $this->Invite->confirmToken($token);
-        if ($confirmRes !== true) {
-            GoalousLog::error('Cant confirm token', [
-                'token' => $token,
-                'message' => $confirmRes
-            ]);
-
-            return false;
-        }
-
-        $userId = $this->Auth->user('id');
-        // トークンが自分用に生成されたもうのかどうかチェック
-        if (!$this->Invite->isForMe($token, $userId)) {
-            GoalousLog::error('This invitation isnt not for you', [
-                'token' => $token,
-                'user_id' => $userId
-            ]);
-
-            return false;
-        }
-
-        // ユーザーがログイン中でかつチームジョインが失敗した場合、
-        // ログインしていたチームのセッションに戻す必要があるためここでチームIDを退避させる
-        $loggedInTeamId = $this->Auth->user('current_team_id');
-        $invitedTeam = $this->_joinTeam($token);
-        if ($invitedTeam === false) {
-            if ($loggedInTeamId) {
-                $this->_switchTeam($loggedInTeamId);
-            }
-            GoalousLog::error('Failed to join team. Please try again later.', [
-                'token' => $token,
-                'loggedInTeamId' => $loggedInTeamId,
-                'invitedTeam' => $invitedTeam,
-            ]);
-            return false;
-        }
-
-        $this->Session->delete('referer_status');
-        GoalousLog::info('joined team', [
-            'token' => $token,
-            'loggedInTeamId' => $loggedInTeamId,
-            'invitedTeam' => $invitedTeam,
-        ]);
-        return true;
     }
 
     /**
