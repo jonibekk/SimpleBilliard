@@ -1,5 +1,6 @@
 <?php
 App::uses("Goal", "Model");
+App::uses("Group", "Model");
 App::import('Lib/DataExtender/Extension', 'DataExtension');
 App::import('Service', 'ImageStorageService');
 
@@ -15,8 +16,9 @@ class GoalExtension extends DataExtension
 
         $conditions = [
             'conditions' => [
-                'id' => $uniqueKeys
+                'id' => $uniqueKeys,
             ],
+            'contain' => ['GoalGroup' => ['Group']]
         ];
 
         $fetchedData = $Goal->useType()->find('all', $conditions);
@@ -31,6 +33,14 @@ class GoalExtension extends DataExtension
         $ImageStorageService = ClassRegistry::init('ImageStorageService');
         foreach ($fetchedData as $i => $v) {
             $fetchedData[$i]['Goal']['photo_img_url'] = $ImageStorageService->getImgUrlEachSize($fetchedData[$i], 'Goal');
+            $fetchedData[$i]['Goal']['groups'] = [];
+            $goalGroups = $fetchedData[$i]['GoalGroup'];
+
+            if (!empty($goalGroups)) {
+                $fetchedData[$i]['Goal']['groups'] = Hash::extract($goalGroups, '{n}.Group');
+            }
+
+            unset($fetchedData[$i]['GoalGroup']);
         }
 
         return $fetchedData;
