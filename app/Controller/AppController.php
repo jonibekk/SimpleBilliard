@@ -268,16 +268,19 @@ class AppController extends BaseController
                     !$this->User->TeamMember->isActive($login_uid)
                 ) {
                     $defaultTeamId = $this->User->TeamMember->getLatestLoggedInActiveTeamId($login_uid);
-                    $this->User->updateDefaultTeam($defaultTeamId, true, $login_uid);
-                    $this->Session->write('current_team_id', $defaultTeamId);
-                    $this->_refreshAuth();
-                    // すでにロード済みのモデルの current_team_id 等を更新する
-                    foreach (ClassRegistry::keys() as $k) {
-                        $obj = ClassRegistry::getObject($k);
-                        if ($obj instanceof AppModel) {
-                            $obj->current_team_id = $defaultTeamId;
+                    if (!empty($defaultTeamId)){
+                        $this->User->updateDefaultTeam($defaultTeamId, true, $login_uid);
+                        $this->Session->write('current_team_id', $defaultTeamId);
+                        $this->_refreshAuth();
+                        // すでにロード済みのモデルの current_team_id 等を更新する
+                        foreach (ClassRegistry::keys() as $k) {
+                            $obj = ClassRegistry::getObject($k);
+                            if ($obj instanceof AppModel) {
+                                $obj->current_team_id = $defaultTeamId;
+                            }
                         }
                     }
+
                 }
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
