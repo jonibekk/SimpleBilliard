@@ -296,7 +296,6 @@ class Group extends AppModel
             'group' => [
                 'Group.id', 
                 'team_members.status',
-                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL AND member_count = 0)',
             ],
             "order" => [
                 "Group.name ASC"
@@ -304,6 +303,12 @@ class Group extends AppModel
         ];
 
         $options = array_merge_recursive($options, $scope);
+        // only append HAVING after all other group_by
+        $options = array_merge_recursive($options, [
+            'group' => [
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL AND member_count = 0)',
+            ]
+        ]);
 
         $results =  $this->find('all', $options);
 
