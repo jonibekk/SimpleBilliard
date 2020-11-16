@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::import('Service', 'EvaluationService');
+App::import('Policy', 'GoalPolicy');
 
 use Goalous\Enum as Enum;
 
@@ -329,10 +330,14 @@ class Evaluation extends AppModel
      */
     function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
     {
+        $goalPolicy = new GoalPolicy($evaluatorId, $this->current_team_id);
+        $accessibleGoals = $this->Goal->find('all', $goalPolicy->scope());
+
         return $this->getEvaluations($evaluateTermId, $evaluateeId,
             [
                 'evaluator_user_id' => [$evaluatorId, $evaluateeId],
-                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR]
+                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
+                'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id')
             ]
         );
 
@@ -540,6 +545,7 @@ class Evaluation extends AppModel
             $all_evaluations = array_merge($all_evaluations,
                 $this->getAddRecordsOfEvaluatee($uid, $term_id, $evaluators));
         }
+
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
             // TODO: fix not to use turn flg. This is not simple.
@@ -579,7 +585,7 @@ class Evaluation extends AppModel
         //evaluator total
         if ($this->Team->EvaluationSetting->isEnabledEvaluator() && Hash::get($evaluators, $uid)) {
             $evals = $evaluators[$uid];
-            foreach ($evals as $eval_uid) {
+            foreach ($evals as $eval_uid => $goalIds) {
                 $evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++, self::TYPE_EVALUATOR);
             }
         }
@@ -593,6 +599,29 @@ class Evaluation extends AppModel
             $this->getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index));
 
         return $evaluations;
+    }
+
+    function appendEvaluatorAccessibleGoals(array $evaluators): array
+    {
+        // evaluators {"0":{"3":"618","4":"614"} -> array<eval_id, eval_uid>
+        $evaluatorGoals = [];
+
+        foreach ($evaluators as $uid => $evals) {
+            $evaluatorGoals[$uid] = [];
+
+            foreach ($evals as $eval_uid) {
+                if (!array_key_exists($eval_uid, $evaluatorGoals[$uid])) {
+                    $policy = new GoalPolicy($eval_uid, $this->current_team_id);
+                    $scope = $policy->scope('evaluate');
+                    $options = array_merge_recursive($scope, ['fields' => 'Goal.id']);
+                    $res = $this->Goal->find('all', $options);
+
+                    $evaluatorGoals[$uid][$eval_uid] = Hash::extract($res, '{n}.Goal.id');
+                } 
+            }
+        }
+
+        return $evaluatorGoals;
     }
 
     /**
@@ -620,9 +649,19 @@ class Evaluation extends AppModel
             //evaluator
             if ($this->Team->EvaluationSetting->isEnabledEvaluator() && Hash::get($evaluators, $uid)) {
                 $evals = $evaluators[$uid];
-                foreach ($evals as $eval_uid) {
-                    $goalEvaluations[] = $this->getAddRecord($uid, $eval_uid, $termId, $index++,
-                        self::TYPE_EVALUATOR, $gid);
+
+                foreach ($evals as $eval_uid => $goalIds) {
+                    // only create evaluator if evaluator has access to the goal
+                    if (in_array($gid, $goalIds)) {
+                        $goalEvaluations[] = $this->getAddRecord(
+                            $uid, 
+                            $eval_uid, 
+                            $termId, 
+                            $index++,
+                            self::TYPE_EVALUATOR, 
+                            $gid
+                        );
+                    }
                 }
             }
             //leader

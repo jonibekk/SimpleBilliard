@@ -423,6 +423,7 @@ class EvaluationService extends AppService
         $evaluators = [];
         if ($EvaluationSetting->isEnabledEvaluator()) {
             $evaluators = $Evaluator->getEvaluatorsCombined($teamId);
+            $evaluators = $Evaluation->appendEvaluatorAccessibleGoals($evaluators);
         }
         $all_evaluations = [];
         try {

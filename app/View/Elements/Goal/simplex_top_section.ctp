@@ -146,7 +146,17 @@
                     <?php else : ?>
                         <p><?= __('Groups that can see this goal') ?></p>
                         <p>
-                            <?= implode(', ', Hash::extract($goalGroups, "{n}.name")) ?>
+                        <?php foreach ($goalGroups as $group): ?>
+                            <a href="#"
+                               data-url="<?= $this->Html->url([
+                                   'controller' => 'groups',
+                                   'action'     => 'ajax_get_group_members',
+                                   'group_id'    => $group['id']
+                               ]) ?>"
+                               class="modal-ajax-get">
+                                <span><?= $group['name'] ?></span>
+                            </a>
+                        <?php endforeach ?>
                         </p>
                     <?php endif ?>
                     <?php if (!empty($archivedGoalGroups)) : ?>
@@ -154,7 +164,17 @@
                             <a href="#" class="archived-toggle"><?= __('View archived groups') ?></a>
                         </p>
                         <p class="archived-list">
-                            <?= implode(', ', Hash::extract($archivedGoalGroups, "{n}.name")) ?>
+                            <?php foreach ($archivedGoalGroups as $group): ?>
+                                <a href="#"
+                                   data-url="<?= $this->Html->url([
+                                       'controller' => 'groups',
+                                       'action'     => 'ajax_get_group_members',
+                                       'group_id'    => $group['id']
+                                   ]) ?>"
+                                   class="modal-ajax-get">
+                                    <span><?= $group['name'] ?></span>
+                                </a>
+                            <?php endforeach ?>
                         </p>
                     <?php endif ?>
                 </li>
