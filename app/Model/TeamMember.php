@@ -844,6 +844,15 @@ class TeamMember extends AppModel
             $users = $this->User->find('all', $contain['User']);
             $users = Hash::combine($users, '{n}.User.id', '{n}');
             if ($group_options) {
+                $group_options['joins'] = [
+                    [
+                        'table' => 'groups',
+                        'conditions' => [
+                            'MemberGroup.group_id = groups.id',
+                            'groups.archived_flg' => false
+                        ]
+                    ]
+                ];
                 //グループ情報をまとめて取得
                 $group_options['conditions']['user_id'] = $user_ids;
                 if (Hash::get($group_options, 'Group')) {
