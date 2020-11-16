@@ -291,7 +291,7 @@ class Group extends AppModel
             ],
             'fields' => [
                 'Group.*',
-                'COALESCE(COUNT(member_groups.user_id)) AS member_count'
+                'COALESCE(COUNT(member_groups.user_id), 0) AS member_count'
             ],
             'group' => [
                 'Group.id', 

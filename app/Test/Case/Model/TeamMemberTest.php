@@ -34,6 +34,7 @@ class TeamMemberTest extends GoalousTestCase
         'app.term',
         'app.circle',
         'app.circle_member',
+        'app.experiment',
         'app.mst_translation_language',
     );
 
