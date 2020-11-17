@@ -17,8 +17,7 @@ class GoalExtension extends DataExtension
         $conditions = [
             'conditions' => [
                 'id' => $uniqueKeys,
-            ],
-            'contain' => ['GoalGroup' => ['Group']]
+            ]
         ];
 
         $fetchedData = $Goal->useType()->find('all', $conditions);
