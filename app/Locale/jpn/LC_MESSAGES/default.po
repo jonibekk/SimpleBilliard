@@ -3885,6 +3885,9 @@ msgstr "どれかを選ぼう。"
 msgid "please contact us."
 msgstr "こちらからお問い合わせください。"
 
+msgid "Please contact your team administrator."
+msgstr "チーム管理者に問い合わせてください。"
+
 msgid "Please create your Goal."
 msgstr "Goalousでゴールを登録してみよう。"
 
@@ -3968,6 +3971,9 @@ msgstr "画像ファイルを選択し直してください。"
 
 msgid "Please select"
 msgstr "選択してください"
+
+msgid "Please select one or more"
+msgstr "ひとつ以上のグループを選択してください。"
 
 msgid "Please select."
 msgstr "選択してください。"
@@ -5624,10 +5630,8 @@ msgstr ""
 msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
 msgstr "ONにすると、これから作成されるゴールの表示制限がなくなります。"
 
-msgid "Which groups will you share this group with?  Please select one or more"
-msgstr ""
-"どのグループにこのゴールをシェアしますか？"
-"ひとつ以上のグループを選択してください。"
+msgid "Which groups will you share this group with?"
+msgstr "どのグループにこのゴールをシェアしますか？"
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
@@ -5851,10 +5855,8 @@ msgstr "評価期間中のゴールのリーダーは変更できません。"
 msgid "You did not like it."
 msgstr "あなたはいいね！していません。"
 
-msgid "You do not have a group set up. Please contact your team administrator."
-msgstr ""
-"あなたにグループがセットされていません。"
-"チーム管理者に問い合わせてください。"
+msgid "You do not have a group set up."
+msgstr "あなたにグループがセットされていません。"
 
 msgid "You do not have permission to view this goal"
 msgstr "このゴールは非公開です"

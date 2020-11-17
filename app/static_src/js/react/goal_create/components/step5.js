@@ -49,20 +49,17 @@ export default class Step5Component extends Base {
 
   render() {
     const {groups, inputData} = this.props.goal;
-    const title = "Let's set up a group to publish to.";
-    const description = "Which groups will you share this group with?";
-    const description2 = "Please select one or more";
     const canSubmit = Object.keys(inputData.groups).length > 0;
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__(title)}</h1>
-        <p className="goals-create-description">{__(description)}</p>
-        <p className="goals-create-description">{__(description2)}</p>
+        <h1 className="goals-create-heading">{__("Let's set up a group to publish to.")}</h1>
+        <p className="goals-create-description">{__( "Which groups will you share this group with?")}</p>
+        <p className="goals-create-description">{__( "Please select one or more")}</p>
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
           <div className="goals-create-list">
             {
-              groups ?  groups.map(group => {
+              groups.length > 0 ?  groups.map(group => {
                 return(
                   <div className="goals-create-list-item" ref={`group-item-${group.id}`}>
                     <div className='left'>
@@ -83,7 +80,15 @@ export default class Step5Component extends Base {
                     </div>
                   </div>
                 )
-              }) : null
+              }) : (
+                (
+                  <div className="no-selectable-groups">
+                    <i className="fa fa-frown-o"></i>
+                    <p>{__("You do not have a group set up.")}</p>
+                    <p>{__("Please contact your team administrator.")}</p>
+                  </div>
+                )
+              )
             }
           </div>
           <button type="submit" className="goals-create-btn-next btn" disabled={!canSubmit}>

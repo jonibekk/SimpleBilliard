@@ -3864,6 +3864,10 @@ msgstr "Por favor escolha um."
 msgid "please contact us."
 msgstr "Por favor, entre em contato conosco."
 
+#, fuzzy
+msgid "Please contact your team administrator."
+msgstr ""
+
 msgid "Please create your Goal."
 msgstr "Crie seu objetivo."
 
@@ -3947,6 +3951,10 @@ msgstr "Por favor selecione uma imagem."
 
 msgid "Please select"
 msgstr "Por favor selecione."
+
+#, fuzzy
+msgid "Please select one or more"
+msgstr ""
 
 msgid "Please select."
 msgstr "Por favor selecione."
@@ -5593,7 +5601,7 @@ msgid "When this is turned on, there will be no restrictions on the display of g
 msgstr "Quando ativado, não haverá restrições na exibição de objetivos criados a partir de agora."
 
 #, fuzzy
-msgid "Which groups will you share this group with?  Please select one or more"
+msgid "Which groups will you share this group with?"
 msgstr ""
 
 msgid "Whichever you choose, this kr will be finished."
@@ -5819,7 +5827,7 @@ msgid "You did not like it."
 msgstr "Você não curtiu isso."
 
 #, fuzzy
-msgid "You do not have a group set up. Please contact your team administrator."
+msgid "You do not have a group set up."
 msgstr ""
 
 msgid "You do not have permission to view this goal"
