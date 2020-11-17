@@ -10,6 +10,7 @@ const initialState = {
   terms: {},
   priorities: [],
   units: [],
+  groups: [],
   default_end_dates: {},
   keyword: "",
   suggestions: [],

@@ -738,6 +738,11 @@ App::uses('AttachedFile', 'Model');
             "Comments": "<?= __("Comments") ?>",
             "Download CSV": "<?= __("Download CSV") ?>",
             "Downloading CSV...": "<?= __("Downloading CSV...") ?>",
+            "Let's set up a group to publish to.": "<?= __("Let's set up a group to publish to.") ?>",
+            "Which groups will you share this group with?": "<?= __("Which groups will you share this group with?") ?>",
+            "You do not have a group set up.": "<?= __("You do not have a group set up.") ?>",
+            "Please select one or more": "<?= __("Please select one or more") ?>",
+            "Please contact your team administrator.": "<?= __("Please contact your team administrator.") ?>",
             "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
         },
         regex: {

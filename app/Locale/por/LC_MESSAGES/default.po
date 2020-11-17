@@ -259,7 +259,7 @@ msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> também comentou na <span class=\"notify-card-head-target\">%3$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span class=\"notify-card-head-target\">your </span>post."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou na <span class=\"notify-card-head-target\">sua</span>publicação"
+msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou na <span class=\"notify-card-head-target\">sua </span>publicação"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> entrou no círculo."
@@ -3202,6 +3202,10 @@ msgstr "Vamos começar uma nova jornada que irá mudar a essência do seu time!"
 msgid "Let's go to Goalous!"
 msgstr "Vamos para o Goalous!"
 
+#, fuzzy
+msgid "Let's set up a group to publish to."
+msgstr ""
+
 msgid "Let's share the actions that you've done today!"
 msgstr "Compartilhe a ação que você fez hoje!"
 
@@ -3860,6 +3864,10 @@ msgstr "Por favor escolha um."
 msgid "please contact us."
 msgstr "Por favor, entre em contato conosco."
 
+#, fuzzy
+msgid "Please contact your team administrator."
+msgstr ""
+
 msgid "Please create your Goal."
 msgstr "Crie seu objetivo."
 
@@ -3943,6 +3951,10 @@ msgstr "Por favor selecione uma imagem."
 
 msgid "Please select"
 msgstr "Por favor selecione."
+
+#, fuzzy
+msgid "Please select one or more"
+msgstr ""
 
 msgid "Please select."
 msgstr "Por favor selecione."
@@ -5576,6 +5588,9 @@ msgstr "Quando começa o período de avaliação gratuita e o pagamento?"
 msgid "When should I apply for the paid plan?"
 msgstr "Quando devo solicitar o plano pago?"
 
+msgid "When SSO is turned off, team members will log in using their Email address and Goalous password. Any team members already logged in to Goalous at the time will remain logged in."
+msgstr "Quando o SSO está desativado, todos os membros da equipe farão o login usando seu endereço de e-mail e senha do Goalous. Os membros da equipe que já estiverem logados no Goalous naquele momento permanecerão logados."
+
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "Quando a avaliação gratuita terminar, você poderá usá-lo apenas no modo somente leitura por 30 dias. Durante esse período, você não poderá postar."
 
@@ -5584,6 +5599,10 @@ msgstr "Quando ativado, não haverá restrição à exibição de objetivos cria
 
 msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
 msgstr "Quando ativado, não haverá restrições na exibição de objetivos criados a partir de agora."
+
+#, fuzzy
+msgid "Which groups will you share this group with?"
+msgstr ""
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "Qualquer que seja a sua escolha, esse Resultado-chave será concluído."
@@ -5806,6 +5825,10 @@ msgstr "Você não pode mudar o líder do objetivo durante o período de avalia�
 
 msgid "You did not like it."
 msgstr "Você não curtiu isso."
+
+#, fuzzy
+msgid "You do not have a group set up."
+msgstr ""
 
 msgid "You do not have permission to view this goal"
 msgstr "Você não tem permissão para ver este objetivo"
