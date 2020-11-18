@@ -831,6 +831,10 @@ msgstr "Pode ver GKA de todos os membros da equipe."
 msgid "Can we customize Goalous?"
 msgstr "Podemos personalizar o Goalous?"
 
+#, fuzzy
+msgid "Can't approve the goal."
+msgstr ""
+
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1163,6 +1167,10 @@ msgstr "Confirme o registro e a cobrança"
 
 msgid "Confirm the email sent to this email address."
 msgstr "Confirme o email enviado para este endereço de email."
+
+#, fuzzy
+msgid "Confirm the selected group"
+msgstr ""
 
 msgid "Confirm this Goal"
 msgstr "Confirme este objetivo"
@@ -4829,6 +4837,10 @@ msgstr "O círculo não existe ou você não tem permissão."
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "O círculo não existe ou você não tem permissão."
 
+#, fuzzy
+msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
+msgstr ""
+
 msgid "The code is incorrect."
 msgstr "O código está incorreto."
 
@@ -4958,6 +4970,10 @@ msgstr "A conta do usuário é inválida."
 msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
 msgstr "A metodologia é fácil, porem implementar é difícil. Vendo como a Colorkrew adotou os OKRs, quero testar na minha empresa também."
 
+#, fuzzy
+msgid "There are %d other hidden goals."
+msgstr ""
+
 msgid "There are no evaluation target goals."
 msgstr "Não há objetivos para avaliação."
 
@@ -5074,6 +5090,10 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
+
+#, fuzzy
+msgid "This goal is not subject to evaluation."
+msgstr ""
 
 msgid "This goal is open to all team members"
 msgstr "Este objetivo está aberto a todos os membros da equipe"

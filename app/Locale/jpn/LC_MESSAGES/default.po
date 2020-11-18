@@ -842,6 +842,9 @@ msgstr "全てのメンバーがゴールとアクションを見ることがで
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
 
+msgid "Can't approve the goal."
+msgstr "ゴールを承認できません"
+
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -1174,6 +1177,9 @@ msgstr "有料プラン登録・請求確認"
 
 msgid "Confirm the email sent to this email address."
 msgstr "このメールアドレスに送られた確認用のメールをご確認ください。"
+
+msgid "Confirm the selected group"
+msgstr "選択したグループを確認する"
 
 msgid "Confirm this Goal"
 msgstr "ゴール編集の確認"
@@ -4853,6 +4859,11 @@ msgstr "サークルが存在しないか、権限がありません。"
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
+msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
+msgstr ""
+"あなたのゴールを承認するコーチが、選択したグループに所属していません。"
+"このゴールを評価対象から外すか、コーチが所属しているグループを選択してください。"
+
 msgid "The code is incorrect."
 msgstr "コードが正しくありません。"
 
@@ -4984,6 +4995,9 @@ msgstr "ユーザアカウントが有効ではありません。"
 msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
 msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、Colorkrewは実現できているということで今後も展開を見守りたいと思いました。"
 
+msgid "There are %d other hidden goals."
+msgstr "表示が制限されているゴールが%dつあります"
+
 msgid "There are no evaluation target goals."
 msgstr "評価対象として申請されたゴールはありません。"
 
@@ -5100,6 +5114,9 @@ msgstr "本機能はPCにてご利用できます。"
 
 msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
+
+msgid "This goal is not subject to evaluation."
+msgstr "この目標は評価の対象にはなりません。"
 
 msgid "This goal is open to all team members"
 msgstr "このゴールは全員に公開されています"
