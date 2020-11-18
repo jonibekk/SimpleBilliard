@@ -337,7 +337,10 @@ class Evaluation extends AppModel
             [
                 'evaluator_user_id' => [$evaluatorId, $evaluateeId],
                 'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
-                'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id')
+                'or' => [
+                    'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
+                    'goal_id IS NULL' // handles for total evaluation
+                ]
             ]
         );
 
