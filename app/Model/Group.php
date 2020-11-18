@@ -298,6 +298,7 @@ class Group extends AppModel
                 'team_members.status',
             ],
             "order" => [
+                "Group.archived_flg ASC",
                 "Group.name ASC"
             ] 
         ];
