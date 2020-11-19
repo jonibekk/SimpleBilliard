@@ -4,7 +4,6 @@ import React from 'react'
 import {Link} from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
-import {forEach} from 'angular';
 
 export default class Step5Component extends Base {
   constructor(props) {
