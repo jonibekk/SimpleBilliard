@@ -2700,4 +2700,59 @@ class TeamMember extends AppModel
 
         return !empty($groupsExperiment);
     }
+
+    function findVerifiedTeamMembersByTeamAndGroup(
+        int $groupId, 
+        int $teamId, 
+        array $memberIds
+    ){
+        $options = [
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        "TeamMember.user_id = MemberGroup.user_id",
+                        "MemberGroup.group_id" => $groupId
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.member_no' => $memberIds,
+                "TeamMember.team_id" => $teamId,
+                "TeamMember.status" => $this::USER_STATUS_ACTIVE
+            ],
+            'fields'     => [
+                'TeamMember.member_no',
+                'TeamMember.user_id',
+                'MemberGroup.group_id',
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function findLastMemberIdForTeam(int $teamId): int
+    {
+        $options = [
+            // when teting is fixed, use "REGEX '^Goalous[[:digit:]]+$'" instead
+            'conditions' => [
+                "TeamMember.member_no LIKE 'Goalous%'",
+                'TeamMember.team_id' => $teamId,
+            ],
+            'order' => 'member_no DESC'
+        ];
+
+        $result = $this->find("first", $options);
+
+        if (empty($result)) {
+            return 0;
+        } else {
+            $memberNo = $result['TeamMember']['member_no'];
+            $matches = [];
+            preg_match('/^Goalous(\d+)/', $memberNo, $matches);
+            return (int) $matches[1];
+        }
+    }
 }

@@ -6073,3 +6073,6 @@ msgstr ""
 
 msgid "日本語"
 msgstr "日本語"
+
+msgid "Failed to reset the password"
+msgstr "パスワードの再設定に失敗しました"

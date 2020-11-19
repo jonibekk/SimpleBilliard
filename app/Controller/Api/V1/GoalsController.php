@@ -358,11 +358,11 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = Configure::read("label.priorities");
+            $res['priorities'] = ConfigKeyResult::getPriorities();
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units");
+            $res['units'] = ConfigKeyResult::getUnits();
         }
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {

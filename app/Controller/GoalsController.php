@@ -959,7 +959,10 @@ class GoalsController extends AppController
         }
 
         $this->Notification->outSuccess(__("Deleted an action."));
-        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+        $currentTerm = $this->Goal->Team->Term->getCurrentTermData();
+        $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
+
+        Cache::delete($this->Goal->getCacheKey($redisKeyname, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -1302,11 +1305,7 @@ class GoalsController extends AppController
         $page = $this->request->params['named']['page'];
 
         // フォロワー一覧
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'page'       => $page,
-            'with_group' => true,
-        ]);
+        $followers = $this->Goal->Follower->getFollowerForGoal($goal_id, GOAL_PAGE_FOLLOWER_NUMBER, $page);
         $this->set('followers', $followers);
 
         // HTML出力
@@ -1702,15 +1701,14 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = Hash::get($this->request->params, "named.goal_id");
+
         if (!$goal_id || !$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Notification->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'with_group' => true,
-        ]);
+
+        $followers = $this->Goal->Follower->getFollowerForGoal($goal_id, GOAL_PAGE_FOLLOWER_NUMBER);
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $this->set(compact('followers', 'goalTerm'));
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1735,10 +1733,7 @@ class GoalsController extends AppController
         ]);
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
         $this->set('members', $members);
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'with_group' => true,
-        ]);
+        $followers = $this->Goal->Follower->getFollowerForGoal($goal_id, GOAL_PAGE_FOLLOWER_NUMBER);
         $this->set('followers', $followers);
         $this->set('goalTerm', $goalTerm);
         $this->addHeaderBrowserBackCacheClear();
@@ -1787,10 +1782,7 @@ class GoalsController extends AppController
 
         // ゴールが属している評価期間データ
         $goalTerm = $this->Goal->getGoalTermData($goal_id);
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'with_group' => true,
-        ]);
+        $followers = $this->Goal->Follower->getFollowerForGoal($goal_id, GOAL_PAGE_FOLLOWER_NUMBER);
         $this->set('followers', $followers);
         // TODO: Duplicate variable. But both are used, so we have to unify.
         $this->set('goalTerm', $goalTerm);
@@ -1937,10 +1929,7 @@ class GoalsController extends AppController
         $this->set('follower_count', $followerCount);
 
         // フォロワー
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goalId, [
-            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
-            'with_group' => true,
-        ]);
+        $followers = $this->Goal->Follower->getFollowerForGoal($goalId, GOAL_PAGE_FOLLOWER_NUMBER);
         $this->set('followers', $followers);
 
         // 閲覧者がゴールのリーダーかを判別

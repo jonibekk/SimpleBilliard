@@ -2128,7 +2128,7 @@ class Post extends AppModel
         ], $this);
     }
 
-    public function coacheePostsSubQuery($userId)
+    public function coacheePostsSubQuery($userId, $teamId)
     {
         $db = $this->getDataSource();
         return $db->buildStatement([
@@ -2158,14 +2158,15 @@ class Post extends AppModel
                     'table' => 'team_members',
                     'conditions' => [
                         'TeamMember.user_id = MemberGroup.user_id',
-                        'TeamMember.coach_user_id' => $userId
+                        'TeamMember.coach_user_id' => $userId,
+                        'TeamMember.team_id' => $teamId
                     ]
                 ]
             ],
         ], $this);
     }
 
-    public function evaluateePostsSubQuery($userId)
+    public function evaluateePostsSubQuery($userId, $teamId)
     {
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
@@ -2198,7 +2199,8 @@ class Post extends AppModel
                     'table' => 'evaluations',
                     'conditions' => [
                         'Evaluation.evaluatee_user_id = MemberGroup.user_id',
-                        'Evaluation.evaluator_user_id' => $userId
+                        'Evaluation.evaluator_user_id' => $userId,
+                        'Evaluation.team_id' => $teamId
                     ]
                 ],
                 [

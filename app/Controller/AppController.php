@@ -56,7 +56,7 @@ class AppController extends BaseController
     /**
      * アクション件数 キャッシュ有効期限
      */
-    const CACHE_KEY_ACTION_COUNT_EXPIRE = 60 * 60 * 24; // 1日
+    const CACHE_KEY_ACTION_COUNT_EXPIRE = 60; // 1分
 
     /**
      * AppControllerを分割した場合、子クラスでComponent,Helper,Modelがマージされないため、
@@ -477,7 +477,8 @@ class AppController extends BaseController
         $model = $this;
         $currentTerm = $model->Team->Term->getCurrentTermData();
         Cache::set('duration', self::CACHE_KEY_ACTION_COUNT_EXPIRE, 'user_data');
-        $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
+        $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
+        $action_count = Cache::remember($this->Goal->getCacheKey($redisKeyname, true),
             function () use ($model, $currentTerm) {
                 $timezone = $this->Team->getTimezone();
                 $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);

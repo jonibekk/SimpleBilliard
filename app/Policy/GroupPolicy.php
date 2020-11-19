@@ -33,13 +33,14 @@ class GroupPolicy extends BasePolicy
 
     public function scope($type = 'read'): array
     {
-        if ($this->isTeamAdmin()) {
+        if ($type === 'manage' && $this->isTeamAdmin()) {
             return [
                 'conditions' => [
                     'Group.team_id' => $this->teamId
                 ]
             ];
         }
+        
         /** @var Group **/
         $Group = ClassRegistry::init('Group');
 
@@ -49,10 +50,10 @@ class GroupPolicy extends BasePolicy
 
         $fullQuery = 'Group.id IN (' . $ownGroupsSubquery . ')';
 
-        if ($type === "search") {
-            $fullQuery = 'Group.id IN (' . $coacheeGroupsSubquery . ') OR ' . $fullQuery;
-            $fullQuery = 'Group.id IN (' . $evaluateeGroupsSubquery . ') OR ' . $fullQuery;
-        }
+        //if ($type === "search") {
+            //$fullQuery = 'Group.id IN (' . $coacheeGroupsSubquery . ') OR ' . $fullQuery;
+            //$fullQuery = 'Group.id IN (' . $evaluateeGroupsSubquery . ') OR ' . $fullQuery;
+        //}
 
         return [
             'conditions' => [
