@@ -3377,6 +3377,10 @@ msgstr "Membros (ativos)"
 msgid "Members"
 msgstr "Membros"
 
+#, fuzzy
+msgid "members"
+msgstr ""
+
 msgid "Members in this circle."
 msgstr "Membros deste círculo."
 
@@ -3388,6 +3392,9 @@ msgstr "Lista de membros"
 
 msgid "Members of logged in"
 msgstr "Membros logados"
+
+msgid "members_copy"
+msgstr "Membros"
 
 msgid "message"
 msgstr "Mensagem"

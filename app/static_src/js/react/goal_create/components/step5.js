@@ -101,7 +101,7 @@ export default class Step5Component extends Base {
                         {group.name}
                       </div>
                       <div className="goals-create-list-item-subtitle">
-                        {group.member_count} members
+                        {group.member_count} {__("members")}
                         {
                           inputData.is_wish_approval && group.coach_belongs ? (
                             <span className="coach-belongs-tag">

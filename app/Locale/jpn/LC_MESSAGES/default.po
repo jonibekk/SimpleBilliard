@@ -3396,6 +3396,9 @@ msgstr "メンバー（アクティブ）"
 msgid "Members"
 msgstr "メンバー"
 
+msgid "members"
+msgstr "メンバー"
+
 msgid "Members in this circle."
 msgstr "このサークルのメンバー"
 
@@ -3407,6 +3410,9 @@ msgstr "メンバー一覧"
 
 msgid "Members of logged in"
 msgstr "ログインメンバー"
+
+msgid "members_copy"
+msgstr "メンバー"
 
 msgid "message"
 msgstr "メッセージ"
