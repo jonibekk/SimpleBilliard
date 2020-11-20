@@ -3396,6 +3396,9 @@ msgstr "メンバー（アクティブ）"
 msgid "Members"
 msgstr "メンバー"
 
+msgid "members"
+msgstr "メンバー"
+
 msgid "Members in this circle."
 msgstr "このサークルのメンバー"
 
@@ -3407,6 +3410,9 @@ msgstr "メンバー一覧"
 
 msgid "Members of logged in"
 msgstr "ログインメンバー"
+
+msgid "members_copy"
+msgstr "メンバー"
 
 msgid "message"
 msgstr "メッセージ"
@@ -5935,6 +5941,9 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "You have reached your translation limit."
 msgstr "翻訳可能な文字数の上限に達しています。"
 
+msgid "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it."
+msgstr "ゴールを承認するため、あなたのコーチが所属しているグループを1つ以上選択してください。"
+
 msgid "You haven't created any actions&hellip; yet."
 msgstr "あなたはまだアクションをしていません。"
 
@@ -5982,6 +5991,9 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 
 msgid "Your campaign plan reached the maximum user allowed. Please contact for the larger plans."
 msgstr "現在のプランでのメンバー数が上限に達しました。より多くのメンバー数のプランについてはお問い合わせください。"
+
+msgid "Your coach belongs to this group"
+msgstr "コーチ所属中"
 
 msgid "Your Credit Card does not match your country settings"
 msgstr "クレジットカードの発行国が、選択した会社の所在地(国)と一致していません"
