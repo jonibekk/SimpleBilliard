@@ -842,6 +842,9 @@ msgstr "全てのメンバーがゴールとアクションを見ることがで
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
 
+msgid "Can't approve the goal."
+msgstr "ゴールを承認できません"
+
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -1174,6 +1177,9 @@ msgstr "有料プラン登録・請求確認"
 
 msgid "Confirm the email sent to this email address."
 msgstr "このメールアドレスに送られた確認用のメールをご確認ください。"
+
+msgid "Confirm the selected group"
+msgstr "選択したグループを確認する"
 
 msgid "Confirm this Goal"
 msgstr "ゴール編集の確認"
@@ -3225,6 +3231,9 @@ msgstr "チームの本質を追求する旅に出ましょう。ご連絡くだ
 msgid "Let's go to Goalous!"
 msgstr "さぁ、Goalousへ！"
 
+msgid "Let's set up a group to publish to."
+msgstr "ゴールを公開するグループを設定しよう"
+
 msgid "Let's share the actions that you've done today!"
 msgstr "今日やったアクションを共有しよう！"
 
@@ -3387,6 +3396,9 @@ msgstr "メンバー（アクティブ）"
 msgid "Members"
 msgstr "メンバー"
 
+msgid "members"
+msgstr "メンバー"
+
 msgid "Members in this circle."
 msgstr "このサークルのメンバー"
 
@@ -3398,6 +3410,9 @@ msgstr "メンバー一覧"
 
 msgid "Members of logged in"
 msgstr "ログインメンバー"
+
+msgid "members_copy"
+msgstr "メンバー"
 
 msgid "message"
 msgstr "メッセージ"
@@ -3882,6 +3897,9 @@ msgstr "どれかを選ぼう。"
 msgid "please contact us."
 msgstr "こちらからお問い合わせください。"
 
+msgid "Please contact your team administrator."
+msgstr "チーム管理者に問い合わせてください。"
+
 msgid "Please create your Goal."
 msgstr "Goalousでゴールを登録してみよう。"
 
@@ -3965,6 +3983,9 @@ msgstr "画像ファイルを選択し直してください。"
 
 msgid "Please select"
 msgstr "選択してください"
+
+msgid "Please select one or more"
+msgstr "ひとつ以上のグループを選択してください。"
 
 msgid "Please select."
 msgstr "選択してください。"
@@ -4844,6 +4865,11 @@ msgstr "サークルが存在しないか、権限がありません。"
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
+msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
+msgstr ""
+"あなたのゴールを承認するコーチが、選択したグループに所属していません。"
+"このゴールを評価対象から外すか、コーチが所属しているグループを選択してください。"
+
 msgid "The code is incorrect."
 msgstr "コードが正しくありません。"
 
@@ -4975,6 +5001,9 @@ msgstr "ユーザアカウントが有効ではありません。"
 msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
 msgstr "考え方としては理想的、実現には懐疑的な考え方だったが、Colorkrewは実現できているということで今後も展開を見守りたいと思いました。"
 
+msgid "There are %d other hidden goals."
+msgstr "表示が制限されているゴールが%dつあります"
+
 msgid "There are no evaluation target goals."
 msgstr "評価対象として申請されたゴールはありません。"
 
@@ -5091,6 +5120,9 @@ msgstr "本機能はPCにてご利用できます。"
 
 msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
+
+msgid "This goal is not subject to evaluation."
+msgstr "この目標は評価の対象にはなりません。"
 
 msgid "This goal is open to all team members"
 msgstr "このゴールは全員に公開されています"
@@ -5607,6 +5639,9 @@ msgstr "新しいフリートライアル期間と、課金の開始日は？"
 msgid "When should I apply for the paid plan?"
 msgstr "いつ有料プランに申し込めばよいですか？"
 
+msgid "When SSO is turned off, team members will log in using their Email address and Goalous password. Any team members already logged in to Goalous at the time will remain logged in."
+msgstr "SSOをOFFにすると、全てのチームメンバーはメールアドレスとGoalousのパスワードを利用してログインします。なお、その時点ですでにGoalousにログインしているチームメンバーは、ログインした状態のままとなります。"
+
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "フリートライアル期間が終了すると、30日間の読込専用モードになります。この期間は、アクションや投稿などの書込をすることができません。"
 
@@ -5617,6 +5652,9 @@ msgstr ""
 
 msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
 msgstr "ONにすると、これから作成されるゴールの表示制限がなくなります。"
+
+msgid "Which groups will you share this group with?"
+msgstr "どのグループにこのゴールをシェアしますか？"
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "※どちらを選択しても、選択中のKRは「完了」となります。"
@@ -5840,6 +5878,9 @@ msgstr "評価期間中のゴールのリーダーは変更できません。"
 msgid "You did not like it."
 msgstr "あなたはいいね！していません。"
 
+msgid "You do not have a group set up."
+msgstr "あなたにグループがセットされていません。"
+
 msgid "You do not have permission to view this goal"
 msgstr "このゴールは非公開です"
 
@@ -5900,6 +5941,9 @@ msgstr "あなたはこのゴールを評価対象にしませんでした。"
 msgid "You have reached your translation limit."
 msgstr "翻訳可能な文字数の上限に達しています。"
 
+msgid "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it."
+msgstr "ゴールを承認するため、あなたのコーチが所属しているグループを1つ以上選択してください。"
+
 msgid "You haven't created any actions&hellip; yet."
 msgstr "あなたはまだアクションをしていません。"
 
@@ -5947,6 +5991,9 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 
 msgid "Your campaign plan reached the maximum user allowed. Please contact for the larger plans."
 msgstr "現在のプランでのメンバー数が上限に達しました。より多くのメンバー数のプランについてはお問い合わせください。"
+
+msgid "Your coach belongs to this group"
+msgstr "コーチ所属中"
 
 msgid "Your Credit Card does not match your country settings"
 msgstr "クレジットカードの発行国が、選択した会社の所在地(国)と一致していません"
@@ -6073,6 +6120,3 @@ msgstr ""
 
 msgid "日本語"
 msgstr "日本語"
-
-msgid "Failed to reset the password"
-msgstr "パスワードの再設定に失敗しました"

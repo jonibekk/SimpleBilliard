@@ -52,6 +52,13 @@ class GroupFixture extends CakeTestFixtureEx
             'key'     => 'index',
             'comment' => 'アクティブフラグ(Offの場合は選択が不可能。古いものを無効にする場合に使用)'
         ),
+        'archived_flg'    => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => 'flag indicating if a group is archived or not'
+        ),
         'del_flg'         => array(
             'type'    => 'boolean',
             'null'    => false,
