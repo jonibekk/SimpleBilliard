@@ -1,4 +1,7 @@
 <?php
+
+use Stripe\ApiResource;
+
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
 App::import('Service/Paging', 'NotificationPagingService');
@@ -30,6 +33,7 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * Time: 11:47
  * @property NotificationComponent $Notification
  * @property FlashComponent $Flash
+ * @property LangComponent  $Lang
  */
 class MeController extends BasePagingController
 {
@@ -38,6 +42,7 @@ class MeController extends BasePagingController
     public $components = [
         'Session',
         'Flash',
+        'Lang',
         'Notification',
     ];
 
@@ -167,6 +172,28 @@ class MeController extends BasePagingController
 
         return ApiResponse::ok()->withBody([
             'data' => $data,
+        ])->getResponse();
+    }
+
+    /**
+     * Get timezones
+     */
+    public function get_timezones()
+    {
+        $data = AppUtil::getTimezoneList();
+        return ApiResponse::ok()->withBody([
+            'data' => $data
+        ])->getResponse();
+    }
+
+    /**
+     * Get available languages
+     */
+    public function get_languages()
+    {
+        $data = $this->Lang->getAvailLangList();
+        return ApiResponse::ok()->withBody([
+            'data' => $data
         ])->getResponse();
     }
 
