@@ -35,27 +35,53 @@ export default class Step5Component extends Base {
     this.props.saveGoal()
   }
 
-  toggleGroup(groupId) {
+  toggleGroup(group) {
     const {groups} = this.props.goal.inputData;
+    const {id} = group;
 
-    if (groups[groupId]) {
-      delete groups[groupId]
+    if (id in groups) {
+      delete groups[id]
     } else {
-      groups[groupId] = true
+      groups[id] = group
     }
     
     this.props.updateInputData(groups, 'groups')
+  } 
+
+  canSubmit() {
+    const {inputData} = this.props.goal;
+    const selectedGroups = Object.values(inputData.groups);
+
+    if (inputData.is_wish_approval) {
+      // select at least one group that your coach belongs to
+      for (const group of selectedGroups) {
+        if (group.coach_belongs) {
+          return true;
+        }
+      }
+      return false;
+
+    } else {
+      // must select at least 1 group
+      return Object.keys(selectedGroups).length > 0;
+    }
   }
 
-  render() {
+  render() { 
     const {groups, inputData} = this.props.goal;
-    const canSubmit = Object.keys(inputData.groups).length > 0;
+
+    const approvalMsg = "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.";
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
         <h1 className="goals-create-heading">{__("Let's set up a group to publish to.")}</h1>
         <p className="goals-create-description">{__( "Which groups will you share this group with?")}</p>
         <p className="goals-create-description">{__( "Please select one or more")}</p>
+        {
+          inputData.is_wish_approval ? (
+            <p className="goals-create-description">{__(approvalMsg)}</p>
+          ) : null
+        }
         <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
           <div className="goals-create-list">
             {
@@ -66,8 +92,8 @@ export default class Step5Component extends Base {
                       <input 
                         type="checkbox" 
                         className="goal-create-checkbox" 
-                        onChange={() => {this.toggleGroup(group.id)}}
-                        checked={inputData.groups[group.id] === true}
+                        onChange={() => {this.toggleGroup(group)}}
+                        checked={group.id in inputData.groups}
                       />
                     </div>
                     <div className='right'>
@@ -75,7 +101,14 @@ export default class Step5Component extends Base {
                         {group.name}
                       </div>
                       <div className="goals-create-list-item-subtitle">
-                        {group.member_count} members
+                        {group.member_count} {__("members")}
+                        {
+                          inputData.is_wish_approval && group.coach_belongs ? (
+                            <span className="coach-belongs-tag">
+                              {__("Your coach belongs to this group")}
+                            </span>
+                          ) : null
+                        }
                       </div>
                     </div>
                   </div>
@@ -91,7 +124,7 @@ export default class Step5Component extends Base {
               )
             }
           </div>
-          <button type="submit" className="goals-create-btn-next btn" disabled={!canSubmit}>
+          <button type="submit" className="goals-create-btn-next btn" disabled={!this.canSubmit()}>
             {__("Save and share")}
           </button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP4}>{__("Back")}</Link>

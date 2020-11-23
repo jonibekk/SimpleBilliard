@@ -3377,6 +3377,10 @@ msgstr "Membros (ativos)"
 msgid "Members"
 msgstr "Membros"
 
+#, fuzzy
+msgid "members"
+msgstr ""
+
 msgid "Members in this circle."
 msgstr "Membros deste círculo."
 
@@ -3388,6 +3392,9 @@ msgstr "Lista de membros"
 
 msgid "Members of logged in"
 msgstr "Membros logados"
+
+msgid "members_copy"
+msgstr "Membros"
 
 msgid "message"
 msgstr "Mensagem"
@@ -5910,6 +5917,10 @@ msgstr "Você não avaliou este objetivo."
 msgid "You have reached your translation limit."
 msgstr "Você alcançou o limite de traduções."
 
+#, fuzzy
+msgid "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it."
+msgstr ""
+
 msgid "You haven't created any actions&hellip; yet."
 msgstr "Você ainda não fez nenhuma ação."
 
@@ -5957,6 +5968,10 @@ msgstr "Sua conta está temporariamente bloqueada. Será desbloqueado após %s m
 
 msgid "Your campaign plan reached the maximum user allowed. Please contact for the larger plans."
 msgstr "Seu plano de atingiu o número máximo usuários. Entre em contato para outros planos。"
+
+#, fuzzy
+msgid "Your coach belongs to this group"
+msgstr ""
 
 msgid "Your Credit Card does not match your country settings"
 msgstr "O seu cartão de crédito não corresponde às configurações do seu país."
