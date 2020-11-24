@@ -188,7 +188,7 @@ class Invite extends AppModel
     {
         $invite = $this->getByToken($token);
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
-            return $invite['Invite']['to_user_id'] === $uid;
+            return $invite['Invite']['to_user_id'] == $uid;
         } //招待先のメアドが既に登録済みユーザの場合で、そのユーザが自分だった場合はtrueを返す
         elseif (isset($invite['Invite']['email'])) {
             $options = [
