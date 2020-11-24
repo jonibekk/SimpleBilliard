@@ -1,4 +1,5 @@
 <?php
+
 App::import('Lib/DataExtender', 'BaseExtender');
 App::import('Service', 'ImageStorageService');
 App::uses('CircleMember', 'Model');
@@ -20,21 +21,21 @@ use Goalous\Enum as Enum;
 
 class MeExtender extends BaseExtender
 {
-    const EXTEND_ALL = "ext:user:all";
-    const EXTEND_CURRENT_TEAM_MEMBER_OWN = "ext:user:is_current_team_admin";
-    const EXTEND_JOINED_ACTIVE_TEAMS = "ext:user:joined_active_teams";
-    const EXTEND_NOTIFICATION_SETTING = "ext:user:notification_setting";
-    const EXTEND_UNAPPROVED_GOAL_COUNT = "ext:user:unapproved_goal_count";
-    const EXTEND_EVALUABLE_COUNT = "ext:user:evaluable_count";
-    const EXTEND_IS_EVALUATION_AVAILABLE = "ext:user:is_evaluation_available";
+    const EXTEND_ALL                      = "ext:user:all";
+    const EXTEND_CURRENT_TEAM_MEMBER_OWN  = "ext:user:is_current_team_admin";
+    const EXTEND_JOINED_ACTIVE_TEAMS      = "ext:user:joined_active_teams";
+    const EXTEND_NOTIFICATION_SETTING     = "ext:user:notification_setting";
+    const EXTEND_UNAPPROVED_GOAL_COUNT    = "ext:user:unapproved_goal_count";
+    const EXTEND_EVALUABLE_COUNT          = "ext:user:evaluable_count";
+    const EXTEND_IS_EVALUATION_AVAILABLE  = "ext:user:is_evaluation_available";
     const EXTEND_JOINED_NOTIFYING_CIRCLES = "ext:user:joined_notifying_circles";
-    const EXTEND_NEW_NOTIFICATION_COUNT = "ext:user:new_notification_count";
-    const EXTEND_NEW_MESSAGE_COUNT = "ext:user:new_message_count";
-    const EXTEND_EMAIL = "ext:user:email";
-    const EXTEND_IS_2FA_COMPLETED = "ext:user:is_2fa_completed";
-    const EXTEND_SETUP_REST_COUNT = "ext:user:setup_rest_count";
-    const EXTEND_ACTION_COUNT = "ext:user:action_count";
-    const EXTEND_SAVED_ITEM_COUNT = "ext:user:saved_item_count";
+    const EXTEND_NEW_NOTIFICATION_COUNT   = "ext:user:new_notification_count";
+    const EXTEND_NEW_MESSAGE_COUNT        = "ext:user:new_message_count";
+    const EXTEND_EMAIL                    = "ext:user:email";
+    const EXTEND_IS_2FA_COMPLETED         = "ext:user:is_2fa_completed";
+    const EXTEND_SETUP_REST_COUNT         = "ext:user:setup_rest_count";
+    const EXTEND_ACTION_COUNT             = "ext:user:action_count";
+    const EXTEND_SAVED_ITEM_COUNT         = "ext:user:saved_item_count";
 
     public function extend(array $data, int $userId, int $currentTeamId, array $extensions = []): array
     {
@@ -63,11 +64,18 @@ class MeExtender extends BaseExtender
         if ($this->includeExt($extensions, self::EXTEND_JOINED_ACTIVE_TEAMS)) {
             $activeTeams = $TeamMember->getActiveTeamList($userId);
             $data['my_active_teams'] = [];
-            foreach ($activeTeams as $activeTeamId => $name) {
+            if (!empty($TeamMember->getSsoEnabledTeams($userId))) {
                 $data['my_active_teams'][] = [
-                    'id'   => $activeTeamId,
-                    'name' => $name
+                    'id'   => $currentTeam['id'],
+                    'name' => $currentTeam['name']
                 ];
+            } else {
+                foreach ($activeTeams as $activeTeamId => $name) {
+                    $data['my_active_teams'][] = [
+                        'id'   => $activeTeamId,
+                        'name' => $name
+                    ];
+                }
             }
         }
         if ($this->includeExt($extensions, self::EXTEND_NOTIFICATION_SETTING)) {
@@ -83,14 +91,17 @@ class MeExtender extends BaseExtender
             /** @var Evaluation $Evaluation */
             $Evaluation = ClassRegistry::init("Evaluation");
             $Evaluation->current_team_id = $currentTeamId;
+            $Evaluation->Team->current_team_id = $currentTeamId;
+            $Evaluation->Team->EvaluationSetting->current_team_id = $currentTeamId;
             $Evaluation->my_uid = $userId;
             $data['evaluable_count'] = $Evaluation->getMyTurnCount();
         }
         if ($this->includeExt($extensions, self::EXTEND_IS_EVALUATION_AVAILABLE)) {
             /** @var EvaluationSetting $EvaluationSetting */
             $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
-            $EvaluationSetting->current_team_id = $currentTeamId;
             $EvaluationSetting->my_uid = $userId;
+            $EvaluationSetting->current_team_id = $currentTeamId;
+
             $data['is_evaluation_available'] = $EvaluationSetting->isEnabled();
         }
         if ($this->includeExt($extensions, self::EXTEND_NEW_MESSAGE_COUNT)) {
@@ -140,17 +151,23 @@ class MeExtender extends BaseExtender
             $Team->current_team_id = $currentTeamId;
             $Team->Term->current_team_id = $currentTeamId;
             $Team->Term->Team->current_team_id = $currentTeamId;
+            $Goal->current_team_id = $currentTeamId;
             $currentTerm = $Team->Term->getCurrentTermData();
             Cache::set('duration', $expire, 'user_data');
             $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
             $action_count = Cache::remember($Goal->getCacheKey($redisKeyname, true, $userId),
                 function () use ($currentTerm, $Team, $Goal) {
+                    if (empty($currentTerm)) {
+                        return 0;
+                    }
                     $timezone = $Team->getTimezone();
                     $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
                     $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
                     $res = $Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
                     return $res;
-                }, 'user_data');
+                },
+                'user_data'
+            );
             $data['action_count'] = $action_count;
         }
 

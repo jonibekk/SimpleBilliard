@@ -317,7 +317,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $setup_guide_status = [
-        'user' => null,
+        'user'               => null,
+        'setup_guide_status' => null
     ];
 
     /**
@@ -1591,7 +1592,7 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    function saveMapSesAndJwt(int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3): JwtAuthentication
+    function saveMapSesAndJwt(?int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3): JwtAuthentication
     {
         App::uses('AccessAuthenticator', 'Lib/Auth');
         $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
@@ -1599,7 +1600,7 @@ class GlRedis extends AppModel
         return $jwt;
     }
 
-    function saveMapSesAndJwtWithToken(int $teamId, int $userId, string $jwtToken, string $sessionId, int $expireTime  = 60 * 24 * 30 * 3)
+    function saveMapSesAndJwtWithToken(?int $teamId, int $userId, string $jwtToken, string $sessionId, int $expireTime  = 60 * 24 * 30 * 3)
     {
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->set($key, $jwtToken);
@@ -1628,15 +1629,15 @@ class GlRedis extends AppModel
      *
      * @return mixed
      */
-    function getMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    function getMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         return $this->Db->get($key) ?? "";
     }
 
-    function getKeyMapSesAndJwt(int $teamId, int $userId, string $sessionId): string
+    function getKeyMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
-        $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId, $userId);
+        $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId ?? 'null', $userId);
         $key .= $sessionId;
         return $key;
     }
