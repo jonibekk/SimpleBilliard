@@ -6,6 +6,7 @@ App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagClient');
 App::import('Lib/Cache/Redis/PaymentFlag', 'PaymentFlagKey');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 
 /**
  * InvitationServiceTest Class
@@ -36,6 +37,10 @@ class InvitationServiceTest extends GoalousTestCase
         'app.mst_price_plan',
         'app.view_price_plan',
         'app.campaign_team',
+        'app.circle',
+        'app.circle_member',
+        'app.credit_card',
+        'app.experiment'
     );
 
     /**
@@ -292,7 +297,60 @@ class InvitationServiceTest extends GoalousTestCase
         $this->assertEquals(1, count($extractedEmailValidationErrors['email']));
     }
 
-    private function createDataInvite(int $userIdFrom, int $teamId, string $email): array
+    public function test_consumeToken_success()
+    {
+        $invitationToken = "somecustomtoken";
+        $receiverUserId = 1;
+
+        $newInviteData = $this->createDataInvite(14, 2, "from@email.com", $invitationToken);
+        $newInviteData['to_user_id'] = $receiverUserId;
+        $this->Invite->save($newInviteData, false);
+        $createData = $this->createTestPaymentData(
+            [
+                'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
+                'team_id'          => 2,
+                'payment_base_day' => 31
+            ]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
+        $newTeamId = $InvitationService->consumeToken($receiverUserId, $invitationToken);
+
+        $this->assertEquals(2, $newTeamId);
+
+        $invitation = $this->Invite->getByToken($invitationToken);
+
+        $this->assertTrue($invitation['Invite']['email_verified']);
+    }
+
+    public function test_consumeTokenUserExist_failed()
+    {
+        $invitationToken = "somecustomtoken";
+
+        $newInviteData = $this->createDataInvite(2, 1, "from@email.com", $invitationToken);
+        $this->Invite->save($newInviteData, false);
+        $createData = $this->createTestPaymentData(
+            [
+                'type'             => Enum\Model\PaymentSetting\Type::INVOICE,
+                'team_id'          => 1,
+                'payment_base_day' => 31
+            ]);
+        $this->PaymentSetting->create();
+        $this->PaymentSetting->save($createData, false);
+
+        /** @var InvitationService $InvitationService */
+        $InvitationService = ClassRegistry::init('InvitationService');
+        try {
+            $InvitationService->consumeToken(1, $invitationToken);
+        } catch (GlException\Auth\AuthInvitationFailedException $e) {
+        } catch (Exception $e) {
+            $this->fail();
+        }
+    }
+
+    private function createDataInvite(int $userIdFrom, int $teamId, string $email, string $token = 'token'): array
     {
         return [
             'from_user_id'        => $userIdFrom,
@@ -301,7 +359,7 @@ class InvitationServiceTest extends GoalousTestCase
             'email'               => $email,
             'message'             => '',
             'email_verified'      => false,
-            'email_token'         => 'token',
+            'email_token'         => $token,
             'email_token_expires' => GoalousDateTime::now()->getTimestamp(),
             'del_flg'             => false,
             'deleted'             => null,
