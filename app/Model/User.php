@@ -6,6 +6,7 @@ App::uses('Email', 'Model');
 App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -2027,7 +2028,8 @@ class User extends AppModel
             'fields'     => [
                 'User.id',
                 'User.password',
-                'User.default_team_id'
+                'User.default_team_id',
+                'User.2fa_secret'
             ],
             'joins'      => [
                 [
@@ -2095,5 +2097,26 @@ class User extends AppModel
         }
 
         return $data;
+    }
+
+    /**
+     * Update last login time of an user
+     *
+     * @param int $userId
+     * @param int $timestamp
+     *
+     * @throws Exception
+     */
+    public function updateLastLogin(int $userId, int $timestamp = REQUEST_TIMESTAMP): void {
+
+        $user = $this->getById($userId);
+
+        if (empty($user)) {
+            throw new GlException\GoalousNotFoundException("User doesn't exist");
+        }
+
+        $user['last_login'] = $timestamp;
+
+        $this->save($user, false);
     }
 }
