@@ -1,5 +1,4 @@
 <?php
-
 App::uses('AppModel', 'Model');
 
 /**
@@ -18,18 +17,10 @@ class Experiment extends AppModel
 
     /**
      * Video feature experiment
-     *
      * @see https://confluence.goalous.com/pages/viewpage.action?pageId=13861014
      */
     const NAME_ENABLE_VIDEO_POST_TRANSCODING = 'EnableVideoPostTranscoding';
-    const NAME_ENABLE_VIDEO_POST_PLAY        = 'EnableVideoPostPlay';
-
-    /**
-     * SSO Login feature
-     *
-     * @see https://confluence.goalous.com/x/BIDUAw
-     */
-    const NAME_ENABLE_SSO_LOGIN = 'EnableSSOLogin';
+    const NAME_ENABLE_VIDEO_POST_PLAY = 'EnableVideoPostPlay';
 
     const NAME_ENABLE_GROUPS_MANAGEMENT = 'EnableGroupsManagement';
 
@@ -68,26 +59,5 @@ class Experiment extends AppModel
         ];
         $ret = $this->find('first', $options);
         return $ret;
-    }
-
-    /**
-     * Check whether given team has experiment setting enabled
-     *
-     * @param int    $teamId
-     * @param string $experimentName
-     *
-     * @return bool
-     */
-    public function hasExperimentSetting(int $teamId, string $experimentName): bool
-    {
-        $options = [
-            'conditions' => [
-                'name'    => $experimentName,
-                'team_id' => $teamId
-            ]
-        ];
-        /** @var int $count */
-        $count = $this->find('count', $options);
-        return $count > 0;
     }
 }

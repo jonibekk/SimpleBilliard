@@ -4,8 +4,6 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
 App::uses('Experiment', 'Model');
-App::uses('TeamLoginMethod', 'Model');
-App::uses('TeamSsoSetting', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'AuthService');
@@ -480,22 +478,6 @@ class TeamsController extends AppController
                 $translationTeamResetText = "-";
             }
         }
-
-        // SSO setting
-        /** @var TeamSsoSetting $TeamSsoSetting */
-        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
-        try {
-            $hasSsoSetting = !empty($TeamSsoSetting->getSetting($team_id));
-        } catch(Exception $e) {
-            GoalousLog::error("Error in getting sso setting information for team setting", [
-                'message' => $e->getMessage(),
-                'trace'   => $e->getTraceAsString(),
-                'team_id' => $team_id,
-                'user_id' => $this->Auth->user('id')
-            ]);
-            $hasSsoSetting = false;
-        }
-
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
@@ -542,7 +524,6 @@ class TeamsController extends AppController
             'translationTeamTotalUsage',
             'translationTeamTotalLimit',
             'translationTeamResetText',
-            'hasSsoSetting',
             'see_gka',
             'can_update_see_gka',
             'can_view_see_gka'
@@ -3081,25 +3062,6 @@ class TeamsController extends AppController
 
         return $this->redirect('/teams/main');
     }
-
-    function members_list()
-    {
-        $this->response->download("members_list.csv");
-
-        $teamId = $this->current_team_id;
-
-        $data = $this->User->Email->findVerifiedTeamMembers($teamId);
-        $this->set(compact('data'));
-        $this->layout = false;
-
-        return;
-    }
-
-    public function delete_sso_setting() {
-        //TODO Will be implemented in phase 3
-
-        return $this->redirect('/');
-    }
   
     function toggle_see_gka()
     {
@@ -3125,5 +3087,24 @@ class TeamsController extends AppController
         }
 
         return $this->redirect($this->referer());
+    }
+
+
+    function import_sample()
+    {
+        $this->layout = false;
+        $filename = 'import_sample';
+
+        $th = [ __('Member ID')];
+
+        $td = [];
+        for ($i = 0; $i < 5; $i++) {
+            $row = [];
+            $row['member_no'] = 'Member00' . $i;
+            $td[] = $row;
+        }
+        
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 }

@@ -51,20 +51,7 @@ class TeamMemberPagingServiceTest extends GoalousTestCase
         $result = $TeamMemberPagingService->getDataWithPaging($pagingRequest, 1);
 
         $this->assertNotEmpty($result['cursor']);
-        $this->assertEquals(15, $result['data'][0]['id']);
-
-        $cursor = $result['cursor'];
-
-        $pagingRequest = PagingRequest::decodeCursorToObject($cursor);
-        $pagingRequest->setCurrentTeamId(1);
-        $pagingRequest->setCurrentUserId(1);
-
-        $result = $TeamMemberPagingService->getDataWithPaging($pagingRequest, 1);
-
-        $this->assertCount(1, $result['data']);
         $this->assertEquals(13, $result['data'][0]['id']);
-        $this->assertNotEmpty($result['cursor']);
-        $this->assertNotEmpty($result['count']);
 
         $cursor = $result['cursor'];
 
@@ -91,6 +78,12 @@ class TeamMemberPagingServiceTest extends GoalousTestCase
         $this->assertEquals(3, $result['data'][0]['id']);
         $this->assertNotEmpty($result['cursor']);
         $this->assertNotEmpty($result['count']);
+
+        $cursor = $result['cursor'];
+
+        $pagingRequest = PagingRequest::decodeCursorToObject($cursor);
+        $pagingRequest->setCurrentTeamId(1);
+        $pagingRequest->setCurrentUserId(1);
 
         $result = $TeamMemberPagingService->getDataWithPaging($pagingRequest, 1);
 

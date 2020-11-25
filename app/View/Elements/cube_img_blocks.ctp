@@ -13,11 +13,7 @@
 <?php if (isset($posts) && !empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
             <div class="cube-img-block action-image">
-                <a href="<?= $this->Html->url([
-                    'controller' => 'posts',
-                    'action'     => 'feed',
-                    'post_id'    => $post['Post']['id']
-                ]) ?>"
+                <a href="<?= "/posts/" . $post['Post']['id'] ?>"
                 <?php if (Hash::get($post, 'ActionResult.ActionResultFile.0.AttachedFile')): ?>
                     <!-- アクション画像がある場合 -->
                     <?= $this->Html->image($this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],"AttachedFile.attached",['style' => 'small']),

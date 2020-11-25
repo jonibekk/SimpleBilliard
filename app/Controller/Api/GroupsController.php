@@ -18,7 +18,7 @@ class GroupsController extends BasePagingController
     public function get_list()
     {
         $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
-        $scope = $policy->scope();
+        $scope = $policy->scope('manage');
         // @var Group $Group;
         $Group = ClassRegistry::init("Group");
         $results = $Group->findGroupsWithMemberCount($scope);
@@ -223,14 +223,17 @@ class GroupsController extends BasePagingController
                 if (!$policy->read($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
                 }
+                break;
             case 'create':
                 if (!$policy->create($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to create groups for this team"));
                 }
+                break;
             case 'update':
                 if (!$policy->update($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to update this group"));
                 }
+                break;
         }
     }
 }

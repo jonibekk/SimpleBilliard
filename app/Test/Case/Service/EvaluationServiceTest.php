@@ -51,6 +51,8 @@ class EvaluationServiceTest extends GoalousTestCase
         'app.evaluator',
         'app.goal',
         'app.goal_member',
+        'app.goal_group',
+        'app.member_group',
         'app.key_result',
         'app.goal_label',
         'app.label',

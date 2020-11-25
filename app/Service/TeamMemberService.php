@@ -336,7 +336,7 @@ class TeamMemberService extends AppService
      *
      * @param int    $teamId
      * @param string $emails
-     *
+     * 
      * @return boolean
      */
     public function updateDelFlgToRevoke(int $teamId, string $email)
@@ -392,50 +392,6 @@ class TeamMemberService extends AppService
         }
 
         $this->TransactionManager->commit();
-
-        return true;
-    }
-
-    /**
-     * Add an user to a team. DOES NOT charge payment
-     *
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function add(int $userId, int $teamId): bool
-    {
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
-
-        if (!$Team->exists($teamId)) {
-            throw new GlException\GoalousNotFoundException("Team does not exist.");
-        }
-
-        if (!$Team->isFreeTrial($teamId) && !$Team->isPaidPlan($teamId)) {
-            throw new GlException\GoalousNotFoundException("Team is not a valid team to join to.");
-        }
-
-        try {
-            $this->TransactionManager->begin();
-
-            /** @var TeamMember $TeamMember */
-            $TeamMember = ClassRegistry::init('TeamMember');
-            if ($TeamMember->add($userId, $teamId) === false) {
-                throw new RuntimeException("Failed to add team member");
-            }
-
-            Cache::delete($TeamMember->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $userId), 'team_info');
-            Cache::delete($TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $userId, false), 'team_info');
-
-            $this->TransactionManager->commit();
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            throw $e;
-        }
 
         return true;
     }

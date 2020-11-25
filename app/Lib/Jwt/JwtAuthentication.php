@@ -98,9 +98,9 @@ class JwtAuthentication
      * JwtAuth constructor.
      *
      * @param int $userId login token for users.id
-     * @param int|null $teamId teams.id to login
+     * @param int $teamId teams.id to login
      */
-    public function __construct(int $userId, ?int $teamId)
+    public function __construct(int $userId, int $teamId)
     {
         $this->teamId = $teamId;
         $this->userId = $userId;
@@ -283,9 +283,9 @@ class JwtAuthentication
 
     /**
      * return teams.id
-     * @return int|null
+     * @return int
      */
-    public function getTeamId(): ?int
+    public function getTeamId(): int
     {
         return $this->teamId;
     }
