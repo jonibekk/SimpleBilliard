@@ -91,15 +91,11 @@ class ActionMembersMigrationShell extends AppShell
         $failList = [];
         foreach ($ActionResutsList as $row) {
             try {
-                $newData = [
-                    'action_result_id' => $row["ActionResult"]['id'],
-                    'user_id' => $row["ActionResult"]['user_id'],
-                    'team_id' => $row["ActionResult"]['team_id'],
-                    'is_action_creator' => true
-                ];
-
-                $ActionResultMember->create();
-                if($ActionResultMember->save($newData)) {
+                $result = $ActionResultMember->addMember($row["ActionResult"]['id'],
+                                                         $row["ActionResult"]['user_id'],
+                                                         $row["ActionResult"]['team_id'],
+                                                         true);
+                if($result) {
                     // success
                     $successCnt++;
                 }
