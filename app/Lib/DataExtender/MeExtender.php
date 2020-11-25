@@ -153,22 +153,25 @@ class MeExtender extends BaseExtender
             $Team->Term->Team->current_team_id = $currentTeamId;
             $Goal->current_team_id = $currentTeamId;
             $currentTerm = $Team->Term->getCurrentTermData();
-            Cache::set('duration', $expire, 'user_data');
-            $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
-            $action_count = Cache::remember($Goal->getCacheKey($redisKeyname, true, $userId),
-                function () use ($currentTerm, $Team, $Goal) {
-                    if (empty($currentTerm)) {
-                        return 0;
-                    }
-                    $timezone = $Team->getTimezone();
-                    $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
-                    $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
-                    $res = $Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
-                    return $res;
-                },
-                'user_data'
-            );
-            $data['action_count'] = $action_count;
+            $actionCount = 0;
+            if (!empty($currentTerm) && !empty($currentTerm["id"])) {
+                Cache::set('duration', $expire, 'user_data');
+                $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
+                $actionCount = Cache::remember($Goal->getCacheKey($redisKeyname, true, $userId),
+                    function () use ($currentTerm, $Team, $Goal) {
+                        if (empty($currentTerm)) {
+                            return 0;
+                        }
+                        $timezone = $Team->getTimezone();
+                        $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
+                        $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
+                        $res = $Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
+                        return $res;
+                    },
+                    'user_data'
+                );
+            }
+            $data['action_count'] = $actionCount;
         }
 
         if ($this->includeExt($extensions, self::EXTEND_SAVED_ITEM_COUNT)) {
