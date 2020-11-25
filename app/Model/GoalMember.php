@@ -550,6 +550,7 @@ class GoalMember extends AppModel
                 'GoalMember.is_wish_approval' => true
             ],
         ];
+        /** @var int $count */
         $count = $this->find('count', $options);
         return $count;
     }
