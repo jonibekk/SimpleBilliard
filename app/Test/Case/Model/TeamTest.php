@@ -494,6 +494,19 @@ class TeamTest extends GoalousTestCase
         $this->assertEquals([4, 5], $queryResult);
     }
 
+    public function test_isDeleted_success()
+    {
+        /** @var Team $Team */
+        $Team = ClassRegistry::init('Team');
+
+        $this->assertFalse($Team->isDeleted(1));
+
+        $this->updateTeamServiceStatus(1, Enum\Model\Team\ServiceUseStatus::DELETED_MANUAL);
+
+        $this->assertTrue($Team->isDeleted(1));
+
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
@@ -502,5 +515,4 @@ class TeamTest extends GoalousTestCase
         $this->Team->Term->current_team_id = 1;
         $this->Team->Term->my_uid = 1;
     }
-
 }

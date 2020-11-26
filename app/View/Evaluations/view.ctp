@@ -560,6 +560,9 @@
         </div>
     </div>
 <?php endif; ?>
+<div class="col-sm-8 col-sm-offset-2 clearfix" style="text-align:center;">
+    <?= __("There are %d other hidden goals.", $hiddenGoalsCount)?>
+</div>
 <?=
 $this->Form->input("evaluate_type", [
     'label' => false,
