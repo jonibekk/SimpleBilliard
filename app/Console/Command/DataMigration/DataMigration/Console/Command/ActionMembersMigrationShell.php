@@ -49,16 +49,17 @@ class ActionMembersMigrationShell extends AppShell
         try {
             return $ActionResultMember->find('list', [
                 'conditions' => [
-                    'ActionResultMember.del_flg' => false
+                    'ActionResultMember.del_flg' => false,
+                    'ActionResultMember.is_action_creator' => true
                 ],
                 'fields' => [
                     'ActionResultMember.action_result_id'
                 ]
-            ]);  
+            ]);
         }
         catch (Exception $e) {
             CakeLog::Error($e);
-        }  
+        }
     }
 
     function getActionResultIdWithoutAlreadyRegistered($actionResultMemberIdList) {
@@ -98,6 +99,9 @@ class ActionMembersMigrationShell extends AppShell
                 if($result) {
                     // success
                     $successCnt++;
+                    if ($successCnt % 1000 === 0) {
+                        CakeLog::Info(sprintf('success count: %d', $successCnt));
+                    }
                 }
             }
             catch(Exception $e) {
