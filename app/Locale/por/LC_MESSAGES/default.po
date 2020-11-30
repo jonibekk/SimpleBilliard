@@ -4512,6 +4512,10 @@ msgstr "%1$s compartilhado, %2$s e %3$s outros "
 msgid "Shared %s"
 msgstr "%s compartilhado"
 
+#, fuzzy
+msgid "Shared Groups"
+msgstr ""
+
 msgid "Shared with %s people"
 msgstr "Compartilhado com %s pessoas"
 
@@ -5757,6 +5761,10 @@ msgstr "Você não pode aumentar o valor atual."
 
 msgid "You can not invite."
 msgstr "Você não pode convidar."
+
+#, fuzzy
+msgid "You can only add groups to share a Goal."
+msgstr ""
 
 msgid "You can only post one video file."
 msgstr "Você pode postar apenas um vídeo."

@@ -63,10 +63,11 @@ export default class Edit extends React.Component {
   getInputDomData() {
     const photoNode = this.refs.innerPhoto.refs.photo
     const photo = ReactDOM.findDOMNode(photoNode).files[0]
+    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
     if (!photo) {
-      return {}
+      return {is_wish_approval}
     }
-    return {photo}
+    return {photo, is_wish_approval}
   }
 
   onKeyPress(e) {
@@ -86,13 +87,14 @@ export default class Edit extends React.Component {
     this.props.updateInputData({[e.target.name]: e.target.value}, childKey)
   }
 
-  toggleGroup(groupId) {
+  toggleGroup(selectedGroup) {
     const {groups} = this.props.goal.inputData;
+    const {id} = selectedGroup;
 
-    if (groups[groupId]) {
-      delete groups[groupId]
+    if (groups[id]) {
+      delete groups[id];
     } else {
-      groups[groupId] = true
+      groups[id] = selectedGroup;
     }
     
     this.props.updateInputData(groups, 'groups')
@@ -108,8 +110,36 @@ export default class Edit extends React.Component {
     return groups_enabled
   }
 
+  canRequestGoalApproval() {
+    const {show_approve, coach_present, inputData, goal, groups} = this.props.goal;
+    const selectedGroups = Object.values(inputData.groups);
+
+    if (goal.groups && groups) {
+      // goal.groups is the already selected groups
+      for (const presentGroup of goal.groups) {
+        for (const group of groups) {
+          if (group.id === presentGroup.id && group.coach_belongs) {
+            return true;
+          }
+        }
+      }
+    }
+
+    if (!show_approve || !coach_present) {
+      return false;
+    }
+
+    for (const group of selectedGroups) {
+      if (group.coach_belongs) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   render() {
-    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups} = this.props.goal
+    const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups, show_approve, coach_present} = this.props.goal
     const tkrValidationErrors = validationErrors.key_result ? validationErrors.key_result : {};
 
     let progress_reset_warning = null
@@ -226,6 +256,29 @@ export default class Edit extends React.Component {
                     onChange={this.onChange}>
               { term_options }
             </select>
+            <div className={`checkbox ${show_approve ? "" : "hide"}`}>
+              <label>
+                <input 
+                  type="checkbox" 
+                  name="is_wish_approval" 
+                  value="1" 
+                  defaultChecked={show_approve} 
+                  ref="is_wish_approval"
+                  disabled={!this.canRequestGoalApproval()}
+                />
+                <span>{__("Request goal approval")}</span>
+              </label>
+              {
+                !coach_present ? (
+                  <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
+                ) : null
+              }
+              {
+                !this.canRequestGoalApproval() ? (
+                  <p className="goals-create-description">{__('You must add a group that your coach belongs to so they can approve it.')}</p>
+                ) : null
+              }
+            </div>
 
             {/* ゴール期限 */}
             <label className="goals-create-input-label">{__("End date")}</label>
@@ -315,8 +368,8 @@ export default class Edit extends React.Component {
                               type="checkbox" 
                               className="goal-create-checkbox" 
                               disabled={alreadyPresent}
-                              onChange={() => this.toggleGroup(group.id)}
-                              checked={alreadyPresent || inputData.groups[group.id] === true}
+                              onChange={() => this.toggleGroup(group)}
+                              checked={alreadyPresent || inputData.groups[group.id]}
                            />
                           </div>
                           <div className='right'>
@@ -324,7 +377,14 @@ export default class Edit extends React.Component {
                               {group.name}
                             </div>
                             <div className="goals-create-list-item-subtitle">
-                              {group.member_count} members
+                              {group.member_count} {__("members")}
+                              {
+                                group.coach_belongs ? (
+                                  <span className="coach-belongs-tag">
+                                    {__("Your coach belongs to this group")}
+                                  </span>
+                                ) : null
+                              }
                             </div>
                           </div>
                         </div>

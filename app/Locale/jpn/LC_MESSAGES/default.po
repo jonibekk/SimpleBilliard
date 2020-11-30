@@ -4527,6 +4527,9 @@ msgstr "%1$s、%2$sと%3$sに共有"
 msgid "Shared %s"
 msgstr "%sに共有"
 
+msgid "Shared Groups"
+msgstr "シェアしたグループ"
+
 msgid "Shared with %s people"
 msgstr "%s人に共有しました"
 
@@ -5781,6 +5784,9 @@ msgstr "現在値は増やせません。"
 
 msgid "You can not invite."
 msgstr "あなたは招待できません。"
+
+msgid "You can only add groups to share a Goal."
+msgstr "ゴールをシェアするグループは追加のみ可能です。"
 
 msgid "You can only post one video file."
 msgstr "1つの動画ファイルしか投稿できません。"

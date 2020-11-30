@@ -33,7 +33,9 @@ const initialState = {
   approvalHistories: [],
   isDisabledSubmit: false,
   from: "",
-  groups_enabled: false
+  groups_enabled: false,
+  show_approve: false,
+  coach_present: false
 }
 
 export default function goal(state = initialState, action) {
