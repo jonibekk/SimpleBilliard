@@ -384,6 +384,22 @@ class GoalApprovalService extends AppService
         return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled && (bool)$coachId;
     }
 
+    function showApprovable($target_user_id, $team_id = null)
+    {
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        if ($team_id) {
+            $EvaluationSetting->current_team_id = $team_id;
+            $TeamMember->current_team_id = $team_id;
+        }
+
+        $teamEvaluateIsEnabled = $EvaluationSetting->isEnabled();
+        $coacheeEvaluateIsEnabled = $TeamMember->getEvaluationEnableFlg($target_user_id);
+        return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled;
+    }
+
     /**
      * ゴール認定用にゴールとTKRのスナップショットを保存する
      *

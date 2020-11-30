@@ -748,6 +748,7 @@ App::uses('AttachedFile', 'Model');
             "members": "<?= __("members") ?>",
             "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.": "<?= __("You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.") ?>",
             "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
+            "Goal cannot be approved because the coach is not set. Contact the team administrator.": "<?= __("Goal cannot be approved because the coach is not set. Contact the team administrator.")?>"
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
