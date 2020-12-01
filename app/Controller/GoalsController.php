@@ -1,4 +1,4 @@
-<?php
+2?php
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception\Follow\ValidationToFollowException;
@@ -429,7 +429,6 @@ class GoalsController extends AppController
             $this->Session->read('current_team_id'),
             $goal_id
         );
-        GoalousLog::info('log', $approvalData);
 
         $this->set(compact('goal', 'priority_list', 'approvalData'));
 
