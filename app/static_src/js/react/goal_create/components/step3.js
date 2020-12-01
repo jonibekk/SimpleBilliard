@@ -41,7 +41,13 @@ export default class Step3Component extends Base {
   getInputDomData() {
     const photoNode = this.refs.innerPhoto.refs.photo
     const photo = ReactDOM.findDOMNode(photoNode).files[0]
-    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
+    const wishApprovalCheckbox = ReactDOM.findDOMNode(this.refs.is_wish_approval);
+    let is_wish_approval = false;
+
+    if (wishApprovalCheckbox) {
+      is_wish_approval = wishApprovalCheckbox.checked
+    }
+      
     if (!photo) {
       return {is_wish_approval}
     }
@@ -54,7 +60,7 @@ export default class Step3Component extends Base {
   }
 
   handleChange(e) {
-    let data = {[e.target.name]: e.target.value}
+    const data = {[e.target.name]: e.target.value}
     // 評価期間の選択によって自動的にゴール終了日を切り替える
     if (e.target.name == "term_type") {
       data["end_date"] = this.props.goal.default_end_dates[e.target.value]
@@ -70,7 +76,7 @@ export default class Step3Component extends Base {
   render() {
     const showMoreLinkClass = "goals-create-view-more " + (this.state.showMoreOption ? "hidden" : "");
 
-    const {inputData, priorities, validationErrors, can_approve, terms} = this.props.goal;
+    const {inputData, priorities, validationErrors, show_approve, coach_present, terms} = this.props.goal;
     let priorityOptions = null;
     if (priorities.length > 0) {
       priorityOptions = priorities.map((v) => {
@@ -110,12 +116,28 @@ export default class Step3Component extends Base {
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
 
-          <div className={`checkbox ${can_approve ? "" : "hide"}`}>
-            <label>
-              <input type="checkbox" name="is_wish_approval" value="1" defaultChecked="true" ref="is_wish_approval"/>
-              <span>{__("Request goal approval")}</span>
-            </label>
-          </div>
+          {
+            show_approve ? (
+              <div className={`checkbox ${show_approve ? "" : "hide"}`}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    name="is_wish_approval" 
+                    value="1" 
+                    defaultChecked={show_approve} 
+                    ref="is_wish_approval"
+                    disabled={!show_approve || !coach_present}
+                  />
+                  <span>{__("Request goal approval")}</span>
+                </label>
+                {
+                  !coach_present ? (
+                    <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
+                  ) : null
+                }
+              </div>
+            ) : null
+          }
 
           <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
             <i className="fa fa-eye" aria-hidden="true"/>

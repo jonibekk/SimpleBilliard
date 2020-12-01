@@ -269,6 +269,8 @@ class GoalsController extends ApiController
         /** @var Group **/
         $Group = ClassRegistry::init("Group");
 
+        $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+
         $res = [];
 
         // 編集の場合、idからゴール情報を取得・設定
@@ -349,10 +351,14 @@ class GoalsController extends ApiController
             $rows = $Group->findGroupsWithMemberCount($scope);
 
             // get coach accessible groups
-            $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
-            $coachPolicy = new GroupPolicy($coachId, $this->current_team_id);
-            $coachGroups = $Group->findGroupsWithMemberCount($coachPolicy->scope());
-            $coachGroupsIds = Hash::extract($coachGroups, '{n}.Group.id');
+
+            $coachGroupsIds = [];
+
+            if (!empty($coachId)) {
+                $coachPolicy = new GroupPolicy($coachId, $this->current_team_id);
+                $coachGroups = $Group->findGroupsWithMemberCount($coachPolicy->scope());
+                $coachGroupsIds = Hash::extract($coachGroups, '{n}.Group.id');
+            }
 
             $groups = [];
             foreach ($rows as $row) {
@@ -390,9 +396,11 @@ class GoalsController extends ApiController
         if ($dataTypes == 'all' || in_array('can_approve', $dataTypes)) {
             /** @var GoalApprovalService $GoalApprovalService */
             $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-            $res['can_approve'] = $GoalApprovalService->isApprovable(
+            $res['show_approve'] = $GoalApprovalService->showApprovable(
                 $this->Auth->user('id'), $this->Session->read('current_team_id')
             );
+
+            $res['coach_present'] = !empty($coachId);
         }
 
         return $this->_getResponseSuccess($res);

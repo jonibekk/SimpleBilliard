@@ -31,7 +31,8 @@ const initialState = {
     groups: {}
   },
   isDisabledSubmit: false,
-  can_approve: false,
+  show_approve: false,
+  coach_present: false,
   redirect_to_home: false,
   groups_enabled: false
 }
