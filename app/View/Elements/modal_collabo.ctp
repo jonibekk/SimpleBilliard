@@ -68,18 +68,33 @@
                     'value'                        => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
                 ]) ?>
             <hr>
-            <?php if ($canApprove):?>
-            <?= $this->Form->input('is_wish_approval', [
-                'wrapInput' => "col col-sm-9 col-sm-offset-3",
-                'type'      => 'checkbox',
-                'label'     => [
-                    'class' => null,
-                    'text'  => __("Request goal approval")
-                ],
-                'checked'   => 'checked'
-            ]);
-            ?>
-            <hr>
+            <?php if ($approvalData['showApprove']):?>
+                <?= $this->Form->input('is_wish_approval', [
+                    'wrapInput' => "col col-sm-9 col-sm-offset-3",
+                    'type'      => 'checkbox',
+                    'label'     => [
+                        'class' => null,
+                        'text'  => __("Request goal approval")
+                    ],
+                    'checked'   => $approvalData['defaultChecked'],
+                    'disabled'  => !$approvalData['canRequestApproval'],
+                ]);
+                ?>
+                <?php if ($approvalData['pendingApproval']):?>
+                    <div class="form-group">
+                        <div class="col col-sm-9 col-sm-offset-3">
+                            <?= __('Awaiting coach approval.') ?>
+                        </div>
+                    </div>
+                <?php endif;?>
+                <?php if ($approvalData['cannotRequestApprovalReason']):?>
+                    <div class="form-group">
+                        <div class="col col-sm-9 col-sm-offset-3">
+                            <?= __($approvalData['cannotRequestApprovalReason']) ?>
+                        </div>
+                    </div>
+                <?php endif;?>
+                <hr>
             <?php endif;?>
             <?=
             $this->Form->input('priority',

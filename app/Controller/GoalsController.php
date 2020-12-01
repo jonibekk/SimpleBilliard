@@ -424,11 +424,14 @@ class GoalsController extends AppController
 
         /** @var GoalApprovalService $GoalApprovalService */
         $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
-        $canApprove = $GoalApprovalService->isApprovable(
-            $this->Auth->user('id'), $this->Session->read('current_team_id')
+        $approvalData = $GoalApprovalService->genRequestApprovalData(
+            $this->Auth->user('id'), 
+            $this->Session->read('current_team_id'),
+            $goal_id
         );
+        GoalousLog::info('log', $approvalData);
 
-        $this->set(compact('goal', 'priority_list', 'canApprove'));
+        $this->set(compact('goal', 'priority_list', 'approvalData'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
