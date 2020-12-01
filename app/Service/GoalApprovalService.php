@@ -12,8 +12,7 @@ App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
 App::uses('KrChangeLog', 'Model');
-App::uses('KeyResult', 'Model');
-App::import('Service', 'GoalMemberService');
+App::uses('KeyResult', 'Model'); App::import('Service', 'GoalMemberService');
 App::import('Policy', 'GoalPolicy');
 
 class GoalApprovalService extends AppService
@@ -450,12 +449,17 @@ class GoalApprovalService extends AppService
             'conditions' => ['user_id' => $userId, 'goal_id' => $goalId, 'team_id' => $teamId]
         ]);
 
-        $isWishApproval = $gm['GoalMember']['is_wish_approval'];
-        $isTargetEvaluation = $gm['GoalMember']['is_target_evaluation'];
-        $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
-
         $canRequestApproval = true;
         $cannotRequestApprovalReason = null;
+        $isWishApproval = false;
+        $isTargetEvaluation = false;
+
+        $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+
+        if (!empty($gm)) {
+            $isWishApproval = $gm['GoalMember']['is_wish_approval'];
+            $isTargetEvaluation = $gm['GoalMember']['is_target_evaluation'];
+        }
 
         if ($isWishApproval || $isTargetEvaluation) {
             $canRequestApproval = false;
@@ -463,13 +467,13 @@ class GoalApprovalService extends AppService
 
         if (empty($coachId)) {
             $canRequestApproval = false;
-            $cannotRequestApprovalReason = "Goal cannot be approved because the coach is not set. Contact the team administrator.";
+            $cannotRequestApprovalReason = __("Goal cannot be approved because the coach is not set. Contact the team administrator.");
         } else {
             $coachPolicy = new GoalPolicy($coachId, $teamId);
 
             if (!$coachPolicy->read($goal['Goal'])) {
                 $canRequestApproval = false;
-                $cannotRequestApprovalReason = "Goal cannot be approved because the coach is not set. Contact the team administrator.";
+                $cannotRequestApprovalReason = __("Goal cannot be approved because the coach is not set. Contact the team administrator.");
             }
         }
 

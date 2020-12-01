@@ -90,7 +90,7 @@
                 <?php if ($approvalData['cannotRequestApprovalReason']):?>
                     <div class="form-group">
                         <div class="col col-sm-9 col-sm-offset-3">
-                            <?= __($approvalData['cannotRequestApprovalReason']) ?>
+                            <?= $approvalData['cannotRequestApprovalReason'] ?>
                         </div>
                     </div>
                 <?php endif;?>
