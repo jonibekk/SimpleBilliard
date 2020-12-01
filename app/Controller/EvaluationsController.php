@@ -152,6 +152,9 @@ class EvaluationsController extends AppController
             $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
             $evaluationList = array_values($EvaluationService->findEvaluations($userId, $evaluateeId, $evaluateTermId));
+            $evaluateeEvalList = array_values($EvaluationService->findEvaluations($evaluateeId, $evaluateeId, $evaluateTermId));
+
+            $hiddenGoalsCount = count($evaluateeEvalList) - count($evaluationList);
 
             // order by priority
             //TODO: このコードは一時的なもの(今後は評価開始時に既にソート済になるので削除予定)
@@ -205,7 +208,8 @@ class EvaluationsController extends AppController
             'evaluateType',
             'status',
             'saveIndex',
-            'isEditable'
+            'isEditable',
+            'hiddenGoalsCount'
         ));
     }
 

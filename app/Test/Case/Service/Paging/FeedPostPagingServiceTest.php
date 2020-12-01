@@ -30,6 +30,7 @@ class FeedPostPagingServiceTest extends GoalousTestCase
         'app.goal_member',
         'app.member_group',
         'app.goal_group',
+        'app.group',
         'app.action_result',
         'app.action_result_file',
         'app.key_result',
