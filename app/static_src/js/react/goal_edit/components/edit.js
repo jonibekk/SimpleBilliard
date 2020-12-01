@@ -126,6 +126,11 @@ export default class Edit extends React.Component {
       return false;
     }
 
+    // do not need coach group check if groups feature is disabled
+    if (!this.shouldDisplayGroupSelection()) {
+      return true;
+    }
+
     // can request if existing groups contains group with coach
     if (goal.groups && groups) {
       for (const presentGroup of goal.groups) {
