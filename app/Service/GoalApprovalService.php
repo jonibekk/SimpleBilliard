@@ -473,7 +473,7 @@ class GoalApprovalService extends AppService
 
             if (!$coachPolicy->read($goal['Goal'])) {
                 $canRequestApproval = false;
-                $cannotRequestApprovalReason = __("Goal cannot be approved because the coach is not set. Contact the team administrator.");
+                $cannotRequestApprovalReason = __("This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator.");
             }
         }
 

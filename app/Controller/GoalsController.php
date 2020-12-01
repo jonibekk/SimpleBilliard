@@ -1,4 +1,4 @@
-2?php
+<?php
 
 use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 use Goalous\Exception\Follow\ValidationToFollowException;
