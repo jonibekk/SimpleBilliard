@@ -1,6 +1,6 @@
 <?php
 
-use Stripe\ApiResource;
+use Goalous\Enum\Model\AttachedFile\AttachedModelType;
 
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service/Paging', 'CircleListPagingService');
@@ -34,10 +34,19 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * @property NotificationComponent $Notification
  * @property FlashComponent $Flash
  * @property LangComponent  $Lang
+ * @property User  $User
+ * @property TeamMember  $TeamMember
+ * @property NotifySetting  $NotifySetting
  */
 class MeController extends BasePagingController
 {
     use AuthTrait;
+
+    public $uses = [
+        'User',
+        'TeamMember',
+        'NotifySetting',
+    ];
 
     public $components = [
         'Session',
@@ -181,6 +190,12 @@ class MeController extends BasePagingController
     public function get_timezones()
     {
         $data = AppUtil::getTimezoneList();
+
+        if (empty($data)) {
+            GoalousLog::error('Failed to get timezones data');
+            return ErrorResponse::internalServerError()->withBody(['error' => 'No timezone found.'])->getResponse();
+        }
+
         return ApiResponse::ok()->withBody([
             'data' => $data
         ])->getResponse();
@@ -191,10 +206,189 @@ class MeController extends BasePagingController
      */
     public function get_languages()
     {
-        $data = $this->Lang->getAvailLangList();
+        /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
+        $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
+        $translation_languages = $TeamTranslationLanguageService->getAllLanguages($this->getTeamId());
+
+        $data = [
+            'languages' => $this->Lang->getAvailLangList(),
+            'translation_languages' => $translation_languages
+        ];
+        
         return ApiResponse::ok()->withBody([
             'data' => $data
         ])->getResponse();
+    }
+
+    /**
+     * Put account data
+     */
+    public function put_account()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        /** @var Team $Team */
+        $Team = ClassRegistry::init("Team");
+
+        $data = $this->getRequestJsonBody();
+
+        $user_options = [
+            'conditions' => ['User.id' => $data['User']['id'],],
+        ];
+        $team_options = [
+            'conditions' => ['Team.id' => $this->getTeamId(),],
+        ];
+
+        $user = $User->find('first', $user_options);
+        $team = $Team->find('first', $team_options);
+
+        if (!empty($user)) {
+
+            $user['User']['default_team_id'] = $data['User']['default_team_id'];
+            $user['User']['language'] = $data['User']['language'];
+            $user['User']['timezone'] = $data['User']['timezone'];
+            $user['User']['update_email_flg'] = $data['User']['update_email_flg'];
+            $result = $User->saveAll($data['User']);
+
+            if (!$result) {
+                return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating account settings.'])->getResponse();
+            }
+        } else {
+            return ErrorResponse::internalServerError()->withBody(['error' => "Couldn't find account user."])->getResponse();
+        }
+
+        //if (!empty($team) && $team['Team']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
+        //    $team['Team']['default_translation_language'] = $data['TeamMember']['default_translation_language'];
+        //    $result = $Team->useType()->useEntity()->save($data['TeamMember'], false);
+        //
+        //    if (!$result) {
+        //        return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating account settings.'])->getResponse();
+        //    }
+        //}
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'success'
+        ])->getResponse();
+    }
+
+    /**
+     * Put profile data
+     */
+    public function put_profile()
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init("User");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var UploadService $UploadService */
+        $UploadService = ClassRegistry::init("UploadService");
+        /** @var AttachedFileService $AttachedFileService */
+        $AttachedFileService = ClassRegistry::init("AttachedFileService");
+
+        $data = $this->getRequestJsonBody();
+
+        $user_options = [
+            'conditions' => ['User.id' => $data['User']['id'],],
+        ];
+        $team_options = [
+            'conditions' => ['TeamMember.team_id' => $data['TeamMember']['id'],],
+        ];
+        $user = $User->find('first', $user_options);
+        $teamMember = $TeamMember->find('first', $team_options);
+
+        if (!empty($user)) {
+            $user['User']['first_name'] = $data['User']['first_name'];
+            $user['User']['last_name'] = $data['User']['last_name'];
+            $user['User']['gender_type'] = $data['User']['gender_type'];
+            $user['User']['birth_day'] = $data['User']['birth_day'];
+            $user['User']['hide_year_flg'] = $data['User']['hide_year_flg'];
+            $user['User']['hometown'] = $data['User']['hometown'];
+            $teamMember['TeamMember']['comment'] = $data['TeamMember']['comment'];
+
+            try {
+                if ($data['User']['photo']) {
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['photo']);
+                    /** @var AttachedFileEntity $attachedFile */
+                    $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+
+                    $user['User']['photo_file_name'] = $uploadedFile->getFileName();
+                }
+                if ($data['User']['cover_photo']) {
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['cover_photo']);
+                    /** @var AttachedFileEntity $attachedFile */
+                    $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+
+                    $user['User']['cover_photo_file_name'] = $uploadedFile->getFileName();
+                }
+            } catch (Exception $e) {
+                return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
+            }
+
+            $TeamMember->useType()->useEntity()->save($teamMember, false);
+            $User->useType()->useEntity()->save($user, false);
+        } else {
+            return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'success'
+        ])->getResponse();
+    }
+
+    /**
+     * Put Notifications data
+     */
+    public function put_notifications()
+    {
+        /** @var NotifySetting $NotifySetting */
+        $NotifySetting = ClassRegistry::init("NotifySetting");
+
+        $data = $this->getRequestJsonBody();
+
+        $options = [
+            'conditions' => ['NotifySetting.user_id' => $data['User']['id'],],
+        ];
+        $notifyData = $NotifySetting->find('first', $options);
+
+        if (!empty($notifyData)) {
+            $notifyData['NotifySetting']['email_status'] = $data['NotifySetting']['email_status'];
+            $notifyData['NotifySetting']['mobile_status'] = $data['NotifySetting']['mobile_status'];
+            $notifyData['NotifySetting']['desktop_status'] = $data['NotifySetting']['desktop_status'];
+
+            $NotifySetting->useType()->useEntity()->save($notifyData, false);
+        } else {
+            return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating notification settings.'])->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'success'
+        ])->getResponse();
+    }
+
+    /**
+     * Put change email
+     */
+    public function put_change_email()
+    {
+        // Change Email Address
+    }
+
+    /**
+     * Put change password
+     */
+    public function put_change_password()
+    {
+        // Change Password
+    }
+
+    /**
+     * Put Enable 2FA
+     */
+    public function put_enable_2fa()
+    {
+        // Enable 2FA
     }
 
     public function get_goal_status()
