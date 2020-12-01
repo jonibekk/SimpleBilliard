@@ -750,7 +750,8 @@ App::uses('AttachedFile', 'Model');
             "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
             "Goal cannot be approved because the coach is not set. Contact the team administrator.": "<?= __("Goal cannot be approved because the coach is not set. Contact the team administrator.")?>",
             "Shared Groups": "<?= __("Shared Groups") ?>",
-            "You can only add groups to a share a Goal.": "<?= __("You can only add groups to a share a Goal.") ?>",
+            "Awaiting coach approval.": "<?= __("Awaiting coach approval.") ?>",
+            "You can only add groups to share a Goal.": "<?= __("You can only add groups to share a Goal.") ?>",
             "You must add a group that your coach belongs to so they can approve it.": "<?= __("You must add a group that your coach belongs to so they can approve it.") ?>",
         },
         regex: {

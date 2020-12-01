@@ -110,24 +110,28 @@ export default class Step3Component extends Base {
           </select>
           <InvalidMessageBox message={validationErrors.term_type}/>
 
-          <div className={`checkbox ${show_approve ? "" : "hide"}`}>
-            <label>
-              <input 
-                type="checkbox" 
-                name="is_wish_approval" 
-                value="1" 
-                defaultChecked={show_approve} 
-                ref="is_wish_approval"
-                disabled={!show_approve || !coach_present}
-              />
-              <span>{__("Request goal approval")}</span>
-            </label>
-            {
-              !coach_present ? (
-                <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
-              ) : null
-            }
-          </div>
+          {
+            show_approve ? (
+              <div className={`checkbox ${show_approve ? "" : "hide"}`}>
+                <label>
+                  <input 
+                    type="checkbox" 
+                    name="is_wish_approval" 
+                    value="1" 
+                    defaultChecked={show_approve} 
+                    ref="is_wish_approval"
+                    disabled={!show_approve || !coach_present}
+                  />
+                  <span>{__("Request goal approval")}</span>
+                </label>
+                {
+                  !coach_present ? (
+                    <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
+                  ) : null
+                }
+              </div>
+            ) : null
+          }
 
           <a className={showMoreLinkClass} href="#" onClick={this.handleClick}>
             <i className="fa fa-eye" aria-hidden="true"/>

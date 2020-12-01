@@ -114,8 +114,20 @@ export default class Edit extends React.Component {
     const {show_approve, coach_present, inputData, goal, groups} = this.props.goal;
     const selectedGroups = Object.values(inputData.groups);
 
+    // cannot request if already requested
+    if (goal.goal_member) {
+      if (goal.goal_member.is_wish_approval || goal.goal_member.is_target_evaluation) {
+        return false;
+      }
+    }
+
+    // cannot request if team settings does not enable
+    if (!show_approve || !coach_present) {
+      return false;
+    }
+
+    // can request if existing groups contains group with coach
     if (goal.groups && groups) {
-      // goal.groups is the already selected groups
       for (const presentGroup of goal.groups) {
         for (const group of groups) {
           if (group.id === presentGroup.id && group.coach_belongs) {
@@ -125,10 +137,7 @@ export default class Edit extends React.Component {
       }
     }
 
-    if (!show_approve || !coach_present) {
-      return false;
-    }
-
+    // can request if newly selected groups contains group with coach
     for (const group of selectedGroups) {
       if (group.coach_belongs) {
         return true;
@@ -137,6 +146,7 @@ export default class Edit extends React.Component {
 
     return false;
   }
+
 
   render() {
     const {suggestions, keyword, validationErrors, inputData, goal, isDisabledSubmit, redirect_to, terms, groups, show_approve, coach_present} = this.props.goal
@@ -182,6 +192,19 @@ export default class Edit extends React.Component {
     }
 
     const is_next_to_current = goal.term_type === 'next' && inputData.term_type == 'current'
+    let alreadyRequestedApproval = false;
+
+    if (goal.goal_member) {
+      alreadyRequestedApproval = goal.goal_member.is_wish_approval || goal.goal_member.is_target_evaluation
+    }
+
+    let canSubmitApprovalRequest = true;
+    
+    if (goal.goal_member) {
+      if (inputData.is_wish_approval && !this.canRequestGoalApproval()) {
+        canSubmitApprovalRequest = false;
+      }
+    }
 
     return (
       <div className="panel panel-default col-sm-8 col-sm-offset-2 goals-create">
@@ -256,29 +279,39 @@ export default class Edit extends React.Component {
                     onChange={this.onChange}>
               { term_options }
             </select>
-            <div className={`checkbox ${show_approve ? "" : "hide"}`}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  name="is_wish_approval" 
-                  value="1" 
-                  defaultChecked={show_approve} 
-                  ref="is_wish_approval"
-                  disabled={!this.canRequestGoalApproval()}
-                />
-                <span>{__("Request goal approval")}</span>
-              </label>
-              {
-                !coach_present ? (
-                  <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
-                ) : null
-              }
-              {
-                !this.canRequestGoalApproval() ? (
-                  <p className="goals-create-description">{__('You must add a group that your coach belongs to so they can approve it.')}</p>
-                ) : null
-              }
-            </div>
+            {
+              goal.goal_member ? (
+                <div className={`checkbox ${show_approve ? "" : "hide"}`}>
+                  <label>
+                    <input 
+                      type="checkbox" 
+                      name="is_wish_approval" 
+                      value="1" 
+                      onChange={this.onChange}
+                      defaultChecked={alreadyRequestedApproval}
+                      ref="is_wish_approval"
+                      disabled={!this.canRequestGoalApproval()}
+                    />
+                    <span>{__("Request goal approval")}</span>
+                  </label>
+                </div>
+              ) : null
+            }
+            {
+              goal.goal_member && goal.goal_member.is_wish_approval && !goal.goal_member.is_target_evaluation ? (
+                <p className="goals-create-description">{__('Awaiting coach approval.')}</p>
+              ) : null
+            }
+            {
+              !coach_present ? (
+                <p className="goals-create-description">{__('Goal cannot be approved because the coach is not set. Contact the team administrator.')}</p>
+              ) : null
+            }
+            {
+              !alreadyRequestedApproval && !this.canRequestGoalApproval() ? (
+                <p className="goals-create-description">{__('You must add a group that your coach belongs to so they can approve it.')}</p>
+              ) : null
+            }
 
             {/* ゴール期限 */}
             <label className="goals-create-input-label">{__("End date")}</label>
@@ -397,7 +430,7 @@ export default class Edit extends React.Component {
             : null
           }
           <button type="submit" className="goals-create-btn-next btn"
-                  disabled={`${isDisabledSubmit ? "disabled" : ""}`}>{ goal.is_approvable ? __("Save & Reapply") : __("Save changes")}</button>
+                  disabled={`${(!canSubmitApprovalRequest || isDisabledSubmit) ? "disabled" : ""}`}>{ goal.is_approvable ? __("Save & Reapply") : __("Save changes")}</button>
           <a className="goals-create-btn-cancel btn" href={ redirect_to }>{__("Cancel")}</a>
         </form>
       </div>
