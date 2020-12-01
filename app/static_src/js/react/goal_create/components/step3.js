@@ -41,7 +41,13 @@ export default class Step3Component extends Base {
   getInputDomData() {
     const photoNode = this.refs.innerPhoto.refs.photo
     const photo = ReactDOM.findDOMNode(photoNode).files[0]
-    const is_wish_approval = ReactDOM.findDOMNode(this.refs.is_wish_approval).checked
+    const wishApprovalCheckbox = ReactDOM.findDOMNode(this.refs.is_wish_approval);
+    let is_wish_approval = false;
+
+    if (wishApprovalCheckbox) {
+      is_wish_approval = wishApprovalCheckbox.checked
+    }
+      
     if (!photo) {
       return {is_wish_approval}
     }
