@@ -239,6 +239,12 @@ class GoalService extends AppService
                     $goal['goal_member']['id'], $requestData['priority']));
             }
 
+
+            if (!$goal['goal_member']['is_target_evaluation'] && !$GoalMember->saveField('is_wish_approval', $requestData['is_wish_approval'])) {
+                throw new Exception(sprintf("Failed to update GoalMember is_wish_approval. goalMemberId:%s is_wish_approval:%s",
+                    $goal['goal_member']['id'], $requestData['is_wish_approval']));
+            }
+
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');

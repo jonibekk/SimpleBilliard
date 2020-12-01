@@ -1937,6 +1937,8 @@ class Goal extends AppModel
                         'MyCollabo.role',
                         'MyCollabo.description',
                         'MyCollabo.priority',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation',
                     ],
                 ],
             ],

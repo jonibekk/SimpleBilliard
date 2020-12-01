@@ -12,12 +12,11 @@ App::uses('ApprovalHistory', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('GoalChangeLog', 'Model');
 App::uses('KrChangeLog', 'Model');
-App::uses('KeyResult', 'Model');
-App::import('Service', 'GoalMemberService');
+App::uses('KeyResult', 'Model'); App::import('Service', 'GoalMemberService');
+App::import('Policy', 'GoalPolicy');
 
 class GoalApprovalService extends AppService
 {
-
     function get($goalMemberId, $loginUserId)
     {
         /** @var GoalMember $GoalMember */
@@ -43,6 +42,8 @@ class GoalApprovalService extends AppService
         $GoalMember = ClassRegistry::init("GoalMember");
         if (!empty($teamId)) {
             $GoalMember->current_team_id = $teamId;
+            $GoalMember->Team->current_team_id = $teamId;
+            $GoalMember->Team->Term->current_team_id = $teamId;
         }
         // Redisのキャッシュデータ取得
         $count = Cache::read($GoalMember->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $userId), 'user_data');
@@ -382,6 +383,22 @@ class GoalApprovalService extends AppService
         return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled && (bool)$coachId;
     }
 
+    function showApprovable($target_user_id, $team_id = null)
+    {
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        if ($team_id) {
+            $EvaluationSetting->current_team_id = $team_id;
+            $TeamMember->current_team_id = $team_id;
+        }
+
+        $teamEvaluateIsEnabled = $EvaluationSetting->isEnabled();
+        $coacheeEvaluateIsEnabled = $TeamMember->getEvaluationEnableFlg($target_user_id);
+        return (bool)$teamEvaluateIsEnabled && (bool)$coacheeEvaluateIsEnabled;
+    }
+
     /**
      * ゴール認定用にゴールとTKRのスナップショットを保存する
      *
@@ -418,4 +435,54 @@ class GoalApprovalService extends AppService
         return $savedGoalSnapshot && $savedTkrSnapshot;
     }
 
+    function genRequestApprovalData(int $userId, int $teamId, int $goalId): array
+    {
+        /** @var GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        /** @var TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var Goal */
+        $Goal = ClassRegistry::init("Goal");
+
+        $goal = $Goal->findById($goalId);
+        $gm = $GoalMember->find('first', [
+            'conditions' => ['user_id' => $userId, 'goal_id' => $goalId, 'team_id' => $teamId]
+        ]);
+
+        $canRequestApproval = true;
+        $cannotRequestApprovalReason = null;
+        $isWishApproval = false;
+        $isTargetEvaluation = false;
+
+        $coachId = $TeamMember->getCoachUserIdByMemberUserId($userId);
+
+        if (!empty($gm)) {
+            $isWishApproval = $gm['GoalMember']['is_wish_approval'];
+            $isTargetEvaluation = $gm['GoalMember']['is_target_evaluation'];
+        }
+
+        if ($isWishApproval || $isTargetEvaluation) {
+            $canRequestApproval = false;
+        }
+
+        if (empty($coachId)) {
+            $canRequestApproval = false;
+            $cannotRequestApprovalReason = __("Goal cannot be approved because the coach is not set. Contact the team administrator.");
+        } else {
+            $coachPolicy = new GoalPolicy($coachId, $teamId);
+
+            if (!$coachPolicy->read($goal['Goal'])) {
+                $canRequestApproval = false;
+                $cannotRequestApprovalReason = __("This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator.");
+            }
+        }
+
+        return [
+            "showApprove" => $this->showApprovable($userId, $teamId),
+            "defaultChecked" => $isWishApproval || $isTargetEvaluation,
+            "pendingApproval" => $isWishApproval && !$isTargetEvaluation,
+            "canRequestApproval" => $canRequestApproval,
+            "cannotRequestApprovalReason" => $cannotRequestApprovalReason
+        ];
+    }
 }
