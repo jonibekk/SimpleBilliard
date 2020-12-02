@@ -80,4 +80,15 @@ class ActionResultMember extends AppModel
             'is_action_creator' => $isActionCreator,
         ])['ActionResultMember'];
     }
+
+    public function deleteAllByActionResultId(
+        string $actionResultId
+    ): bool {
+        if (empty($actionResultId)) {
+            return false;
+        }
+        return $this->deleteAll([
+            'ActionResultMember.action_result_id' => $actionResultId,
+        ]);
+    }
 }
