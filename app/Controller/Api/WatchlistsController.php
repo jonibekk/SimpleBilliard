@@ -57,6 +57,7 @@ class WatchlistsController extends BasePagingController
         $result = $krProgressService->processKeyResults($krs);
         $response = [
             'id' => $id,
+            'kr_count' => count($krs),
             'kr_with_progress' => $result['data']
         ];
 
