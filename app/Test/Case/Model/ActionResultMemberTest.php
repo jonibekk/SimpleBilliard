@@ -197,6 +197,9 @@ class ActionResultMemberTest extends GoalousTestCase
             ]
         ])['Post'];
 
+        ClassRegistry::removeObject(BufferStorageClient::class);
+        ClassRegistry::removeObject(AssetsStorageClient::class);
+
         return [
             $actionResultId,
             $keyResult,
