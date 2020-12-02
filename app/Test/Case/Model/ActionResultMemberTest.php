@@ -72,6 +72,7 @@ class ActionResultMemberTest extends GoalousTestCase
     public function tearDown()
     {
         parent::tearDown();
+        Mockery::close();
     }
 
     function test_addMember()
