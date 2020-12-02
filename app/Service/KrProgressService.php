@@ -17,11 +17,12 @@ class KrProgressService extends AppService
     /** @var boolean **/
     private $withKrProgressGraphValues;
 
+    const MY_KR_ID = 'my_krs';
+
 
     function __construct(CakeRequest $request, int $userId, int $teamId)
     {
         $this->withKrProgressGraphValues = boolval($request->query('with_kr_progress_graph_values'));
-        $goalIdSelected = intval($request->query('goal_id'));
         $limit = intval($request->query('limit'));
 
         $this->userId = $userId;
@@ -33,7 +34,6 @@ class KrProgressService extends AppService
             $this->teamId,
             $currentTerm
         );
-        $this->request->setGoalIdSelected($goalIdSelected);
         $this->request->setLimit($limit);
     }
 
@@ -49,13 +49,11 @@ class KrProgressService extends AppService
         return $currentTerm;
     }
 
-    function process(): array
+    function processKeyResults(array $keyResults): array
     {
-        $results = $this->findKrs();
-
         $krs = [];
-        foreach ($results as $idx => $kr) {
-            array_push($krs, $this->processKr($kr));
+        foreach ($keyResults as $idx => $kr) {
+            array_push($krs, $this->extendKr($kr));
         };
 
         $response = $this->formatResponse($krs);
@@ -67,14 +65,19 @@ class KrProgressService extends AppService
         return $response;
     }
 
-    function findKrs(): array
+    function findKrs($id = self::MY_KR_ID): array
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
-        return $KeyResultService->findForKeyResultList($this->request);
+
+        if ($id === self::MY_KR_ID) {
+            return $KeyResultService->findForKeyResultList($this->request);
+        } else {
+            return $KeyResultService->findForWatchlist($this->request, $id);
+        }
     }
 
-    function processKr($keyResult)
+    function extendKr($keyResult)
     {
         /** @var ActionResult $ActionResult */
         $ActionResult = ClassRegistry::init("ActionResult");

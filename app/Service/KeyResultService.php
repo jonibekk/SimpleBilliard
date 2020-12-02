@@ -767,4 +767,51 @@ class KeyResultService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         return $KeyResult->useType()->find('all', $options);
     }
+
+    public function findForWatchlist($request, $watchlistId)
+    { 
+        $now = GoalousDateTime::now();
+        $options = [
+            'conditions' => [
+                'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
+                'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
+                'KeyResult.team_id'     => $request->getTeamId(),,
+                'Goal.end_date >='      => $now->format('Y-m-d'),
+            ],
+            'joins' => [
+                [
+                    'alias' => 'KrWatchlist',
+                    'table' => 'kr_watchlists', 
+                    'conditions' => [
+                        'KrWatchlist.key_result_id = KeyResult.id',
+                        'KrWatchlist.del_flg != 1',
+                        'KrWatchlist.watchlist_id' => $watchlistId
+                    ]
+                ]
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*'
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
+                        'ActionResult.created' => 'desc'
+                    ],
+                    'User'
+                ]
+            ]
+        ];
+
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        return $KeyResult->useType()->find('all', $options);
+    }
 }

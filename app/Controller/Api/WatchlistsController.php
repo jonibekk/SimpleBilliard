@@ -1,5 +1,7 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
+App::uses('Group', 'Model');
+App::uses('KeyResult', 'Model');
 App::import('Service', 'WatchlistService');
 App::import('Service', 'KrProgressService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -29,10 +31,10 @@ class WatchlistsController extends BasePagingController
         $watchlists = Hash::extract($results, '{n}.Watchlist');
 
         $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
-        $myKrsCount = count($krProgressService->findKrs());
+        $myKrsCount = count($krProgressService->findKrs('my_krs'));
 
         $myKrsList = [
-            'id' => 'my_krs',
+            'id' => KrProgressService::MY_KR_ID,
             'krCount' => $myKrsCount,
         ];
 
@@ -43,16 +45,18 @@ class WatchlistsController extends BasePagingController
 
     public function get_detail(string $id)
     {
-        try {
+        if ($id !== KrProgressService::MY_KR_ID) {
             // @var Watchlist ;
             $Watchlist = ClassRegistry::init("Watchlist");
             $watchlist = $Watchlist->findById($id);
             $this->authorize('read', $watchlist);
-        } catch (Exception $e) {
-            return $this->generateResponseIfException($e);
         }
 
-        return ApiResponse::ok()->withData($watchlist)->getResponse();
+        $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
+        $krs = $krProgressService->findKrs($id);
+        $response = $krProgressService->processKeyResults($krs);
+
+        return ApiResponse::ok()->withData($response)->getResponse();
     }
 
     public function authorize(string $method, array $watchlist): void
