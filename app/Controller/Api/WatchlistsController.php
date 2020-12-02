@@ -52,11 +52,13 @@ class WatchlistsController extends BasePagingController
 
     public function get_detail(string $id)
     {
-        if ($id !== KrProgressService::MY_KR_ID) {
-            // @var Watchlist ;
-            $Watchlist = ClassRegistry::init("Watchlist");
-            $watchlist = $Watchlist->findById($id)['Watchlist'];
-            $this->authorize('read', $watchlist);
+        try {
+            if ($id !== KrProgressService::MY_KR_ID) {
+                $watchlist = $this->findWatchlist($id);
+                $this->authorize('read', $watchlist);
+            }
+        } catch (Exception $e) {
+            return $this->generateResponseIfException($e);
         }
 
         $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
@@ -69,6 +71,19 @@ class WatchlistsController extends BasePagingController
         ];
 
         return ApiResponse::ok()->withData($response)->getResponse();
+    }
+
+    private function findWatchlist(int $watchlistId): array
+    {
+        /** @var Watchlist $Watchlist */
+        $Watchlist = ClassRegistry::init("Watchlist");
+        $watchlist = $Watchlist->getById($watchlistId);
+
+        if (empty($watchlist)) {
+            throw new GlException\GoalousNotFoundException(__("This watchlist doesn't exist."));
+        }
+
+        return $watchlist;
     }
 
     public function authorize(string $method, array $watchlist): void

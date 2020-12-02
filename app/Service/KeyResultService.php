@@ -753,6 +753,7 @@ class KeyResultService extends AppService
                 ]
             ]
         ];
+
         if ($request->getLimit()) {
             $options['limit'] = $request->getLimit();
         }

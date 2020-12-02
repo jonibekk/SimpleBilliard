@@ -1,6 +1,6 @@
 <?php
 App::import('Service/Request/KeyResults', 'ResourceRequest');
-App::import('Service', 'AppService');
+App::import('Service', 'GoalService');
 App::import('Service', 'AppService');
 
 /**
@@ -12,6 +12,8 @@ class KrProgressService extends AppService
     private $userId;
     /** @var int **/
     private $teamId;
+    /** @var int **/
+    private $goalId;
     /** @var FindForKeyResultListRequest **/
     private $request;
     /** @var boolean **/
@@ -24,9 +26,11 @@ class KrProgressService extends AppService
     {
         $this->withKrProgressGraphValues = boolval($request->query('with_kr_progress_graph_values'));
         $limit = intval($request->query('limit'));
+        $requestGoalId = $request->query('goal_id');
 
         $this->userId = $userId;
         $this->teamId = $teamId;
+        $this->goalId = $requestGoalId ? intval($requestGoalId) : null;
         $currentTerm = $this->initializeTerm();
 
         $this->request = new FindForKeyResultListRequest(
@@ -49,14 +53,19 @@ class KrProgressService extends AppService
         return $currentTerm;
     }
 
-    function processKeyResults(array $keyResults): array
+    function processKeyResults(array $allKrs): array
     {
         $krs = [];
-        foreach ($keyResults as $idx => $kr) {
+
+        foreach ($allKrs as $kr) {
+            if ($this->goalId !== null && $this->goalId !== $kr['Goal']['id']) {
+                continue;
+            } 
+
             array_push($krs, $this->extendKr($kr));
         };
 
-        $response = $this->formatResponse($krs);
+        $response = $this->formatResponse($allKrs, $krs);
 
         if ($this->withKrProgressGraphValues) {
             $response = $this->appendProgressGraph($response);
@@ -120,17 +129,20 @@ class KrProgressService extends AppService
         );
     }
 
-    function formatResponse(array $krs): array
+    function formatResponse(array $allKrs, array $krs): array
     {
         $periodFrom = $this->periodFrom();
         $periodTo = GoalousDateTime::now();
 
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
+        $goals = array_reduce($allKrs, function($acc, $kr) {
+            $goalName = $kr['Goal']['name'];
+            if (!array_key_exists($goalName, $acc)) {
+                $acc[$goalName] = $kr['Goal'];
+            }
+            return $acc;
+        }, []);
 
-        $currentTerm = $this->request->getCurrentTermModel();
+        ksort($goals);
 
         return [
             'data' => [
@@ -138,9 +150,9 @@ class KrProgressService extends AppService
                     'from' => $periodFrom->getTimestamp(),
                     'to' => $periodTo->getTimestamp(),
                 ],
-                'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->userId),
+                'krs_total' => count($allKrs),
                 'krs' => $krs,
-                'goals' => $GoalService->findNameListAsMember($this->userId, $currentTerm['start_date'], $currentTerm['end_date']),
+                'goals' => array_values($goals),
             ],
         ];
     }
