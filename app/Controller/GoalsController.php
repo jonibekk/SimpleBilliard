@@ -2032,16 +2032,18 @@ class GoalsController extends AppController
             $WatchlistService = ClassRegistry::init("WatchlistService");
 
             if ($watched) {
-                $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
+                $watchlist = $WatchlistService->add($this->my_uid, $this->current_team_id, $kr_id);
+                $url = "/watchlists/" . $watchlist['Watchlist']['id'];
                 $this->Notification->outSuccess(
                     __("KR has been added to the Important List"),
-                    ['link_url' => "https://google.com", "link_text" => __("View List")]
+                    ['link_url' => $url, "link_text" => __("View List")]
                 );
             } else {
-                $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
+                $watchlist = $WatchlistService->remove($this->my_uid, $this->current_team_id, $kr_id);
+                $url = "/watchlists/" . $watchlist['Watchlist']['id'];
                 $this->Notification->outSuccess(
                     __("Removed from the Important list"),
-                    ['link_url' => "https://google.com", "link_text" => __("View List")]
+                    ['link_url' => $url, "link_text" => __("View List")]
                 );
             }
         } else {
