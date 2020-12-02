@@ -149,10 +149,8 @@ class ActionResultMemberTest extends GoalousTestCase
         $returnValue = "5beb86de5430f7.89168598";
         $bufferClient = mock::mock('BufferStorageClient');
         $bufferClient->shouldReceive('save')
-            ->once()
             ->andReturn(true);
         $bufferClient->shouldReceive('get')
-            ->once()
             ->andReturn(new UploadedFile(base64_encode('1'), '1'));
         ClassRegistry::addObject(BufferStorageClient::class, $bufferClient);
 
@@ -175,13 +173,10 @@ class ActionResultMemberTest extends GoalousTestCase
         $assetsClient = mock::mock('AssetsStorageClient');
 
         $assetsClient->shouldReceive('save')
-            ->once()
             ->andReturn(true);
         $assetsClient->shouldReceive('delete')
-            ->once()
             ->andReturn(true);
         $assetsClient->shouldReceive('bulkSave')
-            ->once()
             ->andReturn(true);
 
         ClassRegistry::addObject(AssetsStorageClient::class, $assetsClient);
@@ -197,9 +192,6 @@ class ActionResultMemberTest extends GoalousTestCase
                 'action_result_id' => $actionResultId
             ]
         ])['Post'];
-
-        ClassRegistry::removeObject(BufferStorageClient::class);
-        ClassRegistry::removeObject(AssetsStorageClient::class);
 
         return [
             $actionResultId,
