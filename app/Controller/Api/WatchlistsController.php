@@ -20,17 +20,24 @@ class WatchlistsController extends BasePagingController
 
     public function get_list()
     {
-        // @var KrProgressService ;
-        $Watchlist = ClassRegistry::init("Watchlist");
+        // @var WatchlistService ;
+        $WatchlistService = ClassRegistry::init("WatchlistService");
         // @var Watchlist ;
         $Watchlist = ClassRegistry::init("Watchlist");
 
-        $policy = new WatchlistPolicy($this->getUserId(), $this->getTeamId());
+        $userId = $this->getUserId();
+        $teamId = $this->getTeamId();
+
+        // TODO: Remove once we enter phase 2
+        // Creates the Important list for users if they haven't watched any KR before
+        $WatchlistService->findOrCreateWatchlist($userId, $teamId);
+
+        $policy = new WatchlistPolicy($userId, $teamId);
         $scope = $policy->scope();
         $results = $Watchlist->findWithKrCount($scope);
         $watchlists = Hash::extract($results, '{n}.Watchlist');
 
-        $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
+        $krProgressService = new KrProgressService($this->request, $userId, $teamId);
         $myKrsCount = count($krProgressService->findKrs('my_krs'));
 
         $myKrsList = [
