@@ -753,9 +753,6 @@ class KeyResultService extends AppService
                 ]
             ]
         ];
-        if ($request->getGoalIdSelected()) {
-            $options['conditions']['Goal.id'] = $request->getGoalIdSelected();
-        }
         if ($request->getLimit()) {
             $options['limit'] = $request->getLimit();
         }
@@ -770,12 +767,15 @@ class KeyResultService extends AppService
 
     public function findForWatchlist($request, $watchlistId)
     { 
+        /** @var KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
         $now = GoalousDateTime::now();
         $options = [
             'conditions' => [
                 'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
                 'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
-                'KeyResult.team_id'     => $request->getTeamId(),,
+                'KeyResult.team_id'     => $request->getTeamId(),
                 'Goal.end_date >='      => $now->format('Y-m-d'),
             ],
             'joins' => [
@@ -810,8 +810,6 @@ class KeyResultService extends AppService
             ]
         ];
 
-        /** @var KeyResult $KeyResult */
-        $KeyResult = ClassRegistry::init("KeyResult");
         return $KeyResult->useType()->find('all', $options);
     }
 }

@@ -35,7 +35,7 @@ class WatchlistsController extends BasePagingController
 
         $myKrsList = [
             'id' => KrProgressService::MY_KR_ID,
-            'krCount' => $myKrsCount,
+            'kr_count' => $myKrsCount,
         ];
 
         $data =  array_merge([$myKrsList], $watchlists);
@@ -48,13 +48,17 @@ class WatchlistsController extends BasePagingController
         if ($id !== KrProgressService::MY_KR_ID) {
             // @var Watchlist ;
             $Watchlist = ClassRegistry::init("Watchlist");
-            $watchlist = $Watchlist->findById($id);
+            $watchlist = $Watchlist->findById($id)['Watchlist'];
             $this->authorize('read', $watchlist);
         }
 
         $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
         $krs = $krProgressService->findKrs($id);
-        $response = $krProgressService->processKeyResults($krs);
+        $result = $krProgressService->processKeyResults($krs);
+        $response = [
+            'id' => $id,
+            'kr_with_progress' => $result['data']
+        ];
 
         return ApiResponse::ok()->withData($response)->getResponse();
     }
