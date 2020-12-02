@@ -51,12 +51,10 @@ class KrProgressService extends AppService
 
     function process(): array
     {
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
-        $keyResults = $KeyResultService->findForKeyResultList($this->request);
+        $results = $this->findKrs();
 
         $krs = [];
-        foreach ($keyResults as $idx => $kr) {
+        foreach ($results as $idx => $kr) {
             array_push($krs, $this->processKr($kr));
         };
 
@@ -67,6 +65,13 @@ class KrProgressService extends AppService
         }
 
         return $response;
+    }
+
+    function findKrs(): array
+    {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        return $KeyResultService->findForKeyResultList($this->request);
     }
 
     function processKr($keyResult)
