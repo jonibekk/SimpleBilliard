@@ -124,7 +124,7 @@ export default class Step3Component extends Base {
                     type="checkbox" 
                     name="is_wish_approval" 
                     value="1" 
-                    defaultChecked={show_approve} 
+                    defaultChecked={coach_present}
                     ref="is_wish_approval"
                     disabled={!show_approve || !coach_present}
                   />
