@@ -35,6 +35,8 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * @property FlashComponent $Flash
  * @property LangComponent  $Lang
  * @property User  $User
+ * @property NotificationComponent $Notification
+ * @property GlEmailComponent      $GlEmail
  * @property TeamMember  $TeamMember
  * @property NotifySetting  $NotifySetting
  */
@@ -51,7 +53,9 @@ class MeController extends BasePagingController
     public $components = [
         'Session',
         'Flash',
-        'Lang',
+        'Lang', 
+        'Notification',
+        'GlEmail',
         'Notification',
     ];
 
@@ -229,7 +233,10 @@ class MeController extends BasePagingController
         $User = ClassRegistry::init("User");
         /** @var Team $Team */
         $Team = ClassRegistry::init("Team");
-
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
+        
         $data = $this->getRequestJsonBody();
 
         $user_options = [
@@ -241,30 +248,22 @@ class MeController extends BasePagingController
 
         $user = $User->find('first', $user_options);
         $team = $Team->find('first', $team_options);
-
         if (!empty($user)) {
 
-            $user['User']['default_team_id'] = $data['User']['default_team_id'];
-            $user['User']['language'] = $data['User']['language'];
-            $user['User']['timezone'] = $data['User']['timezone'];
-            $user['User']['update_email_flg'] = $data['User']['update_email_flg'];
-            $result = $User->saveAll($data['User']);
+            if (!empty($team) && $team['Team']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
+                $translationLanguage = $data['TeamMember']['default_translation_language'];
+                $data['TeamMember'] = array();
+                $data['TeamMember'][0] = [
+                    'id' => $TeamMember->getIdByTeamAndUserId($this->getTeamId(), $data['User']['id']),
+                    'default_translation_language' => $translationLanguage
+                ];
+            }
 
+            $result = $User->saveAll($data['User']);
             if (!$result) {
                 return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating account settings.'])->getResponse();
             }
-        } else {
-            return ErrorResponse::internalServerError()->withBody(['error' => "Couldn't find account user."])->getResponse();
         }
-
-        //if (!empty($team) && $team['Team']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
-        //    $team['Team']['default_translation_language'] = $data['TeamMember']['default_translation_language'];
-        //    $result = $Team->useType()->useEntity()->save($data['TeamMember'], false);
-        //
-        //    if (!$result) {
-        //        return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating account settings.'])->getResponse();
-        //    }
-        //}
 
         return ApiResponse::ok()->withBody([
             'data' => 'success'
@@ -284,6 +283,7 @@ class MeController extends BasePagingController
         $UploadService = ClassRegistry::init("UploadService");
         /** @var AttachedFileService $AttachedFileService */
         $AttachedFileService = ClassRegistry::init("AttachedFileService");
+        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
         $data = $this->getRequestJsonBody();
 
@@ -313,6 +313,7 @@ class MeController extends BasePagingController
                     $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
 
                     $user['User']['photo_file_name'] = $uploadedFile->getFileName();
+                    $UploadService->saveWithProcessing("User", $this->getUserId(), 'photo', $uploadedFile);
                 }
                 if ($data['User']['cover_photo']) {
                     /** @var UploadedFile $uploadedFile */
@@ -321,13 +322,14 @@ class MeController extends BasePagingController
                     $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
 
                     $user['User']['cover_photo_file_name'] = $uploadedFile->getFileName();
+                    $UploadService->saveWithProcessing("User", $this->getUserId(), 'cover_photo', $uploadedFile);
                 }
             } catch (Exception $e) {
                 return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
             }
 
-            $TeamMember->useType()->useEntity()->save($teamMember, false);
-            $User->useType()->useEntity()->save($user, false);
+            $TeamMember->save($teamMember, false);
+            $User->save($user, false);
         } else {
             return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
         }
@@ -357,7 +359,9 @@ class MeController extends BasePagingController
             $notifyData['NotifySetting']['mobile_status'] = $data['NotifySetting']['mobile_status'];
             $notifyData['NotifySetting']['desktop_status'] = $data['NotifySetting']['desktop_status'];
 
-            $NotifySetting->useType()->useEntity()->save($notifyData, false);
+            $NotifySetting->save($notifyData, false);
+
+            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
         } else {
             return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating notification settings.'])->getResponse();
         }
@@ -372,7 +376,27 @@ class MeController extends BasePagingController
      */
     public function put_change_email()
     {
-        // Change Email Address
+        $data = $this->getRequestJsonBody();
+
+        try {
+            if (!$this->User->validatePassword($data)) {
+                return ErrorResponse::internalServerError()->withBody(['error' => 'Invalid password.'])->getResponse();
+            } else {
+                $email_data = $this->User->addEmail($data, $this->getUserId());
+            }
+        } catch (RuntimeException $e) {
+            return ErrorResponse::internalServerError()->withBody(['error' => 'Something went wrong!'])->getResponse();
+        }
+
+        $this->GlEmail->sendMailChangeEmailVerify(
+            $this->getUserId(),
+            $email_data['Email']['email'],
+            $email_data['Email']['email_token']
+        );
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'Confirmation has been sent to your email address.'
+        ])->getResponse();
     }
 
     /**
@@ -380,7 +404,21 @@ class MeController extends BasePagingController
      */
     public function put_change_password()
     {
-        // Change Password
+        $data = $this->getRequestJsonBody();
+
+        try {
+            if (!$this->User->validatePassword($data)) {
+                return ErrorResponse::internalServerError()->withBody(['error' => "Incorrect current password."])->getResponse();
+            } else {
+                $this->User->changePassword($data);
+            }
+        } catch (RuntimeException $e) {
+            return ErrorResponse::internalServerError()->withBody(['error' => "Failed to save password change."])->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'Changed password.'
+        ])->getResponse();
     }
 
     /**
