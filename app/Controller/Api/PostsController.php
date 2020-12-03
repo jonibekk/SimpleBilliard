@@ -375,6 +375,22 @@ class PostsController extends BasePagingController
             PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
 
+        GoalousLog::error(print_r($post, true));
+        if (!in_array('key_result', $post) || !in_array('goal', $post) || is_null($post['key_result']) || is_null($post['goal'])){
+            return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))
+                ->getResponse();
+        }
+
+        /*
+        $post = array_filter($post, function($v) {
+            if (is_null($v['key_result']) || is_null($v['goal'])){
+                return false;
+            }
+            return true;
+        });
+         */
+        GoalousLog::error('-=====================');
+        GoalousLog::error(print_r($post, true));
         return ApiResponse::ok()->withData([
             'type' => $post['type'],
             'data' => $post

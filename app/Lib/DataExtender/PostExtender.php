@@ -62,6 +62,13 @@ class PostExtender extends BaseExtender
                     break;
                 case Post::TYPE_ACTION:
                 case Post::TYPE_CREATE_GOAL:
+                    /** @var ActionExtension $ActionExtension */
+                    $ActionExtension = ClassRegistry::init('ActionExtension');
+                    $data = $ActionExtension->extend($data, "action_result_id");
+                    /** @var GoalExtension $GoalExtension */
+                    $GoalExtension = ClassRegistry::init('GoalExtension');
+                    $data = $GoalExtension->extend($data, "goal_id");
+
                     if ($postType === Post::TYPE_ACTION) {
                         /** @var KrProgressLog $KrProgressLog */
                         $KrProgressLog = ClassRegistry::init('KrProgressLog');
@@ -77,25 +84,10 @@ class PostExtender extends BaseExtender
                         $data['action_img_url'] = $ImageStorageService->getImgUrlEachSize($attachedFiles[0]->toArray(),
                             'AttachedFile',
                             'attached');
+                        /** @var KeyResultExtension $KeyResultExtension */
+                        $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
+                        $data = $KeyResultExtension->extend($data, "action_result.key_result_id");
                     }
-                    /** @var GoalExtension $GoalExtension */
-                    $GoalExtension = ClassRegistry::init('GoalExtension');
-                    $data = $GoalExtension->extend($data, "goal_id");
-                    /** @var KeyResult $KeyResult */
-                    $KeyResult = ClassRegistry::init('KeyResult');
-                    $topKr = $KeyResult->getTkrWithTyped($data['goal']['id']);
-                    $data['key_result'] = $topKr['KeyResult'];
-                    /** @var ActionExtension $ActionExtension */
-                    $ActionExtension = ClassRegistry::init('ActionExtension');
-                    $data = $ActionExtension->extend($data, "action_result_id");
-
-                    /** @var KeyResultExtension $KeyResultExtension */
-                    $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
-                    $data = $KeyResultExtension->extend($data, "action_result.key_result_id");
-
-                    /** @var GoalExtension $GoalExtension */
-                    $GoalExtension = ClassRegistry::init('GoalExtension');
-                    $data = $GoalExtension->extend($data, "action_result.goal_id");
 
                     if ($postType == Enum\Model\Post\Type::CREATE_GOAL) {
                         /** @var GoalMember $GoalMember */
