@@ -64,7 +64,8 @@ class GoalServiceTest extends GoalousTestCase
         'app.team_translation_status',
         'app.mst_translation_language',
         'app.translation',
-        'app.evaluation_setting'
+        'app.evaluation_setting',
+        'app.action_result_member'
     ];
 
     /**
