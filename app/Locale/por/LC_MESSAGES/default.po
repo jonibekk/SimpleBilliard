@@ -447,9 +447,6 @@ msgstr "Sobre nós"
 msgid "Account"
 msgstr "Conta"
 
-msgid "Acheive Goal"
-msgstr "Atingir o objetivo"
-
 msgid "Achieve Goal"
 msgstr "Alcançar objetivo"
 
