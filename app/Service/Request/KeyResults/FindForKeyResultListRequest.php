@@ -20,11 +20,6 @@ class FindForKeyResultListRequest
     /**
      * @var null|integer
      */
-    protected $goalIdSelected;
-
-    /**
-     * @var null|integer
-     */
     protected $limit;
 
     /**
@@ -72,14 +67,6 @@ class FindForKeyResultListRequest
     /**
      * @return int|null
      */
-    public function getGoalIdSelected(): ?int
-    {
-        return $this->goalIdSelected;
-    }
-
-    /**
-     * @return int|null
-     */
     public function getLimit(): ?int
     {
         return $this->limit;
@@ -91,14 +78,6 @@ class FindForKeyResultListRequest
     public function getOnlyKrIncomplete(): ?bool
     {
         return $this->onlyKrIncomplete;
-    }
-
-    /**
-     * @param int|null $goalIdSelected
-     */
-    public function setGoalIdSelected(?int $goalIdSelected): void
-    {
-        $this->goalIdSelected = $goalIdSelected;
     }
 
     /**

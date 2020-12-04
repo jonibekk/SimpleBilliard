@@ -1311,4 +1311,5 @@ SQL;
 
         return Hash::extract($result, '{n}.KeyResult');
     }
+
 }

@@ -48,7 +48,7 @@ class WatchlistService extends AppService
         return $watchlist;
     }
 
-    private function findOrCreateWatchlist(int $userId, int $teamId): array
+    public function findOrCreateWatchlist(int $userId, int $teamId): array
     {
         /** @var Watchlist */
         $Watchlist = ClassRegistry::init("Watchlist");
