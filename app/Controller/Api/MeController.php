@@ -232,9 +232,7 @@ class MeController extends BasePagingController
         /** @var User $User */
         $User = ClassRegistry::init("User");
         /** @var Team $Team */
-        $Team = ClassRegistry::init("Team");
-        /** @var TeamMember $TeamMember */
-        $TeamMember = ClassRegistry::init('TeamMember');
+        $Team = ClassRegistry::init('Team');
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
         
         $data = $this->getRequestJsonBody();
@@ -252,11 +250,8 @@ class MeController extends BasePagingController
 
             if (!empty($team) && $team['Team']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
                 $translationLanguage = $data['TeamMember']['default_translation_language'];
-                $data['TeamMember'] = array();
-                $data['TeamMember'][0] = [
-                    'id' => $TeamMember->getIdByTeamAndUserId($this->getTeamId(), $data['User']['id']),
-                    'default_translation_language' => $translationLanguage
-                ];
+                $team['Team']['default_translation_language'] = $translationLanguage;
+                $Team->save($team, false);
             }
 
             $result = $User->saveAll($data['User']);
