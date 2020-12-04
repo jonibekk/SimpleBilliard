@@ -5043,6 +5043,9 @@ msgstr "これ以上のアクションはありません。"
 msgid "There is no Goal that you can take action."
 msgstr "アクションできるゴールがありません。"
 
+msgid "There is no group to which your coach belongs. Please contact team administrators for more information."
+msgstr "あなたのコーチが所属しているグループがありません。詳しくはチーム管理者にお問い合わせください。"
+
 msgid "There is no Key Result."
 msgstr "KRが存在しません。"
 
@@ -5126,6 +5129,9 @@ msgstr "本機能はPCにてご利用できます。"
 
 msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
+
+msgid "This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator."
+msgstr "このゴールはコーチに共有されていないため、承認できません。チーム管理者にお問い合わせください。"
 
 msgid "This goal is not subject to evaluation."
 msgstr "この目標は評価の対象にはなりません。"
@@ -5545,7 +5551,7 @@ msgid "Watch Video"
 msgstr "Watch Video"
 
 msgid "Watched"
-msgstr "ウォッチ"
+msgstr "ウォッチ済み"
 
 msgid "We are downgrading your team to read-only"
 msgstr "読み取り専用にダウングレードしました"
