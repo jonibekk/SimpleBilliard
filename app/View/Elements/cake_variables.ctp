@@ -753,6 +753,7 @@ App::uses('AttachedFile', 'Model');
             "Awaiting coach approval.": "<?= __("Awaiting coach approval.") ?>",
             "You can only add groups to share a Goal.": "<?= __("You can only add groups to share a Goal.") ?>",
             "You must add a group that your coach belongs to so they can approve it.": "<?= __("You must add a group that your coach belongs to so they can approve it.") ?>",
+            "There is no group to which your coach belongs. Please contact team administrators for more information.": "<?= __("There is no group to which your coach belongs. Please contact team administrators for more information.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"
