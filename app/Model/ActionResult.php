@@ -296,6 +296,9 @@ class ActionResult extends AppModel
         'Post' => [
             'dependent' => true,
         ],
+        'ActionResultMember' => [
+            'dependent' => true,
+        ],
         'ActionResultFile',
     ];
 
