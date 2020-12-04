@@ -5022,6 +5022,10 @@ msgstr "Nenhuma ação necessária."
 msgid "There is no Goal that you can take action."
 msgstr "Não existe objetivo para tomar uma ação."
 
+#, fuzzy
+msgid "There is no group to which your coach belongs. Please contact team administrators for more information."
+msgstr ""
+
 msgid "There is no Key Result."
 msgstr "Não há nenhum Resultado-chave."
 
@@ -5105,6 +5109,10 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
+
+#, fuzzy
+msgid "This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator."
+msgstr ""
 
 #, fuzzy
 msgid "This goal is not subject to evaluation."
@@ -5524,6 +5532,7 @@ msgstr "Veja este  KR"
 msgid "Watch Video"
 msgstr "Veja o vídeo"
 
+#, fuzzy
 msgid "Watched"
 msgstr "Visto"
 
