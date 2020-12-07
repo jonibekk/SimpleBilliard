@@ -471,7 +471,7 @@ class User extends AppModel
         }
         // shellによる通知orメール送信時は言語設定がセットされていない時があるが、その場合はローカル名の取得をしない
         if ($this->me['language']) {
-            $localNames = $this->LocalName->getNames($this->uids, LangUtil::convertToISO3($this->me['language']));
+            $localNames = $this->LocalName->getNames($this->uids, $this->me['language']);
             if (!empty($localNames)) {
                 $this->local_names += $localNames;
             }
