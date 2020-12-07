@@ -137,6 +137,7 @@ class AppModel extends Model
         $Session = new CakeSession();
 
         $this->me = $Session->read('Auth.User');
+        $this->me['language'] = LangUtil::convertToISO3($this->me['language']);
         $this->current_team_id = $Session->read('current_team_id');
         $this->my_uid = $Session->read('Auth.User.id');
         if ($Session->read('Auth.User.language')) {
