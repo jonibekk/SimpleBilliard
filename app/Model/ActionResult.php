@@ -360,6 +360,7 @@ class ActionResult extends AppModel
         if ($endTimestamp) {
             $options['conditions']["$dateCol <="] = $endTimestamp;
         }
+        /** @var int $res */
         $res = $this->find('count', $options);
         return $res;
     }
