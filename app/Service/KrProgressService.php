@@ -14,6 +14,8 @@ class KrProgressService extends AppService
     private $teamId;
     /** @var int **/
     private $goalId;
+    /** @var string **/
+    private $listId;
     /** @var FindForKeyResultListRequest **/
     private $request;
     /** @var boolean **/
@@ -22,7 +24,7 @@ class KrProgressService extends AppService
     const MY_KR_ID = 'my_krs';
 
 
-    function __construct(CakeRequest $request, int $userId, int $teamId)
+    function __construct(CakeRequest $request, int $userId, int $teamId, string $listId)
     {
         $this->withKrProgressGraphValues = boolval($request->query('with_kr_progress_graph_values'));
         $limit = intval($request->query('limit'));
@@ -30,6 +32,7 @@ class KrProgressService extends AppService
 
         $this->userId = $userId;
         $this->teamId = $teamId;
+        $this->listId = $listId;
         $this->goalId = $requestGoalId ? intval($requestGoalId) : null;
         $currentTerm = $this->initializeTerm();
 
@@ -74,15 +77,15 @@ class KrProgressService extends AppService
         return $response;
     }
 
-    function findKrs($id = self::MY_KR_ID): array
+    function findKrs(): array
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        if ($id === self::MY_KR_ID) {
+        if ($this->listId === self::MY_KR_ID) {
             return $KeyResultService->findForKeyResultList($this->request);
         } else {
-            return $KeyResultService->findForWatchlist($this->request, $id);
+            return $KeyResultService->findForWatchlist($this->request, $this->listId);
         }
     }
 
@@ -159,25 +162,16 @@ class KrProgressService extends AppService
 
     function appendProgressGraph(array $response): array
     {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-        $currentTerm = $this->request->getCurrentTermModel();
-
-        $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
-        $graphRange = $GoalService->getGraphRange(
-            $todayDate,
-            GoalService::GRAPH_TARGET_DAYS,
-            GoalService::GRAPH_MAX_BUFFER_DAYS
-        );
-        $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
-            $this->userId,
-            $graphRange['graphStartDate'],
-            $graphRange['graphEndDate'],
-            $graphRange['plotDataEndDate'],
-            true
-        );
+        $graphRange = $this->generateGraphRange();
         $TimeEx = new TimeExHelper(new View());
-        $krProgressGraphValues = [
+
+        if ($this->listId === self::MY_KR_ID) {
+            $progressGraph = $this->generateMyKrProgressGraph($graphRange);
+        } else {
+            $progressGraph = $this->generateWatchlistGraph($graphRange);
+        }
+
+        $krProgressGraph =  [
             'data'       => [
                 'sweet_spot_top' => $progressGraph[0],
                 'sweet_spot_bottom' => $progressGraph[1],
@@ -187,8 +181,48 @@ class KrProgressService extends AppService
             'start_date' => $TimeEx->formatDateI18n(strtotime($graphRange['graphStartDate'])),
             'end_date'   => $TimeEx->formatDateI18n(strtotime($graphRange['graphEndDate'])),
         ];
-        $response['data']['kr_progress_graph'] = $krProgressGraphValues;
+
+        $response['data']['kr_progress_graph'] = $krProgressGraph;
         return $response;
+    }
+
+    private function generateMyKrProgressGraph($graphRange)
+    {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+
+        return $GoalService->getUserAllGoalProgressForDrawingGraph(
+            $this->userId,
+            $graphRange['graphStartDate'],
+            $graphRange['graphEndDate'],
+            $graphRange['plotDataEndDate'],
+            true
+        );
+    }
+
+    private function generateWatchlistGraph($graphRange)
+    {
+        /** @var WatchlistService */
+        $WatchlistService = ClassRegistry::init('WatchlistService');
+
+        return $WatchlistService->getWatchlistProgressForGraph(
+            $this->listId,
+            $graphRange['graphStartDate'],
+            $graphRange['graphEndDate']
+        );
+    }
+
+    private function generateGraphRange(): array {
+        /** @var GoalService $GoalService */
+        $GoalService = ClassRegistry::init('GoalService');
+        $currentTerm = $this->request->getCurrentTermModel();
+
+        $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
+        return $GoalService->getGraphRange(
+            $todayDate,
+            GoalService::GRAPH_TARGET_DAYS,
+            GoalService::GRAPH_MAX_BUFFER_DAYS
+        );
     }
 
     private function periodFrom()

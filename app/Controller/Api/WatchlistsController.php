@@ -37,8 +37,8 @@ class WatchlistsController extends BasePagingController
         $results = $Watchlist->findWithKrCount($scope);
         $watchlists = Hash::extract($results, '{n}.Watchlist');
 
-        $krProgressService = new KrProgressService($this->request, $userId, $teamId);
-        $myKrsCount = count($krProgressService->findKrs('my_krs'));
+        $krProgressService = new KrProgressService($this->request, $userId, $teamId, KrProgressService::MY_KR_ID);
+        $myKrsCount = count($krProgressService->findKrs());
 
         $myKrsList = [
             'id' => KrProgressService::MY_KR_ID,
@@ -61,9 +61,10 @@ class WatchlistsController extends BasePagingController
             return $this->generateResponseIfException($e);
         }
 
-        $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId());
-        $krs = $krProgressService->findKrs($id);
+        $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId(), $id);
+        $krs = $krProgressService->findKrs();
         $result = $krProgressService->processKeyResults($krs);
+
         $response = [
             'id' => $id,
             'kr_count' => count($krs),

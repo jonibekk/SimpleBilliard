@@ -249,10 +249,11 @@ class MeController extends BasePagingController
         $service = new KrProgressService(
             $this->request, 
             $this->getUserId(), 
-            $this->getTeamId()
+            $this->getTeamId(),
+            KrProgressService::MY_KR_ID
         );
 
-        $krs = $service->findKrs(KrProgressService::MY_KR_ID);
+        $krs = $service->findKrs();
         $response = $service->processKeyResults($krs);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
