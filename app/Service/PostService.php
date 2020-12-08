@@ -23,6 +23,7 @@ App::uses('PostSharedLog', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('Post', 'Model');
 App::uses('User', 'Model');
+App::uses('Term', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('Translation', 'Model');
@@ -860,6 +861,8 @@ class PostService extends AppService
         $Post = ClassRegistry::init('Post');
         /** @var PostResource $PostResource */
         $PostResource = ClassRegistry::init('PostResource');
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
 
         //Check if post exists & not deleted
         $postCondition = [
@@ -903,6 +906,12 @@ class PostService extends AppService
             if ($post['Post']['type'] == $Post::TYPE_ACTION && $post['Post']['action_result_id']){
                 $ActionResult = ClassRegistry::init('ActionResult');
                 $res = $ActionResult->softDelete($post['Post']['action_result_id']);
+
+                // Delete dashboard action count cache
+                $currentTermId = $Term->getCurrentTermId();
+                $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTermId;
+                Cache::delete($Term->getCacheKey($redisKeyname, true), 'user_data');
+
                 if (!$res) {
                     throw new RuntimeException("Error on deleting action result for post $postId: failed action soft delete");
                 }

@@ -130,6 +130,22 @@ class TeamMember extends AppModel
         return $this->myTeams;
     }
 
+    /**
+     * Get the team list of SSO enabled
+     * @param string $userId
+     * @return array
+     */
+    public function getSsoEnabledTeams(string $userId): array
+    {
+        /** @var TeamSsoSetting $TeamSsoSetting */
+        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
+
+        $teamIdsJoined = $this->getActiveTeamList($userId);
+        return array_filter($teamIdsJoined, function ($teamName, $teamId) use ($TeamSsoSetting) {
+            return !empty($TeamSsoSetting->getSetting($teamId));
+        }, ARRAY_FILTER_USE_BOTH);
+    }
+
     function setActiveTeamList($uid)
     {
         $model = $this;
@@ -183,10 +199,30 @@ class TeamMember extends AppModel
         return $this->active_member_list;
     }
 
-    function updateLastLogin($team_id, $uid)
+    /**
+     * Update last login time of a user in a team
+     *
+     * @param int|null $teamId
+     * @param int      $userId
+     * @param int      $loginTimestamp
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function updateLastLogin(?int $teamId, int $userId, int $loginTimestamp = REQUEST_TIMESTAMP): array
     {
-        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
-        $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
+        if (is_null($teamId)){
+            return[];
+        }
+
+        $teamMember = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
+
+        if (empty($teamMember)) {
+            throw new GlException\GoalousNotFoundException("Team Member doesn't exist");
+        }
+
+        $teamMember['TeamMember']['last_login'] = $loginTimestamp;
 
         $enable_with_team_id = false;
         if ($this->Behaviors->loaded('WithTeamId')) {
@@ -196,7 +232,7 @@ class TeamMember extends AppModel
             $this->Behaviors->disable('WithTeamId');
         }
 
-        $res = $this->save($team_member);
+        $res = $this->save($teamMember);
 
         if ($enable_with_team_id) {
             $this->Behaviors->enable('WithTeamId');
@@ -383,20 +419,30 @@ class TeamMember extends AppModel
         return (bool)$res;
     }
 
-    public function add($uid, $team_id)
+    /**
+     * Create or update status of user member information in a team.
+     *
+     * @param int $userId
+     * @param int $teamId ID of the team that the user is joining
+     *
+     * @return array|BaseEntity|mixed
+     * @throws Exception
+     */
+    public function add(int $userId, int $teamId)
     {
         //if exists update
-        $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
+        $team_member = $this->find('first', ['conditions' => ['user_id' => $userId, 'team_id' => $teamId]]);
         if (Hash::get($team_member, 'TeamMember.id')) {
             $team_member['TeamMember']['status'] = self::USER_STATUS_ACTIVE;
-            return $this->save($team_member);
+            return $this->save($team_member, false);
         }
         $data = [
-            'user_id' => $uid,
-            'team_id' => $team_id,
+            'user_id' => $userId,
+            'team_id' => $teamId,
             'status'  => self::USER_STATUS_ACTIVE,
         ];
-        return $this->save($data);
+        $this->create();
+        return $this->save($data, false);
     }
 
     public function getAllMemberUserIdList(
@@ -844,6 +890,15 @@ class TeamMember extends AppModel
             $users = $this->User->find('all', $contain['User']);
             $users = Hash::combine($users, '{n}.User.id', '{n}');
             if ($group_options) {
+                $group_options['joins'] = [
+                    [
+                        'table' => 'groups',
+                        'conditions' => [
+                            'MemberGroup.group_id = groups.id',
+                            'groups.archived_flg' => false
+                        ]
+                    ]
+                ];
                 //グループ情報をまとめて取得
                 $group_options['conditions']['user_id'] = $user_ids;
                 if (Hash::get($group_options, 'Group')) {
@@ -1042,6 +1097,11 @@ class TeamMember extends AppModel
             $this->save($this->csv_datas[$k]['TeamMember'], true, $team_member_update_fields);
         }
 
+        // Only parse group from csv if groups experiment is disabled
+        if (!$this->isGroupsFeatureEnabled()) {
+            $this->setGroupMembersFromCsv();
+        }
+
         /**
          * コーチは最後に登録
          * コーチIDはメンバーIDを検索し、セット
@@ -1089,6 +1149,34 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    function setGroupMembersFromCsv()
+    {
+        /**
+         * グループ登録処理
+         * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
+         */
+        //一旦グループ紐付けを解除
+        $this->User->MemberGroup->deleteAll(['MemberGroup.team_id' => $this->current_team_id]);
+
+        $member_groups = [];
+        foreach ($this->csv_datas as $row_k => $row_v) {
+            if (Hash::get($row_v, 'Group')) {
+                foreach ($row_v['Group'] as $k => $v) {
+                    $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
+                    $member_groups[] = [
+                        'group_id'  => $group['Group']['id'],
+                        'index_num' => $k,
+                        'team_id'   => $this->current_team_id,
+                        'user_id'   => $row_v['User']['id'],
+                    ];
+                }
+                unset($this->csv_datas[$row_k]['Group']);
+            }
+        }
+        $this->User->MemberGroup->create();
+        $this->User->MemberGroup->saveAll($member_groups);
+    }
+
     function validateUpdateMemberCsvData($csv_data)
     {
         $this->_setCsvValidateRule(false);
@@ -1103,6 +1191,7 @@ class TeamMember extends AppModel
         $this->csv_datas = [];
         //emails
         $before_emails = array_column($before_csv_data, 'email');
+        $groupsEnabled = $this->isGroupsFeatureEnabled();
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
@@ -1113,6 +1202,7 @@ class TeamMember extends AppModel
         foreach ($csv_data as $key => $row) {
             //set line no
             $res['error_line_no'] = $key + 1;
+
             //key name set
             if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
                 $res['error_msg'] = __("Numbers are not consistent.");
@@ -1157,6 +1247,15 @@ class TeamMember extends AppModel
             } else {
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
+            //Group
+            if (!$groupsEnabled) {
+                foreach ($row['group'] as $v) {
+                    if (viaIsSet($v)) {
+                        $this->csv_datas[$key]['Group'][] = $v;
+                    }
+                }
+            }
+            
             //exists check (after check)
             $this->csv_coach_ids[] = $row['coach_member_no'];
             if (Hash::get($row, 'coach_member_no')) {
@@ -1388,6 +1487,7 @@ class TeamMember extends AppModel
         }
 
         $this->setAllMembers($team_id);
+        $groupsEnabled = $this->isGroupsFeatureEnabled();
         //convert csv data
         foreach ($this->all_users as $k => $v) {
             if (!Hash::get($v, 'User.id')) {
@@ -1410,6 +1510,15 @@ class TeamMember extends AppModel
             $this->csv_datas[$k]['evaluation_enable_flg'] = Hash::get($v,
                 'TeamMember.evaluation_enable_flg') && $v['TeamMember']['evaluation_enable_flg'] ? 'ON' : 'OFF';
             $this->csv_datas[$k]['member_type'] = Hash::get($v, 'MemberType.name') ? $v['MemberType']['name'] : null;
+
+
+            if (!$groupsEnabled && Hash::get($v, 'User.MemberGroup')) {
+                foreach ($v['User']['MemberGroup'] as $g_k => $g_v) {
+                    $key_index = $g_k + 1;
+                    $this->csv_datas[$k]['group.' . $key_index] = Hash::get($g_v,
+                        'Group.name') ? $g_v['Group']['name'] : null;
+                }
+            }
         }
 
         $this->setCoachNumberForCsvData($team_id);
@@ -1694,25 +1803,52 @@ class TeamMember extends AppModel
      */
     function _getCsvHeading()
     {
-        return [
-            'email'                 => __("Email(*, Not changed)"),
-            'first_name'            => __("First Name(*, Not changed)"),
-            'last_name'             => __("Last Name(*, Not changed)"),
-            'member_no'             => __("Member ID(*)"),
-            'status'                => __("Member active status(*)"),
-            'admin_flg'             => __("Administrator(*)"),
-            'evaluation_enable_flg' => __("Evaluated(*)"),
-            'member_type'           => __("Member Type"),
-            'coach_member_no'       => __("Coach ID"),
-            'evaluator_member_no.1' => __("Evaluator 1"),
-            'evaluator_member_no.2' => __("Evaluator 2"),
-            'evaluator_member_no.3' => __("Evaluator 3"),
-            'evaluator_member_no.4' => __("Evaluator 4"),
-            'evaluator_member_no.5' => __("Evaluator 5"),
-            'evaluator_member_no.6' => __("Evaluator 6"),
-            'evaluator_member_no.7' => __("Evaluator 7"),
-        ];
-
+        if ($this->isGroupsFeatureEnabled()) {
+            return [
+                'email'                 => __("Email(*, Not changed)"),
+                'first_name'            => __("First Name(*, Not changed)"),
+                'last_name'             => __("Last Name(*, Not changed)"),
+                'member_no'             => __("Member ID(*)"),
+                'status'                => __("Member active status(*)"),
+                'admin_flg'             => __("Administrator(*)"),
+                'evaluation_enable_flg' => __("Evaluated(*)"),
+                'member_type'           => __("Member Type"),
+                'coach_member_no'       => __("Coach ID"),
+                'evaluator_member_no.1' => __("Evaluator 1"),
+                'evaluator_member_no.2' => __("Evaluator 2"),
+                'evaluator_member_no.3' => __("Evaluator 3"),
+                'evaluator_member_no.4' => __("Evaluator 4"),
+                'evaluator_member_no.5' => __("Evaluator 5"),
+                'evaluator_member_no.6' => __("Evaluator 6"),
+                'evaluator_member_no.7' => __("Evaluator 7"),
+            ];
+        } else {
+            return [
+                'email'                 => __("Email(*, Not changed)"),
+                'first_name'            => __("First Name(*, Not changed)"),
+                'last_name'             => __("Last Name(*, Not changed)"),
+                'member_no'             => __("Member ID(*)"),
+                'status'                => __("Member active status(*)"),
+                'admin_flg'             => __("Administrator(*)"),
+                'evaluation_enable_flg' => __("Evaluated(*)"),
+                'member_type'           => __("Member Type"),
+                'group.1'               => __("Group 1"),
+                'group.2'               => __("Group 2"),
+                'group.3'               => __("Group 3"),
+                'group.4'               => __("Group 4"),
+                'group.5'               => __("Group 5"),
+                'group.6'               => __("Group 6"),
+                'group.7'               => __("Group 7"),
+                'coach_member_no'       => __("Coach ID"),
+                'evaluator_member_no.1' => __("Evaluator 1"),
+                'evaluator_member_no.2' => __("Evaluator 2"),
+                'evaluator_member_no.3' => __("Evaluator 3"),
+                'evaluator_member_no.4' => __("Evaluator 4"),
+                'evaluator_member_no.5' => __("Evaluator 5"),
+                'evaluator_member_no.6' => __("Evaluator 6"),
+                'evaluator_member_no.7' => __("Evaluator 7"),
+            ];
+        }
     }
 
     function _getCsvHeadingEvaluation()
@@ -1818,6 +1954,23 @@ class TeamMember extends AppModel
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
                     'message' => __("%s should be entered in less than 64 characters.", __("Member Type"))
+                ],
+            ],
+            'group'                 => [
+                'isAlignLeft'     => [
+                    'rule'       => 'isAlignLeft',
+                    'message'    => __("Please %s fill with align left.", __("Group name")),
+                    'allowEmpty' => true,
+                ],
+                'isNotDuplicated' => [
+                    'rule'       => 'isNotDuplicated',
+                    'message'    => __("%s is duplicated.", __("Group name")),
+                    'allowEmpty' => true,
+                ],
+                'maxLengthArray'  => [
+                    'rule'       => ['maxLengthArray', 64],
+                    'message'    => __("%s should be entered in less than 64 characters.", __("Group name")),
+                    'allowEmpty' => true,
                 ],
             ],
             'coach_member_no'       => [
@@ -2111,14 +2264,14 @@ class TeamMember extends AppModel
      *
      * @return bool
      */
-    public
-    function isActiveAdmin(
+    public function isActiveAdmin(
         int $userId,
         int $teamId
     ): bool {
         $options = [
             'conditions' => [
                 'TeamMember.user_id'   => $userId,
+                'TeamMember.team_id'   => $teamId,
                 'TeamMember.admin_flg' => true,
                 'TeamMember.status'    => self::USER_STATUS_ACTIVE
             ],
@@ -2136,8 +2289,9 @@ class TeamMember extends AppModel
             ],
         ];
 
-        $res = $this->find('first', $options);
-        return (bool)$res;
+        $res = $this->find('count', $options);
+
+        return $res > 0;
     }
 
     /**
@@ -2393,7 +2547,7 @@ class TeamMember extends AppModel
                 ]
             ]
         ];
-        $res = $this->find('first', $condition);
+        $res = $this->findWithoutTeamId('first', $condition);
 
         return Hash::get($res, 'TeamMember.team_id', null);
     }
@@ -2592,5 +2746,69 @@ class TeamMember extends AppModel
         }
 
         return true;
+    }
+
+    function isGroupsFeatureEnabled()
+    {
+        /** @var Experiment */
+        $Experiment = ClassRegistry::init("Experiment");
+        $groupsExperiment = $Experiment->findExperiment($Experiment::NAME_ENABLE_GROUPS_MANAGEMENT);
+
+        return !empty($groupsExperiment);
+    }
+
+    function findVerifiedTeamMembersByTeamAndGroup(
+        int $groupId, 
+        int $teamId, 
+        array $memberIds
+    ){
+        $options = [
+            'joins' => [
+                [
+                    'alias' => 'MemberGroup',
+                    'table' => 'member_groups',
+                    'type' => 'LEFT',
+                    'conditions' => [
+                        "TeamMember.user_id = MemberGroup.user_id",
+                        "MemberGroup.group_id" => $groupId
+                    ]
+                ],
+            ],
+            'conditions' => [
+                'TeamMember.member_no' => $memberIds,
+                "TeamMember.team_id" => $teamId,
+                "TeamMember.status" => $this::USER_STATUS_ACTIVE
+            ],
+            'fields'     => [
+                'TeamMember.member_no',
+                'TeamMember.user_id',
+                'MemberGroup.group_id',
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    function findLastMemberIdForTeam(int $teamId): int
+    {
+        $options = [
+            // when teting is fixed, use "REGEX '^Goalous[[:digit:]]+$'" instead
+            'conditions' => [
+                "TeamMember.member_no LIKE 'Goalous%'",
+                'TeamMember.team_id' => $teamId,
+            ],
+            'order' => 'member_no DESC'
+        ];
+
+        $result = $this->find("first", $options);
+
+        if (empty($result)) {
+            return 0;
+        } else {
+            $memberNo = $result['TeamMember']['member_no'];
+            $matches = [];
+            preg_match('/^Goalous(\d+)/', $memberNo, $matches);
+            return (int) $matches[1];
+        }
     }
 }

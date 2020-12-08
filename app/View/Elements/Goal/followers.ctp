@@ -22,10 +22,6 @@
                         <p class="goal-detail-follower-name">
                             <?= h($follower['User']['display_username']) ?>
                         </p>
-                        <i class="fa-sitemap fa"></i>
-                        <span class="goal-detail-follower-group">
-                            <?= h($follower['Group']['name']) ?>
-                        </span>
                     </div>
                 </div>
             </a>
@@ -35,7 +31,7 @@
                     'action'     => 'ajax_get_collabo_change_modal',
                     'goal_id'    => $goal['Goal']['id']
                 ]) ?>">Edit</a>
-            <?php endif ?>  
+            <?php endif ?>
         </div>
     <?php endforeach ?>
     <?= $this->App->viewEndComment() ?>

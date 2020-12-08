@@ -41,4 +41,26 @@ class GroupsController extends AppController
         $this->layout = false;
         return;
     }
+
+    function ajax_get_group_members()
+    {
+        $groupId = Hash::get($this->request->params, 'named.group_id');
+        $this->_ajaxPreProcess();
+
+        /** @var MemberGroup */
+        $MemberGroup = ClassRegistry::init("MemberGroup");
+
+        $groupMembers = $MemberGroup->find('all', [
+            'conditions' => [
+                'MemberGroup.group_id' => $groupId,
+                'MemberGroup.del_flg != 1'
+            ],
+            'contain' => ['User']
+        ]);
+
+        $this->set(compact('groupMembers'));
+        $response = $this->render('Group/modal_group_members');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
 }

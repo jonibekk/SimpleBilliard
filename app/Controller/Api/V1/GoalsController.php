@@ -341,13 +341,25 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('groups', $dataTypes)) {
+            // get own accessible groups
             $policy = new GroupPolicy($this->my_uid, $this->current_team_id);
             $auth_scope = $policy->scope('edit');
             $additional_scope = ['conditions' => ['Group.archived_flg' => false]];
             $scope = array_merge_recursive($auth_scope, $additional_scope);
+            $rows = $Group->findGroupsWithMemberCount($scope);
 
-            $results = $Group->findGroupsWithMemberCount($scope);
-            $groups = Hash::extract($results, '{n}.Group');
+            // get coach accessible groups
+            $coachId = $this->User->TeamMember->getCoachUserIdByMemberUserId($this->my_uid);
+            $coachPolicy = new GroupPolicy($coachId, $this->current_team_id);
+            $coachGroups = $Group->findGroupsWithMemberCount($coachPolicy->scope());
+            $coachGroupsIds = Hash::extract($coachGroups, '{n}.Group.id');
+
+            $groups = [];
+            foreach ($rows as $row) {
+                $row['Group']['coach_belongs'] = in_array($row['Group']['id'], $coachGroupsIds);
+                array_push($groups, $row['Group']);
+            }
+
             $res['groups'] = $groups;
         }
 
@@ -358,11 +370,11 @@ class GoalsController extends ApiController
         }
 
         if ($dataTypes == 'all' || in_array('priorities', $dataTypes)) {
-            $res['priorities'] = Configure::read("label.priorities");
+            $res['priorities'] = ConfigKeyResult::getPriorities();
         }
 
         if ($dataTypes == 'all' || in_array('units', $dataTypes)) {
-            $res['units'] = Configure::read("label.units");
+            $res['units'] = ConfigKeyResult::getUnits();
         }
 
         if ($dataTypes == 'all' || in_array('default_end_dates', $dataTypes)) {

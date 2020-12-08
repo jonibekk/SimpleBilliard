@@ -21,6 +21,7 @@ App::uses('TeamMember', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('ActionResultFile', 'Model');
+App::uses('Term', 'Model');
 App::import('Service', 'GoalMemberService');
 App::import('Service', 'KeyResultService');
 App::uses('Service', 'UploadService');
@@ -60,6 +61,8 @@ class ActionService extends AppService
         $ActionResult = ClassRegistry::init("ActionResult");
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init("AttachedFile");
         /** @var GlRedis $GlRedis */
@@ -161,7 +164,9 @@ class ActionService extends AppService
 
             // ダッシュボードのKRキャッシュ削除
             $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
-            Cache::delete($KeyResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+            $currentTermId = $Term->getCurrentTermId();
+            $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTermId;
+            Cache::delete($KeyResult->getCacheKey($redisKeyname, true), 'user_data');
 
             $ActionResult->commit();
         } catch (RuntimeException $e) {
@@ -529,9 +534,13 @@ class ActionService extends AppService
         $KeyResult = ClassRegistry::init("KeyResult");
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var Term $Term */
+        $Term = ClassRegistry::init("Term");
 
         $KeyResultService->removeGoalMembersCacheInDashboard($goalId, false);
-        Cache::delete($KeyResult->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+        $currentTermId = $Term->getCurrentTermId();
+        $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTermId;
+        Cache::delete($KeyResult->getCacheKey($redisKeyname, true), 'user_data');
     }
 
     private function translateActionPost(int $teamId, int $newActionId)

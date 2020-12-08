@@ -1,5 +1,6 @@
 <?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamMember', 'Model');
+App::import('Service', 'TeamSsoSettingService');
 
 use Goalous\Enum as Enum;
 
@@ -34,7 +35,9 @@ class TeamMemberTest extends GoalousTestCase
         'app.term',
         'app.circle',
         'app.circle_member',
+        'app.experiment',
         'app.mst_translation_language',
+        'app.team_sso_setting'
     );
 
     /**
@@ -103,6 +106,29 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
+    }
+
+    function test_getSsoEnabledTeams()
+    {
+        $uid = '1';
+        $data = [
+            'TeamMember' => [
+                ['user_id' => $uid, 'status' => TeamMember::USER_STATUS_ACTIVE]],
+            'Team'       => [
+                'name' => 'test'
+            ]
+        ];
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        /** @var TeamSsoSettingService $TeamSsoSettingService */
+        $TeamSsoSettingService = ClassRegistry::init('TeamSsoSettingService');
+
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
+
+        $this->assertEmpty($TeamMember->getSsoEnabledTeams($uid));
+        $TeamSsoSettingService->addOrUpdateSetting(1, "https://somesampleidp.com/12345", "https://somesampleidp.com/", "anykindofcertificate");
+        $this->assertNotEmpty($TeamMember->getSsoEnabledTeams($uid));
     }
 
     function testPermissionCheck()
@@ -634,6 +660,33 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+    function testValidateUpdateMemberCsvDataGroupAlignLeftError()
+    {
+        $this->setDefault();
+
+        $csv_data = [];
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+
+        $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
+
+        if (Hash::get($actual, 'error_msg')) {
+            unset($actual['error_msg']);
+        }
+        $excepted = [
+            'error'         => true,
+            'error_line_no' => 2
+        ];
+        $this->assertEquals($excepted, $actual);
+    }
+
     function testValidateUpdateMemberCsvDataGroupDuplicateError()
     {
         $this->setDefault();
@@ -704,7 +757,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_1'
             ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
@@ -742,7 +801,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 '',
                 'rater2'
@@ -782,7 +847,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'member_1',
                 'rater2'
@@ -822,7 +893,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'rater1',
                 'rater1'
@@ -851,8 +928,8 @@ class TeamMemberTest extends GoalousTestCase
         $this->setDefault();
 
         $csv_data = [];
-        $csv_data[0] = $this->TeamMember->_getCsvHeading();
-        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(16),
+        $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
+        $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
             [
                 'from@email.com',
                 'firstname',
@@ -862,15 +939,22 @@ class TeamMemberTest extends GoalousTestCase
                 'OFF',
                 'ON',
                 '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'rater1',
                 'rater2'
             ]);
-        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(16),
+        $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
             ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
-        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(16),
+        $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
             ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
-        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(16),
+        $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
             ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
@@ -901,7 +985,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'rater1',
                 'rater2'
@@ -941,7 +1031,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'rater1',
                 'rater2'
@@ -980,7 +1076,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'xxxxxxxxxx',
                 'rater1',
                 'rater2'
@@ -1020,7 +1122,13 @@ class TeamMemberTest extends GoalousTestCase
                 'ON',
                 'ON',
                 '',
-
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
                 'member_2',
                 'rater1',
                 'rater2',
@@ -1850,6 +1958,18 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertNotEmpty($this->TeamMember->updateLastLogin(1, 1));
     }
 
+    /**
+     * @expectedException Goalous\Exception\GoalousNotFoundException
+     */
+    public function test_updateLastLoginDontExist_failed()
+    {
+        $this->setDefault();
+
+        $this->TeamMember->updateLastLogin(1123213, 209309231);
+
+        $this->fail();
+    }
+
     function testDeleteCacheMember()
     {
         $this->setDefault();
@@ -1934,47 +2054,113 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
 
         // TeamMember: active admin, User: active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
+        $this->TeamMember->save(
+            ['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
+        $this->TeamMember->save(
+            ['id' => 2, 'user_id' => 2, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
         $this->TeamMember->User->save(['user_id' => 1, 'active_flg' => true]);
         $this->assertTrue($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: is not admin
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => false,
-            'status'    => TeamMember::USER_STATUS_ACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => false,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
+
+        // TeamMember: is not admin
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => false,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: active, User: not active
-        $this->TeamMember->save(['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]);
+        $this->TeamMember->save(
+            ['id' => 1, 'user_id' => 1, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
+        $this->TeamMember->save(
+            ['id' => 2, 'user_id' => 2, 'team_id' => 1, 'admin_flg' => true, 'status' => TeamMember::USER_STATUS_ACTIVE]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertTrue($this->TeamMember->isActiveAdmin(2, 1));
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => false]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: not active, User: active
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => true,
-            'status'    => TeamMember::USER_STATUS_INACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_INACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => true]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
+
+        // TeamMember: not active, User: active
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_INACTIVE
+            ]
+        );
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => true]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
 
         // TeamMember: not active, User: not active
-        $this->TeamMember->save([
-            'id'        => 1,
-            'user_id'   => 1,
-            'team_id'   => 1,
-            'admin_flg' => true,
-            'status'    => TeamMember::USER_STATUS_ACTIVE
-        ]);
+        $this->TeamMember->save(
+            [
+                'id'        => 1,
+                'user_id'   => 1,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
         $this->TeamMember->User->save(['id' => 1, 'active_flg' => false]);
         $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
+
+
+        // TeamMember: not active, User: not active
+        $this->TeamMember->save(
+            [
+                'id'        => 2,
+                'user_id'   => 2,
+                'team_id'   => 1,
+                'admin_flg' => true,
+                'status'    => TeamMember::USER_STATUS_ACTIVE
+            ]
+        );
+        $this->TeamMember->User->save(['id' => 2, 'active_flg' => false]);
+        $this->assertFalse($this->TeamMember->isActiveAdmin(1, 1));
+        $this->assertFalse($this->TeamMember->isActiveAdmin(2, 1));
     }
 
     function test_updateActiveFlgToStatus_success()
@@ -2159,7 +2345,7 @@ class TeamMemberTest extends GoalousTestCase
             ['user_id' => 3, 'team_id' => 1]
         );
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 4);
+        $this->assertEquals(count($res), 5);
         $diff = array_values(array_diff($allMemberIds, $res));
         $this->assertEquals($diff, [3]);
 
@@ -2168,20 +2354,20 @@ class TeamMemberTest extends GoalousTestCase
             ['user_id' => 1, 'team_id' => 1]
         );
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 3);
-        $this->assertEquals($res, [2, 12, 13]);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res, [2, 12, 13, 4]);
 
         $userId = $this->createActiveUser(1);
         $tmId = $this->TeamMember->getLastInsertId();
 
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 3);
-        $this->assertEquals($res, [2, 12, 13]);
+        $this->assertEquals(count($res), 4);
+        $this->assertEquals($res, [2, 12, 13, 4]);
 
         $allMemberIds[] = $userId;
         $res = $this->TeamMember->filterActiveMembers($allMemberIds, $teamId);
-        $this->assertEquals(count($res), 4);
-        $this->assertEquals($res, [2, 12, 13, $userId]);
+        $this->assertEquals(count($res), 5);
+        $this->assertEquals($res, [2, 12, 13, 4, $userId]);
     }
 
     public function test_setDefaultTranslationLanguage_success()

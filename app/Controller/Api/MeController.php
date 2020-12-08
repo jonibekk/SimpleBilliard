@@ -537,6 +537,11 @@ class MeController extends BasePagingController
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init('TeamMember');
 
+        if (!empty($TeamMember->getSsoEnabledTeams($userId))) {
+            return ErrorResponse::forbidden()->withMessage(__("You don't have access right to this team."))
+                ->getResponse();
+        }
+
         // Check permission whether access team
         $myTeams = $TeamMember->getActiveTeamList($userId);
         if (!array_key_exists($teamId, $myTeams)) {

@@ -165,6 +165,37 @@ class Follower extends AppModel
     }
 
     /**
+     * @param int $goal_id
+     * @param int|null $limit
+     * @param int $page
+     *
+     * @return array|null
+     */
+    public function getFollowerForGoal($goal_id, $limit, $page = 1)
+    {
+        $options = [
+            'conditions' => [
+                'Follower.goal_id' => $goal_id,
+                'Follower.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User' => [
+                    'fields' => [
+                        'User.id',
+                        'User.*',
+                    ]
+                ]
+            ],
+            'limit'      => $limit,
+            'page'       => $page,
+            'order'      => ['Follower.created' => 'DESC'],
+            'joins'      => [],
+        ];
+
+        return $this->find('all', $options);
+    }
+
+    /**
      * フォロワーの一覧を取得
      *
      * @param       $goal_id
