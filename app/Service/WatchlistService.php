@@ -98,7 +98,8 @@ class WatchlistService extends AppService
             $strDate = date('Y-m-d', $timestamp);
 
             if (array_key_exists($strDate, $logsByDate)) {
-                $cummulativeVal += ($logsByDate[$strDate] / $targetProgress * 100);
+                $addedVal = number_format($logsByDate[$strDate] / $targetProgress * 100, 2);
+                $cummulativeVal += $addedVal;
                 $datapoints[] = $cummulativeVal;
             } else if ($timestamp > time()) {
                 $datapoints[] = null;
