@@ -38,6 +38,10 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * @property NotificationComponent $Notification
  * @property GlEmailComponent      $GlEmail
  * @property TeamMember  $TeamMember
+ * @property TwoFaComponent $TwoFa
+ * @property MixpanelComponent  $Mixpanel
+ * @property SessionComponent $Session
+ * @property GlRedis          $GlRedis
  * @property NotifySetting  $NotifySetting
  */
 class MeController extends BasePagingController
@@ -47,13 +51,16 @@ class MeController extends BasePagingController
     public $uses = [
         'User',
         'TeamMember',
+        'Mixpanel',
+        "GlRedis",
         'NotifySetting',
     ];
 
     public $components = [
         'Session',
         'Flash',
-        'Lang', 
+        'Lang',
+        'TwoFa',
         'Notification',
         'GlEmail',
         'Notification',
@@ -197,7 +204,7 @@ class MeController extends BasePagingController
 
         if (empty($data)) {
             GoalousLog::error('Failed to get timezones data');
-            return ErrorResponse::internalServerError()->withBody(['error' => 'No timezone found.'])->getResponse();
+            return ErrorResponse::forbidden()->withMessage('No timezone found.')->getResponse();
         }
 
         return ApiResponse::ok()->withBody([
@@ -219,6 +226,37 @@ class MeController extends BasePagingController
             'translation_languages' => $translation_languages
         ];
         
+        return ApiResponse::ok()->withBody([
+            'data' => $data
+        ])->getResponse();
+    }
+
+    /**
+     * Get QR Code
+     */
+    public function get_qrcode()
+    {
+        if ($this->Session->read('2fa_secret_key')) {
+            $google_2fa_secret_key = $this->Session->read('2fa_secret_key');
+        } else {
+            $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
+            $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
+        }
+
+        $url_2fa = $this->TwoFa->getQRCodeInline(
+            SERVICE_NAME,
+            $this->Session->read('Auth.User.PrimaryEmail.email'),
+            $google_2fa_secret_key
+        );
+
+        $data = [];
+        if ($url_2fa) {
+            $data = ['url' => $url_2fa];
+        } else {
+            return ErrorResponse::internalServerError()->withMessage('Cannot load qr code')->getResponse();
+        }
+
+
         return ApiResponse::ok()->withBody([
             'data' => $data
         ])->getResponse();
@@ -256,7 +294,7 @@ class MeController extends BasePagingController
 
             $result = $User->saveAll($data['User']);
             if (!$result) {
-                return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating account settings.'])->getResponse();
+                return ErrorResponse::internalServerError()->withMessage('Error on updating account settings.')->getResponse();
             }
         }
 
@@ -320,13 +358,13 @@ class MeController extends BasePagingController
                     $UploadService->saveWithProcessing("User", $this->getUserId(), 'cover_photo', $uploadedFile);
                 }
             } catch (Exception $e) {
-                return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
+                return ErrorResponse::internalServerError()->withMessage('Error on updating profile settings.')->getResponse();
             }
-
+            
             $TeamMember->save($teamMember, false);
             $User->save($user, false);
         } else {
-            return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating profile settings.'])->getResponse();
+            return ErrorResponse::internalServerError()->withMessage('Error on updating profile settings.')->getResponse();
         }
 
         return ApiResponse::ok()->withBody([
@@ -358,7 +396,7 @@ class MeController extends BasePagingController
 
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
         } else {
-            return ErrorResponse::internalServerError()->withBody(['error' => 'Error on updating notification settings.'])->getResponse();
+            return ErrorResponse::badRequest()->withMessage('Error on updating notification settings.')->getResponse();
         }
 
         return ApiResponse::ok()->withBody([
@@ -375,12 +413,12 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                return ErrorResponse::internalServerError()->withBody(['error' => 'Invalid password.'])->getResponse();
+                return ErrorResponse::internalServerError()->withMessage('Invalid password.')->getResponse();
             } else {
                 $email_data = $this->User->addEmail($data, $this->getUserId());
             }
         } catch (RuntimeException $e) {
-            return ErrorResponse::internalServerError()->withBody(['error' => 'Something went wrong!'])->getResponse();
+            return ErrorResponse::internalServerError()->withMessage('Something went wrong!')->getResponse();
         }
 
         $this->GlEmail->sendMailChangeEmailVerify(
@@ -403,12 +441,12 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                return ErrorResponse::internalServerError()->withBody(['error' => "Incorrect current password."])->getResponse();
+                return ErrorResponse::badRequest()->withMessage("Incorrect current password.")->getResponse();
             } else {
                 $this->User->changePassword($data);
             }
         } catch (RuntimeException $e) {
-            return ErrorResponse::internalServerError()->withBody(['error' => "Failed to save password change."])->getResponse();
+            return ErrorResponse::internalServerError()->withMessage("Failed to save password change.")->getResponse();
         }
 
         return ApiResponse::ok()->withBody([
@@ -417,11 +455,97 @@ class MeController extends BasePagingController
     }
 
     /**
-     * Put Enable 2FA
+     * Post Enable 2FA
      */
-    public function put_enable_2fa()
+    public function post_enable_2fa()
     {
-        // Enable 2FA
+        $tmp = $this->getRequestJsonBody();
+
+        $data = [
+            'User' => [
+                '2fa_code' => $tmp['code']
+            ]
+        ];
+
+        try {
+            if (!$secret_key = $this->Session->read('2fa_secret_key')) {
+                throw new RuntimeException(__("An error has occurred."));
+            }
+            if (!Hash::get($data, 'User.2fa_code')) {
+                throw new RuntimeException(__("An error has occurred."));
+            }
+            if (!$this->TwoFa->verifyKey($secret_key, $data['User']['2fa_code'])) {
+                throw new RuntimeException(__("The code is incorrect."));
+                return ErrorResponse::internalServerError()->withMessage("The code is incorrect.")->getResponse();
+            }
+
+            $this->User->id = $this->getUserId();
+            $this->User->saveField('2fa_secret', $secret_key);
+            //
+        } catch (RuntimeException $e) {
+            return ErrorResponse::internalServerError()->withMessage($e->getMessage())->getResponse();
+        }
+
+        $this->Session->delete('2fa_secret_key');
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
+
+        return ApiResponse::ok()->withBody([
+            'data' => 'Succeeded to save 2-Step Verification.'
+        ])->getResponse();
+    }
+
+    /**
+     * Post Disable 2FA
+     */
+    function post_desable_2fa()
+    {
+        $this->User->id = $this->getUserId();
+        $this->User->saveField('2fa_secret', null);
+        $this->User->RecoveryCode->invalidateAll($this->User->id);
+
+        if (empty($this->getTeamId()) === false && empty($this->getUserId()) === false) {
+            $this->GlRedis->deleteDeviceHash($this->getTeamId(), $this->getUserId());
+        }
+        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
+
+        return ApiResponse::ok()->withBody([
+            'data' => "Succeeded to cancel 2-Step Verification."
+        ])->getResponse();
+    }
+
+    /**
+     * Get recovery Code
+     */
+    function get_recovery_code()
+    {
+        $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
+        if (!$recovery_codes) {
+            $success = $this->User->RecoveryCode->regenerate($this->getUserId());
+            if (!$success) {
+                throw new NotFoundException();
+            }
+            $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
+        }
+
+        return ApiResponse::ok()->withBody([
+            'data' => $recovery_codes
+        ])->getResponse();
+    }
+
+    /**
+     * Get regenerated Code
+     */
+    function get_regenerated_code()
+    {
+        $success = $this->User->RecoveryCode->regenerate($this->getUserId());
+        if (!$success) {
+            return ErrorResponse::internalServerError()->withMessage("An error has occurred.")->getResponse();
+        }
+        $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
+
+        return ApiResponse::ok()->withBody([
+            'data' => $recovery_codes
+        ])->getResponse();
     }
 
     public function get_goal_status()

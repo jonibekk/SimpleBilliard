@@ -96,6 +96,7 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
      */
     Router::connect('/api/:controller/:action', ['prefix' => 'get', '[method]' => 'GET']);
     Router::connect('/api/:controller/:action', ['prefix' => 'put', '[method]' => 'PUT']);
+    Router::connect('/api/:controller/:action', ['prefix' => 'post', '[method]' => 'POST']);
 
     /**
      * Search
