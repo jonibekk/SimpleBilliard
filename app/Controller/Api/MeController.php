@@ -219,16 +219,12 @@ class MeController extends BasePagingController
         $TermService = ClassRegistry::init("TermService");
         /** @var GoalExtension $UserExtension */
         $GoalExtension = ClassRegistry::init('GoalExtension');
-        /** @var Team */
-        $Team = ClassRegistry::init("Team");
-
-        $currentTeam = $Team->useEntity()->findById($this->getTeamId());
         $currentTerm = $TermService->getCurrentTerm($this->getTeamId());
 
         // Find KeyResult ordered by actioned in recent
         $findForKeyResultListRequest = new FindForKeyResultListRequest( 
             $this->getUserId(), 
-            $currentTeam, 
+            $this->getTeamId(),
             $currentTerm,
             ['onlyIncomplete' => true]
         );

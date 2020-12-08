@@ -1,6 +1,7 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('Group', 'Model');
+App::uses('Term', 'Model');
 App::uses('KeyResult', 'Model');
 App::import('Service', 'WatchlistService');
 App::import('Service', 'KrProgressService');
@@ -59,6 +60,21 @@ class WatchlistsController extends BasePagingController
         return ApiResponse::ok()->withData($response)->getResponse();
     }
 
+    public function get_by_term() 
+    {
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
+        $terms = $Term->getAllTerm();
+        $processed = [];
+
+        foreach ($terms as $term) {
+            $term['watchlists'] = $this->loadTermWatchlists($term['id']);
+            $processed[] = $term;
+        }
+
+        return ApiResponse::ok()->withData($processed)->getResponse();
+    }
+
     private function findWatchlist(int $watchlistId): array
     {
         /** @var Watchlist $Watchlist */
@@ -101,7 +117,9 @@ class WatchlistsController extends BasePagingController
 
         $policy = new WatchlistPolicy($userId, $teamId);
         $scope = $policy->scope();
-        $results = $Watchlist->findWithKrCount($scope);
+        $termScope = ['conditions' => ['Watchlist.term_id' => $termId]];
+        $fullScope = array_merge_recursive($scope, $termScope);
+        $results = $Watchlist->findWithKrCount($fullScope);
         $watchlists = Hash::extract($results, '{n}.Watchlist');
 
         $krProgressService = new KrProgressService(
