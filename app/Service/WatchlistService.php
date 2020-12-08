@@ -2,11 +2,10 @@
 <?php
 App::import('Service', 'AppService');
 App::import('Service', 'GoalService');
+App::import('Service', 'KeyResultService');
 App::uses('Watchlist', 'Model');
 App::uses('KrWatchlist', 'Model');
 App::import('Model/Entity', 'WatchlistEntity');
-
-use Goalous\Enum as Enum;
 
 /**
  * Class WatchlistService
@@ -18,8 +17,11 @@ class WatchlistService extends AppService
     {
         /** @var KrWatchlist */
         $KrWatchlist = ClassRegistry::init("KrWatchlist");
+        /** @var KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $watchlist = $this->findOrCreateWatchlist($userId, $teamId);
+        $termId = (int)$KeyResultService->findTermIdForKr($krId);
+        $watchlist = $this->findOrCreateWatchlist($userId, $teamId, $termId);
         $conditions = [
             "key_result_id" => (int)$krId, 
             "watchlist_id" => $watchlist['Watchlist']['id'], 
@@ -38,8 +40,11 @@ class WatchlistService extends AppService
     {
         /** @var KrWatchlist */
         $KrWatchlist = ClassRegistry::init("KrWatchlist");
+        /** @var KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
 
-        $watchlist = $this->findOrCreateWatchlist($userId, $teamId);
+        $termId = $KeyResultService->findTermIdForKr($krId);
+        $watchlist = $this->findOrCreateWatchlist($userId, $teamId, $termId);
 
         $KrWatchlist->deleteAll([
             "key_result_id" => $krId, 
@@ -49,14 +54,19 @@ class WatchlistService extends AppService
         return $watchlist;
     }
 
-    public function findOrCreateWatchlist(int $userId, int $teamId): array
+    public function findOrCreateWatchlist(int $userId, int $teamId, int $termId): array
     {
         /** @var Watchlist */
         $Watchlist = ClassRegistry::init("Watchlist");
 
         // use 1 watchlist per user for phase 1, will allow configuration of watchlist in phase 2
         $defaultWatchlistName = "Important";
-        $scope = ["conditions" => ["Watchlist.name" => $defaultWatchlistName]];
+        $scope = [
+            "conditions" => [
+                "Watchlist.name" => $defaultWatchlistName, 
+                "Watchlist.term_id" => $termId
+            ]
+        ];
         $watchlist = $Watchlist->findByUserAndTeam($userId, $teamId, $scope);
 
         if (empty($watchlist)) {
@@ -64,6 +74,7 @@ class WatchlistService extends AppService
                 "name" => $defaultWatchlistName,
                 "user_id" => $userId,
                 "team_id" => $teamId,
+                "term_id" => $termId,
             ];
 
             $Watchlist->create();

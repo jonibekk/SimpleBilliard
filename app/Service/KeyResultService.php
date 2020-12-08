@@ -813,4 +813,34 @@ class KeyResultService extends AppService
 
         return $KeyResult->useType()->find('all', $options);
     }
+
+    public function findTermIdForKr(int $krId)
+    {
+        /** @var KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult"); 
+
+        $options = [
+            'conditions' => [
+                'KeyResult.id' => $krId
+            ],
+            'joins' => [
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'KeyResult.start_date >= Term.start_date',
+                        'KeyResult.end_date <= Term.end_date',
+                        'KeyResult.team_id = Term.team_id'
+                    ]
+                ]
+            ],
+            'fields' => [
+                'KeyResult.id',
+                'Term.id'
+            ]
+        ];
+
+        $results = $KeyResult->find('first', $options);
+        return $results['Term']['id'];
+    }
 }

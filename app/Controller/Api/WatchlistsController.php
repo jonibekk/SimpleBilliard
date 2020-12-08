@@ -2,6 +2,7 @@
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('Group', 'Model');
 App::uses('KeyResult', 'Model');
+App::uses('Term', 'Model');
 App::import('Service', 'WatchlistService');
 App::import('Service', 'KrProgressService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
@@ -24,13 +25,17 @@ class WatchlistsController extends BasePagingController
         $WatchlistService = ClassRegistry::init("WatchlistService");
         // @var Watchlist ;
         $Watchlist = ClassRegistry::init("Watchlist");
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
 
+        $currentTerm = $Term->getCurrentTermData();
         $userId = $this->getUserId();
         $teamId = $this->getTeamId();
+        $termId = $currentTerm['id'];
 
         // TODO: Remove once we enter phase 2
         // Creates the Important list for users if they haven't watched any KR before
-        $WatchlistService->findOrCreateWatchlist($userId, $teamId);
+        $WatchlistService->findOrCreateWatchlist($userId, $teamId, $termId);
 
         $policy = new WatchlistPolicy($userId, $teamId);
         $scope = $policy->scope();
