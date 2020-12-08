@@ -1,5 +1,6 @@
 <?php
 App::import('Service', 'AppService');
+App::uses('AppUtil', 'Util');
 
 /**
  * Class TermService
@@ -267,4 +268,17 @@ class TermService extends AppService
         return $targetTerm['start_date'] >= $currentTerm['start_date'];
     }
 
+    function getCurrentTerm(int $teamId): TermEntity
+    {
+        /** @var Term */
+        $Term = ClassRegistry::init("Term");
+        /** @var Team */
+        $Team = ClassRegistry::init("Team");
+
+        $team = $Team->findById($teamId);
+        $timezone = $team['Team']['timezone'];
+        $data = AppUtil::todayDateYmdLocal($timezone);
+
+        return $Term->getTermByDate($teamId, $data);
+    }
 }

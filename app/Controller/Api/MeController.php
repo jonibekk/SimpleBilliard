@@ -13,6 +13,7 @@ App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
 App::import('Lib/Paging', 'PagingRequest');
@@ -20,6 +21,7 @@ App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('CheckedCircle', 'Model');
+App::uses('Term', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
@@ -213,23 +215,23 @@ class MeController extends BasePagingController
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
+        /** @var TermService $TermService */
+        $TermService = ClassRegistry::init("TermService");
         /** @var GoalExtension $UserExtension */
         $GoalExtension = ClassRegistry::init('GoalExtension');
+        /** @var Team */
+        $Team = ClassRegistry::init("Team");
 
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->getTeamId();
-        $Term->Team->my_uid = $this->getUserId();
-        $Term->current_team_id = $this->getTeamId();
-        $Term->my_uid = $this->getUserId();
-        $currentTerm = $Term->getCurrentTermData();
+        $currentTeam = $Team->useEntity()->findById($this->getTeamId());
+        $currentTerm = $TermService->getCurrentTerm($this->getTeamId());
 
         // Find KeyResult ordered by actioned in recent
-        $findForKeyResultListRequest = new FindForKeyResultListRequest(
-            $this->getUserId(),
-            $this->getTeamId(),
-            $currentTerm);
-        $findForKeyResultListRequest->setOnlyKrIncomplete(true);
+        $findForKeyResultListRequest = new FindForKeyResultListRequest( 
+            $this->getUserId(), 
+            $currentTeam, 
+            $currentTerm,
+            ['onlyIncomplete' => true]
+        );
         $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
 
         foreach ($keyResults as $index => $keyResult) {
@@ -255,6 +257,7 @@ class MeController extends BasePagingController
 
         $krs = $service->findKrs();
         $response = $service->processKeyResults($krs);
+        $response = $service->appendProgressGraph($response);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }

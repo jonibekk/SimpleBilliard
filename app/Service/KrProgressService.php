@@ -1,7 +1,9 @@
 <?php
 App::import('Service/Request/KeyResults', 'ResourceRequest');
+App::uses('Team', 'Model');
 App::import('Service', 'GoalService');
 App::import('Service', 'AppService');
+App::import('Service', 'TermService');
 
 /**
  * Class KrProgressService
@@ -9,51 +11,37 @@ App::import('Service', 'AppService');
 class KrProgressService extends AppService
 {
     /** @var int **/
-    private $userId;
-    /** @var int **/
-    private $teamId;
-    /** @var int **/
     private $goalId;
     /** @var string **/
     private $listId;
     /** @var FindForKeyResultListRequest **/
     private $request;
-    /** @var boolean **/
-    private $withKrProgressGraphValues;
 
     const MY_KR_ID = 'my_krs';
 
 
     function __construct(CakeRequest $request, int $userId, int $teamId, string $listId)
     {
-        $this->withKrProgressGraphValues = boolval($request->query('with_kr_progress_graph_values'));
-        $limit = intval($request->query('limit'));
-        $requestGoalId = $request->query('goal_id');
+        // @var TermService ;
+        $TermService = ClassRegistry::init("TermService");
+        /** @var Team */
+        $Team = ClassRegistry::init("Team");
 
-        $this->userId = $userId;
-        $this->teamId = $teamId;
+        $currentTeam = $Team->useEntity()->findById($teamId);
+
+        // do not get intval because goal_id can be null
+        $requestGoalId = $request->query('goal_id');
+        $limit = intval($request->query('limit'));
+
         $this->listId = $listId;
         $this->goalId = $requestGoalId ? intval($requestGoalId) : null;
-        $currentTerm = $this->initializeTerm();
 
         $this->request = new FindForKeyResultListRequest(
-            $this->userId,
-            $this->teamId,
-            $currentTerm
+            $userId,
+            $currentTeam,
+            $TermService->getCurrentTerm($teamId),
+            ['limit' => $limit]
         );
-        $this->request->setLimit($limit);
-    }
-
-    function initializeTerm(): array
-    {
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->teamId;
-        $Term->Team->my_uid = $this->userId;
-        $Term->current_team_id = $this->teamId;
-        $Term->my_uid = $this->userId;
-        $currentTerm = $Term->getCurrentTermData();
-        return $currentTerm;
     }
 
     function processKeyResults(array $allKrs): array
@@ -68,13 +56,7 @@ class KrProgressService extends AppService
             array_push($krs, $this->extendKr($kr));
         };
 
-        $response = $this->formatResponse($allKrs, $krs);
-
-        if ($this->withKrProgressGraphValues) {
-            $response = $this->appendProgressGraph($response);
-        }
-
-        return $response;
+        return $this->formatResponse($allKrs, $krs);
     }
 
     function findKrs(): array
@@ -114,7 +96,7 @@ class KrProgressService extends AppService
             $changeValueTotal += $krProgressLog['change_value'];
 
             // Need a post_id to make link to action detail post.
-            $post = $Post->getByActionResultId($actionResult['id'], $this->teamId);
+            $post = $Post->getByActionResultId($actionResult['id'], $this->request->getTeam()['id']);
             $actionResults[$i]['post_id'] = $post['Post']['id'];
             $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
         }
@@ -192,7 +174,7 @@ class KrProgressService extends AppService
         $GoalService = ClassRegistry::init('GoalService');
 
         return $GoalService->getUserAllGoalProgressForDrawingGraph(
-            $this->userId,
+            $this->request->getUserId(),
             $graphRange['graphStartDate'],
             $graphRange['graphEndDate'],
             $graphRange['plotDataEndDate'],
@@ -215,11 +197,8 @@ class KrProgressService extends AppService
     private function generateGraphRange(): array {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
-        $currentTerm = $this->request->getCurrentTermModel();
-
-        $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
         return $GoalService->getGraphRange(
-            $todayDate,
+            $this->request->getTodayDate(),
             GoalService::GRAPH_TARGET_DAYS,
             GoalService::GRAPH_MAX_BUFFER_DAYS
         );

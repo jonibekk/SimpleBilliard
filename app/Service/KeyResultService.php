@@ -712,15 +712,14 @@ class KeyResultService extends AppService
 
     public function findForKeyResultList(FindForKeyResultListRequest $request): array
     {
-        $now = GoalousDateTime::now();
         $options = [
             'conditions' => [
                 'GoalMember.user_id'    => $request->getUserId(),
-                'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
-                'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
-                'KeyResult.team_id'     => $request->getTeamId(),
+                'KeyResult.end_date >=' => $request->getTerm()['start_date'],
+                'KeyResult.end_date <=' => $request->getTerm()['end_date'],
+                'KeyResult.team_id'     => $request->getTeam()['id'],
                 'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $now->format('Y-m-d'),
+                'Goal.end_date >='      => $request->getTodayDate(),
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -757,7 +756,7 @@ class KeyResultService extends AppService
         if ($request->getLimit()) {
             $options['limit'] = $request->getLimit();
         }
-        if ($request->getOnlyKrIncomplete()) {
+        if ($request->getOnlyIncomplete()) {
             $options['conditions']['KeyResult.completed'] = null;
         }
 
@@ -766,18 +765,16 @@ class KeyResultService extends AppService
         return $KeyResult->useType()->find('all', $options);
     }
 
-    public function findForWatchlist($request, $watchlistId)
+    public function findForWatchlist(FindForKeyResultListRequest $request, int $watchlistId)
     { 
         /** @var KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
 
-        $now = GoalousDateTime::now();
         $options = [
             'conditions' => [
-                'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
-                'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
-                'KeyResult.team_id'     => $request->getTeamId(),
-                'Goal.end_date >='      => $now->format('Y-m-d'),
+                'KeyResult.end_date >=' => $request->getTerm()['start_date'],
+                'KeyResult.end_date <=' => $request->getTerm()['end_date'],
+                'KeyResult.team_id'     => $request->getTeam()['id'],
             ],
             'joins' => [
                 [
@@ -810,6 +807,10 @@ class KeyResultService extends AppService
                 ]
             ]
         ];
+
+        if ($request->getLimit()) {
+            $options['limit'] = $request->getLimit();
+        }
 
         return $KeyResult->useType()->find('all', $options);
     }

@@ -1,4 +1,7 @@
 <?php
+App::uses('TeamEntity', 'Model/Entity');
+App::uses('TermEntity', 'Model/Entity');
+App::uses('AppUtil', 'Util');
 
 class FindForKeyResultListRequest
 {
@@ -8,91 +11,73 @@ class FindForKeyResultListRequest
     protected $userId;
 
     /**
-     * @var integer
+     * @var TermEntity
      */
-    protected $teamId;
+    protected $term;
 
     /**
-     * @var array
+     * @var TeamEntity
      */
-    protected $currentTermModel;
+    protected $team;
+
+    /**
+     * @var string
+     */
+    protected $todayDate;
+
+    /**
+     * @var null|boolean
+     */
+    protected $onlyIncomplete;
 
     /**
      * @var null|integer
      */
     protected $limit;
 
-    /**
-     * @var null|boolean
-     */
-    protected $onlyKrIncomplete;
-
-    /**
-     * FindForKeyResultListRequest constructor.
-     * @param int $userId
-     * @param int $teamId
-     * @param array $currentTermModel
-     */
-    public function __construct(int $userId, int $teamId, array $currentTermModel)
+    public function __construct(int $userId, TeamEntity $team, TermEntity $term, array $opts)
     {
         $this->userId = $userId;
-        $this->teamId = $teamId;
-        $this->currentTermModel = $currentTermModel;
+        $this->team = $team;
+        $this->term = $term;
+        $this->todayDate = AppUtil::dateYmdLocal(time(), $team['timezone']);
+
+        if (array_key_exists('onlyIncomplete', $opts)) {
+            $this->onlyIncomplete = $opts['onlyIncomplete'];
+        }
+
+        if (array_key_exists('limit', $opts)) {
+            $this->limit = $opts['limit'];
+        }
     }
 
-    /**
-     * @return int
-     */
-    public function getUserId(): int
+    public function getUserId()
     {
         return $this->userId;
     }
 
-    /**
-     * @return int
-     */
-    public function getTeamId(): int
+    public function getTeam()
     {
-        return $this->teamId;
+        return $this->team;
     }
 
-    /**
-     * @return array
-     */
-    public function getCurrentTermModel(): array
+    public function getTerm()
     {
-        return $this->currentTermModel;
+        return $this->term;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLimit(): ?int
+    public function getOnlyIncomplete()
+    {
+        return $this->onlyIncomplete;
+    }
+
+    public function getLimit()
     {
         return $this->limit;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function getOnlyKrIncomplete(): ?bool
+    public function getTodayDate()
     {
-        return $this->onlyKrIncomplete;
-    }
-
-    /**
-     * @param int|null $limit
-     */
-    public function setLimit(?int $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    /**
-     * @param bool|null $onlyKrIncomplete
-     */
-    public function setOnlyKrIncomplete(?bool $onlyKrIncomplete): void
-    {
-        $this->onlyKrIncomplete = $onlyKrIncomplete;
+        return $this->todayDate;
     }
 }
