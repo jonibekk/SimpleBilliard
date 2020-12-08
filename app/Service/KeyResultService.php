@@ -717,7 +717,7 @@ class KeyResultService extends AppService
                 'GoalMember.user_id'    => $request->getUserId(),
                 'KeyResult.end_date >=' => $request->getTerm()['start_date'],
                 'KeyResult.end_date <=' => $request->getTerm()['end_date'],
-                'KeyResult.team_id'     => $request->getTeam()['id'],
+                'KeyResult.team_id'     => $request->getTeamId(),
                 'GoalMember.del_flg'    => false,
                 'Goal.end_date >='      => $request->getTodayDate(),
             ],
@@ -774,7 +774,7 @@ class KeyResultService extends AppService
             'conditions' => [
                 'KeyResult.end_date >=' => $request->getTerm()['start_date'],
                 'KeyResult.end_date <=' => $request->getTerm()['end_date'],
-                'KeyResult.team_id'     => $request->getTeam()['id'],
+                'KeyResult.team_id'     => $request->getTeamId(),
             ],
             'joins' => [
                 [

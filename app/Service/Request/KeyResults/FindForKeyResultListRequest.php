@@ -11,14 +11,14 @@ class FindForKeyResultListRequest
     protected $userId;
 
     /**
+     * @var integer
+     */
+    protected $teamId;
+
+    /**
      * @var TermEntity
      */
     protected $term;
-
-    /**
-     * @var TeamEntity
-     */
-    protected $team;
 
     /**
      * @var string
@@ -35,12 +35,12 @@ class FindForKeyResultListRequest
      */
     protected $limit;
 
-    public function __construct(int $userId, TeamEntity $team, TermEntity $term, array $opts)
+    public function __construct(int $userId, int $teamId, TermEntity $term, array $opts)
     {
         $this->userId = $userId;
-        $this->team = $team;
+        $this->teamId = $teamId;
         $this->term = $term;
-        $this->todayDate = AppUtil::dateYmdLocal(time(), $team['timezone']);
+        $this->todayDate = GoalousDateTime::now()->format('Y-m-d');
 
         if (array_key_exists('onlyIncomplete', $opts)) {
             $this->onlyIncomplete = $opts['onlyIncomplete'];
@@ -56,9 +56,9 @@ class FindForKeyResultListRequest
         return $this->userId;
     }
 
-    public function getTeam()
+    public function getTeamId()
     {
-        return $this->team;
+        return $this->teamId;
     }
 
     public function getTerm()

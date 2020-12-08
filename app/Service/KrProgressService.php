@@ -20,14 +20,16 @@ class KrProgressService extends AppService
     const MY_KR_ID = 'my_krs';
 
 
-    function __construct(CakeRequest $request, int $userId, int $teamId, string $listId)
+    function __construct(
+        CakeRequest $request, 
+        int $userId, 
+        int $teamId, 
+        string $listId,
+        int $termId = null
+    )
     {
         // @var TermService ;
         $TermService = ClassRegistry::init("TermService");
-        /** @var Team */
-        $Team = ClassRegistry::init("Team");
-
-        $currentTeam = $Team->useEntity()->findById($teamId);
 
         // do not get intval because goal_id can be null
         $requestGoalId = $request->query('goal_id');
@@ -38,7 +40,7 @@ class KrProgressService extends AppService
 
         $this->request = new FindForKeyResultListRequest(
             $userId,
-            $currentTeam,
+            $teamId,
             $TermService->getCurrentTerm($teamId),
             ['limit' => $limit]
         );
@@ -96,7 +98,7 @@ class KrProgressService extends AppService
             $changeValueTotal += $krProgressLog['change_value'];
 
             // Need a post_id to make link to action detail post.
-            $post = $Post->getByActionResultId($actionResult['id'], $this->request->getTeam()['id']);
+            $post = $Post->getByActionResultId($actionResult['id'], $this->request->getTeamId());
             $actionResults[$i]['post_id'] = $post['Post']['id'];
             $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
         }
@@ -195,13 +197,28 @@ class KrProgressService extends AppService
     }
 
     private function generateGraphRange(): array {
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-        return $GoalService->getGraphRange(
-            $this->request->getTodayDate(),
-            GoalService::GRAPH_TARGET_DAYS,
-            GoalService::GRAPH_MAX_BUFFER_DAYS
-        );
+        if ($this->isPastTerm()) {
+            // default to entire term length if checking a past term
+            return [
+                'graphStartDate'  => $this->request->getTerm()['start_date'],
+                'graphEndDate'    => $this->request->getTerm()['end_date'],
+                'plotDataEndDate' => $this->request->getTerm()['end_date'],
+            ];
+            
+        } else {
+            /** @var GoalService $GoalService */
+            $GoalService = ClassRegistry::init('GoalService');
+            return $GoalService->getGraphRange(
+                $this->request->getTodayDate(),
+                GoalService::GRAPH_TARGET_DAYS,
+                GoalService::GRAPH_MAX_BUFFER_DAYS
+            );
+        }
+    }
+
+    private function isPastTerm(): bool
+    {
+        return $this->request->getTerm()['end_date'] < $this->request->getTodayDate();
     }
 
     private function periodFrom()
