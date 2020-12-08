@@ -12,6 +12,7 @@ use Goalous\Enum\Model\Translation\ContentType as TranslationContentType;
 App::import('Service', 'AppService');
 App::uses('AppUtil', 'Util');
 App::uses('ActionResult', 'Model');
+App::uses('ActionResultMember', 'Model');
 App::uses('KeyResult', 'Model');
 App::uses('GoalMember', 'Model');
 App::uses('Post', 'Model');
@@ -198,6 +199,7 @@ class ActionService extends AppService
         try {
             $this->TransactionManager->begin();
             $newActionId = $this->createAction($data);
+            $this->createActionResultMembers($newActionId, $data);
             $this->updateKrAndProgress($newActionId, $data);
             $this->createGoalPost($newActionId, $data);
             $this->createAttachedFiles($newActionId, $data);
@@ -304,6 +306,19 @@ class ActionService extends AppService
         $ActionResult->useType()->useEntity()->save($oldAction, false);
 
         return $data['action_result_id'];
+    }
+
+    private function createActionResultMembers(int $actionResultId, array $data)
+    {
+        // TODO:
+        // https://jira.goalous.com/browse/GL-9102
+        // [Phase2][API] Add process adding/editing Action Members in POST /api/actions
+
+
+        /** @var ActionResultMember $ActionResultMember */
+        $ActionResultMember = ClassRegistry::init("ActionResultMember");
+
+        $ActionResultMember->addMember($actionResultId, $data['user_id'], $data['team_id'], true);
     }
 
     private function updateKrAndProgress(int $newActionId, array $data)
@@ -446,7 +461,7 @@ class ActionService extends AppService
                 if ($id === null) {
                     continue;
                 }
-            
+
                 $actionResultOptions = [
                     'conditions' => [
                         'ActionResultFile.attached_file_id' => $id,

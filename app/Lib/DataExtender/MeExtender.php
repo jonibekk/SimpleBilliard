@@ -158,14 +158,15 @@ class MeExtender extends BaseExtender
                 Cache::set('duration', $expire, 'user_data');
                 $redisKeyname = CACHE_KEY_ACTION_COUNT . ":term:" . $currentTerm["id"];
                 $actionCount = Cache::remember($Goal->getCacheKey($redisKeyname, true, $userId),
-                    function () use ($currentTerm, $Team, $Goal) {
+                    function () use ($currentTerm, $Team, $Goal, $userId, $currentTeamId) {
                         if (empty($currentTerm)) {
                             return 0;
                         }
                         $timezone = $Team->getTimezone();
                         $startTimestamp = AppUtil::getStartTimestampByTimezone($currentTerm['start_date'], $timezone);
                         $endTimestamp = AppUtil::getEndTimestampByTimezone($currentTerm['end_date'], $timezone);
-                        $res = $Goal->ActionResult->getCount('me', $startTimestamp, $endTimestamp);
+                        $Goal->ActionResult->current_team_id = $currentTeamId;
+                        $res = $Goal->ActionResult->getCount($userId, $startTimestamp, $endTimestamp);
                         return $res;
                     },
                     'user_data'

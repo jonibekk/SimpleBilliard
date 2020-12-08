@@ -721,6 +721,10 @@ msgstr "E-mail de autenticação"
 msgid "Authentication for changing email address"
 msgstr "Autenticação para alterar o email"
 
+#, fuzzy
+msgid "Awaiting coach approval."
+msgstr ""
+
 msgid "Back"
 msgstr "Voltar"
 
@@ -2325,6 +2329,10 @@ msgstr "Aprovação do objetivo"
 msgid "Goal approval list"
 msgstr "Lista de aprovação de objetivos"
 
+#, fuzzy
+msgid "Goal cannot be approved because the coach is not set. Contact the team administrator."
+msgstr ""
+
 msgid "Goal Category"
 msgstr "Categoria do objetivo"
 
@@ -3377,9 +3385,8 @@ msgstr "Membros (ativos)"
 msgid "Members"
 msgstr "Membros"
 
-#, fuzzy
 msgid "members"
-msgstr ""
+msgstr "Membros"
 
 msgid "Members in this circle."
 msgstr "Membros deste círculo."
@@ -3392,9 +3399,6 @@ msgstr "Lista de membros"
 
 msgid "Members of logged in"
 msgstr "Membros logados"
-
-msgid "members_copy"
-msgstr "Membros"
 
 msgid "message"
 msgstr "Mensagem"
@@ -4508,6 +4512,10 @@ msgstr "%1$s compartilhado, %2$s e %3$s outros "
 msgid "Shared %s"
 msgstr "%s compartilhado"
 
+#, fuzzy
+msgid "Shared Groups"
+msgstr ""
+
 msgid "Shared with %s people"
 msgstr "Compartilhado com %s pessoas"
 
@@ -5014,6 +5022,10 @@ msgstr "Nenhuma ação necessária."
 msgid "There is no Goal that you can take action."
 msgstr "Não existe objetivo para tomar uma ação."
 
+#, fuzzy
+msgid "There is no group to which your coach belongs. Please contact team administrators for more information."
+msgstr ""
+
 msgid "There is no Key Result."
 msgstr "Não há nenhum Resultado-chave."
 
@@ -5097,6 +5109,10 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
+
+#, fuzzy
+msgid "This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator."
+msgstr ""
 
 #, fuzzy
 msgid "This goal is not subject to evaluation."
@@ -5516,6 +5532,7 @@ msgstr "Veja este  KR"
 msgid "Watch Video"
 msgstr "Veja o vídeo"
 
+#, fuzzy
 msgid "Watched"
 msgstr "Visto"
 
@@ -5754,6 +5771,10 @@ msgstr "Você não pode aumentar o valor atual."
 msgid "You can not invite."
 msgstr "Você não pode convidar."
 
+#, fuzzy
+msgid "You can only add groups to share a Goal."
+msgstr ""
+
 msgid "You can only post one video file."
 msgstr "Você pode postar apenas um vídeo."
 
@@ -5933,6 +5954,10 @@ msgstr "Você pode ler apenas as páginas da sua equipe."
 msgid "You may start evaluations with your team's current settings. Only one term can be selected for evaluations."
 msgstr "Você pode iniciar avaliações com as configurações atuais de sua equipe. Apenas um período pode ser selecionado para avaliações."
 
+#, fuzzy
+msgid "You must add a group that your coach belongs to so they can approve it."
+msgstr ""
+
 msgid "You must be at least 16 years old to register Goalous."
 msgstr "Você deve ter pelo menos 16 anos para registrar a Goalous."
 
@@ -6095,24 +6120,6 @@ msgstr "Vamos melhorar nossa comunicação interna. Tudo começa aí!"
 
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr "Para alterá-lo, você precisa digitar a senha."
-
-msgid "Contact us"
-msgstr "Contate-nos"
-
-msgid "SAML Authentication"
-msgstr "SSOログイン設定"
-
-msgid "Get set up with SAML2.0 solution."
-msgstr ""
-
-msgid "Configure SSO"
-msgstr "SAML2.0を設定"
-
-msgid "Update SSO Setting"
-msgstr ""
-
-msgid "Stop Using the SSO"
-msgstr ""
 
 msgid "日本語"
 msgstr "Japonês"

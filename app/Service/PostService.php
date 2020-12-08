@@ -900,12 +900,16 @@ class PostService extends AppService
                     throw new RuntimeException("Error on deleting ${model} for post $postId: failed post soft delete");
                 }
             }
-            
+
             // Delete action results
-            /** @var ActionResult $ActionResult*/
             if ($post['Post']['type'] == $Post::TYPE_ACTION && $post['Post']['action_result_id']){
+                /** @var ActionResult $ActionResult*/
                 $ActionResult = ClassRegistry::init('ActionResult');
+                /** @var ActionResultMember $ActionResultMember */
+                $ActionResultMember = ClassRegistry::init("ActionResultMember");
+
                 $res = $ActionResult->softDelete($post['Post']['action_result_id']);
+                $ActionResultMember->deleteAllByActionResultId($post['Post']['action_result_id']);
 
                 // Delete dashboard action count cache
                 $currentTermId = $Term->getCurrentTermId();
