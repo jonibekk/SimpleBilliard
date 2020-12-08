@@ -208,8 +208,7 @@ class KrProgressService extends AppService
         return $WatchlistService->getWatchlistProgressForGraph(
             $this->listId,
             $graphRange['graphStartDate'],
-            $graphRange['graphEndDate'],
-            $graphRange['plotDataEndDate']
+            $graphRange['graphEndDate']
         );
     }
 
