@@ -24,7 +24,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                             <a href="/goals/edit-action/<?= $post['Post']['id'] ?>/action/<?= $post['Post']['action_result_id'] ?>"><?= __("Edit Action") ?></a>
                         </li>
                     <?php endif ?>
-                    <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                    <?php if ($my_member_status['TeamMember']['admin_flg'] || intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
                         <li><?=
                             $this->Form->postLink(__("Delete the action"),
                                 [
