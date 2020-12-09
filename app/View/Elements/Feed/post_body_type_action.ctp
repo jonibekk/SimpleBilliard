@@ -19,7 +19,7 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     <i class="fa fa-ellipsis-v feed-arrow"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                    <?php if (intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
                         <li>
                             <a href="/goals/edit-action/<?= $post['Post']['id'] ?>/action/<?= $post['Post']['action_result_id'] ?>"><?= __("Edit Action") ?></a>
                         </li>
