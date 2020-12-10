@@ -225,6 +225,11 @@ class MeController extends BasePagingController
             'languages' => $this->Lang->getAvailLangList(),
             'translation_languages' => $translation_languages
         ];
+
+        if (empty($data)) {
+            GoalousLog::error('Failed to get languages and translations data');
+            return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
+        }
         
         return ApiResponse::ok()->withBody([
             'data' => $data
