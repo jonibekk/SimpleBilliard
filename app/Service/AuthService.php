@@ -412,6 +412,7 @@ class AuthService extends AppService
     {
         try {
             $userInfo= $this->User->findById($userId);
+            unset($userInfo['User']['password']);
             $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
 
             return [
