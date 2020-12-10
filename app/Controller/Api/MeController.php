@@ -204,7 +204,7 @@ class MeController extends BasePagingController
 
         if (empty($data)) {
             GoalousLog::error('Failed to get timezones data');
-            return ErrorResponse::forbidden()->withMessage('No timezone found.')->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
         return ApiResponse::ok()->withBody([
@@ -253,7 +253,7 @@ class MeController extends BasePagingController
         if ($url_2fa) {
             $data = ['url' => $url_2fa];
         } else {
-            return ErrorResponse::internalServerError()->withMessage('Cannot load qr code')->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
 
@@ -294,12 +294,11 @@ class MeController extends BasePagingController
 
             $result = $User->saveAll($data['User']);
             if (!$result) {
-                return ErrorResponse::internalServerError()->withMessage('Error on updating account settings.')->getResponse();
+                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
             }
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'success'
+        return ApiResponse::ok()->withBody(['data' => __('Saved user setting.')
         ])->getResponse();
     }
 
@@ -358,17 +357,16 @@ class MeController extends BasePagingController
                     $UploadService->saveWithProcessing("User", $this->getUserId(), 'cover_photo', $uploadedFile);
                 }
             } catch (Exception $e) {
-                return ErrorResponse::internalServerError()->withMessage('Error on updating profile settings.')->getResponse();
+                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
             }
             
             $TeamMember->save($teamMember, false);
             $User->save($user, false);
         } else {
-            return ErrorResponse::internalServerError()->withMessage('Error on updating profile settings.')->getResponse();
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'success'
+        return ApiResponse::ok()->withBody(['data' => __("Saved user setting.")
         ])->getResponse();
     }
 
@@ -396,11 +394,10 @@ class MeController extends BasePagingController
 
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
         } else {
-            return ErrorResponse::badRequest()->withMessage('Error on updating notification settings.')->getResponse();
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'success'
+        return ApiResponse::ok()->withBody(['data' => __("Saved user setting.")
         ])->getResponse();
     }
 
@@ -413,12 +410,12 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                return ErrorResponse::internalServerError()->withMessage('Invalid password.')->getResponse();
+                return ErrorResponse::internalServerError()->withMessage(__('Invalid Data'))->getResponse();
             } else {
                 $email_data = $this->User->addEmail($data, $this->getUserId());
             }
         } catch (RuntimeException $e) {
-            return ErrorResponse::internalServerError()->withMessage('Something went wrong!')->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
         $this->GlEmail->sendMailChangeEmailVerify(
@@ -427,8 +424,7 @@ class MeController extends BasePagingController
             $email_data['Email']['email_token']
         );
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'Confirmation has been sent to your email address.'
+        return ApiResponse::ok()->withBody(['data' => __('Confirmation has been sent to your email address.')
         ])->getResponse();
     }
 
@@ -441,16 +437,15 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                return ErrorResponse::badRequest()->withMessage("Incorrect current password.")->getResponse();
+                return ErrorResponse::badRequest()->withMessage(__('Failed to save password change.'))->getResponse();
             } else {
                 $this->User->changePassword($data);
             }
         } catch (RuntimeException $e) {
-            return ErrorResponse::internalServerError()->withMessage("Failed to save password change.")->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__('Failed to save password change.'))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'Changed password.'
+        return ApiResponse::ok()->withBody(['data' => __('Changed password.')
         ])->getResponse();
     }
 
@@ -475,8 +470,7 @@ class MeController extends BasePagingController
                 throw new RuntimeException(__("An error has occurred."));
             }
             if (!$this->TwoFa->verifyKey($secret_key, $data['User']['2fa_code'])) {
-                throw new RuntimeException(__("The code is incorrect."));
-                return ErrorResponse::internalServerError()->withMessage("The code is incorrect.")->getResponse();
+                return ErrorResponse::internalServerError()->withMessage(__("The code is incorrect."))->getResponse();
             }
 
             $this->User->id = $this->getUserId();
@@ -489,8 +483,7 @@ class MeController extends BasePagingController
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
 
-        return ApiResponse::ok()->withBody([
-            'data' => 'Succeeded to save 2-Step Verification.'
+        return ApiResponse::ok()->withBody(['data' => __('Succeeded to save 2-Step Verification.')
         ])->getResponse();
     }
 
@@ -508,8 +501,7 @@ class MeController extends BasePagingController
         }
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
 
-        return ApiResponse::ok()->withBody([
-            'data' => "Succeeded to cancel 2-Step Verification."
+        return ApiResponse::ok()->withBody(['data' => __("Succeeded to cancel 2-Step Verification.")
         ])->getResponse();
     }
 
@@ -539,7 +531,7 @@ class MeController extends BasePagingController
     {
         $success = $this->User->RecoveryCode->regenerate($this->getUserId());
         if (!$success) {
-            return ErrorResponse::internalServerError()->withMessage("An error has occurred.")->getResponse();
+            return ErrorResponse::internalServerError()->withMessage(__("An error has occurred."))->getResponse();
         }
         $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
 
