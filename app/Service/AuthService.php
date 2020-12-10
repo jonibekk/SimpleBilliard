@@ -411,7 +411,7 @@ class AuthService extends AppService
     private function createAuthResponseData(int $userId, ?int $teamId): array
     {
         try {
-            $userInfo = $this->getUserInfo($userId, $teamId);
+            $userInfo= $this->User->findById($userId);
             $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
 
             return [
