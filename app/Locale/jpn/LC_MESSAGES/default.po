@@ -732,6 +732,9 @@ msgstr "メールアドレス認証"
 msgid "Authentication for changing email address"
 msgstr "メールアドレス変更に伴う認証"
 
+msgid "Awaiting coach approval."
+msgstr "コーチの承認を待っています"
+
 msgid "Back"
 msgstr "戻る"
 
@@ -2336,6 +2339,9 @@ msgstr "ゴール認定"
 msgid "Goal approval list"
 msgstr "ゴール認定リスト"
 
+msgid "Goal cannot be approved because the coach is not set. Contact the team administrator."
+msgstr "コーチがセットされていないため、ゴールの承認を依頼できません。チーム管理者へ問い合わせてください。"
+
 msgid "Goal Category"
 msgstr "ゴールカテゴリ"
 
@@ -3410,9 +3416,6 @@ msgstr "メンバー一覧"
 
 msgid "Members of logged in"
 msgstr "ログインメンバー"
-
-msgid "members_copy"
-msgstr "メンバー"
 
 msgid "message"
 msgstr "メッセージ"
@@ -4524,6 +4527,9 @@ msgstr "%1$s、%2$sと%3$sに共有"
 msgid "Shared %s"
 msgstr "%sに共有"
 
+msgid "Shared Groups"
+msgstr "シェアしたグループ"
+
 msgid "Shared with %s people"
 msgstr "%s人に共有しました"
 
@@ -5037,6 +5043,9 @@ msgstr "これ以上のアクションはありません。"
 msgid "There is no Goal that you can take action."
 msgstr "アクションできるゴールがありません。"
 
+msgid "There is no group to which your coach belongs. Please contact team administrators for more information."
+msgstr "あなたのコーチが所属しているグループがありません。詳しくはチーム管理者にお問い合わせください。"
+
 msgid "There is no Key Result."
 msgstr "KRが存在しません。"
 
@@ -5120,6 +5129,9 @@ msgstr "本機能はPCにてご利用できます。"
 
 msgid "This Goal doesn't exist."
 msgstr "ゴールが存在しません。"
+
+msgid "This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator."
+msgstr "このゴールはコーチに共有されていないため、承認できません。チーム管理者にお問い合わせください。"
 
 msgid "This goal is not subject to evaluation."
 msgstr "この目標は評価の対象にはなりません。"
@@ -5539,7 +5551,7 @@ msgid "Watch Video"
 msgstr "Watch Video"
 
 msgid "Watched"
-msgstr "ウォッチ"
+msgstr "ウォッチ済み"
 
 msgid "We are downgrading your team to read-only"
 msgstr "読み取り専用にダウングレードしました"
@@ -5779,6 +5791,9 @@ msgstr "現在値は増やせません。"
 msgid "You can not invite."
 msgstr "あなたは招待できません。"
 
+msgid "You can only add groups to share a Goal."
+msgstr "ゴールをシェアするグループは追加のみ可能です。"
+
 msgid "You can only post one video file."
 msgstr "1つの動画ファイルしか投稿できません。"
 
@@ -5956,6 +5971,9 @@ msgstr "あなたのチームはページの読み取りしか許可されてい
 msgid "You may start evaluations with your team's current settings. Only one term can be selected for evaluations."
 msgstr "現在のチームの設定内容で評価を開始することができます。評価は1つの期のみで開始することができます。"
 
+msgid "You must add a group that your coach belongs to so they can approve it."
+msgstr "あなたのコーチが所属しているゴールを、シェア先に追加してください"
+
 msgid "You must be at least 16 years old to register Goalous."
 msgstr "16歳以上の方がGoalousに登録できます。"
 
@@ -6120,39 +6138,3 @@ msgstr ""
 
 msgid "日本語"
 msgstr "日本語"
-
-msgid "Failed to reset the password"
-msgstr "パスワードの再設定に失敗しました"
-
-msgid "Any goals created in the future will need to have a destination group set up for publication."
-msgstr "今後作成するゴールには、公開先グループを設定する必要があります。"
-
-msgid "This check cannot be turned off because there is no valid group in this team."
-msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
-
-msgid "This goal is open to all team members"
-msgstr "このゴールは全員に公開されています"
-
-msgid "There is %s goals you do not have permission to see"
-msgstr "非公開のゴールが%s件あります"
-
-msgid "Contact us"
-msgstr "お問い合わせ"
-
-msgid "SAML Authentication"
-msgstr "SSOログイン設定"
-
-msgid "Get set up with SAML2.0 solution."
-msgstr ""
-
-msgid "Configure SSO"
-msgstr "SAML2.0を設定"
-
-msgid "Update SSO Setting"
-msgstr ""
-
-msgid "Stop Using the SSO"
-msgstr ""
-
-msgid "There is %s actions you do not have permission to see"
-msgstr "非公開のアクションが%s件あります"

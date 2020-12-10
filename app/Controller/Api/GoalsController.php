@@ -37,6 +37,20 @@ class GoalsController extends BasePagingController
         'Mention'
     ];
 
+    public function get_collab_details(int $goalId)
+    {
+        /** @var GoalApprovalService */
+        $GoalApprovalService = ClassRegistry::init("GoalApprovalService");
+        $approvalData = $GoalApprovalService->genRequestApprovalData(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $goalId
+        );
+        $approvalData['goal_id'] = $goalId;
+
+        return ApiResponse::ok()->withData($approvalData)->getResponse();
+    }
+
     public function post_follow(int $goalId)
     {
         /** @var FollowService $FollowService */
