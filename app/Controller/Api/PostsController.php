@@ -375,7 +375,7 @@ class PostsController extends BasePagingController
             PostExtender::EXTEND_TRANSLATION_LANGUAGE
         ]);
 
-        if (!array_key_exists('key_result', $post) || !array_key_exists('goal', $post) || is_null($post['key_result']) || is_null($post['goal'])){
+        if (intval($post['type']) === Post::TYPE_ACTION && (!array_key_exists('key_result', $post) || !array_key_exists('goal', $post) || is_null($post['key_result']) || is_null($post['goal']))){
             return ErrorResponse::notFound()->withMessage(__("This post doesn't exist."))
                 ->getResponse();
         }

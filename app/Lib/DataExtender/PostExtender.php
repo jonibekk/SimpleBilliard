@@ -90,6 +90,11 @@ class PostExtender extends BaseExtender
                     }
 
                     if ($postType == Enum\Model\Post\Type::CREATE_GOAL) {
+                        /** @var KeyResult $KeyResult */
+                        $KeyResult = ClassRegistry::init('KeyResult');
+                        $topKr = $KeyResult->getTkrWithTyped($data['goal']['id']);
+                        $data['key_result'] = $topKr['KeyResult'];
+
                         /** @var GoalMember $GoalMember */
                         $GoalMember = ClassRegistry::init('GoalMember');
                         $goalMember = $GoalMember->getUnique($userId, $data['goal_id']);
