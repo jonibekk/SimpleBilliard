@@ -53,6 +53,8 @@ class WatchlistsController extends BasePagingController
 
         $response = [
             'id' => $id,
+            'is_my_krs' => $id === KrProgressService::MY_KR_ID,
+            'term_id' => $krProgressService->getTerm()['id'],
             'kr_count' => count($krs),
             'kr_with_progress' => $response['data']
         ];
@@ -122,6 +124,11 @@ class WatchlistsController extends BasePagingController
         $results = $Watchlist->findWithKrCount($fullScope);
         $watchlists = Hash::extract($results, '{n}.Watchlist');
 
+        $watchlists = array_map(function ($watchlist) {
+            $watchlist['is_my_krs'] = false;
+            return $watchlist;
+        }, $watchlists);
+
         $krProgressService = new KrProgressService(
             $this->request, 
             $userId, 
@@ -132,6 +139,8 @@ class WatchlistsController extends BasePagingController
 
         $myKrsList = [
             'id' => KrProgressService::MY_KR_ID,
+            'term_id' => $termId,
+            'is_my_krs' => true,
             'kr_count' => $myKrsCount,
         ];
 

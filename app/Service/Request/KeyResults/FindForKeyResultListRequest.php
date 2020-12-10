@@ -80,4 +80,9 @@ class FindForKeyResultListRequest
     {
         return $this->todayDate;
     }
+
+    public function isPastTerm()
+    {
+        return $this->todayDate > $this->term['end_date'];
+    }
 }

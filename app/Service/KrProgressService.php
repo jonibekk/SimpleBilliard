@@ -30,18 +30,29 @@ class KrProgressService extends AppService
     {
         // @var TermService ;
         $TermService = ClassRegistry::init("TermService");
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
 
         // do not get intval because goal_id can be null
         $requestGoalId = $request->query('goal_id');
+        $requestTermId = $request->query('term_id');
         $limit = intval($request->query('limit'));
+        $term = null;
 
         $this->listId = $listId;
         $this->goalId = $requestGoalId ? intval($requestGoalId) : null;
 
+        if (empty($requestTermId) || $requestTermId === 'current') {
+            $term = $TermService->getCurrentTerm($teamId);
+        } else {
+            $term = $Term->useType()->useEntity()->findById($requestTermId);
+        }
+
+
         $this->request = new FindForKeyResultListRequest(
             $userId,
             $teamId,
-            $TermService->getCurrentTerm($teamId),
+            $term,
             ['limit' => $limit]
         );
     }
@@ -146,6 +157,10 @@ class KrProgressService extends AppService
 
     function appendProgressGraph(array $response): array
     {
+        // TODO: Temporarily skip graph generation for past terms
+        if ($this->request->isPastTerm()) {
+            return $response;
+        }
         $graphRange = $this->generateGraphRange();
         $TimeEx = new TimeExHelper(new View());
 
@@ -168,6 +183,11 @@ class KrProgressService extends AppService
 
         $response['data']['kr_progress_graph'] = $krProgressGraph;
         return $response;
+    }
+
+    function getTerm(): TermEntity
+    {
+        return $this->request->getTerm();
     }
 
     private function generateMyKrProgressGraph($graphRange)
