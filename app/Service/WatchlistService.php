@@ -86,10 +86,10 @@ class WatchlistService extends AppService
     }
 
     public function getWatchlistProgressForGraph(
-        $watchlistId,
-        $graphStartDate,
-        $graphEndDate,
-        $term
+        int $watchlistId,
+        string $graphStartDate,
+        string $graphEndDate,
+        array $term
     ): array {
         /** @var GoalService */
         $GoalService = ClassRegistry::init('GoalService');

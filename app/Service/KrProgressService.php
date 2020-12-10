@@ -129,8 +129,13 @@ class KrProgressService extends AppService
 
     function formatResponse(array $allKrs, array $krs): array
     {
-        $periodFrom = $this->periodFrom();
-        $periodTo = GoalousDateTime::now();
+        if ($this->request->isPastTerm()) {
+            $periodFrom = $this->request->getTerm()['start_date'];
+            $periodTo = $this->request->getTerm()['end_date'];
+        } else {
+            $periodFrom = $this->periodFrom()->getTimestamp();
+            $periodTo = GoalousDateTime::now()->getTimestamp();
+        }
 
         $goals = array_reduce($allKrs, function($acc, $kr) {
             $goalName = $kr['Goal']['name'];
@@ -145,8 +150,8 @@ class KrProgressService extends AppService
         return [
             'data' => [
                 'period_kr_collection' => [
-                    'from' => $periodFrom->getTimestamp(),
-                    'to' => $periodTo->getTimestamp(),
+                    'from' => $periodFrom,
+                    'to' => $periodTo,
                 ],
                 'krs_total' => count($allKrs),
                 'krs' => $krs,
@@ -157,10 +162,6 @@ class KrProgressService extends AppService
 
     function appendProgressGraph(array $response): array
     {
-        // TODO: Temporarily skip graph generation for past terms
-        if ($this->request->isPastTerm()) {
-            return $response;
-        }
         $graphRange = $this->generateGraphRange();
         $TimeEx = new TimeExHelper(new View());
 
@@ -200,7 +201,8 @@ class KrProgressService extends AppService
             $graphRange['graphStartDate'],
             $graphRange['graphEndDate'],
             $graphRange['plotDataEndDate'],
-            true
+            true,
+            $this->request->getTerm()->toArray()
         );
     }
 
@@ -213,7 +215,7 @@ class KrProgressService extends AppService
             $this->listId,
             $graphRange['graphStartDate'],
             $graphRange['graphEndDate'],
-            $this->request->getTerm()
+            $this->request->getTerm()->toArray()
         );
     }
 
