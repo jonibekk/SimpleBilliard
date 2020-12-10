@@ -133,7 +133,8 @@ class WatchlistsController extends BasePagingController
             $this->request, 
             $userId, 
             $teamId,
-            KrProgressService::MY_KR_ID
+            KrProgressService::MY_KR_ID,
+            $termId
         );
         $myKrsCount = count($krProgressService->findKrs(KrProgressService::MY_KR_ID));
 
@@ -143,6 +144,7 @@ class WatchlistsController extends BasePagingController
             'is_my_krs' => true,
             'kr_count' => $myKrsCount,
         ];
+        GoalousLog::info('log', $myKrsList);
 
         return array_merge([$myKrsList], $watchlists);
     }

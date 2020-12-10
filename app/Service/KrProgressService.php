@@ -42,12 +42,13 @@ class KrProgressService extends AppService
         $this->listId = $listId;
         $this->goalId = $requestGoalId ? intval($requestGoalId) : null;
 
-        if (empty($requestTermId) || $requestTermId === 'current') {
+        if ($termId !== null) {
+            $term = $Term->useType()->useEntity()->findById($termId);
+        } else if (empty($requestTermId) || $requestTermId === 'current') {
             $term = $TermService->getCurrentTerm($teamId);
         } else {
             $term = $Term->useType()->useEntity()->findById($requestTermId);
         }
-
 
         $this->request = new FindForKeyResultListRequest(
             $userId,
