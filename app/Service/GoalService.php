@@ -1483,12 +1483,16 @@ class GoalService extends AppService
         string $startDate,
         string $endDate,
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
-        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
+        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM,
+        TermEntity $term = null
     ): array
     {
-        /** @var Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('Term');
-        $term = $EvaluateTerm->getCurrentTermData();
+        if ($term === null) {
+            /** @var Term $EvaluateTerm */
+            $EvaluateTerm = ClassRegistry::init('Term');
+            $term = $EvaluateTerm->getCurrentTermData();
+        }
+
         $termStartDate = $term['start_date'];
         $termEndDate = $term['end_date'];
 

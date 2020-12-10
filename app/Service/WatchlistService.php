@@ -88,7 +88,8 @@ class WatchlistService extends AppService
     public function getWatchlistProgressForGraph(
         $watchlistId,
         $graphStartDate,
-        $graphEndDate
+        $graphEndDate,
+        $term
     ): array {
         /** @var GoalService */
         $GoalService = ClassRegistry::init('GoalService');
@@ -119,7 +120,13 @@ class WatchlistService extends AppService
             $timestamp = strtotime('+1 day', $timestamp);
         }
 
-        $sweetSpot = $GoalService->getSweetSpot($graphStartDate, $graphEndDate);
+        $sweetSpot = $GoalService->getSweetSpot(
+            $graphStartDate, 
+            $graphEndDate,
+            $GoalService::GRAPH_SWEET_SPOT_MAX_TOP,
+            $GoalService::GRAPH_SWEET_SPOT_MAX_BOTTOM,
+            $term
+        );
 
         return [
             array_merge(['sweet_spot_top'], $sweetSpot['top']),

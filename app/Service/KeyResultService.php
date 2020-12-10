@@ -719,7 +719,6 @@ class KeyResultService extends AppService
                 'KeyResult.end_date <=' => $request->getTerm()['end_date'],
                 'KeyResult.team_id'     => $request->getTeamId(),
                 'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $request->getTodayDate(),
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -753,6 +752,9 @@ class KeyResultService extends AppService
             ]
         ];
 
+        if (!$request->isPastTerm()) {
+            $options['conditions']['Goal.end_date >='] = $request->getTodayDate();
+        }
         if ($request->getLimit()) {
             $options['limit'] = $request->getLimit();
         }
