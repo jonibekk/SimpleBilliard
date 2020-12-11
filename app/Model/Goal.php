@@ -1117,10 +1117,7 @@ class Goal extends AppModel
                         'ActionResult.photo5_file_name',
                     ],
                     'limit'            => $action_limit,
-                    'conditions'       => [
-                        'ActionResult.user_id' => $user_id,
-                        'ActionResult.key_result_id IS NOT NULL'
-                    ],
+                    'conditions'       => ['ActionResult.user_id' => $user_id],
                     'order'            => ['ActionResult.created desc'],
                     'Post'             => [
                         'fields' => ['Post.id']

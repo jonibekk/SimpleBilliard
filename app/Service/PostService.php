@@ -836,8 +836,7 @@ class PostService extends AppService
                         'Post.action_result_id = ActionResultFile.action_result_id'
                     ]
                 ]
-            ],
-            "order"      => 'ActionResultFile.index_num ASC',
+            ]
         ];
 
         if (!empty($type)) {

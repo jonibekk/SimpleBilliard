@@ -541,18 +541,6 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
-                $post_options['joins'] = [
-                    [
-                        'type'       => 'INNER',
-                        'table'      => 'action_results',
-                        'alias'      => 'ActionResultForJoin',
-                        'conditions' => [
-                            'ActionResultForJoin.id = Post.action_result_id',
-                            'ActionResultForJoin.key_result_id IS NOT NULL',
-                            'ActionResultForJoin.goal_id IS NOT NULL'
-                        ],
-                    ]
-                ];
             }
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;

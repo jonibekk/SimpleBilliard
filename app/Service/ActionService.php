@@ -34,7 +34,6 @@ App::import('Model/Entity', 'ActionResultFileEntity');
 
 use Goalous\Enum\Model\AttachedFile\AttachedModelType as AttachedModelType;
 use Guzzle\Common\ToArrayInterface;
-use Symfony\Component\OptionsResolver\Options;
 
 /**
  * Class ActionService
@@ -215,25 +214,6 @@ class ActionService extends AppService
         }
     }
 
-    public function updateAngular(array $data): int
-    {
-        try {
-            $this->TransactionManager->begin();
-            $actionId = $this->updateAction($data);
-
-            if (!empty($data['file_ids']) || !empty($data['old_resources'])) {
-                $this->updateAttachedFiles($actionId, $data);
-            }
-            $this->TransactionManager->commit();
-
-            $this->translateActionPost($data['team_id'], $actionId);
-            return $actionId;
-        } catch (Exception $e) {
-            $this->TransactionManager->rollback();
-            throw $e;
-        }
-    }
-
     /**
      * アクション一覧をユーザーIDでグルーピング
      *
@@ -287,25 +267,6 @@ class ActionService extends AppService
         $ActionResult->create();
         $result = $ActionResult->useType()->useEntity()->save($actionSaveData, false);
         return $result['id'];
-    }
-
-    private function updateAction(array $data)
-    {
-        /** @var ActionResult $ActionResult */
-        $ActionResult = ClassRegistry::init("ActionResult");
-
-        $options = [
-            'conditions' => [
-                'ActionResult.id' => $data['action_result_id'],
-                'ActionResult.del_flg'      => false,
-            ],
-        ];
-
-        $oldAction = $ActionResult->find('first', $options);
-        $oldAction['ActionResult']['name'] = $data['name'];
-        $ActionResult->useType()->useEntity()->save($oldAction, false);
-
-        return $data['action_result_id'];
     }
 
     private function createActionResultMembers(int $actionResultId, array $data)
@@ -438,109 +399,6 @@ class ActionService extends AppService
 
             throw new Exception("Failed to save attached files.");
         }
-    }
-
-    private function updateAttachedFiles(int $actionID, array $data)
-    {
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init("UploadService");
-        /** @var AttachedFileService $AttachedFileService */
-        $AttachedFileService = ClassRegistry::init("AttachedFileService");
-        /** @var ActionResultFile $ActionResultFile */
-        $ActionResultFile = ClassRegistry::init('ActionResultFile');
-
-        $userId = $data['user_id'];
-        $teamId = $data['team_id'];
-        $fileIds = $data['file_ids'];
-        $oldActionId = $data['old_action_file_id'];
-        $deletedFiles = $data['old_resources'];
-        $addedFiles = [];
-
-        try {
-            foreach ($fileIds as $index => $id) {
-                if ($id === null) {
-                    continue;
-                }
-
-                $actionResultOptions = [
-                    'conditions' => [
-                        'ActionResultFile.attached_file_id' => $id,
-                        'ActionResultFile.del_flg'      => false,
-                    ],
-                ];
-                $actionResultFile = $ActionResultFile->find('first', $actionResultOptions);
-
-                if ($actionResultFile === null || empty($actionResultFile)) {
-
-                    if ($index === 0) {
-                        $this->deleteActionFile($oldActionId);
-                    }
-
-                    /** @var UploadedFile $uploadedFile */
-                    $uploadedFile = $UploadService->getBuffer($userId, $teamId, $id);
-
-                    /** @var AttachedFileEntity $attachedFile */
-                    $attachedFile = $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
-
-                    $addedFiles[] = $attachedFile['id'];
-                    $newData = [
-                        'action_result_id' => $actionID,
-                        'attached_file_id' => $attachedFile['id'],
-                        'team_id'          => $teamId,
-                        'index_num'        => $index,
-                        'del_flag'         => false,
-                        'created'          => GoalousDateTime::now()->getTimestamp()
-                    ];
-                    $ActionResultFile->create();
-                    $ActionResultFile->useType()->useEntity()->save($newData, false);
-                    $UploadService->saveWithProcessing("AttachedFile", $attachedFile['id'], 'attached', $uploadedFile);
-                } else {
-                    $actionResultFile['ActionResultFile']['index_num'] = $index;
-                    $ActionResultFile->useType()->useEntity()->save($actionResultFile, false);
-                }
-            }
-
-            foreach ($deletedFiles as $file) {
-                $this->deleteActionFile($file['id']);
-            }
-        } catch (Exception $e) {
-            foreach ($addedFiles as $id) {
-                $UploadService->deleteAsset('AttachedFile', $id);
-                GoalousLog::error(print_r($actionResultFile, true));
-            }
-
-            throw new Exception("Failed to save attached files.");
-        }
-    }
-
-    private function deleteActionFile(int $id)
-    {
-        /** @var ActionResultFile $ActionResultFile */
-        $ActionResultFile = ClassRegistry::init('ActionResultFile');
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init('AttachedFile');
-
-        $attFileOptions = [
-            'conditions' => [
-                'AttachedFile.id' => $id,
-                'AttachedFile.del_flg'      => false,
-            ],
-        ];
-        $attFile = $AttachedFile->find('first', $attFileOptions);
-        $attFile['AttachedFile']['del_flg'] = true;
-        $attFile['AttachedFile']['deleted'] = GoalousDateTime::now()->getTimestamp();
-        $AttachedFile->useType()->useEntity()->save($attFile, false);
-
-        $actionResultOptions = [
-            'conditions' => [
-                'ActionResultFile.attached_file_id' => $id,
-                'ActionResultFile.del_flg'      => false,
-            ],
-        ];
-        $actionResultFile = $ActionResultFile->find('first', $actionResultOptions);
-        $actionResultFile['ActionResultFile']['del_flg'] = true;
-        $actionResultFile['ActionResultFile']['deleted'] = GoalousDateTime::now()->getTimestamp();
-        $ActionResultFile->useType()->useEntity()->save($actionResultFile, false);
     }
 
     private function refreshKrCache(int $goalId)

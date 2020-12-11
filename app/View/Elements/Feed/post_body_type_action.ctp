@@ -19,12 +19,17 @@ $kr = Hash::get($post, 'ActionResult.KeyResult');
                     <i class="fa fa-ellipsis-v feed-arrow"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <?php if (intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
+                    <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                         <li>
-                            <a href="/goals/edit-action/<?= $post['Post']['id'] ?>/action/<?= $post['Post']['action_result_id'] ?>"><?= __("Edit Action") ?></a>
+                            <a href="<?= $this->Html->url([
+                                'controller'       => 'goals',
+                                'action'           => 'edit_action',
+                                'action_result_id' => $post['Post']['action_result_id']
+                            ]) ?>"
+                            ><?= __("Edit Action") ?></a>
                         </li>
                     <?php endif ?>
-                    <?php if ($my_member_status['TeamMember']['admin_flg'] || intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
+                    <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                         <li><?=
                             $this->Form->postLink(__("Delete the action"),
                                 [
