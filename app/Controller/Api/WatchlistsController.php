@@ -24,8 +24,16 @@ class WatchlistsController extends BasePagingController
     {
         // @var TermService ;
         $TermService = ClassRegistry::init("TermService");
+        // @var WatchlistService ;
+        $WatchlistService = ClassRegistry::init("WatchlistService");
+
         $term = $TermService->getCurrentTerm($this->getTeamId());
-        $data = $this->loadTermWatchlists($term['id']);
+        $data = $WatchlistService->getForTerm(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $term['id'],
+            $this->request
+        );
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
@@ -64,13 +72,21 @@ class WatchlistsController extends BasePagingController
 
     public function get_by_term() 
     {
+        // @var WatchlistService ;
+        $WatchlistService = ClassRegistry::init("WatchlistService");
         // @var Term ;
         $Term = ClassRegistry::init("Term");
         $terms = $Term->getAllTerm();
         $processed = [];
 
         foreach ($terms as $term) {
-            $term['watchlists'] = $this->loadTermWatchlists($term['id']);
+            $term['watchlists'] = $WatchlistService->getForTerm(
+                $this->getUserId(),
+                $this->getTeamId(),
+                $term['id'],
+                $this->request
+            );
+
             $processed[] = $term;
         }
 
@@ -101,51 +117,5 @@ class WatchlistsController extends BasePagingController
                 }
                 break;
         }
-    }
-
-    public function loadTermWatchlists(int $termId): array
-    {
-        // @var WatchlistService ;
-        $WatchlistService = ClassRegistry::init("WatchlistService");
-        // @var Watchlist ;
-        $Watchlist = ClassRegistry::init("Watchlist");
-
-        $userId = $this->getUserId();
-        $teamId = $this->getTeamId();
-
-        // TODO: Remove once we enter phase 2
-        // Creates the Important list for users if they haven't watched any KR before
-        $WatchlistService->findOrCreateWatchlist($userId, $teamId, $termId);
-
-        $policy = new WatchlistPolicy($userId, $teamId);
-        $scope = $policy->scope();
-        $termScope = ['conditions' => ['Watchlist.term_id' => $termId]];
-        $fullScope = array_merge_recursive($scope, $termScope);
-        $results = $Watchlist->findWithKrCount($fullScope);
-        $watchlists = Hash::extract($results, '{n}.Watchlist');
-
-        $watchlists = array_map(function ($watchlist) {
-            $watchlist['is_my_krs'] = false;
-            return $watchlist;
-        }, $watchlists);
-
-        $krProgressService = new KrProgressService(
-            $this->request, 
-            $userId, 
-            $teamId,
-            KrProgressService::MY_KR_ID,
-            $termId
-        );
-        $myKrsCount = count($krProgressService->findKrs(KrProgressService::MY_KR_ID));
-
-        $myKrsList = [
-            'id' => KrProgressService::MY_KR_ID,
-            'term_id' => $termId,
-            'is_my_krs' => true,
-            'kr_count' => $myKrsCount,
-        ];
-        GoalousLog::info('log', $myKrsList);
-
-        return array_merge([$myKrsList], $watchlists);
     }
 }

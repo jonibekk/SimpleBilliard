@@ -3,9 +3,11 @@
 App::import('Service', 'AppService');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'KrProgressService');
 App::uses('Watchlist', 'Model');
 App::uses('KrWatchlist', 'Model');
 App::import('Model/Entity', 'WatchlistEntity');
+App::import('Policy', 'WatchlistPolicy');
 
 /**
  * Class WatchlistService
@@ -83,6 +85,46 @@ class WatchlistService extends AppService
         }
 
         return $watchlist;
+    }
+
+    public function getForTerm(int $userId, int $teamId, int $termId, CakeRequest $request): array
+    {
+        // @var Watchlist ;
+        $Watchlist = ClassRegistry::init("Watchlist");
+
+        // TODO: Remove once we enter phase 2
+        // Creates the Important list for users if they haven't watched any KR before
+        $this->findOrCreateWatchlist($userId, $teamId, $termId);
+
+        $policy = new WatchlistPolicy($userId, $teamId);
+        $scope = $policy->scope();
+        $termScope = ['conditions' => ['Watchlist.term_id' => $termId]];
+        $fullScope = array_merge_recursive($scope, $termScope);
+        $results = $Watchlist->findWithKrCount($fullScope);
+        $watchlists = Hash::extract($results, '{n}.Watchlist');
+
+        $watchlists = array_map(function ($watchlist) {
+            $watchlist['is_my_krs'] = false;
+            return $watchlist;
+        }, $watchlists);
+
+        $krProgressService = new KrProgressService(
+            $request, 
+            $userId, 
+            $teamId,
+            KrProgressService::MY_KR_ID,
+            $termId
+        );
+        $myKrsCount = count($krProgressService->findKrs(KrProgressService::MY_KR_ID));
+
+        $myKrsList = [
+            'id' => KrProgressService::MY_KR_ID,
+            'term_id' => $termId,
+            'is_my_krs' => true,
+            'kr_count' => $myKrsCount,
+        ];
+
+        return array_merge([$myKrsList], $watchlists);
     }
 
     public function getWatchlistProgressForGraph(
