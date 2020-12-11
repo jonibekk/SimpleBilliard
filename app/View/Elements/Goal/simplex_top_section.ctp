@@ -57,7 +57,7 @@
                             <?php if ($isCanComplete): ?>
                                 <li>
                                     <?=
-                                    $this->Form->postLink(__("Acheive Goal"),
+                                    $this->Form->postLink(__("Achieve Goal"),
                                         "/goals/complete/" . $goal['Goal']['id'],
                                         ['escape' => false], __("Do you really want to complete this Goal?")) ?>
                                 </li>
