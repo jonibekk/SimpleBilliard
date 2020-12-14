@@ -87,10 +87,12 @@ class WatchlistService extends AppService
         return $watchlist;
     }
 
-    public function getForTerm(int $userId, int $teamId, int $termId, CakeRequest $request): array
+    public function getForTerm(int $userId, int $teamId, int $termId): array
     {
         // @var Watchlist ;
         $Watchlist = ClassRegistry::init("Watchlist");
+        // @var KrProgressService ;
+        $KrProgressService = ClassRegistry::init("KrProgressService");
 
         // TODO: Remove once we enter phase 2
         // Creates the Important list for users if they haven't watched any KR before
@@ -108,14 +110,12 @@ class WatchlistService extends AppService
             return $watchlist;
         }, $watchlists);
 
-        $krProgressService = new KrProgressService(
-            $request, 
-            $userId, 
-            $teamId,
-            KrProgressService::MY_KR_ID,
-            $termId
-        );
-        $myKrsCount = count($krProgressService->findKrs(KrProgressService::MY_KR_ID));
+        $opts = [
+            'listId' => KrProgressService::MY_KR_ID,
+            'termId' => $termId
+        ];
+        $findKrsRequest = new FindForKeyResultListRequest( $userId, $teamId, $opts);
+        $myKrsCount = count($KrProgressService->findKrs($findKrsRequest));
 
         $myKrsList = [
             'id' => KrProgressService::MY_KR_ID,

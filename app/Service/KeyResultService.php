@@ -767,7 +767,7 @@ class KeyResultService extends AppService
         return $KeyResult->useType()->find('all', $options);
     }
 
-    public function findForWatchlist(FindForKeyResultListRequest $request, int $watchlistId)
+    public function findForWatchlist(FindForKeyResultListRequest $request)
     { 
         /** @var KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
@@ -785,7 +785,7 @@ class KeyResultService extends AppService
                     'conditions' => [
                         'KrWatchlist.key_result_id = KeyResult.id',
                         'KrWatchlist.del_flg != 1',
-                        'KrWatchlist.watchlist_id' => $watchlistId
+                        'KrWatchlist.watchlist_id' => $request->getListId(),
                     ]
                 ]
             ],

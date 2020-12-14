@@ -215,20 +215,16 @@ class MeController extends BasePagingController
     {
         /** @var KeyResultService $KeyResultService */
         $KeyResultService = ClassRegistry::init("KeyResultService");
-        /** @var TermService $TermService */
-        $TermService = ClassRegistry::init("TermService");
         /** @var GoalExtension $UserExtension */
         $GoalExtension = ClassRegistry::init('GoalExtension');
-        $currentTerm = $TermService->getCurrentTerm($this->getTeamId());
 
         // Find KeyResult ordered by actioned in recent
-        $findForKeyResultListRequest = new FindForKeyResultListRequest( 
+        $findKrsRequest = new FindForKeyResultListRequest( 
             $this->getUserId(), 
             $this->getTeamId(),
-            $currentTerm,
             ['onlyIncomplete' => true]
         );
-        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
+        $keyResults = $KeyResultService->findForKeyResultList($findKrsRequest);
 
         foreach ($keyResults as $index => $keyResult) {
             $keyResults[$index]['KeyResult'] = $GoalExtension->extend($keyResults[$index]['KeyResult'], 'goal_id');
@@ -244,16 +240,21 @@ class MeController extends BasePagingController
 
     public function get_kr_progress()
     {
-        $service = new KrProgressService(
-            $this->request, 
-            $this->getUserId(), 
+        /** @var KrProgressService */
+        $KrProgressService = ClassRegistry::init('KrProgressService');
+
+        $opts = [
+            'goalId' => $this->request->query('goal_id'),
+            'limit' => intval($this->request->query('limit'))
+        ];
+
+        $findKrRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
             $this->getTeamId(),
-            KrProgressService::MY_KR_ID
+            $opts
         );
 
-        $krs = $service->findKrs();
-        $response = $service->processKeyResults($krs);
-        $response = $service->appendProgressGraph($response);
+        $response = $KrProgressService->getWithGraph($findKrRequest);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }

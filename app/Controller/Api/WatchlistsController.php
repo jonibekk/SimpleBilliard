@@ -31,8 +31,7 @@ class WatchlistsController extends BasePagingController
         $data = $WatchlistService->getForTerm(
             $this->getUserId(),
             $this->getTeamId(),
-            $term['id'],
-            $this->request
+            $term['id']
         );
 
         return ApiResponse::ok()->withData($data)->getResponse();
@@ -49,22 +48,30 @@ class WatchlistsController extends BasePagingController
             return $this->generateResponseIfException($e);
         }
 
-        $krProgressService = new KrProgressService(
-            $this->request, 
-            $this->getUserId(), 
-            $this->getTeamId(), 
-            $id
+        /** @var KrProgressService */
+        $KrProgressService = ClassRegistry::init('KrProgressService');
+
+        $opts = [
+            'listId' => $id,
+            'termId' => $this->request->query('term_id'),
+            'goalId' => $this->request->query('goal_id'),
+            'limit' => intval($this->request->query('limit'))
+        ];
+
+        $findKrRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $opts
         );
-        $krs = $krProgressService->findKrs();
-        $response = $krProgressService->processKeyResults($krs);
-        $response = $krProgressService->appendProgressGraph($response);
+
+        $results = $KrProgressService->getWithGraph($findKrRequest);
 
         $response = [
             'id' => $id,
             'is_my_krs' => $id === KrProgressService::MY_KR_ID,
-            'term_id' => $krProgressService->getTerm()['id'],
-            'kr_count' => count($krs),
-            'kr_with_progress' => $response['data']
+            'term_id' => $findKrRequest->getTerm()['id'],
+            'kr_count' => $results['data']['krs_total'],
+            'kr_with_progress' => $results['data']
         ];
 
         return ApiResponse::ok()->withData($response)->getResponse();
