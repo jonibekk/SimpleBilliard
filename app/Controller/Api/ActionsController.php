@@ -122,8 +122,8 @@ class ActionsController extends BasePagingController
             foreach ($ActionResult->validationErrors as $field => $errors) {
                 $errMsgs[$field] = array_shift($errors);
             }
-            GoalousLog::error("Invalid action parameters", $errMsgs);
-            throw new Exception("Something went wrong! We're working to fix it as soon as we can. Please refresh the page or try again later.");
+            GoalousLog::error(__("Parameters are invalid."), $errMsgs);
+            throw new Exception(__("Something went wrong! We're working to fix it as soon as we can. Please refresh the page or try again later."));
         }
     }
 
