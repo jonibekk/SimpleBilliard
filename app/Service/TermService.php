@@ -272,13 +272,8 @@ class TermService extends AppService
     {
         /** @var Term */
         $Term = ClassRegistry::init("Term");
-        /** @var Team */
-        $Team = ClassRegistry::init("Team");
+        $date = GoalousDateTime::now()->format('Y-m-d');
 
-        $team = $Team->findById($teamId);
-        $timezone = $team['Team']['timezone'];
-        $data = AppUtil::todayDateYmdLocal($timezone);
-
-        return $Term->getTermByDate($teamId, $data);
+        return $Term->getTermByDate($teamId, $date);
     }
 }
