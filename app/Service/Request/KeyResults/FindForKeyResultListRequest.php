@@ -114,7 +114,7 @@ class FindForKeyResultListRequest
 
     public function isPastTerm()
     {
-        return $this->todayDate > $this->term['end_date'];
+        return strtotime($this->todayDate) > strtotime($this->term['end_date']);
     }
 
     private function initializeTerm(array $opts) 
