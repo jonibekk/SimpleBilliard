@@ -415,7 +415,7 @@ class AuthService extends AppService
             $User = ClassRegistry::init('User');
             $userInfo = $User->findById($userId);
             $userInfo = $userInfo['User'];
-            $userInfo['current_team_id'] = $teamId;
+            $userInfo['current_team_id'] = strval($teamId);
             unset($userInfo['password']);
 
             $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
