@@ -54,7 +54,6 @@ class User extends AppModel
     ];
 
     const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
-    //const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
 
     // https://www.emilynoie.com/entry/tokushu-alphabet#d
     // https://unicode-table.com/en/blocks/ipa-extensions/
