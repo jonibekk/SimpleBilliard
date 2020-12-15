@@ -133,6 +133,9 @@ class AuthController extends BaseApiController
                     'trace'   => $e->getTraceAsString()
                 ]
             );
+
+            var_dump($e->getMessage());exit;
+
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -178,6 +181,9 @@ class AuthController extends BaseApiController
                     'trace'   => $e->getTraceAsString()
                 ]
             );
+
+            var_dump($e->getMessage());exit;
+
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -543,7 +549,7 @@ class AuthController extends BaseApiController
 
         //For compatibility with old backend
         if (!empty($returnArray['language'])) {
-            $returnArray['language'] = LangUtil::convertToISO3($returnArray['language']);
+            $returnArray['language'] = LangUtil::convertISOFrom3to2($returnArray['language']);
         }
 
         return $returnArray;
