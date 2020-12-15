@@ -83,7 +83,17 @@ class WatchlistsController extends BasePagingController
         $WatchlistService = ClassRegistry::init("WatchlistService");
         // @var Term ;
         $Term = ClassRegistry::init("Term");
-        $terms = $Term->getAllTerm();
+
+        $opts = [
+            'conditions' => [
+                'team_id' => $this->getTeamId(),
+                'start_date <=' => GoalousDateTime::now(),
+            ],
+            'order' => ['start_date' => 'desc'],
+        ];
+
+        $rows = $Term->find('all', $opts);
+        $terms = Hash::extract($rows, '{n}.Term');
         $processed = [];
 
         foreach ($terms as $term) {
