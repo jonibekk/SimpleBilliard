@@ -42,12 +42,10 @@ class AuthController extends BaseApiController
     /**
      * Endpoint for checking for session
      *
-     * @param CakeRequest $request
-     *
      * @ignoreRestriction
      * @skipAuthentication
      */
-    public function get_has_session(CakeRequest $request)
+    public function get_has_session()
     {
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
@@ -57,7 +55,7 @@ class AuthController extends BaseApiController
 
         if (!$user) {
             $hasSession = false;
-            $authHeader = $request->header('Authorization');
+            $authHeader = $this->request->header('Authorization');
             $sessionId = $this->Session->id();
 
             $debugInfo = [
