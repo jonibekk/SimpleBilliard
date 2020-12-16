@@ -543,7 +543,7 @@ class AuthController extends BaseApiController
 
         //For compatibility with old backend
         if (!empty($returnArray['language'])) {
-            $returnArray['language'] = LangUtil::convertISOFrom3to2($returnArray['language']);
+            $returnArray['language'] = LangUtil::convertToISO3($returnArray['language']);
         }
 
         return $returnArray;
