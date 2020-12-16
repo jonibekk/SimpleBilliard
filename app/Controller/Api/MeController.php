@@ -13,6 +13,7 @@ App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
 App::import('Lib/Paging', 'PagingRequest');
@@ -20,6 +21,7 @@ App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('CheckedCircle', 'Model');
+App::uses('Term', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
@@ -216,21 +218,13 @@ class MeController extends BasePagingController
         /** @var GoalExtension $UserExtension */
         $GoalExtension = ClassRegistry::init('GoalExtension');
 
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->getTeamId();
-        $Term->Team->my_uid = $this->getUserId();
-        $Term->current_team_id = $this->getTeamId();
-        $Term->my_uid = $this->getUserId();
-        $currentTerm = $Term->getCurrentTermData();
-
         // Find KeyResult ordered by actioned in recent
-        $findForKeyResultListRequest = new FindForKeyResultListRequest(
-            $this->getUserId(),
+        $findKrsRequest = new FindForKeyResultListRequest( 
+            $this->getUserId(), 
             $this->getTeamId(),
-            $currentTerm);
-        $findForKeyResultListRequest->setOnlyKrIncomplete(true);
-        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
+            ['onlyIncomplete' => true]
+        );
+        $keyResults = $KeyResultService->findForKeyResultList($findKrsRequest);
 
         foreach ($keyResults as $index => $keyResult) {
             $keyResults[$index]['KeyResult'] = $GoalExtension->extend($keyResults[$index]['KeyResult'], 'goal_id');
@@ -246,15 +240,21 @@ class MeController extends BasePagingController
 
     public function get_kr_progress()
     {
-        $service = new KrProgressService(
-            $this->request, 
-            $this->getUserId(), 
+        /** @var KrProgressService */
+        $KrProgressService = ClassRegistry::init('KrProgressService');
+
+        $opts = [
+            'goalId' => $this->request->query('goal_id'),
+            'limit' => intval($this->request->query('limit'))
+        ];
+
+        $findKrRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
             $this->getTeamId(),
-            KrProgressService::MY_KR_ID
+            $opts
         );
 
-        $krs = $service->findKrs();
-        $response = $service->processKeyResults($krs);
+        $response = $KrProgressService->getWithGraph($findKrRequest);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }

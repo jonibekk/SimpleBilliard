@@ -3,9 +3,11 @@
 App::import('Service', 'AppService');
 App::import('Service', 'GoalService');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'KrProgressService');
 App::uses('Watchlist', 'Model');
 App::uses('KrWatchlist', 'Model');
 App::import('Model/Entity', 'WatchlistEntity');
+App::import('Policy', 'WatchlistPolicy');
 
 /**
  * Class WatchlistService
@@ -85,10 +87,51 @@ class WatchlistService extends AppService
         return $watchlist;
     }
 
+    public function getForTerm(int $userId, int $teamId, int $termId): array
+    {
+        // @var Watchlist ;
+        $Watchlist = ClassRegistry::init("Watchlist");
+        // @var KrProgressService ;
+        $KrProgressService = ClassRegistry::init("KrProgressService");
+
+        // TODO: Remove once we enter phase 2
+        // Creates the Important list for users if they haven't watched any KR before
+        $this->findOrCreateWatchlist($userId, $teamId, $termId);
+
+        $policy = new WatchlistPolicy($userId, $teamId);
+        $scope = $policy->scope();
+        $termScope = ['conditions' => ['Watchlist.term_id' => $termId]];
+        $fullScope = array_merge_recursive($scope, $termScope);
+        $results = $Watchlist->findWithKrCount($fullScope);
+        $watchlists = Hash::extract($results, '{n}.Watchlist');
+
+        $watchlists = array_map(function ($watchlist) {
+            $watchlist['is_my_krs'] = false;
+            return $watchlist;
+        }, $watchlists);
+
+        $opts = [
+            'listId' => KrProgressService::MY_KR_ID,
+            'termId' => $termId
+        ];
+        $findKrsRequest = new FindForKeyResultListRequest( $userId, $teamId, $opts);
+        $myKrsCount = count($KrProgressService->findKrs($findKrsRequest));
+
+        $myKrsList = [
+            'id' => KrProgressService::MY_KR_ID,
+            'term_id' => $termId,
+            'is_my_krs' => true,
+            'kr_count' => $myKrsCount,
+        ];
+
+        return array_merge([$myKrsList], $watchlists);
+    }
+
     public function getWatchlistProgressForGraph(
-        $watchlistId,
-        $graphStartDate,
-        $graphEndDate
+        int $watchlistId,
+        string $graphStartDate,
+        string $graphEndDate,
+        array $term
     ): array {
         /** @var GoalService */
         $GoalService = ClassRegistry::init('GoalService');
@@ -119,7 +162,13 @@ class WatchlistService extends AppService
             $timestamp = strtotime('+1 day', $timestamp);
         }
 
-        $sweetSpot = $GoalService->getSweetSpot($graphStartDate, $graphEndDate);
+        $sweetSpot = $GoalService->getSweetSpot(
+            $graphStartDate, 
+            $graphEndDate,
+            $GoalService::GRAPH_SWEET_SPOT_MAX_TOP,
+            $GoalService::GRAPH_SWEET_SPOT_MAX_BOTTOM,
+            $term
+        );
 
         return [
             array_merge(['sweet_spot_top'], $sweetSpot['top']),

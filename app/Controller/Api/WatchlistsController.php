@@ -1,10 +1,11 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
 App::uses('Group', 'Model');
-App::uses('KeyResult', 'Model');
 App::uses('Term', 'Model');
+App::uses('KeyResult', 'Model');
 App::import('Service', 'WatchlistService');
 App::import('Service', 'KrProgressService');
+App::import('Service', 'TermService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Service', 'ImageStorageService');
 App::import('Policy', 'WatchlistPolicy');
@@ -21,36 +22,17 @@ class WatchlistsController extends BasePagingController
 
     public function get_list()
     {
+        // @var TermService ;
+        $TermService = ClassRegistry::init("TermService");
         // @var WatchlistService ;
         $WatchlistService = ClassRegistry::init("WatchlistService");
-        // @var Watchlist ;
-        $Watchlist = ClassRegistry::init("Watchlist");
-        // @var Term ;
-        $Term = ClassRegistry::init("Term");
 
-        $currentTerm = $Term->getCurrentTermData();
-        $userId = $this->getUserId();
-        $teamId = $this->getTeamId();
-        $termId = $currentTerm['id'];
-
-        // TODO: Remove once we enter phase 2
-        // Creates the Important list for users if they haven't watched any KR before
-        $WatchlistService->findOrCreateWatchlist($userId, $teamId, $termId);
-
-        $policy = new WatchlistPolicy($userId, $teamId);
-        $scope = $policy->scope();
-        $results = $Watchlist->findWithKrCount($scope);
-        $watchlists = Hash::extract($results, '{n}.Watchlist');
-
-        $krProgressService = new KrProgressService($this->request, $userId, $teamId, KrProgressService::MY_KR_ID);
-        $myKrsCount = count($krProgressService->findKrs());
-
-        $myKrsList = [
-            'id' => KrProgressService::MY_KR_ID,
-            'kr_count' => $myKrsCount,
-        ];
-
-        $data =  array_merge([$myKrsList], $watchlists);
+        $term = $TermService->getCurrentTerm($this->getTeamId());
+        $data = $WatchlistService->getForTerm(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $term['id']
+        );
 
         return ApiResponse::ok()->withData($data)->getResponse();
     }
@@ -66,17 +48,66 @@ class WatchlistsController extends BasePagingController
             return $this->generateResponseIfException($e);
         }
 
-        $krProgressService = new KrProgressService($this->request, $this->getUserId(), $this->getTeamId(), $id);
-        $krs = $krProgressService->findKrs();
-        $result = $krProgressService->processKeyResults($krs);
+        /** @var KrProgressService */
+        $KrProgressService = ClassRegistry::init('KrProgressService');
+
+        $opts = [
+            'listId' => $id,
+            'termId' => $this->request->query('term_id'),
+            'goalId' => $this->request->query('goal_id'),
+            'limit' => intval($this->request->query('limit'))
+        ];
+
+        $findKrRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $opts
+        );
+
+        $results = $KrProgressService->getWithGraph($findKrRequest);
 
         $response = [
             'id' => $id,
-            'kr_count' => count($krs),
-            'kr_with_progress' => $result['data']
+            'is_my_krs' => $id === KrProgressService::MY_KR_ID,
+            'term_id' => $findKrRequest->getTerm()['id'],
+            'kr_count' => $results['data']['krs_total'],
+            'kr_with_progress' => $results['data']
         ];
 
         return ApiResponse::ok()->withData($response)->getResponse();
+    }
+
+    public function get_by_term() 
+    {
+        // @var WatchlistService ;
+        $WatchlistService = ClassRegistry::init("WatchlistService");
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
+
+        $opts = [
+            'conditions' => [
+                'team_id' => $this->getTeamId(),
+                'start_date <=' => GoalousDateTime::now(),
+            ],
+            'order' => ['start_date' => 'desc'],
+        ];
+
+        $rows = $Term->find('all', $opts);
+        $terms = Hash::extract($rows, '{n}.Term');
+        $processed = [];
+
+        foreach ($terms as $term) {
+            $term['watchlists'] = $WatchlistService->getForTerm(
+                $this->getUserId(),
+                $this->getTeamId(),
+                $term['id'],
+                $this->request
+            );
+
+            $processed[] = $term;
+        }
+
+        return ApiResponse::ok()->withData($processed)->getResponse();
     }
 
     private function findWatchlist(int $watchlistId): array
