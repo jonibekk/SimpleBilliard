@@ -47,9 +47,24 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
+        $user = $this->Auth->user();
+        $hasSession = true;
+
+        if (!$user) {
+            $hasSession = false;
+
+            GoalousLog::debug(
+                'has session returns false',
+                [
+                    'has_session' => !!$user,
+                    'user'   => $user
+                ]
+            );
+        }
+
         return ApiResponse::ok()
             ->withMessage(Enum\Auth\Status::OK)
-            ->withData(['has_session' => !!$this->Auth->user()])
+            ->withData(['has_session' => $hasSession])
             ->getResponse();
     }
 
