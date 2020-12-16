@@ -76,7 +76,11 @@ class AuthController extends BaseApiController
                     try {
                         $jwtAuth = AccessAuthenticator::verify($jwtToken);
 
-                        if (!empty($jwtAuth->getUserId()) && !empty($jwtAuth->getTeamId())) {
+                        if (
+                            !empty($jwtAuth->getUserId()) &&
+                            !empty($jwtAuth->getTeamId()) &&
+                            !empty($sessionId)
+                        ) {
                             $debugInfo['current_team_id'] = $jwtAuth->getTeamId();
                             $debugInfo['map_ses_jwt'] = $GlRedis->getMapSesAndJwt(
                                 $jwtAuth->getTeamId(),
