@@ -57,10 +57,8 @@ class AuthController extends BaseApiController
             $hasSession = false;
             $authHeader = $request->header('Authorization');
             $sessionId = $this->Session->id();
-            $teamId = $this->getTeamId();
 
             $debugInfo = [
-                'current_team_id' => $teamId,
                 'session' => $this->Session->read(),
                 'session_id' => $sessionId,
                 'user' => $user
@@ -72,13 +70,23 @@ class AuthController extends BaseApiController
                 $jwt = sscanf($authHeader, 'Bearer %s');
                 $jwtToken = $jwt[0] ?? null;
 
+                $debugInfo['jwt_token'] = $jwtToken;
+
                 if (null !== $jwtToken) {
-                    $debugInfo['jwt_token'] = $jwtToken;
+                    try {
+                        $jwtAuth = AccessAuthenticator::verify($jwtToken);
 
-                    if ($teamId && $sessionId && $userId) {
-                        $map = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
-
-                        $debugInfo['map_ses_jwt'] = $map;
+                        if (!empty($jwtAuth->getUserId()) && !empty($jwtAuth->getTeamId())) {
+                            $debugInfo['current_team_id'] = $jwtAuth->getTeamId();
+                            $debugInfo['map_ses_jwt'] = $GlRedis->getMapSesAndJwt(
+                                $jwtAuth->getTeamId(),
+                                $jwtAuth->getUserId(),
+                                $sessionId
+                            );
+                            $debugInfo['user_id'] = $jwtAuth->getUserId();
+                        }
+                    } catch (Exception $e) {
+                        $debugInfo['error'] = $e->getMessage();
                     }
                 }
             }
