@@ -72,7 +72,7 @@ class AuthController extends BaseApiController
 
                 $debugInfo['jwt_token'] = $jwtToken;
 
-                if (null !== $jwtToken) {
+                if ($jwtToken) {
                     try {
                         $jwtAuth = AccessAuthenticator::verify($jwtToken);
 
