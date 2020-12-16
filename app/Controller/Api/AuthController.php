@@ -56,7 +56,9 @@ class AuthController extends BaseApiController
             GoalousLog::debug(
                 'has session returns false',
                 [
-                    'has_session' => !!$user,
+                    'current_team_id' => $this->getTeamId(),
+                    'jwt_token' => $this->getUserToken(),
+                    'session' => $this->Session->read(),
                     'user'   => $user
                 ]
             );
