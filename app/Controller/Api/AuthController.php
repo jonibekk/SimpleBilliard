@@ -47,9 +47,64 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+
+        $user = $this->Auth->user();
+        $hasSession = true;
+
+        if (!$user) {
+            $hasSession = false;
+            $authHeader = $this->request->header('Authorization');
+            $sessionId = $this->Session->id();
+
+            $debugInfo = [
+                'session' => $this->Session->read(),
+                'session_id' => $sessionId,
+                'user' => $user
+            ];
+
+            if (!empty($authHeader)) {
+                $debugInfo['auth_header'] = $authHeader;
+
+                $jwt = sscanf($authHeader, 'Bearer %s');
+                $jwtToken = $jwt[0] ?? null;
+
+                $debugInfo['jwt_token'] = $jwtToken;
+
+                if ($jwtToken) {
+                    try {
+                        $jwtAuth = AccessAuthenticator::verify($jwtToken);
+
+                        $debugInfo['current_team_id'] = $jwtAuth->getTeamId();
+                        $debugInfo['user_id'] = $jwtAuth->getUserId();
+
+                        if (
+                            !empty($jwtAuth->getUserId()) &&
+                            !empty($jwtAuth->getTeamId()) &&
+                            !empty($sessionId)
+                        ) {
+                            $debugInfo['map_ses_jwt'] = $GlRedis->getMapSesAndJwt(
+                                $jwtAuth->getTeamId(),
+                                $jwtAuth->getUserId(),
+                                $sessionId
+                            );
+                        }
+                    } catch (Exception $e) {
+                        $debugInfo['error'] = $e->getMessage();
+                    }
+                }
+            }
+
+            GoalousLog::debug(
+                'has session returns false',
+                $debugInfo
+            );
+        }
+
         return ApiResponse::ok()
             ->withMessage(Enum\Auth\Status::OK)
-            ->withData(['has_session' => !!$this->Auth->user()])
+            ->withData(['has_session' => $hasSession])
             ->getResponse();
     }
 
