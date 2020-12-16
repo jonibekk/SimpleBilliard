@@ -47,20 +47,45 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+
         $user = $this->Auth->user();
         $hasSession = true;
 
         if (!$user) {
             $hasSession = false;
+            $authHeader = $request->header('Authorization');
+            $sessionId = $this->Session->id();
+            $teamId = $this->getTeamId();
+
+            $debugInfo = [
+                'current_team_id' => $teamId,
+                'session' => $this->Session->read(),
+                'session_id' => $sessionId,
+                'user' => $user
+            ];
+
+            if (!empty($authHeader)) {
+                $debugInfo['auth_header'] = $authHeader;
+
+                $jwt = sscanf($authHeader, 'Bearer %s');
+                $jwtToken = $jwt[0] ?? null;
+
+                if (null !== $jwtToken) {
+                    $debugInfo['jwt_token'] = $jwtToken;
+
+                    if ($teamId && $sessionId && $userId) {
+                        $map = $GlRedis->getMapSesAndJwt($teamId, $user['id'], $sesId);
+
+                        $debugInfo['map_ses_jwt'] = $map;
+                    }
+                }
+            }
 
             GoalousLog::debug(
                 'has session returns false',
-                [
-                    'current_team_id' => $this->getTeamId(),
-                    'jwt_token' => $this->getUserToken(),
-                    'session' => $this->Session->read(),
-                    'user'   => $user
-                ]
+                $debugInfo
             );
         }
 
