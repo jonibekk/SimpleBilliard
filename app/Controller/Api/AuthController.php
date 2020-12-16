@@ -42,10 +42,12 @@ class AuthController extends BaseApiController
     /**
      * Endpoint for checking for session
      *
+     * @param CakeRequest $request
+     *
      * @ignoreRestriction
      * @skipAuthentication
      */
-    public function get_has_session()
+    public function get_has_session(CakeRequest $request)
     {
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
