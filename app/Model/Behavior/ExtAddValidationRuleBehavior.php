@@ -358,7 +358,7 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         App::uses('User', 'Model');
         $value = array_values($check);
         $value = $value[0];
-        return preg_match('/' . User::USER_NAME_REGEX . '/', $value);
+        return preg_match('/' . User::USER_NAME_REGEX . '/u', $value);
     }
 
     function numBetween(
