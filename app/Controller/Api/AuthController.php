@@ -47,7 +47,6 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
-        // $this->Auth->initialize($this);
         $this->Auth->startup($this);
 
         /** @var GlRedis $GlRedis */
