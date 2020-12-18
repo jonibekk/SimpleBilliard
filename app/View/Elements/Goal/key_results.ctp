@@ -37,6 +37,34 @@
                         <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
                     <?php endif ?>
                 </dd>
+                <?php if (array_key_exists('watched', $kr['KeyResult'])): ?>
+                    <?= 
+                        $this->Form->create('KeyResult', [
+                            'novalidate'    => true,
+                            'class'         => 'goal-detail-toggle ',
+                            'url'           => ['controller' => 'goals', 'action' => 'toggle_watch']
+                        ])
+                    ?>
+                    <?= $this->Form->input('kr_id', ['type' => 'hidden', 'value' => $kr['KeyResult']['id']]) ?>
+                    <?= $this->Form->input('watched', ['type' => 'hidden', 'value' => (int)!$kr['KeyResult']['watched']]) ?>
+                    <button 
+                        type="submit" 
+                        class="<?= $kr['KeyResult']['watched'] ? 'active' : '' ?>"
+                        onclick="this.form.submit();this.disabled=true"
+                    >
+                        <dt class="goal-detail-kr-info-counts-title">
+                            <i class="fa fa-eye"></i>
+                        </dt>
+                        <dd class="goal-detail-kr-info-counts-description">
+                            <?php if ($kr['KeyResult']['watched']) : ?>
+                                <?= __("Watched") ?>
+                            <?php else : ?>
+                                <?= __("Watch") ?>
+                            <?php endif; ?>
+                        </dd>
+                    </button>
+                    <?= $this->Form->end() ?>
+                <?php endif; ?>
             </dl>
             <?php if (!empty($kr['KeyResult']['description'])): ?>
                 <div class="showmore-init-none">
