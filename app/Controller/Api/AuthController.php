@@ -52,7 +52,7 @@ class AuthController extends BaseApiController
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 
-        $user = $this->Auth->user();
+        $user = AuthComponent::user();
         $hasSession = true;
 
         if (!$user) {
