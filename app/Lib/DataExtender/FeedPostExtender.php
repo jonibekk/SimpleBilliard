@@ -71,6 +71,8 @@ class FeedPostExtender extends BaseExtender
 
             /** @var KeyResultExtension $KeyResultExtension */
             $KeyResultExtension = ClassRegistry::init('KeyResultExtension');
+            $KeyResultExtension->setUserId($userId);
+            $KeyResultExtension->setTeamId($teamId);
 
             /** @var GoalExtension $GoalExtension */
             $GoalExtension = ClassRegistry::init('GoalExtension');

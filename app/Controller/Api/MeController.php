@@ -13,12 +13,15 @@ App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
+App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
+App::import('Service', 'KrProgressService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
 App::uses('CheckedCircle', 'Model');
+App::uses('Term', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
@@ -215,21 +218,13 @@ class MeController extends BasePagingController
         /** @var GoalExtension $UserExtension */
         $GoalExtension = ClassRegistry::init('GoalExtension');
 
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->getTeamId();
-        $Term->Team->my_uid = $this->getUserId();
-        $Term->current_team_id = $this->getTeamId();
-        $Term->my_uid = $this->getUserId();
-        $currentTerm = $Term->getCurrentTermData();
-
         // Find KeyResult ordered by actioned in recent
-        $findForKeyResultListRequest = new FindForKeyResultListRequest(
-            $this->getUserId(),
+        $findKrsRequest = new FindForKeyResultListRequest( 
+            $this->getUserId(), 
             $this->getTeamId(),
-            $currentTerm);
-        $findForKeyResultListRequest->setOnlyKrIncomplete(true);
-        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
+            ['onlyIncomplete' => true]
+        );
+        $keyResults = $KeyResultService->findForKeyResultList($findKrsRequest);
 
         foreach ($keyResults as $index => $keyResult) {
             $keyResults[$index]['KeyResult'] = $GoalExtension->extend($keyResults[$index]['KeyResult'], 'goal_id');
@@ -245,121 +240,21 @@ class MeController extends BasePagingController
 
     public function get_kr_progress()
     {
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
-        /** @var KrProgressLog $KrProgressLog */
-        $KrProgressLog = ClassRegistry::init('KrProgressLog');
-        /** @var UserExtension $UserExtension */
-        $UserExtension = ClassRegistry::init('UserExtension');
-        /** @var GoalExtension $UserExtension */
-        $GoalExtension = ClassRegistry::init('GoalExtension');
-        /** @var ActionResult $ActionResult */
-        $ActionResult = ClassRegistry::init("ActionResult");
-        /** @var Post $Post */
-        $Post = ClassRegistry::init("Post");
+        /** @var KrProgressService */
+        $KrProgressService = ClassRegistry::init('KrProgressService');
 
-        /** @var Term $Term */
-        $Term = ClassRegistry::init("Term");
-        $Term->Team->current_team_id = $this->getTeamId();
-        $Term->Team->my_uid = $this->getUserId();
-        $Term->current_team_id = $this->getTeamId();
-        $Term->my_uid = $this->getUserId();
-        $currentTerm = $Term->getCurrentTermData();
-
-        $now = GoalousDateTime::now();
-        $periodFrom = $now->copy()->startOfDay()->subDays(7);
-        $periodTo = $now->copy();
-
-        $goalIdSelected = intval($this->request->query('goal_id'));
-        $limit = intval($this->request->query('limit'));
-        $withKrProgressGraphValues = intval($this->request->query('with_kr_progress_graph_values'));
-
-        // Find KeyResult ordered by actioned in recent
-        $findForKeyResultListRequest = new FindForKeyResultListRequest(
-            $this->getUserId(),
-            $this->getTeamId(),
-            $currentTerm);
-        $findForKeyResultListRequest->setGoalIdSelected($goalIdSelected);
-        $findForKeyResultListRequest->setLimit($limit);
-
-        $keyResults = $KeyResultService->findForKeyResultList($findForKeyResultListRequest);
-
-        $krs = [];
-        foreach ($keyResults as $index => $keyResult) {
-            // Find action that has filtered by period
-            $actionResults = $ActionResult->getByKrIdAndCreatedFrom($keyResult['KeyResult']['id'], $periodFrom);
-            $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
-
-            // Total action progress in period
-            $changeValueTotal = 0;
-            foreach ($actionResults as $i => $actionResult) {
-                $krProgressLog = $KrProgressLog->getByActionResultId($actionResult['id'])->toArray();
-                $actionResults[$i]['kr_progress_log'] = $krProgressLog;
-                $changeValueTotal += $krProgressLog['change_value'];
-
-                // Need a post_id to make link to action detail post.
-                $post = $Post->getByActionResultId($actionResult['id'], $this->getTeamId());
-                $actionResults[$i]['post_id'] = $post['Post']['id'];
-                $actionResults[$i] = $UserExtension->extend($actionResults[$i], 'user_id');
-            }
-
-            $keyResult['KeyResult'] = $GoalExtension->extend($keyResult['KeyResult'], 'goal_id');
-
-            array_push($krs, array_merge(
-                $keyResult['KeyResult'],
-                [
-                    'progress_log_recent_total' => [
-                        'change_value' => $changeValueTotal,
-                    ],
-                    'action_results' => $actionResults,
-                ]
-            ));
-        }
-
-        /** @var GoalService $GoalService */
-        $GoalService = ClassRegistry::init('GoalService');
-        /** @var KeyResultService $KeyResultService */
-        $KeyResultService = ClassRegistry::init("KeyResultService");
-
-        $response = [
-            'data' => [
-                'period_kr_collection' => [
-                    'from' => $periodFrom->getTimestamp(),
-                    'to' => $periodTo->getTimestamp(),
-                ],
-                'krs_total' => $KeyResultService->countMine($goalIdSelected ?? null, false, $this->getUserId()),
-                'krs' => $krs,
-                'goals' => $GoalService->findNameListAsMember($this->getUserId(), $currentTerm['start_date'], $currentTerm['end_date']),
-            ],
+        $opts = [
+            'goalId' => $this->request->query('goal_id'),
+            'limit' => intval($this->request->query('limit'))
         ];
 
-        if ($withKrProgressGraphValues) {
-            $todayDate = AppUtil::dateYmd(REQUEST_TIMESTAMP + $currentTerm['timezone'] * HOUR);
-            $graphRange = $GoalService->getGraphRange(
-                $todayDate,
-                GoalService::GRAPH_TARGET_DAYS,
-                GoalService::GRAPH_MAX_BUFFER_DAYS
-            );
-            $progressGraph = $GoalService->getUserAllGoalProgressForDrawingGraph(
-                $this->getUserId(),
-                $graphRange['graphStartDate'],
-                $graphRange['graphEndDate'],
-                $graphRange['plotDataEndDate'],
-                true
-            );
-            $TimeEx = new TimeExHelper(new View());
-            $krProgressGraphValues = [
-                'data'       => [
-                    'sweet_spot_top' => $progressGraph[0],
-                    'sweet_spot_bottom' => $progressGraph[1],
-                    'data' => $progressGraph[2],
-                    'x' => $progressGraph[3],
-                ],
-                'start_date' => $TimeEx->formatDateI18n(strtotime($graphRange['graphStartDate'])),
-                'end_date'   => $TimeEx->formatDateI18n(strtotime($graphRange['graphEndDate'])),
-            ];
-            $response['data']['kr_progress_graph'] = $krProgressGraphValues;
-        }
+        $findKrRequest = new FindForKeyResultListRequest(
+            $this->getUserId(),
+            $this->getTeamId(),
+            $opts
+        );
+
+        $response = $KrProgressService->getWithGraph($findKrRequest);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
