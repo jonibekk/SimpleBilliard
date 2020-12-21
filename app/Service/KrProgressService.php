@@ -23,16 +23,19 @@ class KrProgressService extends AppService
 
     function processKeyResults(FindForKeyResultListRequest $request, array $allKrs): array
     {
+        $limit = $request->getLimit();
         $goalId = $request->getGoalId();
         $krs = [];
 
-        foreach ($allKrs as $kr) {
+        foreach ($allKrs as $idx => $kr) {
             if ($goalId !== null && $goalId !== $kr['Goal']['id']) {
                 continue;
             } 
-
-            array_push($krs, $this->extendKr($request, $kr));
+            if (empty($limit) || $idx < $limit) {
+                array_push($krs, $this->extendKr($request, $kr));
+            }
         };
+
         return $krs;
     }
 
