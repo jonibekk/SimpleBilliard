@@ -47,9 +47,66 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
+        $this->Auth->startup($this);
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+
+        $user = AuthComponent::user();
+        $hasSession = true;
+
+        if (!$user) {
+            $hasSession = false;
+            $authHeader = $this->request->header('Authorization');
+            $sessionId = $this->Session->id();
+
+            $debugInfo = [
+                'session' => $this->Session->read(),
+                'session_id' => $sessionId,
+                'user' => $user
+            ];
+
+            if (!empty($authHeader)) {
+                $debugInfo['auth_header'] = $authHeader;
+
+                $jwt = sscanf($authHeader, 'Bearer %s');
+                $jwtToken = $jwt[0] ?? null;
+
+                $debugInfo['jwt_token'] = $jwtToken;
+
+                if ($jwtToken) {
+                    try {
+                        $jwtAuth = AccessAuthenticator::verify($jwtToken);
+
+                        $debugInfo['current_team_id'] = $jwtAuth->getTeamId();
+                        $debugInfo['user_id'] = $jwtAuth->getUserId();
+
+                        if (
+                            !empty($jwtAuth->getUserId()) &&
+                            !empty($jwtAuth->getTeamId()) &&
+                            !empty($sessionId)
+                        ) {
+                            $debugInfo['map_ses_jwt'] = $GlRedis->getMapSesAndJwt(
+                                $jwtAuth->getTeamId(),
+                                $jwtAuth->getUserId(),
+                                $sessionId
+                            );
+                        }
+                    } catch (Exception $e) {
+                        $debugInfo['error'] = $e->getMessage();
+                    }
+                }
+            }
+
+            GoalousLog::debug(
+                'has session returns false',
+                $debugInfo
+            );
+        }
+
         return ApiResponse::ok()
             ->withMessage(Enum\Auth\Status::OK)
-            ->withData(['has_session' => !!$this->Auth->user()])
+            ->withData(['has_session' => $hasSession])
             ->getResponse();
     }
 
@@ -495,17 +552,9 @@ class AuthController extends BaseApiController
         }
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
-        /** @var User $User */
-        $User = ClassRegistry::init('User');
 
         //Filter out extended data
-        $userData = array_filter(
-            $responseData['data']['me'],
-            function ($input) use ($User) {
-                return in_array($input, $User->loginUserFields);
-            },
-            ARRAY_FILTER_USE_KEY
-        );
+        $userData = $this->filterAndConvertUserData($responseData['data']['me']);
 
         if (!$this->Auth->login($userData)) {
             throw new GlException\Auth\AuthFailedException("Unable to manually log user.");
@@ -516,8 +565,8 @@ class AuthController extends BaseApiController
 
         $sessionId = $this->Session->id();
 
-        $this->Session->write('current_team_id', $currentTeamId);
-        $this->Session->write('default_team_id ', $responseData['data']['me']['default_team_id']);
+        $this->Session->write('current_team_id', strval($currentTeamId));
+        $this->Session->write('default_team_id ', strval($responseData['data']['me']['default_team_id']));
 
         $cookieLifetime = Configure::read('Session')["ini"]["session.cookie_lifetime"];
         $cookieExpiryTime = GoalousDateTime::now()->addSeconds($cookieLifetime);
@@ -534,5 +583,26 @@ class AuthController extends BaseApiController
         $GlRedis->saveMapSesAndJwtWithToken($currentTeamId, $userId, $responseData['data']['token'], $sessionId);
 
         return $responseData;
+    }
+
+    private function filterAndConvertUserData(array $userData): array
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $returnArray = [];
+
+        foreach ($userData as $key => $value) {
+            if (in_array($key, $User->loginUserFields)) {
+                $returnArray[$key] = strval($value);
+            }
+        }
+
+        //For compatibility with old backend
+        if (!empty($returnArray['language'])) {
+            $returnArray['language'] = LangUtil::convertToISO3($returnArray['language']);
+        }
+
+        return $returnArray;
     }
 }
