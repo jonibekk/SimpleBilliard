@@ -436,6 +436,7 @@ class UsersController extends AppController
      */
     public function logout()
     {
+        CustomLogger::getInstance()->logEvent('logout');
         $user = $this->Auth->user();
 
         //Need to put the notification between logout process & the redirect

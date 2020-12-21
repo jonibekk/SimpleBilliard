@@ -44,7 +44,7 @@ class CustomLogger {
         ]);
     }
 
-    public function logEvent(string $name, array $data)
+    public function logEvent(string $name, array $data = [])
     {
 
         if (extension_loaded('newrelic')) {
