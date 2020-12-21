@@ -46,15 +46,16 @@ class CustomLogger {
 
     public function logEvent(string $name, array $data = [])
     {
+        $loggedData = [
+            'data' => $data,
+            'controllerData' => $this->controllerData
+        ];
 
         if (extension_loaded('newrelic')) {
-            $flattenedData = AppUtil::flattenArrayPath($data);
+            $flattenedData = AppUtil::flattenArrayPath($loggedData);
             newrelic_record_custom_event($name, $flattenedData);
         }
 
-        GoalousLog::info($name, [
-            'data' => $data,
-            'controllerData' => $this->controllerData
-        ]);
+        GoalousLog::info($name, $loggedData);
     }
 }
