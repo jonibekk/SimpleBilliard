@@ -39,7 +39,6 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * @property GlEmailComponent      $GlEmail
  * @property TeamMember  $TeamMember
  * @property TwoFaComponent $TwoFa
- * @property MixpanelComponent  $Mixpanel
  * @property SessionComponent $Session
  * @property GlRedis          $GlRedis
  * @property NotifySetting  $NotifySetting
@@ -51,7 +50,6 @@ class MeController extends BasePagingController
     public $uses = [
         'User',
         'TeamMember',
-        'Mixpanel',
         "GlRedis",
         'NotifySetting',
     ];
@@ -486,7 +484,7 @@ class MeController extends BasePagingController
         }
 
         $this->Session->delete('2fa_secret_key');
-        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
+        //$this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
 
         return ApiResponse::ok()->withBody(['data' => __('Succeeded to save 2-Step Verification.')
         ])->getResponse();
@@ -504,7 +502,7 @@ class MeController extends BasePagingController
         if (empty($this->getTeamId()) === false && empty($this->getUserId()) === false) {
             $this->GlRedis->deleteDeviceHash($this->getTeamId(), $this->getUserId());
         }
-        $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
+        //$this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
 
         return ApiResponse::ok()->withBody(['data' => __("Succeeded to cancel 2-Step Verification.")
         ])->getResponse();
