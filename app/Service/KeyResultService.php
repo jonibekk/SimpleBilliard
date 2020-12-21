@@ -755,9 +755,6 @@ class KeyResultService extends AppService
         if (!$request->isPastTerm()) {
             $options['conditions']['Goal.end_date >='] = $request->getTodayDate();
         }
-        if ($request->getLimit()) {
-            $options['limit'] = $request->getLimit();
-        }
         if ($request->getOnlyIncomplete()) {
             $options['conditions']['KeyResult.completed'] = null;
         }
@@ -809,10 +806,6 @@ class KeyResultService extends AppService
                 ]
             ]
         ];
-
-        if ($request->getLimit()) {
-            $options['limit'] = $request->getLimit();
-        }
 
         return $KeyResult->useType()->find('all', $options);
     }
