@@ -1,4 +1,9 @@
 <?php
+App::uses('TeamEntity', 'Model/Entity');
+App::uses('TermEntity', 'Model/Entity');
+App::import('Service', 'TermService');
+App::uses('Team', 'Model');
+App::uses('AppUtil', 'Util');
 
 class FindForKeyResultListRequest
 {
@@ -13,107 +18,125 @@ class FindForKeyResultListRequest
     protected $teamId;
 
     /**
-     * @var array
+     * @var integer
      */
-    protected $currentTermModel;
+    protected $goalId;
 
     /**
-     * @var null|integer
+     * @var integer
      */
-    protected $goalIdSelected;
+    protected $listId;
+
+    /**
+     * @var TermEntity
+     */
+    protected $term;
+
+    /**
+     * @var string
+     */
+    protected $todayDate;
+
+    /**
+     * @var null|boolean
+     */
+    protected $onlyIncomplete;
 
     /**
      * @var null|integer
      */
     protected $limit;
 
-    /**
-     * @var null|boolean
-     */
-    protected $onlyKrIncomplete;
-
-    /**
-     * FindForKeyResultListRequest constructor.
-     * @param int $userId
-     * @param int $teamId
-     * @param array $currentTermModel
-     */
-    public function __construct(int $userId, int $teamId, array $currentTermModel)
+    public function __construct(int $userId, int $teamId, array $opts)
     {
+
         $this->userId = $userId;
         $this->teamId = $teamId;
-        $this->currentTermModel = $currentTermModel;
+        $this->todayDate = GoalousDateTime::now()->format('Y-m-d');
+        $this->initializeTerm($opts);
+
+        if (array_key_exists('onlyIncomplete', $opts)) {
+            $this->onlyIncomplete = $opts['onlyIncomplete'];
+        }
+
+        if (array_key_exists('limit', $opts)) {
+            $this->limit = $opts['limit'];
+        }
+
+        if (array_key_exists('listId', $opts)) {
+            $this->listId = $opts['listId'];
+        }
+
+        if (array_key_exists('goalId', $opts)) {
+            $this->goalId = $opts['goalId'];
+        }
     }
 
-    /**
-     * @return int
-     */
-    public function getUserId(): int
+    public function getUserId()
     {
         return $this->userId;
     }
 
-    /**
-     * @return int
-     */
-    public function getTeamId(): int
+    public function getTeamId()
     {
         return $this->teamId;
     }
 
-    /**
-     * @return array
-     */
-    public function getCurrentTermModel(): array
+    public function getListId()
     {
-        return $this->currentTermModel;
+        return $this->listId;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getGoalIdSelected(): ?int
+    public function getGoalId()
     {
-        return $this->goalIdSelected;
+        return $this->goalId;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLimit(): ?int
+    public function getTerm()
+    {
+        return $this->term;
+    }
+
+    public function getOnlyIncomplete()
+    {
+        return $this->onlyIncomplete;
+    }
+
+    public function getLimit()
     {
         return $this->limit;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function getOnlyKrIncomplete(): ?bool
+    public function getTodayDate()
     {
-        return $this->onlyKrIncomplete;
+        return $this->todayDate;
     }
 
-    /**
-     * @param int|null $goalIdSelected
-     */
-    public function setGoalIdSelected(?int $goalIdSelected): void
+    public function isPastTerm()
     {
-        $this->goalIdSelected = $goalIdSelected;
+        return strtotime($this->todayDate) > strtotime($this->term['end_date']);
     }
 
-    /**
-     * @param int|null $limit
-     */
-    public function setLimit(?int $limit): void
+    private function initializeTerm(array $opts) 
     {
-        $this->limit = $limit;
+        // @var TermService ;
+        $TermService = ClassRegistry::init("TermService");
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
+
+        if (array_key_exists('termId', $opts)) {
+            $termId = $opts['termId'];
+
+            if (!empty($termId) && $termId !== 'current') {
+                $this->term = $Term->useType()->useEntity()->findById($termId);
+                return;
+            }
+        } 
+
+        $this->term = $TermService->getCurrentTerm($this->teamId);
     }
 
-    /**
-     * @param bool|null $onlyKrIncomplete
-     */
-    public function setOnlyKrIncomplete(?bool $onlyKrIncomplete): void
-    {
-        $this->onlyKrIncomplete = $onlyKrIncomplete;
+    public function log() {
+        GoalousLog::info('request', get_object_vars($this));
     }
 }

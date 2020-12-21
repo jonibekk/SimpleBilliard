@@ -459,9 +459,6 @@ msgstr "About Us"
 msgid "Account"
 msgstr "アカウント"
 
-msgid "Acheive Goal"
-msgstr "ゴールを達成"
-
 msgid "Achieve Goal"
 msgstr "ゴールを達成"
 
