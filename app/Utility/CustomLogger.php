@@ -34,14 +34,16 @@ class CustomLogger {
 
     public function logException(Exception $exception)
     {
+        $loggedData = [
+            'exception' => $exception->__toString(),
+            'controllerData' => $this->controllerData
+        ];
+
         if (extension_loaded('newrelic')) {
             newrelic_notice_error($exception);
         }
 
-        GoalousLog::error('Caught Exception', [
-            'exception' => $exception->__toString(),
-            'controllerData' => $this->controllerData
-        ]);
+        GoalousLog::error('Exception raised', $this->appendNewrelicMetadata($loggedData));
     }
 
     public function logEvent(string $name, array $data = [])
@@ -56,6 +58,14 @@ class CustomLogger {
             newrelic_record_custom_event($name, $flattenedData);
         }
 
-        GoalousLog::info($name, $loggedData);
+        GoalousLog::info($name, $this->appendNewrelicMetadata($loggedData));
+    }
+
+    private function appendNewrelicMetadata($data) 
+    {
+        if (extension_loaded('newrelic')) {
+            return array_merge($data, newrelic_get_linking_metadata());
+        }
+        return $data;
     }
 }
