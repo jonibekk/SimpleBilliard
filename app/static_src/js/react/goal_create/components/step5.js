@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
-import {Link} from "react-router";
+import { Link } from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
 
@@ -36,17 +36,17 @@ export default class Step5Component extends Base {
   }
 
   toggleGroup(group) {
-    const {groups} = this.props.goal.inputData;
-    const {id} = group;
+    const { groups } = this.props.goal.inputData;
+    const { id } = group;
 
     if (id in groups) {
       delete groups[id]
     } else {
       groups[id] = group
     }
-    
+
     this.props.updateInputData(groups, 'groups')
-  } 
+  }
 
   canSelectGroup() {
     const {inputData, groups } = this.props.goal;
@@ -65,7 +65,7 @@ export default class Step5Component extends Base {
   }
 
   canSubmit() {
-    const {inputData} = this.props.goal;
+    const { inputData } = this.props.goal;
     const selectedGroups = Object.values(inputData.groups);
 
     if (inputData.is_wish_approval) {
@@ -83,8 +83,8 @@ export default class Step5Component extends Base {
     }
   }
 
-  render() { 
-    const {groups, inputData} = this.props.goal;
+  render() {
+    const { groups, inputData } = this.props.goal;
 
     const approvalMsg = "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.";
     const noCoachGroupBelongsMsg = "There is no group to which your coach belongs. Please contact team administrators for more information.";
@@ -93,8 +93,8 @@ export default class Step5Component extends Base {
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
         <h1 className="goals-create-heading">{__("Let's set up a group to publish to.")}</h1>
-        <p className="goals-create-description">{__( "Which groups will you share this group with?")}</p>
-        <p className="goals-create-description">{__( "Please select one or more")}</p>
+        <p className="goals-create-description">{__("Which groups will you share this group with?")}</p>
+        <p className="goals-create-description">{__("Please select one or more")}</p>
         {
           !canSelectGroup ? (
             <p className="goals-create-description goal-create-error">{ __(noCoachGroupBelongsMsg) }</p>
@@ -105,17 +105,17 @@ export default class Step5Component extends Base {
             <p className="goals-create-description">{__(approvalMsg)}</p>
           ) : null
         }
-        <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
+        <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e)}>
           <div className="goals-create-list">
             {
-              groups.length > 0 ?  groups.map(group => {
-                return(
+              groups.length > 0 ? groups.map(group => {
+                return (
                   <div className="goals-create-list-item" ref={`group-item-${group.id}`}>
                     <div className='left'>
-                      <input 
-                        type="checkbox" 
-                        className="goal-create-checkbox" 
-                        onChange={() => {this.toggleGroup(group)}}
+                      <input
+                        type="checkbox"
+                        className="goal-create-checkbox"
+                        onChange={() => { this.toggleGroup(group) }}
                         checked={group.id in inputData.groups}
                         disabled={!canSelectGroup}
                       />
@@ -138,14 +138,14 @@ export default class Step5Component extends Base {
                   </div>
                 )
               }) : (
-                (
-                  <div className="no-selectable-groups">
-                    <i className="fa fa-frown-o"></i>
-                    <p>{__("You do not have a group set up.")}</p>
-                    <p>{__("Please contact your team administrator.")}</p>
-                  </div>
+                  (
+                    <div className="no-selectable-groups">
+                      <i className="fa fa-frown-o"></i>
+                      <p>{__("You do not have a group set up.")}</p>
+                      <p>{__("Please contact your team administrator.")}</p>
+                    </div>
+                  )
                 )
-              )
             }
           </div>
           <button type="submit" className="goals-create-btn-next btn" disabled={!this.canSubmit()}>

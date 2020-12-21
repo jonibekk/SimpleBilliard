@@ -184,7 +184,7 @@ class AuthServiceTest extends GoalousTestCase
         $this->assertArrayHasKey('data', $response);
         $this->assertArrayHasKey('me', $response['data']);
         $this->assertArrayHasKey('token', $response['data']);
-        $this->assertNull($response['data']['me']['current_team_id']);
+        $this->assertEmpty($response['data']['me']['current_team_id']);
     }
 
     public function test_authenticateWithPasswordWith2FA_success()
