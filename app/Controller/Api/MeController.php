@@ -16,6 +16,7 @@ App::import('Service', 'GoalService');
 App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
+App::import('Service', 'ActionService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
@@ -229,7 +230,21 @@ class MeController extends BasePagingController
         foreach ($keyResults as $index => $keyResult) {
             $keyResults[$index]['KeyResult'] = $GoalExtension->extend($keyResults[$index]['KeyResult'], 'goal_id');
         }
+        return ApiResponse::ok()
+            ->withBody([
+                'data' => [
+                    'krs' => Hash::extract($keyResults, '{n}.KeyResult'),
+                ],
+            ])->getResponse();
+    }
 
+    public function get_latest_actioned_kr()
+    {
+        /** @var KeyResultService $KeyResultService */
+        $KeyResultService = ClassRegistry::init("KeyResultService");
+        $result = $KeyResultService->getLatestActionedKrIdByUser($this->getUserId());
+
+        $keyResults[0]['KeyResult'] = $result['KeyResult'];
         return ApiResponse::ok()
             ->withBody([
                 'data' => [

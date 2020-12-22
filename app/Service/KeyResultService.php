@@ -810,6 +810,35 @@ class KeyResultService extends AppService
         return $KeyResult->useType()->find('all', $options);
     }
 
+    public function getLatestActionedKrIdByUser($userId) {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        $conditions = [
+            'conditions' => [
+                'KeyResult.completed is NULL'
+            ],
+            'joins' => [
+                [
+                    'alias' => 'ActionResult',
+                    'table' => 'action_results',
+                    'conditions' => [
+                        'ActionResult.user_id' => $userId,
+                        'ActionResult.key_result_id = KeyResult.id'
+                    ]
+                ]
+            ],
+            'fields' => [
+                'KeyResult.*',
+            ],
+            'order' => [
+                'ActionResult.created' => 'desc'
+            ]
+        ];
+
+        return $KeyResult->useType()->find('first', $conditions);
+    }
+
     public function findTermIdForKr(int $krId)
     {
         /** @var KeyResult */
