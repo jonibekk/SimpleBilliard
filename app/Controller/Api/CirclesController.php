@@ -175,7 +175,7 @@ class CirclesController extends BasePagingController
             // If user is last admin in the circle, user can't leave from circle
             if ($CircleMember->isAdmin($this->getUserId(), $circleId)) {
                 if (count($CircleMember->getAdminMemberList($circleId, false)) === 0) {
-                    return ErrorResponse::badRequest()->getResponse();
+                    return ErrorResponse::badRequest()->withMessage(__("hoge"))->getResponse();
                 }
             }
 
