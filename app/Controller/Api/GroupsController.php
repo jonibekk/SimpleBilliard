@@ -218,8 +218,6 @@ class GroupsController extends BasePagingController
     public function authorize(string $method, array $group): void
     {
         $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
-        $ex = new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
-        CustomLogger::getInstance()->logException($ex);
 
         switch ($method) {
             case 'read':

@@ -3,15 +3,18 @@ App::uses('AppUtil', 'Util');
 App::import('Utility', 'CustomLogger');
 
 class CustomLogger {
+    /** Singleton instance of CustomLogger */
     private static $instance = NULL;
-
-    /**
-     * @var array
-     */
-    protected $controllerData;
+    /** @var array */
+    protected $controllerData = [];
+    /** @var array */
+    protected $metadata = [];
 
     private function __construct() {}
 
+    /**
+     * return singleton instance of CustomLogger
+     */
     public static function getInstance() {
         if(self::$instance === NULL) {
             self::$instance = new CustomLogger();
@@ -32,40 +35,74 @@ class CustomLogger {
         }
     }
 
+    /**
+     * sets metadata within the current transaction, this will be automatically appended to logs and forwarded to NewRelic
+     */
+    public function setMetadata(array $newMetadata)
+    {
+        $this->metadata = array_merge_recursive($this->metadata, $newMetadata);
+
+        if (extension_loaded('newrelic')) {
+            $flattenedNewMetadata = AppUtil::flattenArrayPath($newMetadata);
+
+            foreach ($flattenedNewMetadata as $key => $value) {
+                newrelic_add_custom_parameter($key, $value);
+            }
+        }
+    }
+
+    /**
+     * sends exception with stacktrace to Newrelic, also adds to error log
+     */
     public function logException(Exception $exception)
     {
-        $loggedData = [
-            'exception' => $exception->__toString(),
-            'controllerData' => $this->controllerData
-        ];
-
         if (extension_loaded('newrelic')) {
             newrelic_notice_error($exception);
         }
 
-        GoalousLog::error('Exception raised', $this->appendNewrelicMetadata($loggedData));
+        $data = [ 'exception' => $exception->__toString()];
+        GoalousLog::error('Exception raised', $this->appendMetadata($data));
     }
 
+    /**
+     * 
+     */
     public function logEvent(string $name, array $data = [])
     {
-        $loggedData = [
-            'data' => $data,
-            'controllerData' => $this->controllerData
-        ];
+        $loggedData = $this->appendMetadata($data);
 
         if (extension_loaded('newrelic')) {
             $flattenedData = AppUtil::flattenArrayPath($loggedData);
             newrelic_record_custom_event($name, $flattenedData);
         }
 
-        GoalousLog::info($name, $this->appendNewrelicMetadata($loggedData));
+        GoalousLog::info($name, $loggedData);
     }
 
-    private function appendNewrelicMetadata($data) 
+    public function info(string $msg, array $data = [])
     {
+        GoalousLog::info($msg, $this->appendMetadata($data));
+    }
+
+    public function error(string $msg, array $data = [])
+    {
+        GoalousLog::error($msg, $this->appendMetadata($data));
+    }
+
+    public function emergency(string $msg, array $data = [])
+    {
+        GoalousLog::emergency($msg, $this->appendMetadata($data));
+    }
+
+    private function appendMetadata($data) 
+    {
+        $data['controllerData'] = $this->controllerData;
+        $data['metadata'] = $this->metadata;
+
         if (extension_loaded('newrelic')) {
             return array_merge($data, newrelic_get_linking_metadata());
         }
+
         return $data;
     }
 }
