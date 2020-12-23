@@ -5,6 +5,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'AuthService');
 App::import('Service', 'TeamService');
+App::import('Utility', 'CustomLogger');
 App::uses('Device', 'Model');
 
 use Goalous\Enum as Enum;
@@ -262,6 +263,14 @@ class BaseController extends Controller
             }
             $this->_setTeamStatus();
         }
+        $this->logSession();
+    }
+
+    private function logSession()
+    {
+        $jwtData = [];
+        $sessionData = $this->Session->read();
+        CustomLogger::getInstance()->setControllerData($jwtData, $sessionData);
     }
 
     /**
