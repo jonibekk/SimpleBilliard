@@ -1,6 +1,7 @@
 <?php
 
 App::uses('BaseApiController', 'Controller/Api');
+App::import('Utility', 'CustomLogger');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
 App::import('Service', 'InvitationService');
@@ -306,19 +307,12 @@ class AuthController extends BaseApiController
         /** @var AuthService $AuthService */
         $AuthService = new AuthService();
 
+        CustomLogger::getInstance()->logEvent('logout');
+
         try {
             $res = $AuthService->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            GoalousLog::error(
-                'failed to logout',
-                [
-                    'message' => $e->getMessage(),
-                    'trace'   => $e->getTraceAsString(),
-                    'user.id' => $this->getUserId(),
-                    'team.id' => $this->getTeamId(),
-                    'jwt_id'  => $this->getJwtAuth()->getJwtId(),
-                ]
-            );
+            CustomLogger::getInstance()->logException($e);
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
