@@ -40,7 +40,7 @@ class CustomLogger {
      */
     public function setMetadata(array $newMetadata)
     {
-        $this->metadata = array_merge_recursive($this->metadata, $newMetadata);
+        $this->metadata[] = $newMetadata;
 
         if (extension_loaded('newrelic')) {
             $flattenedNewMetadata = AppUtil::flattenArrayPath($newMetadata);
@@ -82,6 +82,11 @@ class CustomLogger {
     public function info(string $msg, array $data = [])
     {
         GoalousLog::info($msg, $this->appendMetadata($data));
+    }
+
+    public function warning(string $msg, array $data = [])
+    {
+        GoalousLog::warning($msg, $this->appendMetadata($data));
     }
 
     public function error(string $msg, array $data = [])
