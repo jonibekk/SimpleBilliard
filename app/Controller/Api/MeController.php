@@ -16,7 +16,6 @@ App::import('Service', 'GoalService');
 App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
-App::import('Service', 'ActionService');
 App::import('Lib/Paging', 'PagingRequest');
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
