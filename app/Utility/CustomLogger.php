@@ -54,7 +54,7 @@ class CustomLogger {
     /**
      * sends exception with stacktrace to Newrelic, also adds to error log
      */
-    public function logException(Exception $exception)
+    public function logException(Throwable $exception)
     {
         if (extension_loaded('newrelic')) {
             newrelic_notice_error($exception);
