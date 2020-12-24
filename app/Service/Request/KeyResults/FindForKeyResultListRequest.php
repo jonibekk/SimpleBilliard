@@ -68,7 +68,9 @@ class FindForKeyResultListRequest
         }
 
         if (array_key_exists('goalId', $opts)) {
-            $this->goalId = $opts['goalId'];
+            if ($opts['goalId'] !== null) {
+                $this->goalId = intval($opts['goalId']);
+            }
         }
     }
 
