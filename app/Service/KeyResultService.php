@@ -816,7 +816,8 @@ class KeyResultService extends AppService
 
         $conditions = [
             'conditions' => [
-                'KeyResult.completed is NULL'
+                'KeyResult.completed is NULL',
+                'KeyResult.del_flg != 1'
             ],
             'joins' => [
                 [
@@ -824,7 +825,8 @@ class KeyResultService extends AppService
                     'table' => 'action_results',
                     'conditions' => [
                         'ActionResult.user_id' => $userId,
-                        'ActionResult.key_result_id = KeyResult.id'
+                        'ActionResult.key_result_id = KeyResult.id',
+                        'ActionResult.del_flg != 1'
                     ]
                 ]
             ],
