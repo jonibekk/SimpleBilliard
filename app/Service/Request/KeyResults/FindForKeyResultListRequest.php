@@ -1,12 +1,15 @@
 <?php
 App::uses('TeamEntity', 'Model/Entity');
 App::uses('TermEntity', 'Model/Entity');
-App::import('Service', 'TermService');
 App::uses('Team', 'Model');
 App::uses('AppUtil', 'Util');
+App::import('Service', 'GoalService');
+App::import('Service', 'TermService');
 
 class FindForKeyResultListRequest
 {
+    const TERM_ID_RECENT = 'recent';
+    const TERM_ID_CURRENT = 'current';
     /**
      * @var integer
      */
@@ -38,6 +41,21 @@ class FindForKeyResultListRequest
     protected $todayDate;
 
     /**
+     * @var string
+     */
+    protected $periodFrom;
+
+    /**
+     * @var string
+     */
+    protected $periodTo;
+
+    /**
+     * @var boolean
+     */
+    protected $onlyRecent;
+
+    /**
      * @var null|boolean
      */
     protected $onlyIncomplete;
@@ -53,7 +71,7 @@ class FindForKeyResultListRequest
         $this->userId = $userId;
         $this->teamId = $teamId;
         $this->todayDate = GoalousDateTime::now()->format('Y-m-d');
-        $this->initializeTerm($opts);
+        $this->term = $this->initializeTerm($opts);
 
         if (array_key_exists('onlyIncomplete', $opts)) {
             $this->onlyIncomplete = $opts['onlyIncomplete'];
@@ -72,6 +90,12 @@ class FindForKeyResultListRequest
                 $this->goalId = intval($opts['goalId']);
             }
         }
+
+        if (array_key_exists('termId', $opts)) {
+            $this->onlyRecent = $opts['termId'] === self::TERM_ID_RECENT;
+        }
+
+        $this->initializePeriod();
     }
 
     public function getUserId()
@@ -114,9 +138,19 @@ class FindForKeyResultListRequest
         return $this->todayDate;
     }
 
-    public function isPastTerm()
+    public function getOnlyRecent()
     {
-        return strtotime($this->todayDate) > strtotime($this->term['end_date']);
+        return $this->onlyRecent;
+    }
+
+    public function getPeriodFrom()
+    {
+        return $this->periodFrom;
+    }
+
+    public function getPeriodTo()
+    {
+        return $this->periodTo;
     }
 
     private function initializeTerm(array $opts) 
@@ -128,17 +162,37 @@ class FindForKeyResultListRequest
 
         if (array_key_exists('termId', $opts)) {
             $termId = $opts['termId'];
+            $isNotCurrentTerm = !in_array($termId, [self::TERM_ID_CURRENT, self::TERM_ID_RECENT]);
 
-            if (!empty($termId) && $termId !== 'current') {
-                $this->term = $Term->useType()->useEntity()->findById($termId);
-                return;
+            if (!empty($termId) && $isNotCurrentTerm) {
+                return $Term->useType()->useEntity()->findById($termId);
             }
         } 
 
-        $this->term = $TermService->getCurrentTerm($this->teamId);
+        return $TermService->getCurrentTerm($this->teamId);
+    }
+
+    private function initializePeriod()
+    {
+        if ($this->getOnlyRecent()) {
+            /** @var GoalService $GoalService */
+            $GoalService = ClassRegistry::init('GoalService');
+
+            $results =  $GoalService->getGraphRange(
+                $this->todayDate,
+                GoalService::GRAPH_TARGET_DAYS,
+                GoalService::GRAPH_MAX_BUFFER_DAYS
+            );
+            $this->periodFrom = $results['graphStartDate'];
+            $this->periodTo = $results['graphEndDate'];
+            
+        } else {
+            $this->periodFrom = $this->term['start_date'];
+            $this->periodTo = $this->term['end_date'];
+        }
     }
 
     public function log() {
-        GoalousLog::info('request', get_object_vars($this));
+        CustomLogger::getInstance('request', get_object_vars($this));
     }
 }

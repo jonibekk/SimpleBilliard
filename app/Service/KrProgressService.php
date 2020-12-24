@@ -1,7 +1,6 @@
 <?php
 App::import('Service/Request/KeyResults', 'ResourceRequest');
 App::uses('Team', 'Model');
-App::import('Service', 'GoalService');
 App::import('Service', 'AppService');
 App::import('Service', 'TermService');
 App::uses('Team', 'Model');
@@ -64,8 +63,10 @@ class KrProgressService extends AppService
         /** @var Post $Post */
         $Post = ClassRegistry::init("Post");
 
+        $periodFrom = GoalousDateTime::createFromFormat('Y-m-d', $request->getPeriodFrom());
+
         // Find action that has filtered by period
-        $actionResults = $ActionResult->getByKrIdAndCreatedFrom($keyResult['KeyResult']['id'], $this->periodFrom());
+        $actionResults = $ActionResult->getByKrIdAndCreatedFrom($keyResult['KeyResult']['id'], $periodFrom);
         $actionResults = Hash::extract($actionResults, "{n}.ActionResult");
 
         // Total action progress in period
@@ -96,14 +97,6 @@ class KrProgressService extends AppService
 
     function formatResponse(FindForKeyResultListRequest $request, array $allKrs, array $krs): array
     {
-        if ($request->isPastTerm()) {
-            $periodFrom = $request->getTerm()['start_date'];
-            $periodTo = $request->getTerm()['end_date'];
-        } else {
-            $periodFrom = $this->periodFrom()->getTimestamp();
-            $periodTo = GoalousDateTime::now()->getTimestamp();
-        }
-
         $goals = array_reduce($allKrs, function($acc, $kr) {
             $goalName = $kr['Goal']['name'];
             if (!array_key_exists($goalName, $acc)) {
@@ -117,8 +110,8 @@ class KrProgressService extends AppService
         return [
             'data' => [
                 'period_kr_collection' => [
-                    'from' => $periodFrom,
-                    'to' => $periodTo,
+                    'from' => $request->getPeriodFrom(),
+                    'to' => $request->getPeriodTo(),
                 ],
                 'krs_total' => count($allKrs),
                 'krs' => $krs,
@@ -129,13 +122,12 @@ class KrProgressService extends AppService
 
     function appendProgressGraph(FindForKeyResultListRequest $request, array $response): array
     {
-        $graphRange = $this->generateGraphRange($request);
         $TimeEx = new TimeExHelper(new View());
 
         if ($request->getListId() === self::MY_KR_ID) {
-            $progressGraph = $this->generateMyKrProgressGraph($request, $graphRange);
+            $progressGraph = $this->generateMyKrProgressGraph($request);
         } else {
-            $progressGraph = $this->generateWatchlistGraph($request, $graphRange);
+            $progressGraph = $this->generateWatchlistGraph($request);
         }
 
         $krProgressGraph =  [
@@ -145,64 +137,39 @@ class KrProgressService extends AppService
                 'data' => $progressGraph[2],
                 'x' => $progressGraph[3],
             ],
-            'start_date' => $TimeEx->formatDateI18n(strtotime($graphRange['graphStartDate'])),
-            'end_date'   => $TimeEx->formatDateI18n(strtotime($graphRange['graphEndDate'])),
+            'start_date' => $TimeEx->formatDateI18n(strtotime($request->getPeriodFrom())),
+            'end_date'   => $TimeEx->formatDateI18n(strtotime($request->getPeriodTo())),
         ];
 
         $response['data']['kr_progress_graph'] = $krProgressGraph;
         return $response;
     }
 
-    private function generateMyKrProgressGraph(FindForKeyResultListRequest $request, array $graphRange)
+    private function generateMyKrProgressGraph(FindForKeyResultListRequest $request)
     {
         /** @var GoalService $GoalService */
         $GoalService = ClassRegistry::init('GoalService');
 
         return $GoalService->getUserAllGoalProgressForDrawingGraph(
             $request->getUserId(),
-            $graphRange['graphStartDate'],
-            $graphRange['graphEndDate'],
-            $graphRange['plotDataEndDate'],
+            $request->getPeriodFrom(),
+            $request->getPeriodTo(),
+            $request->getPeriodTo(),
             true,
             $request->getTerm()->toArray()
         );
     }
 
-    private function generateWatchlistGraph(FindForKeyResultListRequest $request, array $graphRange)
+    private function generateWatchlistGraph(FindForKeyResultListRequest $request)
     {
         /** @var WatchlistService */
         $WatchlistService = ClassRegistry::init('WatchlistService');
 
         return $WatchlistService->getWatchlistProgressForGraph(
             $request->getListId(),
-            $graphRange['graphStartDate'],
-            $graphRange['graphEndDate'],
+            $request->getPeriodFrom(),
+            $request->getPeriodTo(),
             $request->getTerm()->toArray()
         );
-    }
-
-    private function generateGraphRange(FindForKeyResultListRequest $request): array {
-        if ($request->isPastTerm()) {
-            // default to entire term length if checking a past term
-            return [
-                'graphStartDate'  => $request->getTerm()['start_date'],
-                'graphEndDate'    => $request->getTerm()['end_date'],
-                'plotDataEndDate' => $request->getTerm()['end_date'],
-            ];
-            
-        } else {
-            /** @var GoalService $GoalService */
-            $GoalService = ClassRegistry::init('GoalService');
-            return $GoalService->getGraphRange(
-                $request->getTodayDate(),
-                GoalService::GRAPH_TARGET_DAYS,
-                GoalService::GRAPH_MAX_BUFFER_DAYS
-            );
-        }
-    }
-
-    private function periodFrom()
-    {
-        return GoalousDateTime::now()->copy()->startOfDay()->subDays(7);
     }
 }
