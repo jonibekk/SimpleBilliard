@@ -513,6 +513,7 @@ class UsersController extends AppController
         if ($step === 1) {
             //プロフィール入力画面の場合
             //validation
+            $this->User->set($this->request->data['User']);
             if ($this->User->validates($this->request->data)) {
                 if (!$this->checkAge(16, $this->request->data['User']['birth_day'], $this->request->data['User']['local_date']))
                 {
