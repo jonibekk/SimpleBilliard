@@ -76,7 +76,8 @@ class PostPolicy extends BasePolicy
         //$allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId, $this->teamId);
 
         $fullQuery = 'Post.id in (' . $allPublicQuery . ') OR 
-                      Post.goal_id in (' . $allGroupsQuery . ')';
+                      Post.goal_id in (' . $allGroupsQuery . ') OR
+                      Post.type = 1';
 
         //if ($type === 'read') {
             //$query = 'Post.id in (' . $allCoacheesQuery . ') OR ';
