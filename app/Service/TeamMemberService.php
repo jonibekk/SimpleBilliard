@@ -439,4 +439,45 @@ class TeamMemberService extends AppService
 
         return true;
     }
+
+    public function getDetails($userId, $teamId): array
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        $team_options = [
+            'conditions' => ['TeamMember.team_id' => $teamId, 'TeamMember.user_id' => $userId,],
+        ];
+
+        try {
+            $data = $TeamMember->find('first', $team_options);
+        } catch (Exception $e) {
+            GoalousLog::error('Failed to get team member data.', ['User: ' => $userId, 'Team' => $teamId]);
+            return null;
+        }
+
+        return $data;
+    }
+
+    public function putTeamData($teamId, array $data): bool
+    {
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
+
+        try {
+            $this->TransactionManager->begin();
+            $TeamMember->save($data, false);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to update notify data.', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team_id' => $teamId
+            ]);
+            return false;
+        }
+
+        return true;
+    }
 }

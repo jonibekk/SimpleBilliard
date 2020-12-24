@@ -294,4 +294,42 @@ class UserService extends AppService
             $this->updateDefaultTeam($userId, $nextActiveTeamId);
         }
     }
+
+    public function getUserData($userId): array
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $user_options = [
+            'conditions' => ['User.id' => $userId,],
+        ];
+
+        $user = $User->find('first', $user_options);
+        if (empty($user)) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    public function updateUserData($userId, array $data): bool
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        try {
+            $this->TransactionManager->begin();
+            $User->save($data, false);
+            $this->TransactionManager->commit();
+        } catch (Exception $e) {
+            $this->TransactionManager->rollback();
+            GoalousLog::error('Failed to update user data.', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'USer data' => $userId
+            ]);
+            return false;
+        }
+        return true;
+    }
 }
