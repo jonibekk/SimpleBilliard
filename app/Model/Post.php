@@ -16,6 +16,7 @@ App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model', 'HavingMentionTrait');
+App::import('Policy', 'PostPolicy');
 
 /**
  * Post Model
@@ -574,6 +575,11 @@ class Post extends AppModel
 //                $order_col = key($post_options['order']);
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
+
+            // apply authorization policy check
+            $policy = new PostPolicy($this->my_uid, $this->current_team_id);
+            $post_options = array_merge_recursive($post_options, $policy->scope());
+            
             $post_list = $this->find('list', $post_options);
 
         }

@@ -129,7 +129,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <i class="fa fa-ellipsis-v feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                <?php if (intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
                                             <a href="<?= UrlUtil::fqdnFrontEnd() ?>/posts/<?= $post['Post']['id'] ?>?edit=1"
@@ -137,7 +137,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                         </li>
                                     <?php endif; ?>
                                 <?php endif ?>
-                                <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                <?php if ($my_member_status['TeamMember']['admin_flg'] || intval($post['User']['id']) === intval($this->Session->read('Auth.User.id'))): ?>
                                     <li><?=
                                         $this->Form->postLink(__("Delete post"),
                                             [
