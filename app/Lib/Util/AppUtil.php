@@ -895,4 +895,22 @@ class AppUtil
 
         return AppUtil::formatBigFloat($rate);
     }
+
+    static function flattenArrayPath($array, $prefix = '')
+    {
+        $result = [];
+
+        foreach ($array as $key => $value)
+        {
+            $new_key = $prefix . (empty($prefix) ? '' : '.') . $key;
+
+            if (is_array($value)) {
+                $result = array_merge($result, self::flattenArrayPath($value, $new_key));
+            } else {
+                $result[$new_key] = $value;
+            }
+        }
+
+        return $result;
+    }
 }

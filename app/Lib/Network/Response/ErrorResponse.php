@@ -2,6 +2,7 @@
 App::uses('BaseApiResponse', 'Lib/Network/Response');
 App::uses('ErrorTypeGlobal', 'Lib/Network/Response/ErrorResponseBody');
 App::uses('ErrorTypeValidation', 'Lib/Network/Response/ErrorResponseBody');
+App::import('Utility', 'CustomLogger');
 
 class ErrorResponse extends BaseApiResponse
 {
@@ -199,6 +200,7 @@ class ErrorResponse extends BaseApiResponse
      */
     public function withException(Throwable $throwable)
     {
+        CustomLogger::getInstance()->logException($throwable);
         if (!in_array(ENV_NAME, [
             'local',
             'dev'
