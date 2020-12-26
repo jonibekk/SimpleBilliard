@@ -185,6 +185,7 @@ class AppController extends BaseController
             //sessionを手動で書き換える。cookieを更新するため。
             if ($this->request->is('get')) {
                 if (!$this->Session->read('last_renewed') || $this->Session->read('last_renewed') < REQUEST_TIMESTAMP) {
+                    CustomLogger::getInstance()->logEvent('UELO:AppController:beforeFilter', 'Renew session.');
                     $this->Session->renew();
                     $this->Session->write('last_renewed', REQUEST_TIMESTAMP + SESSION_RENEW_TTL);
                 }

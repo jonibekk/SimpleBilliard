@@ -198,6 +198,8 @@ class BaseController extends Controller
 
     function beforeFilter()
     {
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter');
+
         parent::beforeFilter();
         $this->_setSecurity();
 
@@ -209,8 +211,14 @@ class BaseController extends Controller
                 $sesId = $this->Session->id();
                 // GL-7364：Enable to keep login status between old Goalous and new Goalous
                 $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
+                CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter.mapSesAndJwt', $mapSesAndJwt);
+
                 if (empty($mapSesAndJwt)) {
                     $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
+                    CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter.jwt', $jwt);
+
                     $this->set('jwt_token', $jwt->token());
                 }
             }
@@ -226,6 +234,8 @@ class BaseController extends Controller
             ];
             //If user is deleted, delete session & user cache, and redirect to login page
             if (empty($this->User->find('first', $condition))) {
+                CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter', 'Cannot find user.');
+
                 $logoutRedirect = $this->logoutProcess();
                 GoalousLog::info("User is deleted. Redirecting", [
                     "user.id" => $this->my_uid,
@@ -235,6 +245,8 @@ class BaseController extends Controller
             }
             // Detect inconsistent data that current team id is empty
             if (empty($this->current_team_id)) {
+                CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter', 'Current team id is empty.');
+
                 //If user doesn't have other team, redirect to create team page
                 GoalousLog::info("User $this->my_uid is not active in any team");
                 $this->Session->write('user_has_no_team', true);
@@ -245,6 +257,9 @@ class BaseController extends Controller
                 //However, ignore this step if user is being invited since user's team_member won't be active yet
                 if (empty($this->User->TeamMember->isBeingInvited($this->my_uid, $this->current_team_id)) &&
                     empty($this->User->TeamMember->isActive($this->my_uid, $this->current_team_id, false))) {
+
+                    CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter', 'Cannot find team or user is inactive.');
+
                     $this->Session->delete('user_has_no_team');
                     $this->User->updateDefaultTeam(null, true, $this->my_uid);
                     $logoutRedirect = $this->logoutProcess();
@@ -257,6 +272,9 @@ class BaseController extends Controller
             }
             if ($this->Session->read('user_has_no_team') && !in_array($this->request->url,
                     $this->ignoreForcedTeamCreation)) {
+
+                CustomLogger::getInstance()->logEvent('UELO:BaseController:beforeFilter', 'User has no team.');
+
                 //If user tries to access other page, force redirect to team creation page
                 $this->Notification->outInfo(__("You need to create a team before using Goalous."));
                 $this->redirect(['controller' => 'teams', 'action' => 'add']);
@@ -366,15 +384,26 @@ class BaseController extends Controller
      */
     public function _refreshAuth($uid = null)
     {
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth');
+
         if (!$uid) {
             $uid = $this->Auth->user('id');
         }
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth.uid', $uid);
+
         //言語設定を退避
         $user_lang = $this->User->findById($uid);
         $lang = null;
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth.user_lang', $user_lang);
+
         if (!empty($user_lang)) {
             $lang = $user_lang['User']['language'];
         }
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth.lang', $lang);
+
         $this->Auth->logout();
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;
@@ -396,8 +425,14 @@ class BaseController extends Controller
         if (isset($user['User'])) {
             $user['User'] = array_merge($user['User'], $associations);
         }
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth.user', $user);
+
         $this->User->me = $user['User'];
         $res = $this->Auth->login($user['User']);
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth.login res', $res);
+
         return $res;
     }
 
@@ -547,7 +582,11 @@ class BaseController extends Controller
      */
     public function _isLoggedIn(): bool
     {
-        return (bool)$this->Auth->user();
+        $isLoggedIn = (bool)$this->Auth->user();
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_isLoggedIn.isLoggedIn', $isLoggedIn);
+
+        return $isLoggedIn;
     }
 
     /*
@@ -577,6 +616,8 @@ class BaseController extends Controller
      */
     protected function logoutProcess()
     {
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:logoutProcess');
+
         // ログアウトした後も通知が届く問題の解消の為、$installationIdをSessionに持っていたら削除する
         // ※ SessionにinstallationIdがあるのはモバイルアプリでログインした場合のみ。
         $installationId = $this->Session->read('installationId');

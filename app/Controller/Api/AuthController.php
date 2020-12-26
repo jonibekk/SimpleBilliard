@@ -48,6 +48,8 @@ class AuthController extends BaseApiController
      */
     public function get_has_session()
     {
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:get_has_session');
+
         $this->Auth->startup($this);
 
         /** @var GlRedis $GlRedis */

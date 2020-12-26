@@ -42,6 +42,8 @@ class ApiController extends BaseController
 
     function beforeFilter()
     {
+        CustomLogger::getInstance()->logEvent('UELO:ApiController:beforeFilter');
+
         parent::beforeFilter();
         $this->_setHeader();
         $this->_setupAuth();
