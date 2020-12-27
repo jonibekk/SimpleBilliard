@@ -9,8 +9,6 @@ class SubscriptionsController extends ApiController
 {
     public function beforeFilter()
     {
-        CustomLogger::getInstance()->logEvent('UELO:AuthController:beforeFilter');
-
         parent::beforeFilter();
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
@@ -53,7 +51,6 @@ class SubscriptionsController extends ApiController
     public function get_has_session()
     {
         CustomLogger::getInstance()->logEvent('UELO:SubscriptionController:get_has_session');
-
         return $this->_getResponseSuccess(['has_session' => true]);
     }
 
