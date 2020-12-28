@@ -1,6 +1,6 @@
 {
   "require": {
-    "cakephp/cakephp": "~2.9.0",
+    "cakephp/cakephp": "2.10.24.*",
     "phpunit/phpunit": "~3.7.0",
     "cakephp/debug_kit": "~2.2.0",
     "cakedc/migrations": "~2.5.0",
@@ -15,7 +15,7 @@
     "oefenweb/cakephp-redis": "^2.0",
     "dereuromark/cakephp-url-cache": "~1.0.0",
     "kaz29/cake_slack": "dev-master",
-    "browscap/browscap-php": "dev-master",
+    "browscap/browscap-php": "*",
     "stripe/stripe-php": "^5.1",
     "nesbot/carbon": "^1.22",
     "myclabs/php-enum": "^1.5",
