@@ -1818,6 +1818,7 @@ class UsersController extends AppController
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('groups', $groups);
+        $this->set('archivedGroups', $groups);
         return $this->render();
     }
 
