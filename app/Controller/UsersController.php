@@ -1805,9 +1805,14 @@ class UsersController extends AppController
      */
     function view_info()
     {
+        $this->loadModel('Group');
+
         $user_id = Hash::get($this->request->params, "named.user_id");
-        $rows = $this->User->MemberGroup->Group->findForUser($user_id);
+        $rows = $this->Group->findForUser($user_id);
         $groups = Hash::extract($rows, "{n}.Group");
+
+        $archivedRows = $this->Group->findForUser($user_id, true);
+        $archivedGroups = Hash::extract($archivedRows, "{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1818,7 +1823,7 @@ class UsersController extends AppController
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('groups', $groups);
-        $this->set('archivedGroups', $groups);
+        $this->set('archivedGroups', $archivedGroups);
         return $this->render();
     }
 
@@ -1934,6 +1939,5 @@ class UsersController extends AppController
             return false;
         }
         return true;
-
     }
 }
