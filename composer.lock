@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "99be175753d1eea6b9a748bc44a88f8c",
+    "content-hash": "a95beb7e6c17b6009cd12df17ed21c25",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -3419,16 +3419,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v5.9.2",
+            "version": "v5.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "026191d12241a76c957884dff75e4f3721b0e77f"
+                "reference": "b2998cf8a495a03d541f274a077277afcf662a12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/026191d12241a76c957884dff75e4f3721b0e77f",
-                "reference": "026191d12241a76c957884dff75e4f3721b0e77f",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/b2998cf8a495a03d541f274a077277afcf662a12",
+                "reference": "b2998cf8a495a03d541f274a077277afcf662a12",
                 "shasum": ""
             },
             "require": {
@@ -3472,9 +3472,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stripe/stripe-php/issues",
-                "source": "https://github.com/stripe/stripe-php/tree/master"
+                "source": "https://github.com/stripe/stripe-php/tree/v5.1.1"
             },
-            "time": "2018-02-07T18:36:55+00:00"
+            "time": "2017-07-03T17:51:56+00:00"
         },
         {
             "name": "symfony/console",
