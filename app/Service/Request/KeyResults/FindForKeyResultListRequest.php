@@ -67,7 +67,6 @@ class FindForKeyResultListRequest
 
     public function __construct(int $userId, int $teamId, array $opts)
     {
-
         $this->userId = $userId;
         $this->teamId = $teamId;
         $this->todayDate = GoalousDateTime::now()->format('Y-m-d');
@@ -94,8 +93,6 @@ class FindForKeyResultListRequest
         if (array_key_exists('termId', $opts)) {
             $this->onlyRecent = $opts['termId'] === self::TERM_ID_RECENT;
         }
-
-        $this->initializePeriod();
     }
 
     public function getUserId()
@@ -153,6 +150,12 @@ class FindForKeyResultListRequest
         return $this->periodTo;
     }
 
+    public function setPeriod($periodFrom, $periodTo)
+    {
+        $this->periodFrom = $periodFrom;
+        $this->periodTo = $periodTo;
+    }
+
     private function initializeTerm(array $opts) 
     {
         // @var TermService ;
@@ -172,27 +175,28 @@ class FindForKeyResultListRequest
         return $TermService->getCurrentTerm($this->teamId);
     }
 
-    private function initializePeriod()
+
+    public static function initializePeriod(FindForKeyResultListRequest $request): FindForKeyResultListRequest
     {
-        if ($this->getOnlyRecent()) {
+        if ($request->getOnlyRecent()) {
             /** @var GoalService $GoalService */
             $GoalService = ClassRegistry::init('GoalService');
 
             $results =  $GoalService->getGraphRange(
-                $this->todayDate,
+                $request->getTodayDate(),
                 GoalService::GRAPH_TARGET_DAYS,
                 GoalService::GRAPH_MAX_BUFFER_DAYS
             );
-            $this->periodFrom = $results['graphStartDate'];
-            $this->periodTo = $results['graphEndDate'];
-            
+
+            $request->setPeriod($results['graphStartDate'], $results['graphEndDate']);
         } else {
-            $this->periodFrom = $this->term['start_date'];
-            $this->periodTo = $this->term['end_date'];
+            $request->setPeriod($request->getTerm()['start_date'], $request->getTerm()['end_date']);
         }
+
+        return $request;
     }
 
     public function log() {
-        CustomLogger::getInstance('request', get_object_vars($this));
+        CustomLogger::getInstance()->info('request', get_object_vars($this));
     }
 }
