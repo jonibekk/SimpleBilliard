@@ -38,8 +38,9 @@
             'refresh-link-id' => 'Comments_new_' . $post['Post']['id'],
         ]); ?>
         <div class="form-group mlr_-1px">
-            <?=
-            $this->Form->input('body', [
+            <?php
+            $toggleClass = isset($post['Post']['can_comment']) && '0' == $post['Post']['can_comment'] ? 'click-cannot-comment-modal-toggle' : 'click-get-ajax-form-toggle';
+            echo $this->Form->input('body', [
                 'id'          => "CommentFormBody_{$post['Post']['id']}",
                 'label'       => false,
                 'type'        => 'textarea',
@@ -49,7 +50,7 @@
                 'has-mention' => true,
                 'post-id'     => $post['Post']['id'],
                 'placeholder' => __("Comment"),
-                'class'       => 'form-control font_12px comment-post-form box-align click-get-ajax-form-toggle',
+                'class'       => 'form-control font_12px comment-post-form box-align '.$toggleClass,
                 'target-id'   => "CommentSubmit_{$post['Post']['id']}",
                 'maxlength'   => 5000,
             ])
@@ -62,7 +63,7 @@
         <div id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
              class="comment-upload-file-preview"></div>
         <?= $this->Form->hidden('post_id', ['value' => $post['Post']['id']]) ?>
-        
+
         <div class="comment-btn" id="Comment_<?= $post['Post']['id'] ?>">
             <div>
                 <a href="#" class="link-red new-comment-add-pic comment-file-attach-button"
