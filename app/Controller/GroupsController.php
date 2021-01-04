@@ -31,15 +31,27 @@ class GroupsController extends AppController
         $datetime = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Ymd_His');
 
         // set filename: group_members_yyyyMMDD_HHMMSS 
-        $this->response->download("group_members_{$datetime}.csv");
+        $filename = "group_members_{$datetime}.csv";
 
-        /** @var Email $Email */
-        $Email = ClassRegistry::init("Email");
-        $data = $Email->findForGroup($groupId);
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
 
-        $this->set(compact('data'));
+        $results = $TeamMember->findVerifiedTeamMembersByTeamAndGroup(
+            $groupId,
+            $teamId
+        );
+
+        $th = [ __('Member ID')];
+
+        $td = [];
+        $rows = Hash::extract($results, '{n}.TeamMember.member_no');
+        foreach ($rows as $memberNo) {
+            $td[] = ['member_no' => $memberNo];
+        }
+
         $this->layout = false;
-        return;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 
     function ajax_get_group_members()

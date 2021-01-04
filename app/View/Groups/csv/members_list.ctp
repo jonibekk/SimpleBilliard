@@ -1,4 +1,2 @@
 <?php
-foreach ($data as $row) :
-    echo implode(',', $row['Email']) . "\n";
-endforeach;
+echo $this->Csv->defaultRender($th, $td, $filename);
