@@ -15,7 +15,7 @@ class CustomLogger {
     /**
      * return singleton instance of CustomLogger
      */
-    public static function getInstance() {
+    public static function getInstance(): CustomLogger {
         if(self::$instance === NULL) {
             self::$instance = new CustomLogger();
         }
