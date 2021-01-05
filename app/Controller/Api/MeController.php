@@ -640,6 +640,7 @@ class MeController extends BasePagingController
             $this->getTeamId(),
             ['onlyIncomplete' => true]
         );
+        $findKrsRequest =FindForKeyResultListRequest::initializePeriod($findKrsRequest);
         $keyResults = $KeyResultService->findForKeyResultList($findKrsRequest);
 
         foreach ($keyResults as $index => $keyResult) {
@@ -678,13 +679,13 @@ class MeController extends BasePagingController
             'limit' => intval($this->request->query('limit'))
         ];
 
-        $findKrRequest = new FindForKeyResultListRequest(
+        $findKrsRequest = new FindForKeyResultListRequest(
             $this->getUserId(),
             $this->getTeamId(),
             $opts
         );
-
-        $response = $KrProgressService->getWithGraph($findKrRequest);
+        $findKrsRequest =FindForKeyResultListRequest::initializePeriod($findKrsRequest);
+        $response = $KrProgressService->getWithGraph($findKrsRequest);
 
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
