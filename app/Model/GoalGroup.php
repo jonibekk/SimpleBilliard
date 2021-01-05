@@ -27,7 +27,7 @@ class GoalGroup extends AppModel
     {
         $conditions = [
             'conditions' => [
-                'archived_flg' => $archived
+                'Group.archived_flg' => $archived
             ],
             'order' => 'Group.name',
             'joins' => [

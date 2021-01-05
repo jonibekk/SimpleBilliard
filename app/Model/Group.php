@@ -203,9 +203,12 @@ class Group extends AppModel
         return $res;
     }
 
-    function findForUser(int $userId)
+    function findForUser(int $userId, bool $archived = false)
     {
-        return $this->find("all", [
+        $opts = [
+            "conditions" => [
+                "Group.archived_flg" => $archived
+            ],
             "joins" => [
                 [
                     "alias" => "MemberGroup",
@@ -224,7 +227,9 @@ class Group extends AppModel
                 ]
             ],
             "order" => "Group.name"
-        ]);
+        ];
+
+        return $this->find("all", $opts);
     }
 
     function findMembers(int $groupId): array
