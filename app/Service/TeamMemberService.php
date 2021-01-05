@@ -465,11 +465,8 @@ class TeamMemberService extends AppService
         $TeamMember = ClassRegistry::init("TeamMember");
 
         try {
-            $this->TransactionManager->begin();
             $TeamMember->save($data, false);
-            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update notify data.', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),

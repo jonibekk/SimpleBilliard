@@ -318,11 +318,8 @@ class UserService extends AppService
         $User = ClassRegistry::init('User');
 
         try {
-            $this->TransactionManager->begin();
             $User->save($data, false);
-            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update user data.', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
@@ -330,6 +327,7 @@ class UserService extends AppService
             ]);
             return false;
         }
+        
         return true;
     }
 }

@@ -275,40 +275,46 @@ class MeController extends BasePagingController
      */
     public function put_account()
     {
-        /** @var User $User */
-        $User = ClassRegistry::init("User");
-        /** @var Team $Team */
-        $Team = ClassRegistry::init('Team');
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+        /** @var TeamMemberService $TeamMemberService */
+        $TeamMemberService = ClassRegistry::init("TeamMemberService");
         
         $data = $this->getRequestJsonBody();
 
-        $user_options = [
-            'conditions' => ['User.id' => $data['User']['id'],],
-        ];
-        $team_options = [
-            'conditions' => ['Team.id' => $this->getTeamId(),],
-        ];
-
-        $user = $User->find('first', $user_options);
-        $team = $Team->find('first', $team_options);
+        $user = $UserService->getUserData($data['User']['id']);
+        $team = $TeamMemberService->getDetails($data['User']['id'], $this->getTeamId());
         if (!empty($user)) {
 
-            if (!empty($team) && $team['Team']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
+            $user['User']['email'] = $data['User']['email'];
+            $user['User']['default_team_id'] = $data['User']['default_team_id'];
+            $user['User']['language'] = $data['User']['language'];
+            $user['User']['timezone'] = $data['User']['timezone'];
+            $user['User']['update_email_flg'] = $data['User']['update_email_flg'];
+
+            if (!empty($team) && $team['TeamMember']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
                 $translationLanguage = $data['TeamMember']['default_translation_language'];
-                $team['Team']['default_translation_language'] = $translationLanguage;
-                $Team->save($team, false);
+                $team['TeamMember']['default_translation_language'] = $translationLanguage;
+                $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $team);
+                if (!$teamSuccess) {
+                    GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
+                    return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
+                }
             }
 
-            $result = $User->saveAll($data['User']);
-            if (!$result) {
+            $userSuccess = $UserService->updateUserData($this->getUserId(), $user);
+            if (!$userSuccess) {
                 GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
                 return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-            } else {
-                Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
             }
+            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
+        } else {
+            GoalousLog::error('Failed to save account user settings data.', ['User' => $data['User']['id']]);
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(['data' => __('Saved user setting.')
+        return ApiResponse::ok()->withBody([
+            'data' => __('Saved user setting.')
         ])->getResponse();
     }
 
@@ -372,12 +378,12 @@ class MeController extends BasePagingController
             $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $teamMember);
             $userSuccess = $UserService->updateUserData($this->getUserId(), $user);
             if (!$teamSuccess && !$userSuccess) {
-                GoalousLog::error('Failed to save profile user settings data.', ['User: ' => $user]);
+                GoalousLog::error('Failed to save profile user settings data.', ['User' => $data['User']['id']]);
                 return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
             }
 
         } else {
-            GoalousLog::error('Failed to save profile user settings data.', ['User: ' => $user]);
+            GoalousLog::error('Failed to save profile user settings data.', ['User' => $data['User']['id']]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
@@ -428,7 +434,7 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                GoalousLog::error('Password validation failed.');
+                GoalousLog::error('Password validation failed.', ['data' => $data]);
                 return ErrorResponse::internalServerError()->withMessage(__('Invalid Data'))->getResponse();
             } else {
                 $email_data = $this->User->addEmail($data, $this->getUserId());
@@ -462,7 +468,7 @@ class MeController extends BasePagingController
 
         try {
             if (!$this->User->validatePassword($data)) {
-                GoalousLog::error('Password validation failed.');
+                GoalousLog::error('Password validation failed.', ['User' => $data]);
                 return ErrorResponse::badRequest()->withMessage(__('Failed to save password change.'))->getResponse();
             } else {
                 $this->User->changePassword($data);

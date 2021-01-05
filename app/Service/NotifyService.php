@@ -35,11 +35,8 @@ class NotifyService extends AppService
         $NotifySetting = ClassRegistry::init("NotifySetting");
 
         try {
-            $this->TransactionManager->begin();
             $NotifySetting->save($data, false);
-            $this->TransactionManager->commit();
         } catch (Exception $e) {
-            $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update notify data.', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
