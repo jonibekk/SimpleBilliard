@@ -715,8 +715,8 @@ class KeyResultService extends AppService
         $options = [
             'conditions' => [
                 'GoalMember.user_id'    => $request->getUserId(),
-                'KeyResult.end_date >=' => $request->getPeriodFrom(),
-                'KeyResult.end_date <=' => $request->getPeriodTo(),
+                'KeyResult.end_date >=' => $request->getTerm()['start_date'],
+                'KeyResult.end_date <=' => $request->getTerm()['end_date'],
                 'KeyResult.team_id'     => $request->getTeamId(),
                 'GoalMember.del_flg'    => false,
             ],
@@ -755,6 +755,7 @@ class KeyResultService extends AppService
         if ($request->getOnlyRecent()) {
             $options['conditions']['Goal.end_date >='] = $request->getTodayDate();
         }
+
         if ($request->getOnlyIncomplete()) {
             $options['conditions']['KeyResult.completed'] = null;
         }
