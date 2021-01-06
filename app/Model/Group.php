@@ -243,16 +243,21 @@ class Group extends AppModel
                     ],
                 ],
                 [
+                    'alias' => 'TeamMember',
                     'table' => 'team_members',
                     'conditions' => [
-                        'MemberGroup.user_id = team_members.user_id', 
-                        'MemberGroup.team_id = team_members.team_id',
-                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
+                        'MemberGroup.user_id = TeamMember.user_id', 
+                        'MemberGroup.team_id = TeamMember.team_id',
+                        'TeamMember.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
             ],
             "order" => [
                 "User.first_name ASC"
+            ],
+            'fields' => [
+                'User.*',
+                'TeamMember.*'
             ]    
         ];
 
