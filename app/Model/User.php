@@ -1230,7 +1230,8 @@ class User extends AppModel
         int $userId,
         $limit = 10,
         $excludeAuthUser = true,
-        $circleId = null
+        $circleId = null,
+        $groupIds = []
     ): array
     {
         $keyword = trim($keyword);
@@ -1281,6 +1282,18 @@ class User extends AppModel
                     'CircleMember.del_flg' => false,
                 ],
 
+            ];
+        }
+        if (!empty($groupIds)) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'member_groups',
+                'alias'      => 'MemberGroup',
+                'conditions' => [
+                    'MemberGroup.user_id = User.id',
+                    'MemberGroup.group_id' => $groupIds,
+                    'MemberGroup.del_flg' => false,
+                ],
             ];
         }
         $res = $this->useType()->find('all', $options);
