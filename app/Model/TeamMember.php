@@ -2760,7 +2760,7 @@ class TeamMember extends AppModel
     function findVerifiedTeamMembersByTeamAndGroup(
         int $groupId, 
         int $teamId, 
-        array $memberIds
+        array $memberIds = []
     ){
         $options = [
             'joins' => [
@@ -2775,7 +2775,6 @@ class TeamMember extends AppModel
                 ],
             ],
             'conditions' => [
-                'TeamMember.member_no' => $memberIds,
                 "TeamMember.team_id" => $teamId,
                 "TeamMember.status" => $this::USER_STATUS_ACTIVE
             ],
@@ -2785,9 +2784,17 @@ class TeamMember extends AppModel
                 'MemberGroup.group_id',
             ]
         ];
+
+        if (!empty($memberIds)) {
+            $condition = ["conditions" => ['TeamMember.member_no' => $memberIds]];
+            $options = array_merge_recursive($options, $condition);
+        }
+
         $res = $this->find('all', $options);
         return $res;
     }
+
+
 
     function findLastMemberIdForTeam(int $teamId): int
     {

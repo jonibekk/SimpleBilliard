@@ -22,26 +22,6 @@ class GroupsController extends AppController
         ]);
     }
 
-    function members_list(int $groupId)
-    {
-        /** @var TeamService $TeamService */
-        $TeamService = ClassRegistry::init("TeamService");
-        $teamId = $this->current_team_id;
-        $timezone = $TeamService->getTeamTimezone($teamId);
-        $datetime = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Ymd_His');
-
-        // set filename: group_members_yyyyMMDD_HHMMSS 
-        $this->response->download("group_members_{$datetime}.csv");
-
-        /** @var Email $Email */
-        $Email = ClassRegistry::init("Email");
-        $data = $Email->findForGroup($groupId);
-
-        $this->set(compact('data'));
-        $this->layout = false;
-        return;
-    }
-
     function ajax_get_group_members()
     {
         $groupId = Hash::get($this->request->params, 'named.group_id');
