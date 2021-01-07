@@ -105,6 +105,7 @@ class AuthController extends BaseApiController
             );
         }
 
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:get_has_session');
         return ApiResponse::ok()
             ->withMessage(Enum\Auth\Status::OK)
             ->withData(['has_session' => $hasSession])
@@ -195,6 +196,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_login');
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
@@ -322,6 +324,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_logout');
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
     }
 
@@ -428,6 +431,7 @@ class AuthController extends BaseApiController
      */
     private function getTokenForRecovery(array $user, int $teamId): string
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:getTokenForRecovery', 'userId' => $userId]);
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 
@@ -541,6 +545,7 @@ class AuthController extends BaseApiController
      */
     private function appendCookieInfo(array $responseData): array
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:appendCookieInfo', 'responseData' => $responseData]);
         if (!array_key_exists('me', $responseData['data'])) {
             return $responseData;
         }
@@ -581,6 +586,7 @@ class AuthController extends BaseApiController
 
     private function filterAndConvertUserData(array $userData): array
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:filterAndConvertUserData', 'userData' => $userData]);
         /** @var User $User */
         $User = ClassRegistry::init('User');
 

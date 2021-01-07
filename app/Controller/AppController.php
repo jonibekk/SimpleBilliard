@@ -182,14 +182,6 @@ class AppController extends BaseController
 
             $login_uid = $this->Auth->user('id');
 
-            //sessionを手動で書き換える。cookieを更新するため。
-            if ($this->request->is('get')) {
-                if (!$this->Session->read('last_renewed') || $this->Session->read('last_renewed') < REQUEST_TIMESTAMP) {
-                    $this->Session->renew();
-                    $this->Session->write('last_renewed', REQUEST_TIMESTAMP + SESSION_RENEW_TTL);
-                }
-            }
-
             //通知の既読ステータス
             $notify_id = $this->request->query('notify_id');
             if ($notify_id) {
