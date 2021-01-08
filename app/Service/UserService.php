@@ -194,16 +194,22 @@ class UserService extends AppService
             return [];
         }
 
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
         /** @var User $User */
         $User = ClassRegistry::init('User');
+
+        $groupIds = [];
+
         switch ($resourceType) {
             case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
                 if (!empty($postId)) {
                     $circle = $Circle->getSharedSecretCircleByPostId($postId);
                     $secretCircleId = !empty($circle) && $circle['public_flg'] === false ? $circle['id'] : null;
+                    $groupIds = $Post->getPostGroups($postId);
                 } else {
                     $secretCircleId = null;
                 }
@@ -230,7 +236,7 @@ class UserService extends AppService
         }
          */
 
-        $users = $User->findByKeywordRangeCircle($keyword, $teamId, $userId, $limit, true, $secretCircleId);
+        $users = $User->findByKeywordRangeCircle($keyword, $teamId, $userId, $limit, true, $secretCircleId, $groupIds);
 
         return $users;
     }

@@ -175,7 +175,7 @@ Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'act
 Router::connect('/topics/:topic_id/search_messages', ['controller' => 'topics', 'action' => 'search_messages']);
 Router::connect(
     '/groups/:id/members_list',
-    ['controller' => 'groups', 'action' => 'members_list', '[method]' => 'GET'],
+    ['controller' => 'teams', 'action' => 'group_members_list_csv', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
 
