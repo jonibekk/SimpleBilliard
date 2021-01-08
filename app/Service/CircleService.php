@@ -578,6 +578,8 @@ class CircleService extends AppService
             return [];
         }
 
+        /** @var Post $Post */
+        $Post = ClassRegistry::init('Post');
         /** @var Circle $Circle */
         $Circle = ClassRegistry::init('Circle');
         /** @var CircleMember $CircleMember */
@@ -590,6 +592,12 @@ class CircleService extends AppService
             case Enum\MentionSearchType::COMMENT:
                 $postId = $resourceId;
                 if (!empty($postId)) {
+                    $groupIds = $Post->getPostGroups($postId);
+
+                    // only return mentioned circles if post is restricted to certain group
+                    if (!empty($groupIds)) {
+                        return [];
+                    }
                     $circle = $Circle->getSharedSecretCircleByPostId($postId);
                     if (!empty($circle) && $circle['public_flg'] === false) {
                         $filterCircleIds = [$circle['id']];
