@@ -347,7 +347,7 @@ class MeController extends BasePagingController
             $teamMember['TeamMember']['comment'] = $data['TeamMember']['comment'];
 
             try {
-                if ($data['User']['photo']) {
+                if (isset($data['User']['photo']) && !empty($data['User']['photo'])) {
                     /** @var UploadedFile $uploadedFile */
                     $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['photo']);
                     /** @var AttachedFileEntity $attachedFile */
@@ -356,7 +356,7 @@ class MeController extends BasePagingController
                     $user['User']['photo_file_name'] = $uploadedFile->getFileName();
                     $UploadService->saveWithProcessing("User", $this->getUserId(), 'photo', $uploadedFile);
                 }
-                if ($data['User']['cover_photo']) {
+                if (isset($data['User']['cover_photo']) && !empty($data['User']['cover_photo'])) {
                     /** @var UploadedFile $uploadedFile */
                     $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['cover_photo']);
                     /** @var AttachedFileEntity $attachedFile */
