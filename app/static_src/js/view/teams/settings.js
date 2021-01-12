@@ -206,6 +206,9 @@ if (document.getElementById("buttonStartEvaluation")) {
     })
     $buttonStartEvaluation.on('click', function() {
         if (window.confirm(cake.message.notice.confirm_evaluation_start)) {
+            this.disabled = true
+            this.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+
             var termId = $('input[name=term_id][type=radio]').filter(":checked").val();
             $.post({
                 url: "/api/v1/terms/" + termId + "/start_evaluation",
