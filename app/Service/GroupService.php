@@ -138,8 +138,10 @@ class GroupService extends AppService
 
         $pre_data = file_get_contents($tmpFilePath);
         $bomPresent = substr($pre_data, 0, 2) == (chr(0xFF) . chr(0xFE));
+        $delimiter = ',';
 
         if ($bomPresent) {
+            $delimiter = "\t";
             $pre_data = hex2bin(preg_replace("/^fffe/", "", bin2hex($pre_data)));
             file_put_contents($tmpFilePath, mb_convert_encoding($pre_data, "UTF-8", "UTF-16LE"));
         }
@@ -151,11 +153,11 @@ class GroupService extends AppService
         setlocale(LC_ALL, 'ja_JP.UTF-8');
 
         // ignore header row
-        fgetcsv($handle, 2000, ",");
+        fgetcsv($handle, 2000, $delimiter);
 
         // aggregrate rows till it reaches chunk_size, trigger callback and reset
         // max 2000 char line based on CsvComponent
-        while (($row_data = fgetcsv($handle, 2000, ",")) !== FALSE) {
+        while (($row_data = fgetcsv($handle, 2000, $delimiter)) !== FALSE) {
             array_push($rows, $row_data);
             $count += 1;
 
