@@ -63,6 +63,16 @@
                                 <li><?= $group["name"] ?></li>
                             <?php endforeach ?>
                         </ul>
+                        <?php if (!empty($archivedGroups)) : ?>
+                            <p>
+                                <a href="#" class="archived-toggle"><?= __('View archived groups') ?></a>
+                            </p>
+                            <ul class="archived-list">
+                                <?php foreach ($archivedGroups as $group) : ?>
+                                    <li><?= $group["name"] ?></li>
+                                <?php endforeach ?>
+                            </ul>
+                        <?php endif ?>
                     </span>
             </div>
             </div>
@@ -70,3 +80,27 @@
     </div>
 </div>
 <?= $this->App->viewEndComment()?>
+<?php $this->append('script') ?>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var archivedHidden = true;
+            var archivedToggle = $('.archived-toggle');
+            var archivedList = $('.archived-list');
+
+            archivedToggle.click(function(e) {
+                e.preventDefault();
+                
+
+                if (archivedHidden) {
+                    archivedToggle.text("<?= __("Hide archived groups") ?>");
+                    archivedList.css("display", "block");
+                } else {
+                    archivedToggle.text("<?= __("View archived groups") ?>");
+                    archivedList.css("display", "none");
+                }
+
+                archivedHidden = !archivedHidden
+            })
+        });
+    </script>
+<?php $this->end() ?>

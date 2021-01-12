@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Comment', 'Model');
+App::uses('GoalGroup', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 App::import('Service', 'ExperimentService');
@@ -2240,5 +2241,26 @@ class Post extends AppModel
                 ]
             ]
         ], $this);
+    }
+
+    public function getPostGroups(int $postId): array
+    {
+        /** @var GoalGroup $GoalGroup */
+        $GoalGroup = ClassRegistry::init('GoalGroup');
+
+        $post = $this->getEntity($postId);
+
+        switch ($post['type']) {
+            case self::TYPE_CREATE_GOAL:
+            case self::TYPE_ACTION:
+                $rows = $GoalGroup->find('all', [
+                    'conditions' => [
+                        'goal_id' => $post['goal_id']
+                    ]
+                ]);
+                return Hash::extract($rows, '{n}.GoalGroup.group_id');
+            default:
+                return [];
+        }
     }
 }

@@ -3145,4 +3145,30 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
         $this->_setResponseCsv($filename);
     }
+
+    function group_members_list_csv (int $groupId)
+    {
+        $this->loadModel('Group');
+        $rows = $this->Group->findMembers($groupId);
+
+        $filename = 'group_members_' . date('Ymd_His');
+        $th = [
+            __('Member ID'),
+            __("Name"),
+            __("Name"),
+        ];
+        $td = [];
+
+        foreach ($rows as $row) {
+            $td[] = [
+                'member_id' => $row['TeamMember']['member_no'],
+                'name' => $row['User']['roman_username'],
+                'local_name' => $row['User']['local_username'],
+            ];
+        }
+
+        $this->layout = false;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
 }

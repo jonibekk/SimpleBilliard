@@ -58,11 +58,14 @@ class WatchlistsController extends BasePagingController
             'limit' => intval($this->request->query('limit'))
         ];
 
+
+
         $findKrRequest = new FindForKeyResultListRequest(
             $this->getUserId(),
             $this->getTeamId(),
             $opts
         );
+        $findKrRequest =FindForKeyResultListRequest::initializePeriod($findKrRequest);
 
         $results = $KrProgressService->getWithGraph($findKrRequest);
 

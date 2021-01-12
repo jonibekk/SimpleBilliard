@@ -752,9 +752,10 @@ class KeyResultService extends AppService
             ]
         ];
 
-        if (!$request->isPastTerm()) {
+        if ($request->getOnlyRecent()) {
             $options['conditions']['Goal.end_date >='] = $request->getTodayDate();
         }
+
         if ($request->getOnlyIncomplete()) {
             $options['conditions']['KeyResult.completed'] = null;
         }
