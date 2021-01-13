@@ -3171,4 +3171,61 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
         $this->_setResponseCsv($filename);
     }
+
+    function unapproved_goals_csv()
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $termId = $this->request->query('term_id');
+        $contain = [
+            'User' => [ 
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.team_id' => $this->current_team_id
+                    ],
+                    'CoachUser' => [
+                        'TeamMember' => [
+                            'conditions' => [
+                                'TeamMember.team_id' => $this->current_team_id
+                            ],
+                        ]
+                    ]
+                ] 
+            ]
+        ];
+
+        $rows = $GoalMember->getUnapprovedForTerm($termId, ['contain' => $contain]);
+
+        $filename = 'unapproved_goals_' . date('Ymd_His');
+        $th = [
+            __('Goal Name'),
+            __("Goal Creator's Name"),
+            __("Goal Creator's Member ID"),
+            __("Coach's Name"),
+            __("Coach's Member ID"),
+        ];
+        $td = [];
+
+        foreach ($rows as $row) {
+            $csvRow = [];
+            $csvRow['goal_name'] = $row['Goal']['name'];
+            $csvRow['goal_creator_name'] = $row['User']['display_username'];
+            $csvRow['goal_creator_id'] = $row['User']['TeamMember'][0]['member_no'];
+            
+            $coach = $row['User']['TeamMember'][0]['CoachUser'];
+
+            if (!empty($coach)) {
+                $csvRow['goal_creator_coach_name'] = $coach['display_username'];
+                $csvRow['goal_creator_coach_id'] = $coach['TeamMember'][0]['member_no'];
+            }
+            $td[] = $csvRow;
+        }
+
+        $this->layout = false;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
 }

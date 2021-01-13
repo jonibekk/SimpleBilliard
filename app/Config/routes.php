@@ -170,6 +170,14 @@ Router::connect(
     ['controller' => 'teams', 'action' => 'group_members_list_csv', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
 );
+Router::connect(
+    '/terms/unapproved_goals',
+    [
+        'controller' => 'teams', 
+        'action' => 'unapproved_goals_csv', 
+        '[method]' => 'GET'
+    ]
+);
 
 Router::connect('/evaluator_settings/:user_id/detail', ['controller' => 'evaluator_settings', 'action' => 'detail']);
 

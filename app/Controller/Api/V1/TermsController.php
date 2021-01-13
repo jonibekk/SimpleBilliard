@@ -30,15 +30,14 @@ class TermsController extends ApiController
         $EvaluationService = ClassRegistry::init("EvaluationService");
 
         $teamId = $this->current_team_id;
-        return $this->handleUnapprovedGoals($termId);
 
         try {
             $err = $this->validateStartEvaluation($termId);
 
             if ($err !== null) {
-                $this->Notification->outError(__($err));
-                $this->_getResponseBadFail(__($err));
+                return $err;
             }
+            return;
 
             $EvaluationService->startEvaluation($teamId, $termId);
 
@@ -59,26 +58,38 @@ class TermsController extends ApiController
     function validateStartEvaluation($termId) {
         /** @var EvaluationSetting $EvaluationSetting */
         $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
-        /** @var  Term $Term */
+        /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
 
         if (!$EvaluationSetting->isEnabled()) {
-            return 'Evaluation setting is not active.';
+            $err =  'Evaluation setting is not active.';
+            $this->Notification->outError(__($err));
+            return $this->_getResponseBadFail(__($err));
         }
+
         if ($Term->isStartedEvaluation($termId)) {
-            return 'The evaluation for this term has already been started.';
+            $err = 'The evaluation for this term has already been started.';
+            $this->Notification->outError(__($err));
+            return $this->_getResponseBadFail(__($err));
         }
+
+        $unapprovedGoals = $GoalMember->getUnapprovedForTerm($termId);
+
+        if (count($unapprovedGoals) > 0) {
+            $this->renderUnapprovedGoalsModal($termId, count($unapprovedGoals));
+        }
+
         return null;
     }
 
-    function handleUnapprovedGoals($termId)
+    function renderUnapprovedGoalsModal(int $termId, int $countUnapprovedGoals)
     {
-        $groupMembers = [];
-
         $this->layout = 'ajax';
         $this->viewPath = 'Elements';
-        $this->set(compact('groupMembers'));
-        $response = $this->render('Group/modal_group_members');
+        $this->set(compact('termId', 'countUnapprovedGoals'));
+        $response = $this->render('Evaluation/modal_unapproved_goals');
         $html = $response->__toString();
         return $this->_getResponse(400, ['modalContent' => $html]);
     }

@@ -1307,4 +1307,46 @@ class GoalMember extends AppModel
         $res = $this->find('list', $options);
         return $res;
     }
+
+    function getUnapprovedForTerm(int $termId, array $scope = []): array
+    {
+        $options = [
+            'conditions' => [
+                'GoalMember.approval_status'=> [
+                    self::APPROVAL_STATUS_NEW,
+                    self::APPROVAL_STATUS_REAPPLICATION,
+                ],
+                'GoalMember.is_target_evaluation' => false
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal2',
+                    'conditions' => [
+                        'Goal2.id = GoalMember.goal_id',
+                        'Goal2.del_flg != 1',
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'terms',
+                    'alias'      => 'Term',
+                    'conditions' => [
+                        'Goal2.start_date >= Term.start_date',
+                        'Goal2.end_date <= Term.end_date',
+                        'Term.id' => $termId
+                    ],
+                ]
+            ],
+            'contain' => 'Goal'
+        ];
+
+        if (!empty($scope)) {
+            $options = array_merge_recursive($options, $scope);
+        }
+
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }
