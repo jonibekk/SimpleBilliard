@@ -48,6 +48,12 @@ class SubscriptionsController extends ApiController
         return $this->_getResponseSuccess(['data' => $ret]);
     }
 
+    public function get_has_session()
+    {
+        CustomLogger::getInstance()->logEvent('UELO:SubscriptionController:get_has_session');
+        return $this->_getResponseSuccess(['has_session' => true]);
+    }
+
     private function validateCreate($data)
     {
         if ($this->validateSubscription($data)) {
