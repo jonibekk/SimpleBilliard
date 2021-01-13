@@ -204,17 +204,29 @@ if (document.getElementById("buttonStartEvaluation")) {
     $('input[name=term_id][type=radio]').on('change', function () {
         $buttonStartEvaluation.prop("disabled", false);
     })
-    $buttonStartEvaluation.on('click', function() {
+    $buttonStartEvaluation.on('click', function(event) {
+        event.preventDefault()
+
         if (window.confirm(cake.message.notice.confirm_evaluation_start)) {
             this.disabled = true
             this.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
 
             var termId = $('input[name=term_id][type=radio]').filter(":checked").val();
-            $.post({
+            var req = $.post({
                 url: "/api/v1/terms/" + termId + "/start_evaluation",
-            }).always(function() {
+            }).done(function() {
                 location.reload(true)
-            })
+            }).fail(function(error) {
+              var errorData = error.responseJSON['data'];
+
+              if (errorData && errorData['modalContent']) {
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+                $modal_elm.append(errorData['modalContent']);
+                $modal_elm.modal();
+              } else {
+                location.reload(true);
+              }
+            });
         }
         return false;
     });

@@ -26,22 +26,18 @@ class TermsController extends ApiController
      */
     function post_start_evaluation($termId)
     {
-        /** @var EvaluationSetting $EvaluationSetting */
-        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
         /** @var EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init("EvaluationService");
-        /** @var  Term $Term */
-        $Term = ClassRegistry::init('Term');
 
         $teamId = $this->current_team_id;
+        return $this->handleUnapprovedGoals($termId);
 
         try {
-            if (!$EvaluationSetting->isEnabled()) {
-                $this->_getResponseBadFail(__("Evaluation setting is not active."));
-            }
+            $err = $this->validateStartEvaluation($termId);
 
-            if ($Term->isStartedEvaluation($termId)) {
-                $this->_getResponseBadFail(__("The evaluation for this term has already been started."));
+            if ($err !== null) {
+                $this->Notification->outError(__($err));
+                $this->_getResponseBadFail(__($err));
             }
 
             $EvaluationService->startEvaluation($teamId, $termId);
@@ -53,14 +49,37 @@ class TermsController extends ApiController
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START, $termId);
             Cache::clear(false, 'team_info');
         } catch (Exception $e) {
-            GoalousLog::error('failed on starting evaluation', [
-                'message' => $e->getMessage(),
-            ]);
-            GoalousLog::error($e->getTraceAsString());
+            CustomLogger::getInstance()->logException($e);
             $this->Notification->outError(__("Evaluation could not start."));
             return $this->_getResponseInternalServerError();
         }
-
         return $this->_getResponseSuccess();
+    }
+
+    function validateStartEvaluation($termId) {
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        /** @var  Term $Term */
+        $Term = ClassRegistry::init('Term');
+
+        if (!$EvaluationSetting->isEnabled()) {
+            return 'Evaluation setting is not active.';
+        }
+        if ($Term->isStartedEvaluation($termId)) {
+            return 'The evaluation for this term has already been started.';
+        }
+        return null;
+    }
+
+    function handleUnapprovedGoals($termId)
+    {
+        $groupMembers = [];
+
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+        $this->set(compact('groupMembers'));
+        $response = $this->render('Group/modal_group_members');
+        $html = $response->__toString();
+        return $this->_getResponse(400, ['modalContent' => $html]);
     }
 }
