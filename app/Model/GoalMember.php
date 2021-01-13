@@ -1308,7 +1308,7 @@ class GoalMember extends AppModel
         return $res;
     }
 
-    function getUnapprovedForTerm(int $termId, array $scope = []): array
+    function getUnapprovedForTerm(int $termId): array
     {
         $options = [
             'conditions' => [
@@ -1339,12 +1339,11 @@ class GoalMember extends AppModel
                     ],
                 ]
             ],
+            'order' => [
+                'Goal.id' => 'asc'
+            ],
             'contain' => 'Goal'
         ];
-
-        if (!empty($scope)) {
-            $options = array_merge_recursive($options, $scope);
-        }
 
         $res = $this->find('all', $options);
         return $res;

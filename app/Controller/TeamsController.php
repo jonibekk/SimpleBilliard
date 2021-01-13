@@ -3180,27 +3180,10 @@ class TeamsController extends AppController
         $TeamMember = ClassRegistry::init('TeamMember');
 
         $termId = $this->request->query('term_id');
-        $contain = [
-            'User' => [ 
-                'TeamMember' => [
-                    'conditions' => [
-                        'TeamMember.team_id' => $this->current_team_id
-                    ],
-                    'CoachUser' => [
-                        'TeamMember' => [
-                            'conditions' => [
-                                'TeamMember.team_id' => $this->current_team_id
-                            ],
-                        ]
-                    ]
-                ] 
-            ]
-        ];
-
-        $rows = $GoalMember->getUnapprovedForTerm($termId, ['contain' => $contain]);
 
         $filename = 'unapproved_goals_' . date('Ymd_His');
         $th = [
+            __('Goal ID'),
             __('Goal Name'),
             __("Goal Creator's Name"),
             __("Goal Creator's Member ID"),
@@ -3209,17 +3192,32 @@ class TeamsController extends AppController
         ];
         $td = [];
 
+        $memberIds = [];
+        $rows = $GoalMember->getUnapprovedForTerm($termId);
+
+        foreach ($rows as $row) {
+            $memberIds[] = $row['GoalMember']['user_id'];
+        }
+
+        $memberRows = $TeamMember->findMemberWithCoach($this->current_team_id, $memberIds);
+        $memberRowsById = array_reduce($memberRows, function($acc, $row) {
+            $memberId = $row['User']['id'];
+            $acc[$memberId] = $row;
+            return $acc;
+        }, []);
+
         foreach ($rows as $row) {
             $csvRow = [];
+            $csvRow['goal_id'] = $row['Goal']['id'];
             $csvRow['goal_name'] = $row['Goal']['name'];
-            $csvRow['goal_creator_name'] = $row['User']['display_username'];
-            $csvRow['goal_creator_id'] = $row['User']['TeamMember'][0]['member_no'];
-            
-            $coach = $row['User']['TeamMember'][0]['CoachUser'];
+            $memberId = $row['GoalMember']['user_id'];
+            $memberRow = $memberRowsById[$memberId];
+            $csvRow['goal_creator_name'] = $memberRow['User']['display_username'];
+            $csvRow['goal_creator_id'] = $memberRow['TeamMember']['member_no'];
 
-            if (!empty($coach)) {
-                $csvRow['goal_creator_coach_name'] = $coach['display_username'];
-                $csvRow['goal_creator_coach_id'] = $coach['TeamMember'][0]['member_no'];
+            if (!empty($memberRow['CoachUser']['id'])) {
+                $csvRow['goal_creator_coach_name'] = $memberRow['CoachUser']['display_username'];
+                $csvRow['goal_creator_coach_id'] = $memberRow['CoachTeamMember']['member_no'];
             }
             $td[] = $csvRow;
         }
