@@ -36,7 +36,7 @@
                     <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal">
                         <?= __("Cancel") ?>
                     </button>
-                    <button id="buttonStartEvaluation" class="btn btn-primary" disabled="true">
+                    <button id="ignore-unapproved-start-eval-btn" class="btn btn-primary" disabled="true" data-termId="<?= $termId ?>">
                         <?= __("Start evaluations") ?>
                     </button>
                 </div>

@@ -231,3 +231,25 @@ if (document.getElementById("buttonStartEvaluation")) {
         return false;
     });
 }
+
+// bind to dynamically added contain in unapproved goals modal
+$(document).on('change', '#ignore-unapproved-goals-checkbox', function() {
+  var startButton = document.querySelector('#ignore-unapproved-start-eval-btn');
+
+  if (this.checked) {
+    startButton.disabled = false;
+  }
+})
+
+$(document).on('click', '#ignore-unapproved-start-eval-btn', function() {
+  this.disabled = true
+  this.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+  var termId = this.dataset.termid;
+  var url = "/api/v1/terms/" + termId + "/start_evaluation?ignore_unapproved=true";
+
+  $.post({
+      url: url,
+  }).always(function() {
+    location.reload()
+  })
+})

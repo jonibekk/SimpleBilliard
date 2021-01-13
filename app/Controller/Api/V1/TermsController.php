@@ -37,7 +37,6 @@ class TermsController extends ApiController
             if ($err !== null) {
                 return $err;
             }
-            return;
 
             $EvaluationService->startEvaluation($teamId, $termId);
 
@@ -75,10 +74,14 @@ class TermsController extends ApiController
             return $this->_getResponseBadFail(__($err));
         }
 
-        $unapprovedGoals = $GoalMember->getUnapprovedForTerm($termId);
+        $ignoreUnapproved = $this->request->query('ignore_unapproved');
 
-        if (count($unapprovedGoals) > 0) {
-            $this->renderUnapprovedGoalsModal($termId, count($unapprovedGoals));
+        if ($ignoreUnapproved !== "true") {
+            $unapprovedGoals = $GoalMember->getUnapprovedForTerm($termId);
+
+            if (count($unapprovedGoals) > 0) {
+                return $this->renderUnapprovedGoalsModal($termId, count($unapprovedGoals));
+            }
         }
 
         return null;
