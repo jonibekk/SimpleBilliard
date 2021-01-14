@@ -238,6 +238,8 @@ $(document).on('change', '#ignore-unapproved-goals-checkbox', function() {
 
   if (this.checked) {
     startButton.disabled = false;
+  } else {
+    startButton.disabled = true;
   }
 })
 

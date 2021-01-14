@@ -17,6 +17,7 @@
                 <br>
                 <p><?= __("Coach's approval is required. Please contact the coach or re-set the coach.") ?></p>
             </div>
+            <br>
             <div class="row">
                 <a href="/terms/unapproved_goals?term_id=<?= $termId ?>" target="_blank">
                     <button class='btn btn-default'><?= __("Unapproved Goals list") ?></button>
