@@ -1322,10 +1322,10 @@ class GoalMember extends AppModel
                 [
                     'type'       => 'INNER',
                     'table'      => 'goals',
-                    'alias'      => 'Goal2',
+                    'alias'      => 'Goal',
                     'conditions' => [
-                        'Goal2.id = GoalMember.goal_id',
-                        'Goal2.del_flg != 1',
+                        'Goal.id = GoalMember.goal_id',
+                        'Goal.del_flg != 1',
                     ],
                 ],
                 [
@@ -1333,8 +1333,8 @@ class GoalMember extends AppModel
                     'table'      => 'terms',
                     'alias'      => 'Term',
                     'conditions' => [
-                        'Goal2.start_date >= Term.start_date',
-                        'Goal2.end_date <= Term.end_date',
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
                         'Term.id' => $termId
                     ],
                 ]
@@ -1342,7 +1342,10 @@ class GoalMember extends AppModel
             'order' => [
                 'Goal.id' => 'asc'
             ],
-            'contain' => 'Goal'
+            'fields' => [
+                'GoalMember.*', 
+                'Goal.*'
+            ]
         ];
 
         $res = $this->find('all', $options);
