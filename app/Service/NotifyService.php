@@ -6,7 +6,7 @@ App::uses('NotifySetting', 'Model');
 
 class NotifyService extends AppService
 {
-    public function get($userID): array
+    public function get($userID): ?array
     {
         /** @var NotifySetting $NotifySetting */
         $NotifySetting = ClassRegistry::init("NotifySetting");

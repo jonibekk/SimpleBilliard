@@ -15,12 +15,17 @@ App::import('Service/Request/Resource', 'TeamResourceRequest');
 App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'NotifyService');
+App::import('Service', 'UserSettingsService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TermService');
 App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
 App::import('Lib/Paging', 'PagingRequest');
+
+App::import('Model/Dto/UserSettings', 'UserAccount');
+App::import('Model/Dto/UserSettings', 'UserProfile');
+
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
@@ -221,11 +226,17 @@ class MeController extends BasePagingController
     {
         /** @var TeamTranslationLanguageService $TeamTranslationLanguageService */
         $TeamTranslationLanguageService = ClassRegistry::init('TeamTranslationLanguageService');
-        $translation_languages = $TeamTranslationLanguageService->getAllLanguages($this->getTeamId());
+
+        try {
+            $translationLanguages = $TeamTranslationLanguageService->getAllLanguages($this->getTeamId());
+        } catch (Exception $e) {
+            GoalousLog::error('Failed to get team translation languages data');
+            $translationLanguages = [];
+        }
 
         $data = [
             'languages' => $this->Lang->getAvailLangList(),
-            'translation_languages' => $translation_languages
+            'translation_languages' => $translationLanguages
         ];
 
         if (empty($data)) {
@@ -243,31 +254,21 @@ class MeController extends BasePagingController
      */
     public function get_qrcode()
     {
-        if ($this->Session->read('2fa_secret_key')) {
-            $google_2fa_secret_key = $this->Session->read('2fa_secret_key');
-        } else {
-            $google_2fa_secret_key = $this->TwoFa->generateSecretKey();
+        if ($google_2fa_secret_key = $this->TwoFa->generateSecretKey()) {
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
+            $url2fa = $this->TwoFa->getQRCodeInline(
+                SERVICE_NAME,
+                $this->Session->read('Auth.User.PrimaryEmail.email'),
+                $google_2fa_secret_key
+            );
         }
 
-        $url_2fa = $this->TwoFa->getQRCodeInline(
-            SERVICE_NAME,
-            $this->Session->read('Auth.User.PrimaryEmail.email'),
-            $google_2fa_secret_key
-        );
-
-        $data = [];
-        if ($url_2fa) {
-            $data = ['url' => $url_2fa];
-        } else {
+        if (empty($url2fa)) {
             GoalousLog::error('Failed to get QR data for 2fa', ['2fa_secret_key' => $this->Session->read('2fa_secret_key')]);
             return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
-
-        return ApiResponse::ok()->withBody([
-            'data' => $data
-        ])->getResponse();
+        return ApiResponse::ok()->withBody(['data' => ['url' => $url2fa]])->getResponse();
     }
 
     /**
@@ -275,43 +276,45 @@ class MeController extends BasePagingController
      */
     public function put_account()
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
+        /** @var UserSettingsService $UserSettingsService */
+        $UserSettingsService = ClassRegistry::init("UserSettingsService");
         /** @var TeamMemberService $TeamMemberService */
         $TeamMemberService = ClassRegistry::init("TeamMemberService");
         
         $data = $this->getRequestJsonBody();
 
-        $user = $UserService->getUserData($data['User']['id']);
-        $team = $TeamMemberService->getDetails($data['User']['id'], $this->getTeamId());
-        if (!empty($user)) {
+        $user = $UserSettingsService->getUserData($this->getUserId());
+        $team = $UserSettingsService->getTeamMemberData($this->getUserId(), $this->getTeamId());
 
-            $user['User']['email'] = $data['User']['email'];
-            $user['User']['default_team_id'] = $data['User']['default_team_id'];
-            $user['User']['language'] = $data['User']['language'];
-            $user['User']['timezone'] = $data['User']['timezone'];
-            $user['User']['update_email_flg'] = $data['User']['update_email_flg'];
+        if (empty($user)) {
+            GoalousLog::error('Failed to save account user settings data.', ['User' => $this->getUserId()]);
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
+        }
 
-            if (!empty($team) && $team['TeamMember']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
-                $translationLanguage = $data['TeamMember']['default_translation_language'];
-                $team['TeamMember']['default_translation_language'] = $translationLanguage;
-                $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $team);
-                if (!$teamSuccess) {
-                    GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
-                    return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-                }
-            }
+        $accountInfo = new UserAccount();
+        $accountInfo->userId = $this->getUserId();
+        $accountInfo->email = $data['User']['email'];
+        $accountInfo->defTeamId = $data['User']['default_team_id'];
+        $accountInfo->language = $data['User']['language'];
+        $accountInfo->timezone = $data['User']['timezone'];
+        $accountInfo->updateEmailFlag = $data['User']['update_email_flg'];
 
-            $userSuccess = $UserService->updateUserData($this->getUserId(), $user);
-            if (!$userSuccess) {
+        if (!empty($team) && $team['TeamMember']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
+            $translationLanguage = $data['TeamMember']['default_translation_language'];
+            $team['TeamMember']['default_translation_language'] = $translationLanguage;
+            $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $team);
+            if (!$teamSuccess) {
                 GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
                 return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
             }
-            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
-        } else {
-            GoalousLog::error('Failed to save account user settings data.', ['User' => $data['User']['id']]);
+        }
+
+        $userSuccess = $UserSettingsService->updateAccountSettingsData($this->getUserId(), $accountInfo);
+        if (!$userSuccess) {
+            GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
+        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
         return ApiResponse::ok()->withBody([
             'data' => __('Saved user setting.')
@@ -323,67 +326,42 @@ class MeController extends BasePagingController
      */
     public function put_profile()
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init("TeamMemberService");
-        /** @var UploadService $UploadService */
-        $UploadService = ClassRegistry::init("UploadService");
-        /** @var AttachedFileService $AttachedFileService */
-        $AttachedFileService = ClassRegistry::init("AttachedFileService");
+        /** @var UserSettingsService $UserSettingsService */
+        $UserSettingsService = ClassRegistry::init("UserSettingsService");
 
         $data = $this->getRequestJsonBody();
 
-        $user = $UserService->getUserData($data['User']['id']);
-        $teamMember = $TeamMemberService->getDetails($data['User']['id'], $this->getTeamId());
+        $user = $UserSettingsService->getUserData($this->getUserId());
+        $teamMember = $UserSettingsService->getTeamMemberData($this->getUserId(), $this->getTeamId());
 
-        if (!empty($user) && !empty($teamMember)) {
-            $user['User']['first_name'] = $data['User']['first_name'];
-            $user['User']['last_name'] = $data['User']['last_name'];
-            $user['User']['gender_type'] = $data['User']['gender_type'];
-            $user['User']['birth_day'] = $data['User']['birth_day'];
-            $user['User']['hide_year_flg'] = $data['User']['hide_year_flg'];
-            $user['User']['hometown'] = $data['User']['hometown'];
-            $teamMember['TeamMember']['comment'] = $data['TeamMember']['comment'];
+        if (empty($user) || empty($teamMember)) {
+            GoalousLog::error('Failed to save profile user settings data.', ['User' => $this->getUserId()]);
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
+        }
 
-            try {
-                if (isset($data['User']['photo']) && !empty($data['User']['photo'])) {
-                    /** @var UploadedFile $uploadedFile */
-                    $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['photo']);
-                    /** @var AttachedFileEntity $attachedFile */
-                    $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
+        $profileInfo = new UserProfile();
+        $profileInfo->userId = $this->getUserId();
+        $profileInfo->teamId = $this->getTeamId();
+        $profileInfo->firstName = $data['User']['first_name'];
+        $profileInfo->lastName = $data['User']['last_name'];
+        $profileInfo->genderType = $data['User']['gender_type'];
+        $profileInfo->birthday = $data['User']['birth_day'];
+        $profileInfo->hideBirthdayFlag = $data['User']['hide_year_flg'];
+        $profileInfo->homewotn = $data['User']['hometown'];
+        $profileInfo->comment = $data['TeamMember']['comment'];
 
-                    $user['User']['photo_file_name'] = $uploadedFile->getFileName();
-                    $UploadService->saveWithProcessing("User", $this->getUserId(), 'photo', $uploadedFile);
-                }
-                if (isset($data['User']['cover_photo']) && !empty($data['User']['cover_photo'])) {
-                    /** @var UploadedFile $uploadedFile */
-                    $uploadedFile = $UploadService->getBuffer($this->getUserId(), $this->getTeamId(), $data['User']['cover_photo']);
-                    /** @var AttachedFileEntity $attachedFile */
-                    $AttachedFileService->add($this->getUserId(), $this->getTeamId(), $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
-
-                    $user['User']['cover_photo_file_name'] = $uploadedFile->getFileName();
-                    $UploadService->saveWithProcessing("User", $this->getUserId(), 'cover_photo', $uploadedFile);
-                }
-            } catch (Exception $e) {
-                GoalousLog::error('Failed to save profile user settings data.', [
-                    'message' => $e->getMessage(),
-                    'trace'   => $e->getTraceAsString(),
-                    'user_id' => $this->getUserId(),
-                    'team_id' => $this->getTeamId()
-                ]);
+        if (isset($data['User']['photo']) || isset($data['User']['cover_photo'])) {
+            $imageSuccess = $UserSettingsService->updateProfileAndCoverPhoto($this->getUserId(), $this->getTeamId(), $data['User']['photo'], $data['User']['cover_photo']);
+            if (!$imageSuccess) {
                 return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
             }
+            $profileInfo->profilePhotoName = $UserSettingsService->getProfilePhotoName();
+            $profileInfo->coverPhotoName = $UserSettingsService->getCoverPhotoName();
+        }
 
-            $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $teamMember);
-            $userSuccess = $UserService->updateUserData($this->getUserId(), $user);
-            if (!$teamSuccess && !$userSuccess) {
-                GoalousLog::error('Failed to save profile user settings data.', ['User' => $data['User']['id']]);
-                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-            }
-
-        } else {
-            GoalousLog::error('Failed to save profile user settings data.', ['User' => $data['User']['id']]);
+        $success = $UserSettingsService->updateProfileSettingsData($this->getUserId(), $profileInfo);
+        if (!$success) {
+            GoalousLog::error('Failed to save profile user settings data.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
@@ -401,25 +379,23 @@ class MeController extends BasePagingController
         $NotifyService = ClassRegistry::init("NotifyService");
 
         $data = $this->getRequestJsonBody();
+        $notifyData = $NotifyService->get($this->getUserId());
 
-        $notifyData = $NotifyService->get($data['User']['id']);
-
-        if (!empty($notifyData)) {
-            $notifyData['NotifySetting']['email_status'] = $data['NotifySetting']['email_status'];
-            $notifyData['NotifySetting']['mobile_status'] = $data['NotifySetting']['mobile_status'];
-            $notifyData['NotifySetting']['desktop_status'] = $data['NotifySetting']['desktop_status'];
-
-            $success = $NotifyService->put($data['User']['id'], $notifyData);
-            if (!$success) {
-                GoalousLog::error('Failed to save notifications user settings data.', ['User' => $data['User']['id']]);
-                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-            }
-
-            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
-        } else {
-            GoalousLog::error('Failed to save notifications user settings data.', ['User' => $data['User']['id']]);
+        if (empty($notifyData)) {
+            GoalousLog::error('Failed to save notifications user settings data.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
+
+        $notifyData['NotifySetting']['email_status'] = $data['NotifySetting']['email_status'];
+        $notifyData['NotifySetting']['mobile_status'] = $data['NotifySetting']['mobile_status'];
+        $notifyData['NotifySetting']['desktop_status'] = $data['NotifySetting']['desktop_status'];
+
+        $success = $NotifyService->put($this->getUserId(), $notifyData);
+        if (!$success) {
+            GoalousLog::error('Failed to save notifications user settings data.', ['User' => $this->getUserId()]);
+            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
+        }
+        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
 
         return ApiResponse::ok()->withBody(['data' => __("Saved user setting.")
         ])->getResponse();
@@ -430,14 +406,22 @@ class MeController extends BasePagingController
      */
     public function put_change_email()
     {
+        /** @var UserSettingsService $UserSettingsService */
+        $UserSettingsService = ClassRegistry::init("UserSettingsService");
+
         $data = $this->getRequestJsonBody();
 
+        $emailInfo = new UserChangeEmail();
+        $emailInfo->userId = $this->getUserId();
+        $emailInfo->email = $data['User']['email'];
+        $emailInfo->password = $data['User']['password_request2'];
+
         try {
-            if (!$this->User->validatePassword($data)) {
+            if (!$UserSettingsService->validatePassword($data)) {
                 GoalousLog::error('Password validation failed.', ['data' => $data]);
                 return ErrorResponse::internalServerError()->withMessage(__('Invalid Data'))->getResponse();
             } else {
-                $email_data = $this->User->addEmail($data, $this->getUserId());
+                $emailData = $UserSettingsService->updateEmailAddress($emailInfo);
             }
         } catch (RuntimeException $e) {
             GoalousLog::error('Failed to change email address.', [
@@ -451,12 +435,11 @@ class MeController extends BasePagingController
 
         $this->GlEmail->sendMailChangeEmailVerify(
             $this->getUserId(),
-            $email_data['Email']['email'],
-            $email_data['Email']['email_token']
+            $emailData['Email']['email'],
+            $emailData['Email']['email_token']
         );
 
-        return ApiResponse::ok()->withBody(['data' => __('Confirmation has been sent to your email address.')
-        ])->getResponse();
+        return ApiResponse::ok()->withBody(['data' => __('Confirmation has been sent to your email address.')])->getResponse();
     }
 
     /**
@@ -464,14 +447,23 @@ class MeController extends BasePagingController
      */
     public function put_change_password()
     {
+        /** @var UserSettingsService $UserSettingsService */
+        $UserSettingsService = ClassRegistry::init("UserSettingsService");
+        
         $data = $this->getRequestJsonBody();
 
+        $passInfo = new UserChangePassword();
+        $passInfo->userId = $this->getUserId();
+        $passInfo->oldPassword = $data['User']['old_password'];
+        $passInfo->password = $data['User']['password'];
+        $passInfo->confirmPassword = $data['User']['password_confirm'];
+
         try {
-            if (!$this->User->validatePassword($data)) {
+            if (!$UserSettingsService->validatePassword($data)) {
                 GoalousLog::error('Password validation failed.', ['User' => $data]);
                 return ErrorResponse::badRequest()->withMessage(__('Failed to save password change.'))->getResponse();
             } else {
-                $this->User->changePassword($data);
+                $UserSettingsService->updatePassword($passInfo);
             }
         } catch (RuntimeException $e) {
             GoalousLog::error('Failed to change password.', [
@@ -483,8 +475,7 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withMessage(__('Failed to save password change.'))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(['data' => __('Changed password.')
-        ])->getResponse();
+        return ApiResponse::ok()->withBody(['data' => __('Changed password.')])->getResponse();
     }
 
     /**
@@ -528,7 +519,6 @@ class MeController extends BasePagingController
         }
 
         $this->Session->delete('2fa_secret_key');
-        //$this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
 
         return ApiResponse::ok()->withBody(['data' => __('Succeeded to save 2-Step Verification.')
         ])->getResponse();
@@ -539,9 +529,10 @@ class MeController extends BasePagingController
      */
     function post_disable_2fa()
     {
-        $this->User->id = $this->getUserId();
-        $success = $this->User->saveField('2fa_secret', null);
-        if ($success) {
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
+        if ($UserService->saveField($this->getUserId(), '2fa_secret', null)) {
             $this->User->RecoveryCode->invalidateAll($this->User->id);
         } else {
             GoalousLog::error('Failed to disable 2fa.', ['User' => $this->getUserId()]);
@@ -551,7 +542,6 @@ class MeController extends BasePagingController
         if (empty($this->getTeamId()) === false && empty($this->getUserId()) === false) {
             $this->GlRedis->deleteDeviceHash($this->getTeamId(), $this->getUserId());
         }
-        //$this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
 
         return ApiResponse::ok()->withBody(['data' => __("Succeeded to cancel 2-Step Verification.")
         ])->getResponse();

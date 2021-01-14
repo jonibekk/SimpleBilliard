@@ -11,6 +11,9 @@ App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'ImageStorageService');
 App::import('Service', 'UserService');
 
+App::import('Model/Dto/UserSettings', 'UserAccount');
+App::import('Model/Dto/UserSettings', 'UserChangeEmail');
+
 use Goalous\Enum as Enum;
 
 /**
@@ -301,7 +304,7 @@ class UserService extends AppService
         }
     }
 
-    public function getUserData($userId): array
+    public function getUserData(int $userId): ?array
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -318,7 +321,7 @@ class UserService extends AppService
         return $user;
     }
 
-    public function updateUserData($userId, array $data): bool
+    public function updateUserData(int $userId, array $data): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -333,7 +336,33 @@ class UserService extends AppService
             ]);
             return false;
         }
-        
+
+        return true;
+    }
+
+    public function saveField(int $id, $column, $value = null): bool
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $data = array(
+            'User' => [
+                'id' => $id,
+                $column => $value
+            ]
+        );
+
+        try {
+            $User->save($data, false);
+        } catch (Exception $e) {
+            GoalousLog::error('Column Save Failed!', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'data'    => $data
+            ]);
+            return false;
+        }
+
         return true;
     }
 }

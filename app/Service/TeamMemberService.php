@@ -440,7 +440,7 @@ class TeamMemberService extends AppService
         return true;
     }
 
-    public function getDetails($userId, $teamId): array
+    public function getDetails(int $userId, int $teamId): ?array
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
@@ -459,7 +459,7 @@ class TeamMemberService extends AppService
         return $data;
     }
 
-    public function putTeamData($teamId, array $data): bool
+    public function putTeamData(int $teamId, array $data): bool
     {
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
