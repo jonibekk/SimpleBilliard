@@ -345,13 +345,13 @@ class Evaluation extends AppModel
                 ]
             );
         } else {
-            $indexNum = $this->getMyTurnIndex($term_id, $evaluateeId, $evaluatorId);
+            $indexNum = $this->getMyTurnIndex($evaluateTermId, $evaluateeId, $evaluatorId);
             if ($indexNum < 0) {
                 return [];
             }
             return $this->getEvaluations($evaluateTermId, $evaluateeId,
                 [
-                    'index_num <= ' => $indexNum, 
+                    'Evaluation.index_num <= ' => $indexNum, 
                     'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
                     'or' => [
                         'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
