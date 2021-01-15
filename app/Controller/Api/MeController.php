@@ -43,34 +43,25 @@ App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
  * @property NotificationComponent $Notification
  * @property FlashComponent $Flash
  * @property LangComponent  $Lang
- * @property User  $User
  * @property NotificationComponent $Notification
  * @property GlEmailComponent      $GlEmail
- * @property TeamMember  $TeamMember
- * @property TwoFaComponent $TwoFa
  * @property SessionComponent $Session
  * @property GlRedis          $GlRedis
- * @property NotifySetting  $NotifySetting
  */
 class MeController extends BasePagingController
 {
     use AuthTrait;
 
     public $uses = [
-        'User',
-        'TeamMember',
         "GlRedis",
-        'NotifySetting',
     ];
 
     public $components = [
         'Session',
         'Flash',
         'Lang',
-        'TwoFa',
         'Notification',
         'GlEmail',
-        'Notification',
     ];
 
     /**
@@ -214,9 +205,7 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => $data
-        ])->getResponse();
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 
     /**
@@ -243,10 +232,8 @@ class MeController extends BasePagingController
             GoalousLog::error('Failed to get languages and team translation languages data');
             return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
-        
-        return ApiResponse::ok()->withBody([
-            'data' => $data
-        ])->getResponse();
+
+        return ApiResponse::ok()->withData($data)->getResponse();
     }
 
     /**
@@ -254,21 +241,26 @@ class MeController extends BasePagingController
      */
     public function get_qrcode()
     {
-        if ($google_2fa_secret_key = $this->TwoFa->generateSecretKey()) {
+        /** @var TwoFAService $TwoFAService */
+        $TwoFAService = ClassRegistry::init("TwoFAService");
+
+        if ($google_2fa_secret_key = $TwoFAService->generateSecretKey()) {
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
-            $url2fa = $this->TwoFa->getQRCodeInline(
+            $url2fa = $TwoFAService->getQRCodeInline(
                 SERVICE_NAME,
                 $this->Session->read('Auth.User.PrimaryEmail.email'),
                 $google_2fa_secret_key
             );
         }
 
+        GoalousLog::error('EMAIL: ', ['email' => $this->Session->read('Auth.User.PrimaryEmail.email')]);
+
         if (empty($url2fa)) {
             GoalousLog::error('Failed to get QR data for 2fa', ['2fa_secret_key' => $this->Session->read('2fa_secret_key')]);
             return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(['data' => ['url' => $url2fa]])->getResponse();
+        return ApiResponse::ok()->withData(['url' => $url2fa])->getResponse();
     }
 
     /**
@@ -314,11 +306,9 @@ class MeController extends BasePagingController
             GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
-        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
+        Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
-        return ApiResponse::ok()->withBody([
-            'data' => __('Saved user setting.')
-        ])->getResponse();
+        return ApiResponse::ok()->withData(__('Saved user setting.'))->getResponse();
     }
 
     /**
@@ -364,10 +354,9 @@ class MeController extends BasePagingController
             GoalousLog::error('Failed to save profile user settings data.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
-        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
+        Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
-        return ApiResponse::ok()->withBody(['data' => __("Saved user setting.")
-        ])->getResponse();
+        return ApiResponse::ok()->withData(__("Saved user setting."))->getResponse();
     }
 
     /**
@@ -375,30 +364,26 @@ class MeController extends BasePagingController
      */
     public function put_notifications()
     {
-        /** @var NotifyService $NotifyService */
-        $NotifyService = ClassRegistry::init("NotifyService");
+        /** @var UserSettingsService $UserSettingsService */
+        $UserSettingsService = ClassRegistry::init("UserSettingsService");
 
         $data = $this->getRequestJsonBody();
-        $notifyData = $NotifyService->get($this->getUserId());
 
-        if (empty($notifyData)) {
-            GoalousLog::error('Failed to save notifications user settings data.', ['User' => $this->getUserId()]);
-            return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-        }
+        $notifyInfo = new UserNotify();
+        $notifyInfo->userId = $this->getUserId();
+        $notifyInfo->id = $data['NotifySetting']['id'];
+        $notifyInfo->emailStatus = $data['NotifySetting']['email_status'];
+        $notifyInfo->mobileStatus = $data['NotifySetting']['mobile_status'];
+        $notifyInfo->desktopStatus = $data['NotifySetting']['desktop_status'];
 
-        $notifyData['NotifySetting']['email_status'] = $data['NotifySetting']['email_status'];
-        $notifyData['NotifySetting']['mobile_status'] = $data['NotifySetting']['mobile_status'];
-        $notifyData['NotifySetting']['desktop_status'] = $data['NotifySetting']['desktop_status'];
-
-        $success = $NotifyService->put($this->getUserId(), $notifyData);
+        $success = $UserSettingsService->updateNotifySettingsData($this->getUserId(), $notifyInfo);
         if (!$success) {
             GoalousLog::error('Failed to save notifications user settings data.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
-        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
+        Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
 
-        return ApiResponse::ok()->withBody(['data' => __("Saved user setting.")
-        ])->getResponse();
+        return ApiResponse::ok()->withData(__("Saved user setting."))->getResponse();
     }
 
     /**
@@ -439,7 +424,7 @@ class MeController extends BasePagingController
             $emailData['Email']['email_token']
         );
 
-        return ApiResponse::ok()->withBody(['data' => __('Confirmation has been sent to your email address.')])->getResponse();
+        return ApiResponse::ok()->withData(__('Confirmation has been sent to your email address.'))->getResponse();
     }
 
     /**
@@ -475,7 +460,7 @@ class MeController extends BasePagingController
             return ErrorResponse::internalServerError()->withMessage(__('Failed to save password change.'))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody(['data' => __('Changed password.')])->getResponse();
+        return ApiResponse::ok()->withData(__('Changed password.'))->getResponse();
     }
 
     /**
@@ -483,6 +468,11 @@ class MeController extends BasePagingController
      */
     public function post_enable_2fa()
     {
+        /** @var TwoFAService $TwoFAService */
+        $TwoFAService = ClassRegistry::init("TwoFAService");
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
         $tmp = $this->getRequestJsonBody();
 
         $data = [
@@ -496,18 +486,15 @@ class MeController extends BasePagingController
                 GoalousLog::error('Enable 2fa failed.', ['Session' => $this->Session->read('2fa_secret_key')]);
                 return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
             }
-            if (!Hash::get($data, 'User.2fa_code')) {
-                GoalousLog::error('Enable 2fa failed.');
-                return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
-            }
-            if (!$this->TwoFa->verifyKey($secret_key, $data['User']['2fa_code'])) {
+            if (!$TwoFAService->verifyKey($secret_key, $data['User']['2fa_code'])) {
                 GoalousLog::error('Enable 2fa failed.', ['2fa code' => $data['User']['2fa_code']]);
                 return ErrorResponse::internalServerError()->withMessage(__("The code is incorrect."))->getResponse();
             }
 
-            $this->User->id = $this->getUserId();
-            $this->User->saveField('2fa_secret', $secret_key);
-            //
+            if (!$UserService->saveField($this->getUserId(), '2fa_secret', $secret_key)) {
+                GoalousLog::error('Enable 2fa failed.', ['2fa_secret' => $secret_key]);
+                return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
+            }
         } catch (RuntimeException $e) {
             GoalousLog::error('Enable 2fa failed.', [
                 'message' => $e->getMessage(),
@@ -520,8 +507,7 @@ class MeController extends BasePagingController
 
         $this->Session->delete('2fa_secret_key');
 
-        return ApiResponse::ok()->withBody(['data' => __('Succeeded to save 2-Step Verification.')
-        ])->getResponse();
+        return ApiResponse::ok()->withData(__('Succeeded to save 2-Step Verification.'))->getResponse();
     }
 
     /**
@@ -533,18 +519,17 @@ class MeController extends BasePagingController
         $UserService = ClassRegistry::init("UserService");
 
         if ($UserService->saveField($this->getUserId(), '2fa_secret', null)) {
-            $this->User->RecoveryCode->invalidateAll($this->User->id);
+            $UserService->invalidateTwoFa($this->getUserId());
         } else {
             GoalousLog::error('Failed to disable 2fa.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
         }
 
-        if (empty($this->getTeamId()) === false && empty($this->getUserId()) === false) {
+        if (!empty($this->getTeamId()) && !empty($this->getUserId())) {
             $this->GlRedis->deleteDeviceHash($this->getTeamId(), $this->getUserId());
         }
 
-        return ApiResponse::ok()->withBody(['data' => __("Succeeded to cancel 2-Step Verification.")
-        ])->getResponse();
+        return ApiResponse::ok()->withData(__("Succeeded to cancel 2-Step Verification."))->getResponse();
     }
 
     /**
@@ -552,20 +537,23 @@ class MeController extends BasePagingController
      */
     function get_recovery_code()
     {
-        $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
-        if (!$recovery_codes) {
-            $success = $this->User->RecoveryCode->regenerate($this->getUserId());
-            if (!$success) {
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
+        try {
+            if (!$UserService->generateRecoveryCodes($this->getUserId())) {
                 GoalousLog::error('Failed to generate recovery codes.', ['User' => $this->getUserId()]);
                 return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
             } else {
-                $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
+                $recoveryCodes = $UserService->getRecoveryCodes($this->getUserId());
             }
+        } catch (Exception $e) {
+            GoalousLog::error('Failed to generate recovery codes.', ['User' => $this->getUserId()]);
+            return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
         }
 
-        return ApiResponse::ok()->withBody([
-            'data' => $recovery_codes
-        ])->getResponse();
+
+        return ApiResponse::ok()->withData($recoveryCodes)->getResponse();
     }
 
     /**
@@ -573,16 +561,16 @@ class MeController extends BasePagingController
      */
     function get_regenerated_code()
     {
-        $success = $this->User->RecoveryCode->regenerate($this->getUserId());
-        if (!$success) {
+        /** @var UserService $UserService */
+        $UserService = ClassRegistry::init("UserService");
+
+        if (!$UserService->generateRecoveryCodes($this->getUserId())) {
             GoalousLog::error('Failed to regenerate recovery codes.');
             return ErrorResponse::internalServerError()->withMessage(__("An error has occurred."))->getResponse();
         }
-        $recovery_codes = $this->User->RecoveryCode->getAll($this->getUserId());
+        $recoveryCodes = $UserService->getRecoveryCodes($this->getUserId());
 
-        return ApiResponse::ok()->withBody([
-            'data' => $recovery_codes
-        ])->getResponse();
+        return ApiResponse::ok()->withData($recoveryCodes)->getResponse();
     }
 
     public function get_goal_status()

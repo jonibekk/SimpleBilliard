@@ -304,6 +304,7 @@ class UserService extends AppService
         }
     }
 
+    // Get Raw User
     public function getUserData(int $userId): ?array
     {
         /** @var User $User */
@@ -321,6 +322,7 @@ class UserService extends AppService
         return $user;
     }
 
+    // Update User data, Primary key required to Save.
     public function updateUserData(int $userId, array $data): bool
     {
         /** @var User $User */
@@ -340,6 +342,7 @@ class UserService extends AppService
         return true;
     }
 
+    // Save Field to specified column.
     public function saveField(int $id, $column, $value = null): bool
     {
         /** @var User $User */
@@ -364,5 +367,30 @@ class UserService extends AppService
         }
 
         return true;
+    }
+
+    // Invalidate TwoFa Auth.
+    public function invalidateTwoFa(int $userId): bool
+    {
+        /** @var RecoveryCode $RecoveryCode */
+        $RecoveryCode = ClassRegistry::init('RecoveryCode');
+
+        return $RecoveryCode->invalidateAll($userId);
+    }
+
+    public function generateRecoveryCodes(int $userId): bool
+    {
+        /** @var RecoveryCode $RecoveryCode */
+        $RecoveryCode = ClassRegistry::init('RecoveryCode');
+
+        return $RecoveryCode->regenerate($userId);
+    }
+
+    public function getRecoveryCodes(int $userId): array
+    {
+        /** @var RecoveryCode $RecoveryCode */
+        $RecoveryCode = ClassRegistry::init('RecoveryCode');
+
+        return $RecoveryCode->getAll($userId);
     }
 }

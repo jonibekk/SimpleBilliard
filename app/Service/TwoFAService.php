@@ -52,6 +52,37 @@ class TwoFAService extends AppService
     }
 
     /**
+     * Verifies a user inputted key against the current timestamp. Checks $window
+     * keys either side of the timestamp.
+     *
+     * @param string $b32seed
+     * @param string $key - User specified key
+     * @param integer $window
+     * @param boolean $useTimeStamp
+     * @return boolean
+     **/
+    public function verifyKey($b32seed, $code, $window = 4, $useTimeStamp = true): bool
+    {
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+
+        return $Google2Fa->verifyKey($b32seed, $code, $window, $useTimeStamp);
+    }
+
+    /**
+     * Generates a QR code data url to display inline.
+     *
+     * @param string $company
+     * @param string $holder
+     * @param string $secret
+     * @return string
+     */
+    public function getQRCodeInline($company, $holder, $secret)
+    {
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+        return $Google2Fa->getQRCodeInline($company, $holder, $secret);
+    }
+
+    /**
      * Use a 2fa recovery code
      *
      * @param int    $userId

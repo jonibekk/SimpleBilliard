@@ -10,6 +10,7 @@ App::uses('User', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Email', 'Model');
 
+App::import('Model/Dto/UserSettings', 'UserNotify');
 App::import('Model/Dto/UserSettings', 'UserAccount');
 App::import('Model/Dto/UserSettings', 'UserProfile');
 App::import('Model/Dto/UserSettings', 'UserChangeEmail');
@@ -52,6 +53,7 @@ class UserSettingsService extends AppService
         return $team;
     }
 
+    // Update User Account
     public function updateAccountSettingsData(int $userId, UserAccount $accountData): bool
     {
         /** @var User $User */
@@ -82,6 +84,7 @@ class UserSettingsService extends AppService
         return true;
     }
 
+    // Update User Profile
     public function updateProfileSettingsData(int $userId, UserProfile $profileData): bool
     {
         /** @var User $User */
@@ -120,7 +123,30 @@ class UserSettingsService extends AppService
             GoalousLog::error('Failed to update user data.', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
-                'User data' => $userId
+                'User data' => $userData
+            ]);
+            return false;
+        }
+
+        return true;
+    }
+
+    //Update User Notify Settings
+    public function updateNotifySettingsData(int $userId, UserNotify $notifyInfo): bool
+    {
+        /** @var NotifySetting $NotifySetting */
+        $NotifySetting = ClassRegistry::init("NotifySetting");
+
+        $data = $notifyInfo->getData();
+        if (empty($data)) return false;
+
+        try {
+            $NotifySetting->save($data, false);
+        } catch (Exception $e) {
+            GoalousLog::error('Failed to update user data.', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'User' => $userId
             ]);
             return false;
         }
@@ -233,6 +259,17 @@ class UserSettingsService extends AppService
 
         return $User->changePassword($passInfo->getData());
     }
+
+    // Get Cache Key
+    // returns String;
+    public function getCacheKey($name, $isUserData = false, $userId = null, $withTeamId = true)
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        return $User->getCacheKey($name, $isUserData, $userId, $withTeamId);
+    }
+
 
     private function setProfilePhotoName($profilePhoto): void
     {
