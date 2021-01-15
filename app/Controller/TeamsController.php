@@ -3185,10 +3185,10 @@ class TeamsController extends AppController
         $th = [
             __('Goal ID'),
             __('Goal Name'),
-            __("Goal Creator's Name"),
-            __("Goal Creator's Member ID"),
-            __("Coach's Name"),
-            __("Coach's Member ID"),
+            __("Name (User)"),
+            __("Member ID (User)"),
+            __("Name (Coach)"),
+            __("Member ID (Coach)"),
         ];
         $td = [];
 
