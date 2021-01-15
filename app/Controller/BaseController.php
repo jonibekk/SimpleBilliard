@@ -5,6 +5,7 @@ App::uses('TeamStatus', 'Lib/Status');
 App::uses('UserAgent', 'Request');
 App::import('Service', 'AuthService');
 App::import('Service', 'TeamService');
+App::import('Utility', 'CustomLogger');
 App::uses('Device', 'Model');
 
 use Goalous\Enum as Enum;
@@ -208,6 +209,7 @@ class BaseController extends Controller
                 $sesId = $this->Session->id();
                 // GL-7364：Enable to keep login status between old Goalous and new Goalous
                 $mapSesAndJwt = $this->GlRedis->getMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
+
                 if (empty($mapSesAndJwt)) {
                     $jwt = $this->GlRedis->saveMapSesAndJwt($this->current_team_id, $this->my_uid, $sesId);
                     $this->set('jwt_token', $jwt->token());
@@ -262,6 +264,14 @@ class BaseController extends Controller
             }
             $this->_setTeamStatus();
         }
+        $this->logSession();
+    }
+
+    private function logSession()
+    {
+        $jwtData = [];
+        $sessionData = $this->Session->read();
+        CustomLogger::getInstance()->setControllerData($jwtData, $sessionData);
     }
 
     /**
@@ -357,15 +367,20 @@ class BaseController extends Controller
      */
     public function _refreshAuth($uid = null)
     {
+        
+
         if (!$uid) {
             $uid = $this->Auth->user('id');
         }
+
         //言語設定を退避
         $user_lang = $this->User->findById($uid);
         $lang = null;
+
         if (!empty($user_lang)) {
             $lang = $user_lang['User']['language'];
         }
+
         $this->Auth->logout();
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;
@@ -387,8 +402,11 @@ class BaseController extends Controller
         if (isset($user['User'])) {
             $user['User'] = array_merge($user['User'], $associations);
         }
+
         $this->User->me = $user['User'];
         $res = $this->Auth->login($user['User']);
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_refreshAuth');
         return $res;
     }
 
@@ -538,7 +556,10 @@ class BaseController extends Controller
      */
     public function _isLoggedIn(): bool
     {
-        return (bool)$this->Auth->user();
+        $isLoggedIn = (bool)$this->Auth->user();
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:_isLoggedIn');
+        return $isLoggedIn;
     }
 
     /*
@@ -606,6 +627,8 @@ class BaseController extends Controller
         }
 
         $this->Cookie->destroy();
+
+        CustomLogger::getInstance()->logEvent('UELO:BaseController:logoutProcess');
         return $this->Auth->logout();
     }
 

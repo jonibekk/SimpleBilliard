@@ -385,6 +385,7 @@ class GlRedis extends AppModel
      */
     public function deleteKeys(string $pattern)
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:deleteKeys', 'pattern' => $pattern]);
         if ($pattern == '*') {
             throw new Exception('cannot use "*" for target. if want to delete all key, use method deleteAllData()');
         }
@@ -1143,6 +1144,7 @@ class GlRedis extends AppModel
      */
     function dellKeys($pattern)
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:dellKeys', 'pattern' => $pattern]);
         if ($pattern == "*") {
             throw new RuntimeException(__("Not allowed to specify."));
         }
@@ -1592,16 +1594,18 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    function saveMapSesAndJwt(?int $teamId, int $userId, string $sessionId, $expire = 60 * 24 * 30 * 3): JwtAuthentication
+    function saveMapSesAndJwt(?int $teamId, int $userId, string $sessionId, $expire = 60 * 60 * 24 * 30 * 3): JwtAuthentication
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:saveMapSesAndJwt', 'userId' => $userId, 'sessionId' => $sessionId]);
         App::uses('AccessAuthenticator', 'Lib/Auth');
         $jwt = AccessAuthenticator::publish($userId, $teamId)->getJwtAuthentication();
         $this->saveMapSesAndJwtWithToken($teamId, $userId, $jwt->token(), $sessionId, $expire);
         return $jwt;
     }
 
-    function saveMapSesAndJwtWithToken(?int $teamId, int $userId, string $jwtToken, string $sessionId, int $expireTime  = 60 * 24 * 30 * 3)
+    function saveMapSesAndJwtWithToken(?int $teamId, int $userId, string $jwtToken, string $sessionId, int $expireTime  = 60 * 60 * 24 * 30 * 3)
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:saveMapSesAndJwtWithToken', 'userId' => $userId, 'jwtToken' => $jwtToken, 'sessionId' => $sessionId]);
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->set($key, $jwtToken);
         $this->Db->setTimeout($key, $expireTime);
@@ -1616,6 +1620,7 @@ class GlRedis extends AppModel
      */
     function delMapSesAndJwt(int $teamId, int $userId, string $sessionId)
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:delMapSesAndJwt', 'userId' => $userId, 'sessionId' => $sessionId]);
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         $this->Db->del($key);
     }
@@ -1631,12 +1636,14 @@ class GlRedis extends AppModel
      */
     function getMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:getMapSesAndJwt', 'userId' => $userId, 'sessionId' => $sessionId]);
         $key = $this->getKeyMapSesAndJwt($teamId, $userId, $sessionId);
         return $this->Db->get($key) ?? "";
     }
 
     function getKeyMapSesAndJwt(?int $teamId, int $userId, string $sessionId): string
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:GlRedis:getKeyMapSesAndJwt', 'userId' => $userId, 'sessionId' => $sessionId]);
         $key = $this->getKeyName(self::KEY_TYPE_MAP_SES_AND_JWT, $teamId ?? 'null', $userId);
         $key .= $sessionId;
         return $key;

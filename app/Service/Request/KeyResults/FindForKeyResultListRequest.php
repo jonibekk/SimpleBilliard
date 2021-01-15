@@ -1,7 +1,15 @@
 <?php
+App::uses('TeamEntity', 'Model/Entity');
+App::uses('TermEntity', 'Model/Entity');
+App::uses('Team', 'Model');
+App::uses('AppUtil', 'Util');
+App::import('Service', 'GoalService');
+App::import('Service', 'TermService');
 
 class FindForKeyResultListRequest
 {
+    const TERM_ID_RECENT = 'recent';
+    const TERM_ID_CURRENT = 'current';
     /**
      * @var integer
      */
@@ -13,107 +21,182 @@ class FindForKeyResultListRequest
     protected $teamId;
 
     /**
-     * @var array
+     * @var integer
      */
-    protected $currentTermModel;
+    protected $goalId;
 
     /**
-     * @var null|integer
+     * @var integer
      */
-    protected $goalIdSelected;
+    protected $listId;
+
+    /**
+     * @var TermEntity
+     */
+    protected $term;
+
+    /**
+     * @var string
+     */
+    protected $todayDate;
+
+    /**
+     * @var string
+     */
+    protected $periodFrom;
+
+    /**
+     * @var string
+     */
+    protected $periodTo;
+
+    /**
+     * @var boolean
+     */
+    protected $onlyRecent;
+
+    /**
+     * @var null|boolean
+     */
+    protected $onlyIncomplete;
 
     /**
      * @var null|integer
      */
     protected $limit;
 
-    /**
-     * @var null|boolean
-     */
-    protected $onlyKrIncomplete;
-
-    /**
-     * FindForKeyResultListRequest constructor.
-     * @param int $userId
-     * @param int $teamId
-     * @param array $currentTermModel
-     */
-    public function __construct(int $userId, int $teamId, array $currentTermModel)
+    public function __construct(int $userId, int $teamId, array $opts)
     {
         $this->userId = $userId;
         $this->teamId = $teamId;
-        $this->currentTermModel = $currentTermModel;
+        $this->todayDate = GoalousDateTime::now()->format('Y-m-d');
+        $this->term = $this->initializeTerm($opts);
+
+        if (array_key_exists('onlyIncomplete', $opts)) {
+            $this->onlyIncomplete = $opts['onlyIncomplete'];
+        }
+
+        if (array_key_exists('limit', $opts)) {
+            $this->limit = $opts['limit'];
+        }
+
+        if (array_key_exists('listId', $opts)) {
+            $this->listId = $opts['listId'];
+        }
+
+        if (array_key_exists('goalId', $opts)) {
+            if ($opts['goalId'] !== null) {
+                $this->goalId = intval($opts['goalId']);
+            }
+        }
+
+        if (array_key_exists('termId', $opts)) {
+            $this->onlyRecent = $opts['termId'] === self::TERM_ID_RECENT;
+        }
     }
 
-    /**
-     * @return int
-     */
-    public function getUserId(): int
+    public function getUserId()
     {
         return $this->userId;
     }
 
-    /**
-     * @return int
-     */
-    public function getTeamId(): int
+    public function getTeamId()
     {
         return $this->teamId;
     }
 
-    /**
-     * @return array
-     */
-    public function getCurrentTermModel(): array
+    public function getListId()
     {
-        return $this->currentTermModel;
+        return $this->listId;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getGoalIdSelected(): ?int
+    public function getGoalId()
     {
-        return $this->goalIdSelected;
+        return $this->goalId;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLimit(): ?int
+    public function getTerm()
+    {
+        return $this->term;
+    }
+
+    public function getOnlyIncomplete()
+    {
+        return $this->onlyIncomplete;
+    }
+
+    public function getLimit()
     {
         return $this->limit;
     }
 
-    /**
-     * @return bool|null
-     */
-    public function getOnlyKrIncomplete(): ?bool
+    public function getTodayDate()
     {
-        return $this->onlyKrIncomplete;
+        return $this->todayDate;
     }
 
-    /**
-     * @param int|null $goalIdSelected
-     */
-    public function setGoalIdSelected(?int $goalIdSelected): void
+    public function getOnlyRecent()
     {
-        $this->goalIdSelected = $goalIdSelected;
+        return $this->onlyRecent;
     }
 
-    /**
-     * @param int|null $limit
-     */
-    public function setLimit(?int $limit): void
+    public function getPeriodFrom()
     {
-        $this->limit = $limit;
+        return $this->periodFrom;
     }
 
-    /**
-     * @param bool|null $onlyKrIncomplete
-     */
-    public function setOnlyKrIncomplete(?bool $onlyKrIncomplete): void
+    public function getPeriodTo()
     {
-        $this->onlyKrIncomplete = $onlyKrIncomplete;
+        return $this->periodTo;
+    }
+
+    public function setPeriod($periodFrom, $periodTo)
+    {
+        $this->periodFrom = $periodFrom;
+        $this->periodTo = $periodTo;
+    }
+
+    private function initializeTerm(array $opts) 
+    {
+        // @var TermService ;
+        $TermService = ClassRegistry::init("TermService");
+        // @var Term ;
+        $Term = ClassRegistry::init("Term");
+
+        if (array_key_exists('termId', $opts)) {
+            $termId = $opts['termId'];
+            $isNotCurrentTerm = !in_array($termId, [self::TERM_ID_CURRENT, self::TERM_ID_RECENT]);
+
+            if (!empty($termId) && $isNotCurrentTerm) {
+                return $Term->useType()->useEntity()->findById($termId);
+            }
+        } 
+
+        return $TermService->getCurrentTerm($this->teamId);
+    }
+
+
+    public static function initializePeriod(FindForKeyResultListRequest $request): FindForKeyResultListRequest
+    {
+        if ($request->getOnlyRecent()) {
+            /** @var GoalService $GoalService */
+            $GoalService = ClassRegistry::init('GoalService');
+
+            $results =  $GoalService->getGraphRange(
+                $request->getTodayDate(),
+                GoalService::GRAPH_TARGET_DAYS,
+                GoalService::GRAPH_MAX_BUFFER_DAYS
+            );
+
+            $request->setPeriod($results['graphStartDate'], $results['graphEndDate']);
+        } else {
+            $request->setPeriod($request->getTerm()['start_date'], $request->getTerm()['end_date']);
+        }
+
+        return $request;
+    }
+
+    public function log() {
+        CustomLogger::getInstance()->info('request', get_object_vars($this));
     }
 }

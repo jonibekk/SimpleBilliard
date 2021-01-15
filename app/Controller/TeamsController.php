@@ -3145,4 +3145,85 @@ class TeamsController extends AppController
         $this->set(compact('filename', 'th', 'td'));
         $this->_setResponseCsv($filename);
     }
+
+    function group_members_list_csv (int $groupId)
+    {
+        $this->loadModel('Group');
+        $rows = $this->Group->findMembers($groupId);
+
+        $filename = 'group_members_' . date('Ymd_His');
+        $th = [
+            __('Member ID'),
+            __("Name"),
+            __("Name"),
+        ];
+        $td = [];
+
+        foreach ($rows as $row) {
+            $td[] = [
+                'member_id' => $row['TeamMember']['member_no'],
+                'name' => $row['User']['roman_username'],
+                'local_name' => $row['User']['local_username'],
+            ];
+        }
+
+        $this->layout = false;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
+
+    function unapproved_goals_csv()
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $termId = $this->request->query('term_id');
+
+        $filename = 'unapproved_goals_' . date('Ymd_His');
+        $th = [
+            __('Goal ID'),
+            __('Goal Name'),
+            __("Goal Creator's Name"),
+            __("Goal Creator's Member ID"),
+            __("Coach's Name"),
+            __("Coach's Member ID"),
+        ];
+        $td = [];
+
+        $memberIds = [];
+        $rows = $GoalMember->getUnapprovedForTerm($termId);
+
+        foreach ($rows as $row) {
+            $memberIds[] = $row['GoalMember']['user_id'];
+        }
+
+        $memberRows = $TeamMember->findMemberWithCoach($this->current_team_id, $memberIds);
+        $memberRowsById = array_reduce($memberRows, function($acc, $row) {
+            $memberId = $row['User']['id'];
+            $acc[$memberId] = $row;
+            return $acc;
+        }, []);
+
+        foreach ($rows as $row) {
+            $csvRow = [];
+            $csvRow['goal_id'] = $row['Goal']['id'];
+            $csvRow['goal_name'] = $row['Goal']['name'];
+            $memberId = $row['GoalMember']['user_id'];
+            $memberRow = $memberRowsById[$memberId];
+            $csvRow['goal_creator_name'] = $memberRow['User']['display_username'];
+            $csvRow['goal_creator_id'] = $memberRow['TeamMember']['member_no'];
+
+            if (!empty($memberRow['CoachUser']['id'])) {
+                $csvRow['goal_creator_coach_name'] = $memberRow['CoachUser']['display_username'];
+                $csvRow['goal_creator_coach_id'] = $memberRow['CoachTeamMember']['member_no'];
+            }
+            $td[] = $csvRow;
+        }
+
+        $this->layout = false;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
 }

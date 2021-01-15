@@ -262,6 +262,7 @@ define('DEMO_RESET_HOURS', 24); // How many hours the demo is reset
 define('DEMO_RESET_TIME', 3); // Every Day 3AM
 
 App::uses('GoalousLog', 'Log');
+App::uses('CustomLogger', 'Utility');
 App::uses('ConfigKeyResult', 'Config');
 
 /**

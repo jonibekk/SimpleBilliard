@@ -54,7 +54,19 @@ class User extends AppModel
     ];
 
     const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
-    const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
+
+    // https://www.emilynoie.com/entry/tokushu-alphabet#d
+    // https://unicode-table.com/en/blocks/ipa-extensions/
+    // Allow
+    // - alphabet
+    // - Basic Latin
+    // - Latin-1 Supplement
+    // - Latin Extended-A
+    // - Latin Extended-B
+    // - IPA Extensions
+    // - Latin Extended-C
+    // - Latin Extended Additional
+    const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-ZÀ-ÖØ-öø-ÿĀ-ſƀ-ɏḀ-ỿⱠ-Ɀɐ-ʯ \'‘’]+$';
     const USER_PASSWORD_REGEX = '/\A(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}\z/i';
 
     /**
@@ -1218,7 +1230,8 @@ class User extends AppModel
         int $userId,
         $limit = 10,
         $excludeAuthUser = true,
-        $circleId = null
+        $circleId = null,
+        $groupIds = []
     ): array
     {
         $keyword = trim($keyword);
@@ -1269,6 +1282,18 @@ class User extends AppModel
                     'CircleMember.del_flg' => false,
                 ],
 
+            ];
+        }
+        if (!empty($groupIds)) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'member_groups',
+                'alias'      => 'MemberGroup',
+                'conditions' => [
+                    'MemberGroup.user_id = User.id',
+                    'MemberGroup.group_id' => $groupIds,
+                    'MemberGroup.del_flg' => false,
+                ],
             ];
         }
         $res = $this->useType()->find('all', $options);

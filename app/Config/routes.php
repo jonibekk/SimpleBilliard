@@ -113,6 +113,10 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
     Router::connect('/api/:controller/:id',
         ['action' => 'delete', '[method]' => 'DELETE'],
         ['id' => '[0-9]+', 'pass' => ['id']]);
+
+    Router::connect('/api/:controller/:id',
+        ['action' => 'detail', 'prefix' => 'get', '[method]' => 'GET'],
+        ['id' => 'my_krs', 'pass' => ['id']]);
     /**
      * REST Endpoints with version in header 'X-API-Version'
      * With action
@@ -163,8 +167,16 @@ Router::connect('/topics/:topic_id/add_members', ['controller' => 'topics', 'act
 Router::connect('/topics/:topic_id/search_messages', ['controller' => 'topics', 'action' => 'search_messages']);
 Router::connect(
     '/groups/:id/members_list',
-    ['controller' => 'groups', 'action' => 'members_list', '[method]' => 'GET'],
+    ['controller' => 'teams', 'action' => 'group_members_list_csv', '[method]' => 'GET'],
     ['id' => '[0-9]+', 'pass' => ['id']]
+);
+Router::connect(
+    '/terms/unapproved_goals',
+    [
+        'controller' => 'teams', 
+        'action' => 'unapproved_goals_csv', 
+        '[method]' => 'GET'
+    ]
 );
 
 Router::connect('/evaluator_settings/:user_id/detail', ['controller' => 'evaluator_settings', 'action' => 'detail']);

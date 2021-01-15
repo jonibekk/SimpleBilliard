@@ -9,6 +9,7 @@ App::uses('PostResource', 'Model');
 App::uses('PostDraft', 'Model');
 App::uses('Translation', 'Model');
 App::uses('Comment', 'Model');
+App::uses('GoalGroup', 'Model');
 App::import('Service', 'PostResourceService');
 App::import('Service', 'PostService');
 App::import('Service', 'ExperimentService');
@@ -16,6 +17,7 @@ App::import('Lib/DataExtender', 'CommentExtender');
 App::import('Lib/DataExtender', 'PostExtender');
 App::import('Model/Entity', 'PostEntity');
 App::import('Model', 'HavingMentionTrait');
+App::import('Policy', 'PostPolicy');
 
 /**
  * Post Model
@@ -574,6 +576,11 @@ class Post extends AppModel
 //                $order_col = key($post_options['order']);
 //                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
+
+            // apply authorization policy check
+            $policy = new PostPolicy($this->my_uid, $this->current_team_id);
+            $post_options = array_merge_recursive($post_options, $policy->scope());
+            
             $post_list = $this->find('list', $post_options);
 
         }
@@ -2234,5 +2241,26 @@ class Post extends AppModel
                 ]
             ]
         ], $this);
+    }
+
+    public function getPostGroups(int $postId): array
+    {
+        /** @var GoalGroup $GoalGroup */
+        $GoalGroup = ClassRegistry::init('GoalGroup');
+
+        $post = $this->getEntity($postId);
+
+        switch ($post['type']) {
+            case self::TYPE_CREATE_GOAL:
+            case self::TYPE_ACTION:
+                $rows = $GoalGroup->find('all', [
+                    'conditions' => [
+                        'goal_id' => $post['goal_id']
+                    ]
+                ]);
+                return Hash::extract($rows, '{n}.GoalGroup.group_id');
+            default:
+                return [];
+        }
     }
 }
