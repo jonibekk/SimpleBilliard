@@ -248,12 +248,10 @@ class MeController extends BasePagingController
             $this->Session->write('2fa_secret_key', $google_2fa_secret_key);
             $url2fa = $TwoFAService->getQRCodeInline(
                 SERVICE_NAME,
-                $this->Session->read('Auth.User.PrimaryEmail.email'),
+                $this->getUserId(),
                 $google_2fa_secret_key
             );
         }
-
-        GoalousLog::error('EMAIL: ', ['email' => $this->Session->read('Auth.User.PrimaryEmail.email')]);
 
         if (empty($url2fa)) {
             GoalousLog::error('Failed to get QR data for 2fa', ['2fa_secret_key' => $this->Session->read('2fa_secret_key')]);

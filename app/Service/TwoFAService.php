@@ -72,14 +72,30 @@ class TwoFAService extends AppService
      * Generates a QR code data url to display inline.
      *
      * @param string $company
-     * @param string $holder
+     * @param int $user id
      * @param string $secret
      * @return string
      */
-    public function getQRCodeInline($company, $holder, $secret)
+    public function getQRCodeInline($company, int $userId, $secret)
     {
+        /** @var Email $Email */
+        $Email = ClassRegistry::init('Email');
+
+        $option = [
+            'conditions' => [
+                'Email.user_id' => $userId,
+                'Email.del_flg' => false,
+            ]
+        ];
+
+        $email = $Email->find('first', $option);
+        if (empty($email)) {
+            GoalousLog::error('No Email Address', ['User' => $userId]);
+            return null;
+        }
+
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
-        return $Google2Fa->getQRCodeInline($company, $holder, $secret);
+        return $Google2Fa->getQRCodeInline($company, $email['Email']['email'], $secret);
     }
 
     /**
