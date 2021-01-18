@@ -20,7 +20,7 @@ class MemberGroupService extends AppService
 
     private function removeCollaborations(int $groupId, int $memberId)
     {
-        // @var GoalMember $GoalMember
+        /* @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         $rows = $this->getCollaboratedGoalsWithGroup($memberId);
         $goalMemberIds = [];
@@ -29,15 +29,23 @@ class MemberGroupService extends AppService
         foreach ($rows as $row) {
             if ($groupId === (int) $row['GoalGroup']['group_id'] ) {
                 $goalMemberIds[] = $row['GoalMember']['id'];
+
+                if ($row['GoalMember']['type'] === $GoalMember::TYPE_OWNER) {
+                    $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
+                }
             }
         }
 
         $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalMemberIds]);
+
+        foreach ($goalsToReassignLeader as $goalId) {
+            $this->reassignGoalLeader($goalId);
+        }
     }
 
     private function getCollaboratedGoalsWithGroup(int $memberId): array
     {
-        // @var GoalMember $GoalMember
+        /* @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
 
         $options = [
@@ -63,5 +71,32 @@ class MemberGroupService extends AppService
         ];
 
         return $GoalMember->find('all', $options);
+    }
+
+    private function reassignGoalLeader(int $goalId)
+    {
+        /* @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init("GoalMember");
+        $options = [
+            'conditions' => [
+                'GoalMember.goal_id' => $goalId,
+                'GoalMember.type' => $GoalMember::TYPE_COLLABORATOR,
+            ]
+        ];
+
+        $row = $GoalMember->find('first', $options);
+        GoalousLog::info('row', [$row]);
+
+        if (empty($row)) {
+            return;
+        }
+
+        $GoalMember->updateAll(
+            ['type' => $GoalMember::TYPE_OWNER ], 
+            [
+                'GoalMember.goal_id' => $goalId, 
+                'GoalMember.user_id' => $row['GoalMember']['user_id'], 
+            ]
+        );
     }
 }
