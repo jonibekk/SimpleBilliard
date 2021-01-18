@@ -86,6 +86,11 @@ class EvaluatorSettingsController extends AppController
         $evaluateeUserId = $this->request->params['user_id'];
         $teamId = $this->current_team_id;
 
+        // if team has fix order, should have no permission to this page
+        if ($this->Team->EvaluationSetting->isFixedEvaluationOrder()){
+            throw new NotFoundException();
+        }
+
         /** @var  User $User */
         $User = ClassRegistry::init('User');
         /** @var  TeamMember $TeamMember */

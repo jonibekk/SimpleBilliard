@@ -551,6 +551,8 @@ class TeamsController extends AppController
     function save_evaluation_setting()
     {
         $this->request->allowMethod(['post', 'put']);
+        // set isFixedEvaluationOrder flag to 1 defaultly
+        $this->request->data['EvaluationSetting']['isFixedEvaluationOrder'] = 1;
         $this->Team->begin();
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
