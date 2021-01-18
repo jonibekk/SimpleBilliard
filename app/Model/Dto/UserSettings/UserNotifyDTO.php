@@ -3,7 +3,7 @@
 /**
  * Class UserNotify
  */
-class UserNotify
+class UserNotifyDTO
 {
     /** @var int */
     public $id;
@@ -20,16 +20,14 @@ class UserNotify
     /** @var string */
     public $mobileStatus;
 
-    public function getData(): ?array
+    public function toArray(): ?array
     {
         $data = array(
-            'NotifySetting' => [
-                'id' => $this->id,
-                'user_id' => $this->userId,
-                'email_status' => $this->emailStatus,
-                'mobile_status' => $this->mobileStatus,
-                'desktop_status' => $this->desktopStatus,
-            ]
+            'id' => $this->id,
+            'user_id' => $this->userId,
+            'email_status' => $this->emailStatus,
+            'mobile_status' => $this->mobileStatus,
+            'desktop_status' => $this->desktopStatus,
         );
 
         return empty($data) ? null : $data;

@@ -23,9 +23,6 @@ App::import('Service', 'KeyResultService');
 App::import('Service', 'KrProgressService');
 App::import('Lib/Paging', 'PagingRequest');
 
-App::import('Model/Dto/UserSettings', 'UserAccount');
-App::import('Model/Dto/UserSettings', 'UserProfile');
-
 App::uses('GlRedis', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('CircleMember', 'Model');
@@ -34,6 +31,12 @@ App::uses('Term', 'Model');
 App::import('Controller/Traits', 'AuthTrait');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsClient');
 App::import('Model/Redis/UnreadPosts', 'UnreadPostsKey');
+
+App::import('Model/Dto/UserSettings', 'UserNotifyDTO');
+App::import('Model/Dto/UserSettings', 'UserAccountDTO');
+App::import('Model/Dto/UserSettings', 'UserProfileDTO');
+App::import('Model/Dto/UserSettings', 'UserChangeEmailDTO');
+App::import('Model/Dto/UserSettings', 'UserChangePasswordDTO');
 
 /**
  * Created by PhpStorm.
@@ -281,7 +284,7 @@ class MeController extends BasePagingController
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
-        $accountInfo = new UserAccount();
+        $accountInfo = new UserAccountDTO();
         $accountInfo->userId = $this->getUserId();
         $accountInfo->email = $data['User']['email'];
         $accountInfo->defTeamId = $data['User']['default_team_id'];
@@ -327,7 +330,7 @@ class MeController extends BasePagingController
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
-        $profileInfo = new UserProfile();
+        $profileInfo = new UserProfileDTO();
         $profileInfo->userId = $this->getUserId();
         $profileInfo->teamId = $this->getTeamId();
         $profileInfo->firstName = $data['User']['first_name'];
@@ -367,7 +370,7 @@ class MeController extends BasePagingController
 
         $data = $this->getRequestJsonBody();
 
-        $notifyInfo = new UserNotify();
+        $notifyInfo = new UserNotifyDTO();
         $notifyInfo->userId = $this->getUserId();
         $notifyInfo->id = $data['NotifySetting']['id'];
         $notifyInfo->emailStatus = $data['NotifySetting']['email_status'];
@@ -394,7 +397,7 @@ class MeController extends BasePagingController
 
         $data = $this->getRequestJsonBody();
 
-        $emailInfo = new UserChangeEmail();
+        $emailInfo = new UserChangeEmailDTO();
         $emailInfo->userId = $this->getUserId();
         $emailInfo->email = $data['User']['email'];
         $emailInfo->password = $data['User']['password_request2'];
@@ -435,7 +438,7 @@ class MeController extends BasePagingController
         
         $data = $this->getRequestJsonBody();
 
-        $passInfo = new UserChangePassword();
+        $passInfo = new UserChangePasswordDTO();
         $passInfo->userId = $this->getUserId();
         $passInfo->oldPassword = $data['User']['old_password'];
         $passInfo->password = $data['User']['password'];

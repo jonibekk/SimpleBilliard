@@ -3,7 +3,7 @@
 /**
  * Class UserChangePassword
  */
-class UserChangePassword
+class UserChangePasswordDTO
 {
     /** @var int */
     public $userId;
@@ -17,15 +17,13 @@ class UserChangePassword
     /** @var string */
     public $confirmPassword;
 
-    public function getData(): ?array
+    public function toArray(): ?array
     {
         $data = array(
-            'User' => [
-                'id' => $this->userId,
-                'old_password' => $this->oldPassword,
-                'password' => $this->password,
-                'password_confirm' => $this->confirmPassword,
-            ]
+            'id' => $this->userId,
+            'old_password' => $this->oldPassword,
+            'password' => $this->password,
+            'password_confirm' => $this->confirmPassword,
         );
 
         return empty($data) ? null : $data;

@@ -10,11 +10,11 @@ App::uses('User', 'Model');
 App::uses('TeamMember', 'Model');
 App::uses('Email', 'Model');
 
-App::import('Model/Dto/UserSettings', 'UserNotify');
-App::import('Model/Dto/UserSettings', 'UserAccount');
-App::import('Model/Dto/UserSettings', 'UserProfile');
-App::import('Model/Dto/UserSettings', 'UserChangeEmail');
-App::import('Model/Dto/UserSettings', 'UserChangePassword');
+App::import('Model/Dto/UserSettings', 'UserNotifyDTO');
+App::import('Model/Dto/UserSettings', 'UserAccountDTO');
+App::import('Model/Dto/UserSettings', 'UserProfileDTO');
+App::import('Model/Dto/UserSettings', 'UserChangeEmailDTO');
+App::import('Model/Dto/UserSettings', 'UserChangePasswordDTO');
 
 
 class UserSettingsService extends AppService
@@ -24,11 +24,7 @@ class UserSettingsService extends AppService
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
-        $user_options = [
-            'conditions' => ['User.id' => $userId,],
-        ];
-
-        $user = $User->find('first', $user_options);
+        $user = $User->getById($userId);
         if (empty($user)) {
             return null;
         }
@@ -41,27 +37,23 @@ class UserSettingsService extends AppService
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
 
-        $user_options = [
-            'conditions' => ['TeamMember.user_id' => $userId, 'TeamMember.team_id' => $teamId,],
-        ];
-
-        $team = $TeamMember->find('first', $user_options);
+        $team = $TeamMember->getUnique($userId, $teamId);
         if (empty($team)) {
             return null;
         }
 
-        return $team;
+        return array('TeamMember' => $team);
     }
 
     // Update User Account
-    public function updateAccountSettingsData(int $userId, UserAccount $accountData): bool
+    public function updateAccountSettingsData(int $userId, UserAccountDTO $accountData): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
         $data = array(
             'User' => [
-                'id' => $accountData->userId,
+                'id' => $userId,
                 'email' => $accountData->email,
                 'default_team_id' => $accountData->defTeamId,
                 'language' => $accountData->language,
@@ -85,7 +77,7 @@ class UserSettingsService extends AppService
     }
 
     // Update User Profile
-    public function updateProfileSettingsData(int $userId, UserProfile $profileData): bool
+    public function updateProfileSettingsData(int $userId, UserProfileDTO $profileData): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
@@ -94,7 +86,7 @@ class UserSettingsService extends AppService
 
         $userData = array(
             'User' => [
-                'id' => $profileData->userId,
+                'id' => $userId,
                 'first_name' => $profileData->firstName,
                 'last_name' => $profileData->lastName,
                 'gender_type' => $profileData->genderType,
@@ -132,16 +124,16 @@ class UserSettingsService extends AppService
     }
 
     //Update User Notify Settings
-    public function updateNotifySettingsData(int $userId, UserNotify $notifyInfo): bool
+    public function updateNotifySettingsData(int $userId, UserNotifyDTO $notifyInfo): bool
     {
         /** @var NotifySetting $NotifySetting */
         $NotifySetting = ClassRegistry::init("NotifySetting");
 
-        $data = $notifyInfo->getData();
+        $data = $notifyInfo->toArray();
         if (empty($data)) return false;
 
         try {
-            $NotifySetting->save($data, false);
+            $NotifySetting->save(array('NotifySetting' => $data), false);
         } catch (Exception $e) {
             GoalousLog::error('Failed to update user data.', [
                 'message' => $e->getMessage(),
@@ -242,22 +234,22 @@ class UserSettingsService extends AppService
     }
 
     // Update Email Address
-    public function updateEmailAddress(UserChangeEmail $emailInfo)
+    public function updateEmailAddress(UserChangeEmailDTO $emailInfo)
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
-        $result = $User->addEmail($emailInfo->getData(), $emailInfo->userId);
+        $result = $User->addEmail(array('User' => $emailInfo->toArray()), $emailInfo->userId);
         return $result;
     }
 
     // Update Passsword
-    public function updatePassword(UserChangePassword $passInfo): bool
+    public function updatePassword(UserChangePasswordDTO $passInfo): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
 
-        return $User->changePassword($passInfo->getData());
+        return $User->changePassword(array('User' => $passInfo->toArray()));
     }
 
     // Get Cache Key

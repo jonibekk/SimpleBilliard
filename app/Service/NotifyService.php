@@ -6,7 +6,7 @@ App::uses('NotifySetting', 'Model');
 
 class NotifyService extends AppService
 {
-    public function get($userID): ?array
+    public function get(int $userID): ?array
     {
         /** @var NotifySetting $NotifySetting */
         $NotifySetting = ClassRegistry::init("NotifySetting");
@@ -29,7 +29,7 @@ class NotifyService extends AppService
         return $data;
     }
 
-    public function put($userID, array $data): bool
+    public function put(int $userID, array $data): bool
     {
         /** @var NotifySetting $NotifySetting */
         $NotifySetting = ClassRegistry::init("NotifySetting");

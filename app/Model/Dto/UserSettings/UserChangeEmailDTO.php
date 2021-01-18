@@ -3,7 +3,7 @@
 /**
  * Class UserChangeEmail
  */
-class UserChangeEmail
+class UserChangeEmailDTO
 {
     /** @var int */
     public $userId;
@@ -14,13 +14,11 @@ class UserChangeEmail
     /** @var string */
     public $password;
 
-    public function getData(): ?array
+    public function toArray(): ?array
     {
         $data = array(
-            'User' => [
-                'email' => $this->email,
-                'password_request2' => $this->password,
-            ]
+            'email' => $this->email,
+            'password_request2' => $this->password,
         );
 
         return empty($data) ? null : $data;

@@ -3,7 +3,7 @@
 /**
  * Class UserProfile
  */
-class UserProfile
+class UserProfileDTO
 {
     /** @var int */
     public $userId;

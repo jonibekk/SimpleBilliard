@@ -11,9 +11,6 @@ App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'ImageStorageService');
 App::import('Service', 'UserService');
 
-App::import('Model/Dto/UserSettings', 'UserAccount');
-App::import('Model/Dto/UserSettings', 'UserChangeEmail');
-
 use Goalous\Enum as Enum;
 
 /**
