@@ -22,6 +22,23 @@ class MemberGroupService extends AppService
     {
         // @var GoalMember $GoalMember
         $GoalMember = ClassRegistry::init("GoalMember");
+        $rows = $this->getCollaboratedGoalsWithGroup($memberId);
+        $goalMemberIds = [];
+        $goalsToReassignLeader = [];
+
+        foreach ($rows as $row) {
+            if ($groupId === (int) $row['GoalGroup']['group_id'] ) {
+                $goalMemberIds[] = $row['GoalMember']['id'];
+            }
+        }
+
+        $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalMemberIds]);
+    }
+
+    private function getCollaboratedGoalsWithGroup(int $memberId): array
+    {
+        // @var GoalMember $GoalMember
+        $GoalMember = ClassRegistry::init("GoalMember");
 
         $options = [
             'conditions' => [
@@ -33,14 +50,18 @@ class MemberGroupService extends AppService
                     'alias' => 'GoalGroup',
                     'conditions' => [
                         'GoalGroup.goal_id = GoalMember.goal_id',
-                        'GoalGroup.group_id' => $groupId
                     ]
                 ]
+            ],
+            'group' => [
+                'GoalGroup.goal_id HAVING COUNT(GoalGroup.group_id) = 1'
+            ],
+            'fields' => [
+                'GoalMember.id',
+                'GoalGroup.group_id',
             ]
         ];
 
-        $goalsRows = $GoalMember->find('all', $options);
-        $goalMemberIds = Hash::extract($goalsRows, '{n}.GoalMember.id');
-        $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalMemberIds]);
+        return $GoalMember->find('all', $options);
     }
 }
