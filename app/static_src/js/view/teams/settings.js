@@ -204,15 +204,54 @@ if (document.getElementById("buttonStartEvaluation")) {
     $('input[name=term_id][type=radio]').on('change', function () {
         $buttonStartEvaluation.prop("disabled", false);
     })
-    $buttonStartEvaluation.on('click', function() {
+    $buttonStartEvaluation.on('click', function(event) {
+        event.preventDefault()
+
         if (window.confirm(cake.message.notice.confirm_evaluation_start)) {
+            this.disabled = true
+            this.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+
             var termId = $('input[name=term_id][type=radio]').filter(":checked").val();
-            $.post({
+            var req = $.post({
                 url: "/api/v1/terms/" + termId + "/start_evaluation",
-            }).always(function() {
+            }).done(function() {
                 location.reload(true)
-            })
+            }).fail(function(error) {
+              var errorData = error.responseJSON['data'];
+
+              if (errorData && errorData['modalContent']) {
+                var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+                $modal_elm.append(errorData['modalContent']);
+                $modal_elm.modal();
+              } else {
+                location.reload(true);
+              }
+            });
         }
         return false;
     });
 }
+
+// bind to dynamically added contain in unapproved goals modal
+$(document).on('change', '#ignore-unapproved-goals-checkbox', function() {
+  var startButton = document.querySelector('#ignore-unapproved-start-eval-btn');
+
+  if (this.checked) {
+    startButton.disabled = false;
+  } else {
+    startButton.disabled = true;
+  }
+})
+
+$(document).on('click', '#ignore-unapproved-start-eval-btn', function() {
+  this.disabled = true
+  this.innerHTML = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+  var termId = this.dataset.termid;
+  var url = "/api/v1/terms/" + termId + "/start_evaluation?ignore_unapproved=true";
+
+  $.post({
+      url: url,
+  }).always(function() {
+    location.reload()
+  })
+})

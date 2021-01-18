@@ -2794,8 +2794,6 @@ class TeamMember extends AppModel
         return $res;
     }
 
-
-
     function findLastMemberIdForTeam(int $teamId): int
     {
         $options = [
@@ -2817,5 +2815,46 @@ class TeamMember extends AppModel
             preg_match('/^Goalous(\d+)/', $memberNo, $matches);
             return (int) $matches[1];
         }
+    }
+
+    function findMemberWithCoach(int $teamId, array $memberIds): array
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id' => $teamId,
+                'TeamMember.user_id' => $memberIds,
+            ],
+            'joins' => [
+                [
+                    'alias' => 'User',
+                    'table' => 'users',
+                    'conditions' => 'TeamMember.user_id = User.id'
+                ],
+                [
+                    'type' => 'LEFT',
+                    'alias' => 'CoachUser',
+                    'table' => 'users',
+                    'conditions' => 'TeamMember.coach_user_id = CoachUser.id'
+                ],
+                [
+                    'type' => 'LEFT',
+                    'alias' => 'CoachTeamMember',
+                    'table' => 'team_members',
+                    'conditions' => [
+                        'CoachTeamMember.user_id = CoachUser.id',
+                        'CoachTeamMember.team_id' => $teamId
+                    ]
+                ],
+
+            ],
+            'fields' => [
+                'User.*',
+                'TeamMember.*',
+                'CoachUser.*',
+                'CoachTeamMember.*'
+            ]
+        ];
+
+        return $this->find('all', $options);
     }
 }
