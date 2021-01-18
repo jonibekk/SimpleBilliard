@@ -4865,8 +4865,11 @@ msgstr "チーム全体サークルは削除できません。"
 msgid "The circle doesn't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
-msgid "The circle dosen't exist or you don't have permission."
-msgstr "サークルが存在しないか、権限がありません。"
+msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
+msgstr "あなたはこのサークルの最後の管理者です。あなたが脱退した後もこのサークルを維持するために、新しい管理者を指名してください。"
+
+msgid "You are the last user. If this circle unnecessary, Delete this circle."
+msgstr "あなたが最後のユーザーです。このサークルが不要な場合はサークルの削除を行ってください。"
 
 msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
 msgstr ""
