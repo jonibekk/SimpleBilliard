@@ -1,6 +1,7 @@
 <?php
 App::uses('BasePagingController', 'Controller/Api');
 App::import('Service', 'GroupService');
+App::import('Service', 'MemberGroupService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Service', 'ImageStorageService');
 App::import('Policy', 'GroupPolicy');
@@ -144,20 +145,17 @@ class GroupsController extends BasePagingController
 
     public function post_remove_member(int $groupId)
     {
+        // @var MemberGroupService $MemberGroupService
+        $MemberGroupService = ClassRegistry::init("MemberGroupService");
+        $requestData = $this->getRequestJsonBody();
+
         try {
             $group = $this->findGroup($groupId);
             $this->authorize('update', $group);
+            $MemberGroupService->removeGroupMember($groupId, $requestData['memberId']);
         } catch (Exception $e) {
             return $this->generateResponseIfException($e);
         }
-
-        $requestData = $this->getRequestJsonBody();
-
-        $this->loadModel("MemberGroup");
-        $this->MemberGroup->deleteAll([
-            'user_id' => $requestData['memberId'],
-            'group_id' => $groupId
-        ]);
 
         return ApiResponse::ok()->withData([])->getResponse();
     }
