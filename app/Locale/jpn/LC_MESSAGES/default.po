@@ -1046,6 +1046,9 @@ msgstr "コーチID"
 msgid "Coach name"
 msgstr "コーチ姓名"
 
+msgid "Coach's approval is required. Please contact the coach or re-set the coach."
+msgstr "コーチの承認が必要です。コーチに連絡するか、コーチの再設定をお願いします。"
+
 msgid "Coached member(s)"
 msgstr "コーチするメンバー"
 
@@ -2372,6 +2375,9 @@ msgstr "ゴール終了日"
 msgid "Goal features"
 msgstr "ゴールの機能"
 
+msgid "Goal ID"
+msgstr "ゴールID"
+
 msgid "GOAL ID"
 msgstr "ゴールID"
 
@@ -2725,6 +2731,9 @@ msgstr "通常の利用をご希望の場合は、%sまでに有料プランを�
 
 msgid "If you're unsure why you received this email, you may simply ignore this message."
 msgstr "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+
+msgid "Ignore it and start the evaluation"
+msgstr "無視して評価を開始する"
 
 msgid "Images"
 msgstr "画像"
@@ -3369,6 +3378,12 @@ msgstr "メンバーアクティブ状態(*)"
 msgid "Member ID"
 msgstr "メンバーID"
 
+msgid "Member ID (Coach)"
+msgstr "コーチID"
+
+msgid "Member ID (User)"
+msgstr "メンバーID"
+
 msgid "Member ID(*)"
 msgstr "メンバーID(*)"
 
@@ -3476,6 +3491,12 @@ msgstr "該当なし"
 
 msgid "Name"
 msgstr "名前"
+
+msgid "Name (Coach)"
+msgstr "コーチ名"
+
+msgid "Name (User)"
+msgstr "メンバー名"
 
 msgid "Name Kana"
 msgstr "名前(カナ)"
@@ -4563,6 +4584,12 @@ msgstr "エラーが発生しました。もう一度最初から登録してく
 msgid "Some users who already joined the topic are included in the specified users. Try again from the start."
 msgstr "既にトピックに参加済みのユーザーが含まれています。もう一度最初からやり直してください。"
 
+msgid "Something went wrong We're working to fix it as soon as we can. Please refresh the page or try again later."
+msgstr ""
+"問題が発生しました。"
+"できるだけ早く解決するよう取り組んでいます。"
+"ページを更新するか、後でもう一度お試しください。"
+
 msgid "Spanish"
 msgstr "スペイン語"
 
@@ -4865,11 +4892,8 @@ msgstr "チーム全体サークルは削除できません。"
 msgid "The circle doesn't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
-msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
-msgstr "あなたはこのサークルの最後の管理者です。あなたが脱退した後もこのサークルを維持するために、新しい管理者を指名してください。"
-
-msgid "You are the last user. If this circle unnecessary, Delete this circle."
-msgstr "あなたが最後のユーザーです。このサークルが不要な場合はサークルの削除を行ってください。"
+msgid "The circle dosen't exist or you don't have permission."
+msgstr "サークルが存在しないか、権限がありません。"
 
 msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
 msgstr ""
@@ -4890,6 +4914,9 @@ msgstr "来期以降における期の長さは、自動的に3か月に設定�
 
 msgid "The default length of any future terms are automatically set to 6 months."
 msgstr "来期以降における期の長さは、自動的に6か月に設定されます。"
+
+msgid "The evaluation for this term has already been started."
+msgstr "今期の評価はすでに開始されています。"
 
 msgid "The file is over limit size."
 msgstr "ファイルサイズが上限を超えています。"
@@ -5010,6 +5037,9 @@ msgstr "考え方としては理想的、実現には懐疑的な考え方だっ
 msgid "There are %d other hidden goals."
 msgstr "表示が制限されているゴールが%dつあります"
 
+msgid "There are %d unapproved Goals."
+msgstr "未承認のゴールが %d つあります。"
+
 msgid "There are no evaluation target goals."
 msgstr "評価対象として申請されたゴールはありません。"
 
@@ -5018,6 +5048,9 @@ msgstr "これ以下のランキングはありません。"
 
 msgid "There are no recent updates."
 msgstr "直近の更新はありません。"
+
+msgid "There are unapproved Goals."
+msgstr "未承認のゴールがあります"
 
 msgid "There is %s actions you do not have permission to see"
 msgstr "非公開のアクションが%s件あります"
@@ -5303,6 +5336,12 @@ msgstr "グループに所属していないか、すでにグループビジョ
 
 msgid "Unachieved"
 msgstr "未達成"
+
+msgid "Unapproved Goals are not eligible for evaluation and do not appear on the evaluation page."
+msgstr "承認されていないゴールは評価の対象外となり、評価ページに表示されません。"
+
+msgid "Unapproved Goals list"
+msgstr "未承認のゴール一覧"
 
 msgid "Uncompete Key Result"
 msgstr "KRを未完了にする"
@@ -5757,6 +5796,12 @@ msgstr "あなたはこのトピックのメンバーではありません。"
 
 msgid "You are not a member of this team."
 msgstr "このチームには所属していません"
+
+msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
+msgstr "あなたはこのサークルの最後の管理者です。あなたが脱退した後もこのサークルを維持するために、新しい管理者を指名してください。"
+
+msgid "You are the last user. If this circle unnecessary, Delete this circle."
+msgstr "あなたが最後のユーザーです。このサークルが不要な場合はサークルの削除を行ってください。"
 
 msgid "You belong to all circles in this team."
 msgstr "参加していないサークルはありません。"

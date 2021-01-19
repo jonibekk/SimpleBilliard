@@ -620,7 +620,7 @@ msgid "All progress of this KR will be reset, is it really OK?"
 msgstr "Todo o progresso deste Resultado-chave será redefinido. Deseja continuar?"
 
 msgid "All Team"
-msgstr "Todo o time"
+msgstr "Time"
 
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "Número permitido está entre %2$ de %3$d."
@@ -1036,6 +1036,10 @@ msgstr "Coach ID"
 
 msgid "Coach name"
 msgstr "Nome do Coach"
+
+#, fuzzy
+msgid "Coach's approval is required. Please contact the coach or re-set the coach."
+msgstr ""
 
 msgid "Coached member(s)"
 msgstr "membro(s) que está recebendo avaliação"
@@ -2363,6 +2367,10 @@ msgstr "Data final do objetivo"
 msgid "Goal features"
 msgstr "Função objetivo"
 
+#, fuzzy
+msgid "Goal ID"
+msgstr ""
+
 msgid "GOAL ID"
 msgstr "ID do objetivo"
 
@@ -2710,6 +2718,10 @@ msgstr "Para restaurar o time, por favor escolha um de nossos planos %s."
 
 msgid "If you're unsure why you received this email, you may simply ignore this message."
 msgstr "Se não sabe porque recebeu esse e-mail, por favor ignore esta mensagem."
+
+#, fuzzy
+msgid "Ignore it and start the evaluation"
+msgstr ""
 
 msgid "Images"
 msgstr "Imagens"
@@ -3352,6 +3364,14 @@ msgstr "Status ativo do membro (*)"
 msgid "Member ID"
 msgstr "ID do membro"
 
+#, fuzzy
+msgid "Member ID (Coach)"
+msgstr ""
+
+#, fuzzy
+msgid "Member ID (User)"
+msgstr ""
+
 msgid "Member ID(*)"
 msgstr "ID do membro (*)"
 
@@ -3459,6 +3479,14 @@ msgstr "Não se aplica."
 
 msgid "Name"
 msgstr "Nome"
+
+#, fuzzy
+msgid "Name (Coach)"
+msgstr ""
+
+#, fuzzy
+msgid "Name (User)"
+msgstr ""
 
 msgid "Name Kana"
 msgstr "Nome"
@@ -4549,6 +4577,10 @@ msgstr "Ocorreu algum erro. Por favor, tente novamente."
 msgid "Some users who already joined the topic are included in the specified users. Try again from the start."
 msgstr "Alguém já entrou no tópico. Por favor, tente novamente."
 
+#, fuzzy
+msgid "Something went wrong We're working to fix it as soon as we can. Please refresh the page or try again later."
+msgstr ""
+
 msgid "Spanish"
 msgstr "Espanhol"
 
@@ -4868,6 +4900,10 @@ msgstr "A configuração para futuros períodos está ajustada para 3 meses."
 msgid "The default length of any future terms are automatically set to 6 months."
 msgstr "A configuração para futuros períodos está ajustada para 6 meses."
 
+#, fuzzy
+msgid "The evaluation for this term has already been started."
+msgstr ""
+
 msgid "The file is over limit size."
 msgstr "O arquivo está acima do tamanho limite."
 
@@ -4986,6 +5022,10 @@ msgstr "A metodologia é fácil, porem implementar é difícil. Vendo como a Col
 msgid "There are %d other hidden goals."
 msgstr ""
 
+#, fuzzy
+msgid "There are %d unapproved Goals."
+msgstr ""
+
 msgid "There are no evaluation target goals."
 msgstr "Não há objetivos para avaliação."
 
@@ -4994,6 +5034,10 @@ msgstr "Não há mais rankings para mostrar."
 
 msgid "There are no recent updates."
 msgstr "Não há novos updates"
+
+#, fuzzy
+msgid "There are unapproved Goals."
+msgstr ""
 
 msgid "There is %s actions you do not have permission to see"
 msgstr "Existem %s ações que você não tem permissão para ver"
@@ -5282,6 +5326,14 @@ msgstr "Visão não pode ser criada pois você não pertence a este time, ou o t
 
 msgid "Unachieved"
 msgstr "Não alcançado"
+
+#, fuzzy
+msgid "Unapproved Goals are not eligible for evaluation and do not appear on the evaluation page."
+msgstr ""
+
+#, fuzzy
+msgid "Unapproved Goals list"
+msgstr ""
 
 msgid "Uncompete Key Result"
 msgstr "Resultado-chave incompleto"
@@ -5734,6 +5786,14 @@ msgstr "Você não é um membro do tópico."
 
 msgid "You are not a member of this team."
 msgstr "Você não é um membro deste time."
+
+#, fuzzy
+msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
+msgstr ""
+
+#, fuzzy
+msgid "You are the last user. If this circle unnecessary, Delete this circle."
+msgstr ""
 
 msgid "You belong to all circles in this team."
 msgstr "Você pertence a todos os círculos desta equipe."
