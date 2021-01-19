@@ -1,11 +1,17 @@
 <?= $this->App->viewStartComment()?>
 <?php foreach ($evaluatees as $user): ?>
+    <?php if (!$isFixedEvaluationOrder): ?>
     <a href="<?= $this->Html->url(['controller'       => 'evaluator_settings',
                                    'action'           => 'detail',
                                    'user_id'          => $user['User']['id'],
     ]) ?>"
        class="font_verydark">
         <div class="eval-list-item col-xxs-12">
+    <?php else: ?>
+    <div
+       class="font_verydark">
+        <div class="col-xxs-12">
+    <?php endif ?>
             <div class="eval-list-item-left">
                 <?=
                 $this->Upload->uploadImage($user, 'User.photo', ['style' => 'medium'],
@@ -36,11 +42,17 @@
                     <?php endforeach ?>
                 <?php endif ?>
             </div>
+            <?php if (!$isFixedEvaluationOrder): ?>
             <div class="eval-list-item-right">
                 <i class="fa fa-angle-right font_lightgray" aria-hidden="true"></i>
             </div>
+            <?php endif ?>
         </div>
+    <?php if (!$isFixedEvaluationOrder): ?>
     </a>
+    <?php else: ?>
+    </div>
+    <?php endif ?>
     <hr class="col-xxs-12">
 <?php endforeach; ?>
 <?= $this->App->viewEndComment()?>
