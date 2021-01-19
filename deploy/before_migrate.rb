@@ -10,7 +10,7 @@ bash "composer install" do
   group 'www-data'
   code <<-EOS
   source /opt/phpbrew/bashrc
-  cd #{release_path}; composer self-update; yes | composer install --no-interaction --no-dev --prefer-dist
+  cd #{release_path}; composer self-update 1.10.15; yes | composer install --no-interaction --no-dev --prefer-dist
   EOS
   environment('PHPBREW_ROOT' => '/opt/phpbrew', 'PHPBREW_HOME' => '/opt/phpbrew')
 end

@@ -53,7 +53,19 @@ class User extends AppModel
     ];
 
     const USER_NAME_REGEX = '^[a-zA-Z\p{Latin} \‘’’]+$';
-    const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-Z\u00C0-\u017F \'‘’]+$';
+
+    // https://www.emilynoie.com/entry/tokushu-alphabet#d
+    // https://unicode-table.com/en/blocks/ipa-extensions/
+    // Allow
+    // - alphabet
+    // - Basic Latin
+    // - Latin-1 Supplement
+    // - Latin Extended-A
+    // - Latin Extended-B
+    // - IPA Extensions
+    // - Latin Extended-C
+    // - Latin Extended Additional
+    const USER_NAME_REGEX_JAVASCRIPT = '^[a-zA-ZÀ-ÖØ-öø-ÿĀ-ſƀ-ɏḀ-ỿⱠ-Ɀɐ-ʯ \'‘’]+$';
     const USER_PASSWORD_REGEX = '/\A(?=.*[0-9])(?=.*[a-zA-Z])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}\z/i';
 
     /**
@@ -1018,7 +1030,7 @@ class User extends AppModel
         $user_email['User']['password_modified'] = REQUEST_TIMESTAMP;
         $user_email['Email']['email_token_expires'] = null;
         $user_email['Email']['email_verified'] = true;
-        $res = $this->Email->saveAll($user_email);
+        $res = $this->Email->saveAll($user_email, ['validate' => false]);
         return $res;
     }
 
@@ -1238,6 +1250,7 @@ class User extends AppModel
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
                         'SearchLocalName.user_id = User.id',
+                        'SearchLocalName.language' => $this->me['language'],
                     ],
                 ],
                 [
@@ -1842,7 +1855,8 @@ class User extends AppModel
                     'table'      => 'team_members',
                     'alias'      => 'TeamMember',
                     'conditions' => [
-                        'TeamMember.user_id = User.id'
+                        'TeamMember.user_id = User.id',
+                        'TeamMember.del_flg' => false
                     ]
                 ]
             ]

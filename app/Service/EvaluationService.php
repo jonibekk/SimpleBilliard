@@ -308,7 +308,8 @@ class EvaluationService extends AppService
         }
 
         // Case: login user is evaluator (evaluatee + my evaluation)
-        $evaluations = $Evaluation->getEvaluationsForEvaluatorAndEvaluatee($termId, $evaluateeId, $userId);
+        $isFixedEvaluationOrder = $EvaluationSetting->isFixedEvaluationOrder();
+        $evaluations = $Evaluation->getEvaluationsForEvaluatorAndEvaluatee($termId, $evaluateeId, $userId, $isFixedEvaluationOrder);
         return $evaluations;
 
     }
@@ -423,6 +424,7 @@ class EvaluationService extends AppService
         $evaluators = [];
         if ($EvaluationSetting->isEnabledEvaluator()) {
             $evaluators = $Evaluator->getEvaluatorsCombined($teamId);
+            $evaluators = $Evaluation->appendEvaluatorAccessibleGoals($evaluators);
         }
         $all_evaluations = [];
         try {

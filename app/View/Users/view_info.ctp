@@ -32,6 +32,10 @@
                     <span class="pull-right"><?= h($user['User']['display_username']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
+                    <?= __('Member ID') ?>
+                    <span class="pull-right"><?= h($user['TeamMember']['member_no']) ?></span>
+                </div>
+                <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __('Gender') ?>
                     <span
                         class="pull-right"><?= $user['User']['gender_type'] ? User::$TYPE_GENDER[$user['User']['gender_type']] : null ?></span>

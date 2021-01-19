@@ -106,12 +106,12 @@ class SubscriptionService extends AppService
      *
      * @return
      */
-    public function sendDesktopPushNotification($subscriptions, $title, $postUrl)
+    public function sendDesktopPushNotification($subscriptions, $title, $body, $postUrl)
     {
         $sendData = [
             "notification" => [
                 "title" => $title,
-                "body" => '',
+                "body" => $body,
                 "url" => VAPID_SUBJECT,
                 "data" => [
                     "url" => $postUrl,

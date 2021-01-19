@@ -6,6 +6,8 @@ App::uses('Evaluator', 'Model');
 App::import('Policy', 'BasePolicy');
 App::import('Service', 'PostService');
 
+use Goalous\Enum as Enum;
+
 /**
  * Class PostPolicy
  */
@@ -13,23 +15,17 @@ class PostPolicy extends BasePolicy
 {
     public function read($post): bool
     {
-        // If circle post, apply different auth criteria
-        if ($post['circle_id'] !== null) {
-            return $this->checkCirclePostAccess($post);
-        }
-
-        if (((int)$post['user_id'] === $this->userId) ||
-            ($this->isTeamAdminForItem($post['team_id'])) ||
-            ($this->isCoach($post['goal_id'])) ||
-            ($this->isActiveEvaluator($post['goal_id'])) ||
-            ($this->isSameGroup($post))
-        ) {
-            return true;
-        }
-
-        // both action posts and goal posts have goal_id
-        if (!empty($post['goal_id'])) {
-            return $this->isSameGroup($post);
+        switch ($post['type']) {
+            case Enum\Model\Post\Type::ACTION:
+            case Enum\Model\Post\Type::CREATE_GOAL:
+                return (((int)$post['user_id'] === $this->userId) ||
+                    //($this->isTeamAdminForItem($post['team_id'])) ||
+                    //($this->isCoach($post['goal_id'])) ||
+                    //($this->isActiveEvaluator($post['goal_id'])) ||
+                    ($this->isSameGroup($post))
+                );            
+            case Enum\Model\Post\Type::NORMAL:
+                return $this->checkCirclePostAccess($post);
         }
 
         return false;
@@ -65,9 +61,10 @@ class PostPolicy extends BasePolicy
 
     public function scope($type = 'read'): array
     {
-        if ($this->isTeamAdmin()) {
-            return ['conditions' => ['Post.team_id' => $this->teamId]];
-        }
+        //if ($this->isTeamAdmin()) {
+            //return ['conditions' => ['Post.team_id' => $this->teamId]];
+        //}
+        
         /** @var Post **/
         $Post = ClassRegistry::init('Post');
         /** @var GoalGroup */
@@ -75,17 +72,21 @@ class PostPolicy extends BasePolicy
 
         $allPublicQuery = $Post->publicPostsSubQuery();
         $allGroupsQuery = $GoalGroup->goalByUserIdSubQuery($this->userId);
-        $allCoacheesQuery = $Post->coacheePostsSubQuery($this->userId);
-        $allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId);
+        //$allCoacheesQuery = $Post->coacheePostsSubQuery($this->userId, $this->teamId);
+        //$allEvaluateesQuerys = $Post->evaluateePostsSubQuery($this->userId, $this->teamId);
 
         $fullQuery = 'Post.id in (' . $allPublicQuery . ') OR 
-                      Post.id in (' . $allCoacheesQuery . ') OR
                       Post.goal_id in (' . $allGroupsQuery . ')';
 
-        if ($this->evaluationSettingEnabled()) {
-            $query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
-            $fullQuery = $query . $fullQuery;
-        }
+        //if ($type === 'read') {
+            //$query = 'Post.id in (' . $allCoacheesQuery . ') OR ';
+            //$fullQuery = $query . $fullQuery;
+
+            //if ($this->evaluationSettingEnabled()) {
+                //$query = 'Post.id in (' . $allEvaluateesQuerys . ') OR ';
+                //$fullQuery = $query . $fullQuery;
+            //}
+        //}
 
         return [
             'conditions' => [

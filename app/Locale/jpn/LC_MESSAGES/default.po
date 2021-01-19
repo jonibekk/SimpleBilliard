@@ -489,6 +489,9 @@ msgstr "ゴールにアクションする"
 msgid "Action list"
 msgstr "アクションリスト"
 
+msgid "Action members"
+msgstr "アクションメンバー"
+
 msgid "Action that had been commented"
 msgstr "コメントされたアクション"
 
@@ -2084,6 +2087,9 @@ msgstr "有料プランの登録に失敗しました。"
 msgid "Failed to register user. Please try again later."
 msgstr "ユーザー本登録に失敗しました。しばらく時間をおいて再度登録してください。"
 
+msgid "Failed to reset the password"
+msgstr "パスワードの再設定に失敗しました"
+
 msgid "Failed to save a Device Information."
 msgstr "デバイス情報の保存に失敗しました。"
 
@@ -2543,6 +2549,9 @@ msgstr "共に助けあい、共に喜び合う。素敵ですよね？"
 
 msgid "Here"
 msgstr "こちら"
+
+msgid "Hide archived groups"
+msgstr "アーカイブされているグループを隠す"
 
 msgid "Hide birth year"
 msgstr "生年を隠す。"
@@ -3073,6 +3082,9 @@ msgstr "KR編集日"
 
 msgid "KR END DATE"
 msgstr "KR終了日"
+
+msgid "KR has been added to the Important List"
+msgstr "重要なKRリストに追加しました"
 
 msgid "KR ID"
 msgstr "KR ID"
@@ -4161,6 +4173,9 @@ msgstr "管理者から外す"
 msgid "Remove from the circle"
 msgstr "サークルから外す"
 
+msgid "Remove Watch"
+msgstr "ウォッチを外す"
+
 msgid "Removed evaluation suspension."
 msgstr "評価の停止を解除しました。"
 
@@ -4169,6 +4184,9 @@ msgstr "評価対象外にしました"
 
 msgid "Removed from the circle members."
 msgstr "サークルから外しました。"
+
+msgid "Removed from the Important list"
+msgstr "重要なKRリストから削除しました"
 
 msgid "Reply"
 msgstr "返信する"
@@ -4966,6 +4984,9 @@ msgstr "これ以下のランキングはありません。"
 msgid "There are no recent updates."
 msgstr "直近の更新はありません。"
 
+msgid "There is %s actions you do not have permission to see"
+msgstr "非公開のアクションが%s件あります"
+
 msgid "There is %s goals you do not have permission to see"
 msgstr "非公開のゴールが%s件あります"
 
@@ -5413,6 +5434,9 @@ msgstr "すべてのコメントを見る(%s)"
 msgid "View All Notifications"
 msgstr "すべての通知を見る"
 
+msgid "View archived groups"
+msgstr "アーカイブされているグループを見る"
+
 msgid "View Cover Image"
 msgstr "カバー画像を見る"
 
@@ -5424,6 +5448,9 @@ msgstr "他のメンバーがつくったゴールを見る (%s)"
 
 msgid "View info"
 msgstr "基本情報"
+
+msgid "View List"
+msgstr "リストを見る"
 
 msgid "View more"
 msgstr "もっと見る"
@@ -5470,8 +5497,17 @@ msgstr "認定待ち"
 msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
 
+msgid "Watch"
+msgstr "ウォッチ"
+
+msgid "Watch this Key Result"
+msgstr "このKRをウォッチする"
+
 msgid "Watch Video"
 msgstr "Watch Video"
+
+msgid "Watched"
+msgstr "ウォッチ"
 
 msgid "We are downgrading your team to read-only"
 msgstr "読み取り専用にダウングレードしました"
@@ -6035,50 +6071,8 @@ msgstr ""
 msgid "変更する場合はパスワード入力が必要です。"
 msgstr ""
 
-msgid "Contact us"
-msgstr "お問い合わせ"
-
-msgid "You do not have permission to view this goal"
-msgstr "このゴールは非公開です"
-
-msgid "Groups that can see this goal"
-msgstr "公開先グループ"
-
 msgid "日本語"
 msgstr "日本語"
 
-msgid "See GKA"
-msgstr "GKAの表示"
-
-msgid "Can see GKA of all team members."
-msgstr "全てのメンバーがゴールとアクションを見ることができる"
-
-msgid "Learn More"
-msgstr "もっと詳しく"
-
-msgid "Attention"
-msgstr "注意"
-
-msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
-msgstr "ONにすると、これから作成されるゴールの表示制限がなくなります。"
-
-msgid "Goals that have already been created will retain their restrictions. You can change the group to which they are published."
-msgstr "既に作成されているゴールは、公開先のグループを変更することができます。"
-
-msgid "This setting will set goals to only be visible to group members."
-msgstr "ゴールがグループメンバーにだけ見えるようになります。"
-
-msgid "Any goals created in the future will need to have a destination group set up for publication."
-msgstr "今後作成するゴールには、公開先グループを設定する必要があります。"
-
-msgid "This check cannot be turned off because there is no valid group in this team."
-msgstr "このチームには有効なグループが存在していないため、このチェックをオフにできません。"
-
-msgid "This goal is open to all team members"
-msgstr "このゴールは全員に公開されています"
-
-msgid "There is %s goals you do not have permission to see"
-msgstr "非公開のゴールが%s件あります"
-
-msgid "There is %s actions you do not have permission to see"
-msgstr "非公開のアクションが%s件あります"
+msgid "Failed to reset the password"
+msgstr "パスワードの再設定に失敗しました"

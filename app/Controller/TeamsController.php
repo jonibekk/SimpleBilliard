@@ -551,6 +551,8 @@ class TeamsController extends AppController
     function save_evaluation_setting()
     {
         $this->request->allowMethod(['post', 'put']);
+        // set fixed_evaluation_order_flg flag to 1 by default
+        $this->request->data['EvaluationSetting']['fixed_evaluation_order_flg'] = 1;
         $this->Team->begin();
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
@@ -3062,20 +3064,7 @@ class TeamsController extends AppController
 
         return $this->redirect('/teams/main');
     }
-
-    function members_list()
-    {
-        $this->response->download("members_list.csv");
-
-        $teamId = $this->current_team_id;
-
-        $data = $this->User->Email->findVerifiedTeamMembers($teamId);
-        $this->set(compact('data'));
-        $this->layout = false;
-
-        return;
-    }
-
+  
     function toggle_see_gka()
     {
         $this->request->allowMethod('post');
@@ -3100,5 +3089,24 @@ class TeamsController extends AppController
         }
 
         return $this->redirect($this->referer());
+    }
+
+
+    function import_sample()
+    {
+        $this->layout = false;
+        $filename = 'import_sample';
+
+        $th = [ __('Member ID')];
+
+        $td = [];
+        for ($i = 0; $i < 5; $i++) {
+            $row = [];
+            $row['member_no'] = 'Member00' . $i;
+            $td[] = $row;
+        }
+        
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 }

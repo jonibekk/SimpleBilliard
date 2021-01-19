@@ -203,6 +203,30 @@ class Group extends AppModel
         return $res;
     }
 
+    function findForUser(int $userId)
+    {
+        return $this->find("all", [
+            "joins" => [
+                [
+                    "alias" => "MemberGroup",
+                    "table" => "member_groups",
+                    "conditions" => [
+                        "MemberGroup.group_id = Group.id"
+                    ]
+                ],
+                [
+                    "alias" => "User",
+                    "table" => "users",
+                    "conditions" => [
+                        "MemberGroup.user_id = User.id",
+                        "User.id" => $userId
+                    ]
+                ]
+            ],
+            "order" => "Group.name"
+        ]);
+    }
+
     function findMembers(int $groupId): array
     {
         /** @var TeamMember */
@@ -272,7 +296,7 @@ class Group extends AppModel
             'group' => [
                 'Group.id', 
                 'team_members.status',
-                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL)',
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL AND member_count = 0)',
             ],
             "order" => [
                 "Group.name ASC"
@@ -366,11 +390,27 @@ class Group extends AppModel
                     ]
                 ],
                 [
+                    'alias' => 'GoalGroup',
+                    'table' => 'goal_groups',
+                    'conditions' => [
+                        'GoalGroup.group_id = Group.id'
+                    ]
+                ],
+                [
+                    'alias' => 'Goal',
+                    'table' => 'goals',
+                    'conditions' => [
+                        'Goal.id = GoalGroup.goal_id'
+                    ]
+                ],
+                [
                     'alias' => 'Term',
                     'table' => 'terms',
                     'conditions' => [
                         'Term.id = Evaluation.term_id',
                         'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
                     ]
                 ]
             ]

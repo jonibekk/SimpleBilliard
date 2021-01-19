@@ -40,7 +40,8 @@ class UrlUtil
 
         //Check if there is a url in the text
         if (preg_match($urlPattern, $baseString, $url)) {
-            $result = preg_replace($urlPattern, "$prefix{$url[0]}$suffix", $baseString);
+
+            $result = preg_replace($urlPattern, $prefix.'${0}'.$suffix, $baseString);
 
             return $result;
         }

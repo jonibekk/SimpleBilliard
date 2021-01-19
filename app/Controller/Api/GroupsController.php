@@ -18,7 +18,7 @@ class GroupsController extends BasePagingController
     public function get_list()
     {
         $policy = new GroupPolicy($this->getUserId(), $this->getTeamId());
-        $scope = $policy->scope();
+        $scope = $policy->scope('manage');
         // @var Group $Group;
         $Group = ClassRegistry::init("Group");
         $results = $Group->findGroupsWithMemberCount($scope);

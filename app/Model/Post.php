@@ -2128,7 +2128,7 @@ class Post extends AppModel
         ], $this);
     }
 
-    public function coacheePostsSubQuery($userId)
+    public function coacheePostsSubQuery($userId, $teamId)
     {
         $db = $this->getDataSource();
         return $db->buildStatement([
@@ -2158,14 +2158,15 @@ class Post extends AppModel
                     'table' => 'team_members',
                     'conditions' => [
                         'TeamMember.user_id = MemberGroup.user_id',
-                        'TeamMember.coach_user_id' => $userId
+                        'TeamMember.coach_user_id' => $userId,
+                        'TeamMember.team_id' => $teamId
                     ]
                 ]
             ],
         ], $this);
     }
 
-    public function evaluateePostsSubQuery($userId)
+    public function evaluateePostsSubQuery($userId, $teamId)
     {
         /** @var Term $Term */
         $Term = ClassRegistry::init('Term');
@@ -2198,8 +2199,16 @@ class Post extends AppModel
                     'table' => 'evaluations',
                     'conditions' => [
                         'Evaluation.evaluatee_user_id = MemberGroup.user_id',
-                        'Evaluation.evaluator_user_id' => $userId
+                        'Evaluation.evaluator_user_id' => $userId,
+                        'Evaluation.team_id' => $teamId
                     ]
+                ],
+                [
+                    'alias' => 'Goal',
+                    'table' => 'goals',
+                    'conditions' => [
+                        'Goal.id = Post.goal_id',
+                    ],
                 ],
                 [
                     'alias' => 'Term',
@@ -2207,6 +2216,8 @@ class Post extends AppModel
                     'conditions' => [
                         'Term.id = Evaluation.term_id',
                         'Term.evaluate_status' => $Term::STATUS_EVAL_IN_PROGRESS,
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
                     ]
                 ]
             ]

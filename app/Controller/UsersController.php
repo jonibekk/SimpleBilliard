@@ -333,7 +333,11 @@ class UsersController extends AppController
 
     function set_session()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        if ($this->Session->read('referer_status') === REFERER_STATUS_INVITED_USER_EXIST && !empty($this->Session->read('referer_url'))){
+             $redirect_url = Router::url($this->Session->read('referer_url'));
+         } else {
+             $redirect_url = ($this->Session->read('Auth.redirect')) ? Router::url($this->Session->read('Auth.redirect')) : "/";
+         }
         $this->set('redirect_url', $redirect_url);
 
         $teamId = $this->Auth->user('default_team_id');
@@ -509,6 +513,7 @@ class UsersController extends AppController
         if ($step === 1) {
             //プロフィール入力画面の場合
             //validation
+            $this->User->set($this->request->data['User']);
             if ($this->User->validates($this->request->data)) {
                 if (!$this->checkAge(16, $this->request->data['User']['birth_day'], $this->request->data['User']['local_date']))
                 {
@@ -605,8 +610,8 @@ class UsersController extends AppController
             return $this->redirect("/");
         }
 
-        
-        
+
+
         // Message of team joining
         $this->Notification->outSuccess(__("Joined %s.", $team['Team']['name']));
 
@@ -811,9 +816,15 @@ class UsersController extends AppController
             $this->Notification->outSuccess(__("Please login with your new password."),
                 ['title' => __('Password is set.')]);
             return $this->redirect(['action' => 'login']);
+        } else {
+            GoalousLog::error("Failed to reset password", [
+                'token'   => $token,
+                'user.id' => $user_email['Email']['user_id']
+            ]);
+            $this->Notification->outError(__("Please try again later."),
+                ['title' => __('Failed to reset the password')]);
+            return $this->render('password_reset');
         }
-        return $this->render('password_reset');
-
     }
 
     public function token_resend()
@@ -1064,6 +1075,7 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
+            $this->Session->write('referer_url', $this->Session->read('Auth.redirect'));
             return $this->redirect(['action' => 'login']);
         }
 
@@ -1087,6 +1099,7 @@ class UsersController extends AppController
         }
 
         $this->Session->delete('referer_status');
+        $this->Session->delete('referer_url');
         $this->Notification->outSuccess(__("Joined %s.", $invitedTeam['Team']['name']));
         return $this->redirect("/");
     }
@@ -1364,7 +1377,7 @@ class UsersController extends AppController
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
 
-            
+
             /* get payment flag */
             $teamId = $inviteTeamId;
             $paymentTiming = new PaymentTiming();
@@ -1632,8 +1645,9 @@ class UsersController extends AppController
         $oldestTimestamp = $postCondition['oldestTimestamp'];
 
         $posts = $this->_findPostsOnActionPage($pageType, $userId, $goalId, $startTimestamp, $endTimestamp);
+        $allAccountsCount = count($posts);
         $posts = $GoalService->filterUnauthorized($posts);
-        $unauthorizedActionsCount = $actionCount - count($posts);
+        $unauthorizedActionsCount = $allAccountsCount - count($posts);
 
         $this->set('long_text', false);
         $this->set(compact(
@@ -1792,17 +1806,8 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = Hash::get($this->request->params, "named.user_id");
-        $rows = $this->User->find("all", [
-            "conditions" => [
-                "User.id" => $user_id
-            ],
-            "contain" => [
-                "MemberGroup" => [
-                    "Group"
-                ]
-            ],
-        ]);
-        $groups = Hash::extract($rows, "{n}.MemberGroup.{n}.Group");
+        $rows = $this->User->MemberGroup->Group->findForUser($user_id);
+        $groups = Hash::extract($rows, "{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1901,10 +1906,10 @@ class UsersController extends AppController
         // For HTTP/1.0 conforming clients
         header('Pragma: no-cache');
     }
-    
+
     /**
      * check Age
-     * 
+     *
      */
     private function checkAge(int $age, array $birthday, string $localDate): bool
     {
