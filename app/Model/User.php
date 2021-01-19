@@ -6,6 +6,7 @@ App::uses('Email', 'Model');
 App::import('Model/Entity', 'UserEntity');
 
 use Goalous\Enum as Enum;
+use Goalous\Exception as GlException;
 use Goalous\Enum\DataType\DataType as DataType;
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -1229,7 +1230,8 @@ class User extends AppModel
         int $userId,
         $limit = 10,
         $excludeAuthUser = true,
-        $circleId = null
+        $circleId = null,
+        $groupIds = []
     ): array
     {
         $keyword = trim($keyword);
@@ -1280,6 +1282,18 @@ class User extends AppModel
                     'CircleMember.del_flg' => false,
                 ],
 
+            ];
+        }
+        if (!empty($groupIds)) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'member_groups',
+                'alias'      => 'MemberGroup',
+                'conditions' => [
+                    'MemberGroup.user_id = User.id',
+                    'MemberGroup.group_id' => $groupIds,
+                    'MemberGroup.del_flg' => false,
+                ],
             ];
         }
         $res = $this->useType()->find('all', $options);
@@ -2039,7 +2053,8 @@ class User extends AppModel
             'fields'     => [
                 'User.id',
                 'User.password',
-                'User.default_team_id'
+                'User.default_team_id',
+                'User.2fa_secret'
             ],
             'joins'      => [
                 [
@@ -2107,5 +2122,26 @@ class User extends AppModel
         }
 
         return $data;
+    }
+
+    /**
+     * Update last login time of an user
+     *
+     * @param int $userId
+     * @param int $timestamp
+     *
+     * @throws Exception
+     */
+    public function updateLastLogin(int $userId, int $timestamp = REQUEST_TIMESTAMP): void {
+
+        $user = $this->getById($userId);
+
+        if (empty($user)) {
+            throw new GlException\GoalousNotFoundException("User doesn't exist");
+        }
+
+        $user['last_login'] = $timestamp;
+
+        $this->save($user, false);
     }
 }

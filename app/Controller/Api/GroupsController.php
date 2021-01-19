@@ -4,6 +4,7 @@ App::import('Service', 'GroupService');
 App::import('Controller/Traits/Notification', 'TranslationNotificationTrait');
 App::import('Service', 'ImageStorageService');
 App::import('Policy', 'GroupPolicy');
+App::import('Utility', 'CustomLogger');
 
 use Goalous\Exception as GlException;
 
@@ -223,14 +224,17 @@ class GroupsController extends BasePagingController
                 if (!$policy->read($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You don't have permission to access this group"));
                 }
+                break;
             case 'create':
                 if (!$policy->create($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to create groups for this team"));
                 }
+                break;
             case 'update':
                 if (!$policy->update($group)) {
                     throw new GlException\Auth\AuthFailedException(__("You are not authorized to update this group"));
                 }
+                break;
         }
     }
 }

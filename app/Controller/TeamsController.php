@@ -4,6 +4,8 @@ App::uses('AppUtil', 'Util');
 App::uses('PaymentUtil', 'Util');
 App::uses('Message', 'Model');
 App::uses('Experiment', 'Model');
+App::uses('TeamLoginMethod', 'Model');
+App::uses('TeamSsoSetting', 'Model');
 App::uses('TeamTranslationLanguage', 'Model');
 App::uses('TeamTranslationStatus', 'Model');
 App::import('Service', 'AuthService');
@@ -478,6 +480,22 @@ class TeamsController extends AppController
                 $translationTeamResetText = "-";
             }
         }
+
+        // SSO setting
+        /** @var TeamSsoSetting $TeamSsoSetting */
+        $TeamSsoSetting = ClassRegistry::init('TeamSsoSetting');
+        try {
+            $hasSsoSetting = !empty($TeamSsoSetting->getSetting($team_id));
+        } catch(Exception $e) {
+            GoalousLog::error("Error in getting sso setting information for team setting", [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'team_id' => $team_id,
+                'user_id' => $this->Auth->user('id')
+            ]);
+            $hasSsoSetting = false;
+        }
+
         $isStartedEvaluation = $EvaluationService->isStarted();
         $this->set(compact(
             'timezones',
@@ -524,6 +542,7 @@ class TeamsController extends AppController
             'translationTeamTotalUsage',
             'translationTeamTotalLimit',
             'translationTeamResetText',
+            'hasSsoSetting',
             'see_gka',
             'can_update_see_gka',
             'can_view_see_gka'
@@ -3064,6 +3083,25 @@ class TeamsController extends AppController
 
         return $this->redirect('/teams/main');
     }
+
+    function members_list()
+    {
+        $this->response->download("members_list.csv");
+
+        $teamId = $this->current_team_id;
+
+        $data = $this->User->Email->findVerifiedTeamMembers($teamId);
+        $this->set(compact('data'));
+        $this->layout = false;
+
+        return;
+    }
+
+    public function delete_sso_setting() {
+        //TODO Will be implemented in phase 3
+
+        return $this->redirect('/');
+    }
   
     function toggle_see_gka()
     {
@@ -3106,6 +3144,87 @@ class TeamsController extends AppController
             $td[] = $row;
         }
         
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
+
+    function group_members_list_csv (int $groupId)
+    {
+        $this->loadModel('Group');
+        $rows = $this->Group->findMembers($groupId);
+
+        $filename = 'group_members_' . date('Ymd_His');
+        $th = [
+            __('Member ID'),
+            __("Name"),
+            __("Name"),
+        ];
+        $td = [];
+
+        foreach ($rows as $row) {
+            $td[] = [
+                'member_id' => $row['TeamMember']['member_no'],
+                'name' => $row['User']['roman_username'],
+                'local_name' => $row['User']['local_username'],
+            ];
+        }
+
+        $this->layout = false;
+        $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
+    }
+
+    function unapproved_goals_csv()
+    {
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+
+        $termId = $this->request->query('term_id');
+
+        $filename = 'unapproved_goals_' . date('Ymd_His');
+        $th = [
+            __('Goal ID'),
+            __('Goal Name'),
+            __("Name (User)"),
+            __("Member ID (User)"),
+            __("Name (Coach)"),
+            __("Member ID (Coach)"),
+        ];
+        $td = [];
+
+        $memberIds = [];
+        $rows = $GoalMember->getUnapprovedForTerm($termId);
+
+        foreach ($rows as $row) {
+            $memberIds[] = $row['GoalMember']['user_id'];
+        }
+
+        $memberRows = $TeamMember->findMemberWithCoach($this->current_team_id, $memberIds);
+        $memberRowsById = array_reduce($memberRows, function($acc, $row) {
+            $memberId = $row['User']['id'];
+            $acc[$memberId] = $row;
+            return $acc;
+        }, []);
+
+        foreach ($rows as $row) {
+            $csvRow = [];
+            $csvRow['goal_id'] = $row['Goal']['id'];
+            $csvRow['goal_name'] = $row['Goal']['name'];
+            $memberId = $row['GoalMember']['user_id'];
+            $memberRow = $memberRowsById[$memberId];
+            $csvRow['goal_creator_name'] = $memberRow['User']['display_username'];
+            $csvRow['goal_creator_id'] = $memberRow['TeamMember']['member_no'];
+
+            if (!empty($memberRow['CoachUser']['id'])) {
+                $csvRow['goal_creator_coach_name'] = $memberRow['CoachUser']['display_username'];
+                $csvRow['goal_creator_coach_id'] = $memberRow['CoachTeamMember']['member_no'];
+            }
+            $td[] = $csvRow;
+        }
+
+        $this->layout = false;
         $this->set(compact('filename', 'th', 'td'));
         $this->_setResponseCsv($filename);
     }

@@ -44,6 +44,27 @@ class ActionsController extends BasePagingController
         return ApiResponse::ok()->withData($ret)->getResponse();
     }
 
+    public function put()
+    {
+        /** @var ActionService $ActionService */
+        $ActionService = ClassRegistry::init("ActionService");
+
+        $data = $this->getRequestJsonBody();
+
+        try {
+            $data['user_id'] = $this->getUserId();
+            $data['team_id'] = $this->getTeamId();
+
+            $resAction = $ActionService->updateAngular($data);
+        } catch (Exception $e) {
+            return ErrorResponse::internalServerError()
+                ->withMessage(__($e->getMessage()))
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withData($resAction)->getResponse();
+    }
+
     private function validateCreate($data)
     {
         try {
@@ -101,8 +122,8 @@ class ActionsController extends BasePagingController
             foreach ($ActionResult->validationErrors as $field => $errors) {
                 $errMsgs[$field] = array_shift($errors);
             }
-            GoalousLog::error("Invalid action paramters", $errMsgs);
-            throw new Exception("Invalid action parameters");
+            GoalousLog::error("Parameters are invalid.", $errMsgs);
+            throw new Exception(__("Something went wrong! We're working to fix it as soon as we can. Please refresh the page or try again later."));
         }
     }
 

@@ -22,42 +22,15 @@ class GroupsController extends AppController
         ]);
     }
 
-    function members_list(int $groupId)
-    {
-        /** @var TeamService $TeamService */
-        $TeamService = ClassRegistry::init("TeamService");
-        $teamId = $this->current_team_id;
-        $timezone = $TeamService->getTeamTimezone($teamId);
-        $datetime = GoalousDateTime::now()->setTimeZoneByHour($timezone)->format('Ymd_His');
-
-        // set filename: group_members_yyyyMMDD_HHMMSS 
-        $this->response->download("group_members_{$datetime}.csv");
-
-        /** @var Email $Email */
-        $Email = ClassRegistry::init("Email");
-        $data = $Email->findForGroup($groupId);
-
-        $this->set(compact('data'));
-        $this->layout = false;
-        return;
-    }
-
     function ajax_get_group_members()
     {
         $groupId = Hash::get($this->request->params, 'named.group_id');
         $this->_ajaxPreProcess();
 
-        /** @var MemberGroup */
-        $MemberGroup = ClassRegistry::init("MemberGroup");
+        /** @var Group */
+        $Group = ClassRegistry::init("Group");
 
-        $groupMembers = $MemberGroup->find('all', [
-            'conditions' => [
-                'MemberGroup.group_id' => $groupId,
-                'MemberGroup.del_flg != 1'
-            ],
-            'contain' => ['User']
-        ]);
-
+        $groupMembers = $Group->findMembers($groupId);
         $this->set(compact('groupMembers'));
         $response = $this->render('Group/modal_group_members');
         $html = $response->__toString();

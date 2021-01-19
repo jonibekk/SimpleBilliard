@@ -900,9 +900,6 @@ class AttachedFile extends AppModel
                 'AttachedFile.model_type' => Enum\Model\AttachedFile\AttachedModelType::TYPE_MODEL_ACTION_RESULT,
                 'AttachedFile.del_flg'    => false
             ],
-            'order'      => [
-                'AttachedFile.id' => "ASC"
-            ],
             'joins'      => [
                 [
                     'type'       => 'INNER',
@@ -914,9 +911,10 @@ class AttachedFile extends AppModel
                         'ActionResultFile.del_flg'          => false
                     ]
                 ]
-            ]
+            ],
+            "order"      => 'ActionResultFile.index_num ASC',
         ];
-
+        
         return $this->useType()->useEntity()->find('all', $option);
     }
 }

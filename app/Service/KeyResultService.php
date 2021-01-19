@@ -8,6 +8,7 @@ App::uses('GoalMember', 'Model');
 App::uses('KrChangeLog', 'Model');
 App::uses('KrProgressLog', 'Model');
 App::uses('TeamMember', 'Model');
+App::uses('Watchlist', 'Model');
 // TODO:NumberExHelperだけimportではnot foundになってしまうので要調査
 App::uses('NumberExHelper', 'View/Helper');
 App::uses('FindForKeyResultListRequest', 'Service/Request/KeyResults');
@@ -45,6 +46,41 @@ class KeyResultService extends AppService
             $unit_select_list[$v['id']] = $unit;
         }
         return $unit_select_list;
+    }
+
+    function appendWatchedToKeyResults(array $keyResults, int $userId, int $teamId)
+    {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+        $krIds = Hash::extract($keyResults, '{n}.KeyResult.id');
+        $watchedKrs = $KeyResult->find("all", [
+            "joins" => [
+                [
+                    'alias' => 'KrWatchlist',
+                    'table' => 'kr_watchlists',
+                    'conditions' => [
+                        'KrWatchlist.key_result_id = KeyResult.id',
+                        'KrWatchlist.key_result_id' => $krIds
+                    ]
+                ],
+                [
+                    'alias' => 'Watchlist',
+                    'table' => 'watchlists',
+                    'conditions' => [
+                        'KrWatchlist.watchlist_id = Watchlist.id',
+                        'Watchlist.user_id' => $userId,
+                        'Watchlist.team_id' => $teamId
+                    ]
+                ]
+            ],
+            "fields" => "KeyResult.id"
+        ]);
+        $watchedKrsIds = Hash::extract($watchedKrs, "{n}.KeyResult.id");
+
+        return array_map(function($kr) use ($watchedKrsIds) {
+            $kr['KeyResult']['watched'] = in_array($kr['KeyResult']['id'], $watchedKrsIds);
+            return $kr;
+        }, $keyResults);
     }
 
     /**
@@ -676,15 +712,13 @@ class KeyResultService extends AppService
 
     public function findForKeyResultList(FindForKeyResultListRequest $request): array
     {
-        $now = GoalousDateTime::now();
         $options = [
             'conditions' => [
                 'GoalMember.user_id'    => $request->getUserId(),
-                'KeyResult.end_date >=' => $request->getCurrentTermModel()['start_date'],
-                'KeyResult.end_date <=' => $request->getCurrentTermModel()['end_date'],
+                'KeyResult.end_date >=' => $request->getTerm()['start_date'],
+                'KeyResult.end_date <=' => $request->getTerm()['end_date'],
                 'KeyResult.team_id'     => $request->getTeamId(),
                 'GoalMember.del_flg'    => false,
-                'Goal.end_date >='      => $now->format('Y-m-d'),
             ],
             'order'      => [
                 'KeyResult.latest_actioned' => 'desc',
@@ -717,18 +751,124 @@ class KeyResultService extends AppService
                 ]
             ]
         ];
-        if ($request->getGoalIdSelected()) {
-            $options['conditions']['Goal.id'] = $request->getGoalIdSelected();
+
+        if ($request->getOnlyRecent()) {
+            $options['conditions']['Goal.end_date >='] = $request->getTodayDate();
         }
-        if ($request->getLimit()) {
-            $options['limit'] = $request->getLimit();
-        }
-        if ($request->getOnlyKrIncomplete()) {
+
+        if ($request->getOnlyIncomplete()) {
             $options['conditions']['KeyResult.completed'] = null;
         }
 
         /** @var KeyResult $KeyResult */
         $KeyResult = ClassRegistry::init("KeyResult");
         return $KeyResult->useType()->find('all', $options);
+    }
+
+    public function findForWatchlist(FindForKeyResultListRequest $request)
+    { 
+        /** @var KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        $options = [
+            'conditions' => [
+                'KeyResult.end_date >=' => $request->getTerm()['start_date'],
+                'KeyResult.end_date <=' => $request->getTerm()['end_date'],
+                'KeyResult.team_id'     => $request->getTeamId(),
+            ],
+            'joins' => [
+                [
+                    'alias' => 'KrWatchlist',
+                    'table' => 'kr_watchlists', 
+                    'conditions' => [
+                        'KrWatchlist.key_result_id = KeyResult.id',
+                        'KrWatchlist.del_flg != 1',
+                        'KrWatchlist.watchlist_id' => $request->getListId(),
+                    ]
+                ]
+            ],
+            'order'      => [
+                'KeyResult.latest_actioned' => 'desc',
+                'KeyResult.priority'        => 'desc',
+                'KeyResult.created'         => 'desc'
+            ],
+            'fields'     => [
+                'KeyResult.*',
+                'Goal.*'
+            ],
+            'contain'    => [
+                'Goal',
+                'ActionResult' => [
+                    'fields'     => ['user_id'],
+                    'order'      => [
+                        'ActionResult.created' => 'desc'
+                    ],
+                    'User'
+                ]
+            ]
+        ];
+
+        return $KeyResult->useType()->find('all', $options);
+    }
+
+    public function getLatestActionedKrIdByUser($userId) {
+        /** @var KeyResult $KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult");
+
+        $conditions = [
+            'conditions' => [
+                'KeyResult.completed is NULL',
+                'KeyResult.del_flg != 1'
+            ],
+            'joins' => [
+                [
+                    'alias' => 'ActionResult',
+                    'table' => 'action_results',
+                    'conditions' => [
+                        'ActionResult.user_id' => $userId,
+                        'ActionResult.key_result_id = KeyResult.id',
+                        'ActionResult.del_flg != 1'
+                    ]
+                ]
+            ],
+            'fields' => [
+                'KeyResult.*',
+            ],
+            'order' => [
+                'ActionResult.created' => 'desc'
+            ]
+        ];
+
+        return $KeyResult->useType()->find('first', $conditions);
+    }
+
+    public function findTermIdForKr(int $krId)
+    {
+        /** @var KeyResult */
+        $KeyResult = ClassRegistry::init("KeyResult"); 
+
+        $options = [
+            'conditions' => [
+                'KeyResult.id' => $krId
+            ],
+            'joins' => [
+                [
+                    'alias' => 'Term',
+                    'table' => 'terms',
+                    'conditions' => [
+                        'KeyResult.start_date >= Term.start_date',
+                        'KeyResult.end_date <= Term.end_date',
+                        'KeyResult.team_id = Term.team_id'
+                    ]
+                ]
+            ],
+            'fields' => [
+                'KeyResult.id',
+                'Term.id'
+            ]
+        ];
+
+        $results = $KeyResult->find('first', $options);
+        return $results['Term']['id'];
     }
 }

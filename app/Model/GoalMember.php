@@ -550,6 +550,7 @@ class GoalMember extends AppModel
                 'GoalMember.is_wish_approval' => true
             ],
         ];
+        /** @var int $count */
         $count = $this->find('count', $options);
         return $count;
     }
@@ -1304,6 +1305,50 @@ class GoalMember extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getUnapprovedForTerm(int $termId): array
+    {
+        $options = [
+            'conditions' => [
+                'GoalMember.approval_status'=> [
+                    self::APPROVAL_STATUS_NEW,
+                    self::APPROVAL_STATUS_REAPPLICATION,
+                ],
+                'GoalMember.is_target_evaluation' => false
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'goals',
+                    'alias'      => 'Goal',
+                    'conditions' => [
+                        'Goal.id = GoalMember.goal_id',
+                        'Goal.del_flg != 1',
+                    ],
+                ],
+                [
+                    'type'       => 'INNER',
+                    'table'      => 'terms',
+                    'alias'      => 'Term',
+                    'conditions' => [
+                        'Goal.start_date >= Term.start_date',
+                        'Goal.end_date <= Term.end_date',
+                        'Term.id' => $termId
+                    ],
+                ]
+            ],
+            'order' => [
+                'Goal.id' => 'asc'
+            ],
+            'fields' => [
+                'GoalMember.*', 
+                'Goal.*'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
         return $res;
     }
 }

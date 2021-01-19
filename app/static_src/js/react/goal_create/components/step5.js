@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 /* eslint-enable no-unused-vars */
-import {Link} from "react-router";
+import { Link } from "react-router";
 import * as Page from "../constants/Page";
 import Base from "~/common/components/Base";
 
@@ -35,42 +35,89 @@ export default class Step5Component extends Base {
     this.props.saveGoal()
   }
 
-  toggleGroup(groupId) {
-    const {groups} = this.props.goal.inputData;
+  toggleGroup(group) {
+    const { groups } = this.props.goal.inputData;
+    const { id } = group;
 
-    if (groups[groupId]) {
-      delete groups[groupId]
+    if (id in groups) {
+      delete groups[id]
     } else {
-      groups[groupId] = true
+      groups[id] = group
     }
-    
+
     this.props.updateInputData(groups, 'groups')
   }
 
+  canSelectGroup() {
+    const {inputData, groups } = this.props.goal;
+
+    if (!inputData.is_wish_approval) {
+      return true;
+    } 
+
+    for (const group of groups) {
+      if (group.coach_belongs) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  canSubmit() {
+    const { inputData } = this.props.goal;
+    const selectedGroups = Object.values(inputData.groups);
+
+    if (inputData.is_wish_approval) {
+      // select at least one group that your coach belongs to
+      for (const group of selectedGroups) {
+        if (group.coach_belongs) {
+          return true;
+        }
+      }
+      return false;
+
+    } else {
+      // must select at least 1 group
+      return Object.keys(selectedGroups).length > 0;
+    }
+  }
+
   render() {
-    const {groups, inputData} = this.props.goal;
-    const title = "Let's set up a group to publish to.";
-    const description = "Which groups will you share this group with?";
-    const description2 = "Please select one or more";
-    const canSubmit = Object.keys(inputData.groups).length > 0;
+    const { groups, inputData } = this.props.goal;
+
+    const approvalMsg = "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.";
+    const noCoachGroupBelongsMsg = "There is no group to which your coach belongs. Please contact team administrators for more information.";
+    const canSelectGroup = this.canSelectGroup();
 
     return (
       <section className="panel panel-default col-sm-8 col-sm-offset-2 clearfix goals-create">
-        <h1 className="goals-create-heading">{__(title)}</h1>
-        <p className="goals-create-description">{__(description)}</p>
-        <p className="goals-create-description">{__(description2)}</p>
-        <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e) }>
+        <h1 className="goals-create-heading">{__("Let's set up a group to publish to.")}</h1>
+        <p className="goals-create-description">{__("Which groups will you share this group with?")}</p>
+        <p className="goals-create-description">{__("Please select one or more")}</p>
+        {
+          !canSelectGroup ? (
+            <p className="goals-create-description goal-create-error">{ __(noCoachGroupBelongsMsg) }</p>
+          ) : null
+        }
+        {
+          inputData.is_wish_approval ? (
+            <p className="goals-create-description">{__(approvalMsg)}</p>
+          ) : null
+        }
+        <form className="goals-create-input" onSubmit={(e) => this.handleSubmit(e)}>
           <div className="goals-create-list">
             {
-              groups ?  groups.map(group => {
-                return(
+              groups.length > 0 ? groups.map(group => {
+                return (
                   <div className="goals-create-list-item" ref={`group-item-${group.id}`}>
                     <div className='left'>
-                      <input 
-                        type="checkbox" 
-                        className="goal-create-checkbox" 
-                        onChange={() => {this.toggleGroup(group.id)}}
-                        checked={inputData.groups[group.id] === true}
+                      <input
+                        type="checkbox"
+                        className="goal-create-checkbox"
+                        onChange={() => { this.toggleGroup(group) }}
+                        checked={group.id in inputData.groups}
+                        disabled={!canSelectGroup}
                       />
                     </div>
                     <div className='right'>
@@ -78,15 +125,30 @@ export default class Step5Component extends Base {
                         {group.name}
                       </div>
                       <div className="goals-create-list-item-subtitle">
-                        {group.member_count} members
+                        {group.member_count} {__("members")}
+                        {
+                          inputData.is_wish_approval && group.coach_belongs ? (
+                            <span className="coach-belongs-tag">
+                              {__("Your coach belongs to this group")}
+                            </span>
+                          ) : null
+                        }
                       </div>
                     </div>
                   </div>
                 )
-              }) : null
+              }) : (
+                  (
+                    <div className="no-selectable-groups">
+                      <i className="fa fa-frown-o"></i>
+                      <p>{__("You do not have a group set up.")}</p>
+                      <p>{__("Please contact your team administrator.")}</p>
+                    </div>
+                  )
+                )
             }
           </div>
-          <button type="submit" className="goals-create-btn-next btn" disabled={!canSubmit}>
+          <button type="submit" className="goals-create-btn-next btn" disabled={!this.canSubmit()}>
             {__("Save and share")}
           </button>
           <Link className="goals-create-btn-cancel btn" to={Page.URL_STEP4}>{__("Back")}</Link>

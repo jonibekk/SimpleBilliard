@@ -65,6 +65,9 @@ class PostServiceTest extends GoalousTestCase
         'app.action_result_file',
         'app.key_result',
         'app.goal',
+        'app.group',
+        'app.goal_group',
+        'app.member_group',
         'app.post_file',
         'app.comment_file',
         'app.team_translation_language',
@@ -72,7 +75,9 @@ class PostServiceTest extends GoalousTestCase
         'app.mst_translation_language',
         'app.translation',
         'app.cache_unread_circle_post',
-        'app.kr_progress_log'
+        'app.kr_progress_log',
+        'app.kr_watchlist',
+        'app.watchlist'
     ];
 
     /**
@@ -1106,6 +1111,7 @@ class PostServiceTest extends GoalousTestCase
         $this->assertEquals($ret['attached_files'][0]['id'], 2);
 
         $this->assertEquals($ret['action_result']['id'], 1);
+        GoalousLog::info("ret", $ret['key_result']);
         $this->assertEquals($ret['key_result']['id'], $ret['action_result']['key_result_id']);
         $this->assertEquals($ret['goal']['id'], $ret['action_result']['goal_id']);
     }

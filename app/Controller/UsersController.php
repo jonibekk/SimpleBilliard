@@ -1075,8 +1075,9 @@ class UsersController extends AppController
             $this->Notification->outInfo(__("Please login and join the team"));
             $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
             $this->Session->write('referer_status', REFERER_STATUS_INVITED_USER_EXIST);
-            $this->Session->write('referer_url', $this->Session->read('Auth.redirect'));
-            return $this->redirect(['action' => 'login']);
+            return $this->redirect(['action' => 'login', '?' => [
+                'invitation_token' => $token
+            ]]);
         }
 
         $userId = $this->Auth->user('id');
@@ -1376,7 +1377,6 @@ class UsersController extends AppController
 
             $this->Circle->current_team_id = $currentTeamId;
             $this->Circle->CircleMember->current_team_id = $currentTeamId;
-
 
             /* get payment flag */
             $teamId = $inviteTeamId;
@@ -1805,9 +1805,14 @@ class UsersController extends AppController
      */
     function view_info()
     {
+        $this->loadModel('Group');
+
         $user_id = Hash::get($this->request->params, "named.user_id");
-        $rows = $this->User->MemberGroup->Group->findForUser($user_id);
+        $rows = $this->Group->findForUser($user_id);
         $groups = Hash::extract($rows, "{n}.Group");
+
+        $archivedRows = $this->Group->findForUser($user_id, true);
+        $archivedGroups = Hash::extract($archivedRows, "{n}.Group");
 
         if (!$user_id || !$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
@@ -1818,6 +1823,7 @@ class UsersController extends AppController
         $this->addHeaderBrowserBackCacheClear();
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('groups', $groups);
+        $this->set('archivedGroups', $archivedGroups);
         return $this->render();
     }
 
@@ -1933,6 +1939,5 @@ class UsersController extends AppController
             return false;
         }
         return true;
-
     }
 }

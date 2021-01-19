@@ -738,7 +738,22 @@ App::uses('AttachedFile', 'Model');
             "Comments": "<?= __("Comments") ?>",
             "Download CSV": "<?= __("Download CSV") ?>",
             "Downloading CSV...": "<?= __("Downloading CSV...") ?>",
+            // Groups
+            "Let's set up a group to publish to.": "<?= __("Let's set up a group to publish to.") ?>",
+            "Which groups will you share this group with?": "<?= __("Which groups will you share this group with?") ?>",
+            "You do not have a group set up.": "<?= __("You do not have a group set up.") ?>",
+            "Please select one or more": "<?= __("Please select one or more") ?>",
+            "Please contact your team administrator.": "<?= __("Please contact your team administrator.") ?>",
+            "Your coach belongs to this group": "<?= __("Your coach belongs to this group") ?>",
+            "members": "<?= __("members") ?>",
+            "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.": "<?= __("You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it.") ?>",
             "Goalous will automatically change the amount charged to your account whenever active members are added to your team.":"<?= __("Goalous will automatically change the amount charged to your account whenever active members are added to your team.") ?>",
+            "Goal cannot be approved because the coach is not set. Contact the team administrator.": "<?= __("Goal cannot be approved because the coach is not set. Contact the team administrator.")?>",
+            "Shared Groups": "<?= __("Shared Groups") ?>",
+            "Awaiting coach approval.": "<?= __("Awaiting coach approval.") ?>",
+            "You can only add groups to share a Goal.": "<?= __("You can only add groups to share a Goal.") ?>",
+            "You must add a group that your coach belongs to so they can approve it.": "<?= __("You must add a group that your coach belongs to so they can approve it.") ?>",
+            "There is no group to which your coach belongs. Please contact team administrators for more information.": "<?= __("There is no group to which your coach belongs. Please contact team administrators for more information.") ?>",
         },
         regex: {
             user_name: "<?= User::USER_NAME_REGEX_JAVASCRIPT ?>"

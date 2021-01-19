@@ -361,8 +361,6 @@ class Evaluation extends AppModel
             );
 
         }
-        
-
     }
 
     /**
@@ -418,6 +416,7 @@ class Evaluation extends AppModel
                     'ActionResult' => [
                         'conditions' => [
                             'user_id' => $evaluateeId,
+                            'key_result_id IS NOT NULL'
                         ],
                         'fields'     => [
                             'id'
@@ -639,7 +638,7 @@ class Evaluation extends AppModel
                     $res = $this->Goal->find('all', $options);
 
                     $evaluatorGoals[$uid][$eval_uid] = Hash::extract($res, '{n}.Goal.id');
-                } 
+                }
             }
         }
 
@@ -676,11 +675,11 @@ class Evaluation extends AppModel
                     // only create evaluator if evaluator has access to the goal
                     if (in_array($gid, $goalIds)) {
                         $goalEvaluations[] = $this->getAddRecord(
-                            $uid, 
-                            $eval_uid, 
-                            $termId, 
+                            $uid,
+                            $eval_uid,
+                            $termId,
                             $index++,
-                            self::TYPE_EVALUATOR, 
+                            self::TYPE_EVALUATOR,
                             $gid
                         );
                     }

@@ -1,6 +1,7 @@
 <?php
 App::import('Lib/Network/Response', 'ApiResponse');
 App::import('Lib/Network/Response', 'ErrorResponse');
+App::import('Utility', 'CustomLogger');
 App::uses('TeamMember', 'Model');
 App::uses('User', 'Model');
 App::uses('LangComponent', 'Controller/Component');
@@ -28,6 +29,10 @@ use Goalous\Enum as Enum;
 
 abstract class BaseApiController extends Controller
 {
+    private $merge_components = [
+        'Cookie',
+        'Session',
+    ];
 
     /** @var string */
     private $_jwtToken;
@@ -61,6 +66,7 @@ abstract class BaseApiController extends Controller
         $components = new ComponentCollection();
         $this->LangComponent = new LangComponent($components);
         $this->LangComponent->initialize();
+        $this->components = array_merge($this->components, $this->merge_components);
     }
 
     /**
@@ -127,6 +133,22 @@ abstract class BaseApiController extends Controller
         }
 
         $this->_setAppLanguage();
+
+        if (!$this->_checkSkipAuthentication($this->request)) {
+            $this->logJwtAndSession();
+        }
+    }
+
+
+
+    protected function logJwtAndSession()
+    {
+        $jwtData = [
+            'userId' => $this->getUserId(), 
+            'teamId' => $this->getTeamId()
+        ];
+        $sessionData = $this->Session->read();
+        CustomLogger::getInstance()->setControllerData($jwtData, $sessionData);
     }
 
     /**
