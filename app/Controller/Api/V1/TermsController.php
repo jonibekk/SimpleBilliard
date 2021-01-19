@@ -26,16 +26,16 @@ class TermsController extends ApiController
      */
     function post_start_evaluation($termId)
     {
-        /** @var EvaluationSetting $EvaluationSetting */
-        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
         /** @var EvaluationService $EvaluationService */
         $EvaluationService = ClassRegistry::init("EvaluationService");
 
         $teamId = $this->current_team_id;
 
         try {
-            if (!$EvaluationSetting->isEnabled()) {
-                $this->_getResponseBadFail(__("Evaluation setting is not active."));
+            $err = $this->validateStartEvaluation($termId);
+
+            if ($err !== null) {
+                return $err;
             }
 
             $EvaluationService->startEvaluation($teamId, $termId);
@@ -47,14 +47,53 @@ class TermsController extends ApiController
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START, $termId);
             Cache::clear(false, 'team_info');
         } catch (Exception $e) {
-            GoalousLog::error('failed on starting evaluation', [
-                'message' => $e->getMessage(),
-            ]);
-            GoalousLog::error($e->getTraceAsString());
+            CustomLogger::getInstance()->logException($e);
             $this->Notification->outError(__("Evaluation could not start."));
             return $this->_getResponseInternalServerError();
         }
-
         return $this->_getResponseSuccess();
+    }
+
+    function validateStartEvaluation($termId) {
+        /** @var EvaluationSetting $EvaluationSetting */
+        $EvaluationSetting = ClassRegistry::init("EvaluationSetting");
+        /** @var Term $Term */
+        $Term = ClassRegistry::init('Term');
+        /** @var GoalMember $GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+
+        if (!$EvaluationSetting->isEnabled()) {
+            $err =  'Evaluation setting is not active.';
+            $this->Notification->outError(__($err));
+            return $this->_getResponseBadFail(__($err));
+        }
+
+        if ($Term->isStartedEvaluation($termId)) {
+            $err = 'The evaluation for this term has already been started.';
+            $this->Notification->outError(__($err));
+            return $this->_getResponseBadFail(__($err));
+        }
+
+        $ignoreUnapproved = $this->request->query('ignore_unapproved');
+
+        if ($ignoreUnapproved !== "true") {
+            $unapprovedGoals = $GoalMember->getUnapprovedForTerm($termId);
+
+            if (count($unapprovedGoals) > 0) {
+                return $this->renderUnapprovedGoalsModal($termId, count($unapprovedGoals));
+            }
+        }
+
+        return null;
+    }
+
+    function renderUnapprovedGoalsModal(int $termId, int $countUnapprovedGoals)
+    {
+        $this->layout = 'ajax';
+        $this->viewPath = 'Elements';
+        $this->set(compact('termId', 'countUnapprovedGoals'));
+        $response = $this->render('Evaluation/modal_unapproved_goals');
+        $html = $response->__toString();
+        return $this->_getResponse(400, ['modalContent' => $html]);
     }
 }

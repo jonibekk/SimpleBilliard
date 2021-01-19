@@ -19,7 +19,7 @@
                                 ['class' => 'comment-img'])
                             ?>
                             <div class="comment-body modal-comment">
-                                <div class="font_12px font_bold modalFeedTextPadding">
+                                <div class="font_12px font_bold modalFeedTextPadding list-item-no-subtitle">
                                     <?= h($user['User']['display_username']) ?>&nbsp;
                                     <?php if (viaIsSet($is_admin)): ?>
                                         <i class="fa fa-adn team-members-card-admin-icon"></i>

@@ -268,6 +268,21 @@ class PostShareCircleTest extends GoalousTestCase
         $this->assertNotEmpty($result[0]['CircleMember'][0]['User']);
     }
 
+    public function test_getFirstSharedCircleId_success()
+    {
+        $circleId = 124;
+        $teamId = 125;
+        $postId = 9393;
+
+        $this->insertNewData($postId, $circleId, $teamId);
+
+        /** @var PostShareCircle $PostShareCircle */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        $returnedCircleId = $PostShareCircle->getFirstSharedCircleId($postId);
+
+        $this->assertTextEquals($circleId, $returnedCircleId);
+    }
+
 
     private function insertNewData(int $postId, int $circleId, int $teamId)
     {

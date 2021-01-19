@@ -203,9 +203,12 @@ class Group extends AppModel
         return $res;
     }
 
-    function findForUser(int $userId)
+    function findForUser(int $userId, bool $archived = false)
     {
-        return $this->find("all", [
+        $opts = [
+            "conditions" => [
+                "Group.archived_flg" => $archived
+            ],
             "joins" => [
                 [
                     "alias" => "MemberGroup",
@@ -224,7 +227,9 @@ class Group extends AppModel
                 ]
             ],
             "order" => "Group.name"
-        ]);
+        ];
+
+        return $this->find("all", $opts);
     }
 
     function findMembers(int $groupId): array
@@ -243,16 +248,21 @@ class Group extends AppModel
                     ],
                 ],
                 [
+                    'alias' => 'TeamMember',
                     'table' => 'team_members',
                     'conditions' => [
-                        'MemberGroup.user_id = team_members.user_id', 
-                        'MemberGroup.team_id = team_members.team_id',
-                        'team_members.status' => $TeamMember::USER_STATUS_ACTIVE
+                        'MemberGroup.user_id = TeamMember.user_id', 
+                        'MemberGroup.team_id = TeamMember.team_id',
+                        'TeamMember.status' => $TeamMember::USER_STATUS_ACTIVE
                     ],
                 ],
             ],
             "order" => [
                 "User.first_name ASC"
+            ],
+            'fields' => [
+                'User.*',
+                'TeamMember.*'
             ]    
         ];
 
@@ -291,19 +301,25 @@ class Group extends AppModel
             ],
             'fields' => [
                 'Group.*',
-                'COALESCE(COUNT(member_groups.user_id)) AS member_count'
+                'COALESCE(COUNT(member_groups.user_id), 0) AS member_count'
             ],
             'group' => [
                 'Group.id', 
                 'team_members.status',
-                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL AND member_count = 0)',
             ],
             "order" => [
+                "Group.archived_flg ASC",
                 "Group.name ASC"
             ] 
         ];
 
         $options = array_merge_recursive($options, $scope);
+        // only append HAVING after all other group_by
+        $options = array_merge_recursive($options, [
+            'group' => [
+                'users.del_flg HAVING users.del_flg != 1 AND (team_members.status = 1) OR (team_members.status IS NULL AND member_count = 0)',
+            ]
+        ]);
 
         $results =  $this->find('all', $options);
 

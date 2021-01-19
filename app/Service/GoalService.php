@@ -239,6 +239,12 @@ class GoalService extends AppService
                     $goal['goal_member']['id'], $requestData['priority']));
             }
 
+
+            if (!$goal['goal_member']['is_target_evaluation'] && !$GoalMember->saveField('is_wish_approval', $requestData['is_wish_approval'])) {
+                throw new Exception(sprintf("Failed to update GoalMember is_wish_approval. goalMemberId:%s is_wish_approval:%s",
+                    $goal['goal_member']['id'], $requestData['is_wish_approval']));
+            }
+
             // TKR更新
             $tkrId = $goal['top_key_result']['id'];
             $inputTkrData = Hash::get($requestData, 'key_result');
@@ -998,7 +1004,8 @@ class GoalService extends AppService
         string $graphStartDate,
         string $graphEndDate,
         string $plotDataEndDate,
-        bool $withSweetSpot = false
+        bool $withSweetSpot = false,
+        array $term = null
     ): array
     {
         //パラメータバリデーション
@@ -1006,10 +1013,12 @@ class GoalService extends AppService
         if ($validOrErrorMsg !== true) {
             throw new Exception($validOrErrorMsg);
         }
+        
         //今期の情報取得
         /** @var Term $EvaluateTerm */
         $EvaluateTerm = ClassRegistry::init('Term');
-        $termTimezone = $EvaluateTerm->getCurrentTermData()['timezone'];
+        $termWithTimezone = $EvaluateTerm->getCurrentTermData();
+        $termTimezone = $termWithTimezone['timezone'];
 
         //当日がプロット対象に含まれるかどうか？
         $isIncludedTodayInPlotData = AppUtil::between(
@@ -1047,7 +1056,14 @@ class GoalService extends AppService
         }
 
         //sweetSpotを算出
-        $sweetSpot = $withSweetSpot ? $this->getSweetSpot($graphStartDate, $graphEndDate) : [];
+        $sweetSpot = $withSweetSpot ? 
+                        $this->getSweetSpot(
+                            $graphStartDate, 
+                            $graphEndDate, 
+                            self::GRAPH_SWEET_SPOT_MAX_TOP, 
+                            self::GRAPH_SWEET_SPOT_MAX_BOTTOM, 
+                            $term
+                        ) : [];
 
         //グラフ用データに整形
         $ret = $this->shapeDataForGraph($progressLogs, $sweetSpot, $graphStartDate, $graphEndDate);
@@ -1477,12 +1493,16 @@ class GoalService extends AppService
         string $startDate,
         string $endDate,
         int $maxTop = self::GRAPH_SWEET_SPOT_MAX_TOP,
-        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM
+        int $maxBottom = self::GRAPH_SWEET_SPOT_MAX_BOTTOM,
+        array $term = null
     ): array
     {
-        /** @var Term $EvaluateTerm */
-        $EvaluateTerm = ClassRegistry::init('Term');
-        $term = $EvaluateTerm->getCurrentTermData();
+        if ($term === null) {
+            /** @var Term $EvaluateTerm */
+            $EvaluateTerm = ClassRegistry::init('Term');
+            $term = $EvaluateTerm->getCurrentTermData();
+        }
+
         $termStartDate = $term['start_date'];
         $termEndDate = $term['end_date'];
 

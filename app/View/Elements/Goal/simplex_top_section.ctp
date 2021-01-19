@@ -57,7 +57,7 @@
                             <?php if ($isCanComplete): ?>
                                 <li>
                                     <?=
-                                    $this->Form->postLink(__("Acheive Goal"),
+                                    $this->Form->postLink(__("Achieve Goal"),
                                         "/goals/complete/" . $goal['Goal']['id'],
                                         ['escape' => false], __("Do you really want to complete this Goal?")) ?>
                                 </li>
@@ -141,7 +141,7 @@
                     <p><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
                 </li>
                 <li class="goal-detail-goal-groups">
-                    <?php if (empty($goalGroups)) : ?>
+                    <?php if (empty($goalGroups) && empty($archivedGoalGroups)) : ?>
                         <p><?= __('This goal is open to all team members') ?></p>
                     <?php else : ?>
                         <p><?= __('Groups that can see this goal') ?></p>

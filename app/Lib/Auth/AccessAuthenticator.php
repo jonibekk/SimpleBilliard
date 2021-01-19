@@ -87,13 +87,13 @@ class AccessAuthenticator
      * Create new authentication token
      *
      * @param int $userId
-     * @param int $teamId
+     * @param int|null $teamId
      *
      * @throws GlException\Auth\AuthFailedException
      *
      * @return AuthorizedAccessInfo
      */
-    public static function publish(int $userId, int $teamId): AuthorizedAccessInfo {
+    public static function publish(int $userId, ?int $teamId): AuthorizedAccessInfo {
         $jwtAuth = new JwtAuthentication($userId, $teamId);
 
         // build token information

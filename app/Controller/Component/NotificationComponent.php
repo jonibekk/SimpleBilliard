@@ -122,8 +122,10 @@ class NotificationComponent extends Component
         if (!array_key_exists($type, $this->options) || !$message) {
             return;
         }
+
+        $base_options = ['link_url' => null, 'link_text' => null];
         $option['escape'] = false;
-        $merged_option = array_merge($this->options[$type], $option);
+        $merged_option = array_merge($base_options, $this->options[$type], $option);
         //改行を<br>に変換
         $message = nl2br(h($message));
         //改行を除去

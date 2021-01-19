@@ -296,6 +296,9 @@ class ActionResult extends AppModel
         'Post' => [
             'dependent' => true,
         ],
+        'ActionResultMember' => [
+            'dependent' => true,
+        ],
         'ActionResultFile',
     ];
 
@@ -341,6 +344,8 @@ class ActionResult extends AppModel
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
+                'key_result_id IS NOT NULL',
+                'goal_id IS NOT NULL',
             ]
         ];
         // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
@@ -357,6 +362,7 @@ class ActionResult extends AppModel
         if ($endTimestamp) {
             $options['conditions']["$dateCol <="] = $endTimestamp;
         }
+        /** @var int $res */
         $res = $this->find('count', $options);
         return $res;
     }
@@ -374,6 +380,7 @@ class ActionResult extends AppModel
             'conditions' => [
                 'goal_id' => $goal_id,
                 'team_id' => $this->current_team_id,
+                'key_result_id IS NOT NULL'
             ]
         ];
         $res = $this->find('count', $options);

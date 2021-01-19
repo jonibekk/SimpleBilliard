@@ -259,7 +259,7 @@ msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> também comentou na <span class=\"notify-card-head-target\">%3$s</span>"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span class=\"notify-card-head-target\">your </span>post."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou na <span class=\"notify-card-head-target\">sua</span>publicação"
+msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> comentou na <span class=\"notify-card-head-target\">sua </span>publicação"
 
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span> entrou no círculo."
@@ -623,7 +623,7 @@ msgid "All progress of this KR will be reset, is it really OK?"
 msgstr "Todo o progresso deste Resultado-chave será redefinido. Deseja continuar?"
 
 msgid "All Team"
-msgstr "Todo o time"
+msgstr "Time"
 
 msgid "Allowed number is between %2$d and %3$d."
 msgstr "Número permitido está entre %2$ de %3$d."
@@ -720,6 +720,10 @@ msgstr "E-mail de autenticação"
 
 msgid "Authentication for changing email address"
 msgstr "Autenticação para alterar o email"
+
+#, fuzzy
+msgid "Awaiting coach approval."
+msgstr ""
 
 msgid "Back"
 msgstr "Voltar"
@@ -830,6 +834,10 @@ msgstr "Pode ver GKA de todos os membros da equipe."
 
 msgid "Can we customize Goalous?"
 msgstr "Podemos personalizar o Goalous?"
+
+#, fuzzy
+msgid "Can't approve the goal."
+msgstr ""
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1032,6 +1040,10 @@ msgstr "Coach ID"
 msgid "Coach name"
 msgstr "Nome do Coach"
 
+#, fuzzy
+msgid "Coach's approval is required. Please contact the coach or re-set the coach."
+msgstr ""
+
 msgid "Coached member(s)"
 msgstr "membro(s) que está recebendo avaliação"
 
@@ -1163,6 +1175,10 @@ msgstr "Confirme o registro e a cobrança"
 
 msgid "Confirm the email sent to this email address."
 msgstr "Confirme o email enviado para este endereço de email."
+
+#, fuzzy
+msgid "Confirm the selected group"
+msgstr ""
 
 msgid "Confirm this Goal"
 msgstr "Confirme este objetivo"
@@ -2317,6 +2333,10 @@ msgstr "Aprovação do objetivo"
 msgid "Goal approval list"
 msgstr "Lista de aprovação de objetivos"
 
+#, fuzzy
+msgid "Goal cannot be approved because the coach is not set. Contact the team administrator."
+msgstr ""
+
 msgid "Goal Category"
 msgstr "Categoria do objetivo"
 
@@ -2697,6 +2717,10 @@ msgstr "Para restaurar o time, por favor escolha um de nossos planos %s."
 
 msgid "If you're unsure why you received this email, you may simply ignore this message."
 msgstr "Se não sabe porque recebeu esse e-mail, por favor ignore esta mensagem."
+
+#, fuzzy
+msgid "Ignore it and start the evaluation"
+msgstr ""
 
 msgid "Images"
 msgstr "Imagens"
@@ -3202,6 +3226,10 @@ msgstr "Vamos começar uma nova jornada que irá mudar a essência do seu time!"
 msgid "Let's go to Goalous!"
 msgstr "Vamos para o Goalous!"
 
+#, fuzzy
+msgid "Let's set up a group to publish to."
+msgstr ""
+
 msgid "Let's share the actions that you've done today!"
 msgstr "Compartilhe a ação que você fez hoje!"
 
@@ -3363,6 +3391,9 @@ msgid "Member(Active)"
 msgstr "Membros (ativos)"
 
 msgid "Members"
+msgstr "Membros"
+
+msgid "members"
 msgstr "Membros"
 
 msgid "Members in this circle."
@@ -3860,6 +3891,10 @@ msgstr "Por favor escolha um."
 msgid "please contact us."
 msgstr "Por favor, entre em contato conosco."
 
+#, fuzzy
+msgid "Please contact your team administrator."
+msgstr ""
+
 msgid "Please create your Goal."
 msgstr "Crie seu objetivo."
 
@@ -3943,6 +3978,10 @@ msgstr "Por favor selecione uma imagem."
 
 msgid "Please select"
 msgstr "Por favor selecione."
+
+#, fuzzy
+msgid "Please select one or more"
+msgstr ""
 
 msgid "Please select."
 msgstr "Por favor selecione."
@@ -4481,6 +4520,10 @@ msgstr "%1$s compartilhado, %2$s e %3$s outros "
 msgid "Shared %s"
 msgstr "%s compartilhado"
 
+#, fuzzy
+msgid "Shared Groups"
+msgstr ""
+
 msgid "Shared with %s people"
 msgstr "Compartilhado com %s pessoas"
 
@@ -4516,6 +4559,10 @@ msgstr "Ocorreu algum erro. Por favor, tente novamente."
 
 msgid "Some users who already joined the topic are included in the specified users. Try again from the start."
 msgstr "Alguém já entrou no tópico. Por favor, tente novamente."
+
+#, fuzzy
+msgid "Something went wrong We're working to fix it as soon as we can. Please refresh the page or try again later."
+msgstr ""
 
 msgid "Spanish"
 msgstr "Espanhol"
@@ -4817,6 +4864,10 @@ msgstr "O círculo não existe ou você não tem permissão."
 msgid "The circle dosen't exist or you don't have permission."
 msgstr "O círculo não existe ou você não tem permissão."
 
+#, fuzzy
+msgid "The coach approving your goal does not belong to the group you have selected. Either remove this goal from the evaluation or select the group to which your coach belongs."
+msgstr ""
+
 msgid "The code is incorrect."
 msgstr "O código está incorreto."
 
@@ -4831,6 +4882,10 @@ msgstr "A configuração para futuros períodos está ajustada para 3 meses."
 
 msgid "The default length of any future terms are automatically set to 6 months."
 msgstr "A configuração para futuros períodos está ajustada para 6 meses."
+
+#, fuzzy
+msgid "The evaluation for this term has already been started."
+msgstr ""
 
 msgid "The file is over limit size."
 msgstr "O arquivo está acima do tamanho limite."
@@ -4946,6 +5001,14 @@ msgstr "A conta do usuário é inválida."
 msgid "The way of thinking was ideal but I was quite skeptical about making that a reality. But hearing that Colorkrew has achieved that ideal, I would like to observe how Colorkrew grows with this ideal moving forward."
 msgstr "A metodologia é fácil, porem implementar é difícil. Vendo como a Colorkrew adotou os OKRs, quero testar na minha empresa também."
 
+#, fuzzy
+msgid "There are %d other hidden goals."
+msgstr ""
+
+#, fuzzy
+msgid "There are %d unapproved Goals."
+msgstr ""
+
 msgid "There are no evaluation target goals."
 msgstr "Não há objetivos para avaliação."
 
@@ -4954,6 +5017,10 @@ msgstr "Não há mais rankings para mostrar."
 
 msgid "There are no recent updates."
 msgstr "Não há novos updates"
+
+#, fuzzy
+msgid "There are unapproved Goals."
+msgstr ""
 
 msgid "There is %s actions you do not have permission to see"
 msgstr "Existem %s ações que você não tem permissão para ver"
@@ -4978,6 +5045,10 @@ msgstr "Nenhuma ação necessária."
 
 msgid "There is no Goal that you can take action."
 msgstr "Não existe objetivo para tomar uma ação."
+
+#, fuzzy
+msgid "There is no group to which your coach belongs. Please contact team administrators for more information."
+msgstr ""
 
 msgid "There is no Key Result."
 msgstr "Não há nenhum Resultado-chave."
@@ -5062,6 +5133,14 @@ msgstr "Esta função pode ser usada apenas pelo PC."
 
 msgid "This Goal doesn't exist."
 msgstr "Este objetivo não existe."
+
+#, fuzzy
+msgid "This goal has not been shared with your coach and therefore cannot be approved. Please contact your team administrator."
+msgstr ""
+
+#, fuzzy
+msgid "This goal is not subject to evaluation."
+msgstr ""
 
 msgid "This goal is open to all team members"
 msgstr "Este objetivo está aberto a todos os membros da equipe"
@@ -5230,6 +5309,14 @@ msgstr "Visão não pode ser criada pois você não pertence a este time, ou o t
 
 msgid "Unachieved"
 msgstr "Não alcançado"
+
+#, fuzzy
+msgid "Unapproved Goals are not eligible for evaluation and do not appear on the evaluation page."
+msgstr ""
+
+#, fuzzy
+msgid "Unapproved Goals list"
+msgstr ""
 
 msgid "Uncompete Key Result"
 msgstr "Resultado-chave incompleto"
@@ -5477,6 +5564,7 @@ msgstr "Veja este  KR"
 msgid "Watch Video"
 msgstr "Veja o vídeo"
 
+#, fuzzy
 msgid "Watched"
 msgstr "Visto"
 
@@ -5576,6 +5664,9 @@ msgstr "Quando começa o período de avaliação gratuita e o pagamento?"
 msgid "When should I apply for the paid plan?"
 msgstr "Quando devo solicitar o plano pago?"
 
+msgid "When SSO is turned off, team members will log in using their Email address and Goalous password. Any team members already logged in to Goalous at the time will remain logged in."
+msgstr "Quando o SSO está desativado, todos os membros da equipe farão o login usando seu endereço de e-mail e senha do Goalous. Os membros da equipe que já estiverem logados no Goalous naquele momento permanecerão logados."
+
 msgid "When the free trial is over, you will only be able to use it in read-only mode for 30 days. During this time, you will not be able to action or post."
 msgstr "Quando a avaliação gratuita terminar, você poderá usá-lo apenas no modo somente leitura por 30 dias. Durante esse período, você não poderá postar."
 
@@ -5584,6 +5675,10 @@ msgstr "Quando ativado, não haverá restrição à exibição de objetivos cria
 
 msgid "When this is turned on, there will be no restrictions on the display of goals created after now."
 msgstr "Quando ativado, não haverá restrições na exibição de objetivos criados a partir de agora."
+
+#, fuzzy
+msgid "Which groups will you share this group with?"
+msgstr ""
 
 msgid "Whichever you choose, this kr will be finished."
 msgstr "Qualquer que seja a sua escolha, esse Resultado-chave será concluído."
@@ -5708,6 +5803,10 @@ msgstr "Você não pode aumentar o valor atual."
 msgid "You can not invite."
 msgstr "Você não pode convidar."
 
+#, fuzzy
+msgid "You can only add groups to share a Goal."
+msgstr ""
+
 msgid "You can only post one video file."
 msgstr "Você pode postar apenas um vídeo."
 
@@ -5807,6 +5906,10 @@ msgstr "Você não pode mudar o líder do objetivo durante o período de avalia�
 msgid "You did not like it."
 msgstr "Você não curtiu isso."
 
+#, fuzzy
+msgid "You do not have a group set up."
+msgstr ""
+
 msgid "You do not have permission to view this goal"
 msgstr "Você não tem permissão para ver este objetivo"
 
@@ -5867,6 +5970,10 @@ msgstr "Você não avaliou este objetivo."
 msgid "You have reached your translation limit."
 msgstr "Você alcançou o limite de traduções."
 
+#, fuzzy
+msgid "You have specified that you wish to be evaluated based on this goal. You must add a group that your coach belongs to so they can approve it."
+msgstr ""
+
 msgid "You haven't created any actions&hellip; yet."
 msgstr "Você ainda não fez nenhuma ação."
 
@@ -5878,6 +5985,10 @@ msgstr "Você pode ler apenas as páginas da sua equipe."
 
 msgid "You may start evaluations with your team's current settings. Only one term can be selected for evaluations."
 msgstr "Você pode iniciar avaliações com as configurações atuais de sua equipe. Apenas um período pode ser selecionado para avaliações."
+
+#, fuzzy
+msgid "You must add a group that your coach belongs to so they can approve it."
+msgstr ""
 
 msgid "You must be at least 16 years old to register Goalous."
 msgstr "Você deve ter pelo menos 16 anos para registrar a Goalous."
@@ -5914,6 +6025,10 @@ msgstr "Sua conta está temporariamente bloqueada. Será desbloqueado após %s m
 
 msgid "Your campaign plan reached the maximum user allowed. Please contact for the larger plans."
 msgstr "Seu plano de atingiu o número máximo usuários. Entre em contato para outros planos。"
+
+#, fuzzy
+msgid "Your coach belongs to this group"
+msgstr ""
 
 msgid "Your Credit Card does not match your country settings"
 msgstr "O seu cartão de crédito não corresponde às configurações do seu país."

@@ -1117,7 +1117,10 @@ class Goal extends AppModel
                         'ActionResult.photo5_file_name',
                     ],
                     'limit'            => $action_limit,
-                    'conditions'       => ['ActionResult.user_id' => $user_id],
+                    'conditions'       => [
+                        'ActionResult.user_id' => $user_id,
+                        'ActionResult.key_result_id IS NOT NULL'
+                    ],
                     'order'            => ['ActionResult.created desc'],
                     'Post'             => [
                         'fields' => ['Post.id']
@@ -1937,6 +1940,8 @@ class Goal extends AppModel
                         'MyCollabo.role',
                         'MyCollabo.description',
                         'MyCollabo.priority',
+                        'MyCollabo.is_wish_approval',
+                        'MyCollabo.is_target_evaluation',
                     ],
                 ],
             ],

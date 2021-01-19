@@ -30,10 +30,13 @@ class FeedPostPagingServiceTest extends GoalousTestCase
         'app.goal_member',
         'app.member_group',
         'app.goal_group',
+        'app.group',
         'app.action_result',
         'app.action_result_file',
         'app.key_result',
         'app.kr_progress_log',
+        'app.kr_watchlist',
+        'app.watchlist',
     ];
 
     public function test_getActionPost_success()

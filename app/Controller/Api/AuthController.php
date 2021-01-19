@@ -1,18 +1,25 @@
 <?php
+
 App::uses('BaseApiController', 'Controller/Api');
-App::import('Lib/DataExtender', 'MeExtender');
+App::import('Utility', 'CustomLogger');
 App::import('Service', 'AuthService');
 App::import('Service', 'ImageStorageService');
+App::import('Service', 'InvitationService');
 App::import('Service/Request/Resource', 'UserResourceRequest');
 App::import('Service', 'UserService');
 App::uses('AuthRequestValidator', 'Validator/Request/Api/V2');
+App::uses('GlRedis', 'Model');
 App::uses('User', 'Model');
 App::uses('LangUtil', 'Util');
 App::uses('GlRedis', 'Model');
 
 use Goalous\Exception as GlException;
+use Goalous\Enum as Enum;
 
 /**
+ * @property AuthComponent    Auth
+ * @property SessionComponent Session
+ *
  * Created by PhpStorm.
  * User: StephenRaharja
  * Date: 2018/05/30
@@ -23,6 +30,125 @@ class AuthController extends BaseApiController
     public function beforeFilter()
     {
         parent::beforeFilter();
+
+        $this->Auth->allow();
+    }
+
+    public $components = [
+        'Auth',
+        'Session',
+        'NotifyBiz',
+    ];
+
+    /**
+     * Endpoint for checking for session
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function get_has_session()
+    {
+        $this->Auth->startup($this);
+
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+
+        $user = AuthComponent::user();
+        $hasSession = true;
+
+        if (!$user) {
+            $hasSession = false;
+            $authHeader = $this->request->header('Authorization');
+            $sessionId = $this->Session->id();
+
+            $debugInfo = [
+                'session' => $this->Session->read(),
+                'session_id' => $sessionId,
+                'user' => $user
+            ];
+
+            if (!empty($authHeader)) {
+                $debugInfo['auth_header'] = $authHeader;
+
+                $jwt = sscanf($authHeader, 'Bearer %s');
+                $jwtToken = $jwt[0] ?? null;
+
+                $debugInfo['jwt_token'] = $jwtToken;
+
+                if ($jwtToken) {
+                    try {
+                        $jwtAuth = AccessAuthenticator::verify($jwtToken);
+
+                        $debugInfo['current_team_id'] = $jwtAuth->getTeamId();
+                        $debugInfo['user_id'] = $jwtAuth->getUserId();
+
+                        if (
+                            !empty($jwtAuth->getUserId()) &&
+                            !empty($jwtAuth->getTeamId()) &&
+                            !empty($sessionId)
+                        ) {
+                            $debugInfo['map_ses_jwt'] = $GlRedis->getMapSesAndJwt(
+                                $jwtAuth->getTeamId(),
+                                $jwtAuth->getUserId(),
+                                $sessionId
+                            );
+                        }
+                    } catch (Exception $e) {
+                        $debugInfo['error'] = $e->getMessage();
+                    }
+                }
+            }
+
+            GoalousLog::debug(
+                'has session returns false',
+                $debugInfo
+            );
+        }
+
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:get_has_session');
+        return ApiResponse::ok()
+            ->withMessage(Enum\Auth\Status::OK)
+            ->withData(['has_session' => $hasSession])
+            ->getResponse();
+    }
+
+    /**
+     * Endpoint for step 1 of login. Returns login method information for the user
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function post_request_login()
+    {
+        $return = $this->validateRequestLogin();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init('AuthService');
+            $loginRequestData = $AuthService->createLoginRequest($requestData['email']);
+        } catch (GlException\Auth\AuthUserNotFoundException $e) {
+            return ErrorResponse::badRequest()->withMessage(Enum\Auth\Status::AUTH_MISMATCH)->getResponse();
+        } catch (GlException\Auth\AuthFailedException $e) {
+            return ErrorResponse::badRequest()->withMessage(Enum\Auth\Status::AUTH_ERROR)->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency(
+                'user failed to request login',
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
+                ]
+            );
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withMessage(Enum\Auth\Status::OK)->withData($loginRequestData)->getResponse();
     }
 
     /**
@@ -41,47 +167,136 @@ class AuthController extends BaseApiController
 
         $requestData = $this->getRequestJsonBody();
 
-        // TODO: do the translation
-
         try {
             /** @var AuthService $AuthService */
             $AuthService = ClassRegistry::init("AuthService");
-            $jwt = $AuthService->authenticateUser($requestData['email'], $requestData['password']);
+            $response = $AuthService->authenticateWithPassword($requestData['email'], $requestData['password']);
+            if ($response['message'] === Enum\Auth\Status::OK) {
+                $response = $this->processInvite($response);
+                $response = $this->appendCookieInfo($response);
+            }
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
         } catch (GlException\Auth\AuthMismatchException $e) {
             return ErrorResponse::badRequest()
                 ->withMessage(__('Email address or Password is incorrect.'))
                 ->withError(new ErrorTypeGlobal(__('Email address or Password is incorrect.')))
                 ->getResponse();
         } catch (\Throwable $e) {
-            GoalousLog::emergency('user failed to login', [
-                'message' => $e->getMessage(),
-            ]);
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
+                ]
+            );
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
 
-        $data = [
-            'me'    => $this->_getAuthUserInfo($jwt->getUserId(), $jwt->getTeamId()),
-            'token' => $jwt->token()
-        ];
-
-        return ApiResponse::ok()->withData($data)->getResponse();
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_login');
+        return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
     /**
-     * Get auth user info for Login API response
+     * Login endpoint for user using 2fa. Ignore restriction and authentication
      *
-     * @param int $userId
-     * @param int $teamId
-     *
-     * @return array
+     * @ignoreRestriction
+     * @skipAuthentication
      */
-    private function _getAuthUserInfo(int $userId, int $teamId): array
+    public function post_login_2fa()
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init('UserService');
-        $req = new UserResourceRequest($userId, $teamId, true);
-        return $UserService->get($req, [MeExtender::EXTEND_ALL]);
+        $return = $this->validate2FALogin();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $response = $AuthService->authenticateWith2FA($requestData['auth_hash'], $requestData['2fa_token']);
+            $response = $this->processInvite($response);
+            $response = $this->appendCookieInfo($response);
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
+        } catch (GlException\Auth\Auth2FAMismatchException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
+                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
+                ]
+            );
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($response)->getResponse();
+    }
+
+    /**
+     * Login endpoint for user using 2fa recovery codes. Ignore restriction and authentication
+     *
+     * @ignoreRestriction
+     * @skipAuthentication
+     */
+    public function post_login_2fa_backup()
+    {
+        $return = $this->validate2FALogin();
+
+        if (!empty($return)) {
+            return $return;
+        }
+
+        $requestData = $this->getRequestJsonBody();
+
+        try {
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init("AuthService");
+            $response = $AuthService->authenticateWith2FA(
+                $requestData['auth_hash'],
+                $requestData['2fa_token'],
+                true
+            );
+            $response = $this->processInvite($response);
+            $response = $this->appendCookieInfo($response);
+        } catch (GlException\GoalousNotFoundException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::USER_NOT_FOUND)
+                ->getResponse();
+        } catch (GlException\Auth\Auth2FAInvalidBackupCodeException $e) {
+            return ErrorResponse::badRequest()
+                ->withMessage(Enum\Auth\Status::AUTH_MISMATCH)
+                ->getResponse();
+        } catch (\Throwable $e) {
+            GoalousLog::emergency(
+                'user failed to login',
+                [
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString()
+                ]
+            );
+            return ErrorResponse::internalServerError()
+                ->getResponse();
+        }
+
+        return ApiResponse::ok()->withBody($response)->getResponse();
+    }
+
+    public function post_login_sso()
+    {
+        //TODO
     }
 
     /**
@@ -94,14 +309,12 @@ class AuthController extends BaseApiController
         /** @var AuthService $AuthService */
         $AuthService = new AuthService();
 
+        CustomLogger::getInstance()->logEvent('logout');
+
         try {
             $res = $AuthService->invalidateUser($this->getJwtAuth());
         } catch (Exception $e) {
-            GoalousLog::error('failed to logout', [
-                'user.id' => $this->getUserId(),
-                'team.id' => $this->getTeamId(),
-                'jwt_id'  => $this->getJwtAuth()->getJwtId(),
-            ]);
+            CustomLogger::getInstance()->logException($e);
             return ErrorResponse::internalServerError()
                 ->getResponse();
         }
@@ -111,7 +324,40 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
+        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_logout');
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
+    }
+
+    /**
+     * Validate parameters
+     *
+     * @return CakeResponse
+     */
+    private function validateRequestLogin()
+    {
+        $requestedBody = $this->getRequestJsonBody();
+        $validator = AuthRequestValidator::createRequestLoginValidator();
+
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
+        try {
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
     }
 
     /**
@@ -133,10 +379,13 @@ class AuthController extends BaseApiController
                 ->addErrorsFromValidationException($e)
                 ->getResponse();
         } catch (Exception $e) {
-            GoalousLog::error('Unexpected validation exception', [
-                'class'   => get_class($e),
-                'message' => $e,
-            ]);
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
             return ErrorResponse::internalServerError()->getResponse();
         }
 
@@ -160,8 +409,11 @@ class AuthController extends BaseApiController
         }
         $token = $this->getTokenForRecovery($user, $teamId);
 
+        /** @var AuthService $AuthService */
+        $AuthService = new AuthService();
+
         $data = [
-            'me'    => $this->_getAuthUserInfo($user['id'], $teamId),
+            'me'    => $AuthService->getUserInfo($user['id'], $teamId),
             'token' => $token
         ];
 
@@ -179,6 +431,7 @@ class AuthController extends BaseApiController
      */
     private function getTokenForRecovery(array $user, int $teamId): string
     {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:getTokenForRecovery', 'userId' => $userId]);
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 
@@ -199,5 +452,157 @@ class AuthController extends BaseApiController
         $jwt = $GlRedis->saveMapSesAndJwt($teamId, $user['id'], $sesId);
         $token = $jwt->token();
         return $token;
+    }
+
+    private function validate2FALogin()
+    {
+        $requestedBody = $this->getRequestJsonBody();
+        $validator = AuthRequestValidator::create2FALoginValidator();
+
+        // This process is almost same as BaseApiController::generateResponseIfValidationFailed()
+        // But not logging $requestedBody because its containing credential value
+        try {
+            $validator->validate($requestedBody);
+        } catch (\Respect\Validation\Exceptions\AllOfException $e) {
+            return ErrorResponse::badRequest()
+                ->addErrorsFromValidationException($e)
+                ->getResponse();
+        } catch (Exception $e) {
+            GoalousLog::error(
+                'Unexpected validation exception',
+                [
+                    'class'   => get_class($e),
+                    'message' => $e,
+                ]
+            );
+            return ErrorResponse::internalServerError()->getResponse();
+        }
+
+        return null;
+    }
+
+    private function processInvite(array $responseData): array
+    {
+        $newResponseData = $responseData;
+
+        // If it's not invitation, return
+        if (!key_exists('invitation_token', $this->getRequestJsonBody())) {
+            return $newResponseData;
+        }
+
+        $userId = $newResponseData['data']['me']['id'];
+        $invitationToken = $this->getRequestJsonBody()['invitation_token'];
+
+        try {
+            /** @var InvitationService $InvitationService */
+            $InvitationService = ClassRegistry::init('InvitationService');
+            $message = $InvitationService->validateToken($userId, $invitationToken);
+
+            // If token is invalid, return with message
+            if ($message !== Enum\Invite\ResponseMessage::SUCCESS) {
+                $newResponseData['message'] = $message;
+                return $newResponseData;
+            }
+
+            $newTeamId = $InvitationService->consumeToken($userId, $invitationToken);
+
+            if (empty($newTeamId) || $newTeamId < 0) {
+                $newResponseData['message'] = Enum\Invite\ResponseMessage::FAILED;
+                return $newResponseData;
+            }
+
+            $oldJwt = JwtAuthentication::decode($newResponseData['data']['token']);
+
+            /** @var AuthService $AuthService */
+            $AuthService = ClassRegistry::init('AuthService');
+            $newResponseData['data']['me'] = $AuthService->getUserInfo($userId, $newTeamId);
+            $newResponseData['data']['token'] = $AuthService->recreateJwt($oldJwt, $newTeamId)->token();
+
+            $newResponseData['message'] = Enum\Invite\ResponseMessage::SUCCESS;
+
+            /** @var NotifyBizComponent $NotifyBiz */
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $newTeamId);
+        } catch (Exception $e) {
+            GoalousLog::error("Failed to process invitation",
+                [
+                    'class'   => get_class($e),
+                    'message' => $e->getMessage(),
+                    'trace'   => $e->getTraceAsString(),
+                    'user.id' => $this->getUserId(),
+                ]
+            );
+            $responseData['message'] = Enum\Invite\ResponseMessage::FAILED;
+            return $responseData;
+        }
+
+        return $newResponseData;
+    }
+
+    /**
+     * @param array $responseData
+     *
+     * @return array
+     */
+    private function appendCookieInfo(array $responseData): array
+    {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:appendCookieInfo', 'responseData' => $responseData]);
+        if (!array_key_exists('me', $responseData['data'])) {
+            return $responseData;
+        }
+        /** @var GlRedis $GlRedis */
+        $GlRedis = ClassRegistry::init('GlRedis');
+
+        //Filter out extended data
+        $userData = $this->filterAndConvertUserData($responseData['data']['me']);
+
+        if (!$this->Auth->login($userData)) {
+            throw new GlException\Auth\AuthFailedException("Unable to manually log user.");
+        }
+
+        $userId = $responseData['data']['me']['id'];
+        $currentTeamId = $responseData['data']['me']['current_team_id'];
+
+        $sessionId = $this->Session->id();
+
+        $this->Session->write('current_team_id', strval($currentTeamId));
+        $this->Session->write('default_team_id ', strval($responseData['data']['me']['default_team_id']));
+
+        $cookieLifetime = Configure::read('Session')["ini"]["session.cookie_lifetime"];
+        $cookieExpiryTime = GoalousDateTime::now()->addSeconds($cookieLifetime);
+
+        $cookieData = [
+            'name'       => getSid(),
+            'session_id' => $sessionId,
+            'max_age'    => $cookieLifetime,
+            'expires'    => $cookieExpiryTime->format("D, d-M-Y H:i:s e")
+        ];
+
+        $responseData['data']['cookie'] = $cookieData;
+
+        $GlRedis->saveMapSesAndJwtWithToken($currentTeamId, $userId, $responseData['data']['token'], $sessionId);
+
+        return $responseData;
+    }
+
+    private function filterAndConvertUserData(array $userData): array
+    {
+        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:filterAndConvertUserData', 'userData' => $userData]);
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $returnArray = [];
+
+        foreach ($userData as $key => $value) {
+            if (in_array($key, $User->loginUserFields)) {
+                $returnArray[$key] = strval($value);
+            }
+        }
+
+        //For compatibility with old backend
+        if (!empty($returnArray['language'])) {
+            $returnArray['language'] = LangUtil::convertToISO3($returnArray['language']);
+        }
+
+        return $returnArray;
     }
 }

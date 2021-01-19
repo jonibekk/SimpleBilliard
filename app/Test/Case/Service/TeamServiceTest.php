@@ -33,6 +33,10 @@ class TeamServiceTest extends GoalousTestCase
         'app.credit_card',
         'app.price_plan_purchase_team',
         'app.campaign_team',
+        'app.circle',
+        'app.circle_member',
+        'app.email',
+        'app.experiment'
     );
 
     /**
@@ -369,7 +373,8 @@ class TeamServiceTest extends GoalousTestCase
         PaymentTypeEnum $type = null,
         bool $withCampaign = false,
         bool $withPricePlan = false
-    ): int {
+    ): int
+    {
 
         $team = [
             'service_use_state_start_date' => $startDate,
@@ -378,7 +383,7 @@ class TeamServiceTest extends GoalousTestCase
         ];
 
         if (!empty($type) && $type->getValue() === PaymentTypeEnum::INVOICE) {
-           $teamId = $this->createInvoicePaidTeam($team)[0];
+            $teamId = $this->createInvoicePaidTeam($team)[0];
         } else {
             $teamId = $this->createCcPaidTeam($team)[0];
         }
@@ -407,5 +412,32 @@ class TeamServiceTest extends GoalousTestCase
         }
 
         return $teamId;
+    }
+
+    public function test_joinTeam_success()
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+        $this->assertTrue($TeamService->joinTeam(1, 2));
+
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init('TeamMember');
+        $this->assertNotEmpty($TeamMember->getUnique(1, 2));
+
+        /** @var CircleMember $CircleMember */
+        $CircleMember = ClassRegistry::init('CircleMember');
+        $this->assertCount(1, $CircleMember->getJoinedCircleIds(2, 1));
+    }
+
+    public function test_joinTeamAlreadyExist_failed()
+    {
+        /** @var TeamService $TeamService */
+        $TeamService = ClassRegistry::init('TeamService');
+        try {
+            $TeamService->joinTeam(1, 1);
+        } catch (Goalous\Exception\GoalousConflictException $e) {
+        } catch (Exception $e) {
+            $this->fail();
+        }
     }
 }
