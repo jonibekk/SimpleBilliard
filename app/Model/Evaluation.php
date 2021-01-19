@@ -328,22 +328,39 @@ class Evaluation extends AppModel
      *
      * @return array
      */
-    function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId): array
+    function getEvaluationsForEvaluatorAndEvaluatee(int $evaluateTermId, int $evaluateeId, int $evaluatorId, bool $isFixedEvaluationOrder = false): array
     {
         $goalPolicy = new GoalPolicy($evaluatorId, $this->current_team_id);
         $accessibleGoals = $this->Goal->find('all', $goalPolicy->scope());
+        if (!$isFixedEvaluationOrder) {
 
-        return $this->getEvaluations($evaluateTermId, $evaluateeId,
-            [
-                'evaluator_user_id' => [$evaluatorId, $evaluateeId],
-                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
-                'or' => [
-                    'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
-                    'goal_id IS NULL' // handles for total evaluation
+            return $this->getEvaluations($evaluateTermId, $evaluateeId,
+                [
+                    'evaluator_user_id' => [$evaluatorId, $evaluateeId],
+                    'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
+                    'or' => [
+                        'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
+                        'goal_id IS NULL'
+                    ]
                 ]
-            ]
-        );
+            );
+        } else {
+            $indexNum = $this->getMyTurnIndex($evaluateTermId, $evaluateeId, $evaluatorId);
+            if ($indexNum < 0) {
+                return [];
+            }
+            return $this->getEvaluations($evaluateTermId, $evaluateeId,
+                [
+                    'Evaluation.index_num <= ' => $indexNum, 
+                    'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
+                    'or' => [
+                        'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
+                        'goal_id IS NULL'
+                    ]
+                ]
+            );
 
+        }
     }
 
     /**
@@ -1422,4 +1439,29 @@ class Evaluation extends AppModel
         return $res;
     }
 
+    /**
+     * @param int $termId
+     * @param int $evaluateeId
+     *
+     * @return int
+     */
+    function getMyTurnIndex(int $termId, int $evaluateeId, int $myId): int
+    {
+        $options = [
+            'conditions' => [
+                'term_id'           => $termId,
+                'evaluatee_user_id' => $evaluateeId,
+                'evaluator_user_id' => $myId,
+                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'goal_id'           => null,
+                'del_flg'           => false
+            ],
+        ];
+
+        $res = $this->find('first', $options);
+        if (!$res) {
+            return -1;
+        }
+        return intval($res['Evaluation']['index_num']);
+    }
 }
