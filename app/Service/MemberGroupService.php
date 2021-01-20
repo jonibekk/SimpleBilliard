@@ -2,6 +2,8 @@
 App::import('Service', 'AppService');
 App::uses('MemberGroup', 'Model');
 App::uses('GoalMember', 'Model');
+App::uses('NotifySetting', 'Model');
+App::uses('NotifyBizComponent', 'Controller/Component');
 
 class MemberGroupService extends AppService
 {
@@ -118,6 +120,9 @@ class MemberGroupService extends AppService
     {
         /* @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
+        /* @var NotifyBizComponent $NotifyBizComponent */
+        $NotifyBizComponent = ClassRegistry::init("NotifyBizComponent");
+
         $options = [
             'conditions' => [
                 'GoalMember.goal_id' => $goalId,
@@ -137,5 +142,7 @@ class MemberGroupService extends AppService
                 'GoalMember.user_id' => $row['GoalMember']['user_id'], 
             ]
         );
+
+        $NotifyBizComponent->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, $goalId);
     }
 }
