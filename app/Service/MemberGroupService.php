@@ -41,14 +41,20 @@ class MemberGroupService extends AppService
 
         foreach ($rows as $row) {
             $isLeader = $row['GoalMember']['type'] == $GoalMember::TYPE_OWNER;
+            $multipleSharedGroups = $row[0]['num_shared_groups'] != 0;
             $otherCollabsPresent = $row[0]['num_other_collaborators'] != 0;
 
             if (!$isLeader) {
                 $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
+
             } else if ($otherCollabsPresent){
-                $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
-            } else if (!$otherCollabsPresent) {
+                $goalstoreassignleader[] = $row['goalmember']['goal_id'];
+
+            } else if (!$otherCollabsPresent && $multipleSharedGroups) {
                 $goalsToRemoveGroup[] = $row['GoalMember']['goal_id'];
+
+            } else if (!$otherCollabsPresent && !$multipleSharedGroups) {
+                $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
             }
         }
 
@@ -100,6 +106,7 @@ class MemberGroupService extends AppService
             'group' => 'GoalMember.goal_id',
             'fields' => [
                 'GoalMember.*',
+                'COUNT(GoalGroup.group_id) AS num_shared_groups',
                 'COUNT(OtherCollaborator.user_id) AS num_other_collaborators',
             ]
         ];
