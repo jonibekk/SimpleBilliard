@@ -18,34 +18,59 @@ class MemberGroupService extends AppService
         $this->removeCollaborations($groupId, $memberId);
     }
 
+    /** 
+     * When member is removed from group
+     * - remove all non-goal-leader collaborations
+     * - for goals where that member is the leader
+     *      - for goals that he shared with that group, reassign goal leader to earliest collaborator
+     *      - if no earliest collaborator present 
+     *          - remove the group from the list of shared groups for the goal instead. 
+     *          - maintain that user as the goal leader
+        */
     private function removeCollaborations(int $groupId, int $memberId)
     {
-        /* @var GoalMember $GoalMember */
+        /* @var GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
-        $rows = $this->getCollaboratedGoalsWithGroup($memberId);
-        $goalMemberIds = [];
+        /* @var GoalGroup */
+        $GoalGroup = ClassRegistry::init("GoalGroup");
+
+        $rows = $this->getCollaboratedGoalsWithGroup($groupId, $memberId);
+        $goalsToRemoveCollaboration = [];
         $goalsToReassignLeader = [];
+        $goalsToRemoveGroup = [];
 
         foreach ($rows as $row) {
-            if ($groupId === (int) $row['GoalGroup']['group_id'] ) {
-                $goalMemberIds[] = $row['GoalMember']['id'];
+            $isLeader = $row['GoalMember']['type'] == $GoalMember::TYPE_OWNER;
+            $otherCollabsPresent = $row[0]['num_other_collaborators'] != 0;
 
-                if ($row['GoalMember']['type'] === $GoalMember::TYPE_OWNER) {
-                    $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
-                }
+            if (!$isLeader) {
+                $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
+            } else if ($otherCollabsPresent){
+                $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
+            } else if (!$otherCollabsPresent) {
+                $goalsToRemoveGroup[] = $row['GoalMember']['goal_id'];
             }
         }
 
-        $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalMemberIds]);
+        $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalsToRemoveCollaboration]);
+        $GoalGroup->deleteAll([
+            'GoalGroup.goal_id' => $goalsToRemoveGroup, 
+            'GoalGroup.group_id' => $groupId
+        ]);
+
+        $GoalMember->updateAll(
+            ['del_flg' => true], 
+            ['GoalMember.goal_id' => $goalsToReassignLeader, 'GoalMember.user_id' => $memberId]
+        );
 
         foreach ($goalsToReassignLeader as $goalId) {
             $this->reassignGoalLeader($goalId);
         }
     }
 
-    private function getCollaboratedGoalsWithGroup(int $memberId): array
+    private function getCollaboratedGoalsWithGroup(int $groupId, int $memberId): array
     {
-        /* @var GoalMember $GoalMember */
+        /* @var GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
 
         $options = [
@@ -58,15 +83,24 @@ class MemberGroupService extends AppService
                     'alias' => 'GoalGroup',
                     'conditions' => [
                         'GoalGroup.goal_id = GoalMember.goal_id',
+                        'GoalGroup.group_id' => $groupId
                     ]
-                ]
+                ],
+                [
+                    'type' => 'LEFT',
+                    'table' => 'goal_members',
+                    'alias' => 'OtherCollaborator',
+                    'conditions' => [
+                        'OtherCollaborator.goal_id = GoalMember.goal_id',
+                        'OtherCollaborator.del_flg != 1',
+                        'OtherCollaborator.user_id !=' => $memberId,
+                    ]
+                ],
             ],
-            'group' => [
-                'GoalGroup.goal_id HAVING COUNT(GoalGroup.group_id) = 1'
-            ],
+            'group' => 'GoalMember.goal_id',
             'fields' => [
-                'GoalMember.id',
-                'GoalGroup.group_id',
+                'GoalMember.*',
+                'COUNT(OtherCollaborator.user_id) AS num_other_collaborators',
             ]
         ];
 
@@ -81,15 +115,13 @@ class MemberGroupService extends AppService
             'conditions' => [
                 'GoalMember.goal_id' => $goalId,
                 'GoalMember.type' => $GoalMember::TYPE_COLLABORATOR,
+            ],
+            'order' => [
+                'created' => 'asc'
             ]
         ];
 
         $row = $GoalMember->find('first', $options);
-        GoalousLog::info('row', [$row]);
-
-        if (empty($row)) {
-            return;
-        }
 
         $GoalMember->updateAll(
             ['type' => $GoalMember::TYPE_OWNER ], 
