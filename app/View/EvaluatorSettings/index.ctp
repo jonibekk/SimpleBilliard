@@ -16,6 +16,7 @@
             <?= $this->element('EvaluatorSetting/index_items',
                 [
                     'evaluatees'     => [$selfUser],
+                    'isFixedEvaluationOrder'     => $isFixedEvaluationOrder,
                 ]) ?>
             <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                 <p class="font_bold"><?= __('Coached member(s)') ?> (<?= count($coachees) ?>)</p>
@@ -23,6 +24,7 @@
             <?= $this->element('EvaluatorSetting/index_items',
                 [
                     'evaluatees'     => $coachees,
+                    'isFixedEvaluationOrder'     => $isFixedEvaluationOrder,
                 ]) ?>
         </div>
     </div>

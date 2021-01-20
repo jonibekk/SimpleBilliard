@@ -2370,6 +2370,10 @@ msgstr "Data final do objetivo"
 msgid "Goal features"
 msgstr "Função objetivo"
 
+#, fuzzy
+msgid "Goal ID"
+msgstr ""
+
 msgid "GOAL ID"
 msgstr "ID do objetivo"
 
@@ -3363,6 +3367,14 @@ msgstr "Status ativo do membro (*)"
 msgid "Member ID"
 msgstr "ID do membro"
 
+#, fuzzy
+msgid "Member ID (Coach)"
+msgstr ""
+
+#, fuzzy
+msgid "Member ID (User)"
+msgstr ""
+
 msgid "Member ID(*)"
 msgstr "ID do membro (*)"
 
@@ -3470,6 +3482,14 @@ msgstr "Não se aplica."
 
 msgid "Name"
 msgstr "Nome"
+
+#, fuzzy
+msgid "Name (Coach)"
+msgstr ""
+
+#, fuzzy
+msgid "Name (User)"
+msgstr ""
 
 msgid "Name Kana"
 msgstr "Nome"
@@ -5769,6 +5789,14 @@ msgstr "Você não é um membro do tópico."
 
 msgid "You are not a member of this team."
 msgstr "Você não é um membro deste time."
+
+#, fuzzy
+msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
+msgstr ""
+
+#, fuzzy
+msgid "You are the last user. If this circle unnecessary, Delete this circle."
+msgstr ""
 
 msgid "You belong to all circles in this team."
 msgstr "Você pertence a todos os círculos desta equipe."
