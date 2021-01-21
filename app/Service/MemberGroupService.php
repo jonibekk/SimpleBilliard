@@ -42,15 +42,17 @@ class MemberGroupService extends AppService
         $goalsToRemoveGroup = [];
 
         foreach ($rows as $row) {
+            $goalId = $row['GoalMember']['goal_id'];
+            $numSharedGroups = count($GoalGroup->findGroupsWithGoalId($goalId, [true, false]));
             $isLeader = $row['GoalMember']['type'] == $GoalMember::TYPE_OWNER;
-            $multipleSharedGroups = $row[0]['num_shared_groups'] != 0;
-            $otherCollabsPresent = $row[0]['num_other_collaborators'] != 0;
+            $multipleSharedGroups = $numSharedGroups > 1;
+            $otherCollabsPresent = $row[0]['num_other_collaborators'] > 0;
 
             if (!$isLeader) {
                 $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
 
             } else if ($otherCollabsPresent){
-                $goalstoreassignleader[] = $row['goalmember']['goal_id'];
+                $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
 
             } else if (!$otherCollabsPresent && $multipleSharedGroups) {
                 $goalsToRemoveGroup[] = $row['GoalMember']['goal_id'];
@@ -108,7 +110,6 @@ class MemberGroupService extends AppService
             'group' => 'GoalMember.goal_id',
             'fields' => [
                 'GoalMember.*',
-                'COUNT(GoalGroup.group_id) AS num_shared_groups',
                 'COUNT(OtherCollaborator.user_id) AS num_other_collaborators',
             ]
         ];
@@ -120,8 +121,7 @@ class MemberGroupService extends AppService
     {
         /* @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
-        /* @var NotifyBizComponent $NotifyBizComponent */
-        $NotifyBizComponent = ClassRegistry::init("NotifyBizComponent");
+        $NotifyBiz = new NotifyBizComponent(new ComponentCollection());
 
         $options = [
             'conditions' => [
@@ -143,6 +143,6 @@ class MemberGroupService extends AppService
             ]
         );
 
-        $NotifyBizComponent->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, $goalId);
+        $NotifyBiz->execSendNotify(NotifySetting::TYPE_EXCHANGED_LEADER, $goalId);
     }
 }
