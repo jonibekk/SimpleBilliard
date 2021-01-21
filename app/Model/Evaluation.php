@@ -345,13 +345,32 @@ class Evaluation extends AppModel
                 ]
             );
         } else {
-            $indexNum = $this->getMyTurnIndex($evaluateTermId, $evaluateeId, $evaluatorId);
-            if ($indexNum < 0) {
+            $evaluators = $this->getEvaluatorOfEvaluatee($evaluateTermId, $evaluateeId, $evaluatorId);
+            if (count($evaluators) == 0) {
                 return [];
             }
+            $evaluatorIds = [];
+            
+            $myIndexNum = -1; 
+            foreach($evaluators as $evaluator) {
+                if (intval($evaluator['Evaluation']['evaluator_user_id']) == $evaluatorId) {
+                    $myIndexNum = intval($evaluator['Evaluation']['index_num']);
+                }
+            }
+
+            if ($myIndexNum == -1) {
+                return [];
+            }
+
+            foreach($evaluators as $evaluator) {
+                if (intval($evaluator['Evaluation']['index_num']) <= $myIndexNum) {
+                    $evaluatorIds[] = intval($evaluator['Evaluation']['evaluator_user_id']);
+                }
+            }
+            
             return $this->getEvaluations($evaluateTermId, $evaluateeId,
                 [
-                    'Evaluation.index_num <= ' => $indexNum, 
+                    'evaluator_user_id' => $evaluatorIds,
                     'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
                     'or' => [
                         'goal_id'           => Hash::extract($accessibleGoals, '{n}.Goal.id'),
@@ -1445,23 +1464,23 @@ class Evaluation extends AppModel
      *
      * @return int
      */
-    function getMyTurnIndex(int $termId, int $evaluateeId, int $myId): int
+    function getEvaluatorOfEvaluatee(int $termId, int $evaluateeId, int $myId): array
     {
         $options = [
             'conditions' => [
                 'term_id'           => $termId,
                 'evaluatee_user_id' => $evaluateeId,
-                'evaluator_user_id' => $myId,
-                'evaluate_type'     => self::TYPE_EVALUATOR,
+                'evaluate_type'     => [self::TYPE_ONESELF, self::TYPE_EVALUATOR],
                 'goal_id'           => null,
                 'del_flg'           => false
             ],
+            'order'      => 'Evaluation.index_num asc',
         ];
 
-        $res = $this->find('first', $options);
+        $res = $this->find('all', $options);
         if (!$res) {
-            return -1;
+            return [];
         }
-        return intval($res['Evaluation']['index_num']);
+        return $res;
     }
 }
