@@ -105,7 +105,7 @@ class AuthController extends BaseApiController
             );
         }
 
-        CustomLogger::getInstance()->logEvent('UELO:AuthController:get_has_session');
+        $this->logAuth('UELO:AuthController:get_has_session');
         return ApiResponse::ok()
             ->withMessage(Enum\Auth\Status::OK)
             ->withData(['has_session' => $hasSession])
@@ -196,7 +196,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
-        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_login');
+        $this->logAuth('UELO:AuthController:post_login');
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
@@ -242,6 +242,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
+        $this->logAuth('UELO:AuthController:post_login_2fa');
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
@@ -291,6 +292,7 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
+        $this->logAuth('UELO:AuthController:post_login_2fa_backup');
         return ApiResponse::ok()->withBody($response)->getResponse();
     }
 
@@ -306,6 +308,8 @@ class AuthController extends BaseApiController
      */
     public function post_logout()
     {
+        $this->logAuth('UELO:AuthController:post_logout');
+
         /** @var AuthService $AuthService */
         $AuthService = new AuthService();
 
@@ -324,7 +328,6 @@ class AuthController extends BaseApiController
                 ->getResponse();
         }
 
-        CustomLogger::getInstance()->logEvent('UELO:AuthController:post_logout');
         return ApiResponse::ok()->withMessage(__('Logged out'))->getResponse();
     }
 
@@ -431,7 +434,7 @@ class AuthController extends BaseApiController
      */
     private function getTokenForRecovery(array $user, int $teamId): string
     {
-        CustomLogger::getInstance()->setMetadata(['event' => 'UELO:AuthController:getTokenForRecovery', 'userId' => $userId]);
+        $this->logAuth('UELO:AuthController:getTokenForRecovery', ['user' => $user, 'teamId' => $teamId]);
         /** @var GlRedis $GlRedis */
         $GlRedis = ClassRegistry::init('GlRedis');
 
@@ -604,5 +607,18 @@ class AuthController extends BaseApiController
         }
 
         return $returnArray;
+    }
+
+    private function logAuth(string $message, array $data): void
+    {
+        $jwtAuth = $this->getJwtAuth();
+
+        if ($jwtAuth) {
+            $data['jwtId'] = $jwtAuth->getJwtId();
+            $data['userId'] = $jwtAuth->getUserId();
+            $data['teamId'] = $jwtAuth->getTeamId();
+        }
+
+        CustomLogger::getInstance()->logEvent($message, $data);
     }
 }
