@@ -609,7 +609,7 @@ class AuthController extends BaseApiController
         return $returnArray;
     }
 
-    private function logAuth(string $message, array $data): void
+    private function logAuth(string $message, array $data = []): void
     {
         $jwtAuth = $this->getJwtAuth();
 
