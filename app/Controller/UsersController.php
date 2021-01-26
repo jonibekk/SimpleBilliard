@@ -436,8 +436,8 @@ class UsersController extends AppController
      */
     public function logout()
     {
-        $logData['user_id'] = $this->Auth->user('id');
-        $logData['current_team_id'] = $this->Auth->user('current_team_id');
+        $logData['my_uid'] = $this->my_uid;
+        $logData['current_team_id'] = $this->current_team_id;
 
         CustomLogger::getInstance()->logEvent('UELO:UsersController:logout', $logData);
 
