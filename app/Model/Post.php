@@ -525,7 +525,7 @@ class Post extends AppModel
                     $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
                 }
 
-                $this->virtualFields['can_comment'] = '(SELECT EXISTS(SELECT 1 FROM post_share_circles psc LEFT JOIN circle_members cm ON cm.circle_id = psc.circle_id WHERE Post.id = psc.post_id AND cm.user_id = "'.$this->my_uid.'" LIMIT 1))';
+                $this->virtualFields['can_comment'] = '(SELECT EXISTS(SELECT 1 FROM post_share_circles psc INNER JOIN circle_members cm ON cm.circle_id = psc.circle_id AND Post.id = psc.post_id AND cm.user_id = "'.$this->my_uid.'" LIMIT 1))';
             }
         }
 
