@@ -69,17 +69,20 @@ class MemberGroupService extends AppService
         foreach ($rows as $row) {
             $isLeader = $row['GoalMember']['type'] == GoalMember::TYPE_OWNER;
 
-            if (!$isLeader) {
+            if ($row['shouldRetainAccess']) {
+                continue;
+
+            } else if (!$isLeader) {
                 $removeCollab[] = $row['GoalMember']['id'];
 
-            } else if (!$row['otherCollabsPresent'] && $row['multipleSharedGroups']) {
+            } else if ($row['otherCollabsPresent']){
+                $reassignLeader[] = $row['GoalMember']['goal_id'];
+
+            } else if ($row['multipleSharedGroups']) {
                 $removeGroup[] = $row['GoalMember']['goal_id'];
 
-            } else if (!$row['otherCollabsPresent'] && !$row['multipleSharedGroups']) {
+            } else if (!!$row['multipleSharedGroups']) {
                 $removeCollab[] = $row['GoalMember']['id'];
-
-            } else if ($row['otherCollabsPresent'] && !$row['multipleSharedGroups']){
-                $reassignLeader[] = $row['GoalMember']['goal_id'];
             }
         }
 
