@@ -46,9 +46,7 @@ class TwoFAService extends AppService
             throw new GlException\GoalousException("User does not have 2fa secret");
         }
 
-        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
-
-        return $Google2Fa->verifyKey($user['2fa_secret'], $twoFaCode);
+        return $this->verifyKey($user['2fa_secret'], $twoFaCode);
     }
 
     /**
@@ -76,26 +74,19 @@ class TwoFAService extends AppService
      * @param string $secret
      * @return string
      */
-    public function getQRCodeInline($company, int $userId, $secret)
+    public function getQRCodeInline(string $company, int $userId, string $secret)
     {
-        /** @var Email $Email */
-        $Email = ClassRegistry::init('Email');
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
 
-        $option = [
-            'conditions' => [
-                'Email.user_id' => $userId,
-                'Email.del_flg' => false,
-            ]
-        ];
-
-        $email = $Email->find('first', $option);
+        $email = $User->getProfileAndEmail($userId);
         if (empty($email)) {
-            GoalousLog::error('No Email Address', ['User' => $userId]);
+            GoalousLog::error('No Email Address', ['Payload' => $email]);
             return null;
         }
 
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
-        return $Google2Fa->getQRCodeInline($company, $email['Email']['email'], $secret);
+        return $Google2Fa->getQRCodeInline($company, $email['User']['PrimaryEmail']['email'], $secret);
     }
 
     /**

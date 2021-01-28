@@ -29,7 +29,7 @@ class UserSettingsService extends AppService
             return null;
         }
 
-        return $user;
+        return array('User' => $user);
     }
 
     public function getTeamMemberData(int $userId, int $teamId): ?array
@@ -46,12 +46,14 @@ class UserSettingsService extends AppService
     }
 
     // Update User Account
-    public function updateAccountSettingsData(int $userId, UserAccountDTO $accountData): bool
+    public function updateAccountSettingsData(int $userId, int $teamId, UserAccountDTO $accountData): bool
     {
         /** @var User $User */
         $User = ClassRegistry::init('User');
+        /** @var TeamMember $TeamMember */
+        $TeamMember = ClassRegistry::init("TeamMember");
 
-        $data = array(
+        $userData = array(
             'User' => [
                 'id' => $userId,
                 'email' => $accountData->email,
@@ -62,9 +64,21 @@ class UserSettingsService extends AppService
             ]
         );
 
+        $team = $this->getTeamMemberData($userId, $teamId);
+        $teamData = array(
+            'TeamMember' => [
+                'id' => $team['TeamMember']['id'],
+                'default_translation_language' => $accountData->defaultTranslationLanguage
+            ]
+        );
+
         try {
-            $User->save($data, false);
+            $this->TransactionManager->begin();
+            $User->save($userData, false);
+            $TeamMember->save($teamData, false);
+            $this->TransactionManager->commit();
         } catch (Exception $e) {
+            $this->TransactionManager->rollback();
             GoalousLog::error('Failed to update user data.', [
                 'message' => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
@@ -147,44 +161,24 @@ class UserSettingsService extends AppService
     }
 
     // Update Profile and/or Cover Photo
-    public function updateProfileAndCoverPhoto(int $userId, int $teamId, $profileUuid, $coverUuid): bool
+    public function updateProfileAndCoverPhoto(int $userId, int $teamId, string $profileUuid = null, string $coverUuid = null, UserProfileDTO $profileInfo): bool
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
         /** @var UploadService $UploadService */
         $UploadService = ClassRegistry::init("UploadService");
-        /** @var AttachedFileService $AttachedFileService */
-        $AttachedFileService = ClassRegistry::init("AttachedFileService");
-
-        $user = $UserService->getUserData($userId);
 
         try {
             if (isset($profileUuid) && strlen($profileUuid) > 0) {
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $UploadService->getBuffer($userId, $teamId, $profileUuid);
-                /** @var AttachedFileEntity $attachedFile */
-                $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
 
-                // Delete old Profile photo
-                if (!empty($user) && !empty($user['User']['photo_file_name'])) {
-                    $this->deleteImage($userId, $teamId, $user['User']['photo_file_name']);
-                }
-
-                $this->setProfilePhotoName($uploadedFile->getFileName());
+                $profileInfo->profilePhotoName = $uploadedFile->getFileName();
                 $UploadService->saveWithProcessing("User", $userId, 'photo', $uploadedFile);
             }
             if (isset($coverUuid) && strlen($coverUuid) > 0) {
                 /** @var UploadedFile $uploadedFile */
                 $uploadedFile = $UploadService->getBuffer($userId, $teamId, $coverUuid);
-                /** @var AttachedFileEntity $attachedFile */
-                $AttachedFileService->add($userId, $teamId, $uploadedFile, AttachedModelType::TYPE_MODEL_ACTION_RESULT());
 
-                // Delete old Cover photo
-                if (!empty($user) && !empty($user['User']['cover_photo_file_name'])) {
-                    $this->deleteImage($userId, $teamId, $user['User']['cover_photo_file_name']);
-                }
-
-                $this->setCoverPhotoName($uploadedFile->getFileName());
+                $profileInfo->coverPhotoName = $uploadedFile->getFileName();
                 $UploadService->saveWithProcessing("User", $userId, 'cover_photo', $uploadedFile);
             }
         } catch (Exception $e) {
@@ -198,30 +192,6 @@ class UserSettingsService extends AppService
         }
 
         return true;
-    }
-
-    // Delete Profile and/or Cover Photo
-    private function deleteImage(int $userId, int $teamId, $fileName)
-    {
-        /** @var AttachedFile $AttachedFile */
-        $AttachedFile = ClassRegistry::init('AttachedFile');
-
-        $option = [
-            'conditions' => [
-                'AttachedFile.user_id' => $userId,
-                'AttachedFile.team_id' => $teamId,
-                'AttachedFile.del_flg'    => false,
-                'AttachedFile.model_type'    => AttachedModelType::TYPE_MODEL_ACTION_RESULT(),
-                'AttachedFile.attached_file_name'    => $fileName,
-            ]
-        ];
-
-        $attFile = $AttachedFile->find('first', $option);
-        if (!empty($attFile)) {
-            $attFile['AttachedFile']['del_flg'] = true;
-            $attFile['AttachedFile']['deleted'] = GoalousDateTime::now()->getTimestamp();
-            $AttachedFile->useType()->useEntity()->save($attFile, false);
-        } else GoalousLog::error('Empty Attached File!');
     }
 
     // Validate Password
@@ -262,30 +232,4 @@ class UserSettingsService extends AppService
         return $User->getCacheKey($name, $isUserData, $userId, $withTeamId);
     }
 
-
-    private function setProfilePhotoName($profilePhoto): void
-    {
-        $this->profilePhoteFileName = $profilePhoto;
-    }
-
-    public function getProfilePhotoName()
-    {
-        return $this->profilePhoteFileName ? $this->profilePhoteFileName : null;
-    }
-
-    private function setCoverPhotoName($coverPhoto): void
-    {
-        $this->coverPhoteFileName = $coverPhoto;
-    }
-
-    public function getCoverPhotoName()
-    {
-        return $this->coverPhoteFileName ? $this->coverPhoteFileName : null;
-    }
-
-    // Profile image file name.
-    private $profilePhoteFileName;
-
-    // Cover image file name.
-    private $coverPhoteFileName;
 }

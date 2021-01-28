@@ -30,6 +30,6 @@ class UserNotifyDTO
             'desktop_status' => $this->desktopStatus,
         );
 
-        return empty($data) ? null : $data;
+        return (empty($this->emailStatus) || empty($this->mobileStatus) || empty($this->desktopStatus)) ? null : $data;
     }
 }

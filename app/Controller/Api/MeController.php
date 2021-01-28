@@ -222,17 +222,22 @@ class MeController extends BasePagingController
         try {
             $translationLanguages = $TeamTranslationLanguageService->getAllLanguages($this->getTeamId());
         } catch (Exception $e) {
-            GoalousLog::error('Failed to get team translation languages data');
+            GoalousLog::error('Failed to get team translation languages data', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'user_id' => $this->getUserId(),
+                'team_id' => $this->getTeamId()
+            ]);
             $translationLanguages = [];
         }
 
         $data = [
-            'languages' => $this->Lang->getAvailLangList(),
+            'languages' => LangUtil::$ISOMap,
             'translation_languages' => $translationLanguages
         ];
 
-        if (empty($data)) {
-            GoalousLog::error('Failed to get languages and team translation languages data');
+        if (empty($data['languages'])) {
+            GoalousLog::error('Failed to get languages and team translation languages data', ['data' => $data]);
             return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
         }
 
@@ -271,16 +276,13 @@ class MeController extends BasePagingController
     {
         /** @var UserSettingsService $UserSettingsService */
         $UserSettingsService = ClassRegistry::init("UserSettingsService");
-        /** @var TeamMemberService $TeamMemberService */
-        $TeamMemberService = ClassRegistry::init("TeamMemberService");
         
         $data = $this->getRequestJsonBody();
 
         $user = $UserSettingsService->getUserData($this->getUserId());
-        $team = $UserSettingsService->getTeamMemberData($this->getUserId(), $this->getTeamId());
 
         if (empty($user)) {
-            GoalousLog::error('Failed to save account user settings data.', ['User' => $this->getUserId()]);
+            GoalousLog::error('Failed to save account user settings data.', ['Request payload' => $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
@@ -291,18 +293,9 @@ class MeController extends BasePagingController
         $accountInfo->language = $data['User']['language'];
         $accountInfo->timezone = $data['User']['timezone'];
         $accountInfo->updateEmailFlag = $data['User']['update_email_flg'];
+        $accountInfo->defaultTranslationLanguage = $data['TeamMember']['default_translation_language'];
 
-        if (!empty($team) && $team['TeamMember']['default_translation_language'] !== $data['TeamMember']['default_translation_language']) {
-            $translationLanguage = $data['TeamMember']['default_translation_language'];
-            $team['TeamMember']['default_translation_language'] = $translationLanguage;
-            $teamSuccess = $TeamMemberService->putTeamData($this->getTeamId(), $team);
-            if (!$teamSuccess) {
-                GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
-                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
-            }
-        }
-
-        $userSuccess = $UserSettingsService->updateAccountSettingsData($this->getUserId(), $accountInfo);
+        $userSuccess = $UserSettingsService->updateAccountSettingsData($this->getUserId(), $this->getTeamId(), $accountInfo);
         if (!$userSuccess) {
             GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
@@ -326,7 +319,7 @@ class MeController extends BasePagingController
         $teamMember = $UserSettingsService->getTeamMemberData($this->getUserId(), $this->getTeamId());
 
         if (empty($user) || empty($teamMember)) {
-            GoalousLog::error('Failed to save profile user settings data.', ['User' => $this->getUserId()]);
+            GoalousLog::error('Failed to save profile user settings data.', ['Request payload' => $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
 
@@ -342,17 +335,16 @@ class MeController extends BasePagingController
         $profileInfo->comment = $data['TeamMember']['comment'];
 
         if (isset($data['User']['photo']) || isset($data['User']['cover_photo'])) {
-            $imageSuccess = $UserSettingsService->updateProfileAndCoverPhoto($this->getUserId(), $this->getTeamId(), $data['User']['photo'], $data['User']['cover_photo']);
-            if (!$imageSuccess) {
-                return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
+            $success = $UserSettingsService->updateProfileAndCoverPhoto($this->getUserId(), $this->getTeamId(), $data['User']['photo'], $data['User']['cover_photo'], $profileInfo);
+            if (!$success) {
+                GoalousLog::error('Failed to save profile and/or cover image.', ['Request payload' => $data]);
+                return ErrorResponse::badRequest()->withMessage(__("Failed to update profile image."))->getResponse();
             }
-            $profileInfo->profilePhotoName = $UserSettingsService->getProfilePhotoName();
-            $profileInfo->coverPhotoName = $UserSettingsService->getCoverPhotoName();
         }
 
         $success = $UserSettingsService->updateProfileSettingsData($this->getUserId(), $profileInfo);
         if (!$success) {
-            GoalousLog::error('Failed to save profile user settings data.', ['User' => $this->getUserId()]);
+            GoalousLog::error('Failed to save profile user settings data.', ['Request payload' => $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
         Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
@@ -379,7 +371,7 @@ class MeController extends BasePagingController
 
         $success = $UserSettingsService->updateNotifySettingsData($this->getUserId(), $notifyInfo);
         if (!$success) {
-            GoalousLog::error('Failed to save notifications user settings data.', ['User' => $this->getUserId()]);
+            GoalousLog::error('Failed to save notifications user settings data.', ['Request payload' => $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
         Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
@@ -492,7 +484,7 @@ class MeController extends BasePagingController
                 return ErrorResponse::internalServerError()->withMessage(__("The code is incorrect."))->getResponse();
             }
 
-            if (!$UserService->saveField($this->getUserId(), '2fa_secret', $secret_key)) {
+            if (!$UserService->update2faSecretKey($this->getUserId(), $secret_key)) {
                 GoalousLog::error('Enable 2fa failed.', ['2fa_secret' => $secret_key]);
                 return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
             }
@@ -518,9 +510,11 @@ class MeController extends BasePagingController
     {
         /** @var UserService $UserService */
         $UserService = ClassRegistry::init("UserService");
+        /** @var RecoveryCodeService $RecoveryCodeService */
+        $RecoveryCodeService = ClassRegistry::init("RecoveryCodeService");
 
-        if ($UserService->saveField($this->getUserId(), '2fa_secret', null)) {
-            $UserService->invalidateTwoFa($this->getUserId());
+        if ($UserService->update2faSecretKey($this->getUserId(), null)) {
+            $RecoveryCodeService->invalidateTwoFa($this->getUserId());
         } else {
             GoalousLog::error('Failed to disable 2fa.', ['User' => $this->getUserId()]);
             return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
@@ -538,18 +532,21 @@ class MeController extends BasePagingController
      */
     function get_recovery_code()
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
+        /** @var RecoveryCodeService $RecoveryCodeService */
+        $RecoveryCodeService = ClassRegistry::init("RecoveryCodeService");
 
         try {
-            if (!$UserService->generateRecoveryCodes($this->getUserId())) {
+            if (!$RecoveryCodeService->generateRecoveryCodes($this->getUserId())) {
                 GoalousLog::error('Failed to generate recovery codes.', ['User' => $this->getUserId()]);
                 return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
             } else {
-                $recoveryCodes = $UserService->getRecoveryCodes($this->getUserId());
+                $recoveryCodes = $RecoveryCodeService->getRecoveryCodes($this->getUserId());
             }
         } catch (Exception $e) {
-            GoalousLog::error('Failed to generate recovery codes.', ['User' => $this->getUserId()]);
+            GoalousLog::error('Failed to generate recovery codes.', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString()
+            ]);
             return ErrorResponse::badRequest()->withMessage(__("An error has occurred."))->getResponse();
         }
 
@@ -562,14 +559,14 @@ class MeController extends BasePagingController
      */
     function get_regenerated_code()
     {
-        /** @var UserService $UserService */
-        $UserService = ClassRegistry::init("UserService");
+        /** @var RecoveryCodeService $RecoveryCodeService */
+        $RecoveryCodeService = ClassRegistry::init("RecoveryCodeService");
 
-        if (!$UserService->generateRecoveryCodes($this->getUserId())) {
-            GoalousLog::error('Failed to regenerate recovery codes.');
+        if (!$RecoveryCodeService->generateRecoveryCodes($this->getUserId())) {
+            GoalousLog::error('Failed to regenerate recovery codes.', ['User' => $this->getUserId()]);
             return ErrorResponse::internalServerError()->withMessage(__("An error has occurred."))->getResponse();
         }
-        $recoveryCodes = $UserService->getRecoveryCodes($this->getUserId());
+        $recoveryCodes = $RecoveryCodeService->getRecoveryCodes($this->getUserId());
 
         return ApiResponse::ok()->withData($recoveryCodes)->getResponse();
     }

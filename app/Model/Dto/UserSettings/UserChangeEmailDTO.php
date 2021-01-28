@@ -21,6 +21,6 @@ class UserChangeEmailDTO
             'password_request2' => $this->password,
         );
 
-        return empty($data) ? null : $data;
+        return (empty($this->email) || empty($this->password)) ? null : $data;
     }
 }

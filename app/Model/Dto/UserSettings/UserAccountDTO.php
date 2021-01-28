@@ -22,4 +22,7 @@ class UserAccountDTO
 
     /** @var bool */
     public $updateEmailFlag;
+
+    /** @var string */
+    public $defaultTranslationLanguage;
 }

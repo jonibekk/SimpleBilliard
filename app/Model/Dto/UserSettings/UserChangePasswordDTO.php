@@ -26,6 +26,6 @@ class UserChangePasswordDTO
             'password_confirm' => $this->confirmPassword,
         );
 
-        return empty($data) ? null : $data;
+        return (empty($this->oldPassword) || empty($this->password) || empty($this->confirmPassword)) ? null : $data;
     }
 }
