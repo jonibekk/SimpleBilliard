@@ -25,7 +25,7 @@ class RecoveryCodeService extends AppService
             return false;
         }
 
-        return $success;
+        return true;
     }
 
     public function generateRecoveryCodes(int $userId): bool

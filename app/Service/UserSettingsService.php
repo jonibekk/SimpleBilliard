@@ -1,7 +1,5 @@
 <?php
 
-use Goalous\Enum\Model\AttachedFile\AttachedModelType;
-
 App::import('Service', 'AppService');
 App::import('Service', 'UploadService');
 App::import('Service', 'AttachedFileService');

@@ -16,6 +16,7 @@ App::import('Service', 'UnreadCirclePostService');
 App::import('Service', 'UserService');
 App::import('Service', 'NotifyService');
 App::import('Service', 'UserSettingsService');
+App::import('Service', 'RecoveryCodeService');
 App::import('Service', 'AuthenticationSessionDataService');
 App::import('Service', 'GoalService');
 App::import('Service', 'TermService');
