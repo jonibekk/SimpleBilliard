@@ -65,10 +65,11 @@ class GoalsController extends AppController
 
     public function edit($id)
     {
-        try {
-            $this->Goal->isPermittedAdmin($id);
-        } catch (RuntimeException$e) {
-            throw new NotFoundException();
+        $row = $this->Goal->findById($id);
+        $policy = new GoalPolicy($this->my_uid, $this->current_team_id);
+
+        if (empty($row) || !$policy->update($row['Goal'])) {
+            throw new NotFoundException;
         }
 
         /** @var GoalService $GoalService */
