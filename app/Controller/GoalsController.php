@@ -65,10 +65,9 @@ class GoalsController extends AppController
 
     public function edit($id)
     {
-        $row = $this->Goal->findById($id);
-        $policy = new GoalPolicy($this->my_uid, $this->current_team_id);
-
-        if (empty($row) || !$policy->update($row['Goal'])) {
+        try {
+            $this->Goal->isPermittedAdmin($id, $this->my_uid, $this->current_team_id);
+        } catch (RuntimeException $e) {
             throw new NotFoundException;
         }
 
@@ -181,7 +180,7 @@ class GoalsController extends AppController
 
         $goalId = $this->request->params['named']['goal_id'];
         try {
-            $this->Goal->isPermittedAdmin($goalId);
+            $this->Goal->isPermittedAdmin($goalId, $this->my_uid, $this->current_team_id);
             $this->Goal->isNotExistsEvaluation($goalId);
         } catch (RuntimeException $e) {
             $this->Notification->outError($e->getMessage());

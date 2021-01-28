@@ -356,7 +356,7 @@ class GoalTest extends GoalousTestCase
     {
         $this->setDefault();
         try {
-            $this->Goal->isPermittedAdmin(99999);
+            $this->Goal->isPermittedAdmin(99999, 1, 1);
         } catch (RuntimeException$e) {
 
         }
@@ -376,7 +376,7 @@ class GoalTest extends GoalousTestCase
         );
 
         try {
-            $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID());
+            $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID(), 1, 1);
         } catch (RuntimeException$e) {
 
         }
@@ -395,7 +395,7 @@ class GoalTest extends GoalousTestCase
             ]
         );
 
-        $res = $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID());
+        $res = $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID(), 1, 1);
         $this->assertTrue($res);
     }
 

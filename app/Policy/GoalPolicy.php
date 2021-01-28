@@ -19,6 +19,16 @@ class GoalPolicy extends BasePolicy
 
     public function update($goal): bool
     {
+        return $this->isOwner($goal);
+    }
+
+    public function delete($goal): bool
+    {
+        return $this->isOwner($goal);
+    }
+
+    public function isOwner($goal): bool
+    {
         /** @var GoalMember */
         $GoalMember = ClassRegistry::init('GoalMember');
 
