@@ -8,6 +8,7 @@ $(function () {
         baseUrl: '/js/modules/'
     });
     $(document).on("click", ".click-get-ajax-form-toggle", toggleCommentForm);
+    $(document).on("click", ".click-cannot-comment-modal-toggle", toggleCannotCommentModal);
     $(document).on("click", ".click-comment-new", evCommentLatestView);
     $(document).on("click", ".js-click-comment-delete", evCommentDelete);
     $(document).on("click", ".js-click-comment-confirm-delete", evCommentDeleteConfirm);
@@ -52,6 +53,31 @@ function getValidURL(input){
     } else {
         return null;
     }
+}
+
+/**
+ * Display cannot comment message
+ */
+function toggleCannotCommentModal() {
+    var modalTemplate =
+        '<div class="modal on fade" tabindex="-1">' +
+        '  <div class="modal-dialog">' +
+        '    <div class="modal-content">' +
+        '      <div class="modal-header none-border">' +
+        '        <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">×</span></button>' +
+        '        <h5 class="modal-title text-danger">' + __("You can't comment on this circle's post.") + '</h5>' +
+        '     </div>' +
+        '     <div class="modal-body">' +
+        '         <h4>' + __("You will be able to comment after joined the circle.") + '</h4>' +
+        '     </div>' +
+        '     <div class="modal-footer">' +
+        '        <button type="button" class="btn-sm btn-default" data-dismiss="modal" aria-hidden="true">' + cake.word.close + '</button>' +
+        '        </div>' +
+        '   </div>' +
+        ' </div>' +
+        '</div>';
+
+    $(modalTemplate).modal();
 }
 
 /**
