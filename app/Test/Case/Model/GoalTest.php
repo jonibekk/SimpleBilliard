@@ -395,6 +395,14 @@ class GoalTest extends GoalousTestCase
             ]
         );
 
+        $this->Goal->GoalMember->save([
+                'user_id' => 1,
+                'team_id' => 1,
+                'goal_id' => $this->Goal->getLastInsertID(),
+                'type'    => 1,
+                'priority'=> 3
+        ]);
+
         $res = $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID(), 1, 1);
         $this->assertTrue($res);
     }
