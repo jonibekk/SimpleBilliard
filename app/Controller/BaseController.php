@@ -176,6 +176,10 @@ class BaseController extends Controller
             'action'     => 'display',
             'pagename'   => 'terms',
         ],
+        [
+            'controller' => 'subscriptions',
+            'action'     => 'get_has_session',
+        ],
     ];
 
     /**
