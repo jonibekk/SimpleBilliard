@@ -81,7 +81,7 @@ class MemberGroupService extends AppService
             } else if ($row['multipleSharedGroups']) {
                 $removeGroup[] = $row['GoalMember']['goal_id'];
 
-            } else if (!!$row['multipleSharedGroups']) {
+            } else if (!$row['multipleSharedGroups']) {
                 $removeCollab[] = $row['GoalMember']['id'];
             }
         }
@@ -134,12 +134,12 @@ class MemberGroupService extends AppService
 
         $otherCollabOpts = $baseOpts;
         $otherCollabOpts['joins'][] = [
-            'alias' => 'MemberGroup',
-            'table' => 'member_groups',
+            'alias' => 'GoalMember',
+            'table' => 'goal_members',
             'conditions' => [
-                'MemberGroup.group_id = GoalGroup.group_id',
-                'MemberGroup.del_flg != 1',
-                'MemberGroup.user_id !=' => $memberId
+                'GoalMember.goal_id = GoalGroup.goal_id',
+                'GoalMember.del_flg != 1',
+                'GoalMember.user_id !=' => $memberId
             ]
         ];
 
@@ -161,11 +161,14 @@ class MemberGroupService extends AppService
         $results = [];
         foreach ($goalMemberRows as $goalMemberRow) {
             $goalId = $goalMemberRow['GoalMember']['goal_id'];
+            $goalMemberRow['shouldRetainAccess'] = false;
+            $goalMemberRow['multipleSharedGroups'] = false;
+            $goalMemberRow['otherCollabsPresent'] = false;
 
             foreach ($rowsWithOwnCollabs as $row) {
                 if ($row['GoalGroup']['goal_id'] === $goalId) {
                     $accessibleGropCount = $row[0]['count'];
-                    $goalMemberRow['shouldRetainAccess'] = $accessibleGropCount > 1;
+                    $goalMemberRow['shouldRetainAccess'] = $accessibleGropCount > 0;
                 }
             }
             foreach ($rowsWithNumSharedGroups as $row) {
