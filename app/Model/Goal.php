@@ -591,19 +591,23 @@ class Goal extends AppModel
      * オーナー権限チェック
      *
      * @param $id
+     * @param $userId
+     * @param $teamId
      *
      * @return bool
      * @throws RuntimeException
      */
-    function isPermittedAdmin($id)
+    function isPermittedAdmin($id, $userId, $teamId)
     {
-        $this->id = $id;
-        if (!$this->exists()) {
+        $row = $this->findById($id);
+        $policy = new GoalPolicy($userId, $teamId);
+
+        if (empty($row)) {
             throw new RuntimeException(__("This Goal doesn't exist."));
-        }
-        if (!$this->isOwner($this->my_uid, $id)) {
+        } else if (!$policy->update($row['Goal'])) {
             throw new RuntimeException(__("You don't have a permission to edit this Goal."));
         }
+
         return true;
     }
 

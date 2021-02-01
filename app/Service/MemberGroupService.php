@@ -9,7 +9,7 @@ class MemberGroupService extends AppService
 {
     public function removeGroupMember(int $groupId, int $memberId)
     {
-        // @var MemberGroup $MemberGroup
+        /** @var MemberGroup $MemberGroup */
         $MemberGroup = ClassRegistry::init("MemberGroup");
 
         $MemberGroup->deleteAll([
@@ -31,56 +31,71 @@ class MemberGroupService extends AppService
         */
     private function removeCollaborations(int $groupId, int $memberId)
     {
-        /* @var GoalMember */
+        /** @var GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
-        /* @var GoalGroup */
+        /** @var GoalGroup */
         $GoalGroup = ClassRegistry::init("GoalGroup");
 
-        $rows = $this->getCollaboratedGoalsWithGroup($groupId, $memberId);
-        $goalsToRemoveCollaboration = [];
-        $goalsToReassignLeader = [];
-        $goalsToRemoveGroup = [];
+        $rows = $this->getForGroupAndMember($groupId, $memberId);
+        $rows = $this->appendStats($rows, $memberId);
+        $results = $this->processMembersGoals($rows);
 
-        foreach ($rows as $row) {
-            $goalId = $row['GoalMember']['goal_id'];
-            $numSharedGroups = count($GoalGroup->findGroupsWithGoalId($goalId, [true, false]));
-            $isLeader = $row['GoalMember']['type'] == $GoalMember::TYPE_OWNER;
-            $multipleSharedGroups = $numSharedGroups > 1;
-            $otherCollabsPresent = $row[0]['num_other_collaborators'] > 0;
+        $GoalMember->updateAll(
+            ['del_flg' => true], 
+            ['GoalMember.id' => $results['removeCollab']]
+        );
 
-            if (!$isLeader) {
-                $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
-
-            } else if ($otherCollabsPresent){
-                $goalsToReassignLeader[] = $row['GoalMember']['goal_id'];
-
-            } else if (!$otherCollabsPresent && $multipleSharedGroups) {
-                $goalsToRemoveGroup[] = $row['GoalMember']['goal_id'];
-
-            } else if (!$otherCollabsPresent && !$multipleSharedGroups) {
-                $goalsToRemoveCollaboration[] = $row['GoalMember']['id'];
-            }
-        }
-
-        $GoalMember->updateAll(['del_flg' => true], ['GoalMember.id' => $goalsToRemoveCollaboration]);
         $GoalGroup->deleteAll([
-            'GoalGroup.goal_id' => $goalsToRemoveGroup, 
+            'GoalGroup.goal_id' => $results['removeGroup'], 
             'GoalGroup.group_id' => $groupId
         ]);
 
         $GoalMember->updateAll(
             ['del_flg' => true], 
-            ['GoalMember.goal_id' => $goalsToReassignLeader, 'GoalMember.user_id' => $memberId]
+            ['GoalMember.goal_id' => $results['reassignLeader'], 'GoalMember.user_id' => $memberId]
         );
 
-        foreach ($goalsToReassignLeader as $goalId) {
+        foreach ($results['reassignLeader'] as $goalId) {
             $this->reassignGoalLeader($goalId);
         }
     }
 
-    private function getCollaboratedGoalsWithGroup(int $groupId, int $memberId): array
+    private function processMembersGoals(array $rows)
     {
-        /* @var GoalMember */
+        $removeCollab = [];
+        $removeGroup = [];
+        $reassignLeader = [];
+
+        foreach ($rows as $row) {
+            $isLeader = $row['GoalMember']['type'] == GoalMember::TYPE_OWNER;
+
+            if ($row['shouldRetainAccess']) {
+                continue;
+
+            } else if (!$isLeader) {
+                $removeCollab[] = $row['GoalMember']['id'];
+
+            } else if ($row['otherCollabsPresent']){
+                $reassignLeader[] = $row['GoalMember']['goal_id'];
+
+            } else if ($row['multipleSharedGroups']) {
+                $removeGroup[] = $row['GoalMember']['goal_id'];
+
+            } else if (!$row['multipleSharedGroups']) {
+                $removeCollab[] = $row['GoalMember']['id'];
+            }
+        }
+
+        return [
+            'removeCollab' => $removeCollab,
+            'removeGroup' => $removeGroup,
+            'reassignLeader' => $reassignLeader,
+        ];
+    }
+
+    private function getForGroupAndMember(int $groupId, int $memberId): array
+    {
+        /** @var GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
 
         $options = [
@@ -95,31 +110,88 @@ class MemberGroupService extends AppService
                         'GoalGroup.goal_id = GoalMember.goal_id',
                         'GoalGroup.group_id' => $groupId
                     ]
-                ],
-                [
-                    'type' => 'LEFT',
-                    'table' => 'goal_members',
-                    'alias' => 'OtherCollaborator',
-                    'conditions' => [
-                        'OtherCollaborator.goal_id = GoalMember.goal_id',
-                        'OtherCollaborator.del_flg != 1',
-                        'OtherCollaborator.user_id !=' => $memberId,
-                    ]
-                ],
+                ]
             ],
-            'group' => 'GoalMember.goal_id',
-            'fields' => [
-                'GoalMember.*',
-                'COUNT(OtherCollaborator.user_id) AS num_other_collaborators',
-            ]
         ];
 
         return $GoalMember->find('all', $options);
     }
 
+    private function appendStats(array $goalMemberRows, int $memberId): array
+    {
+        /** @var GoalGroup */
+        $GoalGroup = ClassRegistry::init("GoalGroup");
+        $goalIds = Hash::extract($goalMemberRows, '{n}.GoalMember.goal_id');
+
+        $baseOpts = [
+            'conditions' => [
+                'GoalGroup.goal_id' => $goalIds
+            ],
+            'joins' => [],
+            'group' => ['GoalGroup.goal_id'],
+            'fields' => ['GoalGroup.goal_id', 'COUNT(GoalGroup.group_id) AS count']
+        ];
+
+        $otherCollabOpts = $baseOpts;
+        $otherCollabOpts['joins'][] = [
+            'alias' => 'GoalMember',
+            'table' => 'goal_members',
+            'conditions' => [
+                'GoalMember.goal_id = GoalGroup.goal_id',
+                'GoalMember.del_flg != 1',
+                'GoalMember.user_id !=' => $memberId
+            ]
+        ];
+
+        $ownCollabOpts = $baseOpts;
+        $ownCollabOpts['joins'][] = [
+            'alias' => 'MemberGroup',
+            'table' => 'member_groups',
+            'conditions' => [
+                'MemberGroup.group_id = GoalGroup.group_id',
+                'MemberGroup.del_flg != 1',
+                'MemberGroup.user_id' => $memberId
+            ]
+        ];
+
+        $rowsWithNumSharedGroups = $GoalGroup->find('all', $baseOpts);
+        $rowsWithOtherCollabs = $GoalGroup->find('all', $otherCollabOpts);
+        $rowsWithOwnCollabs = $GoalGroup->find('all', $ownCollabOpts);
+
+        $results = [];
+        foreach ($goalMemberRows as $goalMemberRow) {
+            $goalId = $goalMemberRow['GoalMember']['goal_id'];
+            $goalMemberRow['shouldRetainAccess'] = false;
+            $goalMemberRow['multipleSharedGroups'] = false;
+            $goalMemberRow['otherCollabsPresent'] = false;
+
+            foreach ($rowsWithOwnCollabs as $row) {
+                if ($row['GoalGroup']['goal_id'] === $goalId) {
+                    $accessibleGropCount = $row[0]['count'];
+                    $goalMemberRow['shouldRetainAccess'] = $accessibleGropCount > 0;
+                }
+            }
+            foreach ($rowsWithNumSharedGroups as $row) {
+                if ($row['GoalGroup']['goal_id'] === $goalId) {
+                    $numSharedGroups = $row[0]['count'];
+                    $goalMemberRow['multipleSharedGroups'] = $numSharedGroups > 1;
+                }
+            }
+            foreach ($rowsWithOtherCollabs as $row) {
+                if ($row['GoalGroup']['goal_id'] === $goalId) {
+                    $numOtherCollabs = $row[0]['count'];
+                    $goalMemberRow['otherCollabsPresent'] = $numOtherCollabs > 0;
+                }
+            }
+            $results[] = $goalMemberRow;
+        }
+
+        return $results;
+    }
+
     private function reassignGoalLeader(int $goalId)
     {
-        /* @var GoalMember $GoalMember */
+        /** @var GoalMember $GoalMember */
         $GoalMember = ClassRegistry::init("GoalMember");
         $NotifyBiz = new NotifyBizComponent(new ComponentCollection());
 
