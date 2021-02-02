@@ -309,6 +309,9 @@ msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"noti
 msgid "<span class=\"notify-card-head-target\">%1$s</span> created <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を作成しました。"
 
+msgid "<span class=\"notify-card-head-target\">%1$s</span> has added you to the Action members."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたをアクションメンバーに追加しました。"
+
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has assigned his/her evaluator(s)."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> が自分の評価者を設定しました。"
 
@@ -5893,6 +5896,9 @@ msgstr "この設定は後から変更できません。"
 msgid "You can't change this setting lator."
 msgstr "この設定は後から変更できません。"
 
+msgid "You can't comment on this circle's post."
+msgstr "このサークルの投稿にはコメントできません。"
+
 msgid "You can't delete achieved KR."
 msgstr "完了済のKRは削除出来ません。"
 
@@ -6036,6 +6042,9 @@ msgstr "あなたのGoalousアカウントを無事に作成しました。"
 
 msgid "You use all features of Goalous for a %s-day free trial. Give it a try!"
 msgstr "フリートライアル15日間の間、Goalousの全ての機能が利用可能です。ぜひお試しください！"
+
+msgid "You will be able to comment after joined the circle."
+msgstr "サークルに参加するとコメントができるようになります。"
 
 msgid "You will soon reach your translation limit."
 msgstr "翻訳できる文字数の上限に近づいています。"
