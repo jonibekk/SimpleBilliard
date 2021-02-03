@@ -524,6 +524,8 @@ class Post extends AppModel
                 if ($this->my_uid == $this->orgParams['user_id']) {
                     $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
                 }
+
+                $this->virtualFields['can_comment'] = '(SELECT EXISTS(SELECT 1 FROM post_share_circles psc INNER JOIN circle_members cm ON cm.circle_id = psc.circle_id WHERE Post.id = psc.post_id AND cm.user_id = "'.$this->my_uid.'" LIMIT 1))';
             }
         }
 

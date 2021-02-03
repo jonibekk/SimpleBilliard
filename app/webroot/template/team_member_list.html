@@ -55,10 +55,10 @@
 <div ng-if="invite_box_show === false">
     <section>
         <div class="team-member-count-label">{{ 'TEAM_MEMBER_LIST.TARGET_MEMBERS' | translate}} ( {{(team_list|filter:name_field).length}} )</div>
-        <a href="{{ invite_member_url }}">
-        <button class="btn team-member-invite-btn">
-            <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>{{ 'TEAM_MEMBER_LIST.INVITE_MEMBERS' | translate}}
-        </button>
+        <a ng-if="login_user_admin_flg == true" href="{{ invite_member_url }}">
+            <button class="btn team-member-invite-btn">
+                <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>{{ 'TEAM_MEMBER_LIST.INVITE_MEMBERS' | translate}}
+            </button>
         </a>
     </section>
     <div class="col-xs-12">

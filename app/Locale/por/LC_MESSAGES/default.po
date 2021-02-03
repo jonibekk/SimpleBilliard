@@ -297,6 +297,10 @@ msgstr "<span class=\"notify-card-head-target\">%1$s</span> comentou na <span cl
 msgid "<span class=\"notify-card-head-target\">%1$s</span> created <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> criado <span class=\"notify-card-head-target\">%2$s</span>"
 
+#, fuzzy
+msgid "<span class=\"notify-card-head-target\">%1$s</span> has added you to the Action members."
+msgstr ""
+
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has assigned his/her evaluator(s)."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> designou seu (s) avaliador (es)."
 
@@ -5886,6 +5890,9 @@ msgstr "Você não pode alterar esta configuração."
 msgid "You can't change this setting lator."
 msgstr "Você não pode alterar esta configuração."
 
+msgid "You can't comment on this circle's post."
+msgstr "Você não pode comentar na postagem deste círculo."
+
 msgid "You can't delete achieved KR."
 msgstr "Resultados-chave completos não podem ser deletados."
 
@@ -6032,6 +6039,9 @@ msgstr "Sua conta foi criada com sucesso."
 
 msgid "You use all features of Goalous for a %s-day free trial. Give it a try!"
 msgstr "Você pode usar todas as funções do Goalous por %s dias de graça!"
+
+msgid "You will be able to comment after joined the circle."
+msgstr "Você poderá comentar depois de entrar no círculo."
 
 msgid "You will soon reach your translation limit."
 msgstr "Você está atingindo o limite de traduções."

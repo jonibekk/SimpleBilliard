@@ -1,6 +1,7 @@
 <?php
 App::uses('Goal', 'Model');
 App::uses('GoalGroup', 'Model');
+App::uses('GoalMember', 'Model');
 App::import('Policy', 'BasePolicy');
 
 /**
@@ -10,13 +11,35 @@ class GoalPolicy extends BasePolicy
 {
     public function read($goal): bool
     {
-        return ((int)$goal['user_id'] === $this->userId) ||
+        return ($this->isSameGroup($goal));
             //($this->isTeamAdminForItem($goal['team_id'])) ||
             //($this->isCoach($goal['id'])) ||
             //($this->isActiveEvaluator($goal['id'])) ||
-            ($this->isSameGroup($goal));
     }
 
+    public function update($goal): bool
+    {
+        return $this->isOwner($goal);
+    }
+
+    public function delete($goal): bool
+    {
+        return $this->isOwner($goal);
+    }
+
+    public function isOwner($goal): bool
+    {
+        /** @var GoalMember */
+        $GoalMember = ClassRegistry::init('GoalMember');
+
+        $isOwnerConditions = [
+            'GoalMember.goal_id' => $goal['id'],
+            'GoalMember.user_id' => $this->userId,
+            'GoalMember.type' => $GoalMember::TYPE_OWNER
+        ];
+
+        return $GoalMember->hasAny($isOwnerConditions);
+    }
 
     private function isSameGroup($goal): bool
     {

@@ -4,7 +4,7 @@ App::import('Lib/Aws', 'AwsClientFactory');
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
-use Guzzle\Http\EntityBody;
+use GuzzleHttp\Psr7\Stream;
 
 /**
  * This file is a part of UploadPack - a plugin that makes file uploads in CakePHP as easy as possible.
@@ -1075,7 +1075,7 @@ class UploadBehavior extends ModelBehavior
                     array(
                         'Bucket'               => S3_ASSETS_BUCKET,
                         'Key'                  => $to_path,
-                        'Body'                 => EntityBody::factory(fopen($from_path, 'r')),
+                        'Body'                 => GuzzleHttp\Psr7\stream_for(fopen($from_path, 'r')),
                         'ContentType'          => $type,
                         'StorageClass'         => 'STANDARD',
                         'ServerSideEncryption' => 'AES256',
