@@ -95,6 +95,8 @@ class UserSettingsService extends AppService
         $User = ClassRegistry::init('User');
         /** @var TeamMember $TeamMember */
         $TeamMember = ClassRegistry::init("TeamMember");
+        /** @var LocalName $LocalName */
+        $LocalName = ClassRegistry::init("LocalName");
 
         $userData = array(
             'User' => [
@@ -114,6 +116,23 @@ class UserSettingsService extends AppService
             $userData['User']['cover_photo_file_name'] = $profileData->coverPhotoName;
         }
 
+        if ($profileData->jpnFlag) {
+            $localName = $LocalName->getName($userId, 'jpn');
+            if (empty($localName)) {
+                $localName = array(
+                    'user_id' => $userId,
+                    'language' => 'jpn',
+                    'first_name' => $profileData->jpnFirstName,
+                    'last_name' => $profileData->jpnLastName,
+                    'del_flg' => false,
+                    'deleted' => null,
+                );
+            } else {
+                $localName['LocalName']['first_name'] = $profileData->jpnFirstName;
+                $localName['LocalName']['last_name'] = $profileData->jpnLastName;
+            }
+        }
+
         $teamMemberData = $this->getTeamMemberData($profileData->userId, $profileData->teamId);
         $teamMemberData['TeamMember']['comment'] = $profileData->comment;
 
@@ -121,6 +140,9 @@ class UserSettingsService extends AppService
             $this->TransactionManager->begin();
             $User->save($userData, false);
             $TeamMember->save($teamMemberData, false);
+            if ($profileData->jpnFlag) {
+                $LocalName->save($localName, false);
+            }
             $this->TransactionManager->commit();
         } catch (Exception $e) {
             $this->TransactionManager->rollback();

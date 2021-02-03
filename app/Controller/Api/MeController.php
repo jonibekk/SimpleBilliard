@@ -334,6 +334,11 @@ class MeController extends BasePagingController
         $profileInfo->hideBirthdayFlag = $data['User']['hide_year_flg'];
         $profileInfo->homewotn = $data['User']['hometown'];
         $profileInfo->comment = $data['TeamMember']['comment'];
+        if ($data['jpnFlag']) {
+            $profileInfo->jpnFirstName = $data['LocalName']['first_name'];
+            $profileInfo->jpnLastName = $data['LocalName']['last_name'];
+            $profileInfo->jpnFlag = $data['jpnFlag'];
+        }
 
         if (isset($data['User']['photo']) || isset($data['User']['cover_photo'])) {
             $success = $UserSettingsService->updateProfileAndCoverPhoto($this->getUserId(), $this->getTeamId(), $data['User']['photo'], $data['User']['cover_photo'], $profileInfo);

@@ -17,6 +17,12 @@ class UserProfileDTO
     /** @var string */
     public $lastName;
 
+    /** @var string */
+    public $jpnFirstName;
+
+    /** @var string */
+    public $jpnLastName;
+
     /** @var int */
     public $genderType;
 
@@ -25,6 +31,9 @@ class UserProfileDTO
 
     /** @var bool */
     public $hideBirthdayFlag;
+
+    /** @var bool */
+    public $jpnFlag;
 
     /** @var string */
     public $homewotn;
