@@ -30,11 +30,7 @@ class SearchApiController extends BasePagingController
     {
         parent::__construct($request, $response);
 
-        if ('local' === constant('ENV_NAME')) {
-            $this->searchApiService = ClassRegistry::init('SearchApiDummyService');
-        } else {
-            $this->searchApiService = ClassRegistry::init('SearchApiService');
-        }
+        $this->searchApiService = ClassRegistry::init('SearchApiService');
     }
 
     /**

@@ -9,4 +9,5 @@ $definesForLocal = [
     //For local S3 user name
     //https://confluence.goalous.com/x/agMQAQ
     'AWS_S3_BUCKET_USERNAME'                        => 'damasa',
+    'ES_API_BASE_URL'                               => 'search:5000'
 ];
