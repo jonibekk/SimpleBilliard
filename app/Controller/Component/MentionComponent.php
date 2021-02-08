@@ -173,7 +173,7 @@ class MentionComponent extends Component
      *
      * @return string
      */
-    public static function appendName(string $type, int $accessControlledId, string $body = null): string
+    public static function appendName(string $type, int $accessControlledId, int $teamId, string $body = null): string
     {
         $matches = self::extractAllIdFromMention($body);
         if (count($matches) > 0) {
@@ -189,6 +189,25 @@ class MentionComponent extends Component
                     $model = ClassRegistry::init('PlainUser');
                     $replacementName = 'display_username';
                     $model->alias = 'User';
+                    $conditions = [
+                        'conditions' => [
+                            'User.id' => $match['id'], 
+                            'User.del_flg' => [true, false]
+                        ],
+                        'joins'      => [
+                            [
+                                'table'      => 'team_members',
+                                'type'       => 'INNER',
+                                'alias'      => 'TeamMember',
+                                'foreignKey' => false,
+                                'conditions' => [
+                                    'TeamMember.user_id = User.id',
+                                    'TeamMember.del_flg' => [true, false],
+                                    'TeamMember.team_id' => $teamId
+                                ]
+                            ]
+                        ]
+                    ];
                 } else {
                     if ($match['isCircle'] === true) {
                         $checked = self::filterAsMentionableCircle($accessControlledId, [['id' => $match['id']]]);
@@ -196,18 +215,25 @@ class MentionComponent extends Component
                             continue;
                         }
                         $model = ClassRegistry::init('PlainCircle');
+                        $conditions = [
+                            'conditions' => [
+                                'id' => $match['id'], 
+                                'del_flg' => [true, false]
+                            ]
+                        ];
                     }
                 }
                 if (!is_null($model)) {
                     // ExtContainableBehavior set del_flg false by default
                     // However we want to get this even if it is deleted
-                    $data = $model->find('first', array(
-                        'conditions' => array('id' => $match['id'], 'del_flg' => [true, false])
-                    ));
-                    $obj = $data[$model->alias];
-                    $replacement = $obj[$replacementName];
-                    if ($replacement) {
-                        $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                    $data = $model->find('first', $conditions);
+                    if ($data) {
+                        $obj = $data[$model->alias];
+                        $replacement = $obj[$replacementName];
+                        if ($replacement) {
+                            $body = self::replaceAndAddNameToMention($key, $replacement, $body);
+                        }
+
                     }
                 }
             }
