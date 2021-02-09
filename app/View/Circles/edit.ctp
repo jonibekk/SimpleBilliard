@@ -357,5 +357,11 @@
             $('#' + tab + 'Tab').trigger('click');
         }
     });
+
+    $(document).ready(function () {
+        $('#EditCircleForm').bootstrapValidator({
+            live: 'enabled'
+        })
+    })
 </script>
 <?= $this->App->viewEndComment()?>
