@@ -114,6 +114,7 @@ class PostTest extends GoalousTestCase
         $postData = [
             'Post' => [
                 'body'       => 'test',
+                'team_id'       => 1,
                 'site_photo' => [
                     'type'     => 'binary/octet-stream',
                     'tmp_name' => "",
@@ -731,6 +732,7 @@ class PostTest extends GoalousTestCase
             'Post' => [
                 'id'   => 1,
                 'body' => 'edit string',
+                'team_id' => 1
             ]
         ];
         $res = $this->Post->postEdit($data);
