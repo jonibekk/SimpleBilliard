@@ -303,7 +303,7 @@ class MeController extends BasePagingController
         }
         $user = $UserSettingsService->getUserData($this->getUserId());
         $this->Session->write('Config.language', LangUtil::convertToISO3($accountInfo->language));
-        $this->Session->write('Auth.User', $user['User']);
+        $this->Session->write('Auth.User.language', $accountInfo->language);
 
         Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
@@ -407,7 +407,7 @@ class MeController extends BasePagingController
         try {
             if (!$UserSettingsService->validatePassword($data)) {
                 GoalousLog::error('Password validation failed.', ['data' => $data]);
-                return ErrorResponse::internalServerError()->withMessage(__('Invalid Data'))->getResponse();
+                return ErrorResponse::badRequest()->withMessage(__('Invalid Data'))->getResponse();
             } else {
                 $emailData = $UserSettingsService->updateEmailAddress($emailInfo);
             }
@@ -418,7 +418,7 @@ class MeController extends BasePagingController
                 'user_id' => $this->getUserId(),
                 'team_id' => $this->getTeamId()
             ]);
-            return ErrorResponse::internalServerError()->withMessage(__('System error has occurred.'))->getResponse();
+            return ErrorResponse::internalServerError()->withMessage($e->getMessage())->getResponse();
         }
 
         $this->GlEmail->sendMailChangeEmailVerify(
