@@ -301,7 +301,9 @@ class MeController extends BasePagingController
             GoalousLog::error('Failed to save account user settings data.', ['Request payload', $data]);
             return ErrorResponse::badRequest()->withMessage(__("Failed to save user setting."))->getResponse();
         }
+        $user = $UserSettingsService->getUserData($this->getUserId());
         $this->Session->write('Config.language', LangUtil::convertToISO3($accountInfo->language));
+        $this->Session->write('Auth.User', $user['User']);
 
         Cache::delete($UserSettingsService->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
 
