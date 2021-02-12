@@ -2012,7 +2012,7 @@ class GoalService extends AppService
 
         $coachId = $TeamMember->getCoachUserIdByMemberUserId($r->getUserId());
         $goalLeaderUserId = $GoalMember->getLeaderUid($r->getGoalId());
-        if (!empty($coachId) && $goalLeaderUserId != $coachId) {
+        if (!empty($goalLeaderUserId) && $goalLeaderUserId != $coachId) {
             $r->getNotifyBiz()->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $r->getGoalId());
         }
 
