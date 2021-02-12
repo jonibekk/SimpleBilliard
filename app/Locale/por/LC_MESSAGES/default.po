@@ -522,7 +522,7 @@ msgid "Add an image to show the result of your action."
 msgstr "Adicione uma imagem para mostrar o resultado da sua ação."
 
 msgid "Add as a target for evaluation ?"
-msgstr "Adicionar como objetivo para avaliação?"
+msgstr "Você gostaria de avaliar este objetivo?"
 
 msgid "Add by pressing the Enter.(You can save maximum 5 labels)"
 msgstr "Adicione pressionando a tecla Enter. (Você pode salvar no máximo 5 etiquetas)"
@@ -1002,6 +1002,10 @@ msgstr "Nome do Círculo"
 msgid "Circle Name?"
 msgstr "Nome do círculo?"
 
+#, fuzzy
+msgid "Circle Posts"
+msgstr ""
+
 msgid "Circle setting"
 msgstr "Configuração do círculo"
 
@@ -1148,7 +1152,7 @@ msgid "Complete Key Result"
 msgstr "Resultado-chave completo"
 
 msgid "Complete the approval of %d Goal(s)."
-msgstr "Conclua a aprovação de % objetivo (s)."
+msgstr "Conclua a aprovação do(s) objetivo(s)."
 
 msgid "Complete Top Key Result"
 msgstr "Principal Resultado-chave completo"

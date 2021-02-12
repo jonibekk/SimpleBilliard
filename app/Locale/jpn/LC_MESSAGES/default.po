@@ -1010,6 +1010,9 @@ msgstr "サークル名"
 msgid "Circle Name?"
 msgstr "サークル名を入力"
 
+msgid "Circle Posts"
+msgstr "投稿"
+
 msgid "Circle setting"
 msgstr "サークルの設定"
 
