@@ -46,7 +46,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'          => 'post_count_item',
             'item_value'       => $insight['post_count'],
-            'item_label'       => __('Posts'),
+            'item_label'       => __('Circle Posts'),
             'item_cmp_percent' => isset($insight['post_count_cmp']) ? $insight['post_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -79,7 +79,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'          => 'post_user_count_item',
             'item_value'       => $insight['post_user_count'],
-            'item_label'       => __('Posts'),
+            'item_label'       => __('Circle Posts'),
             'item_cmp_percent' => isset($insight['post_user_count_cmp']) ? $insight['post_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -114,7 +114,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'          => 'post_user_percent_item',
             'item_value'       => $insight['post_user_percent'] . ' %',
-            'item_label'       => __('Posts'),
+            'item_label'       => __('Circle Posts'),
             'item_cmp_percent' => isset($insight['post_user_percent_cmp']) ? $insight['post_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
