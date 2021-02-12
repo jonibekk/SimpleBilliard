@@ -599,7 +599,8 @@ class GoalsController extends ApiController
             return $this->_getResponseNotFound();
         }
         // ゴール作成者か
-        if ($this->Auth->user('id') != $goal['user_id']) {
+        $policy = new GoalPolicy($this->Auth->user('id'), $this->current_team_id);
+        if (!$policy->update($goal)) {
             return $this->_getResponseForbidden();
         }
         // 今季以降のゴールか

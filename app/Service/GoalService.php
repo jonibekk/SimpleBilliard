@@ -2011,8 +2011,8 @@ class GoalService extends AppService
         Cache::delete($GlRedis->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
 
         $coachId = $TeamMember->getCoachUserIdByMemberUserId($r->getUserId());
-        $goalLeaderUserId = Hash::get($goal, 'Goal.user_id');
-        if (!empty($coachId) && $goalLeaderUserId != $coachId) {
+        $goalLeaderUserId = $GoalMember->getLeaderUid($r->getGoalId());
+        if (!empty($goalLeaderUserId) && $goalLeaderUserId != $coachId) {
             $r->getNotifyBiz()->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $r->getGoalId());
         }
 
