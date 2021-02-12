@@ -188,6 +188,12 @@ $(document).ready(function () {
   $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
   $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
 
+  $(document).on("change", "input#GoalMemberIsWishApproval" , function() {
+    var form = document.querySelector('form#CollaboEditForm');
+    var formIsValid = form.reportValidity();
+    var formSubmitBtn = document.querySelector('#CollaboEditForm input[type="submit"]');
+    formSubmitBtn.disabled = !formIsValid;
+  });
 });
 
 
