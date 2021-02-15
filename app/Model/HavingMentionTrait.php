@@ -31,13 +31,13 @@ trait HavingMentionTrait
                 if (isset($data[$this->alias]['post_id'])) {
                     $accessControlledId = $data[$this->alias]['post_id'];
                     $data[$this->alias][$this->bodyProperty] = MentionComponent::appendName('Comment',
-                        $accessControlledId, $body);
+                        $accessControlledId, $data[$this->alias]['team_id'], $body);
                 }
             }else {
                 if (isset($data[$this->alias]['id'])) {
                     $accessControlledId = $data[$this->alias]['id'];
                     $data[$this->alias][$this->bodyProperty] = MentionComponent::appendName('post',
-                        $accessControlledId, $body);
+                        $accessControlledId, $data[$this->alias]['team_id'], $body);
                 }
             }
         }

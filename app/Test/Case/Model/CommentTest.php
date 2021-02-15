@@ -141,6 +141,7 @@ class CommentTest extends GoalousTestCase
             'Comment' => [
                 'user_id'    => 1,
                 'post_id'    => 1,
+                'team_id'    => 1,
                 'body'       => 'test',
                 'site_photo' => [
                     'type'     => 'binary/octet-stream',
