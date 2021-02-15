@@ -345,7 +345,13 @@ class MeController extends BasePagingController
         }
 
         if (isset($data['User']['photo']) || isset($data['User']['cover_photo'])) {
-            $success = $UserSettingsService->updateProfileAndCoverPhoto($this->getUserId(), $this->getTeamId(), $data['User']['photo'], $data['User']['cover_photo'], $profileInfo);
+            $success = $UserSettingsService->updateProfileAndCoverPhoto(
+                $this->getUserId(),
+                $this->getTeamId(),
+                isset($data['User']['photo']) ? $data['User']['photo'] : null,
+                isset($data['User']['cover_photo']) ? $data['User']['cover_photo'] : null,
+                $profileInfo
+            );
             if (!$success) {
                 GoalousLog::error('Failed to save profile and/or cover image.', ['Request payload' => $data]);
                 return ErrorResponse::badRequest()->withMessage(__("Failed to update profile image."))->getResponse();
