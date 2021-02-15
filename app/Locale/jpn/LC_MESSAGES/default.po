@@ -309,6 +309,9 @@ msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"noti
 msgid "<span class=\"notify-card-head-target\">%1$s</span> created <span class=\"notify-card-head-target\">%2$s</span>."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を作成しました。"
 
+msgid "<span class=\"notify-card-head-target\">%1$s</span> has added you to the Action members."
+msgstr "<span class=\"notify-card-head-target\">%1$s</span> があなたをアクションメンバーに追加しました。"
+
 msgid "<span class=\"notify-card-head-target\">%1$s</span> has assigned his/her evaluator(s)."
 msgstr "<span class=\"notify-card-head-target\">%1$s</span> が自分の評価者を設定しました。"
 
@@ -2378,6 +2381,9 @@ msgstr "ゴール終了日"
 msgid "Goal features"
 msgstr "ゴールの機能"
 
+msgid "Goal ID"
+msgstr "ゴールID"
+
 msgid "GOAL ID"
 msgstr "ゴールID"
 
@@ -3378,6 +3384,12 @@ msgstr "メンバーアクティブ状態(*)"
 msgid "Member ID"
 msgstr "メンバーID"
 
+msgid "Member ID (Coach)"
+msgstr "コーチID"
+
+msgid "Member ID (User)"
+msgstr "メンバーID"
+
 msgid "Member ID(*)"
 msgstr "メンバーID(*)"
 
@@ -3485,6 +3497,12 @@ msgstr "該当なし"
 
 msgid "Name"
 msgstr "名前"
+
+msgid "Name (Coach)"
+msgstr "コーチ名"
+
+msgid "Name (User)"
+msgstr "メンバー名"
 
 msgid "Name Kana"
 msgstr "名前(カナ)"
@@ -5785,6 +5803,12 @@ msgstr "あなたはこのトピックのメンバーではありません。"
 msgid "You are not a member of this team."
 msgstr "このチームには所属していません"
 
+msgid "You are the last admin of this circle. Set new admins to maintain this circle after you leave."
+msgstr "あなたはこのサークルの最後の管理者です。あなたが脱退した後もこのサークルを維持するために、新しい管理者を指名してください。"
+
+msgid "You are the last user. If this circle unnecessary, Delete this circle."
+msgstr "あなたが最後のユーザーです。このサークルが不要な場合はサークルの削除を行ってください。"
+
 msgid "You belong to all circles in this team."
 msgstr "参加していないサークルはありません。"
 
@@ -5871,6 +5895,9 @@ msgstr "この設定は後から変更できません。"
 
 msgid "You can't change this setting lator."
 msgstr "この設定は後から変更できません。"
+
+msgid "You can't comment on this circle's post."
+msgstr "このサークルの投稿にはコメントできません。"
 
 msgid "You can't delete achieved KR."
 msgstr "完了済のKRは削除出来ません。"
@@ -6015,6 +6042,9 @@ msgstr "あなたのGoalousアカウントを無事に作成しました。"
 
 msgid "You use all features of Goalous for a %s-day free trial. Give it a try!"
 msgstr "フリートライアル15日間の間、Goalousの全ての機能が利用可能です。ぜひお試しください！"
+
+msgid "You will be able to comment after joined the circle."
+msgstr "サークルに参加するとコメントができるようになります。"
 
 msgid "You will soon reach your translation limit."
 msgstr "翻訳できる文字数の上限に近づいています。"

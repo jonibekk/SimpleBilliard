@@ -169,6 +169,20 @@ class CirclesController extends BasePagingController
         try {
             /** @var CircleMemberService $CircleMemberService */
             $CircleMemberService = ClassRegistry::init('CircleMemberService');
+            /** @var CircleMember $CircleMember */
+            $CircleMember = ClassRegistry::init('CircleMember');
+
+            // if user is last user in the circle, user can't leave leave from circle
+            if ($CircleMember->getMemberCount($circleId) == 1) {
+                return ErrorResponse::badRequest()->withMessage(__("You are the last user. If this circle unnecessary, Delete this circle."))->getResponse();
+            }
+
+            // If user is last admin in the circle, user can't leave from circle
+            if ($CircleMember->isAdmin($this->getUserId(), $circleId)) {
+                if (count($CircleMember->getAdminMemberList($circleId, false)) === 0) {
+                    return ErrorResponse::badRequest()->withMessage(__("You are the last admin of this circle. Set new admins to maintain this circle after you leave."))->getResponse();
+                }
+            }
 
             $CircleMemberService->delete($this->getUserId(), $this->getTeamId(), $circleId);
         } catch (GlException\GoalousNotFoundException $exception) {

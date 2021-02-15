@@ -18,12 +18,10 @@ class PostPolicy extends BasePolicy
         switch ($post['type']) {
             case Enum\Model\Post\Type::ACTION:
             case Enum\Model\Post\Type::CREATE_GOAL:
-                return (((int)$post['user_id'] === $this->userId) ||
+                return $this->isSameGroup($post);
                     //($this->isTeamAdminForItem($post['team_id'])) ||
                     //($this->isCoach($post['goal_id'])) ||
                     //($this->isActiveEvaluator($post['goal_id'])) ||
-                    ($this->isSameGroup($post))
-                );            
             case Enum\Model\Post\Type::NORMAL:
                 return $this->checkCirclePostAccess($post);
         }
