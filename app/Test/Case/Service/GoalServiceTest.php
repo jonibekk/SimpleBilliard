@@ -1145,15 +1145,16 @@ class GoalServiceTest extends GoalousTestCase
 
         $startDate = AppUtil::dateYmd(strtotime("{$termStartDate} -1 day"));
         $endDate = $termEndDate;
-        $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
+        $emptySweetSpot = ['top' => [], 'bottom' => []];
+        $this->assertEquals($this->GoalService->getSweetSpot($startDate, $endDate), $emptySweetSpot);
 
         $startDate = $termStartDate;
         $endDate = AppUtil::dateYmd(strtotime("{$termEndDate} +1 day"));
-        $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
+        $this->assertEquals($this->GoalService->getSweetSpot($startDate, $endDate), $emptySweetSpot);
 
         $startDate = AppUtil::dateYmd(strtotime("{$termStartDate} -1 day"));
         $endDate = AppUtil::dateYmd(strtotime("{$termEndDate} +1 day"));
-        $this->assertEmpty($this->GoalService->getSweetSpot($startDate, $endDate));
+        $this->assertEquals($this->GoalService->getSweetSpot($startDate, $endDate), $emptySweetSpot);
 
         $startDate = $termStartDate;
         $endDate = $termEndDate;
