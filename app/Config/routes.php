@@ -92,11 +92,28 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['controller' => 'me', 'action' => 'hide_goal_create_guidance', 'prefix' => 'put', '[method]' => 'PUT']);
 
     /**
-     * User Settings Endpoints: GET/PUT
+     * User Settings Endpoints: PUT
      */
-    Router::connect('/api/:controller/:action', ['prefix' => 'get', '[method]' => 'GET']);
-    Router::connect('/api/:controller/:action', ['prefix' => 'put', '[method]' => 'PUT']);
-    Router::connect('/api/:controller/:action', ['prefix' => 'post', '[method]' => 'POST']);
+    Router::connect(
+        '/api/me/account',
+        ['controller' => 'me', 'action' => 'account', 'prefix' => 'put', '[method]' => 'PUT']
+    );
+    Router::connect(
+        '/api/me/profile',
+        ['controller' => 'me', 'action' => 'profile', 'prefix' => 'put', '[method]' => 'PUT']
+    );
+    Router::connect(
+        '/api/me/notifications',
+        ['controller' => 'me', 'action' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']
+    );
+    Router::connect(
+        '/api/me/change_email',
+        ['controller' => 'me', 'action' => 'change_email', 'prefix' => 'put', '[method]' => 'PUT']
+    );
+    Router::connect(
+        '/api/me/change_password',
+        ['controller' => 'me', 'action' => 'change_password', 'prefix' => 'put', '[method]' => 'PUT']
+    );
 
     /**
      * Search
