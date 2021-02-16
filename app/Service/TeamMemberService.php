@@ -439,4 +439,5 @@ class TeamMemberService extends AppService
 
         return true;
     }
+
 }

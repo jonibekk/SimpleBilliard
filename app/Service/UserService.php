@@ -300,4 +300,32 @@ class UserService extends AppService
             $this->updateDefaultTeam($userId, $nextActiveTeamId);
         }
     }
+
+    // Save Field to specified column.
+    public function update2faSecretKey(int $id, $value = null): bool
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $data = array(
+            'User' => [
+                'id' => $id,
+                '2fa_secret' => $value
+            ]
+        );
+
+        try {
+            $User->save($data, false);
+        } catch (Exception $e) {
+            GoalousLog::error('Column Save Failed!', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+                'data'    => $data
+            ]);
+            return false;
+        }
+
+        return true;
+    }
+
 }

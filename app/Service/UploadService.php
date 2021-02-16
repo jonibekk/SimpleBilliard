@@ -74,6 +74,7 @@ class UploadService extends AppService
         $uploader = $this->getBufferStorageClient($userId, $teamId);
 
         $uploader->save($uploadedFile);
+
         return $uploadedFile->getUUID();
     }
 

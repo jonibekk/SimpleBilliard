@@ -160,7 +160,7 @@ class User extends AppModel
      */
     protected $modelConversionTable = [
         'default_team_id' => DataType::INT,
-        'timezone' => DataType::INT
+        'timezone' => DataType::FLOAT
     ];
 
     /**

@@ -85,10 +85,18 @@ if (isset($_SERVER['REQUEST_URI']) && preg_match('/^\/api\/v1/i', $_SERVER['REQU
         ['controller' => 'notifications', 'prefix' => 'put', '[method]' => 'PUT']);
     Router::connect('/api/me',
         ['controller' => 'me', 'action' => 'detail', 'prefix' => 'get', '[method]' => 'GET']);
+
     Router::connect('/api/me/switch_team',
         ['controller' => 'me', 'action' => 'switch_team', 'prefix' => 'put', '[method]' => 'PUT']);
     Router::connect('/api/me/hide_goal_create_guidance',
         ['controller' => 'me', 'action' => 'hide_goal_create_guidance', 'prefix' => 'put', '[method]' => 'PUT']);
+
+    /**
+     * User Settings Endpoints: GET/PUT
+     */
+    Router::connect('/api/:controller/:action', ['prefix' => 'get', '[method]' => 'GET']);
+    Router::connect('/api/:controller/:action', ['prefix' => 'put', '[method]' => 'PUT']);
+    Router::connect('/api/:controller/:action', ['prefix' => 'post', '[method]' => 'POST']);
 
     /**
      * Search

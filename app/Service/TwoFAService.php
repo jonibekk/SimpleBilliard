@@ -46,9 +46,47 @@ class TwoFAService extends AppService
             throw new GlException\GoalousException("User does not have 2fa secret");
         }
 
+        return $this->verifyKey($user['2fa_secret'], $twoFaCode);
+    }
+
+    /**
+     * Verifies a user inputted key against the current timestamp. Checks $window
+     * keys either side of the timestamp.
+     *
+     * @param string $b32seed
+     * @param string $key - User specified key
+     * @param integer $window
+     * @param boolean $useTimeStamp
+     * @return boolean
+     **/
+    public function verifyKey($b32seed, $code, $window = 4, $useTimeStamp = true): bool
+    {
         $Google2Fa = new PragmaRX\Google2FA\Google2FA();
 
-        return $Google2Fa->verifyKey($user['2fa_secret'], $twoFaCode);
+        return $Google2Fa->verifyKey($b32seed, $code, $window, $useTimeStamp);
+    }
+
+    /**
+     * Generates a QR code data url to display inline.
+     *
+     * @param string $company
+     * @param int $user id
+     * @param string $secret
+     * @return string
+     */
+    public function getQRCodeInline(string $company, int $userId, string $secret)
+    {
+        /** @var User $User */
+        $User = ClassRegistry::init('User');
+
+        $email = $User->getProfileAndEmail($userId);
+        if (empty($email)) {
+            GoalousLog::error('No Email Address', ['Payload' => $email]);
+            return null;
+        }
+
+        $Google2Fa = new PragmaRX\Google2FA\Google2FA();
+        return $Google2Fa->getQRCodeInline($company, $email['User']['PrimaryEmail']['email'], $secret);
     }
 
     /**
