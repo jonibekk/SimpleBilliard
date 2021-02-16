@@ -436,7 +436,10 @@ class UsersController extends AppController
      */
     public function logout()
     {
-        $user = $this->Auth->user();
+        $logData['my_uid'] = $this->my_uid;
+        $logData['current_team_id'] = $this->current_team_id;
+
+        CustomLogger::getInstance()->logEvent('UELO:UsersController:logout', $logData);
 
         //Need to put the notification between logout process & the redirect
         //If not notification can't reach the frontend

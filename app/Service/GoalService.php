@@ -868,6 +868,10 @@ class GoalService extends AppService
             $ret['graphStartDate'] = $termStartDate;
             $ret['graphEndDate'] = AppUtil::dateAfter($termStartDate, $targetDays - 1);;
             $ret['plotDataEndDate'] = $targetEndDate;
+
+            if ($ret['graphEndDate'] > $termEndDate) {
+                $ret['graphEndDate'] = $termEndDate;
+            }
             return $ret;
         }
 
@@ -932,14 +936,6 @@ class GoalService extends AppService
                     __FILE__, __LINE__, __METHOD__, $targetDays, $maxBufferDays)
             );
             return __('Wrong target days or buffer days.');
-        }
-        //$targetDaysが期の日数を超えていたらエラー
-        $termTotalDays = AppUtil::totalDays($termStartDate, $termEndDate);
-        if ($targetDays > $termTotalDays) {
-            $this->log(sprintf("%s%s [method:%s] targetDays(%s days) over termTotalDays(%s days).",
-                    __FILE__, __LINE__, __METHOD__, $targetDays, $termTotalDays)
-            );
-            return __('Wrong target days.');
         }
         //指定グラフ終了日は評価期間内でなければいけない
         if ($targetEndDate < $termStartDate || $targetEndDate > $termEndDate) {
@@ -1497,6 +1493,12 @@ class GoalService extends AppService
         array $term = null
     ): array
     {
+        //返り値
+        $sweetSpot = [
+            'top'    => [],
+            'bottom' => [],
+        ];
+
         if ($term === null) {
             /** @var Term $EvaluateTerm */
             $EvaluateTerm = ClassRegistry::init('Term');
@@ -1508,7 +1510,7 @@ class GoalService extends AppService
 
         //開始日、終了日のどちらかが期の範囲を超えていたら、何もしない
         if ($startDate < $termStartDate || $endDate > $termEndDate) {
-            return [];
+            return $sweetSpot;
         }
 
         $termTotalDays = AppUtil::totalDays($termStartDate, $termEndDate);
@@ -1517,11 +1519,6 @@ class GoalService extends AppService
         //sweetspotの下辺の一日で進む高さ(0が含まれるのでその分-1)
         $bottomStep = (float)($maxBottom / ($termTotalDays - 1));
 
-        //返り値
-        $sweetSpot = [
-            'top'    => [],
-            'bottom' => [],
-        ];
 
         //期の開始日からの日数を算出し、その日数分開始値を進める
         $daysFromTermStart = AppUtil::diffDays($termStartDate, $startDate);
